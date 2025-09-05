@@ -46,6 +46,7 @@ final class LocalMeilisearchServer implements IProvideCurrentKeyForLocalServer
         return $this->root_dir . 'var/lib/tuleap/fts_meilisearch_server/meilisearch-master-key.env';
     }
 
+    #[\Override]
     public function getCurrentKey(): ?ConcealedString
     {
         $key_path = $this->getExpectedMasterKeyEnvFilePath();

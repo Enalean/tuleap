@@ -56,6 +56,7 @@ final class LogUsersOutInstance implements InstanceOperation
         return new self($project, $user_id);
     }
 
+    #[\Override]
     public function getRequest(RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory): RequestInterface
     {
         return $request_factory->createRequest(
@@ -82,6 +83,7 @@ final class LogUsersOutInstance implements InstanceOperation
         return json_encode(['user' => (string) $this->user_id], JSON_THROW_ON_ERROR);
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return self::TOPIC;

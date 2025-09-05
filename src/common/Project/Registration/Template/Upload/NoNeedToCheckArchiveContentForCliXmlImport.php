@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Result;
 
 final class NoNeedToCheckArchiveContentForCliXmlImport implements CheckArchiveContent
 {
+    #[\Override]
     public function checkArchiveContent(SimpleXMLElement $xml_element): Ok|Err
     {
         return Result::ok($xml_element);

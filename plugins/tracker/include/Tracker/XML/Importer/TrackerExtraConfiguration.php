@@ -35,6 +35,7 @@ class TrackerExtraConfiguration implements ImportExtraConfiguration
         $this->trackers_to_reuse = $trackers_to_reuse;
     }
 
+    #[\Override]
     public function getServiceName()
     {
         return trackerPlugin::SERVICE_SHORTNAME;
@@ -43,6 +44,7 @@ class TrackerExtraConfiguration implements ImportExtraConfiguration
     /**
      * @return string[]
      */
+    #[\Override]
     public function getValue()
     {
         return $this->trackers_to_reuse;

@@ -49,6 +49,7 @@ class RoadmapPlugin extends Plugin
         bindtextdomain('tuleap-roadmap', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {
@@ -65,6 +66,7 @@ class RoadmapPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['tracker'];

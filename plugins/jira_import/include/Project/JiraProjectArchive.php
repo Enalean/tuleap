@@ -38,6 +38,7 @@ class JiraProjectArchive implements ArchiveInterface
         $this->project_xml = $project_xml;
     }
 
+    #[\Override]
     public function getProjectXML(): string
     {
         $xml = $this->project_xml->asXML();
@@ -47,20 +48,24 @@ class JiraProjectArchive implements ArchiveInterface
         return $xml;
     }
 
+    #[\Override]
     public function getUsersXML(): string
     {
         return '';
     }
 
+    #[\Override]
     public function extractFiles(): void
     {
     }
 
+    #[\Override]
     public function getExtractionPath(): string
     {
         return AttachmentDownloader::getTmpFolderURL();
     }
 
+    #[\Override]
     public function cleanUp(): void
     {
     }

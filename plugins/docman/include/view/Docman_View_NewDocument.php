@@ -22,26 +22,31 @@
 
 class Docman_View_NewDocument extends Docman_View_New // phpcs:ignoreFile
 {
+    #[\Override]
     public function _getTitle($params)
     {
         return dgettext('tuleap-docman', 'New document');
     }
 
+    #[\Override]
     public function _getEnctype()
     {
         return ' enctype="multipart/form-data" ';
     }
 
+    #[\Override]
     public function _getAction()
     {
         return 'createDocument';
     }
 
+    #[\Override]
     public function _getActionText()
     {
         return dgettext('tuleap-docman', 'Create document');
     }
 
+    #[\Override]
     public function _getSpecificProperties($params)
     {
         $html            = '';
@@ -111,6 +116,7 @@ class Docman_View_NewDocument extends Docman_View_New // phpcs:ignoreFile
         return $html;
     }
 
+    #[\Override]
     public function _getNewItem()
     {
         $i = new Docman_Document();

@@ -110,6 +110,7 @@ final class ReviewerAddedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
@@ -118,6 +119,7 @@ final class ReviewerAddedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getRecipients(): array
     {
         return $this->new_reviewers;
@@ -126,6 +128,7 @@ final class ReviewerAddedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function asPlaintext(): string
     {
         return sprintf(
@@ -139,6 +142,7 @@ final class ReviewerAddedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

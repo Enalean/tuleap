@@ -20,11 +20,13 @@
 
 class SystemEvent_UPDATE_ALIASES extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return '';
     }
 
+    #[\Override]
     public function process()
     {
         $backendAliases = BackendAliases::instance();

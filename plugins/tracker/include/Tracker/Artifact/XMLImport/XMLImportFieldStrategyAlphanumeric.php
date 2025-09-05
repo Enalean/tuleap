@@ -30,6 +30,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric implements T
      *
      * @return mixed
      */
+    #[\Override]
     public function getFieldData(
         TrackerField $field,
         SimpleXMLElement $field_change,

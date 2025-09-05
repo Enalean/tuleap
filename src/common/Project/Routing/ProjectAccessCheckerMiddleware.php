@@ -39,6 +39,7 @@ final class ProjectAccessCheckerMiddleware implements MiddlewareInterface
     ) {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

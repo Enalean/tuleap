@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UnusedComponentCleaner;
 
 final class WorkspaceDAO extends DataAccessObject implements UnusedComponentCleaner
 {
+    #[\Override]
     public function dropUnusedComponents(): void
     {
         $sql = 'DELETE

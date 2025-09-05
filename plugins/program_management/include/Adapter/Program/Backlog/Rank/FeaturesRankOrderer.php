@@ -36,6 +36,7 @@ final class FeaturesRankOrderer implements OrderFeatureRank
     /**
      * @throws FeatureCanNotBeRankedWithItselfException
      */
+    #[\Override]
     public function reorder(FeaturesToReorder $order, string $context_id, ProgramIdentifier $program): void
     {
         try {

@@ -24,6 +24,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
     public const MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
     public const MESSAGE_REMOVED      = 'removed'; // X has been removed
 
+    #[\Override]
     public function somethingHappen($event, $params)
     {
         //search for users who monitor the item
@@ -33,6 +34,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         }
     }
 
+    #[\Override]
     public function sendNotifications($event, $params)
     {
         $path = $this->_getDocmanPath();
@@ -117,6 +119,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         }
     }
 
+    #[\Override]
     public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
@@ -156,6 +159,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         return $msg;
     }
 
+    #[\Override]
     protected function getMessageLink($type, $params)
     {
         switch ($type) {

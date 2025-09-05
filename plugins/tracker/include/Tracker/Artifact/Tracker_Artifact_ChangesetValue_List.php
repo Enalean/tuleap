@@ -40,6 +40,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitList($this);
@@ -50,6 +51,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return int the number of files
      */
+    #[\Override]
     public function count(): int
     {
         return count($this->list_values);
@@ -62,6 +64,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return mixed value at given offset
      */
+    #[\Override]
     public function offsetGet($offset): Tracker_FormElement_Field_List_BindValue
     {
         return $this->list_values[$offset];
@@ -74,6 +77,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * @param mixed $value  new value
      *
      */
+    #[\Override]
     public function offsetSet($offset, $value): void
     {
         $this->list_values[$offset] = $value;
@@ -86,6 +90,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return bool wether the offset exists
      */
+    #[\Override]
     public function offsetExists($offset): bool
     {
         return isset($this->list_values[$offset]);
@@ -97,6 +102,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * @param int $offset to delete
      *
      */
+    #[\Override]
     public function offsetUnset($offset): void
     {
         unset($this->files[$offset]);
@@ -113,6 +119,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     /**
      * spl\Iterator
      */
+    #[\Override]
     public function current(): Tracker_FormElement_Field_List_BindValue
     {
         return $this->list_values[$this->index];
@@ -123,6 +130,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return int the current index
      */
+    #[\Override]
     public function key(): int
     {
         return $this->index;
@@ -131,6 +139,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     /**
      * spl\Iterator
      */
+    #[\Override]
     public function next(): void
     {
         $this->index++;
@@ -141,6 +150,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * Reset the pointer to the start of the collection
      */
+    #[\Override]
     public function rewind(): void
     {
         $this->index = 0;
@@ -151,6 +161,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return bool true if the current pointer is valid
      */
+    #[\Override]
     public function valid(): bool
     {
         return isset($this->list_values[$this->index]);
@@ -169,6 +180,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return array of int The values of this artifact changeset value
      */
+    #[\Override]
     public function getValue()
     {
         $values = $this->getListValues();
@@ -185,6 +197,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return string The value of this artifact changeset value in Json Format
      */
+    #[\Override]
     public function getJsonValue()
     {
         $values          = $this->getListValues();
@@ -198,6 +211,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $returned_values;
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         return $this->getFullRESTValue($user);
@@ -208,6 +222,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $value->getRESTId();
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         $artifact_field_value_list_representation = new ArtifactFieldValueListFullRepresentation();
@@ -231,6 +246,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return string|false The difference between another $changeset_value, false if no differneces
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $previous = $changeset_value->getListValues();
@@ -308,6 +324,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $changes;
     }
 
+    #[\Override]
     public function nodiff($format = 'html')
     {
         $next      = $this->getListValues();

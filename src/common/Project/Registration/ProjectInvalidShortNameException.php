@@ -37,6 +37,7 @@ final class ProjectInvalidShortNameException extends \RuntimeException implement
         );
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

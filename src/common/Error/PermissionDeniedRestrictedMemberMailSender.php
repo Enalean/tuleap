@@ -25,6 +25,7 @@ use Project;
 
 final class PermissionDeniedRestrictedMemberMailSender extends PermissionDeniedMailSender
 {
+    #[\Override]
     protected function getPermissionDeniedMailBody(
         Project $project,
         PFUser $user,
@@ -47,6 +48,7 @@ final class PermissionDeniedRestrictedMemberMailSender extends PermissionDeniedM
         );
     }
 
+    #[\Override]
     protected function getPermissionDeniedMailSubject(Project $project, PFUser $user): string
     {
         return $GLOBALS['Language']->getText(

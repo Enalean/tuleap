@@ -58,6 +58,7 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
             ->map(static fn(array $list_values) => new self($list_values));
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         /** @var Ok<list<string>> $ok */
@@ -69,6 +70,7 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Ok<list<string>>|Err<Fault>
      */
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         $usernames = [];
@@ -84,6 +86,7 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
         return Result::ok($usernames);
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         $value = $value_wrapper->getValue();
@@ -95,6 +98,7 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
         return $ok;
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         throw new \LogicException('Should not end there');
@@ -104,6 +108,7 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Err<Fault>
      */
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         return Result::err(InvalidComparisonToCurrentDateTimeFault::build());
@@ -113,6 +118,7 @@ final readonly class ListValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Err<Fault>
      */
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         return Result::err(InvalidComparisonToStatusOpenFault::build());

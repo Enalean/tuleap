@@ -21,6 +21,7 @@
 
 class Tracker_URLVerification extends URLVerification
 {
+    #[\Override]
     protected function getUrl()
     {
         return new Tracker_URL();
@@ -36,6 +37,7 @@ class Tracker_URLVerification extends URLVerification
      * @throws \Tuleap\Project\ProjectAccessSuspendedException
      * @throws \Tuleap\Project\AccessNotActiveException
      */
+    #[\Override]
     public function userCanAccessProject(PFUser $user, Project $project): true
     {
         $permissions_checker = new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(

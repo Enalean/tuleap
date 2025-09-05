@@ -34,6 +34,7 @@ class BrokerLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInt
         $this->loggers = $loggers;
     }
 
+    #[\Override]
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         foreach ($this->loggers as $logger) {

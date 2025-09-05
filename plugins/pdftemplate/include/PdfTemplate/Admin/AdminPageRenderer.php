@@ -34,6 +34,7 @@ use Tuleap\Layout\SidebarPresenter;
 
 final class AdminPageRenderer implements RenderAPresenter
 {
+    #[\Override]
     public function renderAPresenter(
         BaseLayout $layout,
         \PFUser $user,

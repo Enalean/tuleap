@@ -74,6 +74,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
      *
      * @see TreeNode_GetStateVisitor::setChildState()
      */
+    #[\Override]
     protected function setChildState(TreeNode $child, $state)
     {
         parent::setChildState($child, $state);

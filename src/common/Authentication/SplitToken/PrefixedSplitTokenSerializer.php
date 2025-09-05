@@ -36,6 +36,7 @@ final class PrefixedSplitTokenSerializer implements SplitTokenFormatter, SplitTo
         $this->prefix = $prefix;
     }
 
+    #[\Override]
     public function getIdentifier(SplitToken $token): ConcealedString
     {
         return new ConcealedString(
@@ -43,6 +44,7 @@ final class PrefixedSplitTokenSerializer implements SplitTokenFormatter, SplitTo
         );
     }
 
+    #[\Override]
     public function getSplitToken(ConcealedString $identifier): SplitToken
     {
         $raw_identifier = $identifier->getString();

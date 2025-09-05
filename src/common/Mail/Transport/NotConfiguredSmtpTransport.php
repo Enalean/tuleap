@@ -31,6 +31,7 @@ final class NotConfiguredSmtpTransport implements MailerInterface
     {
     }
 
+    #[\Override]
     public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         // We don't send any mail if the smtp transport if not configured using "email_relayhost"

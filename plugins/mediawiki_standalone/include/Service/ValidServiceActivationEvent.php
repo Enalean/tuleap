@@ -28,6 +28,7 @@ namespace Tuleap\MediawikiStandalone\Service;
  */
 final class ValidServiceActivationEvent extends ServiceActivationEvent
 {
+    #[\Override]
     public function isValid(): bool
     {
         return true;

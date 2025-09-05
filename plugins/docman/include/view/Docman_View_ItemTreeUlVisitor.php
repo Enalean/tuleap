@@ -84,6 +84,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         return true;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         $li_displayed = $this->_displayItem($item, $params);
@@ -122,37 +123,44 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         }
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         // We don't want to support other type of documents in the legacy interface
         return '';
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         return '';

@@ -25,21 +25,25 @@ final class NotEqualComparison implements Comparison
     {
     }
 
+    #[\Override]
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
         return $visitor->visitNotEqualComparison($this, $parameters);
     }
 
+    #[\Override]
     public function getSearchable(): Searchable
     {
         return $this->searchable;
     }
 
+    #[\Override]
     public function getValueWrapper(): ValueWrapper
     {
         return $this->value_wrapper;
     }
 
+    #[\Override]
     public function getType(): ComparisonType
     {
         return ComparisonType::NotEqual;

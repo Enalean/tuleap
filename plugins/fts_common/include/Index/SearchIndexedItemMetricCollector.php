@@ -32,6 +32,7 @@ final class SearchIndexedItemMetricCollector implements SearchIndexedItem
     ) {
     }
 
+    #[\Override]
     public function searchItems(string $keywords, int $limit, int $offset): SearchResultPage
     {
         $this->prometheus->increment('fts_search_requests_total', 'Total number of full-text search requests');

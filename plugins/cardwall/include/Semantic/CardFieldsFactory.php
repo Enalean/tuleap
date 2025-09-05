@@ -28,6 +28,7 @@ use Tuleap\Tracker\Tracker;
 
 class Cardwall_Semantic_CardFieldsFactory implements IBuildSemanticFromXML  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function getInstanceFromXML(
         SimpleXMLElement $current_semantic_xml,
         SimpleXMLElement $all_semantics_xml,

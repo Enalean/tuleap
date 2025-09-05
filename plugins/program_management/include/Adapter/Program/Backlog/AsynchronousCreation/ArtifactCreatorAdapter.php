@@ -47,6 +47,7 @@ final class ArtifactCreatorAdapter implements CreateArtifact
     ) {
     }
 
+    #[\Override]
     public function create(MirroredTimeboxFirstChangeset $first_changeset): MirroredTimeboxIdentifier
     {
         $full_tracker = $this->tracker_retriever->getNonNullTracker($first_changeset->mirrored_timebox_tracker);

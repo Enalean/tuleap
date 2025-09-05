@@ -39,17 +39,20 @@ class WebDAV_DocmanController extends Docman_Controller
         $this->current_user = $current_user;
     }
 
+    #[\Override]
     public function getUser(): PFUser
     {
         return $this->current_user;
     }
 
+    #[\Override]
     public function actionsManagement()
     {
         $action = new Docman_Actions($this);
         $action->process($this->action, $this->_actionParams);
     }
 
+    #[\Override]
     public function viewsManagement()
     {
     }

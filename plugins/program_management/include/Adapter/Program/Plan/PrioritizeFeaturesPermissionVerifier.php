@@ -45,6 +45,7 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
     ) {
     }
 
+    #[\Override]
     public function canUserPrioritizeFeatures(
         ProgramIdentifier $program,
         UserIdentifier $user_identifier,

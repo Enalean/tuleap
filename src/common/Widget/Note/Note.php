@@ -48,6 +48,7 @@ abstract class Note extends \Widget
 
     abstract protected static function getName(): string;
 
+    #[\Override]
     public function getTitle(): string
     {
         if ($this->title !== null) {
@@ -56,11 +57,13 @@ abstract class Note extends \Widget
         return _('Note');
     }
 
+    #[\Override]
     public function getIcon(): string
     {
         return 'fa-sticky-note';
     }
 
+    #[\Override]
     public function isUnique(): bool
     {
         return false;
@@ -69,6 +72,7 @@ abstract class Note extends \Widget
     /**
      * @param string $id
      */
+    #[\Override]
     public function loadContent($id): void
     {
         $row           = $this->dao->get($id);
@@ -79,11 +83,13 @@ abstract class Note extends \Widget
     /**
      * @param string $widget_id
      */
+    #[\Override]
     public function hasPreferences($widget_id): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         return $this->renderer->renderToString(
@@ -92,6 +98,7 @@ abstract class Note extends \Widget
         );
     }
 
+    #[\Override]
     public function getInstallPreferences(): string
     {
         return $this->renderer->renderToString(
@@ -100,6 +107,7 @@ abstract class Note extends \Widget
         );
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request): bool
     {
         $content_id = $request->getValidated('content_id', 'uint', 0);
@@ -116,6 +124,7 @@ abstract class Note extends \Widget
         return (int) $this->dao->create($owner_id, $owner_type, $note['title'], $note['content']);
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return $this->interpretContent();
@@ -140,6 +149,7 @@ abstract class Note extends \Widget
     }
 
     /** @return array */
+    #[\Override]
     public function getJavascriptDependencies()
     {
         $javascript_dependencies = [];
@@ -154,6 +164,7 @@ abstract class Note extends \Widget
         return $javascript_dependencies;
     }
 
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         if ($this->code_block_features->isMermaidNeeded()) {
@@ -172,6 +183,7 @@ abstract class Note extends \Widget
     /**
      * @return CssAssetCollection
      */
+    #[\Override]
     public function getStylesheetDependencies()
     {
         $this->interpretContent();

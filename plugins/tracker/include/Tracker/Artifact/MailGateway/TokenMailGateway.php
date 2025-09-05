@@ -22,11 +22,13 @@ use Tuleap\Tracker\Tracker;
 
 class Tracker_Artifact_MailGateway_TokenMailGateway extends Tracker_Artifact_MailGateway_MailGateway
 {
+    #[\Override]
     protected function canCreateArtifact(Tracker $tracker)
     {
         return false;
     }
 
+    #[\Override]
     protected function canUpdateArtifact(Tracker $tracker)
     {
         return $this->tracker_artifactbyemail->canUpdateArtifactInTokenMode($tracker);

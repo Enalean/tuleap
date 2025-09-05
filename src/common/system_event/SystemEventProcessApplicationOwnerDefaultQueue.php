@@ -27,16 +27,19 @@ class SystemEventProcessApplicationOwnerDefaultQueue implements SystemEventProce
     /**
      * @see SystemEventProcess::getLockName()
      */
+    #[\Override]
     public function getLockName()
     {
         return 'tuleap_process_system_event_' . SystemEvent::OWNER_APP;
     }
 
+    #[\Override]
     public function getQueue()
     {
         return SystemEvent::APP_OWNER_QUEUE;
     }
 
+    #[\Override]
     public function getCommandName()
     {
         return 'tuleap.php process-system-events ' . SystemEvent::OWNER_APP;

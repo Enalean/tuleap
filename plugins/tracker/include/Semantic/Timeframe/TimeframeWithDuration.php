@@ -30,6 +30,7 @@ class TimeframeWithDuration implements IComputeTimeframes
 {
     private const NAME = 'timeframe-with-duration';
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;
@@ -52,6 +53,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         $this->duration_field   = $duration_field;
     }
 
+    #[\Override]
     public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         $field_id = $field->getId();
@@ -60,6 +62,7 @@ class TimeframeWithDuration implements IComputeTimeframes
             $field_id === $this->duration_field->getId();
     }
 
+    #[\Override]
     public function getConfigDescription(): string
     {
         return sprintf(
@@ -69,11 +72,13 @@ class TimeframeWithDuration implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function isDefined(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void
     {
         $start_date_field_id = $this->start_date_field->getId();
@@ -91,6 +96,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         $semantic->addChild('duration_field')->addAttribute('REF', $duration_ref);
     }
 
+    #[\Override]
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe
     {
         if (
@@ -106,6 +112,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return $dao->save(
@@ -117,21 +124,25 @@ class TimeframeWithDuration implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function getStartDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return $this->start_date_field;
     }
 
+    #[\Override]
     public function getDurationField(): \Tuleap\Tracker\FormElement\Field\NumericField
     {
         return $this->duration_field;
     }
 
+    #[\Override]
     public function getEndDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return null;
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -153,6 +164,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         return DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -177,6 +189,7 @@ class TimeframeWithDuration implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -234,16 +247,19 @@ class TimeframeWithDuration implements IComputeTimeframes
         return DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
     }
 
+    #[\Override]
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return null;
     }
 
+    #[\Override]
     public function userCanReadTimeframeFields(\PFUser $user): bool
     {
         return $this->start_date_field->userCanRead($user) && $this->duration_field->userCanRead($user);
     }
 
+    #[\Override]
     public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): bool
     {
         try {
@@ -271,6 +287,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         return $start_date === 0 && $duration === 0;
     }
 
+    #[\Override]
     public function isTimeDisplayedForEvent(): bool
     {
         return $this->start_date_field->isTimeDisplayed();

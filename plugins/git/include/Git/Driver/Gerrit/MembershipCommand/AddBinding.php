@@ -38,6 +38,7 @@ class Git_Driver_Gerrit_MembershipCommand_AddBinding extends Git_Driver_Gerrit_M
         $this->source_ugroup = $source_ugroup;
     }
 
+    #[\Override]
     public function execute(Git_RemoteServer_GerritServer $server)
     {
         $driver              = $this->getDriver($server);

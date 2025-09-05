@@ -37,6 +37,7 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
         parent::__construct();
     }
 
+    #[\Override]
     public function deleteLogsPerTracker(int $tracker_id): void
     {
         $this->getDB()->run(
@@ -54,6 +55,7 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
     /**
      * @return FunctionLogLineWithArtifact[]
      */
+    #[\Override]
     public function searchLogsByTrackerId(int $tracker_id): array
     {
         return array_map(
@@ -103,6 +105,7 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
     /**
      * @psalm-return Option<FunctionLogPayloads>
      */
+    #[\Override]
     public function searchPayloadsByChangesetID(int $changeset_id): Option
     {
         $row = $this->getDB()->row(
@@ -128,6 +131,7 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
         );
     }
 
+    #[\Override]
     public function saveFunctionLogLine(FunctionLogLineToSave $log_line): void
     {
         $this->getDB()->insert(

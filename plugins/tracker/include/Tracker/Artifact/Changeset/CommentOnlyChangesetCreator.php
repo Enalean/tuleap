@@ -37,6 +37,7 @@ final class CommentOnlyChangesetCreator implements CreateCommentOnlyChangeset
     {
     }
 
+    #[\Override]
     public function createCommentOnlyChangeset(NewComment $new_comment, Artifact $artifact): Ok|Err
     {
         $empty_fields_data = [];

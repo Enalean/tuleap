@@ -48,6 +48,7 @@ final class MediaWikiManagementCommandProcess implements MediaWikiManagementComm
     /**
      * @return Ok<null>|Err<MediaWikiManagementCommandFailure>
      */
+    #[\Override]
     public function wait(): Ok|Err
     {
         $exit_code      = $this->process->wait();

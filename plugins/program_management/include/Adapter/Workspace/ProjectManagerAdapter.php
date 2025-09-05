@@ -33,16 +33,19 @@ final class ProjectManagerAdapter implements RetrieveProject, SearchProjectsUser
     {
     }
 
+    #[\Override]
     public function getProject(int $project_id): \Project
     {
         return $this->project_manager->getProject($project_id);
     }
 
+    #[\Override]
     public function getProjectWithId(int $project_id): ProjectIdentifier
     {
         return ProjectProxy::buildFromProject($this->project_manager->getProject($project_id));
     }
 
+    #[\Override]
     public function getProjectsUserIsAdmin(UserIdentifier $user_identifier): array
     {
         $user         = $this->retrieve_user->getUserWithId($user_identifier);

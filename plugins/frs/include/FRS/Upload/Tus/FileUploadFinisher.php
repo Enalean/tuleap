@@ -94,6 +94,7 @@ class FileUploadFinisher implements TusFinisherDataStore
         $this->frs_file_builder     = $frs_file_builder;
     }
 
+    #[\Override]
     public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $this->finishUploadFile($file_information);

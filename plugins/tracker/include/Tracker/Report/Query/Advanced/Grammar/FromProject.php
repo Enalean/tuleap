@@ -40,6 +40,7 @@ final readonly class FromProject implements FromSomething
         return $this->condition;
     }
 
+    #[\Override]
     public function acceptFromSomethingVisitor(FromSomethingVisitor $visitor, $parameters)
     {
         return $visitor->visitProject($this, $parameters);

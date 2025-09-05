@@ -38,6 +38,7 @@ final class SetupForgeUpgradeCommand extends Command
         parent::__construct('setup:forgeupgrade');
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -45,6 +46,7 @@ final class SetupForgeUpgradeCommand extends Command
             ->setHidden(true); // This command is hidden ATM because we don't want to keep the backward compat if the setup evolves latter on
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         \ForgeConfig::loadInSequence();

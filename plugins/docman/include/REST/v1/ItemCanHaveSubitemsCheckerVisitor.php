@@ -36,41 +36,49 @@ use Tuleap\Docman\Item\OtherDocument;
  */
 class ItemCanHaveSubitemsCheckerVisitor implements ItemVisitor
 {
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         // everything is fine
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();

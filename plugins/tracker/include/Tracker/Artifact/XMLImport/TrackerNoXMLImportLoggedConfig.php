@@ -25,11 +25,13 @@ namespace Tuleap\Tracker\Artifact\XMLImport;
 
 class TrackerNoXMLImportLoggedConfig implements TrackerImportConfig
 {
+    #[\Override]
     public function isFromXml(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function getMoveImportConfig(): MoveImportConfig
     {
         return MoveImportConfig::buildForRegularImport();

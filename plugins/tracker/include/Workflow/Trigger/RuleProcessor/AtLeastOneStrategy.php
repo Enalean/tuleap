@@ -30,6 +30,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategy implements Trac
      * @see Tracker_Workflow_Trigger_RulesProcessor_Strategy::allPrecondtionsAreMet
      * @return bool
      */
+    #[\Override]
     public function allPrecondtionsAreMet()
     {
         return true;

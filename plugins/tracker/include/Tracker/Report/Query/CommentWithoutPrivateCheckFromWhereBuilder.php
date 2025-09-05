@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Report\Query;
 
 final class CommentWithoutPrivateCheckFromWhereBuilder implements CommentFromWhereBuilder
 {
+    #[\Override]
     public function getFromWhereWithComment(string $value, string $suffix): IProvideParametrizedFromAndWhereSQLFragments
     {
         $value = $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery($value);
@@ -45,6 +46,7 @@ final class CommentWithoutPrivateCheckFromWhereBuilder implements CommentFromWhe
         return new ParametrizedFromWhere($from, $where, [$value], []);
     }
 
+    #[\Override]
     public function getFromWhereWithoutComment(string $suffix): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (

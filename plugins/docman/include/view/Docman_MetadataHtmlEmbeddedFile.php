@@ -28,11 +28,13 @@ class Docman_MetadataHtmlEmbeddedFile extends \Docman_MetadataHtml
         $this->content = $content;
     }
 
+    #[\Override]
     public function getLabel($show_mandatory_information = \true)
     {
         return \dgettext('tuleap-docman', 'Content:');
     }
 
+    #[\Override]
     public function getField()
     {
         $hp    = \Codendi_HTMLPurifier::instance();
@@ -41,6 +43,7 @@ class Docman_MetadataHtmlEmbeddedFile extends \Docman_MetadataHtml
         return $html;
     }
 
+    #[\Override]
     public function &getValidator()
     {
         $validator = \null;

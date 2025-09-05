@@ -40,6 +40,7 @@ final class UpdatedCommentEvent implements EventSubjectToNotification
         return new self($updated_comment->getId());
     }
 
+    #[\Override]
     public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
     {
         if (! isset($payload['comment_id'])) {
@@ -49,6 +50,7 @@ final class UpdatedCommentEvent implements EventSubjectToNotification
         return new self($payload['comment_id']);
     }
 
+    #[\Override]
     public function toWorkerEventPayload(): array
     {
         return [

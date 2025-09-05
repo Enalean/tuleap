@@ -86,6 +86,7 @@ abstract class Ref extends GitObject
      * @return string object hash
      * @throws GitRepoRefNotFoundException
      */
+    #[\Override]
     public function GetHash() // @codingStandardsIgnoreLine
     {
         if (empty($this->hash)) {

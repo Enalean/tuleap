@@ -104,6 +104,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->transaction_executor           = $transaction_executor;
     }
 
+    #[\Override]
     public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $this->finishUploadEmptyFile($file_information);

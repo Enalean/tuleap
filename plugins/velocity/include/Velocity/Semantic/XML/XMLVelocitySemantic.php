@@ -39,6 +39,7 @@ final class XMLVelocitySemantic extends XMLSemantic
         parent::__construct(SemanticVelocity::NAME);
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $semantic = parent::export($parent_node, $form_elements);

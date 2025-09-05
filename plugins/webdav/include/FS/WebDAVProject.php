@@ -39,6 +39,7 @@ class WebDAVProject implements ICollection
      *
      * @return \Sabre\DAV\INode[]
      */
+    #[\Override]
     public function getChildren(): array
     {
         $children = [];
@@ -65,6 +66,7 @@ class WebDAVProject implements ICollection
      *
      * @param string $service
      */
+    #[\Override]
     public function getChild($service): \Sabre\DAV\INode
     {
         $children = $this->getChildren();
@@ -74,6 +76,7 @@ class WebDAVProject implements ICollection
         throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'service_not_available'));
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->project->getUnixName();
@@ -82,31 +85,37 @@ class WebDAVProject implements ICollection
     /**
      * Projects don't have a last modified date
      */
+    #[\Override]
     public function getLastModified(): int
     {
         return 0;
     }
 
+    #[\Override]
     public function delete(): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function setName($name): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function createFile($name, $data = null): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function createDirectory($name): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function childExists($name): bool
     {
         try {

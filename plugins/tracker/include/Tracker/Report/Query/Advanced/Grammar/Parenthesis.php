@@ -27,6 +27,7 @@ final class Parenthesis implements Term
     {
     }
 
+    #[\Override]
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
         return $visitor->visitParenthesis($this, $parameters);

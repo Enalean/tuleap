@@ -39,6 +39,7 @@ final class TrackerIdentifierProxy implements TrackerIdentifier
         return new self($tracker->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

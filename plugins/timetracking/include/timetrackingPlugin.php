@@ -75,6 +75,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
         bindtextdomain('tuleap-timetracking', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo()
     {
         if (! is_a($this->pluginInfo, TimetrackingPluginInfo::class)) {
@@ -84,6 +85,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return ['tracker'];
@@ -121,6 +123,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
         ];
     }
 
+    #[\Override]
     public function process(): void
     {
         $router = new Router(
@@ -448,6 +451,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
         }
     }
 
+    #[\Override]
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
         $event->addConfigClass(FeatureFlagTimetrackingManagementWidget::class);

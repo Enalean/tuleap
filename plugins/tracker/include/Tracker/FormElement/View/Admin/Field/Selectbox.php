@@ -23,6 +23,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
 {
     protected $availableTypes = ['rb', 'msb', 'cb'];
 
+    #[\Override]
     public function fetchTypeForUpdate()
     {
         $html_purifier = Codendi_HTMLPurifier::instance();

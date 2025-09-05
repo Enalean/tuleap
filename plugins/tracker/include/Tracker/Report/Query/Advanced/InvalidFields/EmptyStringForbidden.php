@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 final class EmptyStringForbidden implements EmptyStringChecker
 {
+    #[\Override]
     public function isEmptyStringAProblem($value)
     {
         return $value === '';

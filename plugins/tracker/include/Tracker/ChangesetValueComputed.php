@@ -49,6 +49,7 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitComputed($this);
@@ -59,6 +60,7 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
      *
      * @return int The value of this artifact changeset value
      */
+    #[\Override]
     public function getValue()
     {
          return $this->getNumeric();
@@ -76,6 +78,7 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
      *
      * @return string|false
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $previous_numeric = $changeset_value->getValue();

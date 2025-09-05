@@ -35,11 +35,13 @@ class ReplicationHTTPUser implements PFO_User
         $this->gerrit_server = $gerrit_server;
     }
 
+    #[\Override]
     public function getGroups()
     {
         return [];
     }
 
+    #[\Override]
     public function getUserName(): string
     {
         return $this->gerrit_server->getGenericUserName();

@@ -114,6 +114,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         return __DIR__ . '/../../../themes/FlamingParrot/templates/';
     }
 
+    #[\Override]
     public function header(HeaderConfiguration|array $params): void
     {
         $project = null;
@@ -168,16 +169,19 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->body($params);
     }
 
+    #[\Override]
     protected function hasHeaderBeenWritten(): bool
     {
         return $this->header_has_been_written;
     }
 
+    #[\Override]
     protected function includeSubsetOfCombined()
     {
         $this->includeJavascriptFile($this->include_asset->getFileURL('tuleap_subset_flamingparrot.js'));
     }
 
+    #[\Override]
     protected function displayCommonStylesheetElements(): void
     {
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
@@ -475,6 +479,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
+    #[\Override]
     public function footer(FooterConfiguration|array $params): void
     {
         $this->displayBrowserDeprecationMessage();
@@ -526,6 +531,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->render('end-of-page', null);
     }
 
+    #[\Override]
     protected function includeJavascriptPolyfills()
     {
         $this->includeJavascriptFile($this->include_asset->getFileURL('flamingparrot-with-polyfills.js'));

@@ -48,11 +48,13 @@ final class CssViteAsset implements CssAssetGeneric
         return new self($include_assets->getFileURL($file_name));
     }
 
+    #[\Override]
     public function getFileURL(ThemeVariation $variant): string
     {
         return $this->file_url;
     }
 
+    #[\Override]
     public function getIdentifier(): string
     {
         return basename($this->file_url);

@@ -39,6 +39,7 @@ final class JiraServerComment implements Comment
     ) {
     }
 
+    #[\Override]
     public static function buildFromAPIResponse(array $comment_response): self
     {
         if (
@@ -56,16 +57,19 @@ final class JiraServerComment implements Comment
         );
     }
 
+    #[\Override]
     public function getDate(): DateTimeImmutable
     {
         return $this->date;
     }
 
+    #[\Override]
     public function getRenderedValue(): string
     {
         return $this->rendered_value;
     }
 
+    #[\Override]
     public function getUpdateAuthor(): JiraUser
     {
         return $this->update_author;

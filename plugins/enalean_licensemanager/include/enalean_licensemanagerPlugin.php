@@ -48,6 +48,7 @@ class enalean_licensemanagerPlugin extends Plugin
         bindtextdomain('tuleap-enalean_licensemanager', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS);
@@ -62,6 +63,7 @@ class enalean_licensemanagerPlugin extends Plugin
     /**
      * @return Tuleap\Enalean\LicenseManager\PluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

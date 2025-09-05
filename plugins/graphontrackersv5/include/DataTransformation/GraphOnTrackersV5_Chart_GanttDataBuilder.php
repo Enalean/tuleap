@@ -31,6 +31,7 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
      *
      * @param Bar_Engine $engine object
      */
+    #[\Override]
     public function buildProperties($engine)
     {
         parent::buildProperties($engine);

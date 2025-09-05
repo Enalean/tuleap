@@ -30,6 +30,7 @@ final class XMLTextField extends XMLField
     private int $rows = 10;
     private int $cols = 50;
 
+    #[\Override]
     public static function getType(): string
     {
         return \Tracker_FormElementFactory::FIELD_TEXT_TYPE;
@@ -57,6 +58,7 @@ final class XMLTextField extends XMLField
         return $new;
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $form_elements): \SimpleXMLElement
     {
         $field = parent::export($form_elements);

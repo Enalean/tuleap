@@ -89,6 +89,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         $this->header_options_provider = $header_options_provider;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment(\taskboardPlugin::NAME);

@@ -27,6 +27,7 @@ use Tuleap\Tracker\Workflow\Update\PostAction;
 
 final class AddToTopBacklogPostActionValue implements PostAction
 {
+    #[\Override]
     public function accept(PostActionVisitor $visitor): void
     {
         $visitor->visitExternalPostActionValue($this);

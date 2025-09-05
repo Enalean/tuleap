@@ -24,6 +24,7 @@ use Tuleap\DB\DataAccessObject;
 
 class UserNotificationOnlyStatusChangeDAO extends DataAccessObject implements UserNotificationOnlyStatusChange
 {
+    #[\Override]
     public function doesUserIdHaveSubscribeOnlyForStatusChangeNotification(int $user_id, int $tracker_id): bool
     {
         $sql = 'SELECT COUNT(*)

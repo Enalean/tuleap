@@ -37,11 +37,13 @@ class HTML_Element_Option extends HTML_Element
         $this->selected = $selected ? 'selected="selected"' : '';
     }
 
+    #[\Override]
     public function render()
     {
         return $this->renderValue();
     }
 
+    #[\Override]
     protected function renderValue()
     {
         $hp    = Codendi_HTMLPurifier::instance();

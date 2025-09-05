@@ -45,6 +45,7 @@ final readonly class DBPersistentQueue implements PersistentQueue
     ) {
     }
 
+    #[\Override]
     public function pushSinglePersistentMessage(string $topic, mixed $content): void
     {
         $this->dao->saveMessage(
@@ -56,6 +57,7 @@ final readonly class DBPersistentQueue implements PersistentQueue
         QueueInstrumentation::increment($this->queue_name, $topic, QueueInstrumentation::STATUS_ENQUEUED);
     }
 
+    #[\Override]
     public function listen(string $queue_id, string $topic, callable $callback): void
     {
         $message_counter = 0;
@@ -126,6 +128,7 @@ final readonly class DBPersistentQueue implements PersistentQueue
         QueueInstrumentation::increment($this->queue_name, $worker_event_content->event_name, QueueInstrumentation::STATUS_REQUEUED);
     }
 
+    #[\Override]
     public function getStatistics(): PersistentQueueStatistics
     {
         return $this->db_transaction_executor->execute(

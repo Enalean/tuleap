@@ -135,6 +135,7 @@ class hudson_gitPlugin extends Plugin
     /**
      * @see Plugin::getDependencies()
      */
+    #[\Override]
     public function getDependencies()
     {
         return ['git', 'hudson'];
@@ -143,6 +144,7 @@ class hudson_gitPlugin extends Plugin
     /**
      * @return PluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

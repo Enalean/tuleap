@@ -44,6 +44,7 @@ class FileUploadDataProvider implements GetFileUploadData
         $this->formelement_factory   = $formelement_factory;
     }
 
+    #[\Override]
     public function getFileUploadData(Tracker $tracker, ?Artifact $artifact, PFUser $user): ?FileUploadData
     {
         $file_fields = $this->formelement_factory->getUsedFileFields($tracker);

@@ -68,6 +68,7 @@ class BindUgroupConfirmController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);

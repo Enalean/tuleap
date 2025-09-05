@@ -29,26 +29,31 @@ class DirectoryArchive implements ArchiveInterface
         $this->archive_path = $archive_path;
     }
 
+    #[\Override]
     public function extractFiles()
     {
         // nothing to do
     }
 
+    #[\Override]
     public function cleanUp()
     {
         // nothing to do
     }
 
+    #[\Override]
     public function getExtractionPath()
     {
         return $this->archive_path;
     }
 
+    #[\Override]
     public function getProjectXML()
     {
         return file_get_contents($this->archive_path . DIRECTORY_SEPARATOR . self::PROJECT_FILE);
     }
 
+    #[\Override]
     public function getUsersXML()
     {
         return file_get_contents($this->archive_path . DIRECTORY_SEPARATOR . self::USER_FILE);

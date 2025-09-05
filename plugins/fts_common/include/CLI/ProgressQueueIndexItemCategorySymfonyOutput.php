@@ -33,6 +33,7 @@ final class ProgressQueueIndexItemCategorySymfonyOutput implements ProgressQueue
     {
     }
 
+    #[\Override]
     public function iterate(iterable $iterable): iterable
     {
         $nb_items = null;

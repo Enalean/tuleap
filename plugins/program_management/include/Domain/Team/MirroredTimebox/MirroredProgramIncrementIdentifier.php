@@ -107,6 +107,7 @@ final class MirroredProgramIncrementIdentifier implements MirroredTimeboxIdentif
         }
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

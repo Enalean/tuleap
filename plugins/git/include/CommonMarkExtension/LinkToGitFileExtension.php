@@ -35,6 +35,7 @@ final class LinkToGitFileExtension implements ExtensionInterface
         $this->git_file_blob_finder = $git_file_blob_finder;
     }
 
+    #[\Override]
     public function register(EnvironmentBuilderInterface $environment): void
     {
         $environment->addEventListener(

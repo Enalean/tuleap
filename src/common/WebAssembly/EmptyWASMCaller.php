@@ -31,6 +31,7 @@ final class EmptyWASMCaller implements WASMCaller
     {
     }
 
+    #[\Override]
     public function call(string $wasm_path, string $module_input, WASMCallerRuntimeSettings $runtime_settings): Option
     {
         return Option::nothing(Ok::class);

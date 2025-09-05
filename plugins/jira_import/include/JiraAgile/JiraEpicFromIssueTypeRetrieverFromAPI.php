@@ -38,6 +38,7 @@ final class JiraEpicFromIssueTypeRetrieverFromAPI implements JiraEpicFromIssueTy
     /**
      * @return JiraEpic[]
      */
+    #[\Override]
     public function getEpics(IssueType $issue_type, string $jira_project): array
     {
         $iterator = JiraCollectionBuilder::iterateUntilTotal(

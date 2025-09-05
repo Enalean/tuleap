@@ -28,6 +28,7 @@ use Tuleap\Date\DateHelper;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_MetadataHtmlObsolescence extends \Docman_MetadataHtml
 {
+    #[\Override]
     public function getValue()
     {
         $v = $this->md->getValue();

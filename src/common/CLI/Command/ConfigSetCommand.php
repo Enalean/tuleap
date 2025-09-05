@@ -45,6 +45,7 @@ class ConfigSetCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Set configuration values')
@@ -52,6 +53,7 @@ class ConfigSetCommand extends Command
             ->addArgument('value', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Variable value');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getArgument('key');

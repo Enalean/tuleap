@@ -57,6 +57,7 @@ final class MirroredProgramIncrementTrackerIdentifier implements TrackerIdentifi
         return new self($mirrored_program_increment_tracker->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

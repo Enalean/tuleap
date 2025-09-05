@@ -36,6 +36,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper extends Git_
         $this->backend_service = $backend_service;
     }
 
+    #[\Override]
     public function execute()
     {
         $this->response->info('Stopping service');

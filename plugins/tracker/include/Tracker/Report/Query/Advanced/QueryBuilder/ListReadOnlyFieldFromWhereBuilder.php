@@ -34,6 +34,7 @@ final class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
     ) {
     }
 
+    #[\Override]
     public function getFromWhere(Comparison $comparison, TrackerField $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $values    = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);

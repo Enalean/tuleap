@@ -58,6 +58,7 @@ class AttachmentForRestCreator implements AttachmentCreator
         $this->rule_file              = $rule_file;
     }
 
+    #[\Override]
     public function createAttachment(
         PFUser $current_user,
         FilesField $field,

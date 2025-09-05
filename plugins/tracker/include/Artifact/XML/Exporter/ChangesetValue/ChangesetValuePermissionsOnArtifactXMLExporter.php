@@ -27,11 +27,13 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetValuePermissionsOnArtifactXMLExporter extends ChangesetValueXMLExporter
 {
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return 'permissions_on_artifact';
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

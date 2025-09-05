@@ -53,6 +53,7 @@ class LoginController implements DispatchableWithRequestNoAuthz
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $return_to = $request->get('return_to');

@@ -29,6 +29,7 @@ final class LogDao extends DataAccessObject implements IRetrieveStoredLog
     /**
      * @return array{time: int, group_id: int, user_id: int, type: int, old_value: string|null, new_value: string|null, field: string|null}[]
      */
+    #[\Override]
     public function searchByItemIdOrderByTimestamp(int $item_id): array
     {
         $sql = 'SELECT time, group_id, user_id, type, old_value, new_value, field
@@ -42,6 +43,7 @@ final class LogDao extends DataAccessObject implements IRetrieveStoredLog
     /**
      * @return array{time: int, group_id: int, user_id: int, type: int, old_value: string|null, new_value: string|null, field: string|null}[]
      */
+    #[\Override]
     public function paginatedSearchByItemIdOrderByTimestamp(int $item_id, int $limit, int $offset): array
     {
         $sql = 'SELECT time, group_id, user_id, type, old_value, new_value, field
@@ -53,6 +55,7 @@ final class LogDao extends DataAccessObject implements IRetrieveStoredLog
         return $this->getDB()->run($sql, $item_id, $limit, $offset);
     }
 
+    #[\Override]
     public function countByItemId(int $item_id): int
     {
         $sql = 'SELECT count(*) as nb FROM plugin_docman_log WHERE item_id = ?';

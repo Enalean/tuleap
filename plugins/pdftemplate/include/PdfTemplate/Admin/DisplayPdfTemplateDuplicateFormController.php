@@ -53,6 +53,7 @@ final readonly class DisplayPdfTemplateDuplicateFormController implements Dispat
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();

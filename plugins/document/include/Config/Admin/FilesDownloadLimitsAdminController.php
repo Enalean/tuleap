@@ -52,6 +52,7 @@ class FilesDownloadLimitsAdminController implements DispatchableWithRequest, Dis
         );
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

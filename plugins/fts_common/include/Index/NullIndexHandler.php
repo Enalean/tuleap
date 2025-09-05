@@ -27,18 +27,22 @@ use Tuleap\Search\ItemToIndex;
 
 final class NullIndexHandler implements SearchIndexedItem, InsertItemsIntoIndex, InsertPlaintextItemsIntoIndex, DeleteIndexedItems
 {
+    #[\Override]
     public function deleteIndexedItems(IndexedItemsToRemove $items_to_remove): void
     {
     }
 
+    #[\Override]
     public function deleteIndexedItemsPerProjectID(int $project_id): void
     {
     }
 
+    #[\Override]
     public function indexItems(ItemToIndex|PlaintextItemToIndex ...$items): void
     {
     }
 
+    #[\Override]
     public function searchItems(string $keywords, int $limit, int $offset): SearchResultPage
     {
         return SearchResultPage::noHits();

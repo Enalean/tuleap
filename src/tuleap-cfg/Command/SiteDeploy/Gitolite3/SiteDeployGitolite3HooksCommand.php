@@ -39,11 +39,13 @@ final class SiteDeployGitolite3HooksCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Deploy Gitolite3 git hooks');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         (new SiteDeployGitolite3Hooks(new ProcessFactory()))->deploy(

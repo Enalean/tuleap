@@ -30,6 +30,7 @@ class MilestoneFilter implements ISearchOnMilestone
         $this->milestone_id = $milestone_id;
     }
 
+    #[\Override]
     public function getMilestoneId(): ?int
     {
         return $this->milestone_id;

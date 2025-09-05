@@ -98,56 +98,67 @@ final class AzureADProvider implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getAuthorizationEndpoint(): string
     {
         return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . '/oauth2/v2.0/authorize';
     }
 
+    #[\Override]
     public function getTokenEndpoint(): string
     {
         return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . '/oauth2/v2.0/token';
     }
 
+    #[\Override]
     public function getUserInfoEndpoint(): string
     {
         return 'https://graph.microsoft.com/oidc/userinfo';
     }
 
+    #[\Override]
     public function getJWKSEndpoint(): ?string
     {
         return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . '/discovery/v2.0/keys?appid=' . urlencode($this->getClientId());
     }
 
+    #[\Override]
     public function getClientId(): string
     {
         return $this->client_id;
     }
 
+    #[\Override]
     public function getClientSecret(): string
     {
         return $this->client_secret;
     }
 
+    #[\Override]
     public function isUniqueAuthenticationEndpoint(): bool
     {
         return $this->is_unique_authentication_endpoint;
     }
 
+    #[\Override]
     public function getIcon(): string
     {
         return $this->icon;
     }
 
+    #[\Override]
     public function getColor(): string
     {
         return $this->color;
@@ -171,6 +182,7 @@ final class AzureADProvider implements Provider
         return $this->acceptable_tenant_for_authentication_configuration->getTenantSetup();
     }
 
+    #[\Override]
     public function getRedirectUri(): string
     {
         return ServerHostname::HTTPSUrl() . '/plugins/openidconnectclient/azure/';

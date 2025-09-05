@@ -69,11 +69,13 @@ class taskboardPlugin extends Plugin
         bindtextdomain('tuleap-taskboard', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['agiledashboard'];
     }
 
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

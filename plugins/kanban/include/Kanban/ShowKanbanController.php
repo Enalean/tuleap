@@ -65,6 +65,7 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
         return $breadcrumbs;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment(KanbanService::INSTRUMENTATION_NAME);

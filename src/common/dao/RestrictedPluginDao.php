@@ -20,16 +20,19 @@
 
 class RestrictedPluginDao extends RestrictedResourceDao
 {
+    #[\Override]
     public function getResourceAllowedProjectsTableName()
     {
         return 'project_plugin';
     }
 
+    #[\Override]
     public function getResourceFieldName()
     {
         return 'plugin_id';
     }
 
+    #[\Override]
     public function isResourceRestricted($resource_id)
     {
         $resource_id = $this->da->escapeInt($resource_id);
@@ -45,6 +48,7 @@ class RestrictedPluginDao extends RestrictedResourceDao
         return false;
     }
 
+    #[\Override]
     public function setResourceRestricted($resource_id)
     {
         $resource_id = $this->da->escapeInt($resource_id);
@@ -54,6 +58,7 @@ class RestrictedPluginDao extends RestrictedResourceDao
         return $this->update($sql);
     }
 
+    #[\Override]
     public function unsetResourceRestricted($resource_id)
     {
         $resource_id = $this->da->escapeInt($resource_id);
@@ -67,6 +72,7 @@ class RestrictedPluginDao extends RestrictedResourceDao
         return false;
     }
 
+    #[\Override]
     public function searchAllowedProjectsOnResource($resource_id)
     {
         $resource_id = $this->da->escapeInt($resource_id);

@@ -20,6 +20,7 @@
 
 class Tracker_Report_Criteria_Float_ValueDao extends Tracker_Report_Criteria_Alphanum_ValueDao
 {
+    #[\Override]
     public function save($id, $value)
     {
         $value         = trim($value);

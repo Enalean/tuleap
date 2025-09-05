@@ -45,6 +45,7 @@ final readonly class NotificationsUserSettingsDisplayController implements Dispa
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['id']);

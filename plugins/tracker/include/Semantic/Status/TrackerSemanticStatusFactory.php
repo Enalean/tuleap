@@ -54,6 +54,7 @@ class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateS
         return CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
     }
 
+    #[\Override]
     public function getInstanceFromXML(
         SimpleXMLElement $current_semantic_xml,
         SimpleXMLElement $all_semantics_xml,
@@ -93,6 +94,7 @@ class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateS
     /**
      * Duplicate the semantic from tracker source to tracker target
      */
+    #[\Override]
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
         $dao = $this->getDao();

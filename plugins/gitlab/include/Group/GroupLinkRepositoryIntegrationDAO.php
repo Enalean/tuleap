@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class GroupLinkRepositoryIntegrationDAO extends DataAccessObject implements LinkARepositoryIntegrationToAGroup, CountIntegratedRepositories, VerifyRepositoryIntegrationsAlreadyLinked
 {
+    #[\Override]
     public function linkARepositoryIntegrationToAGroup(NewRepositoryIntegrationLinkedToAGroup $command): void
     {
         $this->getDB()->insert('plugin_gitlab_group_repository_integration', [
@@ -34,6 +35,7 @@ final class GroupLinkRepositoryIntegrationDAO extends DataAccessObject implement
         ]);
     }
 
+    #[\Override]
     public function countIntegratedRepositories(GroupLink $group_link): int
     {
         return $this->getDB()->cell(
@@ -42,6 +44,7 @@ final class GroupLinkRepositoryIntegrationDAO extends DataAccessObject implement
         );
     }
 
+    #[\Override]
     public function isRepositoryIntegrationAlreadyLinkedToAGroup(int $integration_id): bool
     {
         $row = $this->getDB()->run(

@@ -39,11 +39,13 @@ final class TextFieldValueProxy implements TextFieldValue
         return new self($changeset_value->getText(), $changeset_value->getFormat());
     }
 
+    #[\Override]
     public function getValue(): string
     {
         return $this->value;
     }
 
+    #[\Override]
     public function getFormat(): string
     {
         return $this->format;

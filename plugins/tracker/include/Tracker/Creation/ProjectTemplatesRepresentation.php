@@ -45,6 +45,7 @@ class ProjectTemplatesRepresentation implements \JsonSerializable
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

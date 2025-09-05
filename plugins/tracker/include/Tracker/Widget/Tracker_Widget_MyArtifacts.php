@@ -46,6 +46,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         }
     }
 
+    #[\Override]
     public function getTitle()
     {
         switch (strtolower($this->artifact_show)) {
@@ -64,6 +65,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         return dgettext('tuleap-tracker', 'My Artifacts') . ' [' . $abbreviation . ']';
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
@@ -87,11 +89,13 @@ class Tracker_Widget_MyArtifacts extends Widget
         return true;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -124,11 +128,13 @@ class Tracker_Widget_MyArtifacts extends Widget
             ';
     }
 
+    #[\Override]
     public function isAjax()
     {
         return true;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $html_my_artifacts = '';
@@ -221,6 +227,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         return $html_my_artifacts;
     }
 
+    #[\Override]
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
         $request  = HTTPRequest::instance();
@@ -231,16 +238,19 @@ class Tracker_Widget_MyArtifacts extends Widget
         return $ajax_url;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-tracker', 'Trackers');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-tracker', 'List artifacts you have submitted or assigned to you, by project.');
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         return \Tuleap\Layout\CssViteAsset::buildCollectionFromMainFileName(
@@ -252,6 +262,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         );
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         return [

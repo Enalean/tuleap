@@ -55,6 +55,7 @@ final class IntegrationApiToken implements ApiToken
         return new self($token, $is_email_already_send_for_invalid_token);
     }
 
+    #[\Override]
     public function getToken(): ConcealedString
     {
         return $this->token;

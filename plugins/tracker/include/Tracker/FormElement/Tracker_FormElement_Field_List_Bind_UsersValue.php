@@ -66,6 +66,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->user_name;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         if ($this->display_name) {
@@ -74,6 +75,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->getUserHelper()->getDisplayNameFromUserId($this->getId());
     }
 
+    #[\Override]
     public function getDataset(ListField $field): array
     {
         return [
@@ -113,6 +115,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return 'Tracker_FormElement_Field_List_Bind_UsersValue #' . $this->getId();
     }
 
+    #[\Override]
     public function fetchFormatted()
     {
         return $this->getLink();
@@ -152,6 +155,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $html;
     }
 
+    #[\Override]
     public function fetchFormattedForCSV()
     {
         return $this->getUsername();
@@ -160,6 +164,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     /**
      * @see Tracker_FormElement_Field_List_Value::fetchFormattedForJson
      */
+    #[\Override]
     public function fetchFormattedForJson()
     {
         $json = parent::fetchFormattedForJson();
@@ -172,11 +177,13 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $json;
     }
 
+    #[\Override]
     public function getAPIValue()
     {
         return $this->getUsername();
     }
 
+    #[\Override]
     public function getJsonValue()
     {
         if ($this->id == 100) {
@@ -185,6 +192,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->id;
     }
 
+    #[\Override]
     public function getFullRESTValue(TrackerField $field)
     {
         if ($this->getId() == 100) {

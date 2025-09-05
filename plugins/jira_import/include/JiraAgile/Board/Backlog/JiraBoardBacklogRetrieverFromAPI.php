@@ -50,6 +50,7 @@ final class JiraBoardBacklogRetrieverFromAPI implements JiraBoardBacklogRetrieve
     /**
      * @return BacklogIssueRepresentation[]
      */
+    #[\Override]
     public function getBoardBacklogIssues(JiraBoard $jira_board): array
     {
         $backlog_issues = [];

@@ -36,6 +36,7 @@ final class NotificationContentFormatter implements FormatNotificationContent
     ) {
     }
 
+    #[\Override]
     public function getFormattedAndPurifiedNotificationContent(PullRequest $pull_request, TimelineComment $comment): string
     {
         if ($comment->getFormat() === TimelineComment::FORMAT_TEXT) {

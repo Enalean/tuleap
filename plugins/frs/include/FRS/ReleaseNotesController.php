@@ -105,6 +105,7 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $release = $this->release_factory->getFRSReleaseFromDb($variables['release_id']);

@@ -53,6 +53,7 @@ final class UserInfoController extends DispatchablePSR15Compatible implements Di
     /**
      * @throws \JsonException
      */
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $granted_authorization = $request->getAttribute(OAuth2ResourceServerMiddleware::class);

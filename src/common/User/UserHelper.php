@@ -92,6 +92,7 @@ class UserHelper implements BuildDisplayName
      *  4: realname (user_name)
      *
      */
+    #[\Override]
     public function getDisplayName(string $user_name, string $realname): string
     {
         $name = '';

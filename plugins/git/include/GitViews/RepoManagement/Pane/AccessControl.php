@@ -89,6 +89,7 @@ class AccessControl extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier()
     {
         return 'perms';
@@ -97,6 +98,7 @@ class AccessControl extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-git', 'Access control');
@@ -105,6 +107,7 @@ class AccessControl extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
+    #[\Override]
     public function getContent()
     {
         $html  = '';

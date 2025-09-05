@@ -38,11 +38,13 @@ final class EndDateFieldReferenceProxy implements EndDateFieldReference
         return new self($end_date_field->getId(), $end_date_field->getLabel());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

@@ -51,6 +51,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
     ) {
     }
 
+    #[\Override]
     public function processCreation(ProgramIncrementCreation $creation): void
     {
         $this->logger->debug(
@@ -88,6 +89,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
      * @throws MirroredTimeboxReplicationException
      * @throws ProgramHasNoTeamException
      */
+    #[\Override]
     public function synchronizeProgramIncrementAndIterationsForTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void
     {
         $this->logger->debug(

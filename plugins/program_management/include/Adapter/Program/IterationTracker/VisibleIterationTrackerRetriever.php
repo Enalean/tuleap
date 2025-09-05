@@ -40,6 +40,7 @@ final class VisibleIterationTrackerRetriever implements RetrieveVisibleIteration
     ) {
     }
 
+    #[\Override]
     public function retrieveVisibleIterationTracker(
         ProgramIdentifier $program,
         UserIdentifier $user_identifier,

@@ -130,6 +130,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         $html = '';

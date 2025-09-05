@@ -83,16 +83,19 @@ final class UpdatedCommentNotification implements NotificationToProcess
         );
     }
 
+    #[\Override]
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
     }
 
+    #[\Override]
     public function getRecipients(): array
     {
         return $this->recipients;
     }
 
+    #[\Override]
     public function asPlaintext(): string
     {
         return sprintf(
@@ -103,6 +106,7 @@ final class UpdatedCommentNotification implements NotificationToProcess
         ) . "\n\n" . $this->comment;
     }
 
+    #[\Override]
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

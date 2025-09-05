@@ -32,6 +32,7 @@ final class UserIsProgramAdminVerifier implements VerifyUserIsProgramAdmin
     {
     }
 
+    #[\Override]
     public function isUserProgramAdmin(UserIdentifier $user_identifier, ProgramIdentifier $program_identifier): bool
     {
         $user = $this->retrieve_user->getUserWithId($user_identifier);

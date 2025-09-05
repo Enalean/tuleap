@@ -38,6 +38,7 @@ final readonly class RetrieveImageMiddleware implements MiddlewareInterface
     ) {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $id = $request->getAttribute('id');

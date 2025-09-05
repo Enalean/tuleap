@@ -38,60 +38,72 @@ class InvalidMethod implements IComputeProgression
         $this->error_message = $error_message;
     }
 
+    #[\Override]
     public static function getMethodName(): string
     {
         return self::METHOD_NAME;
     }
 
+    #[\Override]
     public static function getMethodLabel(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getCurrentConfigurationDescription(): string
     {
         return $this->getErrorMessage();
     }
 
+    #[\Override]
     public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return false;
     }
 
+    #[\Override]
     public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
         return new ProgressionResult(null, $this->error_message);
     }
 
+    #[\Override]
     public function isConfiguredAndValid(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isConfigured(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getErrorMessage(): string
     {
         return $this->error_message;
     }
 
+    #[\Override]
     public function exportToREST(\PFUser $user): ?IRepresentSemanticProgress
     {
         return null;
     }
 
+    #[\Override]
     public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void
     {
     }
 
+    #[\Override]
     public function saveSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return false;
     }
 
+    #[\Override]
     public function deleteSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return false;

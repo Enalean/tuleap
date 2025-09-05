@@ -28,6 +28,7 @@ final class ReportToFilterArtifactsRetriever implements RetrieveReportToFilterAr
     {
     }
 
+    #[\Override]
     public function getReportToFilterArtifacts(int $widget_id, \PFUser $user): ?\Tracker_Report
     {
         $report_id = $this->dao->getReportIdToFilterArtifacts($widget_id);

@@ -47,6 +47,7 @@ final readonly class NewPullRequestNotificationToProcessBuilder implements Notif
     ) {
     }
 
+    #[\Override]
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         return $this->pull_request_retriever->getPullRequestById($event->getPullRequestId())->match(

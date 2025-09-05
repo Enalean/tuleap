@@ -30,6 +30,7 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class LFSAuthorizationTokenHeaderSerializer implements SplitTokenFormatter, SplitTokenIdentifierTranslator
 {
+    #[\Override]
     public function getIdentifier(SplitToken $token): ConcealedString
     {
         return new ConcealedString(
@@ -41,6 +42,7 @@ final class LFSAuthorizationTokenHeaderSerializer implements SplitTokenFormatter
      * @throws InvalidIdentifierFormatException
      * @throws IncorrectSizeVerificationStringException
      */
+    #[\Override]
     public function getSplitToken(ConcealedString $identifier): SplitToken
     {
         if (preg_match('/^RemoteAuth (?<id>\d+)\.(?<verifier>(?:[[:xdigit:]]{2})+)$/', $identifier, $matches) !== 1) {

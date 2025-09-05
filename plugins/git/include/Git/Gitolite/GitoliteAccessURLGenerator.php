@@ -53,6 +53,7 @@ class GitoliteAccessURLGenerator implements GenerateGitoliteAccessURL
     EOT)]
     public const HTTP_URL = 'git_http_url';
 
+    #[\Override]
     public function getSSHURL(GitRepository $repository): string
     {
         $ssh_url = $this->getConfigurationParameter(self::SSH_URL);
@@ -64,6 +65,7 @@ class GitoliteAccessURLGenerator implements GenerateGitoliteAccessURL
         return $ssh_url . '/' . $repository->getProject()->getUnixName() . '/' . $repository->getFullName() . '.git';
     }
 
+    #[\Override]
     public function getHTTPURL(GitRepository $repository): string
     {
         $http_url = $this->getConfigurationParameter(self::HTTP_URL);

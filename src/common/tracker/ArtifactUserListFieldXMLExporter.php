@@ -26,6 +26,7 @@ class ArtifactUserListFieldXMLExporter extends ArtifactStaticListFieldXMLExporte
     public const TV5_BIND            = 'users';
     public const TV5_NONE_USER_LABEL = 'None';
 
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         $field_node = $this->getNode(self::TV5_TYPE, $row);
@@ -49,6 +50,7 @@ class ArtifactUserListFieldXMLExporter extends ArtifactStaticListFieldXMLExporte
         throw new Exception_TV3XMLException('Unknown user ' . $value);
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         return self::TV3_VALUE_INDEX;

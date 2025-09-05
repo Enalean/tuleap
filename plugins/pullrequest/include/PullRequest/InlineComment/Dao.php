@@ -43,6 +43,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
      *     last_edition_date: int|null
      * }|null
      */
+    #[\Override]
     public function searchByCommentID(int $inline_comment_id): ?array
     {
         return $this->getDB()->row(
@@ -53,6 +54,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         );
     }
 
+    #[\Override]
     public function searchUpToDateByFilePath(int $pull_request_id, string $file_path): array
     {
         $sql = 'SELECT * FROM plugin_pullrequest_inline_comments
@@ -84,6 +86,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         return $this->getDB()->run($sql, $pull_request_id);
     }
 
+    #[\Override]
     public function insert(NewInlineComment $comment): int
     {
         $this->getDB()->insert(
@@ -113,6 +116,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         $this->getDB()->run($sql, $unidiff_offset, $is_outdated, $comment_id);
     }
 
+    #[\Override]
     public function setThreadColor(int $id, string $color): void
     {
         $sql = 'UPDATE plugin_pullrequest_inline_comments
@@ -122,6 +126,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         $this->getDB()->run($sql, $color, $id);
     }
 
+    #[\Override]
     public function saveUpdatedComment(InlineComment $comment): void
     {
         $this->getDB()->update(

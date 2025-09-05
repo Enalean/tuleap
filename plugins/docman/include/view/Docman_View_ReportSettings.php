@@ -255,6 +255,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         return $html;
     }
 
+    #[\Override]
     public function _content($params)
     {
         $html = '';

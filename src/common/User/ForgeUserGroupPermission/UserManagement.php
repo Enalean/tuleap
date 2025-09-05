@@ -22,6 +22,7 @@ class User_ForgeUserGroupPermission_UserManagement extends User_ForgeUserGroupPe
 {
     public const ID = 5;
 
+    #[\Override]
     public function getId()
     {
         if (self::ID) {
@@ -29,11 +30,13 @@ class User_ForgeUserGroupPermission_UserManagement extends User_ForgeUserGroupPe
         }
     }
 
+    #[\Override]
     public function getName()
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_management_name');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_management_description');

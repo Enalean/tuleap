@@ -54,6 +54,7 @@ final class GitlabProjectIntegrator implements IntegrateGitlabProject
     /**
      * @return Ok<null>|Err<Fault>
      */
+    #[\Override]
     public function integrateSeveralProjects(IntegrateRepositoriesInGroupLinkCommand $command): Ok|Err
     {
         foreach ($command->gitlab_projects as $gitlab_project) {

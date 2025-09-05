@@ -36,6 +36,7 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
     /**
      * @throws \Throwable
      */
+    #[\Override]
     public function save(TeamCollection $team_collection): void
     {
         $this->getDB()->tryFlatTransaction(function () use ($team_collection): void {
@@ -63,6 +64,7 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
         });
     }
 
+    #[\Override]
     public function isATeam(int $project_id): bool
     {
         $sql = 'SELECT * FROM plugin_program_management_team_projects WHERE team_project_id = ?';
@@ -70,6 +72,7 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
         return $this->getDB()->exists($sql, $project_id);
     }
 
+    #[\Override]
     public function isATeamFromProgram(int $program_id, int $team_id): bool
     {
         $sql = 'SELECT * FROM plugin_program_management_team_projects WHERE program_project_id = ? AND team_project_id = ?';
@@ -80,6 +83,7 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
     /**
      * @return int[]
      */
+    #[\Override]
     public function searchProgramIdsOfTeam(int $project_id): array
     {
         $sql = 'SELECT program_project_id

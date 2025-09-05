@@ -29,6 +29,7 @@ final class PrefixOAuth2ClientSecret implements PrefixSplitTokenForSerialization
     /**
      * @psalm-pure
      */
+    #[\Override]
     public function getString(): string
     {
         return 'tlp-oauth2-c1-';

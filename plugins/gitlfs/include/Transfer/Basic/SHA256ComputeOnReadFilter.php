@@ -36,17 +36,20 @@ final class SHA256ComputeOnReadFilter implements FilterInterface
         $this->hash_context = \hash_init('sha256');
     }
 
+    #[\Override]
     public function process($data_chunk): string
     {
         \hash_update($this->hash_context, $data_chunk);
         return $data_chunk;
     }
 
+    #[\Override]
     public function getFilteredChainIdentifier(): int
     {
         return STREAM_FILTER_READ;
     }
 
+    #[\Override]
     public function filterDetachedEvent(): void
     {
     }

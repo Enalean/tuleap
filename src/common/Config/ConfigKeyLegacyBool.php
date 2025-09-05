@@ -53,11 +53,13 @@ final class ConfigKeyLegacyBool implements ConfigKeyType
     /**
      * @psalm-assert-if-true !null $this->default_value
      */
+    #[\Override]
     public function hasDefaultValue(): bool
     {
         return $this->default_value !== null;
     }
 
+    #[\Override]
     public function getSerializedRepresentation(string $name, string|int|bool $value): string
     {
         if (is_string($value) && ! in_array($value, [self::TRUE, self::FALSE], true)) {

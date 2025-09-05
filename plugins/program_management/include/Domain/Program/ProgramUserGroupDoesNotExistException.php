@@ -38,6 +38,7 @@ final class ProgramUserGroupDoesNotExistException extends \RuntimeException impl
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

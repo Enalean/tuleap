@@ -40,6 +40,7 @@ final class ExecuteWASMResponse implements WASMResponseExecutor
     ) {
     }
 
+    #[\Override]
     public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok|Err
     {
         try {

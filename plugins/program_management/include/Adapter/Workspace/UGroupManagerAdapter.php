@@ -37,6 +37,7 @@ final class UGroupManagerAdapter implements RetrieveUGroups
     /**
      * @return UserGroupAttributes[]
      */
+    #[\Override]
     public function getUgroupsFromProgram(ProgramForAdministrationIdentifier $program_identifier): array
     {
         $project = $this->retrieve_full_project->getProject($program_identifier->id);
@@ -49,6 +50,7 @@ final class UGroupManagerAdapter implements RetrieveUGroups
         return $list;
     }
 
+    #[\Override]
     public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program_identifier, string $ugroup_name): ?UserGroupAttributes
     {
         $project = $this->retrieve_full_project->getProject($program_identifier->id);

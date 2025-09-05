@@ -45,6 +45,7 @@ final class DispatchTemporaryRedirect implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $layout->redirect($this->url);

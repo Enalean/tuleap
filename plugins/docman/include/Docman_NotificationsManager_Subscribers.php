@@ -33,6 +33,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
      *
      * @return void
      */
+    #[\Override]
     public function somethingHappen($event, $params)
     {
         $um    = $this->_getUserManager();
@@ -59,6 +60,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     *
     * @return void
     */
+    #[\Override]
     public function _buildMessage($event, $params, $user)
     {
         $type = '';
@@ -104,6 +106,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     *
     * @return String
     */
+    #[\Override]
     public function _getMessageForUser($user, $message_type, $params)
     {
         $msg       = '';
@@ -136,6 +139,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         return $msg;
     }
 
+    #[\Override]
     protected function getMessageLink($type, $params)
     {
         switch ($type) {

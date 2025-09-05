@@ -40,6 +40,7 @@ final class ArtifactLinkTypeConverter implements GetExistingArtifactLinkTypes, G
     {
     }
 
+    #[\Override]
     public function getMissingArtifactLinkTypes(array $json_representation): ?TypePresenter
     {
         $tuleap_type = $this->getArtifactLinkTypeFromJiraRepresentation($json_representation);
@@ -49,6 +50,7 @@ final class ArtifactLinkTypeConverter implements GetExistingArtifactLinkTypes, G
         return $tuleap_type;
     }
 
+    #[\Override]
     public function getExistingArtifactLinkTypes(array $json_representation): ?TypePresenter
     {
         $tuleap_type = $this->getArtifactLinkTypeFromJiraRepresentation($json_representation);

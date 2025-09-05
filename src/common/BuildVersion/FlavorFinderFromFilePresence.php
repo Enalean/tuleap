@@ -36,6 +36,7 @@ final class FlavorFinderFromFilePresence implements FlavorFinder
         $this->sources_root = $sources_root;
     }
 
+    #[\Override]
     public function isEnterprise(): bool
     {
         return \file_exists($this->sources_root . self::ENTERPRISE_BUILD_FILE_NAME);

@@ -41,6 +41,7 @@ class ProjectCreationNotifier implements NotifySiteAdmin
         $this->logger        = $logger;
     }
 
+    #[\Override]
     public function notifySiteAdmin(Project $project): void
     {
         $subject = sprintf(

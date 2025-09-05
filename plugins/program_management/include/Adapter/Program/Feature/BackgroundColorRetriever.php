@@ -40,6 +40,7 @@ final class BackgroundColorRetriever implements RetrieveBackgroundColor
     ) {
     }
 
+    #[\Override]
     public function retrieveBackgroundColor(ArtifactIdentifier $artifact_identifier, UserIdentifier $user_identifier): BackgroundColor
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($artifact_identifier);

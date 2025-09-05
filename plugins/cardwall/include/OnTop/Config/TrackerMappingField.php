@@ -40,6 +40,7 @@ abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_
         $this->field          = $field;
     }
 
+    #[\Override]
     public function getField()
     {
         return $this->field;
@@ -48,6 +49,7 @@ abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_
     /**
      * @return array of Cardwall_OnTop_Config_ValueMapping
      */
+    #[\Override]
     public function getValueMappings()
     {
         return $this->value_mappings;

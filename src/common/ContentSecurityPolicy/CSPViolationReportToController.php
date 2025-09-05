@@ -51,6 +51,7 @@ final class CSPViolationReportToController extends DispatchablePSR15Compatible i
         $this->logger           = $logger;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         try {

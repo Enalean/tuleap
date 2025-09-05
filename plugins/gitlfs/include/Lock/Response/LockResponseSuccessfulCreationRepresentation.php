@@ -32,6 +32,7 @@ class LockResponseSuccessfulCreationRepresentation implements LockResponse
         $this->lock_representation = $lock_representation;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

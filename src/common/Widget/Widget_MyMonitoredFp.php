@@ -33,11 +33,13 @@ class Widget_MyMonitoredFp extends Widget //phpcs:ignore PSR1.Classes.ClassDecla
         parent::__construct('mymonitoredfp');
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_files');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $purifier             = Codendi_HTMLPurifier::instance();
@@ -122,21 +124,25 @@ class Widget_MyMonitoredFp extends Widget //phpcs:ignore PSR1.Classes.ClassDecla
         return $html_my_monitored_fp;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return _('Files');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_monitored_fp', 'description');
     }
 
+    #[\Override]
     public function isAjax()
     {
         return true;
     }
 
+    #[\Override]
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
         $request  = HTTPRequest::instance();

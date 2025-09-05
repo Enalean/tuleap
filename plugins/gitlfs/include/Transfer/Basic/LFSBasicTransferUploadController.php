@@ -45,6 +45,7 @@ class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
         $this->basic_object_saver          = $basic_object_saver;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');

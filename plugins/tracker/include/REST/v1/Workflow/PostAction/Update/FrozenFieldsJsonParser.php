@@ -30,6 +30,7 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
 {
     public const POSTACTION_TYPE = 'frozen_fields';
 
+    #[\Override]
     public function accept(array $json): bool
     {
         return isset($json['type']) && $json['type'] === self::POSTACTION_TYPE;
@@ -39,6 +40,7 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
      * @throws IncompatibleWorkflowModeException
      * @throws I18NRestException
      */
+    #[\Override]
     public function parse(Workflow $workflow, array $json): PostAction
     {
         if ($workflow->isAdvanced()) {

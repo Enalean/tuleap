@@ -56,26 +56,31 @@ class DefaultProjectTemplate implements ProjectTemplate
         $this->glyph       = $glyph_finder->get(self::NAME);
     }
 
+    #[\Override]
     public function getId(): string
     {
         return (string) $this->template_id;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return $this->description;
     }
 
+    #[\Override]
     public function getGlyph(): Glyph
     {
         return $this->glyph;
     }
 
+    #[\Override]
     public function isBuiltIn(): bool
     {
         return true;

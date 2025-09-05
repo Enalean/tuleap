@@ -94,6 +94,7 @@ class TextField extends AlphaNumericField
         return new CriteriaAlphaNumValueDAO();
     }
 
+    #[\Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
@@ -134,12 +135,14 @@ class TextField extends AlphaNumericField
         );
     }
 
+    #[\Override]
     public function getQuerySelect(): string
     {
         $R2 = 'R2_' . $this->id;
         return "$R2.value AS " . $this->getQuerySelectName();
     }
 
+    #[\Override]
     public function getQueryFrom()
     {
         $R1 = 'R1_' . $this->id;
@@ -150,6 +153,7 @@ class TextField extends AlphaNumericField
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . ' )';
     }
 
+    #[\Override]
     protected function buildMatchExpression(string $field_name, $criteria_value): Option
     {
         $expr = parent::buildMatchExpression($field_name, $criteria_value);
@@ -181,16 +185,19 @@ class TextField extends AlphaNumericField
         return \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
+    #[\Override]
     protected function getCriteriaDao()
     {
         return new Tracker_Report_Criteria_Text_ValueDao();
     }
 
+    #[\Override]
     public function canBeUsedToSortReport()
     {
         return true;
     }
 
+    #[\Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -230,11 +237,13 @@ class TextField extends AlphaNumericField
         return $changeset_value;
     }
 
+    #[\Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         return $value ?? '';
     }
 
+    #[\Override]
     protected function getValueDao()
     {
         return new TextValueDao();
@@ -288,6 +297,7 @@ class TextField extends AlphaNumericField
         return Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;
     }
 
+    #[\Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         $value  = $this->getValueFromSubmitOrDefault($submitted_values);
@@ -300,6 +310,7 @@ class TextField extends AlphaNumericField
         return $this->getRichTextarea(null, $format, $value['content']);
     }
 
+    #[\Override]
     protected function fetchSubmitValueMasschange(): string
     {
         $html  = '';
@@ -328,6 +339,7 @@ class TextField extends AlphaNumericField
      * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      * @param array $submitted_values The value already submitted by the user
      */
+    #[\Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -358,6 +370,7 @@ class TextField extends AlphaNumericField
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
+    #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         $this->is_artifact_copy = true;
@@ -406,6 +419,7 @@ class TextField extends AlphaNumericField
     /**
      * Fetch data to display the field value in mail
      */
+    #[\Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -436,6 +450,7 @@ class TextField extends AlphaNumericField
      *
      * @return string
      */
+    #[\Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $text = $value ? $value->getValue() : '';
@@ -447,6 +462,7 @@ class TextField extends AlphaNumericField
         return '<div class="textarea-value">' . $text . '</div>';
     }
 
+    #[\Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -459,6 +475,7 @@ class TextField extends AlphaNumericField
      * Display the html field in the admin ui
      * @return string html
      */
+    #[\Override]
     protected function fetchAdminFormElement()
     {
         $hp      = Codendi_HTMLPurifier::instance();
@@ -473,26 +490,31 @@ class TextField extends AlphaNumericField
         return $html;
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Text');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Paragraph, long text field');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-spin.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-spin--plus.png');
     }
 
+    #[\Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html = '';
@@ -509,6 +531,7 @@ class TextField extends AlphaNumericField
      * Ugly legacy hack to display fields in columns
      * @return bool
      */
+    #[\Override]
     public function takesTwoColumns()
     {
         return $this->getProperty('cols') > 40;
@@ -519,6 +542,7 @@ class TextField extends AlphaNumericField
      *
      * @return bool true if Tracler is ok
      */
+    #[\Override]
     public function testImport()
     {
         if (parent::testImport()) {
@@ -545,6 +569,7 @@ class TextField extends AlphaNumericField
      *
      * @return bool true if the value is considered ok
      */
+    #[\Override]
     protected function validate(Artifact $artifact, $value)
     {
         return (new TextValueValidator())->isValueValid(
@@ -571,6 +596,7 @@ class TextField extends AlphaNumericField
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
+    #[\Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $changeset_value = null;
@@ -583,6 +609,7 @@ class TextField extends AlphaNumericField
     /**
      * @see TrackerField::hasChanges()
      */
+    #[\Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         assert($old_value instanceof Tracker_Artifact_ChangesetValue_Text);
@@ -598,6 +625,7 @@ class TextField extends AlphaNumericField
      *
      * @return mixed
      */
+    #[\Override]
     public function getFieldDataFromRESTValueByField(array $value, ?Artifact $artifact = null)
     {
         if ($this->doesValueUseTheByFieldOutput($value)) {
@@ -624,6 +652,7 @@ class TextField extends AlphaNumericField
                ! is_array($value['value']);
     }
 
+    #[\Override]
     public function getRestFieldData($value)
     {
         if ($this->isValueAlreadyWellFormatted($value)) {
@@ -659,6 +688,7 @@ class TextField extends AlphaNumericField
                );
     }
 
+    #[\Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -697,6 +727,7 @@ class TextField extends AlphaNumericField
         return is_array($value) ? $value['format'] : $old_format;
     }
 
+    #[\Override]
     public function addChangesetValueToSearchIndex(ItemToIndexQueue $index_queue, Tracker_Artifact_ChangesetValue $changeset_value): void
     {
         assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
@@ -725,6 +756,7 @@ class TextField extends AlphaNumericField
      * @param Artifact $artifact The artifact to check
      * @param mixed $submitted_value The submitted value
      */
+    #[\Override]
     public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value): bool
     {
         if (! $this->isRequired()) {
@@ -767,6 +799,7 @@ class TextField extends AlphaNumericField
      *
      * @return mixed The default value for this field, or null if no default value defined
      */
+    #[\Override]
     public function getDefaultValue()
     {
         $user           = $this->getCurrentUser();
@@ -785,16 +818,19 @@ class TextField extends AlphaNumericField
         ];
     }
 
+    #[\Override]
     public function isEmpty($value, Artifact $artifact)
     {
         return trim($this->getRightContent($value)) === '';
     }
 
+    #[\Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitText($this);
     }
 
+    #[\Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;

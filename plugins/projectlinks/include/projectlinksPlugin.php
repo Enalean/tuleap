@@ -61,6 +61,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
     }
 
     //========================================================================
+    #[\Override]
     public function getPluginInfo()
     {
         if (! ($this->pluginInfo instanceof ProjectLinksPluginInfo)) {
@@ -92,6 +93,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
         return $this;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment($this->getName());

@@ -48,6 +48,7 @@ final class NoDuckTypedMatchingValueException extends \Exception implements Fiel
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

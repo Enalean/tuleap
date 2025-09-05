@@ -60,11 +60,13 @@ class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDecl
      *
      * @return String
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-git', 'My last Git pushes');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $dao     = new Git_LogDao();
@@ -147,6 +149,7 @@ class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDecl
      *
      * @return String
      */
+    #[\Override]
     public function getCategory()
     {
         return _('Source code management');
@@ -157,6 +160,7 @@ class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDecl
      *
      * @return String
      */
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-git', 'Display last Git pushes performed by the user');
@@ -167,6 +171,7 @@ class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDecl
      *
      * @return bool
      */
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
@@ -191,11 +196,13 @@ class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDecl
         return true;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -228,6 +235,7 @@ class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDecl
             ';
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         return [
@@ -235,6 +243,7 @@ class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDecl
         ];
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         $include_assets = new IncludeViteAssets(

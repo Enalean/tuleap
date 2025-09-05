@@ -35,6 +35,7 @@ final readonly class SemanticStatusFieldRetriever implements RetrieveSemanticSta
     ) {
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): ?ListField
     {
         return $this->search_status_field->searchFieldByTrackerId($tracker->getId())

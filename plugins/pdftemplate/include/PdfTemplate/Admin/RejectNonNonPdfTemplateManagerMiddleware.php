@@ -36,6 +36,7 @@ final readonly class RejectNonNonPdfTemplateManagerMiddleware implements Middlew
     ) {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $user = $this->current_user_provider->getCurrentUser();

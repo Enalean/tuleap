@@ -37,6 +37,7 @@ use function Psl\Json\encode as psl_json_encode;
 
 final class WebAuthnCredentialSourceDao extends DataAccessObject implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId, DeleteCredentialSource, GetCredentialSourceById
 {
+    #[\Override]
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
         return $this->getCredentialSourceById($publicKeyCredentialId)
@@ -46,6 +47,7 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
             );
     }
 
+    #[\Override]
     public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
     {
         $sql = 'SELECT *
@@ -62,6 +64,7 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
         return $res;
     }
 
+    #[\Override]
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
         $sql = 'SELECT 1
@@ -94,6 +97,7 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
     // Below, functions for Tuleap usage
 
+    #[\Override]
     public function saveCredentialSourceWithName(PublicKeyCredentialSource $publicKeyCredentialSource, string $name): void
     {
         $time = new \DateTimeImmutable();
@@ -108,6 +112,7 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
         );
     }
 
+    #[\Override]
     public function changeCredentialSourceName(string $public_key_credential_id, string $name): void
     {
         $this->getDB()->update(
@@ -120,6 +125,7 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
     /**
      * @return WebAuthnCredentialSource[]
      */
+    #[\Override]
     public function getAllByUserId(int $user_id): array
     {
         $sql = 'SELECT *
@@ -136,6 +142,7 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
         return $res;
     }
 
+    #[\Override]
     public function deleteCredentialSource(string $public_key_credential_id): void
     {
         $this->getDB()->delete(
@@ -144,6 +151,7 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
         );
     }
 
+    #[\Override]
     public function getCredentialSourceById(string $public_key_credential_id): Option
     {
         $sql = 'SELECT *

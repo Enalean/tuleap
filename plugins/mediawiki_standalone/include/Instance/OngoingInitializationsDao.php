@@ -34,6 +34,7 @@ final class OngoingInitializationsDao extends DataAccessObject implements Ongoin
         parent::__construct($db_connection);
     }
 
+    #[\Override]
     public function startInitialization(\Project $project): void
     {
         $this->getDB()->insertIgnore(
@@ -42,6 +43,7 @@ final class OngoingInitializationsDao extends DataAccessObject implements Ongoin
         );
     }
 
+    #[\Override]
     public function finishInitialization(\Project $project): void
     {
         $this->getDB()->tryFlatTransaction(
@@ -58,6 +60,7 @@ final class OngoingInitializationsDao extends DataAccessObject implements Ongoin
         );
     }
 
+    #[\Override]
     public function markAsError(\Project $project): void
     {
         $this->getDB()->update(
@@ -67,6 +70,7 @@ final class OngoingInitializationsDao extends DataAccessObject implements Ongoin
         );
     }
 
+    #[\Override]
     public function getStatus(\Project $project): OngoingInitializationStatus
     {
         $row = $this->getDB()->row(

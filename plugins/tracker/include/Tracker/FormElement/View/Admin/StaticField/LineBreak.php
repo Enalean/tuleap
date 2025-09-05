@@ -25,6 +25,7 @@ class Tracker_FormElement_View_Admin_StaticField_LineBreak extends Tracker_FormE
      *
      * @return string html
      */
+    #[\Override]
     public function fetchDescriptionForUpdate()
     {
         return '';
@@ -35,11 +36,13 @@ class Tracker_FormElement_View_Admin_StaticField_LineBreak extends Tracker_FormE
      *
      * @return string html
      */
+    #[\Override]
     public function fetchDescriptionForShared()
     {
         return '';
     }
 
+    #[\Override]
     protected function fetchCustomHelp()
     {
         $html  = '';

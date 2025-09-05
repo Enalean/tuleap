@@ -38,6 +38,7 @@ final class PullRequestEmptyStatePresenter implements PresentPullRequest
     ) {
     }
 
+    #[\Override]
     public function getTemplateName(): string
     {
         return 'pullrequest-empty-state';

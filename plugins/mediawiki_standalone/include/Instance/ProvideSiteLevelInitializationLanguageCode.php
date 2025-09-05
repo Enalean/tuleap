@@ -34,6 +34,7 @@ final class ProvideSiteLevelInitializationLanguageCode implements Initialization
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getLanguageCode(): string
     {
         return \Psl\Str\before($this->sys_lang_value, '_') ?? \BaseLanguage::DEFAULT_LANG_SHORT;

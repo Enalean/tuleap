@@ -39,6 +39,7 @@ final class PluginsInstallClosureBuilderFromVariable implements PluginsInstallCl
     /**
      * @psalm-return Option<Closure():void>
      */
+    #[\Override]
     public function buildClosureToInstallPlugins(): Option
     {
         $plugins_list = trim($this->variable_provider->get(self::VARIABLE_NAME));

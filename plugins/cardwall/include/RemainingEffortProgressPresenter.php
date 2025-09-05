@@ -33,6 +33,7 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         $this->remaining_effort = $remaining_effort;
     }
 
+    #[\Override]
     public function milestone_capacity()
     {
         return sprintf(dgettext('tuleap-cardwall', 'Capacity: %1$s'), floatval($this->capacity));
@@ -43,21 +44,25 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         return '';
     }
 
+    #[\Override]
     public function milestone_initial_effort_value()
     {
         return sprintf(dgettext('tuleap-cardwall', 'Initial effort: %1$s'), $this->initial_effort);
     }
 
+    #[\Override]
     public function milestone_initial_effort()
     {
         return $this->initial_effort;
     }
 
+    #[\Override]
     public function milestone_has_initial_effort()
     {
         return $this->initial_effort != 0;
     }
 
+    #[\Override]
     public function milestone_points_to_go()
     {
         if ($this->milestone_remaining_effort() <= 1) {
@@ -67,6 +72,7 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         return dgettext('tuleap-cardwall', 'points remaining');
     }
 
+    #[\Override]
     public function milestone_remaining_effort()
     {
         if ($this->remaining_effort > 0) {
@@ -76,6 +82,7 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         return 0;
     }
 
+    #[\Override]
     public function initial_effort_completion()
     {
         if ($this->cannotBeDivided($this->initial_effort)) {
@@ -103,11 +110,13 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         return $number === 0;
     }
 
+    #[\Override]
     public function milestone_count_style()
     {
         return self::COUNT_STYLE;
     }
 
+    #[\Override]
     public function count_style_helper()
     {
         return '';

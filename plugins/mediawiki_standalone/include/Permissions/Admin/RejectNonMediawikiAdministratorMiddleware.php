@@ -40,6 +40,7 @@ final class RejectNonMediawikiAdministratorMiddleware implements \Psr\Http\Serve
     /**
      * @throws ForbiddenException
      */
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

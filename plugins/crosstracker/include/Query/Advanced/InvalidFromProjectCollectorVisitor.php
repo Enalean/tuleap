@@ -47,6 +47,7 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
     ) {
     }
 
+    #[\Override]
     public function visitEqual(FromProjectEqual $project_equal, $parameters): void
     {
         if (is_array($project_equal->getValue())) {
@@ -108,6 +109,7 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
         }
     }
 
+    #[\Override]
     public function visitIn(FromProjectIn $project_in, $parameters): void
     {
         $from_project = $parameters->from_project;

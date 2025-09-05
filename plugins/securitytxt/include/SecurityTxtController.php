@@ -45,6 +45,7 @@ final class SecurityTxtController extends DispatchablePSR15Compatible implements
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $primary_contact = \ForgeConfig::get(SecurityTxtOptions::CONTACT);

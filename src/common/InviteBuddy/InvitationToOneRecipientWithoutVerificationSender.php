@@ -46,6 +46,7 @@ final class InvitationToOneRecipientWithoutVerificationSender implements Invitat
     /**
      * @return Ok<true>|Err<Fault>
      */
+    #[\Override]
     public function sendToRecipient(
         PFUser $from_user,
         InvitationRecipient $recipient,

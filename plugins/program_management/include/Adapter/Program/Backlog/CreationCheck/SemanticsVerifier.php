@@ -41,6 +41,7 @@ final readonly class SemanticsVerifier implements VerifySemanticsAreConfigured
     ) {
     }
 
+    #[\Override]
     public function areTrackerSemanticsWellConfigured(
         TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,

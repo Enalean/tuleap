@@ -23,6 +23,7 @@ namespace Tuleap\Layout;
 
 final class CssAssetWithDensityVariants extends CssAsset
 {
+    #[\Override]
     public function getFileURL(ThemeVariation $variant): string
     {
         return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');

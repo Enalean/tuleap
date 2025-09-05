@@ -48,6 +48,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      *
      * @throws DeleteFailedException
      */
+    #[\Override]
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         //delete all sub items before
@@ -98,6 +99,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @return bool $deleted. True if there is no error.  False otherwise.
      * @throws DeleteFailedException
      */
+    #[\Override]
     public function visitWiki(Docman_Wiki $wiki, array $params = [])
     {
         $should_propagate_deletion = $params['cascadeWikiPageDeletion'];
@@ -112,11 +114,13 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         ))->deleteWiki($wiki, $user, $should_propagate_deletion);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         $this->visitDocument($item, $params);
@@ -128,6 +132,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
+    #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
         if ($this->getPermissionManager($item->getGroupId())->userCanDelete($params['user'], $item)) {
@@ -144,6 +149,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitFile($item, $params);
@@ -152,11 +158,13 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         return false;

@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifact
 
 final class AreTherePermissionsToMigrateVerifier implements VerifyThereArePermissionsToMigrate
 {
+    #[\Override]
     public function areTherePermissionsToMigrate(
         PermissionsOnArtifactField $source_field,
         Artifact $artifact,

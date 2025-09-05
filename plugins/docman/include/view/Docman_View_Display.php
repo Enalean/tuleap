@@ -24,6 +24,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
 
 /* abstract */ class Docman_View_Display extends Docman_View_Docman
 {
+    #[\Override]
     protected function displayTitle(array $params): void
     {
         // No title in printer version
@@ -38,7 +39,8 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         );
     }
 
-    /* protected */ public function _footer($params)
+    /* protected */ #[\Override]
+    public function _footer($params)
     {
         $builder   = new DocumentFooterPresenterBuilder(ProjectManager::instance());
         $presenter = $builder->build($params, $params['group_id'], $params['item']->toRow(), $params['user']);
@@ -50,6 +52,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         parent::_footer($params);
     }
 
+    #[\Override]
     protected function displayOldBreadcrumbs(array $params): void
     {
         $hp                 = Codendi_HTMLPurifier::instance();
@@ -101,6 +104,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         echo $html;
     }
 
+    #[\Override]
     public function _javascript($params)
     {
         // force docman object to watch click on pen icon
@@ -108,6 +112,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         parent::_javascript($params);
     }
 
+    #[\Override]
     protected function displayMode(array $params): void
     {
         $html = '';

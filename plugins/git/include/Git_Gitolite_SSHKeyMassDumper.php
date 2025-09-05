@@ -36,6 +36,7 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
         $this->user_manager = $user_manager;
     }
 
+    #[\Override]
     public function dumpSSHKeys(InvalidKeysCollector $invalid_keys_collector)
     {
         $this->dumpAllKeys();

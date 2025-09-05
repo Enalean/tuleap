@@ -95,6 +95,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         $this->flushable_storage = $flushable_storage;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->response_factory->createResponse()

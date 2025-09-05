@@ -46,6 +46,7 @@ final class JiraSprintIssuesRetrieverFromAPI implements JiraSprintIssuesRetrieve
         $this->logger = $logger;
     }
 
+    #[\Override]
     public function getArtifactLinkChange(JiraSprint $sprint): array
     {
         $issue_ids = [];

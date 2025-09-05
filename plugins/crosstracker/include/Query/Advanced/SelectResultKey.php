@@ -37,6 +37,7 @@ final readonly class SelectResultKey implements Stringable
         return new self($field->name);
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->key;

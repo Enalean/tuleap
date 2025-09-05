@@ -83,16 +83,19 @@ class LockDeleteRequest implements GitLfsHTTPOperation
         return $this->force;
     }
 
+    #[\Override]
     public function getReference(): ?RequestReference
     {
         return $this->reference;
     }
 
+    #[\Override]
     public function isWrite(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function isRead(): bool
     {
         return false;

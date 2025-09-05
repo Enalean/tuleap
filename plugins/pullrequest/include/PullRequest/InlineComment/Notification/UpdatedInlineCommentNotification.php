@@ -98,16 +98,19 @@ final class UpdatedInlineCommentNotification implements NotificationToProcess
         );
     }
 
+    #[\Override]
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
     }
 
+    #[\Override]
     public function getRecipients(): array
     {
         return $this->recipients_without_author_user;
     }
 
+    #[\Override]
     public function asPlaintext(): string
     {
         return sprintf(
@@ -121,6 +124,7 @@ final class UpdatedInlineCommentNotification implements NotificationToProcess
         );
     }
 
+    #[\Override]
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

@@ -58,6 +58,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      * @return string template filename
      */
+    #[\Override]
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
         return 'tuleap/shortlog.tpl';
@@ -72,6 +73,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
+    #[\Override]
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
@@ -87,6 +89,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
         if (! isset($this->params['searchtype'])) {
@@ -116,6 +119,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $co = $this->project->GetCommit($this->params['hashbase']);

@@ -29,6 +29,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitFloat($this);
@@ -52,6 +53,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
      *
      * @return float the float value
      */
+    #[\Override]
     public function getNumeric()
     {
         return $this->getFloat();
@@ -62,6 +64,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
      *
      * @return string|null The value of this artifact changeset value
      */
+    #[\Override]
     public function getValue()
     {
         if ($this->getFloat() !== null) {
@@ -70,11 +73,13 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
         return null;
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         return $this->getFullRESTValue($user);
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         return $this->getFullRESTRepresentation($this->getFloat());
@@ -85,6 +90,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
      *
      * @return string The value of this artifact changeset value in Json format
      */
+    #[\Override]
     public function getJsonValue()
     {
         return $this->getFloat();

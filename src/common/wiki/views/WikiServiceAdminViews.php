@@ -120,6 +120,7 @@ class WikiServiceAdminViews extends WikiViews
   /**
    * displayMenu - public
    */
+    #[\Override]
     public function displayMenu()
     {
         if (defined('DEFAULT_LANGUAGE') && DEFAULT_LANGUAGE === 'fr_FR') {
@@ -150,6 +151,7 @@ class WikiServiceAdminViews extends WikiViews
    *
    * Main and default view.
    */
+    #[\Override]
     public function main()
     {
         if (defined('DEFAULT_LANGUAGE') && DEFAULT_LANGUAGE === 'fr_FR') {

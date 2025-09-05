@@ -28,6 +28,7 @@ final class ForbidWritersSettings implements ITellIfWritersAreAllowedToUpdatePro
     {
     }
 
+    #[\Override]
     public function areWritersAllowedToUpdateProperties(int $project_id): bool
     {
         $settings = $this->dao->searchByProjectId($project_id);
@@ -39,6 +40,7 @@ final class ForbidWritersSettings implements ITellIfWritersAreAllowedToUpdatePro
         return ! $settings['forbid_writers_to_update'];
     }
 
+    #[\Override]
     public function areWritersAllowedToDelete(int $project_id): bool
     {
         $settings = $this->dao->searchByProjectId($project_id);

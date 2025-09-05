@@ -42,11 +42,13 @@ final class PluginUpdateHookCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Execute plugins update hook')->setHidden(true);
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->assert_runner->assertProcessIsExecutedByExpectedUser();

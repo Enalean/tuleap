@@ -33,6 +33,7 @@ class LinkedList extends Collection
     /**
      * add the element add the end of the LinkedList
      */
+    #[\Override]
     public function add($element)
     {
         $this->elements[] = $element;
@@ -43,6 +44,7 @@ class LinkedList extends Collection
      * @param obj the reference object with which to compare.
      * @return bool true if this object is the same as the obj argument; false otherwise.
      */
+    #[\Override]
     public function equals($obj)
     {
         if ($obj instanceof \Collection && $this->size() === $obj->size()) {

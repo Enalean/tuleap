@@ -34,6 +34,7 @@ class Docman_ApprovalTableFile extends Docman_ApprovalTableVersionned
         return $this->versionId;
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         parent::initFromRow($row);

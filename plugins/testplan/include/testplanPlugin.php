@@ -71,11 +71,13 @@ final class testplanPlugin extends Plugin
         bindtextdomain('tuleap-testplan', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['tracker', 'agiledashboard', 'testmanagement'];
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {

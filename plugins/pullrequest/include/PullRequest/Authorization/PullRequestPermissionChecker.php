@@ -44,6 +44,7 @@ class PullRequestPermissionChecker implements CheckUserCanAccessPullRequest
      * @throws UserCannotReadGitRepositoryException
      * @throws \GitRepoNotFoundException
      */
+    #[\Override]
     public function checkPullRequestIsReadableByUser(PullRequest $pull_request, PFUser $user): void
     {
         $repository = $this->getRepository($pull_request->getRepoDestId());

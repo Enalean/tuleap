@@ -73,6 +73,7 @@ final class SiteAdminListAppsController implements DispatchableWithRequest, Disp
         $this->csrf_token          = $csrf_token;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);

@@ -40,35 +40,42 @@ class SystemControlNoop implements SystemControlInterface
         $this->targets = $targets;
     }
 
+    #[\Override]
     public function getBeforeMessage(): string
     {
         return sprintf('Doing nothing with %s %s...', $this->action, implode(', ', $this->targets));
     }
 
+    #[\Override]
     public function run(): void
     {
     }
 
+    #[\Override]
     public function isSuccessful(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getExitCode(): int
     {
         return 0;
     }
 
+    #[\Override]
     public function getOutput(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getCommandLine(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getErrorOutput(): string
     {
         return '';

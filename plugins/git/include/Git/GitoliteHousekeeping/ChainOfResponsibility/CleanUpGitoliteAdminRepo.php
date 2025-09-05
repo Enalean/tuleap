@@ -48,6 +48,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo ex
         $this->remote_admin_repository = $remote_admin_repository;
     }
 
+    #[\Override]
     public function execute(): void
     {
         $admin_dir  = 'admin';

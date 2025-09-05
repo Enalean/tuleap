@@ -41,17 +41,20 @@ class Docman_Wiki extends Docman_Document
         $this->pagename = $pagename;
     }
 
+    #[\Override]
     public function getType()
     {
         return dgettext('tuleap-docman', 'Wiki');
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         parent::initFromRow($row);
         $this->setPagename($row['wiki_page']);
     }
 
+    #[\Override]
     public function toRow()
     {
         $row              = parent::toRow();
@@ -60,6 +63,7 @@ class Docman_Wiki extends Docman_Document
         return $row;
     }
 
+    #[\Override]
     public function accept($visitor, $params = [])
     {
         return $visitor->visitWiki($this, $params);

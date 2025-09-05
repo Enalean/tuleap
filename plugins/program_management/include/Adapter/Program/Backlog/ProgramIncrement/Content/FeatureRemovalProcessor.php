@@ -39,6 +39,7 @@ final class FeatureRemovalProcessor implements RemoveFeature
     ) {
     }
 
+    #[\Override]
     public function removeFromAllProgramIncrements(FeatureRemoval $feature_removal): void
     {
         $program_ids = $this->program_increments_dao->getProgramIncrementsLinkToFeatureId($feature_removal->feature_id);

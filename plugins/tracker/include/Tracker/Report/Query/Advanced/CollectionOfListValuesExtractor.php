@@ -60,16 +60,19 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
         }
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new NowIsNotSupportedException();
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         $values = [];
@@ -89,6 +92,7 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
         return $values;
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         $values = [];
@@ -99,6 +103,7 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
         return $values;
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         $value = $value_wrapper->getValue();
@@ -109,6 +114,7 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
         return $value;
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new StatusOpenIsNotSupportedException();

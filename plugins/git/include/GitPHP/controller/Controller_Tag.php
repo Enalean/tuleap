@@ -51,6 +51,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      * @return string template filename
      */
+    #[\Override]
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
         return 'tuleap/tag.tpl';
@@ -65,6 +66,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
      * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
+    #[\Override]
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
@@ -80,6 +82,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function ReadQuery(): void // @codingStandardsIgnoreLine
     {
         if (isset($_GET['h'])) {
@@ -94,6 +97,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadData(): void // @codingStandardsIgnoreLine
     {
         $head = $this->project->GetHeadCommit();

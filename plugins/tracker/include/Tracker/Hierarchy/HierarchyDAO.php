@@ -121,6 +121,7 @@ class HierarchyDAO extends DataAccessObject implements SearchParentTracker
         return $this->getDB()->column('SELECT parent_id FROM tracker_hierarchy WHERE child_id = ?', [$tracker_id]);
     }
 
+    #[\Override]
     public function searchParentId(int $child_tracker_id): Option
     {
         $row = $this->searchAncestorIds($child_tracker_id);

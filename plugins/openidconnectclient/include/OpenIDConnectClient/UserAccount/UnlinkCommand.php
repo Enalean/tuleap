@@ -41,6 +41,7 @@ final class UnlinkCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         // This command is hidden because it is only here for testing purpose
@@ -57,6 +58,7 @@ final class UnlinkCommand extends Command
             );
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $user_name = $input->getArgument('user_name');

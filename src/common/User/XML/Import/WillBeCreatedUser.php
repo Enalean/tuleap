@@ -67,6 +67,7 @@ class WillBeCreatedUser implements ReadyToBeImportedUser
         $this->use_lame_password = $use_lame_password;
     }
 
+    #[\Override]
     public function getUserName()
     {
         return $this->username;
@@ -96,6 +97,7 @@ class WillBeCreatedUser implements ReadyToBeImportedUser
         return new ConcealedString($random_generator->getNumber());
     }
 
+    #[\Override]
     public function process(UserManager $user_manager, LoggerInterface $logger)
     {
         $fake_user = new PFUser();
@@ -121,6 +123,7 @@ class WillBeCreatedUser implements ReadyToBeImportedUser
         }
     }
 
+    #[\Override]
     public function getRealUser(UserManager $user_manager)
     {
         $user = $user_manager->getUserByUserName($this->username);

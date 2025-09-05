@@ -65,16 +65,19 @@ final class ProgramIncrementCreationEventProxy implements ProgramIncrementCreati
         return new self($payload['artifact_id'], $user, $payload['changeset_id']);
     }
 
+    #[\Override]
     public function getArtifactId(): int
     {
         return $this->artifact_id;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;
     }
 
+    #[\Override]
     public function getChangesetId(): int
     {
         return $this->changeset_id;

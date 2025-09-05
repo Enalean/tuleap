@@ -79,6 +79,7 @@ class WorkerSupervisorCommand extends Command
         $this->worker_availability = $worker_availability;
     }
 
+    #[\Override]
     protected function configure()
     {
         $this
@@ -88,6 +89,7 @@ class WorkerSupervisorCommand extends Command
             ->addOption('daemon', 'd', InputOption::VALUE_NONE, 'No output on stdout, should be used with & to run in background. Option only valid for `start`');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         switch ($input->getArgument('action')) {

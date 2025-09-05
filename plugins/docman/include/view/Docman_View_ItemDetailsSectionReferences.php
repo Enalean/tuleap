@@ -27,6 +27,7 @@ class Docman_View_ItemDetailsSectionReferences extends Docman_View_ItemDetailsSe
         parent::__construct($item, $url, 'references', dgettext('tuleap-docman', 'References'));
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         $crf = new CrossReferenceFactory($this->item->getId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->item->getGroupId());

@@ -84,6 +84,7 @@ final class CommitStatusWithKnownStatus implements CommitStatus
     /**
      * @return string
      */
+    #[\Override]
     public function getStatusName()
     {
         switch ($this->status) {
@@ -101,6 +102,7 @@ final class CommitStatusWithKnownStatus implements CommitStatus
     /**
      * @return \DateTimeImmutable
      */
+    #[\Override]
     public function getDate()
     {
         return $this->date;

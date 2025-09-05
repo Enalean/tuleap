@@ -40,12 +40,14 @@ final class ItemToIndexLimitedBatchQueue implements ItemToIndexBatchQueue, ItemT
     {
     }
 
+    #[\Override]
     public function startBatchingItemsIntoQueue(callable $callback): void
     {
         $callback($this);
         $this->processBatch();
     }
 
+    #[\Override]
     public function addItemToQueue(ItemToIndex $item_to_index): void
     {
         $this->items_to_index[] = $item_to_index;

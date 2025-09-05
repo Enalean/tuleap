@@ -55,6 +55,7 @@ final class PostAuthenticationChallengeController extends DispatchablePSR15Compa
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $current_user = $this->user_manager->getCurrentUser();

@@ -35,6 +35,7 @@ class UserCounterWebhook implements Webhook
     /**
      * @return int
      */
+    #[\Override]
     public function getId()
     {
         return 0;
@@ -43,6 +44,7 @@ class UserCounterWebhook implements Webhook
     /**
      * @return string
      */
+    #[\Override]
     public function getUrl()
     {
         return $this->url;

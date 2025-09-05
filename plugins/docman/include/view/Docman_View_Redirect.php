@@ -27,7 +27,8 @@ use Tuleap\Docman\Item\OtherDocument;
  */
 class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
 {
-    /* protected */ public function _content($params)
+    /* protected */ #[\Override]
+    public function _content($params)
     {
         if (isset($params['redirect_to'])) {
             $url = $params['redirect_to'];
@@ -46,11 +47,13 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
         $GLOBALS['Response']->redirect($url);
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         throw new Exception('Redirect view cannot be applied to Folders');
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         $project_id = urlencode($item->getGroupId());
@@ -58,6 +61,7 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
         return '/wiki/?group_id=' . $project_id . '&pagename=' . $pagename;
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, $params = [])
     {
         $url = null;
@@ -95,26 +99,31 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
         exit();
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
         throw new Exception('Redirect view cannot be applied to Files');
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         throw new Exception('Redirect view cannot be applied to Embedded Files');
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
         throw new Exception('Redirect view cannot be applied to Empty documents');
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         throw new Exception('Redirect view cannot be applied to unknown item documents');
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return EventManager::instance()

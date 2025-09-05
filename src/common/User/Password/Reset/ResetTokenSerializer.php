@@ -32,6 +32,7 @@ final class ResetTokenSerializer implements SplitTokenFormatter, SplitTokenIdent
 {
     public const PARTS_SEPARATOR = '.';
 
+    #[\Override]
     public function getIdentifier(SplitToken $token): ConcealedString
     {
         return new ConcealedString(
@@ -43,6 +44,7 @@ final class ResetTokenSerializer implements SplitTokenFormatter, SplitTokenIdent
      * @throws InvalidIdentifierFormatException
      * @throws IncorrectSizeVerificationStringException
      */
+    #[\Override]
     public function getSplitToken(ConcealedString $identifier): SplitToken
     {
         $identifier_parts = explode(self::PARTS_SEPARATOR, $identifier);

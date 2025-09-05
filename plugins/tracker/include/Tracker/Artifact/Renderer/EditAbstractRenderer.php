@@ -48,12 +48,14 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
         $this->visit_recorder             = $visit_recorder;
     }
 
+    #[\Override]
     public function display(Codendi_Request $request, PFUser $current_user)
     {
         $this->visit_recorder->record($current_user, $this->artifact);
         parent::display($request, $current_user);
     }
 
+    #[\Override]
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
         return $this->fetchArtifactInformations($this->artifact);

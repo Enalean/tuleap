@@ -752,6 +752,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         return count($this->extractReferences($string, (int) $project->getId())) > 0;
     }
 
+    #[\Override]
     public function extractReferences(string $html, int $group_id): array
     {
         $this->tmpGroupIdForCallbackFunction = $group_id;
@@ -800,6 +801,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         }
     }
 
+    #[\Override]
     public function extractCrossRef(
         mixed $html,
         int|string $source_id,

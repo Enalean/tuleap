@@ -33,11 +33,13 @@ class ChangesetValueFileXMLExporter extends ChangesetValueXMLExporter
     {
     }
 
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return 'file';
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

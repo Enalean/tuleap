@@ -49,21 +49,25 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget //phpcs:ign
         $this->job_builder = $job_builder;
     }
 
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-hudson', 'Jenkins Jobs');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-hudson', 'Shows an overview of all the jobs associated with this project. You can always choose the ones you want to display in the widget (preferences link).');
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return false;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $purifier         = Codendi_HTMLPurifier::instance();

@@ -32,6 +32,7 @@ final class MergeSettingWithValue implements MergeSetting
     /**
      * @return bool
      */
+    #[\Override]
     public function isMergeCommitAllowed()
     {
         return $this->is_merge_commit_allowed;

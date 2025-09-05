@@ -152,6 +152,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
     /**
     * Builds gantt graph
     */
+    #[\Override]
     public function buildGraph()
     {
         $this->graph = new Chart_Gantt($this->width, $this->height, 'auto');

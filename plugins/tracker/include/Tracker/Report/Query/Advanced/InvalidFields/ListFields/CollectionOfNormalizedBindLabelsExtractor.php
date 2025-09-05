@@ -38,11 +38,13 @@ final readonly class CollectionOfNormalizedBindLabelsExtractor implements BindVi
     ) {
     }
 
+    #[\Override]
     public function extractCollectionOfNormalizedLabels(ListField $field): array
     {
         return (array) $field->getBind()->accept($this, new BindParameters($field));
     }
 
+    #[\Override]
     public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters)
     {
         $list_values       = $parameters->getField()->getAllValues();
@@ -55,6 +57,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractor implements BindVi
         return $list_label_values;
     }
 
+    #[\Override]
     public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters)
     {
         $list_values       = $parameters->getField()->getAllValues();
@@ -67,6 +70,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractor implements BindVi
         return $list_label_values;
     }
 
+    #[\Override]
     public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters)
     {
         $list_values       = $parameters->getField()->getAllValues();
@@ -84,6 +88,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractor implements BindVi
         return $list_label_values;
     }
 
+    #[\Override]
     public function visitListBindNull(Tracker_FormElement_Field_List_Bind_Null $bind, BindParameters $parameters)
     {
     }

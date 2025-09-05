@@ -33,6 +33,7 @@ class UploadPathAllocator implements PathAllocator
         return ForgeConfig::get('tmp_dir') . '/frs/ongoing-upload/';
     }
 
+    #[\Override]
     public function getPathForItemBeingUploaded(TusFileInformation $file_information): string
     {
         return $this->getBasePath() . $file_information->getID() . '/' . $file_information->getName();

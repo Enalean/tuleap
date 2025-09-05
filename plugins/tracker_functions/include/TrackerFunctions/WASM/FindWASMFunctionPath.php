@@ -39,6 +39,7 @@ final class FindWASMFunctionPath implements WASMFunctionPathHelper
     /**
      * @psalm-return non-empty-string
      */
+    #[\Override]
     public function getPathForTracker(Tracker $tracker): string
     {
         return $this->base_path . $tracker->getId() . '/post-action.wasm';

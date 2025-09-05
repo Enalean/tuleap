@@ -43,6 +43,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /**
      * @see Workflow_Transition_Condition::exportToXml()
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if (! $this->fields) {
@@ -60,6 +61,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /**
      * @see Workflow_Transition_Condition::saveObject()
      */
+    #[\Override]
     public function saveObject()
     {
         $this->dao->create($this->getTransition()->getId(), $this->getFieldIds());
@@ -80,6 +82,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $ids;
     }
 
+    #[\Override]
     public function validate($fields_data, Artifact $artifact, string $comment_body, PFUser $current_user): bool
     {
         if (empty($this->fields)) {
@@ -122,6 +125,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $value;
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitFieldNotEmpty($this);

@@ -263,6 +263,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     /**
      * @return PFUser[] of User admin of the project
      */
+    #[\Override]
     public function getAdmins(?UGroupManager $ugm = null): array
     {
         if (is_null($ugm)) {
@@ -274,6 +275,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     /**
      * @return PFUser[] array of User members of the project
      */
+    #[\Override]
     public function getMembers(?UGroupManager $ugm = null)
     {
         if (is_null($ugm)) {
@@ -285,6 +287,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     /**
      * Alias of @see getMembers()
      */
+    #[\Override]
     public function getUsers()
     {
         return $this->getMembers();

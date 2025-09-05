@@ -40,6 +40,7 @@ final class ProjectDashboardVisitRetriever implements GetVisitHistory
     ) {
     }
 
+    #[\Override]
     public function getVisitHistory(HistoryEntryCollection $collection, int $max_length_history): void
     {
         $recently_visited_rows = $this->recently_visited_project_dashboard_dao->searchVisitByUserId(

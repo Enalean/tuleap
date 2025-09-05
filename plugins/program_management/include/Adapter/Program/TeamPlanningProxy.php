@@ -42,21 +42,25 @@ final class TeamPlanningProxy implements TeamPlanning
     ) {
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getPlanningTracker(): TrackerReference
     {
         return $this->planning_tracker;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getPlannableTrackerIds(): array
     {
         return $this->backlog_tracker_ids;

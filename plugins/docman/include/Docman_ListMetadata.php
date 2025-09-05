@@ -59,6 +59,7 @@ class Docman_ListMetadata extends \Docman_Metadata
         return $i;
     }
 
+    #[\Override]
     public function setDefaultValue($v)
     {
         if ($v instanceof \Iterator) {

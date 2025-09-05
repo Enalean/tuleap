@@ -76,6 +76,7 @@ abstract class XMLField extends XMLFormElement
         return $new;
     }
 
+    #[\Override]
     public function exportPermissions(\SimpleXMLElement $form_elements): void
     {
         if (count($this->permissions) === 0 && ! $this->without_permissions_authorized) {

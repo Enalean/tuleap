@@ -68,6 +68,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      *
      * @throws Request\NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
@@ -87,6 +88,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      * @return void
      * @throws Request\NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $this->project->usesService(GitPlugin::SERVICE_SHORTNAME)) {

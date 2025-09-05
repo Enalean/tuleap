@@ -30,6 +30,7 @@ use function session_write_close;
 
 final class SessionWriteCloseMiddleware implements MiddlewareInterface
 {
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         session_write_close();

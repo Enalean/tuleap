@@ -86,6 +86,7 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->permission_item_updater     = $permission_item_updater;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         $this->instantiatePermissions($item, $params['permissions_for_groups']);
@@ -94,6 +95,7 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->triggerPostCreationEvents($params);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         $this->instantiatePermissions($item, $params['permissions_for_groups']);
@@ -103,6 +105,7 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->triggerPostCreationEvents($params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = [])
     {
         $creation_time = $params['creation_time'];
@@ -119,11 +122,13 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->triggerPostCreationEvents($params);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = [])
     {
         throw new CannotCreateThisItemTypeException();
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         $this->instantiatePermissions($item, $params['permissions_for_groups']);
@@ -131,6 +136,7 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->triggerPostCreationEvents($params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         $initial_version_number = 1;
@@ -164,6 +170,7 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->triggerPostCreationEvents($params);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
         $this->instantiatePermissions($item, $params['permissions_for_groups']);
@@ -172,6 +179,7 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->triggerPostCreationEvents($params);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         throw new CannotCreateThisItemTypeException();

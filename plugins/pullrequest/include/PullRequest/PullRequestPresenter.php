@@ -60,6 +60,7 @@ final class PullRequestPresenter implements PresentPullRequest
         $this->is_vue_homepage_shown              = $app === PullRequestApp::HOMEPAGE_APP;
     }
 
+    #[\Override]
     public function getTemplateName(): string
     {
         return 'pullrequest';

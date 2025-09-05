@@ -36,6 +36,7 @@ class Docman_HtmlFilterList extends \Docman_HtmlFilter
         return $html;
     }
 
+    #[\Override]
     public function _valueSelectorHtml($formName = 0)
     {
         $vIter = $this->filter->md->getListOfValueIterator();

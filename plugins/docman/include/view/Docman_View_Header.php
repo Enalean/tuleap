@@ -23,6 +23,7 @@ use Tuleap\Layout\HeaderConfigurationBuilder;
 
 /* abstract */ class Docman_View_Header extends Docman_View_View
 {
+    #[\Override]
     public function _header($params)
     {
         if (! headers_sent()) {
@@ -107,7 +108,8 @@ use Tuleap\Layout\HeaderConfigurationBuilder;
         return $title;
     }
 
-    /* protected */ public function _footer($params)
+    /* protected */ #[\Override]
+    public function _footer($params)
     {
         if (isset($params['pv']) && $params['pv'] > 0) {
             $GLOBALS['HTML']->pv_footer();
@@ -116,7 +118,8 @@ use Tuleap\Layout\HeaderConfigurationBuilder;
         }
     }
 
-    /* protected */ public function _feedback($params)
+    /* protected */ #[\Override]
+    public function _feedback($params)
     {
         //$this->_controller->feedback->display();
     }

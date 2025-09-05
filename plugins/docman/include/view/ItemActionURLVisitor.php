@@ -34,16 +34,19 @@ use Tuleap\Docman\Item\OtherDocument;
 
 final class ItemActionURLVisitor implements ItemVisitor
 {
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): ?string
     {
         return null;
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): ?string
     {
         return null;
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): ?string
     {
         return null;
@@ -52,6 +55,7 @@ final class ItemActionURLVisitor implements ItemVisitor
     /**
      * @psalm-return non-empty-string|null
      */
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): ?string
     {
         if (! isset($params['action']) || $params['action'] !== 'show') {
@@ -64,21 +68,25 @@ final class ItemActionURLVisitor implements ItemVisitor
         return $download_href;
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): ?string
     {
         return null;
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): ?string
     {
         return null;
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = []): ?string
     {
         return null;
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): ?string
     {
         return null;

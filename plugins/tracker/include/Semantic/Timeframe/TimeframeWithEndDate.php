@@ -47,11 +47,13 @@ class TimeframeWithEndDate implements IComputeTimeframes
         $this->end_date_field   = $end_date_field;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         $field_id = $field->getId();
@@ -60,6 +62,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
             $field_id === $this->end_date_field->getId();
     }
 
+    #[\Override]
     public function getConfigDescription(): string
     {
         return sprintf(
@@ -69,11 +72,13 @@ class TimeframeWithEndDate implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function isDefined(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void
     {
         $start_date_field_id = $this->start_date_field->getId();
@@ -91,6 +96,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         $semantic->addChild('end_date_field')->addAttribute('REF', $end_date_ref);
     }
 
+    #[\Override]
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe
     {
         if (
@@ -106,6 +112,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return $dao->save(
@@ -117,21 +124,25 @@ class TimeframeWithEndDate implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function getStartDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return $this->start_date_field;
     }
 
+    #[\Override]
     public function getEndDateField(): \Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return $this->end_date_field;
     }
 
+    #[\Override]
     public function getDurationField(): ?\Tuleap\Tracker\FormElement\Field\NumericField
     {
         return null;
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -152,6 +163,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         return DatePeriodWithOpenDays::buildFromEndDate($start_date, $end_date, $logger);
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -175,6 +187,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -223,16 +236,19 @@ class TimeframeWithEndDate implements IComputeTimeframes
         return DatePeriodWithOpenDays::buildFromEndDate($start_date, $end_date, $logger);
     }
 
+    #[\Override]
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return null;
     }
 
+    #[\Override]
     public function userCanReadTimeframeFields(\PFUser $user): bool
     {
         return $this->start_date_field->userCanRead($user) && $this->end_date_field->userCanRead($user);
     }
 
+    #[\Override]
     public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): bool
     {
         try {
@@ -260,6 +276,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         return $start_date === 0 && $end_date === 0;
     }
 
+    #[\Override]
     public function isTimeDisplayedForEvent(): bool
     {
         return $this->start_date_field->isTimeDisplayed() &&

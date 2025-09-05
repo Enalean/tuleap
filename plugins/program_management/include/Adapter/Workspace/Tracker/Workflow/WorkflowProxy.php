@@ -37,6 +37,7 @@ final class WorkflowProxy implements WorkflowIdentifier
         return new self((int) $workflow->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

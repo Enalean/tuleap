@@ -41,6 +41,7 @@ class TaskboardPane extends AgileDashboard_Pane
      * @return string eg: 'cardwall'
      * @see PaneInfo::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier()
     {
         return $this->pane_info->getIdentifier();
@@ -51,6 +52,7 @@ class TaskboardPane extends AgileDashboard_Pane
      *
      * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
+    #[\Override]
     public function getFullContent()
     {
         return '';
@@ -62,6 +64,7 @@ class TaskboardPane extends AgileDashboard_Pane
      *
      * @return string eg: '<table>...</table>'
      */
+    #[\Override]
     public function getMinimalContent()
     {
         return '';

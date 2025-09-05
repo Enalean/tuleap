@@ -28,11 +28,13 @@ class User_MutableInfoPresenter extends User_ImmutableInfoPresenter
         $this->change = $change;
     }
 
+    #[\Override]
     public function can_change()
     {
         return true;
     }
 
+    #[\Override]
     public function change()
     {
         return $this->change;

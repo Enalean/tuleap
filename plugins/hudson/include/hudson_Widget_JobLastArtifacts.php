@@ -62,6 +62,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget //phpcs:ignore PSR1
         $this->job_builder = $job_builder;
     }
 
+    #[\Override]
     public function getTitle()
     {
         $title = '';
@@ -75,16 +76,19 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget //phpcs:ignore PSR1
         return $purifier->purify($title);
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-hudson', 'Show the last successfully published artifacts of one job. To display something, your job needs to publish artifacts.');
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $this->content_id = $id;
     }
 
+    #[\Override]
     protected function initContent()
     {
         $job_id = $this->getJobIdFromWidgetConfiguration();
@@ -115,6 +119,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget //phpcs:ignore PSR1
         }
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $this->initContent();

@@ -66,6 +66,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
     /**
      * @return PluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -147,6 +148,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         (new Tuleap\ProjectMilestones\Widget\ConfigureAtXMLImport())($event);
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return ['agiledashboard'];

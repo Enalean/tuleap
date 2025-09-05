@@ -41,6 +41,7 @@ class AccessKeyRevocationController implements DispatchableWithRequest
         $this->csrf_token = $csrf_token;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();

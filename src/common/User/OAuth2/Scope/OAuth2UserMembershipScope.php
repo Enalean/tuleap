@@ -49,11 +49,13 @@ final class OAuth2UserMembershipScope implements AuthenticationScope
         $this->identifier = $identifier;
         $this->definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition
         {
+            #[\Override]
             public function getName(): string
             {
                 return _('Membership in user groups (read only)');
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return _('Read only access to your membership in user groups');
@@ -64,6 +66,7 @@ final class OAuth2UserMembershipScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromItself(): AuthenticationScope
     {
         return new self(OAuth2ScopeIdentifier::fromIdentifierKey(self::IDENTIFIER_KEY));
@@ -72,6 +75,7 @@ final class OAuth2UserMembershipScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
     {
         if ($identifier instanceof OAuth2ScopeIdentifier && $identifier->toString() === self::IDENTIFIER_KEY) {
@@ -81,16 +85,19 @@ final class OAuth2UserMembershipScope implements AuthenticationScope
         return null;
     }
 
+    #[\Override]
     public function getIdentifier(): AuthenticationScopeIdentifier
     {
         return $this->identifier;
     }
 
+    #[\Override]
     public function getDefinition(): AuthenticationScopeDefinition
     {
         return $this->definition;
     }
 
+    #[\Override]
     public function covers(AuthenticationScope $scope): bool
     {
         return self::IDENTIFIER_KEY === $scope->getIdentifier()->toString();

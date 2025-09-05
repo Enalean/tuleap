@@ -24,6 +24,7 @@ use Tracker_Artifact_Changeset;
 
 final class ClearArtifactChangesetCacheTask implements PostCreationTask
 {
+    #[\Override]
     public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration)
     {
         $changeset->getArtifact()->clearChangesets();

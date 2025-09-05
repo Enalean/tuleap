@@ -35,6 +35,7 @@ final readonly class FlatArtifactListValueLabelFlatStringTransformer implements 
      * @psalm-param list<string> $value_labels
      * @psalm-return Ok<string>|Err<Fault>
      */
+    #[\Override]
     public function transformListValueLabels(
         int $artifact_id,
         int $field_id,

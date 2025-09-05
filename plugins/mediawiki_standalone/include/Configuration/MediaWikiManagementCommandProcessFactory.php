@@ -38,6 +38,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
     {
     }
 
+    #[\Override]
     public function buildInstallCommand(): MediaWikiManagementCommand
     {
         if (file_exists($this->path_setting_directory . '/' . self::LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI)) {
@@ -66,6 +67,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
         );
     }
 
+    #[\Override]
     public function buildFarmInstanceConfigurationUpdate(): MediaWikiManagementCommand
     {
         $farm_instance_configuration_path =  $this->path_setting_directory . '/' . self::LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI;
@@ -100,6 +102,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
         );
     }
 
+    #[\Override]
     public function buildUpdateFarmInstanceCommand(): MediaWikiManagementCommand
     {
         return new MediaWikiManagementCommandProcess(
@@ -108,6 +111,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
         );
     }
 
+    #[\Override]
     public function buildUpdateProjectInstanceCommand(string $project_name): MediaWikiManagementCommand
     {
         return new MediaWikiManagementCommandProcess(
@@ -119,6 +123,7 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
         );
     }
 
+    #[\Override]
     public function buildUpdateToMediaWiki135ProjectInstanceCommand(string $project_name): MediaWikiManagementCommand
     {
         return new MediaWikiManagementCommandProcess(

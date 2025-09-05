@@ -30,6 +30,7 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
         $this->xml_mapping = $xml_mapping;
     }
 
+    #[\Override]
     public function getNewValueId($old_value_id)
     {
         $old_reference = $this->getOldValueReferenceFromOldValueId($old_value_id);
@@ -54,6 +55,7 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
         return Tracker_FormElement_Field_List_Value::XML_ID_PREFIX . $old_value_id;
     }
 
+    #[\Override]
     public function getNewOpenValueId($old_value_id)
     {
         $old_reference = $this->getOldValueReferenceFromOldOpenValueId($old_value_id);

@@ -62,6 +62,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         bindtextdomain('tuleap-fts_meilisearch', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {
@@ -78,6 +79,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         return $this->pluginInfo;
     }
 
+    #[\Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectCLICommands(CLICommandsCollector $collector): void
     {
@@ -105,6 +107,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         (new GenerateServerMasterKey(new LocalMeilisearchServer(), $event->logger))->generateMasterKey();
     }
 
+    #[\Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function workerEvent(WorkerEvent $event): void
     {
@@ -124,16 +127,19 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         );
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(RemoteMeilisearchServerSettings::class);
     }
 
+    #[\Override]
     protected function getIndexSearcher(): \Tuleap\FullTextSearchCommon\Index\SearchIndexedItem
     {
         return $this->getMeilisearchHandler();
     }
 
+    #[\Override]
     protected function getItemInserter(): \Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
@@ -144,11 +150,13 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         );
     }
 
+    #[\Override]
     protected function getItemRemover(): \Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems
     {
         return $this->getMeilisearchHandler();
     }
 
+    #[\Override]
     protected function getBatchQueue(): \Tuleap\Search\ItemToIndexBatchQueue
     {
         return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserterWithMetricCollector(), self::MAX_ITEMS_PER_BATCH);

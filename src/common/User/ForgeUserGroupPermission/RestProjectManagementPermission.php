@@ -26,16 +26,19 @@ class RestProjectManagementPermission extends User_ForgeUserGroupPermission
 {
     public const ID = 8;
 
+    #[\Override]
     public function getId()
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getName()
     {
         return _('REST projects management');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return _('This permission grants the right to manage projects through the REST api');

@@ -43,6 +43,7 @@ class ProjectIsSuspended extends SystemEvent
         $this->project_manager = $project_manager;
     }
 
+    #[\Override]
     public function process()
     {
         $project_id = $this->getProjectIdFromParameters();
@@ -71,6 +72,7 @@ class ProjectIsSuspended extends SystemEvent
         return $parameters[0];
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $project_id = $this->getProjectIdFromParameters();

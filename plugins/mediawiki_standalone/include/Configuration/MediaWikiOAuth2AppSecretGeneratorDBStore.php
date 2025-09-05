@@ -42,6 +42,7 @@ final class MediaWikiOAuth2AppSecretGeneratorDBStore implements MediaWikiOAuth2A
     ) {
     }
 
+    #[\Override]
     public function generateOAuth2AppSecret(): LastGeneratedClientSecret
     {
         return $this->transaction_executor->execute(

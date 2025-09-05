@@ -28,6 +28,7 @@ use Symfony\Component\Process\Process;
 
 final class DefaultBranchUpdateExecutorAsGitoliteUser implements DefaultBranchUpdateExecutor
 {
+    #[\Override]
     public function setDefaultBranch(\Git_Exec $git_exec, string $default_branch): void
     {
         $set_default_branch_process = new Process(

@@ -34,6 +34,7 @@ class PermissionsOnArtifactFieldValueDao extends DataAccessObject implements Sea
         parent::__construct();
     }
 
+    #[\Override]
     public function searchById($changeset_value_id): ?array
     {
         $sql = 'SELECT changeset_value_id, use_perm, ugroup.ugroup_id, ugroup.name AS ugroup_name
@@ -81,6 +82,7 @@ class PermissionsOnArtifactFieldValueDao extends DataAccessObject implements Sea
         return $this->getDB()->run($sql, $to, $from) !== null;
     }
 
+    #[\Override]
     public function delete(int $changeset_value_id): void
     {
         $this->getDB()->delete('tracker_changeset_value_permissionsonartifact', ['changeset_value_id' => $changeset_value_id]);

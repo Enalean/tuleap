@@ -64,11 +64,13 @@ class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassD
      *
      * @return String
      */
+    #[\Override]
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('include_project_home', 'latest_news');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return $this->content;
@@ -79,6 +81,7 @@ class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassD
      *
      * @return bool
      */
+    #[\Override]
     public function isAvailable()
     {
         return $this->content ? true : false;
@@ -101,6 +104,7 @@ class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassD
      *
      * @return String
      */
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_latest_news', 'description');
@@ -126,6 +130,7 @@ class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassD
         return ProjectManager::instance();
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         return [

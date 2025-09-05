@@ -38,6 +38,7 @@ final class SetupSVNCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $httpd_vhost = '/etc/httpd/conf.d/tuleap-vhost.conf';

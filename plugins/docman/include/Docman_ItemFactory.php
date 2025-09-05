@@ -107,6 +107,7 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
         return $this->groupId;
     }
 
+    #[\Override]
     public function getItemFromRow(array $row)
     {
         $item = null;

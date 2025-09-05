@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 final class OpenListFieldVerifier implements VerifyIsOpenListField
 {
+    #[\Override]
     public function isAnOpenListField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $field instanceof \Tuleap\Tracker\FormElement\Field\List\OpenListField;

@@ -42,6 +42,7 @@ final class FieldPermissionsVerifier implements VerifyFieldPermissions
     {
     }
 
+    #[\Override]
     public function canUserSubmit(
         UserIdentifier $user_identifier,
         TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field,
@@ -56,6 +57,7 @@ final class FieldPermissionsVerifier implements VerifyFieldPermissions
         return $full_field->userCanSubmit($user);
     }
 
+    #[\Override]
     public function canUserUpdate(
         UserIdentifier $user_identifier,
         TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field,

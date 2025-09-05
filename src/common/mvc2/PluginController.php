@@ -27,6 +27,7 @@ abstract class MVC2_PluginController extends MVC2_Controller
 {
     protected $group_id;
 
+    #[\Override]
     protected function getTemplatesDir()
     {
         return __DIR__ . '/../../../plugins/' . $this->base_name . '/templates';

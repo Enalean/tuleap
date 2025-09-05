@@ -21,6 +21,7 @@
 
 class Docman_View_Extra extends Docman_View_Docman
 {
+    #[\Override]
     protected function addDocmanTool($params, &$toolbar)
     {
         $toolbar[] = [

@@ -42,6 +42,7 @@ final class MiddlewareDispatcher implements RequestHandlerInterface
         $this->middlewares = $middleware_stack;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $middleware = current($this->middlewares);

@@ -22,6 +22,7 @@ class SystemCheckLogger extends WrapperLogger
 {
     private $warning_messages = [];
 
+    #[\Override]
     public function warning(string|\Stringable $message, array $context = []): void
     {
         $this->warning_messages[] = $message;

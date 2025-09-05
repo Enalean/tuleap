@@ -41,6 +41,7 @@ final class XMLReferenceByName implements XMLReference
     /**
      * @throw \LogicException
      */
+    #[\Override]
     public function getId(XMLFormElementFlattenedCollection $form_elements): string
     {
         return $form_elements->getByName($this->name)->id;

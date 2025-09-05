@@ -42,6 +42,7 @@ final class RobotsTxtController extends DispatchablePSR15Compatible implements D
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->response_factory->createResponse()

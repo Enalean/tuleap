@@ -44,6 +44,7 @@ final readonly class TrackerFromXmlInstantiator implements InstantiateTrackerFro
     ) {
     }
 
+    #[\Override]
     public function instantiateTrackerFromXml(
         Project $project,
         SimpleXMLElement $xml_tracker,

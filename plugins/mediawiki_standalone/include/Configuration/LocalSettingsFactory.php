@@ -36,6 +36,7 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
     ) {
     }
 
+    #[\Override]
     public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
     {
         $oauth2_secret = $this->oauth2_app_generator->generateOAuth2AppSecret();

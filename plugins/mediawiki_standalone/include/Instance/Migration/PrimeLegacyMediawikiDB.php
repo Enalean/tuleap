@@ -38,6 +38,7 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
     /**
      * @psalm-return Ok<null>|Err<Fault>
      */
+    #[\Override]
     public function prepareDBForMigration(LoggerInterface $logger, \Project $project, string $db_name, string $db_prefix): Ok|Err
     {
         $project_id = (int) $project->getID();

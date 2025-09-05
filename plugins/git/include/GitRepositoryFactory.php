@@ -45,6 +45,7 @@ class GitRepositoryFactory implements RetrieveGitRepository
      *
      * @return GitRepository|null the repository or null if not found
      */
+    #[\Override]
     public function getRepositoryById(int $id): ?GitRepository
     {
         if ($id == GitRepositoryGitoliteAdmin::ID) {
@@ -54,6 +55,7 @@ class GitRepositoryFactory implements RetrieveGitRepository
         return $this->getRepositoryFromRow($row);
     }
 
+    #[\Override]
     public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository
     {
         if ($id == GitRepositoryGitoliteAdmin::ID) {

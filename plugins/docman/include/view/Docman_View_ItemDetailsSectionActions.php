@@ -40,6 +40,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         parent::__construct($item, $url, 'actions', dgettext('tuleap-docman', 'Actions'));
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         $user = $this->_controller->getUser();
@@ -152,6 +153,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): string
     {
         $content = '';
@@ -183,6 +185,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): string
     {
         $content  = '';
@@ -203,16 +206,19 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): string
     {
         return $this->getSectionForNewVersion();
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): string
     {
         return $this->getSectionForNewVersion();
@@ -231,6 +237,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         $content = '<textarea name="content" rows="15" cols="50">';
@@ -242,11 +249,13 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $this->visitFile($item, array_merge($params, ['input_content' => $content]));
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(\Tuleap\Docman\Item\OtherDocument $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);

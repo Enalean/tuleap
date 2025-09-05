@@ -42,6 +42,7 @@ final class ProjectRegistrationBaseChecker implements ProjectRegistrationChecker
         $this->rule_project_full_name = $rule_project_full_name;
     }
 
+    #[\Override]
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
         ProjectCreationData $project_creation_data,

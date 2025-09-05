@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 
 final class ProgramDaoProject extends DataAccessObject implements RetrieveProgramOfProgramIncrement, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher, RetrieveProgramOfIteration, VerifyIsProjectAProgramOrUsedInPlan
 {
+    #[\Override]
     public function isAProgram(int $project_id): bool
     {
         $sql = 'SELECT COUNT(*)
@@ -45,6 +46,7 @@ final class ProgramDaoProject extends DataAccessObject implements RetrieveProgra
         return $this->getDB()->exists($sql, $project_id);
     }
 
+    #[\Override]
     public function isProjectAProgramOrIsPartOfPlan(int $project_id): bool
     {
         $sql = 'SELECT COUNT(*)
@@ -61,6 +63,7 @@ final class ProgramDaoProject extends DataAccessObject implements RetrieveProgra
     /**
      * @return int[]
      */
+    #[\Override]
     public function getAllPrograms(): array
     {
         $sql = 'SELECT program_project_id
@@ -70,6 +73,7 @@ final class ProgramDaoProject extends DataAccessObject implements RetrieveProgra
         return array_map(static fn(array $row): int => $row['program_project_id'], $rows);
     }
 
+    #[\Override]
     public function searchTeamIdsOfProgram(int $project_id): array
     {
         $sql = 'SELECT team_project_id
@@ -80,6 +84,7 @@ final class ProgramDaoProject extends DataAccessObject implements RetrieveProgra
         return array_map(static fn(array $row): int => $row['team_project_id'], $rows);
     }
 
+    #[\Override]
     public function getProgramOfProgramIncrement(ProgramIncrementIdentifier $program_increment): int
     {
         $sql = 'SELECT program.program_project_id
@@ -94,6 +99,7 @@ final class ProgramDaoProject extends DataAccessObject implements RetrieveProgra
         return (int) $result;
     }
 
+    #[\Override]
     public function getProgramOfIteration(IterationIdentifier $iteration): int
     {
         $sql = <<<SQL

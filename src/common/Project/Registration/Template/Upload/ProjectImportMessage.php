@@ -36,21 +36,25 @@ final readonly class ProjectImportMessage implements NotifyProjectImportMessage
         return new self($subject, $html_template_name, $text_template_name, $presenter);
     }
 
+    #[\Override]
     public function getSubject(): string
     {
         return $this->subject;
     }
 
+    #[\Override]
     public function getHTMLTemplateName(): string
     {
         return $this->html_template_name;
     }
 
+    #[\Override]
     public function getTextTemplateName(): string
     {
         return $this->text_template_name;
     }
 
+    #[\Override]
     public function getPresenter(): array
     {
         return $this->presenter;

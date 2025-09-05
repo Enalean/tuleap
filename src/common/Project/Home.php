@@ -79,6 +79,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project  = $this->getProject($variables);
@@ -191,6 +192,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
         }
     }
 
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectFromAutocompleter($variables['name']);

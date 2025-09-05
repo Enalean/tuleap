@@ -28,6 +28,7 @@ use Tuleap\Option\Option;
 
 final class TitleSemanticDAO extends DataAccessObject implements SearchTitleField, SearchTrackersWithoutTitleSemantic
 {
+    #[\Override]
     public function searchByTrackerId(int $tracker_id): Option
     {
         $sql      = 'SELECT field_id FROM tracker_semantic_title WHERE tracker_id = ?';
@@ -51,11 +52,13 @@ final class TitleSemanticDAO extends DataAccessObject implements SearchTitleFiel
         $this->getDB()->delete('tracker_semantic_title', ['tracker_id' => $tracker_id]);
     }
 
+    #[\Override]
     public function countTrackersWithoutTitleSemantic(array $tracker_ids): int
     {
         return count($this->getTrackerIdsWithoutTitleSemantic($tracker_ids));
     }
 
+    #[\Override]
     public function getTrackerIdsWithoutTitleSemantic(array $tracker_ids): array
     {
         if ($tracker_ids === []) {

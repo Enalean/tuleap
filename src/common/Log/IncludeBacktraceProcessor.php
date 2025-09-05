@@ -28,6 +28,7 @@ use Monolog\Processor\ProcessorInterface;
 
 final class IncludeBacktraceProcessor implements ProcessorInterface
 {
+    #[\Override]
     public function __invoke(LogRecord $record): LogRecord
     {
         $record['extra']['backtrace'] = '';

@@ -35,6 +35,7 @@ class GroupSyncSilentNotificationsManager implements GroupSyncNotificationsManag
      * @param $to_remove an array of suer IDs to be removed
      * @return Void
      * */
+    #[\Override]
     public function sendNotifications(\Project $project, array $to_add, array $to_remove)
     {
         // Do nothing

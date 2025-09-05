@@ -40,6 +40,7 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertPlaintextItem
     {
     }
 
+    #[\Override]
     public function indexItems(PlaintextItemToIndex ...$items): void
     {
         $documents_to_add    = [];
@@ -71,6 +72,7 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertPlaintextItem
         ];
     }
 
+    #[\Override]
     public function deleteIndexedItems(IndexedItemsToRemove $items_to_remove): void
     {
         $this->deleteIndexedItemsByIDs(
@@ -78,6 +80,7 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertPlaintextItem
         );
     }
 
+    #[\Override]
     public function deleteIndexedItemsPerProjectID(int $project_id): void
     {
         $this->deleteIndexedItemsByIDs(
@@ -95,6 +98,7 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertPlaintextItem
         $this->metadata_dao->deleteIndexedItemsFromIDs($item_ids_to_remove);
     }
 
+    #[\Override]
     public function searchItems(string $keywords, int $limit, int $offset): SearchResultPage
     {
         $parameters = [

@@ -42,6 +42,7 @@ final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVi
     ) {
     }
 
+    #[\Override]
     public function visitEqual(FromTrackerEqual $tracker_equal, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from_tracker = $parameters->from_tracker;
@@ -52,6 +53,7 @@ final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVi
         };
     }
 
+    #[\Override]
     public function visitIn(FromTrackerIn $tracker_in, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from_tracker = $parameters->from_tracker;

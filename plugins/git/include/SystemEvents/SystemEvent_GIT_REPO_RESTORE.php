@@ -34,6 +34,7 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
         $this->repository_factory = $repository_factory;
     }
 
+    #[\Override]
     public function process()
     {
         $parameters    = $this->getParametersAsArray();
@@ -69,6 +70,7 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
         $this->done();
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $repository = $this->getRepositoryFromParameters();

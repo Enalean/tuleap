@@ -29,6 +29,7 @@ use Tuleap\Error\PermissionDeniedMailSender;
 
 class PermissionDeniedDocumentMailSender extends PermissionDeniedMailSender
 {
+    #[\Override]
     protected function getPermissionDeniedMailBody(
         Project $project,
         PFUser $user,
@@ -51,6 +52,7 @@ Otherwise, please inform the requester (%7$s) that he will not get access to the
 %1$s.'), $user->getRealName(), $user->getUserName(), $link, $project->getPublicName(), $href_approval, $message_to_admin, $user->getEmail());
     }
 
+    #[\Override]
     protected function getPermissionDeniedMailSubject(Project $project, PFUser $user): string
     {
         return sprintf(dgettext('tuleap-docman', '%2$s requests access to a document in "%1$s"'), $project->getPublicName(), $user->getRealName());

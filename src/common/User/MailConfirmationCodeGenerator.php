@@ -26,6 +26,7 @@ final class MailConfirmationCodeGenerator implements IGenerateMailConfirmationCo
     {
     }
 
+    #[\Override]
     public function getConfirmationCode(): string
     {
         $confirmation_code = null;

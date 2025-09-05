@@ -78,6 +78,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
         return sprintf('/plugins/oauth2_server/project/%d/admin', $project->getID());
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);

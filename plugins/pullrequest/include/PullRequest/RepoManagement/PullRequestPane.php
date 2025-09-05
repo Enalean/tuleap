@@ -48,6 +48,7 @@ class PullRequestPane extends Pane
     /**
      * @return string eg: 'perms'
      */
+    #[\Override]
     public function getIdentifier()
     {
         return self::NAME;
@@ -56,6 +57,7 @@ class PullRequestPane extends Pane
     /**
      * @return string eg: 'Accesss Control'
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-pullrequest', 'Pull requests');
@@ -64,6 +66,7 @@ class PullRequestPane extends Pane
     /**
      * @return string eg: '<form>...</form>'
      */
+    #[\Override]
     public function getContent()
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(PULLREQUEST_BASE_DIR . '/templates');

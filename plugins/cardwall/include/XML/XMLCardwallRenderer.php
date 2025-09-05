@@ -46,6 +46,7 @@ final class XMLCardwallRenderer extends XMLRenderer
         return $new;
     }
 
+    #[\Override]
     public function export(SimpleXMLElement $renderers, XMLFormElementFlattenedCollection $form_elements): SimpleXMLElement
     {
         $renderer_xml = parent::export($renderers, $form_elements);

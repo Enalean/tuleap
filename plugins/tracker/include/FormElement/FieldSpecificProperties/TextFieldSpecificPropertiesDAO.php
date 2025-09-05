@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class TextFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
+    #[\Override]
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
         $sql = 'REPLACE INTO tracker_field_text (field_id, `rows`, cols, default_value)
@@ -33,6 +34,7 @@ final class TextFieldSpecificPropertiesDAO extends DataAccessObject implements D
         $this->getDB()->run($sql, $to_field_id, $from_field_id);
     }
 
+    #[\Override]
     public function deleteFieldProperties(int $field_id): void
     {
         $this->getDB()->delete('tracker_field_text', ['field_id' => $field_id]);
@@ -41,6 +43,7 @@ final class TextFieldSpecificPropertiesDAO extends DataAccessObject implements D
     /**
      * @return null | array{field_id: int, rows: int, cols: int, default_value: ?string}
      */
+    #[\Override]
     public function searchByFieldId(int $field_id): ?array
     {
         $sql = 'SELECT *
@@ -50,6 +53,7 @@ final class TextFieldSpecificPropertiesDAO extends DataAccessObject implements D
         return $this->getDB()->row($sql, $field_id);
     }
 
+    #[\Override]
     public function saveSpecificProperties(int $field_id, array $row): void
     {
         $rows = 10;

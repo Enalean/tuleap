@@ -29,11 +29,13 @@ final class AddToBacklogPostActionAllPowerfulUser extends \PFUser
         parent::__construct(null);
     }
 
+    #[\Override]
     public function isAnonymous(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isSuperUser(): bool
     {
         return true;

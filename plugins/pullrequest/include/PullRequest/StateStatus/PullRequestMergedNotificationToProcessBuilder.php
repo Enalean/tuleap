@@ -47,6 +47,7 @@ final class PullRequestMergedNotificationToProcessBuilder implements Notificatio
     ) {
     }
 
+    #[\Override]
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         return $this->pull_request_retriever->getPullRequestById($event->getPullRequestID())->match(

@@ -24,12 +24,14 @@
 
 class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
 {
+    #[\Override]
     public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         return sprintf(dgettext('tuleap-docman', 'Paste in progress \'%1$s\' in \'%2$s\''), $hp->purify($params['itemToPaste']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
+    #[\Override]
     public function _content($params)
     {
         //spinner
@@ -60,6 +62,7 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
         echo '<script type="text/javascript">setTimeout(function () {location.href="' . $url . '";}, 5000);</script>';
     }
 
+    #[\Override]
     public function &_getDocmanIcons($params)
     {
         $icons = new Docman_Icons($this->_controller->getThemePath() . '/images/ic/', EventManager::instance());

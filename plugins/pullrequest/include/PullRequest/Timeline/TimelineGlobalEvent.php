@@ -63,6 +63,7 @@ final class TimelineGlobalEvent implements TimelineEvent
         return $this->user_id;
     }
 
+    #[\Override]
     public function getPostDate(): \DateTimeImmutable
     {
         return $this->post_date;

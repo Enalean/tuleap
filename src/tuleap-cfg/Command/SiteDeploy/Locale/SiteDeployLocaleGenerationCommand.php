@@ -36,11 +36,13 @@ final class SiteDeployLocaleGenerationCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Generate the locales needed for gettext');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         \ForgeConfig::loadInSequence();

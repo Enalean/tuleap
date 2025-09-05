@@ -25,6 +25,7 @@ use Tuleap\Webhook\Webhook;
 
 class StatusLogger implements \Tuleap\Webhook\StatusLogger
 {
+    #[\Override]
     public function log(Webhook $webhook, $status)
     {
         BackendLogger::getDefaultLogger()->info('[enalean license manager webhook] ' . $status);

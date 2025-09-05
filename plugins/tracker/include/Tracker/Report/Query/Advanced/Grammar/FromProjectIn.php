@@ -39,6 +39,7 @@ final readonly class FromProjectIn implements FromProjectCondition
         return $this->values;
     }
 
+    #[\Override]
     public function acceptFromProjectConditionVisitor(FromProjectConditionVisitor $visitor, $parameters)
     {
         return $visitor->visitIn($this, $parameters);

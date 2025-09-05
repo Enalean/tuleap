@@ -36,36 +36,43 @@ final readonly class SearchRepresentationTypeVisitor implements ItemVisitor
     {
     }
 
+    #[\Override]
     public function visitFolder(\Docman_Folder $item, array $params = [])
     {
         return ItemRepresentation::TYPE_FOLDER;
     }
 
+    #[\Override]
     public function visitWiki(\Docman_Wiki $item, array $params = [])
     {
         return ItemRepresentation::TYPE_WIKI;
     }
 
+    #[\Override]
     public function visitLink(\Docman_Link $item, array $params = [])
     {
         return ItemRepresentation::TYPE_LINK;
     }
 
+    #[\Override]
     public function visitFile(\Docman_File $item, array $params = [])
     {
         return ItemRepresentation::TYPE_FILE;
     }
 
+    #[\Override]
     public function visitEmbeddedFile(\Docman_EmbeddedFile $item, array $params = [])
     {
         return ItemRepresentation::TYPE_EMBEDDED;
     }
 
+    #[\Override]
     public function visitEmpty(\Docman_Empty $item, array $params = [])
     {
         return ItemRepresentation::TYPE_EMPTY;
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->dispatcher
@@ -73,6 +80,7 @@ final readonly class SearchRepresentationTypeVisitor implements ItemVisitor
             ->getType();
     }
 
+    #[\Override]
     public function visitItem(\Docman_Item $item, array $params = [])
     {
         return null;

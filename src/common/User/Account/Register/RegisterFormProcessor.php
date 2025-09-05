@@ -37,6 +37,7 @@ final class RegisterFormProcessor implements IProcessRegisterForm
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $mail_confirm_code = $this->mail_confirmation_code_generator->getConfirmationCode();

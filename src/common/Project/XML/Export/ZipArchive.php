@@ -40,6 +40,7 @@ class ZipArchive implements ArchiveInterface
         }
     }
 
+    #[\Override]
     public function close()
     {
         if (! $this->archive->close()) {
@@ -47,11 +48,13 @@ class ZipArchive implements ArchiveInterface
         }
     }
 
+    #[\Override]
     public function addEmptyDir($dirname)
     {
         $this->archive->addEmptyDir($dirname);
     }
 
+    #[\Override]
     public function addFile($localname, $path_to_filesystem)
     {
         if (! $this->archive->addFile($path_to_filesystem, $localname)) {
@@ -59,6 +62,7 @@ class ZipArchive implements ArchiveInterface
         }
     }
 
+    #[\Override]
     public function addFromString($localname, $contents)
     {
         if (! $this->archive->addFromString($localname, $contents)) {
@@ -66,11 +70,13 @@ class ZipArchive implements ArchiveInterface
         }
     }
 
+    #[\Override]
     public function getArchivePath()
     {
         return $this->archive_path;
     }
 
+    #[\Override]
     public function isADirectory()
     {
         return false;

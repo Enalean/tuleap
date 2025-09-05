@@ -75,6 +75,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Class
      *
      * @return bool
      */
+    #[\Override]
     protected function addUserToGroup($id, $userId)
     {
         return $this->getDao()->addUserToGroup($id, $userId);
@@ -88,6 +89,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Class
      *
      * @return bool
      */
+    #[\Override]
     protected function removeUserFromGroup($id, $userId)
     {
         return $this->getDao()->removeUserFromGroup($id, $userId);
@@ -100,6 +102,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Class
      *
      * @return Array
      */
+    #[\Override]
     public function getDbGroupMembersIds($ugroupId)
     {
         return $this->getDao()->getMembersId($ugroupId);
@@ -156,6 +159,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Class
      *
      * @return LDAP_UserGroupDao
      */
+    #[\Override]
     public function getDao()
     {
         return $this->dao;
@@ -181,6 +185,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Class
         }
     }
 
+    #[\Override]
     protected function diffDbAndDirectory($option)
     {
         parent::diffDbAndDirectory($option);

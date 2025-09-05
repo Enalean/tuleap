@@ -29,26 +29,31 @@ class Docman_ReportColumnLocation extends \Docman_ReportColumn
         $this->sort = \null;
     }
 
+    #[\Override]
     public function setSort($s)
     {
         return;
     }
 
+    #[\Override]
     public function getSortSelectorHtml()
     {
         return;
     }
 
+    #[\Override]
     public function getTitle($defaultUrl, $viewParams = '')
     {
         return \dgettext('tuleap-docman', 'Location');
     }
 
+    #[\Override]
     public function initFromRequest($request)
     {
         return;
     }
 
+    #[\Override]
     public function getTableBox($item, $view, $params)
     {
         $hp        = \Codendi_HTMLPurifier::instance();

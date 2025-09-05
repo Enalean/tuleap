@@ -42,6 +42,7 @@ final class XMLTimeframeSemantic extends XMLSemantic
         parent::__construct(SemanticTimeframe::NAME);
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $child = parent::export($parent_node, $form_elements);

@@ -44,6 +44,7 @@ final class FieldValuesGatherer implements GatherFieldValues
     ) {
     }
 
+    #[\Override]
     public function getTitleValue(TitleFieldReference $title): string
     {
         $full_field = $this->form_element_factory->getFieldById($title->getId());
@@ -65,6 +66,7 @@ final class FieldValuesGatherer implements GatherFieldValues
         return $title_value->getValue();
     }
 
+    #[\Override]
     public function getDescriptionValue(DescriptionFieldReference $description): TextFieldValue
     {
         $full_field = $this->form_element_factory->getFieldById($description->getId());
@@ -84,16 +86,19 @@ final class FieldValuesGatherer implements GatherFieldValues
         return TextFieldValueProxy::fromChangesetValue($description_value);
     }
 
+    #[\Override]
     public function getStartDateValue(StartDateFieldReference $start_date): int
     {
         return $this->date_value_retriever->getDateFieldTimestamp($this->changeset, $start_date);
     }
 
+    #[\Override]
     public function getEndDateValue(EndDateFieldReference $end_date): int
     {
         return $this->date_value_retriever->getDateFieldTimestamp($this->changeset, $end_date);
     }
 
+    #[\Override]
     public function getDurationValue(DurationFieldReference $duration): int
     {
         $full_field = $this->form_element_factory->getFieldById($duration->getId());
@@ -108,6 +113,7 @@ final class FieldValuesGatherer implements GatherFieldValues
         return $duration_value->getValue();
     }
 
+    #[\Override]
     public function getStatusValues(StatusFieldReference $status): array
     {
         $full_field = $this->form_element_factory->getFieldById($status->getId());

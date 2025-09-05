@@ -119,6 +119,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
         $this->cards_preview_builder              = $cards_preview_builder;
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         $html   = '';
@@ -174,6 +175,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
         $this->card_fields = $fields;
     }
 
+    #[\Override]
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -217,31 +219,37 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         $this->xml_exporter->exportToXml($root, $xml_mapping, $this);
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-cardwall', 'Manage the Fields to be displayed on cards');
     }
 
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-cardwall', 'Cards');
     }
 
+    #[\Override]
     public function getShortName()
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field)
     {
         return $this->semantic_field_checker->isUsedInSemantic($field, $this->getFields());
     }
 
+    #[\Override]
     public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         if ($request->get('add') && (int) $request->get('field')) {
@@ -282,6 +290,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
         $this->getDao()->remove($this->tracker->getId(), $field->getId());
     }
 
+    #[\Override]
     public function save()
     {
         $dao = $this->getDao();

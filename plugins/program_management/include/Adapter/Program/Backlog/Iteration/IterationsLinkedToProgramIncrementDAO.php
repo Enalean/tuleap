@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 
 final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject implements SearchIterations, VerifyIterationHasBeenLinkedBefore
 {
+    #[\Override]
     public function searchIterations(ProgramIncrementIdentifier $program_increment): array
     {
         $sql = "SELECT iteration.id AS id, iteration.last_changeset_id AS changeset_id
@@ -58,6 +59,7 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
         return $rows;
     }
 
+    #[\Override]
     public function hasIterationBeenLinkedBefore(
         ProgramIncrementIdentifier $program_increment,
         IterationIdentifier $iteration,

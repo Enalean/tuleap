@@ -95,6 +95,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
     /**
      * @return Service[]
      */
+    #[\Override]
     public function getListOfAllowedServicesForProject(Project $project): array
     {
         if (! isset($this->list_of_services_per_project[$project->getID()])) {
@@ -178,6 +179,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
     /**
      * @throws ServiceCannotBeUpdatedException
      */
+    #[\Override]
     public function checkServiceCanBeUpdated(Project $project, string $short_name, bool $is_used, PFUser $user): void
     {
         if ($short_name === 'admin' && ! $is_used) {

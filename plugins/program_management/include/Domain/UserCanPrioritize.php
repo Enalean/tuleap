@@ -56,6 +56,7 @@ final class UserCanPrioritize implements UserIdentifier
         return new self($user_identifier->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

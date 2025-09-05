@@ -28,6 +28,7 @@ final class VersionRetriever implements IRetrieveVersion
     {
     }
 
+    #[\Override]
     public function getVersion(int $id): \Docman_Version
     {
         $row = $this->dao->searchById($id);

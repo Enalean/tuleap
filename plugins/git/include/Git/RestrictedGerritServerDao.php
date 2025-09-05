@@ -24,16 +24,19 @@ use RestrictedResourceDao;
 
 class RestrictedGerritServerDao extends RestrictedResourceDao
 {
+    #[\Override]
     public function getResourceAllowedProjectsTableName()
     {
         return 'plugin_git_restricted_gerrit_servers_allowed_projects';
     }
 
+    #[\Override]
     public function getResourceFieldName()
     {
         return 'gerrit_server_id';
     }
 
+    #[\Override]
     public function unsetResourceRestricted($gerrit_server_id)
     {
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);
@@ -43,6 +46,7 @@ class RestrictedGerritServerDao extends RestrictedResourceDao
         return $this->update($sql);
     }
 
+    #[\Override]
     public function setResourceRestricted($gerrit_server_id)
     {
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);
@@ -65,6 +69,7 @@ class RestrictedGerritServerDao extends RestrictedResourceDao
         return false;
     }
 
+    #[\Override]
     public function searchAllowedProjectsOnResource($gerrit_server_id)
     {
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);
@@ -77,6 +82,7 @@ class RestrictedGerritServerDao extends RestrictedResourceDao
         return $this->retrieve($sql);
     }
 
+    #[\Override]
     public function isResourceRestricted($gerrit_server_id)
     {
         $gerrit_server_id = $this->da->escapeInt($gerrit_server_id);

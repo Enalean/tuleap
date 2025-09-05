@@ -51,6 +51,7 @@ final class OnlyOfficeCreateAdminSettingsController extends DispatchablePSR15Com
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->csrf_token->check();

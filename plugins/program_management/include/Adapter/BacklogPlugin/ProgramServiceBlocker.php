@@ -37,6 +37,7 @@ final class ProgramServiceBlocker implements BacklogBlocksProgramServiceIfNeeded
     ) {
     }
 
+    #[\Override]
     public function shouldProgramServiceBeBlocked(
         UserIdentifier $user_identifier,
         ProjectIdentifier $project_identifier,

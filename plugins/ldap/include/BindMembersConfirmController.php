@@ -70,6 +70,7 @@ class BindMembersConfirmController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         // Import very long user group may takes very long time.

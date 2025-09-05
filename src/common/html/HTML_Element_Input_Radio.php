@@ -33,6 +33,7 @@ class HTML_Element_Input_Radio extends HTML_Element_Input
         }
     }
 
+    #[\Override]
     public function render()
     {
         $hp    = Codendi_HTMLPurifier::instance();
@@ -43,6 +44,7 @@ class HTML_Element_Input_Radio extends HTML_Element_Input
         return $html;
     }
 
+    #[\Override]
     protected function getInputType()
     {
         return 'radio';

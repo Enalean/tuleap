@@ -60,6 +60,7 @@ final class SetupTuleapCommand extends Command
         parent::__construct('setup:tuleap');
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -69,6 +70,7 @@ final class SetupTuleapCommand extends Command
             ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Set required php version');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $fqdn        = $input->getOption(self::OPT_TULEAP_FQDN);

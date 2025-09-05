@@ -30,6 +30,7 @@ final class UserCanManageProjectMembersChecker implements EnsureUserCanManagePro
     {
     }
 
+    #[\Override]
     public function checkUserCanManageProjectMembers(\PFUser $user, \Project $project): void
     {
         if ($project->getStatus() === \Project::STATUS_CREATING_FROM_ARCHIVE) {

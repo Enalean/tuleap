@@ -33,6 +33,7 @@ class BucketFilter extends FilterIterator
     /**
      * Match php upgrade scripts
      */
+    #[\Override]
     public function accept(): bool
     {
         $filePath = parent::current()->getPathname();

@@ -43,6 +43,7 @@ final class ProjectVisibilityNeedsRestrictedUsersException extends \RuntimeExcep
         $this->requested_access_level = $requested_access_level;
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

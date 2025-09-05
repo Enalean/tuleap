@@ -45,6 +45,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      * @access protected
      * @return string template filename
      */
+    #[\Override]
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
         if (! isset($this->params['sidebyside'])) {
@@ -63,6 +64,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
+    #[\Override]
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
@@ -78,6 +80,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      *
      * @access protected
      */
+    #[\Override]
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
         parent::ReadQuery();
@@ -103,6 +106,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         if (isset($this->params['file'])) {

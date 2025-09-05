@@ -70,6 +70,7 @@ class DocmanEmbeddedPOSTRepresentation implements CanContainACopyRepresentation
      */
     public $copy;
 
+    #[\Override]
     public static function getNonCopyRequiredObjectProperties(): array
     {
         return self::REQUIRED_NON_COPY_PROPERTIES;

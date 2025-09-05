@@ -47,6 +47,7 @@ class NewChangesetCreator implements CreateNewChangeset
     ) {
     }
 
+    #[\Override]
     public function create(NewChangeset $changeset, PostCreationContext $context): ?\Tracker_Artifact_Changeset
     {
         $submitter = $changeset->getSubmitter();

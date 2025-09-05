@@ -71,6 +71,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         return strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL . '/') === 0;
     }
 
+    #[\Override]
     public function getPluginInfo()
     {
         if (! is_a($this->pluginInfo, 'hudsonPluginInfo')) {
@@ -80,11 +81,13 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return 'hudson';
     }
 
+    #[\Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
@@ -95,21 +98,25 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
      * @see Event::SERVICE_IS_USED
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
      */
+    #[\Override]
     public function serviceIsUsed(array $params): void
     {
         // nothing to do for hudson
     }
 
+    #[\Override]
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
         // nothing to do for hudson
     }
 
+    #[\Override]
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         // nothing to do for hudson
     }
 
+    #[\Override]
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for hudson
@@ -374,6 +381,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         }
     }
 
+    #[\Override]
     public function process(): void
     {
         require_once('hudson.php');
@@ -416,6 +424,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         $hudson_organizer->organizeHudsonReferences($organizer);
     }
 
+    #[\Override]
     public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
     {
     }

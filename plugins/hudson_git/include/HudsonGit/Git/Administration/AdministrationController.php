@@ -54,6 +54,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
@@ -98,6 +99,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);

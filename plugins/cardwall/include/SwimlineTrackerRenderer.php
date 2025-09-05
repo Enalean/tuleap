@@ -35,6 +35,7 @@ class Cardwall_SwimlineTrackerRenderer extends Cardwall_Swimline
         $this->cells = $cells;
     }
 
+    #[\Override]
     public function getCardPresenter()
     {
         return null;

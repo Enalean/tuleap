@@ -48,6 +48,7 @@ final class FilteredOutboundHTTPResponseAlerter implements Plugin
     ) {
     }
 
+    #[\Override]
     public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
         if (! OutboundHTTPRequestProxy::isFilteringProxyEnabled()) {

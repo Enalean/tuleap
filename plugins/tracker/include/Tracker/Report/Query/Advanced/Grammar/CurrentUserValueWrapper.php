@@ -34,6 +34,7 @@ final readonly class CurrentUserValueWrapper implements ValueWrapper
         $this->value  = $current_user->getUserName();
     }
 
+    #[\Override]
     public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitCurrentUserValueWrapper($this, $parameters);

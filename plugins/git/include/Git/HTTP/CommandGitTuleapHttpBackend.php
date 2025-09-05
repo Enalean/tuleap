@@ -24,6 +24,7 @@ namespace Tuleap\Git\HTTP;
 
 final class CommandGitTuleapHttpBackend extends \Git_HTTP_Command
 {
+    #[\Override]
     public function getCommand(): string
     {
         return 'sudo -E -u gitolite ' . \Git_Exec::GIT_TULEAP_PATH . '/libexec/git-core/git-http-backend';

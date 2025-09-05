@@ -46,6 +46,7 @@ class Valid_File extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      * @param  String Index of file to check in $_FILES array.
      * @return bool
      */
+    #[\Override]
     public function validate($value, $index = '')
     {
         if (\is_array($value) && isset($value[$index])) {

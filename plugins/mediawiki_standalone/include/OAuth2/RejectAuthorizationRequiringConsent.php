@@ -36,6 +36,7 @@ final class RejectAuthorizationRequiringConsent implements ConsentRequiredRespon
     {
     }
 
+    #[\Override]
     public function buildConsentRequiredResponse(
         ServerRequestInterface $request,
         OAuth2App $client_app,

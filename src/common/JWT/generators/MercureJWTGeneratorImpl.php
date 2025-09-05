@@ -34,11 +34,13 @@ final class MercureJWTGeneratorImpl implements MercureJWTGenerator
     ) {
     }
 
+    #[\Override]
     public function getTokenWithSubscription(string $app_name, int $id, \PFUser $user): ConcealedString
     {
         return $this->getToken($app_name, $id, true, $user);
     }
 
+    #[\Override]
     public function getTokenWithoutSubscription(string $app_name, int $id, \PFUser $user): ConcealedString
     {
         return $this->getToken($app_name, $id, false, $user);
@@ -66,6 +68,7 @@ final class MercureJWTGeneratorImpl implements MercureJWTGenerator
         return new ConcealedString($token->toString());
     }
 
+    #[\Override]
     public function getTokenBackend(): ConcealedString
     {
         $mercure = [

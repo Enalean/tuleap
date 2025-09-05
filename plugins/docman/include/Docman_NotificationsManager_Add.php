@@ -23,11 +23,13 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
 {
     public const MESSAGE_ADDED = 'added'; // X has been added
 
+    #[\Override]
     public function _getListeningUsersItemId($params)
     {
         return $params['parent']->getId();
     }
 
+    #[\Override]
     public function _buildMessage($event, $params, $user)
     {
         switch ($event) {
@@ -49,6 +51,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
         }
     }
 
+    #[\Override]
     public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
@@ -75,6 +78,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
         return $msg;
     }
 
+    #[\Override]
     protected function getMessageLink($type, $params)
     {
         switch ($type) {

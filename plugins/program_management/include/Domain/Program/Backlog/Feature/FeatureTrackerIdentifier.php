@@ -42,6 +42,7 @@ final class FeatureTrackerIdentifier implements TrackerIdentifier
         return new self($tracker_retriever->getFeatureTracker($feature_identifier)->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

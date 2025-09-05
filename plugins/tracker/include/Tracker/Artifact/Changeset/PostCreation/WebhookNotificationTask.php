@@ -58,6 +58,7 @@ final class WebhookNotificationTask implements PostCreationTask
         $this->payload_builder = $payload_builder;
     }
 
+    #[\Override]
     public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
         $tracker  = $changeset->getTracker();

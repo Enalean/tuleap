@@ -26,6 +26,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_MetadataHtmlText extends \Docman_MetadataHtml
 {
+    #[\Override]
     public function getValue()
     {
         $value = $this->hp->purify($this->md->getValue(), \CODENDI_PURIFIER_BASIC, $this->md->getGroupId());

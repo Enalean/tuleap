@@ -33,6 +33,7 @@ final class CurrentDateTimeValueWrapper implements ValueWrapper
         $this->value = $this->computeCurrentDateTime($sign, $period);
     }
 
+    #[\Override]
     public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitCurrentDateTimeValueWrapper($this, $parameters);

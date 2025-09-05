@@ -36,6 +36,7 @@ class ReferenceGetTooltipChainLegacy extends ReferenceGetTooltipChain
         $this->event_manager = $event_manager;
     }
 
+    #[\Override]
     public function process(
         \Reference $reference,
         \Project $project,

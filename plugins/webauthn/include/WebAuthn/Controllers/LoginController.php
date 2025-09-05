@@ -49,6 +49,7 @@ final class LoginController implements DispatchableWithRequestNoAuthz, Dispatcha
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();

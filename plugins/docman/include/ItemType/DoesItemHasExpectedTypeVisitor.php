@@ -59,41 +59,49 @@ final class DoesItemHasExpectedTypeVisitor implements ItemVisitor
         return $this->expected_item_class;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $item instanceof $this->expected_item_class;
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): bool
     {
         return $item::class === $this->expected_item_class;

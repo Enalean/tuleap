@@ -40,6 +40,7 @@ final class MoveArtifactsAdminController implements DispatchableWithRequest, Dis
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['tracker_id']);

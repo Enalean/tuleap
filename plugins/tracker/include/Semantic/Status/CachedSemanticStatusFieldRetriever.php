@@ -48,6 +48,7 @@ final class CachedSemanticStatusFieldRetriever implements RetrieveSemanticStatus
     {
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): ?ListField
     {
         if (! isset($this->semantic_cache[$tracker->getId()])) {

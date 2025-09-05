@@ -47,6 +47,7 @@ final readonly class TeamAdapter implements BuildTeam
     ) {
     }
 
+    #[\Override]
     public function checkProjectIsATeam(int $team_id, UserIdentifier $user_identifier): void
     {
         $user    = $this->retrieve_user->getUserWithId($user_identifier);
@@ -60,6 +61,7 @@ final readonly class TeamAdapter implements BuildTeam
         $this->checkProject($project);
     }
 
+    #[\Override]
     public function checkProjectIsATeamForRestTestInitialization(int $team_id): void
     {
         $project = $this->retrieve_full_project->getProject($team_id);

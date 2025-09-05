@@ -58,6 +58,7 @@ final readonly class ArtifactIdsValuesCollection implements ValueWrapperVisitor
             ->map(static fn(array $artifact_ids) => new self($artifact_ids));
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         $value = $value_wrapper->getValue();
@@ -82,6 +83,7 @@ final readonly class ArtifactIdsValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Err<Fault>
      */
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         return Result::err(InvalidComparisonToStatusOpenFault::build());
@@ -91,11 +93,13 @@ final readonly class ArtifactIdsValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Err<Fault>
      */
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         return Result::err(InvalidComparisonToCurrentDateTimeFault::build());
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getMinValue()
@@ -116,6 +120,7 @@ final readonly class ArtifactIdsValuesCollection implements ValueWrapperVisitor
             );
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new \LogicException('Should not end there');
@@ -125,6 +130,7 @@ final readonly class ArtifactIdsValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Err<Fault>
      */
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         return Result::err(InvalidComparisonToCurrentUserFault::build());

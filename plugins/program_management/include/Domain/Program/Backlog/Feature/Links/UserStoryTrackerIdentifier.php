@@ -37,6 +37,7 @@ final class UserStoryTrackerIdentifier implements TrackerIdentifier
     {
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->tracker_identifier->getId();

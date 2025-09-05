@@ -47,6 +47,7 @@ final class PreReceiveCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('This command calls an external module to decide whether or not the revisions passed on STDIN should be accepted.')
@@ -58,6 +59,7 @@ final class PreReceiveCommand extends Command
             ->setHidden(true);
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $repository_path = (string) $input->getArgument('repository_path');

@@ -43,6 +43,7 @@ class FrozenFields extends Transition_PostAction
     }
 
     /** @return string */
+    #[\Override]
     public function getShortName()
     {
         return self::SHORT_NAME;
@@ -60,6 +61,7 @@ class FrozenFields extends Transition_PostAction
     }
 
     /** @return string */
+    #[\Override]
     public static function getLabel()
     {
         // Not implemented. We do not support the legacy UI for this new post action
@@ -67,6 +69,7 @@ class FrozenFields extends Transition_PostAction
     }
 
     /** @return bool */
+    #[\Override]
     public function isDefined()
     {
         // Since we do not support the legacy UI, it is always well defined
@@ -81,6 +84,7 @@ class FrozenFields extends Transition_PostAction
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if (count($this->getFieldIds()) > 0) {
@@ -100,11 +104,13 @@ class FrozenFields extends Transition_PostAction
      *
      * @return bool
      */
+    #[\Override]
     public function bypassPermissions(TrackerField $field)
     {
         return false;
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitFrozenFields($this);

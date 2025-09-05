@@ -40,6 +40,7 @@ final class DocmanFileDownloadCORS implements MiddlewareInterface
         $this->response_factory = $response_factory;
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($request->getMethod() === 'OPTIONS') {

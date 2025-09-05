@@ -26,11 +26,13 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
     public const IDENTIFIER = 'admin_lock_infos';
     public $defaultUrl;
 
+    #[\Override]
     protected function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
+    #[\Override]
     protected function getTitle(array $params): string
     {
         return self::getTabTitle();
@@ -46,6 +48,7 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'List of locked documents.');
     }
 
+    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $html = '<div class="tlp-framed">';

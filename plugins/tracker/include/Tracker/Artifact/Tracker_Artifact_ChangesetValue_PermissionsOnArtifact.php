@@ -48,6 +48,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitPermissionsOnArtifact($this);
@@ -81,6 +82,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return $this->used;
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         $representation = new ArtifactFieldValuePermissionsOnArtifactRepresentation();
@@ -106,6 +108,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return UserGroupRepresentation::getRESTIdForProject($project_id, $user_group_id);
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         $representation = new ArtifactFieldValuePermissionsOnArtifactFullRepresentation();
@@ -130,6 +133,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      *
      * @return string The value of this artifact changeset value for the web interface
      */
+    #[\Override]
     public function getValue()
     {
         return '';
@@ -140,6 +144,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      *
      * @return string|false The difference between another $changeset_value, false if no differneces
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         assert($changeset_value instanceof self);
@@ -180,6 +185,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return $changes;
     }
 
+    #[\Override]
     public function nodiff($format = 'html')
     {
         $added_arr = [];

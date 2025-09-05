@@ -52,6 +52,7 @@ class GitLegacyURLRedirectController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @return void
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_manager->getProject($variables['project_id']);

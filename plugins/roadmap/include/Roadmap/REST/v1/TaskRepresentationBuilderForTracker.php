@@ -69,6 +69,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
         $this->logger                 = $logger;
     }
 
+    #[\Override]
     public function buildRepresentation(Artifact $artifact, \PFUser $user): TaskRepresentation
     {
         if ($this->tracker->getId() !== $artifact->getTracker()->getId()) {

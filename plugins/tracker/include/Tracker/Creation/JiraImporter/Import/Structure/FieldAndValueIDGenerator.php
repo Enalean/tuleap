@@ -32,6 +32,7 @@ final class FieldAndValueIDGenerator implements IDGenerator
      */
     private $id = 0;
 
+    #[\Override]
     public function getNextId(): int
     {
         $this->id++;

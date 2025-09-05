@@ -41,6 +41,7 @@ final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAnd
     /**
      * @throws MediaWikiInstallAndUpdateHandlerException
      */
+    #[\Override]
     public function runInstallAndUpdate(): void
     {
         $this->mainpage_deployer->deployMainPages();

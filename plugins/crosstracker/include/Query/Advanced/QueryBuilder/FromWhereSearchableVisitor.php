@@ -32,6 +32,7 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
  */
 final class FromWhereSearchableVisitor implements SearchableVisitor
 {
+    #[\Override]
     public function visitField(Field $field, $parameters)
     {
         return $parameters->field_from_where_builder->getFromWhere(
@@ -42,6 +43,7 @@ final class FromWhereSearchableVisitor implements SearchableVisitor
         );
     }
 
+    #[\Override]
     public function visitMetaData(Metadata $metadata, $parameters)
     {
         return $parameters->metadata_from_where_builder->getFromWhere(

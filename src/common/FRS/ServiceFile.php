@@ -29,6 +29,7 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR2.Methods.MethodDeclaration.Underscore
 {
+    #[\Override]
     public function getIconName(): string
     {
         return 'far fa-copy';
@@ -39,6 +40,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
      *
      * Return the link which will be displayed in public area in summary page
      */
+    #[\Override]
     public function getPublicArea(): string
     {
         $purifier = Codendi_HTMLPurifier::instance();

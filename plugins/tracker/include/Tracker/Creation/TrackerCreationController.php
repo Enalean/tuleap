@@ -90,6 +90,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
      * @throws NotFoundException
      * @throws ForbiddenException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -136,6 +137,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
      * It's the preferred way to deal with those kind of URLs over Event::GET_PROJECTID_FROM_URL
      *
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);

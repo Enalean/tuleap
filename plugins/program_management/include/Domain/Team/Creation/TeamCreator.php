@@ -58,6 +58,7 @@ final class TeamCreator implements CreateTeam
      * @throws ProgramIsTeamException
      * @throws ProgramCannotBeATeamException
      */
+    #[\Override]
     public function create(UserReference $user, int $project_id, array $team_ids): void
     {
         if (in_array($project_id, $team_ids, true)) {

@@ -38,6 +38,7 @@ final class TeamAccessException extends \Exception implements TeamException
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

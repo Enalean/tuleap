@@ -55,6 +55,7 @@ class JenkinsTuleapPluginHookPayload implements Payload
         ];
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         $now = ($this->clock)();

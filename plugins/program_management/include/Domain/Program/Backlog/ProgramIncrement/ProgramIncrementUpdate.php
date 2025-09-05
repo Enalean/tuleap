@@ -88,6 +88,7 @@ final class ProgramIncrementUpdate implements TimeboxMirroringOrder
         );
     }
 
+    #[\Override]
     public function getTimebox(): TimeboxIdentifier
     {
         return $this->program_increment;
@@ -98,6 +99,7 @@ final class ProgramIncrementUpdate implements TimeboxMirroringOrder
         return $this->program_increment;
     }
 
+    #[\Override]
     public function getTracker(): TrackerIdentifier
     {
         return $this->tracker;
@@ -108,6 +110,7 @@ final class ProgramIncrementUpdate implements TimeboxMirroringOrder
         return $this->tracker;
     }
 
+    #[\Override]
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
@@ -118,6 +121,7 @@ final class ProgramIncrementUpdate implements TimeboxMirroringOrder
         return $this->old_changeset;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;

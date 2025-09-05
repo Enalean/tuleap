@@ -25,6 +25,7 @@ class Delete extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier()
     {
         return 'delete';
@@ -33,6 +34,7 @@ class Delete extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
+    #[\Override]
     public function getTitle()
     {
         return ucfirst($GLOBALS['Language']->getText('global', 'delete'));
@@ -41,6 +43,7 @@ class Delete extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
+    #[\Override]
     public function getContent()
     {
         $html  = '';

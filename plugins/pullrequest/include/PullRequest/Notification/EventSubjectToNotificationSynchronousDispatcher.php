@@ -38,6 +38,7 @@ final class EventSubjectToNotificationSynchronousDispatcher implements EventDisp
         $this->listener_provider = $listener_provider;
     }
 
+    #[\Override]
     public function dispatch(object $event): object
     {
         if (! $event instanceof EventSubjectToNotification) {

@@ -22,6 +22,7 @@ namespace Tuleap\User\XML;
 
 class UserXMLExportedDevNullCollection extends \UserXMLExportedCollection
 {
+    #[\Override]
     public function add(\PFUser $user): void
     {
         // ignore the addition of users

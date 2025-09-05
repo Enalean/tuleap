@@ -35,6 +35,7 @@ class PermissionPerGroupController extends RouterLink
         $this->permissions_retriever = $permissions_retriever;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request)
     {
         switch ($request->get('action')) {

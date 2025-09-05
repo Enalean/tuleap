@@ -98,6 +98,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         $this->prioritized_on           = $prioritized_on;
     }
 
+    #[\Override]
     public function getId()
     {
         return $this->id;
@@ -143,11 +144,13 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $this->prioritized_on;
     }
 
+    #[\Override]
     public function getFollowUpClassnames($diff_to_previous, PFUser $user): string
     {
         return 'tracker_artifact_followup-priority';
     }
 
+    #[\Override]
     public function getSubmitterUrl()
     {
         $user_helper   = UserHelper::instance();
@@ -156,16 +159,19 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $submitter_url;
     }
 
+    #[\Override]
     public function getFollowUpDate()
     {
         return $this->prioritized_on;
     }
 
+    #[\Override]
     public function getHTMLAvatar()
     {
         return $this->prioritized_by->fetchHtmlAvatar();
     }
 
+    #[\Override]
     public function fetchFollowUp($diff_to_previous, PFUser $current_user): string
     {
         $html  = '';
@@ -186,6 +192,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $html;
     }
 
+    #[\Override]
     public function getFollowupContent(string $diff_to_previous, \PFUser $current_user): string
     {
         return dgettext('tuleap-tracker', 'The priority has been') .
@@ -245,6 +252,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
      *
      * @return string html
      */
+    #[\Override]
     public function diffToPrevious(
         $format = 'html',
         $user = null,
@@ -254,6 +262,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return '';
     }
 
+    #[\Override]
     public function getValue(TrackerField $field)
     {
         return null;
@@ -262,11 +271,13 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
     /**
      * @return Tracker_Artifact_ChangesetValue[]
      */
+    #[\Override]
     public function getChangesetValuesHasChanged(): array
     {
         return [];
     }
 
+    #[\Override]
     public function canHoldValue()
     {
         return false;

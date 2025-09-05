@@ -37,6 +37,7 @@ final readonly class EventSummaryRetriever implements RetrieveEventSummary
     /**
      * @return Ok<CalendarEventData>|Err<non-empty-string>
      */
+    #[\Override]
     public function retrieveEventSummary(
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,

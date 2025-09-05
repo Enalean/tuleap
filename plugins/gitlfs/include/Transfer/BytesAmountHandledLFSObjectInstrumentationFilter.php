@@ -80,17 +80,20 @@ final class BytesAmountHandledLFSObjectInstrumentationFilter implements FilterIn
         );
     }
 
+    #[\Override]
     public function process($data_chunk): string
     {
         $this->transferred_bytes += \strlen($data_chunk);
         return $data_chunk;
     }
 
+    #[\Override]
     public function getFilteredChainIdentifier(): int
     {
         return STREAM_FILTER_READ;
     }
 
+    #[\Override]
     public function filterDetachedEvent(): void
     {
         $this->prometheus->incrementBy(

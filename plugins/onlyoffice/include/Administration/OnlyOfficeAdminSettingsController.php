@@ -44,6 +44,7 @@ final class OnlyOfficeAdminSettingsController implements DispatchableWithRequest
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $this->current_user_provider->getCurrentUser();

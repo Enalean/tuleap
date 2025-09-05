@@ -36,21 +36,25 @@ final readonly class FileBeingUploadedInformation implements TusFileInformation
         }
     }
 
+    #[\Override]
     public function getID(): FileIdentifier
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLength(): int
     {
         return $this->length;
     }
 
+    #[\Override]
     public function getOffset(): int
     {
         return $this->offset;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;

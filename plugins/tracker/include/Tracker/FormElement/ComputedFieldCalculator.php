@@ -37,6 +37,7 @@ class ComputedFieldCalculator implements IProvideArtifactChildrenForComputedCalc
         $this->dao = $dao;
     }
 
+    #[\Override]
     public function fetchChildrenAndManualValuesOfArtifacts(
         array $artifact_ids_to_fetch,
         $timestamp,

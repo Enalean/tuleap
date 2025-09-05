@@ -42,6 +42,7 @@ final class TitleFieldHasIncorrectTypeException extends \Exception implements Fi
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

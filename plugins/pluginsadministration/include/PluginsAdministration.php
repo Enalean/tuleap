@@ -26,6 +26,7 @@ class PluginsAdministration extends Controler
         HTTPRequest::instance()->checkUserIsSuperUser();
     }
 
+    #[\Override]
     public function request()
     {
         $request = HTTPRequest::instance();

@@ -32,6 +32,7 @@ final class MediaWikiSharedSecretGeneratorForgeConfigStore implements MediaWikiS
     {
     }
 
+    #[\Override]
     public function generateSharedSecret(): ConcealedString
     {
         $secret = new ConcealedString(sodium_bin2hex(random_bytes(32)));

@@ -46,6 +46,7 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();

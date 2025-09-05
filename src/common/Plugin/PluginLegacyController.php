@@ -48,6 +48,7 @@ final class PluginLegacyController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment($this->plugin->getName());

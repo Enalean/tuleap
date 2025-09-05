@@ -782,6 +782,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         return $this->getDB()->run($sql);
     }
 
+    #[\Override]
     public function isArtifactClosureAllowed(int $repository_id): bool
     {
         $sql = 'SELECT repo.allow_artifact_closure FROM plugin_git AS repo WHERE repo.repository_id = ?';
@@ -790,6 +791,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         return $result === 1;
     }
 
+    #[\Override]
     public function allowArtifactClosureForRepository(int $repository_id): void
     {
         $this->getDB()->update(
@@ -799,6 +801,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         );
     }
 
+    #[\Override]
     public function forbidArtifactClosureForRepository(int $repository_id): void
     {
         $this->getDB()->update(

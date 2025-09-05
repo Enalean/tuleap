@@ -29,6 +29,7 @@ use Tuleap\DB\DataAccessObject;
  */
 final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateWidget, CloneWidget
 {
+    #[\Override]
     public function searchWidgetExistence(int $widget_id): bool
     {
         return $this->getDB()->row('SELECT 1 FROM plugin_crosstracker_widget WHERE id = ?', $widget_id) !== null;
@@ -37,6 +38,7 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
     /**
      * @psalm-return CrossTrackerWidgetDashboardRow|null
      */
+    #[\Override]
     public function searchCrossTrackerWidgetDashboardById(int $content_id): ?array
     {
         $sql = "SELECT dashboard_id, dashboard_type, user_id, project_dashboards.project_id
@@ -57,11 +59,13 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
         return $this->getDB()->row($sql, $content_id);
     }
 
+    #[\Override]
     public function createWidget(): int
     {
         return (int) $this->getDB()->insertReturnId('plugin_crosstracker_widget', []);
     }
 
+    #[\Override]
     public function cloneWidget(int $template_widget_id): int
     {
         return $this->getDB()->tryFlatTransaction(function () use ($template_widget_id) {

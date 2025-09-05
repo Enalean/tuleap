@@ -275,6 +275,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
         ]);
     }
 
+    #[\Override]
     public function displayHeader(Project $project, string $title, array $breadcrumbs, HeaderConfiguration|array $params): void
     {
         $breadcrumbs = array_merge(
@@ -315,6 +316,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
         return UserManager::instance()->getCurrentUser();
     }
 
+    #[\Override]
     public function displayFooter(Project $project): void
     {
         if ($service = $project->getService('plugin_tracker')) {
@@ -570,6 +572,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
         $this->displayFooter($project);
     }
 
+    #[\Override]
     public function fetchTrackerSwitcher(PFUser $user, $separator, ?Project $include_project = null, ?Tracker $current_tracker = null)
     {
         $hp   = Codendi_HTMLPurifier::instance();

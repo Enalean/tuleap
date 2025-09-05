@@ -50,6 +50,7 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): \Project
     {
         $project = $this->project_manager->getProjectByUnixName($variables['project_name']);
@@ -60,6 +61,7 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
         return $project;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);

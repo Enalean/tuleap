@@ -43,6 +43,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
     /**
      * Builds bar chart object
      */
+    #[\Override]
     public function buildGraph()
     {
         if (! $this->width) {
@@ -146,6 +147,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
         return $b;
     }
 
+    #[\Override]
     public function toArray()
     {
         return $this->getChartData(

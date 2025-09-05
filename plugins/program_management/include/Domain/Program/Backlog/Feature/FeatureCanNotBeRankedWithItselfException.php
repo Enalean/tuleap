@@ -32,6 +32,7 @@ final class FeatureCanNotBeRankedWithItselfException extends \RuntimeException i
         $this->i18n_message = dgettext('tuleap-program_management', 'Feature cannot be ranked with itself');
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

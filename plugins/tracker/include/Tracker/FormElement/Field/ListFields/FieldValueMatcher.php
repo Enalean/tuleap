@@ -30,6 +30,7 @@ final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, 
     {
     }
 
+    #[\Override]
     public function getMatchingValueByDuckTyping(
         ListField $source_field,
         ListField $destination_field,
@@ -55,6 +56,7 @@ final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, 
         return ($destination_value !== null) ? $destination_value->getId() : null;
     }
 
+    #[\Override]
     public function getMatchingBindValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
         \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
@@ -68,6 +70,7 @@ final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, 
         return null;
     }
 
+    #[\Override]
     public function isSourceUserValueMatchingADestinationUserValue(ListField $destination_contributor_field, SimpleXMLElement $value): bool
     {
         $user = $this->user_finder->getUser($value);

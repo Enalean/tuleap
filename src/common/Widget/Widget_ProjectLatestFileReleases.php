@@ -39,16 +39,19 @@ class Widget_ProjectLatestFileReleases extends Widget
         }
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $this->content['title'] ?? '';
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return $this->content['content'] ?? '';
     }
 
+    #[\Override]
     public function isAvailable()
     {
         return isset($this->content['title']);
@@ -59,11 +62,13 @@ class Widget_ProjectLatestFileReleases extends Widget
         return $project->usesFile();
     }
 
+    #[\Override]
     public function getCategory()
     {
         return _('Files');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_latest_file_releases', 'description');

@@ -32,6 +32,7 @@ final class EventOrganizerRetriever implements RetrieveEventOrganizer
     /**
      * @return Ok<CalendarEventData>
      */
+    #[\Override]
     public function retrieveEventOrganizer(CalendarEventData $calendar_event_data, \Tracker_Artifact_Changeset $changeset, \PFUser $recipient, LoggerInterface $logger, bool $should_check_permissions,): Ok
     {
         $parse_result = mailparse_rfc822_parse_addresses(\ForgeConfig::get(ConfigurationVariables::NOREPLY));

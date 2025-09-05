@@ -67,6 +67,7 @@ class DeleteController implements DispatchableWithRequest
         $this->csrf_token              = $csrf_token;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->exist('jenkins_server_id')) {

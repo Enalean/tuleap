@@ -38,6 +38,7 @@ final class ProjectRegistrationCheckerAggregator implements ProjectRegistrationC
         $this->checkers = $checkers;
     }
 
+    #[\Override]
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
         ProjectCreationData $project_creation_data,

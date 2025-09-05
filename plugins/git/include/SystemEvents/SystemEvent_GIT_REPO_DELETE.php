@@ -58,6 +58,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
         $this->event_manager         = $event_manager;
     }
 
+    #[\Override]
     public function process()
     {
         $parameters = $this->getParametersAsArray();
@@ -110,6 +111,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
         return true;
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return $this->parameters;

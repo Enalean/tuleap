@@ -69,6 +69,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey
      * SSH key of replication
      * @return array
      */
+    #[\Override]
     public function getAuthorizedKeysArray()
     {
         if ($this->value) {
@@ -80,6 +81,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey
     /**
      * Fake username for replication
      */
+    #[\Override]
     public function getUserName(): string
     {
         return Rule_UserName::RESERVED_PREFIX . self::KEYNAME_PREFIX . $this->getGerritHostId();

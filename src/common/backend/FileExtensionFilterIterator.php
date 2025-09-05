@@ -36,6 +36,7 @@ class FileExtensionFilterIterator extends RecursiveFilterIterator
         $this->allowed_extensions = $allowed_extensions;
     }
 
+    #[\Override]
     public function accept(): bool
     {
         $file = $this->current();
@@ -48,6 +49,7 @@ class FileExtensionFilterIterator extends RecursiveFilterIterator
         return in_array($extension, $this->allowed_extensions);
     }
 
+    #[\Override]
     public function getChildren(): RecursiveFilterIterator
     {
         return new self($this->getInnerIterator()->getChildren(), $this->allowed_extensions);

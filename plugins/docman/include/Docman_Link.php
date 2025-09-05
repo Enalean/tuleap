@@ -46,17 +46,20 @@ class Docman_Link extends Docman_Document
         $this->url = $url;
     }
 
+    #[\Override]
     public function getType()
     {
         return dgettext('tuleap-docman', 'Link');
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         parent::initFromRow($row);
         $this->setUrl($row['link_url']);
     }
 
+    #[\Override]
     public function toRow()
     {
         $row              = parent::toRow();
@@ -65,6 +68,7 @@ class Docman_Link extends Docman_Document
         return $row;
     }
 
+    #[\Override]
     public function accept($visitor, $params = [])
     {
         return $visitor->visitLink($this, $params);

@@ -74,6 +74,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
      *
      * @return void
      */
+    #[\Override]
     public function display(Codendi_Request $request, PFUser $current_user)
     {
         // the following statement needs to be called before displayHeader
@@ -82,6 +83,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         parent::display($request, $current_user);
     }
 
+    #[\Override]
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
         $html = parent::fetchFormContent($request, $current_user);
@@ -105,6 +107,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $this->cached_parent_hierarchy;
     }
 
+    #[\Override]
     protected function enhanceRedirect(Codendi_Request $request): void
     {
         $from_aid = $request->get('from_aid');
@@ -114,6 +117,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         parent::enhanceRedirect($request);
     }
 
+    #[\Override]
     protected function displayHeader()
     {
         if (CodeBlockFeaturesOnArtifact::getInstance()->isMermaidNeeded()) {
@@ -315,6 +319,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $html;
     }
 
+    #[\Override]
     protected function displayFooter()
     {
         if (CodeBlockFeaturesOnArtifact::getInstance()->isSyntaxHighlightNeeded()) {

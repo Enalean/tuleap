@@ -26,16 +26,19 @@ class TrackerAdminAllProjects extends User_ForgeUserGroupPermission
 {
     public const ID = 2;
 
+    #[\Override]
     public function getId()
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getName()
     {
         return dgettext('tuleap-tracker', 'Global Tracker Administrator');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-tracker', 'This permission grants tracker administration rights on all trackers on all projects');

@@ -28,6 +28,7 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class CSRFTokenSynchronizerProvider implements ProvideCSRFTokenSynchronizer
 {
+    #[\Override]
     public function getCSRFToken(Project $project): CSRFSynchronizerTokenInterface
     {
         return new CSRFSynchronizerToken(DefaultSettingsUrlBuilder::build($project));

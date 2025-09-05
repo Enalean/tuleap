@@ -47,6 +47,7 @@ final class TaskWorkerProcessCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Process one async event');
@@ -59,6 +60,7 @@ final class TaskWorkerProcessCommand extends Command
         );
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $path_file_event = $input->getArgument('input_file');

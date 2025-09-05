@@ -33,6 +33,7 @@ final class PromotedTrackersRetriever implements RetrievePromotedTrackers
     /**
      * @return Tracker[]
      */
+    #[\Override]
     public function getTrackers(\PFUser $current_user, \Project $project): array
     {
         $trackers = [];

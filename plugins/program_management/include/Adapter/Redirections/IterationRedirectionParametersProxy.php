@@ -42,27 +42,32 @@ final class IterationRedirectionParametersProxy implements IterationRedirectionP
         return new self($redirect_value, $increment_id);
     }
 
+    #[\Override]
     public function getValue(): string
     {
         return $this->redirect_value;
     }
 
+    #[\Override]
     public function getIncrementId(): string
     {
         return $this->increment_id;
     }
 
+    #[\Override]
     public function isRedirectionNeeded(): bool
     {
         return $this->needsRedirectionAfterCreate() || $this->needsRedirectionAfterUpdate();
     }
 
+    #[\Override]
     public function needsRedirectionAfterCreate(): bool
     {
         return $this->increment_id !== '' &&
             $this->redirect_value === IterationRedirectionParameters::REDIRECT_AFTER_CREATE_ACTION;
     }
 
+    #[\Override]
     public function needsRedirectionAfterUpdate(): bool
     {
         return $this->increment_id !== '' &&

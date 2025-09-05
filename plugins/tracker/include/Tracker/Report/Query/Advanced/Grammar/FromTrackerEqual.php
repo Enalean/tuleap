@@ -33,6 +33,7 @@ final readonly class FromTrackerEqual implements FromTrackerCondition
         return $this->value;
     }
 
+    #[\Override]
     public function acceptFromTrackerConditionVisitor(FromTrackerConditionVisitor $visitor, $parameters)
     {
         return $visitor->visitEqual($this, $parameters);

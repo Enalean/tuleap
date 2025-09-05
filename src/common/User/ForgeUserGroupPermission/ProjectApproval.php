@@ -22,6 +22,7 @@ class User_ForgeUserGroupPermission_ProjectApproval extends User_ForgeUserGroupP
 {
     public const ID = 1;
 
+    #[\Override]
     public function getId()
     {
         if (self::ID) {
@@ -29,11 +30,13 @@ class User_ForgeUserGroupPermission_ProjectApproval extends User_ForgeUserGroupP
         }
     }
 
+    #[\Override]
     public function getName()
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'project_approval_name');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'project_approval_description');

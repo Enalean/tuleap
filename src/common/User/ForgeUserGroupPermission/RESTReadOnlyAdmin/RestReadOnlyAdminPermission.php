@@ -26,16 +26,19 @@ class RestReadOnlyAdminPermission extends User_ForgeUserGroupPermission
 {
     public const ID = 9;
 
+    #[\Override]
     public function getId()
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getName()
     {
         return _('REST Read only administrator');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return _('This permission grants the user the right to see all the platform content through the REST API (GET/OPTIONS)');

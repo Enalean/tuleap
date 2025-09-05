@@ -44,6 +44,7 @@ final class MissingMandatoryFieldException extends \RuntimeException implements 
         );
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

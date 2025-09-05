@@ -33,11 +33,13 @@ final class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElem
         return $this->getLabel();
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return (string) $this->getId();
     }
 
+    #[\Override]
     public function getJsonId()
     {
         return '!' . $this->getId();

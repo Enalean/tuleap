@@ -50,6 +50,7 @@ final class DeletePdfTemplateController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(\PFUser::class);

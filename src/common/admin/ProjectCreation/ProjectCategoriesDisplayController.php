@@ -41,6 +41,7 @@ class ProjectCategoriesDisplayController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @return void
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

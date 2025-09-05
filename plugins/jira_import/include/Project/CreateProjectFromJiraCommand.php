@@ -74,6 +74,7 @@ final class CreateProjectFromJiraCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Import a project from a Jira instance')
@@ -104,6 +105,7 @@ final class CreateProjectFromJiraCommand extends Command
             ->addOption(self::OPT_DEBUG, 'd', InputOption::VALUE_REQUIRED, 'Turn on debug mode, will dump content in provided directory');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $logger          = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);

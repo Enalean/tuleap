@@ -50,6 +50,7 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
     ) {
     }
 
+    #[\Override]
     public function visitEqual(FromProjectEqual $project_equal, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         if (is_array($project_equal->getValue())) {
@@ -168,6 +169,7 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
         );
     }
 
+    #[\Override]
     public function visitIn(FromProjectIn $project_in, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from_project = $parameters->from_project;

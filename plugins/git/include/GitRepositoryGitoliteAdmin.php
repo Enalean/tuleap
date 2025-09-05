@@ -34,11 +34,13 @@ class GitRepositoryGitoliteAdmin extends GitRepository
         $this->setPath(self::NAME);
     }
 
+    #[\Override]
     public function getPathWithoutLazyLoading()
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getBackendType()
     {
         return GitDao::BACKEND_GITOLITE;

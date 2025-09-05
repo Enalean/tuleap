@@ -25,6 +25,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
     public const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
     public const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
 
+    #[\Override]
     public function somethingHappen($event, $params)
     {
         if ($event == 'plugin_docman_event_move') {
@@ -61,6 +62,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
         }
     }
 
+    #[\Override]
     public function _buildMessage($params, $user, $type)
     {
         $params['old_parent'] = $this->_item_factory->getItemFromDb($params['item']->getParentId());
@@ -76,6 +78,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
         );
     }
 
+    #[\Override]
     public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
@@ -133,6 +136,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
         return $msg;
     }
 
+    #[\Override]
     protected function getMessageLink($type, $params)
     {
         switch ($type) {

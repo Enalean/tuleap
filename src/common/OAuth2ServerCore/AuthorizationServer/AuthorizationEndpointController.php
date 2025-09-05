@@ -124,6 +124,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
     /**
      * @throws ForbiddenException
      */
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($request->getMethod() === 'POST') {

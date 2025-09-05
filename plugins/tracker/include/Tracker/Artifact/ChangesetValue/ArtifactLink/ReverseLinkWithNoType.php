@@ -36,11 +36,13 @@ final class ReverseLinkWithNoType implements ReverseLink
         return new self($reverse_link->getSourceArtifactId(), '');
     }
 
+    #[\Override]
     public function getSourceArtifactId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getType(): string
     {
         return $this->type;

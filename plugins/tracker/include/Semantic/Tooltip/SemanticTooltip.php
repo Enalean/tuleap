@@ -51,6 +51,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
         $this->fields = $fields;
     }
 
+    #[\Override]
     public function getFields(): array
     {
         if (empty($this->fields)) {
@@ -75,6 +76,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @return bool true if success, false otherwise
      */
+    #[\Override]
     public function save()
     {
         $dao = $this->getDao();
@@ -94,6 +96,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @return void
      */
+    #[\Override]
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -123,6 +126,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @return string
      */
+    #[\Override]
     public function getShortName()
     {
         return 'tooltip';
@@ -133,6 +137,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @return string
      */
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-tracker', 'Tooltip');
@@ -143,6 +148,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @return string
      */
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-tracker', 'Manage tooltip');
@@ -205,6 +211,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @return void
      */
+    #[\Override]
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -241,6 +248,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         $html = '';
@@ -276,6 +284,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(\SimpleXMLElement $root, $xml_mapping)
     {
         $child = $root->addChild('semantic');
@@ -292,6 +301,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field)
     {
         $fields = $this->getFields();

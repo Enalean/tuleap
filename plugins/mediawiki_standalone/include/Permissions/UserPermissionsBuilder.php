@@ -36,6 +36,7 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
     ) {
     }
 
+    #[\Override]
     public function getPermissions(\PFUser $user, \Project $project): UserPermissions
     {
         try {

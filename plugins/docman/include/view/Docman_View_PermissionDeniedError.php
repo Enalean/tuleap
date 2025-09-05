@@ -21,6 +21,7 @@
 
 class Docman_View_PermissionDeniedError extends Docman_View_DocmanError
 {
+    #[\Override]
     public function display($params = [])
     {
         $sendMail = new Docman_Error_PermissionDenied();

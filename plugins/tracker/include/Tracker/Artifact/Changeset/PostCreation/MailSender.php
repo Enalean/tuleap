@@ -38,6 +38,7 @@ use UserManager;
 
 class MailSender implements SendMail
 {
+    #[\Override]
     public function send(
         Tracker_Artifact_Changeset $changeset,
         array $recipients,

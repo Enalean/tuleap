@@ -55,6 +55,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent
         }
     }
 
+    #[\Override]
     public function process()
     {
         $server          = $this->getServer();
@@ -69,6 +70,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent
         }
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         if ($with_link) {

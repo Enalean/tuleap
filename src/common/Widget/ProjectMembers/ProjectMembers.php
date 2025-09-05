@@ -32,21 +32,25 @@ class ProjectMembers extends Widget
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     public function getTitle()
     {
         return _('Project Team');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return _('Lists the project members.');
     }
 
+    #[\Override]
     public function getIcon()
     {
         return 'fa-users';
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $renderer = \TemplateRendererFactory::build()->getRenderer(
@@ -70,6 +74,7 @@ class ProjectMembers extends Widget
         );
     }
 
+    #[\Override]
     public function exportAsXML(): \SimpleXMLElement
     {
         $widget = new \SimpleXMLElement('<widget />');

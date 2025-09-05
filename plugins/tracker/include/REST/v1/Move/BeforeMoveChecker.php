@@ -42,6 +42,7 @@ final class BeforeMoveChecker implements CheckBeforeMove
     /**
      * @throws RestException
      */
+    #[\Override]
     public function check(Tracker $source_tracker, Tracker $target_tracker, \PFUser $user, Artifact $artifact, MoveArtifactActionAllowedByPluginRetriever $event): void
     {
         $this->status_verificator->checkProjectStatusAllowsAllUsersToAccessIt(

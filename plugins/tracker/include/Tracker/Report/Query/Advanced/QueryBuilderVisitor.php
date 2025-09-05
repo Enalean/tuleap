@@ -195,6 +195,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return $parsed_query->acceptLogicalVisitor($this, new QueryBuilderParameters($tracker, $user));
     }
 
+    #[\Override]
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -208,6 +209,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -221,6 +223,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -234,6 +237,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -247,6 +251,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -260,6 +265,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -273,6 +279,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -286,6 +293,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitInComparison(InComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -299,6 +307,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
@@ -312,11 +321,13 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         );
     }
 
+    #[\Override]
     public function visitParenthesis(Parenthesis $parenthesis, $parameters)
     {
         return $this->visitOrExpression($parenthesis->or_expression, $parameters);
     }
 
+    #[\Override]
     public function visitAndExpression(AndExpression $and_expression, $parameters)
     {
         $from_where_expression = $and_expression->getExpression()->acceptTermVisitor($this, $parameters);
@@ -326,6 +337,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return $this->buildAndClause($parameters, $tail, $from_where_expression);
     }
 
+    #[\Override]
     public function visitOrExpression(OrExpression $or_expression, $parameters)
     {
         $from_where_expression = $or_expression->getExpression()->acceptLogicalVisitor($this, $parameters);
@@ -335,6 +347,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return $this->buildOrClause($parameters, $tail, $from_where_expression);
     }
 
+    #[\Override]
     public function visitOrOperand(OrOperand $or_operand, $parameters)
     {
         $from_where_expression = $or_operand->getOperand()->acceptLogicalVisitor($this, $parameters);
@@ -344,6 +357,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return $this->buildOrClause($parameters, $tail, $from_where_expression);
     }
 
+    #[\Override]
     public function visitAndOperand(AndOperand $and_operand, $parameters)
     {
         $from_where_expression = $and_operand->getOperand()->acceptTermVisitor($this, $parameters);
@@ -375,21 +389,25 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         return new ParametrizedOrFromWhere($from_where_expression, $from_where_tail);
     }
 
+    #[\Override]
     public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
         return $this->reverse_link_from_where_builder->getFromWhereForWithReverseLink($condition, $parameters->user);
     }
 
+    #[\Override]
     public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
         return $this->reverse_link_from_where_builder->getFromWhereForWithoutReverseLink($condition, $parameters->user);
     }
 
+    #[\Override]
     public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
         return $this->forward_link_from_where_builder->getFromWhereForWithForwardLink($condition, $parameters->user);
     }
 
+    #[\Override]
     public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
         return $this->forward_link_from_where_builder->getFromWhereForWithoutForwardLink($condition, $parameters->user);

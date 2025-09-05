@@ -38,6 +38,7 @@ final class RequiredFieldVerifier implements VerifyRequiredFieldsLimitedToSynchr
         $this->tracker_factory = $tracker_factory;
     }
 
+    #[\Override]
     public function areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,

@@ -32,6 +32,7 @@ final class InvalidServiceActivationEvent extends ServiceActivationEvent
     {
     }
 
+    #[\Override]
     public function isValid(): bool
     {
         return false;

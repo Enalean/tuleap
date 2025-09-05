@@ -59,6 +59,7 @@ final class DiscoveryController extends DispatchablePSR15Compatible implements D
     /**
      * @throws \JsonException
      */
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->json_response_builder->fromData($this->representation_builder->build());

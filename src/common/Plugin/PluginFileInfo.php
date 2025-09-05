@@ -56,6 +56,7 @@ class PluginFileInfo extends PluginInfo // phpcs:ignore PSR1.Classes.ClassDeclar
     /**
      * Load properties from the configuration file
      */
+    #[\Override]
     public function loadProperties(): void
     {
         if (is_file($this->default_conf_path)) {

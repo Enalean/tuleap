@@ -41,6 +41,7 @@ final class RemoveRecipientWhenTheyAreInCreationOnlyMode implements RecipientRem
      *
      * @psalm-return array<string, Recipient>
      */
+    #[\Override]
     public function removeRecipient(LoggerInterface $logger, Tracker_Artifact_Changeset $changeset, array $recipients, bool $is_update): array
     {
         if (! $is_update) {

@@ -27,6 +27,7 @@ final class GreaterThanOrEqualComparisonChecker implements ICheckMetadataForACom
 {
     public const OPERATOR = '>=';
 
+    #[\Override]
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {
         throw new InvalidMetadataForComparisonException($metadata, self::OPERATOR);

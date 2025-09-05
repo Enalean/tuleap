@@ -50,6 +50,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
      */
     private $date_retriever;
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return '-';
@@ -69,6 +70,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
         $this->date_retriever   = $date_retriever;
     }
 
+    #[\Override]
     public function process()
     {
         TimezoneWrapper::wrapTimezone(

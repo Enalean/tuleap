@@ -35,12 +35,14 @@ final class SmokescreenDumpConfigurationCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Dump Smokecreen configuration')
             ->setHidden(true);
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->write(

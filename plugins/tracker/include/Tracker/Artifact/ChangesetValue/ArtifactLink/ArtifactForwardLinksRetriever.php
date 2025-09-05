@@ -34,6 +34,7 @@ final class ArtifactForwardLinksRetriever implements RetrieveForwardLinks
     ) {
     }
 
+    #[\Override]
     public function retrieve(
         \PFUser $submitter,
         \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $link_field,

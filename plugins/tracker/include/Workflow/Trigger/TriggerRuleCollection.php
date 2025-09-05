@@ -25,6 +25,7 @@ class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Counta
      */
     private $trigger_rules = [];
 
+    #[\Override]
     public function fetchFormattedForJson()
     {
         $json = [];
@@ -42,31 +43,37 @@ class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Counta
     /**
      * @return Tracker_Workflow_Trigger_TriggerRule
      */
+    #[\Override]
     public function current(): Tracker_Workflow_Trigger_TriggerRule|false
     {
         return current($this->trigger_rules);
     }
 
+    #[\Override]
     public function key(): int
     {
         return key($this->trigger_rules);
     }
 
+    #[\Override]
     public function next(): void
     {
         next($this->trigger_rules);
     }
 
+    #[\Override]
     public function rewind(): void
     {
         reset($this->trigger_rules);
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return current($this->trigger_rules) !== false;
     }
 
+    #[\Override]
     public function count(): int
     {
         return count($this->trigger_rules);

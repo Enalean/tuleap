@@ -62,6 +62,7 @@ class ArchiveDeletedArtifactProvider implements ArchiveDeletedItemProvider
      *
      * @throws \Tuleap\Project\XML\ArchiveException
      */
+    #[\Override]
     public function getArchivePath(): string
     {
         $this->archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $this->artifact->getId() . '_' . time() . '.zip';
@@ -71,11 +72,13 @@ class ArchiveDeletedArtifactProvider implements ArchiveDeletedItemProvider
         return $this->archive_path;
     }
 
+    #[\Override]
     public function getPrefix(): string
     {
         return 'deleted_';
     }
 
+    #[\Override]
     public function purge(): void
     {
         if ($this->archive_path && file_exists($this->archive_path)) {

@@ -36,6 +36,7 @@ final class SendNotificationToTrackerAdministrator implements TrackerAdministrat
     ) {
     }
 
+    #[\Override]
     public function sendNotificationToTrackerAdministrator(\Tracker_Artifact_Changeset $changeset): void
     {
         $this->recipients_retriever->retrieveRecipients($changeset->getTracker())

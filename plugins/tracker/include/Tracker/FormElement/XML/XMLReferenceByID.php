@@ -38,6 +38,7 @@ final class XMLReferenceByID implements XMLReference
         $this->id = $id;
     }
 
+    #[\Override]
     public function getId(XMLFormElementFlattenedCollection $form_elements): string
     {
         return $this->id;

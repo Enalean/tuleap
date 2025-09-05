@@ -141,6 +141,7 @@ class WikiViews extends Views
    *
    * Display Wiki Service header
    */
+    #[\Override]
     public function header()
     {
         $this->addStylesheets();

@@ -88,6 +88,7 @@ class Tracker_URL extends URL
      *
      * @return ?int
      */
+    #[\Override]
     public function getGroupIdFromUrl($url)
     {
         $request = HTTPRequest::instance();

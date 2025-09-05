@@ -39,6 +39,7 @@ final class SiteDeployCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Execute all deploy actions needed at site update')
@@ -46,6 +47,7 @@ final class SiteDeployCommand extends Command
             ->addOption(SiteDeployFPMCommand::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force files to be rewritten (by default existing files are not modified)');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         return $this->executeAllCommandsInNamespace($input, $output);

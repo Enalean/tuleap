@@ -63,6 +63,7 @@ class StepsDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @return string|false
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         /** @var Step[] $previous_steps */
@@ -99,6 +100,7 @@ class StepsDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
      * @param mixed $format
      * @return null|string
      */
+    #[\Override]
     public function nodiff($format = 'html')
     {
         if (count($this->steps)) {
@@ -106,11 +108,13 @@ class StepsDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
         }
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         return null;
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -133,6 +137,7 @@ class StepsDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitExternalField($this);
@@ -143,6 +148,7 @@ class StepsDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @return array The value of this artifact changeset value
      */
+    #[\Override]
     public function getValue()
     {
         return $this->steps;

@@ -35,6 +35,7 @@ class User_ForgeUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.Class
         $this->description = $description;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $this->description;
@@ -43,6 +44,7 @@ class User_ForgeUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.Class
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
@@ -51,6 +53,7 @@ class User_ForgeUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.Class
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getName(): string
     {
         return (string) $this->name;

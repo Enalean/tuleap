@@ -60,6 +60,7 @@ final class OwnerRequestHandler extends DispatchablePSR15Compatible implements D
      * @throws JsonException
      * @throws NotFoundException
      */
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $current_user     = $this->user_manager->getCurrentUser();
@@ -95,6 +96,7 @@ final class OwnerRequestHandler extends DispatchablePSR15Compatible implements D
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_extractor->getProject($variables);

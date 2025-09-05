@@ -39,26 +39,31 @@ final class ParametrizedWhere implements IProvideParametrizedFromAndWhereSQLFrag
     ) {
     }
 
+    #[\Override]
     public function getWhere(): string|EasyStatement
     {
         return $this->where;
     }
 
+    #[\Override]
     public function getWhereParameters(): array
     {
         return $this->parameters;
     }
 
+    #[\Override]
     public function getFrom(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getFromParameters(): array
     {
         return [];
     }
 
+    #[\Override]
     public function getAllParametrizedFrom(): array
     {
         return [];

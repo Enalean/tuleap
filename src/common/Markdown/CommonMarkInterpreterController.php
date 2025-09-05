@@ -61,6 +61,7 @@ final class CommonMarkInterpreterController extends DispatchablePSR15Compatible 
         $this->stream_factory   = $stream_factory;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(Project::class);

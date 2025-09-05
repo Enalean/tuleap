@@ -33,6 +33,7 @@ final readonly class FileBeingUploadedWriter implements TusWriter
     {
     }
 
+    #[\Override]
     public function writeChunk(TusFileInformation $file_information, int $offset, $input_source): int
     {
         $allocated_path = $this->path_allocator->getPathForItemBeingUploaded($file_information);

@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 final class StaticListFieldVerifier implements VerifyIsStaticListField
 {
+    #[\Override]
     public function isStaticListField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         if (! $field instanceof \Tuleap\Tracker\FormElement\Field\ListField) {

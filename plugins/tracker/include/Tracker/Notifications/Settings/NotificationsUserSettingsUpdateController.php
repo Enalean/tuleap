@@ -51,6 +51,7 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
         $this->project_history_dao            = $project_history_dao;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['id']);

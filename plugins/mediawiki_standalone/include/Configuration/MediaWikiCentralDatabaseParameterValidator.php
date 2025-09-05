@@ -32,11 +32,13 @@ final class MediaWikiCentralDatabaseParameterValidator implements ValueValidator
     {
     }
 
+    #[\Override]
     public static function buildSelf(): ValueValidator
     {
         return new self(\PluginManager::instance());
     }
 
+    #[\Override]
     public function checkIsValid(string $value): void
     {
         $plugin = $this->plugin_manager->getPluginByName('mediawiki');

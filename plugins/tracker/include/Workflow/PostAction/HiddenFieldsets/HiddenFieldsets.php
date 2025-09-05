@@ -57,6 +57,7 @@ class HiddenFieldsets extends Transition_PostAction
      * Get the shortname of the post action
      *
      */
+    #[\Override]
     public function getShortName(): string
     {
         return self::SHORT_NAME;
@@ -67,6 +68,7 @@ class HiddenFieldsets extends Transition_PostAction
      *
      * @return string
      */
+    #[\Override]
     public static function getLabel()
     {
         // Not implemented. We do not support the legacy UI for this new post action
@@ -78,6 +80,7 @@ class HiddenFieldsets extends Transition_PostAction
      *
      * @return bool
      */
+    #[\Override]
     public function isDefined()
     {
         // Since we do not support the legacy UI, it is always well defined
@@ -92,6 +95,7 @@ class HiddenFieldsets extends Transition_PostAction
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if (count($this->getFieldsets()) > 0) {
@@ -111,11 +115,13 @@ class HiddenFieldsets extends Transition_PostAction
      *
      * @return bool
      */
+    #[\Override]
     public function bypassPermissions(TrackerField $field)
     {
         return false;
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitHiddenFieldsets($this);

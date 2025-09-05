@@ -45,11 +45,13 @@ final class AfterLocalSVNLogin implements AfterLocalLogin
         $this->is_login_allowed = false;
     }
 
+    #[\Override]
     public function isIsLoginAllowed(): bool
     {
         return $this->is_login_allowed;
     }
 
+    #[\Override]
     public function getFeedbackMessage(): string
     {
         return $this->feedback_message;

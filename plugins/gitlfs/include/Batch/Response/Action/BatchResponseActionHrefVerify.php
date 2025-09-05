@@ -42,6 +42,7 @@ final class BatchResponseActionHrefVerify implements BatchResponseActionHref
     /**
      * @return string
      */
+    #[\Override]
     public function getHref()
     {
         return $this->server_url . '/git-lfs/objects/' . urlencode($this->object->getOID()->getValue()) . '/verify';

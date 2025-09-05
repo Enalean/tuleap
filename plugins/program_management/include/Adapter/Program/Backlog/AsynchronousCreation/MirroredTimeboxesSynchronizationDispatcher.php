@@ -35,6 +35,7 @@ final readonly class MirroredTimeboxesSynchronizationDispatcher implements Dispa
     ) {
     }
 
+    #[\Override]
     public function dispatchSynchronizationCommand(CommandTeamSynchronization $team_synchronization_command): void
     {
         $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);

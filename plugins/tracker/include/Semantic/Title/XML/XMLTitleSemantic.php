@@ -38,6 +38,7 @@ final class XMLTitleSemantic extends XMLSemantic
         parent::__construct(TrackerSemanticTitle::NAME);
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $child = parent::export($parent_node, $form_elements);

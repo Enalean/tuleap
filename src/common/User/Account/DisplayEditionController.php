@@ -63,6 +63,7 @@ final class DisplayEditionController implements DispatchableWithRequest, Dispatc
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();

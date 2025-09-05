@@ -33,6 +33,7 @@ final class AuthorRetriever implements RetrieveAuthor
     /**
      * @throws \Git_Command_Exception
      */
+    #[\Override]
     public function getAuthor(string $sha1): UserName
     {
         $author_information = $this->git_exec->getAuthorInformation($sha1);

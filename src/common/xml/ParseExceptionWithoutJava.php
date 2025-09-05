@@ -29,6 +29,7 @@ final class ParseExceptionWithoutJava extends \XML_ParseException
         parent::__construct('Parse errors. Install java to get details', $rng_path, $indented_xml);
     }
 
+    #[\Override]
     public function getErrors(): array
     {
         return [];

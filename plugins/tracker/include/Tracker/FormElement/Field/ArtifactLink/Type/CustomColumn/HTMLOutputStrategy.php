@@ -39,12 +39,14 @@ class HTMLOutputStrategy implements OutputStrategy
     }
 
     /** @return string */
+    #[\Override]
     public function fetchDefault(Tracker_ArtifactLinkInfo $artifact_link_info)
     {
         return $artifact_link_info->getLink();
     }
 
     /** @return string */
+    #[\Override]
     public function fetchFormatted(Tracker_ArtifactLinkInfo $artifact_link_info, $formatted_value)
     {
         $artlink_as_html  = '<a href="' . $artifact_link_info->getUrl() . '">';
@@ -55,6 +57,7 @@ class HTMLOutputStrategy implements OutputStrategy
     }
 
     /** @return string */
+    #[\Override]
     public function fetchWhenNoFieldToFormat(Tracker_ArtifactLinkInfo $artifact_link_info)
     {
         return $this->getDefaultFormatWithWarning(
@@ -64,6 +67,7 @@ class HTMLOutputStrategy implements OutputStrategy
     }
 
     /** @return string */
+    #[\Override]
     public function fetchWhenUnsupportedField(Tracker_ArtifactLinkInfo $artifact_link_info)
     {
         return $this->getDefaultFormatWithWarning(

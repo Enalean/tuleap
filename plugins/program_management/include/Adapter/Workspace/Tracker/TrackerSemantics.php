@@ -34,6 +34,7 @@ final class TrackerSemantics implements VerifyTrackerSemantics
         $this->tracker_factory = $tracker_factory;
     }
 
+    #[\Override]
     public function hasTitleSemantic(int $tracker_id): bool
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
@@ -43,6 +44,7 @@ final class TrackerSemantics implements VerifyTrackerSemantics
         return $tracker->hasSemanticsTitle();
     }
 
+    #[\Override]
     public function hasStatusSemantic(int $tracker_id): bool
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);

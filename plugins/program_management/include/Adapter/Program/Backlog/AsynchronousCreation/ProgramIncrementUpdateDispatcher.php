@@ -43,6 +43,7 @@ final readonly class ProgramIncrementUpdateDispatcher implements DispatchProgram
     ) {
     }
 
+    #[\Override]
     public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
     {
         $representation = PendingProgramIncrementUpdateRepresentation::fromUpdateAndCreations($update, ...$creations);

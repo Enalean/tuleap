@@ -40,6 +40,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
     /**
      * @psalm-return array{id: int, project_id: int}[]
      */
+    #[\Override]
     public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array
     {
         $sql = "SELECT linked_art.id, t.group_id as project_id
@@ -58,6 +59,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
         return $this->getDB()->run($sql, $artifact_id, $program_increment_id);
     }
 
+    #[\Override]
     public function isLinkedToASprintInMirroredProgramIncrement(int $artifact_id, int $release_tracker_id, int $project_id): bool
     {
         $sql = "SELECT sprint.id
@@ -76,6 +78,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
         return count($rows) > 0;
     }
 
+    #[\Override]
     public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(
         MirroredProgramIncrementIdentifier $mirrored_program_increment,
     ): array {
@@ -126,6 +129,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
     /**
      * @psalm-return array{user_story_id:int, project_id:int}[]
      */
+    #[\Override]
     public function getPlannedUserStory(int $artifact_id): array
     {
         $sql = "SELECT feature_artlink.artifact_id AS user_story_id, user_story_tracker.group_id AS project_id FROM
@@ -141,6 +145,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
         return $this->getDB()->run($sql, $artifact_id);
     }
 
+    #[\Override]
     public function getChildrenOfFeatureInTeamProjects(FeatureIdentifier $feature): array
     {
         $sql = <<<SQL
@@ -166,6 +171,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
         return array_map(static fn(array $row): int => $row['children_id'], $rows);
     }
 
+    #[\Override]
     public function getParentOfUserStory(UserStoryIdentifier $story_identifier): ?int
     {
         $sql = "SELECT feature.id AS id
@@ -194,6 +200,7 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
     /**
      * @return int[]
      */
+    #[\Override]
     public function getArtifactsLinkedInChangeset(ChangesetIdentifier $changeset_identifier): array
     {
         $sql = '

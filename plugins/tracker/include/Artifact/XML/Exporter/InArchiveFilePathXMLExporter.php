@@ -25,6 +25,7 @@ use Tuleap;
 
 class InArchiveFilePathXMLExporter implements FilePathXMLExporter
 {
+    #[\Override]
     public function getPath(Tracker_FileInfo $file_info): string
     {
         return Tuleap\Project\XML\ArchiveInterface::DATA_DIR .

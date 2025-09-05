@@ -32,6 +32,7 @@ final readonly class CSRFSessionKeyCookieStorage implements CSRFSessionKeyStorag
     {
     }
 
+    #[\Override]
     public function getSessionKey(): string
     {
         $session_key = $this->cookie_manager->getCookie(self::COOKIE_NAME);

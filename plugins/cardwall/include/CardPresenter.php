@@ -91,6 +91,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getId()
     {
         return $this->artifact->getId();
@@ -99,11 +100,13 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getTitle()
     {
         return $this->artifact->getTitle();
     }
 
+    #[\Override]
     public function getFields()
     {
         $diplayed_fields_presenter = [];
@@ -123,6 +126,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getUrl()
     {
         return $this->artifact->getUri();
@@ -131,6 +135,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getXRef()
     {
         return $this->artifact->getXRef();
@@ -139,6 +144,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getEditUrl()
     {
         return $this->getUrl();
@@ -147,6 +153,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getArtifactId()
     {
         return $this->artifact->getId();
@@ -155,11 +162,13 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getArtifact()
     {
         return $this->artifact;
     }
 
+    #[\Override]
     public function getAncestorId()
     {
         return $this->parent ? $this->parent->getId() : 0;
@@ -173,6 +182,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getEditLabel()
     {
         return dgettext('tuleap-agiledashboard', 'Edit');
@@ -181,6 +191,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
+    #[\Override]
     public function getCssClasses()
     {
         $classes  = '';
@@ -193,6 +204,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter::getAccentColor()
      */
+    #[\Override]
     public function getAccentColor()
     {
         return $this->accent_color->getColor();
@@ -201,6 +213,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter::hasLegacyAccentColor()
      */
+    #[\Override]
     public function hasLegacyAccentColor()
     {
         return $this->accent_color->isLegacyColor();
@@ -211,6 +224,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
      *
      * @return Tracker[]
      */
+    #[\Override]
     public function allowedChildrenTypes()
     {
         return $this->allowed_children;
@@ -221,6 +235,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
      *
      * @return string TLP color name
      */
+    #[\Override]
     public function getBackgroundColorName()
     {
         return $this->background_color->getBackgroundColorName();

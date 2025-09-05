@@ -100,6 +100,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     /**
      * Create a new approval table based on the last active one.
      */
+    #[\Override]
     public function createTable($userId, $import)
     {
         $tableCreated = false;

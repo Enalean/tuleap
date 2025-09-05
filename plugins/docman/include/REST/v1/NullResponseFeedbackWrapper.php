@@ -24,6 +24,7 @@ use Tuleap\Docman\ResponseFeedbackWrapper;
 
 class NullResponseFeedbackWrapper extends ResponseFeedbackWrapper
 {
+    #[\Override]
     public function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
         //Do nothing

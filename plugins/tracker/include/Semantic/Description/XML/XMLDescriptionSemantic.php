@@ -38,6 +38,7 @@ final class XMLDescriptionSemantic extends XMLSemantic
         parent::__construct(TrackerSemanticDescription::NAME);
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $child = parent::export($parent_node, $form_elements);

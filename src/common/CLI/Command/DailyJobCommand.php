@@ -50,11 +50,13 @@ class DailyJobCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Execute time consuming, low priority housekeeping jobs that should run once a day');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->execution_delayed_launcher->execute(function () {

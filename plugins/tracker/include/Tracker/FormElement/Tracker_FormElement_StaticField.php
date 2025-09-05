@@ -34,16 +34,19 @@ use Tuleap\Tracker\Artifact\Artifact;
 abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
 {
     // TODO : remove these functions (no need for that kind of "fields"
+    #[\Override]
     public function fetchAddCriteria($used, $prefix = '')
     {
         return '';
     }
 
+    #[\Override]
     public function fetchAddColumn($used, $prefix = '')
     {
         return '';
     }
 
+    #[\Override]
     public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         return '';
@@ -55,6 +58,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return string html
      */
+    #[\Override]
     public function fetchArtifact(
         Artifact $artifact,
         array $submitted_values,
@@ -67,11 +71,13 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return string html
      */
+    #[\Override]
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifact($artifact, $submitted_values, []);
     }
 
+    #[\Override]
     public function fetchSubmitForOverlay(array $submitted_values)
     {
         return $this->fetchSubmit($submitted_values);
@@ -83,6 +89,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return string html
      */
+    #[\Override]
     public function fetchArtifactReadOnly(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchReadOnly();
@@ -93,6 +100,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return string html
      */
+    #[\Override]
     public function fetchSubmit(array $submitted_values)
     {
         return $this->fetchReadOnly();
@@ -103,6 +111,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return string html
      */
+    #[\Override]
     public function fetchSubmitMasschange()
     {
         return $this->fetchReadOnly();
@@ -113,6 +122,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return bool
      */
+    #[\Override]
     public function isUpdateable()
     {
         return false;
@@ -123,6 +133,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return bool
      */
+    #[\Override]
     public function isSubmitable()
     {
         return false;
@@ -134,11 +145,13 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return string returns null if the field can be unused, a message otherwise
      */
+    #[\Override]
     public function getCannotRemoveMessage()
     {
         return '';
     }
 
+    #[\Override]
     public function canBeRemovedFromUsage()
     {
         return true;
@@ -151,6 +164,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return bool
      */
+    #[\Override]
     public function userCanRead(?PFUser $user = null)
     {
         return true;
@@ -161,6 +175,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
+    #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
@@ -180,6 +195,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
      *
      * @return mixed The values or null if there are no specific available values
      */
+    #[\Override]
     public function getRESTAvailableValues()
     {
         return null;
@@ -190,6 +206,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
         return null;
     }
 
+    #[\Override]
     public function getDefaultRESTValue()
     {
         return $this->getDefaultValue();

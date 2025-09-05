@@ -35,6 +35,7 @@ final readonly class NewChangesetFieldValueSaver implements StoreNewChangesetFie
     /**
      * @throws \Tracker_FieldValueNotStoredException
      */
+    #[\Override]
     public function storeFieldsValues(
         NewChangeset $new_changeset,
         ?\Tracker_Artifact_Changeset $previous_changeset,

@@ -45,6 +45,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /**
      * @see Workflow_Transition_Condition::exportToXml()
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         $child = $root->addChild('condition');
@@ -68,6 +69,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /**
      * @see Workflow_Transition_Condition::saveObject()
      */
+    #[\Override]
     public function saveObject()
     {
         $this->addPermissions($this->authorized_ugroups_keyname);
@@ -100,6 +102,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
     }
 
+    #[\Override]
     public function validate($fields_data, Artifact $artifact, string $comment_body, PFUser $current_user): bool
     {
         if (! $this->isUserAllowedToSeeTransition($current_user, $artifact->getTracker())) {
@@ -152,6 +155,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         return $ugroups;
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitPermissions($this);

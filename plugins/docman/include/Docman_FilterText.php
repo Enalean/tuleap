@@ -28,11 +28,13 @@ class Docman_FilterText extends \Docman_Filter
         parent::__construct($md);
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         $this->setValue($row['value_string']);
     }
 
+    #[\Override]
     public function getUrlParameters()
     {
         $hp    = \Codendi_HTMLPurifier::instance();

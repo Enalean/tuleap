@@ -39,6 +39,7 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregator extends \Psr\Log\A
         return $this->logs_stack;
     }
 
+    #[\Override]
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         if (

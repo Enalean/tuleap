@@ -37,6 +37,7 @@ final class securitytxtPlugin extends Plugin implements PluginWithConfigKeys
         bindtextdomain('tuleap-securitytxt', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -48,6 +49,7 @@ final class securitytxtPlugin extends Plugin implements PluginWithConfigKeys
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
         $event->addConfigClass(\Tuleap\SecurityTxt\SecurityTxtOptions::class);

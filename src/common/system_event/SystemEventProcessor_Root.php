@@ -70,11 +70,13 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         $this->generator       = $generator;
     }
 
+    #[\Override]
     public function getOwner()
     {
         return SystemEvent::OWNER_ROOT;
     }
 
+    #[\Override]
     protected function postEventsActions(array $executed_events_ids, $queue_name)
     {
         $this->site_cache->restoreOwnership();
@@ -116,6 +118,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         }
     }
 
+    #[\Override]
     public function getProcessOwner()
     {
         return 'root';

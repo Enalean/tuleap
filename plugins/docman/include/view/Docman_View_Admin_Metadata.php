@@ -28,11 +28,13 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
 {
     public const IDENTIFIER = 'admin_metadata';
 
+    #[\Override]
     protected function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
+    #[\Override]
     protected function getTitle(array $params): string
     {
         return self::getTabTitle();
@@ -48,6 +50,7 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'Define the properties of your documents.');
     }
 
+    #[\Override]
     protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
         $GLOBALS['Response']->addJavascriptAsset(
@@ -65,6 +68,7 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
         );
     }
 
+    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $renderer->renderToPage('admin/properties', [

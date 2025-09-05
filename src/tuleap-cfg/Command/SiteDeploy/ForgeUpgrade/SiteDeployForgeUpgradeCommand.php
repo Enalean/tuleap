@@ -40,11 +40,13 @@ final class SiteDeployForgeUpgradeCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Execute database migrations');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         \ForgeConfig::loadInSequence();

@@ -43,6 +43,7 @@ final class PluginInstallCommand extends Command
         $this->plugin_manager = $plugin_manager;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Install and activate plugins with their dependencies')
@@ -50,6 +51,7 @@ final class PluginInstallCommand extends Command
             ->addArgument('plugins', InputArgument::IS_ARRAY, 'List of plugins (space separated)');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (posix_getuid() === 0) {

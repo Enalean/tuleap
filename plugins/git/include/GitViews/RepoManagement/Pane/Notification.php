@@ -59,6 +59,7 @@ class Notification extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier()
     {
         return self::ID;
@@ -67,6 +68,7 @@ class Notification extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-git', 'Notifications');
@@ -75,6 +77,7 @@ class Notification extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
+    #[\Override]
     public function getContent()
     {
         $users  = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($this->repository);

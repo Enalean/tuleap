@@ -69,6 +69,7 @@ final class UserWellKnownChangePasswordController extends DispatchablePSR15Compa
         $this->stream_factory   = $stream_factory;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $current_user = $this->user_manager->getCurrentUser();

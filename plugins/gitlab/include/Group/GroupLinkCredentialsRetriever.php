@@ -34,6 +34,7 @@ final class GroupLinkCredentialsRetriever implements RetrieveGroupLinksCredentia
     ) {
     }
 
+    #[\Override]
     public function retrieveCredentials(GroupLink $group_link): Credentials
     {
         $token         = $this->group_link_token_retriever->retrieveToken($group_link);

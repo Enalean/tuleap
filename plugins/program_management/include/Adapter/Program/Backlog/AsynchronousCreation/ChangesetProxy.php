@@ -45,6 +45,7 @@ final class ChangesetProxy implements ChangesetIdentifier
         return new self((int) $changeset->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

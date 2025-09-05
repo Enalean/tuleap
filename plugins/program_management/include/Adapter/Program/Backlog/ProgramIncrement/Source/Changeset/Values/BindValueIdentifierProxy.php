@@ -41,6 +41,7 @@ final class BindValueIdentifierProxy implements BindValueIdentifier
         return new self((int) $bind_value->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

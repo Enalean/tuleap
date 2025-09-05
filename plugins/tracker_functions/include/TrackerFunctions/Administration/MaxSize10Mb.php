@@ -25,6 +25,7 @@ namespace Tuleap\TrackerFunctions\Administration;
 
 final class MaxSize10Mb implements MaxSizeProvider
 {
+    #[\Override]
     public function getMaxSizeForFunctionInMb(): int
     {
         return 10;

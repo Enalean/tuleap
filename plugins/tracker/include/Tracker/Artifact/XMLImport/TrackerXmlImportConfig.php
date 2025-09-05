@@ -48,6 +48,7 @@ final class TrackerXmlImportConfig implements TrackerImportConfig
         return $this->import_timestamp;
     }
 
+    #[\Override]
     public function isFromXml(): bool
     {
         return true;
@@ -58,6 +59,7 @@ final class TrackerXmlImportConfig implements TrackerImportConfig
         return $this->with_all_data;
     }
 
+    #[\Override]
     public function getMoveImportConfig(): MoveImportConfig
     {
         return $this->move_import_config;

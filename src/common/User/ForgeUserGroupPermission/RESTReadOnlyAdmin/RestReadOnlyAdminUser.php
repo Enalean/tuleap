@@ -24,6 +24,7 @@ use PFUser;
 
 class RestReadOnlyAdminUser extends PFUser
 {
+    #[\Override]
     public function isSuperUser(): bool
     {
         return true;

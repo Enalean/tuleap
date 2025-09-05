@@ -40,6 +40,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
     /**
      * Builds pie graph
      */
+    #[\Override]
     public function buildGraph()
     {
         $this->graph = new Chart_Pie($this->width, $this->height);
@@ -72,6 +73,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
         return $this->graph;
     }
 
+    #[\Override]
     public function toArray()
     {
         return parent::toArray() + [

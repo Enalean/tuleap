@@ -54,6 +54,7 @@ class tracker_date_reminderPlugin extends Plugin
         $this->addHook('tracker_postmod', 'tracker_update_artifact');
     }
 
+    #[\Override]
     public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {

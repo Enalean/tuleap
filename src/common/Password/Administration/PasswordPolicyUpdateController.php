@@ -37,6 +37,7 @@ class PasswordPolicyUpdateController implements DispatchableWithRequest
         $this->password_configuration_saver = $password_configuration_saver;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $request->checkUserIsSuperUser();

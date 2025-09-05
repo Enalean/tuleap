@@ -30,11 +30,13 @@ class Docman_EmbeddedFile extends Docman_File
         parent::__construct($data);
     }
 
+    #[\Override]
     public function accept($visitor, $params = [])
     {
         return $visitor->visitEmbeddedFile($this, $params);
     }
 
+    #[\Override]
     public function toRow()
     {
         $row              = parent::toRow();
@@ -42,6 +44,7 @@ class Docman_EmbeddedFile extends Docman_File
         return $row;
     }
 
+    #[\Override]
     public function getType()
     {
         return dgettext('tuleap-docman', 'Embedded File');

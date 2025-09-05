@@ -44,6 +44,7 @@ final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepres
     ) {
     }
 
+    #[\Override]
     public function getRepresentationBuilderForTracker(Tracker $tracker, \PFUser $user): ?IBuildATaskRepresentation
     {
         if (! isset($this->builders[$tracker->getId()])) {

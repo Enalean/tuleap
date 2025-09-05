@@ -72,16 +72,19 @@ class TagPushWebhookData implements WebhookData
         $this->after             = $after;
     }
 
+    #[\Override]
     public function getEventName(): string
     {
         return $this->event_name;
     }
 
+    #[\Override]
     public function getGitlabProjectId(): int
     {
         return $this->gitlab_project_id;
     }
 
+    #[\Override]
     public function getGitlabWebUrl(): string
     {
         return $this->gitlab_web_url;

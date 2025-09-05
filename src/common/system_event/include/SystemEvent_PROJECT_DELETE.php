@@ -32,6 +32,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classe
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $txt  = '';
@@ -44,6 +45,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classe
      *
      * @return bool
      */
+    #[\Override]
     public function process()
     {
         // Check parameters

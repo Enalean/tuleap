@@ -35,6 +35,7 @@ final readonly class RejectAnonymousMiddleware implements MiddlewareInterface
     {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $user = $this->current_user_provider->getCurrentUser();

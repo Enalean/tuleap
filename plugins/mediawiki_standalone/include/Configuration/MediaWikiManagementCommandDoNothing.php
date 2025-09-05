@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Result;
 
 final class MediaWikiManagementCommandDoNothing implements MediaWikiManagementCommand
 {
+    #[\Override]
     public function wait(): Ok|Err
     {
         return Result::ok(null);

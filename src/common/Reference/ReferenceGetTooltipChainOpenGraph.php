@@ -41,6 +41,7 @@ class ReferenceGetTooltipChainOpenGraph extends ReferenceGetTooltipChain
         $this->embed         = $embed;
     }
 
+    #[\Override]
     public function process(
         \Reference $reference,
         \Project $project,

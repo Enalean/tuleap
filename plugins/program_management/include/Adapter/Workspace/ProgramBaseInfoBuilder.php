@@ -33,6 +33,7 @@ final class ProgramBaseInfoBuilder implements BuildProgramBaseInfo
     {
     }
 
+    #[\Override]
     public function build(ProgramIdentifier $program_identifier): ProgramBaseInfo
     {
         $program_reference = $this->retrieve_project_reference->buildFromId($program_identifier->getId());

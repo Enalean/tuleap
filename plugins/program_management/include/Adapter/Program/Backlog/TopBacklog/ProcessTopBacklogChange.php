@@ -67,6 +67,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $this->feature_removal_processor               = $feature_removal_processor;
     }
 
+    #[\Override]
     public function processTopBacklogChangeForAProgram(
         ProgramIdentifier $program,
         TopBacklogChange $top_backlog_change,

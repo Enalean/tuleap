@@ -47,6 +47,7 @@ final class ProgramIncrementsSearcher implements SearchOpenProgramIncrements
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
      */
+    #[\Override]
     public function searchOpenProgramIncrements(int $potential_program_id, UserIdentifier $user): array
     {
         $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user);

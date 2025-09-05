@@ -33,6 +33,7 @@ final class OnlyOfficeAvailabilityChecker implements CheckOnlyOfficeIsAvailable
     ) {
     }
 
+    #[\Override]
     public function isOnlyOfficeIntegrationAvailableForProject(\Project $project): bool
     {
         $servers                     = $this->servers_retriever->retrieveAll();

@@ -32,11 +32,13 @@ class ChangesetValueOpenListXMLExporter extends ChangesetValueListXMLExporter
     {
     }
 
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return 'open_list';
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

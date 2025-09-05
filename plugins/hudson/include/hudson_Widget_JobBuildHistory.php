@@ -58,6 +58,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget //phpcs:ignore PSR1.
         $this->job_builder = $job_builder;
     }
 
+    #[\Override]
     public function getTitle()
     {
         $title = '';
@@ -69,16 +70,19 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget //phpcs:ignore PSR1.
         return $title;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-hudson', 'Show the build history of the selected job, under the form of RSS feed. For each build of the list, you can see the build number, the status and the date the build has been scheduled.');
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $this->content_id = $id;
     }
 
+    #[\Override]
     protected function initContent()
     {
         $job_id = $this->getJobIdFromWidgetConfiguration();
@@ -100,6 +104,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget //phpcs:ignore PSR1.
         }
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $this->initContent();
@@ -117,11 +122,13 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget //phpcs:ignore PSR1.
         return $html;
     }
 
+    #[\Override]
     public function hasRss()
     {
         return true;
     }
 
+    #[\Override]
     public function getRssUrl($owner_id, $owner_type)
     {
         if ($this->job) {

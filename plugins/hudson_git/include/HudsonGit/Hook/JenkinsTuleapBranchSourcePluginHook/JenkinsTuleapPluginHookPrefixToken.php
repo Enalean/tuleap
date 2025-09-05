@@ -29,6 +29,7 @@ final class JenkinsTuleapPluginHookPrefixToken implements PrefixSplitTokenForSer
     /**
      * @psalm-pure
      */
+    #[\Override]
     public function getString(): string
     {
         return 'tlp-jk-hook1-';

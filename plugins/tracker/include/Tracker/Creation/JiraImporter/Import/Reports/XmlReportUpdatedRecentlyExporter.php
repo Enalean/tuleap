@@ -38,6 +38,7 @@ class XmlReportUpdatedRecentlyExporter implements IExportJiraLikeXmlReport
         $this->tql_report_exporter = $tql_report_exporter;
     }
 
+    #[\Override]
     public function exportJiraLikeReport(
         SimpleXMLElement $reports_node,
         StatusValuesCollection $status_values_collection,

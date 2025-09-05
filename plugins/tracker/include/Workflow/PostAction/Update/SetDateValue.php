@@ -41,6 +41,7 @@ final class SetDateValue implements SetFieldValue
         $this->value    = $value;
     }
 
+    #[\Override]
     public function getFieldId(): int
     {
         return $this->field_id;
@@ -51,6 +52,7 @@ final class SetDateValue implements SetFieldValue
         return $this->value;
     }
 
+    #[\Override]
     public function accept(PostActionVisitor $visitor)
     {
         $visitor->visitSetDateValue($this);

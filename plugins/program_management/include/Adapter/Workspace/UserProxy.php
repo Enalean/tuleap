@@ -41,11 +41,13 @@ final class UserProxy implements UserReference
         return new self((int) $user->getId(), $user->getUserName());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;

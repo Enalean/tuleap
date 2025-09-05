@@ -64,21 +64,25 @@ final class CustomCodeExecutionHistorySaver implements LogFunctionRemoved, LogFu
         $params['subEvents']['event_others'][] = self::FUNCTION_DEACTIVATED;
     }
 
+    #[\Override]
     public function logFunctionRemoved(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logActionOnTracker(self::FUNCTION_REMOVED, $user, $tracker);
     }
 
+    #[\Override]
     public function logFunctionUploaded(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logActionOnTracker(self::FUNCTION_UPLOADED, $user, $tracker);
     }
 
+    #[\Override]
     public function logFunctionActivated(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logActionOnTracker(self::FUNCTION_ACTIVATED, $user, $tracker);
     }
 
+    #[\Override]
     public function logFunctionDeactivated(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logActionOnTracker(self::FUNCTION_DEACTIVATED, $user, $tracker);

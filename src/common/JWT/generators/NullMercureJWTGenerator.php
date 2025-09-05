@@ -24,16 +24,19 @@ use Tuleap\Cryptography\ConcealedString;
 
 class NullMercureJWTGenerator implements MercureJWTGenerator
 {
+    #[\Override]
     public function getTokenWithSubscription(string $app_name, int $id, \PFUser $user): ?ConcealedString
     {
         return null;
     }
 
+    #[\Override]
     public function getTokenWithoutSubscription(string $app_name, int $id, \PFUser $user): ?ConcealedString
     {
         return null;
     }
 
+    #[\Override]
     public function getTokenBackend(): ?ConcealedString
     {
         return null;

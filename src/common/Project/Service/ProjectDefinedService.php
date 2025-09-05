@@ -51,16 +51,19 @@ class ProjectDefinedService extends \Service
         );
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return ($this->data['icon'] !== '') ? $this->data['icon'] : self::DEFAULT_ICON;
     }
 
+    #[\Override]
     public function isOpenedInNewTab(): bool
     {
         return (int) $this->data['is_in_new_tab'] === 1;
     }
 
+    #[\Override]
     public function urlCanChange(): bool
     {
         return true;

@@ -37,26 +37,31 @@ final class EasyDBWrapper implements DBWrapperInterface
         $this->db = $db;
     }
 
+    #[\Override]
     public function run(string $statement, ...$params)
     {
         return $this->db->run($statement, ...$params);
     }
 
+    #[\Override]
     public function escapeIdentifier(string $identifier, bool $quote = true): string
     {
         return $this->db->escapeIdentifier($identifier, $quote);
     }
 
+    #[\Override]
     public function row(string $statement)
     {
         return $this->db->row($statement);
     }
 
+    #[\Override]
     public function single(string $statement)
     {
         return $this->db->single($statement);
     }
 
+    #[\Override]
     public function rawExec(string $statement): void
     {
         $this->db->getPdo()->exec($statement);

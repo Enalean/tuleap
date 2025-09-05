@@ -50,6 +50,7 @@ final readonly class IndexController implements DispatchableWithRequest, Dispatc
      * @throws \Tuleap\Request\ForbiddenException
      * @throws \Tuleap\Request\NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $title = $GLOBALS['Language']->getText('project_admin_servicebar', 'edit_s_bar');

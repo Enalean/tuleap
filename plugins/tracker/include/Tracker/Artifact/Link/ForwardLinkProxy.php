@@ -44,11 +44,13 @@ final class ForwardLinkProxy implements ForwardLink
         );
     }
 
+    #[\Override]
     public function getTargetArtifactId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getType(): string
     {
         return $this->type;

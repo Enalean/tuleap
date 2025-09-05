@@ -105,6 +105,7 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
@@ -113,6 +114,7 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getRecipients(): array
     {
         return $this->owners;
@@ -121,6 +123,7 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function asPlaintext(): string
     {
         return sprintf(
@@ -134,6 +137,7 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

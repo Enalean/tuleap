@@ -64,6 +64,7 @@ final class SVNAccessFileDefaultBlockGenerator implements SVNAccessFileDefaultBl
         return self::$instance;
     }
 
+    #[\Override]
     public function getDefaultBlock(Repository $repository): SVNAccessFileDefaultBlock
     {
         $project_id = (int) $repository->getProject()->getID();

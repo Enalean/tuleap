@@ -32,6 +32,7 @@ final class embedPlugin extends Plugin
         bindtextdomain('tuleap-embed', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {

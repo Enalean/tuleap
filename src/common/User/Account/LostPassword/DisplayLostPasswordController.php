@@ -41,6 +41,7 @@ final class DisplayLostPasswordController implements DispatchableWithRequestNoAu
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $this->event_manager->dispatch(new BeforeLostPassword());

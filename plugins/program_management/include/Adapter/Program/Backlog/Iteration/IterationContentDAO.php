@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredIterationIdenti
 
 final class IterationContentDAO extends DataAccessObject implements SearchUserStoryPlannedInIteration
 {
+    #[\Override]
     public function searchStoriesOfMirroredIteration(MirroredIterationIdentifier $mirrored_iteration_identifier): array
     {
         $sql = "SELECT user_story.id

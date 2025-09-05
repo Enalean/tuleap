@@ -56,6 +56,7 @@ final class CommonMarkInterpreter implements ContentInterpretor
         return new self($html_purifier, new MarkdownConverter($environment));
     }
 
+    #[\Override]
     public function getInterpretedContent(string $content): string
     {
         return $this->html_purifier->purify(
@@ -64,11 +65,13 @@ final class CommonMarkInterpreter implements ContentInterpretor
         );
     }
 
+    #[\Override]
     public function getInterpretedContentWithReferences(string $content, int $project_id): string
     {
         return $this->html_purifier->purifyHTMLWithReferences($this->converter->convert($content)->getContent(), $project_id);
     }
 
+    #[\Override]
     public function getContentStrippedOfTags(string $content): string
     {
         return $this->html_purifier->purify(

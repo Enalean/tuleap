@@ -29,6 +29,7 @@ class Docman_ReportColumnTitle extends \Docman_ReportColumn
         parent::__construct($md);
     }
 
+    #[\Override]
     public function getTableBox($item, $view, $params)
     {
         $html                   = '';
@@ -47,6 +48,7 @@ class Docman_ReportColumnTitle extends \Docman_ReportColumn
         return $html;
     }
 
+    #[\Override]
     public function getJavascript($item, $view)
     {
         return $view->getActionForItem($item);

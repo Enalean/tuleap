@@ -31,6 +31,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $this->token  = $token;
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         $content  = '';

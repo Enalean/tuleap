@@ -761,11 +761,13 @@ class Tracker implements Tracker_Dispatchable_Interface
      * @see plugins/tracker/include/Tracker/Tracker_Dispatchable_Interface::getTracker()
      *
      */
+    #[\Override]
     public function getTracker()
     {
         return $this;
     }
 
+    #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         //TODO: log the admin actions (add a formElement, ...) ?

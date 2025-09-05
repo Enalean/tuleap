@@ -28,11 +28,13 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Ad
 {
     public const IDENTIFIER = 'admin_display_love';
 
+    #[\Override]
     protected function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
+    #[\Override]
     protected function getTitle(array $params): string
     {
         return sprintf(
@@ -42,6 +44,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Ad
         );
     }
 
+    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $metadata = $params['md'];

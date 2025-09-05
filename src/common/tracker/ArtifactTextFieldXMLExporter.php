@@ -26,6 +26,7 @@ class ArtifactTextFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
     public const TV5_TYPE         = 'text';
     public const TV3_VALUE_INDEX  = 'valueText';
 
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         if (isset($row['new_value'])) {
@@ -36,11 +37,13 @@ class ArtifactTextFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
         $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         return self::TV3_VALUE_INDEX;
     }
 
+    #[\Override]
     public function isValueEqual($history_field_value, $field_value)
     {
         return $history_field_value == util_unconvert_htmlspecialchars($field_value);

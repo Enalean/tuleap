@@ -64,6 +64,7 @@ class Docman_SqlFilterDate extends \Docman_SqlFilter
         return $stmt;
     }
 
+    #[\Override]
     public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt = [];

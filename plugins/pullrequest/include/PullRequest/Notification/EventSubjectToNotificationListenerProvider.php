@@ -46,6 +46,7 @@ final class EventSubjectToNotificationListenerProvider implements ListenerProvid
      * @psalm-return array<callable():EventSubjectToNotificationListener>
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getListenersForEvent(object $event): iterable
     {
         return $this->mapping[$event::class] ?? [];

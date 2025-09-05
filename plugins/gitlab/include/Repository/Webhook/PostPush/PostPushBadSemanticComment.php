@@ -44,6 +44,7 @@ final class PostPushBadSemanticComment implements BadSemanticCommentInCommonMark
         );
     }
 
+    #[\Override]
     public function getBody(): string
     {
         return $this->comment;

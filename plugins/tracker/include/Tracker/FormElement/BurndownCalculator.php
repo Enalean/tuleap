@@ -38,6 +38,7 @@ class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculati
         $this->computed_dao = $computed_dao;
     }
 
+    #[\Override]
     public function fetchChildrenAndManualValuesOfArtifacts(
         array $artifact_ids_to_fetch,
         $timestamp,

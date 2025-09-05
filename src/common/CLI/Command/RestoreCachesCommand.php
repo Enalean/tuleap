@@ -30,11 +30,13 @@ class RestoreCachesCommand extends Command
 {
     public const NAME = '-r, --restore-caches';
 
+    #[\Override]
     protected function configure()
     {
         $this->setName(self::NAME)->setDescription('Recreate cache directories if needed');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $site_cache = new SiteCache(new ConsoleLogger($output));

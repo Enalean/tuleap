@@ -76,6 +76,7 @@ class GenericWebhookPresenter implements WebhookPresenter
         }
     }
 
+    #[\Override]
     public function isSimple(): bool
     {
         return false;

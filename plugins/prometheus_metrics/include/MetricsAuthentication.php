@@ -58,6 +58,7 @@ final class MetricsAuthentication implements MiddlewareInterface
         $this->config_dir_root            = $config_dir_root;
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $credential = $this->extractAuthentication($request);

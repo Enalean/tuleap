@@ -81,6 +81,7 @@ class WebDAVTree extends \Sabre\DAV\Tree
      *
      * @return void
      */
+    #[\Override]
     public function copy($sourcePath, $destinationPath)
     {
         throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
@@ -98,6 +99,7 @@ class WebDAVTree extends \Sabre\DAV\Tree
      *
      * @psalm-suppress InvalidReturnType Return type of the library is incorrect
      */
+    #[\Override]
     public function move($sourcePath, $destinationPath): void
     {
         list($sourceDir, $sourceName)           = \Sabre\Uri\split($sourcePath);

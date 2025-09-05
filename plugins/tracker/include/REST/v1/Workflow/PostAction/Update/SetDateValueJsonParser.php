@@ -29,6 +29,7 @@ use Workflow;
 
 class SetDateValueJsonParser implements PostActionUpdateJsonParser
 {
+    #[\Override]
     public function accept(array $json): bool
     {
         return isset($json['type'])
@@ -37,6 +38,7 @@ class SetDateValueJsonParser implements PostActionUpdateJsonParser
             && $json['field_type'] === 'date';
     }
 
+    #[\Override]
     public function parse(Workflow $workflow, array $json): PostAction
     {
         if (! isset($json['field_id'])) {

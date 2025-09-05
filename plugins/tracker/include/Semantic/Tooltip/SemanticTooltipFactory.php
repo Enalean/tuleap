@@ -64,6 +64,7 @@ class SemanticTooltipFactory implements IBuildSemanticFromXML
         return $tooltip;
     }
 
+    #[\Override]
     public function getInstanceFromXML(
         \SimpleXMLElement $current_semantic_xml,
         \SimpleXMLElement $all_semantics_xml,

@@ -120,6 +120,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->approval_table_action_checker  = $approval_table_action_checker;
     }
 
+    #[\Override]
     public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $upload_id = $file_information->getID();

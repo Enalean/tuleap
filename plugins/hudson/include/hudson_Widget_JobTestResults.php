@@ -67,6 +67,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         $this->hudson_job_builder = $hudson_job_builder;
     }
 
+    #[\Override]
     public function getTitle()
     {
         $title = '';
@@ -80,16 +81,19 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         return $title;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-hudson', 'Show the test results of the latest build for the selected job.To display something, your job needs to execute tests and publish them. The result is shown on a pie chart.');
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $this->content_id = $id;
     }
 
+    #[\Override]
     protected function initContent()
     {
         $job_id = $this->getJobIdFromWidgetConfiguration();
@@ -117,6 +121,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         }
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $this->initContent();
@@ -142,6 +147,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         return $html;
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         return [
@@ -149,6 +155,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         ];
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'hudson-style')]);

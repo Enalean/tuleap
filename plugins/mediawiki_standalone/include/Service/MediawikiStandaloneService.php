@@ -39,6 +39,7 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
     private const SERVICE_URL_PREFIX = '/mediawiki/';
     public const  SERVICE_SHORTNAME  = 'plugin_mediawiki_standalone';
 
+    #[\Override]
     public static function forServiceCreation(\Project $project): self
     {
         return new self(
@@ -63,26 +64,31 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
         );
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fas fa-tlp-mediawiki';
     }
 
+    #[\Override]
     public function getInternationalizedName(): string
     {
         return 'MediaWiki';
     }
 
+    #[\Override]
     public function getProjectAdministrationName(): string
     {
         return dgettext('tuleap-mediawiki_standalone', 'MediaWiki Standalone');
     }
 
+    #[\Override]
     public function getInternationalizedDescription(): string
     {
         return $this->getProjectAdministrationName();
     }
 
+    #[\Override]
     public function getUrl(?string $url = null): string
     {
         $dao = new OngoingInitializationsDao(new MediawikiFlavorUsageDao());
@@ -106,6 +112,7 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
         };
     }
 
+    #[\Override]
     public function urlCanChange(): bool
     {
         return false;

@@ -49,6 +49,7 @@ final readonly class ProgramAdapter implements BuildProgram, ProjectIsAProgramOr
     ) {
     }
 
+    #[\Override]
     public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void
     {
         $this->ensureUserCanAccessToProject($project_id, $user);
@@ -57,6 +58,7 @@ final readonly class ProgramAdapter implements BuildProgram, ProjectIsAProgramOr
         }
     }
 
+    #[\Override]
     public function ensureProjectIsAProgramOrIsPartOfPlan(int $project_id, UserIdentifier $user): void
     {
         $this->ensureUserCanAccessToProject($project_id, $user);

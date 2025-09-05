@@ -37,6 +37,7 @@ final class ForSubmittedBy implements ListReadOnlyConditionBuilder
         $this->user_manager = $user_manager;
     }
 
+    #[\Override]
     public function getCondition(array $values): ParametrizedSQLFragment
     {
         $in = EasyStatement::open()->in('?*', $this->getUsersIdByUserNames($values));

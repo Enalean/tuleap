@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 
 class FieldChangeComputedXMLUpdater implements Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater
 {
+    #[\Override]
     public function update(SimpleXMLElement $field_change_xml, $submitted_value)
     {
         if (

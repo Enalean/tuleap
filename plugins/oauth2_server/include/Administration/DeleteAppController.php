@@ -73,6 +73,7 @@ final class DeleteAppController extends DispatchablePSR15Compatible
         return sprintf('/plugins/oauth2_server/project/%d/admin/delete-app', $project->getID());
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

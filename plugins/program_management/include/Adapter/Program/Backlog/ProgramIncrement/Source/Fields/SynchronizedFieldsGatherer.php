@@ -55,6 +55,7 @@ final readonly class SynchronizedFieldsGatherer implements GatherSynchronizedFie
     ) {
     }
 
+    #[\Override]
     public function getTitleField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference
     {
         $full_tracker = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
@@ -74,6 +75,7 @@ final readonly class SynchronizedFieldsGatherer implements GatherSynchronizedFie
         return TitleFieldReferenceProxy::fromTrackerField($title_field);
     }
 
+    #[\Override]
     public function getDescriptionField(TrackerIdentifier $tracker_identifier): DescriptionFieldReference
     {
         $full_tracker      = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
@@ -84,6 +86,7 @@ final readonly class SynchronizedFieldsGatherer implements GatherSynchronizedFie
         return DescriptionFieldReferenceProxy::fromTrackerField($description_field);
     }
 
+    #[\Override]
     public function getStatusField(TrackerIdentifier $tracker_identifier): StatusFieldReference
     {
         $full_tracker = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
@@ -94,6 +97,7 @@ final readonly class SynchronizedFieldsGatherer implements GatherSynchronizedFie
         return StatusFieldReferenceProxy::fromTrackerField($status_field);
     }
 
+    #[\Override]
     public function getStartDateField(TrackerIdentifier $tracker_identifier): StartDateFieldReference
     {
         $full_tracker     = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
@@ -104,6 +108,7 @@ final readonly class SynchronizedFieldsGatherer implements GatherSynchronizedFie
         return StartDateFieldReferenceProxy::fromTrackerField($start_date_field);
     }
 
+    #[\Override]
     public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndDateFieldReference|DurationFieldReference
     {
         $full_tracker   = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
@@ -120,6 +125,7 @@ final readonly class SynchronizedFieldsGatherer implements GatherSynchronizedFie
         throw new MissingTimeFrameFieldException($tracker_identifier->getId(), 'end date or duration');
     }
 
+    #[\Override]
     public function getArtifactLinkField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): ArtifactLinkFieldReference
     {
         $full_tracker        = $this->tracker_retriever->getNonNullTracker($tracker_identifier);

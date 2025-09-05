@@ -37,16 +37,19 @@ final class ResumeInstanceTask implements QueueTask
         $this->project_id = (int) $project->getID();
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return ResumeInstance::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return ['project_id' => $this->project_id];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Resume MediaWiki instance #' . $this->project_id;

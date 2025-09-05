@@ -96,6 +96,7 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
         );
     }
 
+    #[\Override]
     public function visitLinkArtifactCondition(LinkArtifactCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
@@ -130,6 +131,7 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
         );
     }
 
+    #[\Override]
     public function visitLinkTrackerEqualCondition(LinkTrackerEqualCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;
@@ -163,6 +165,7 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
         );
     }
 
+    #[\Override]
     public function visitLinkTrackerNotEqualCondition(LinkTrackerNotEqualCondition $condition, $parameters)
     {
         $suffix = $parameters->suffix;

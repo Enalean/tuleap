@@ -45,6 +45,7 @@ final class ProjectMemberAccordingToInvitationAdder implements AddUserToProjectA
     ) {
     }
 
+    #[\Override]
     public function addUserToProjectAccordingToInvitation(
         \PFUser $just_created_user,
         Invitation|InvitationToEmail $invitation,

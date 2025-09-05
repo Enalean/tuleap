@@ -61,65 +61,78 @@ final class CallbackNoBufferStream implements StreamInterface
         return $this->getContents();
     }
 
+    #[\Override]
     public function close(): void
     {
     }
 
+    #[\Override]
     public function detach(): null
     {
         return null;
     }
 
+    #[\Override]
     public function getSize(): ?int
     {
         return null;
     }
 
+    #[\Override]
     public function tell(): int
     {
         $this->throwExceptionOnDirectIOOperations();
     }
 
+    #[\Override]
     public function eof(): bool
     {
         return $this->has_been_called;
     }
 
+    #[\Override]
     public function isSeekable(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function seek($offset, $whence = SEEK_SET): void
     {
         $this->throwExceptionOnDirectIOOperations();
     }
 
+    #[\Override]
     public function rewind(): void
     {
         $this->throwExceptionOnDirectIOOperations();
     }
 
+    #[\Override]
     public function isWritable(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function write(string $string): int
     {
         $this->throwExceptionOnDirectIOOperations();
     }
 
+    #[\Override]
     public function isReadable(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function read(int $length): string
     {
         $this->throwExceptionOnDirectIOOperations();
     }
 
+    #[\Override]
     public function getContents(): string
     {
         $this->has_been_called = true;
@@ -127,6 +140,7 @@ final class CallbackNoBufferStream implements StreamInterface
         return '';
     }
 
+    #[\Override]
     public function getMetadata(?string $key = null): null
     {
         return null;

@@ -27,6 +27,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation;
  */
 final class SystemActionContext implements ArtifactLinkValidationContext
 {
+    #[\Override]
     public function isSystemAction(): bool
     {
         return true;

@@ -34,11 +34,13 @@ class ChangesetValueDateXMLExporter extends ChangesetValueXMLExporter
     {
     }
 
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return Tracker_FormElementFactory::FIELD_DATE_TYPE;
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

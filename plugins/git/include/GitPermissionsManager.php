@@ -66,6 +66,7 @@ class GitPermissionsManager implements VerifyUserIsGitAdministrator
         $this->fine_grained_retriever   = $fine_grained_retriever;
     }
 
+    #[\Override]
     public function userIsGitAdmin(PFUser $user, Project $project): bool
     {
         $database_result = $this->getCurrentGitAdminPermissionsForProject($project);

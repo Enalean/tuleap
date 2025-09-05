@@ -45,6 +45,7 @@ final class BlockToMaxSizeOnReadFilter implements FilterInterface
         $this->max_size = $max_size;
     }
 
+    #[\Override]
     public function process($data_chunk): string
     {
         if ($this->maximum_size_exceeded) {
@@ -60,11 +61,13 @@ final class BlockToMaxSizeOnReadFilter implements FilterInterface
         return $cut_data_chunk;
     }
 
+    #[\Override]
     public function getFilteredChainIdentifier(): int
     {
         return STREAM_FILTER_READ;
     }
 
+    #[\Override]
     public function filterDetachedEvent(): void
     {
     }

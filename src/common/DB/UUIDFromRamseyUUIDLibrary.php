@@ -33,11 +33,13 @@ final readonly class UUIDFromRamseyUUIDLibrary implements UUID
     {
     }
 
+    #[\Override]
     public function getBytes(): string
     {
         return $this->uuid->getBytes();
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->uuid->toString();

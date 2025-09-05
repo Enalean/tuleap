@@ -85,6 +85,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
      *
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
@@ -130,6 +131,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
      *
      * @return void
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $this->checkUserCanAccess($variables);

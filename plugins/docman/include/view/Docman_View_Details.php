@@ -23,12 +23,14 @@ use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
 
 class Docman_View_Details extends Docman_View_Display
 {
-    /* protected */ public function _getTitle($params)
+    /* protected */ #[\Override]
+    public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         return sprintf(dgettext('tuleap-docman', 'Details of %1$s'), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
+    #[\Override]
     protected function displayTitle(array $params): void
     {
         if ($this->isOldUiAllowed($params['user'], $params['item'])) {
@@ -36,6 +38,7 @@ class Docman_View_Details extends Docman_View_Display
         }
     }
 
+    #[\Override]
     protected function displayOldBreadcrumbs(array $params): void
     {
         if ($this->isOldUiAllowed($params['user'], $params['item'])) {
@@ -43,6 +46,7 @@ class Docman_View_Details extends Docman_View_Display
         }
     }
 
+    #[\Override]
     protected function displayMode(array $params): void
     {
         if ($this->isOldUiAllowed($params['user'], $params['item'])) {
@@ -50,6 +54,7 @@ class Docman_View_Details extends Docman_View_Display
         }
     }
 
+    #[\Override]
     protected function getBreadcrumbs(array $params, Project $project, \Tuleap\Docman\ServiceDocman $service): array
     {
         if ($this->isOldUiAllowed($params['user'], $params['item'])) {
@@ -98,6 +103,7 @@ class Docman_View_Details extends Docman_View_Display
         return \Tuleap\Document\Tree\SwitchToOldUi::isAllowed($user, $project);
     }
 
+    #[\Override]
     public function _content($params, $view = null, $section = null)
     {
         $url = $params['default_url'];

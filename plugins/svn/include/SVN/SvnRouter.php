@@ -110,6 +110,7 @@ class SvnRouter implements DispatchableWithRequest
      * Routes the request to the correct controller
      * @return void
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         try {

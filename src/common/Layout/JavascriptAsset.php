@@ -24,11 +24,13 @@ namespace Tuleap\Layout;
 
 final class JavascriptAsset extends JavascriptAssetGeneric
 {
+    #[\Override]
     public function getType(): string
     {
         return 'text/javascript';
     }
 
+    #[\Override]
     public function getAssociatedCSSAssets(): CssAssetCollection
     {
         return CssAssetCollection::empty();

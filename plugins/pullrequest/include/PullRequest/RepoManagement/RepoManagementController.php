@@ -54,6 +54,7 @@ class RepoManagementController implements DispatchableWithRequest
         $this->permissions_manager = $permissions_manager;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getProject()->usesService(\gitPlugin::SERVICE_SHORTNAME)) {

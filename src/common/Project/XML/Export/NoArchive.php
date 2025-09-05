@@ -26,26 +26,32 @@ class NoArchive implements ArchiveInterface
     {
     }
 
+    #[\Override]
     public function close()
     {
     }
 
+    #[\Override]
     public function addEmptyDir($dirname)
     {
     }
 
+    #[\Override]
     public function addFile($localname, $path_to_filesystem)
     {
     }
 
+    #[\Override]
     public function addFromString($localname, $contents)
     {
     }
 
+    #[\Override]
     public function getArchivePath()
     {
     }
 
+    #[\Override]
     public function isADirectory()
     {
     }

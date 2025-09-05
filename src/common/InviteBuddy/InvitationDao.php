@@ -38,6 +38,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         parent::__construct();
     }
 
+    #[\Override]
     public function create(
         int $created_on,
         int $from_user_id,
@@ -62,6 +63,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         );
     }
 
+    #[\Override]
     public function searchById(int $id): Invitation
     {
         $row = $this->getDB()->row('SELECT * FROM invitations WHERE id = ?', $id);
@@ -72,11 +74,13 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         return $this->instantiateFromRow($row);
     }
 
+    #[\Override]
     public function markAsSent(int $id): void
     {
         $this->getDB()->update('invitations', ['status' => Invitation::STATUS_SENT], ['id' => $id]);
     }
 
+    #[\Override]
     public function markAsError(int $id): void
     {
         $this->getDB()->update(
@@ -93,6 +97,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
     /**
      * @throws InvalidInvitationTokenException|InvitationNotFoundException
      */
+    #[\Override]
     public function searchBySplitToken(SplitToken $split_token): Invitation
     {
         $row = $this->getDB()->row(
@@ -168,6 +173,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         );
     }
 
+    #[\Override]
     public function searchInvitationUsedToRegister(int $user_id): ?Invitation
     {
         $row = $this->getDB()->row(
@@ -188,6 +194,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
     /**
      * @return Invitation[] Invitations that are removed
      */
+    #[\Override]
     public function purgeObsoleteInvitations(\DateTimeImmutable $today, int $nb_days): array
     {
         return $this->getDB()->tryFlatTransaction(
@@ -236,6 +243,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         }
     }
 
+    #[\Override]
     public function searchPendingInvitationsForProject(int $project_id): array
     {
         return array_map(
@@ -254,6 +262,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         );
     }
 
+    #[\Override]
     public function withdrawPendingInvitationsForProject(string $to_email, int $project_id): void
     {
         $nb_deleted = $this->getDB()->delete(

@@ -38,6 +38,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc extends Git_Git
         $this->response         = $response;
     }
 
+    #[\Override]
     public function execute()
     {
         $this->response->info('Enabling git gc');

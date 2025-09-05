@@ -50,6 +50,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      *
      * @return string|null
      */
+    #[\Override]
     public function getValue()
     {
         return $this->numeric;
@@ -60,6 +61,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      *
      * @return string|false The difference between another $changeset_value, false if no differences
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $previous_numeric = $changeset_value->getValue();
@@ -85,6 +87,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      *
      * @return string The sentence to add in changeset
      */
+    #[\Override]
     public function nodiff($format = 'html')
     {
         if ($this->getNumeric() != 0) {

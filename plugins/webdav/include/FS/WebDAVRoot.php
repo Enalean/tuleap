@@ -47,6 +47,7 @@ class WebDAVRoot implements ICollection
      *
      * @return \Sabre\DAV\INode[]
      */
+    #[\Override]
     public function getChildren(): array
     {
         if ($this->user->isAnonymous()) {
@@ -61,6 +62,7 @@ class WebDAVRoot implements ICollection
      *
      * @param string $projectName
      */
+    #[\Override]
     public function getChild($projectName): WebDAVProject
     {
         $project = $this->project_manager->getProjectByUnixName($projectName);
@@ -90,11 +92,13 @@ class WebDAVRoot implements ICollection
         return $this->getWebDAVProject($project);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'WebDAV Root';
     }
 
+    #[\Override]
     public function getLastModified(): int
     {
         return 0;
@@ -157,26 +161,31 @@ class WebDAVRoot implements ICollection
         }
     }
 
+    #[\Override]
     public function delete(): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function setName($name): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function createFile($name, $data = null): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function createDirectory($name): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function childExists($name): bool
     {
         try {

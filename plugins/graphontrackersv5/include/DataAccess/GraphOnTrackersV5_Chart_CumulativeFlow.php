@@ -106,6 +106,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * Load object from session
      */
+    #[\Override]
     public function loadFromSession()
     {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
@@ -124,6 +125,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * Load object from DB
      */
+    #[\Override]
     public function loadFromDb(): void
     {
         $arr              = $this->getDao()->searchById($this->id)->getRow();
@@ -133,6 +135,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         $this->stop_date  = $arr['stop_date'] ?? null;
     }
 
+    #[\Override]
     public function registerInSession()
     {
         parent::registerInSession();
@@ -142,11 +145,13 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         $this->report_session->set("$this->id.stop_date", $this->stop_date);
     }
 
+    #[\Override]
     protected function getDao()
     {
         return new GraphOnTrackersV5_Chart_CumulativeFlowDao();
     }
 
+    #[\Override]
     public static function create($graphic_report, $id, $rank, $title, $description, $width, $height)
     {
         $session = self::getSession($graphic_report->report->id, $graphic_report->id);
@@ -165,6 +170,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      * array('prop1' => 'value', 'prop2' => 'value', ...)
      * @return array
      */
+    #[\Override]
     public function getSpecificRow()
     {
         return [
@@ -178,6 +184,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * Return the chart type (gantt, bar, pie, ...)
      */
+    #[\Override]
     public function getChartType()
     {
         return 'cumulative_flow';
@@ -186,6 +193,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * @return GraphOnTrackersV5_Engine The engine associated to the concrete chart
      */
+    #[\Override]
     protected function getEngine()
     {
         return new GraphOnTrackersV5_Engine_CumulativeFlow();
@@ -194,6 +202,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * @return ChartDataBuilderV5 The data builder associated to the concrete chart
      */
+    #[\Override]
     protected function getChartDataBuilder($artifacts)
     {
         return new GraphOnTrackersV5_CumulativeFlow_DataBuilder($this, $artifacts);
@@ -203,6 +212,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      * Allow update of the specific properties of the concrete chart
      * @return bool true if the update is successful
      */
+    #[\Override]
     protected function updateSpecificProperties($row)
     {
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
@@ -225,6 +235,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * User as permission to visualize the chart
      */
+    #[\Override]
     public function userCanVisualize()
     {
         $ff             = Tracker_FormElementFactory::instance();
@@ -238,6 +249,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * @return array of HTML_Element for properties
      */
+    #[\Override]
     public function getProperties()
     {
         $scaleSelect = new HTML_Element_Selectbox(
@@ -302,6 +314,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      * @param SimpleXMLElement $xml characterising the chart
      * @param array $formsMapping associating xml IDs to real fields
      */
+    #[\Override]
     public function setSpecificPropertiesFromXML($xml, $formsMapping)
     {
         if ($xml['start_date']) {
@@ -323,6 +336,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      *
      * @return array containing the properties
      */
+    #[\Override]
     public function arrayOfSpecificProperties()
     {
         return ['start_date' => $this->getStartDate(),
@@ -332,6 +346,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         ];
     }
 
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $formsMapping)
     {
         parent::exportToXML($root, $formsMapping);
@@ -349,6 +364,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         }
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         return $visitor->visitCumulativeFlowChart($this);

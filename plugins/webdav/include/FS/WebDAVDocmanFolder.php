@@ -98,6 +98,7 @@ class WebDAVDocmanFolder implements ICollection
      *
      * @return \Sabre\DAV\INode[]
      */
+    #[\Override]
     public function getChildren(): array
     {
         $children = $this->getChildList();
@@ -115,6 +116,7 @@ class WebDAVDocmanFolder implements ICollection
      *
      * @param string $name
      */
+    #[\Override]
     public function getChild($name): \Sabre\DAV\INode
     {
         $name     = $this->utils->retrieveName($name);
@@ -138,6 +140,7 @@ class WebDAVDocmanFolder implements ICollection
     /**
      * Returns the name of the folder
      */
+    #[\Override]
     public function getName(): string
     {
         if ($this->isDocmanRoot()) {
@@ -147,6 +150,7 @@ class WebDAVDocmanFolder implements ICollection
         return $this->utils->unconvertHTMLSpecialChars($this->item->getTitle());
     }
 
+    #[\Override]
     public function getLastModified(): int
     {
         return $this->item->getUpdateDate();
@@ -162,6 +166,7 @@ class WebDAVDocmanFolder implements ICollection
      *
      * @param string $name Name of the folder to create
      */
+    #[\Override]
     public function createDirectory($name): void
     {
         if ($this->utils->isWriteEnabled()) {
@@ -188,6 +193,7 @@ class WebDAVDocmanFolder implements ICollection
      * @param string               $name Name of the file
      * @param resource|string|null $data Initial payload
      */
+    #[\Override]
     public function createFile($name, $data = null): void
     {
         if ($this->utils->isWriteEnabled()) {
@@ -228,6 +234,7 @@ class WebDAVDocmanFolder implements ICollection
     /**
      * @param string $name
      */
+    #[\Override]
     public function childExists($name): bool
     {
         try {
@@ -253,6 +260,7 @@ class WebDAVDocmanFolder implements ICollection
      *
      * @param string $name New name of the folder
      */
+    #[\Override]
     public function setName($name): void
     {
         if ($this->utils->isWriteEnabled()) {
@@ -272,6 +280,7 @@ class WebDAVDocmanFolder implements ICollection
         }
     }
 
+    #[\Override]
     public function delete(): void
     {
         if ($this->utils->isWriteEnabled()) {

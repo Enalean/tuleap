@@ -128,11 +128,13 @@ class DatePeriodWithOpenDays implements DatePeriod
         return in_array((int) date('N', $day), OpeningDaysRetriever::getListOfOpenDays());
     }
 
+    #[\Override]
     public function getStartDate(): ?int
     {
         return $this->start_date;
     }
 
+    #[\Override]
     public function getDuration(): ?int
     {
         return $this->duration;

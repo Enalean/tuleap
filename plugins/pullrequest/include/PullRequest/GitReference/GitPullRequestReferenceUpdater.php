@@ -47,6 +47,7 @@ class GitPullRequestReferenceUpdater implements UpdateGitPullRequestReference
      * @throws \Git_Command_Exception
      * @throws GitReferenceNotFound
      */
+    #[\Override]
     public function updatePullRequestReference(
         PullRequest $pull_request,
         GitExec $executor_repository_source,

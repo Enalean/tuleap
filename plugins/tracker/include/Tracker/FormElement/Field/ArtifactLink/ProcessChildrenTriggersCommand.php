@@ -47,6 +47,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
     /**
      * @see Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand::execute()
      */
+    #[\Override]
     public function execute(
         Artifact $artifact,
         PFUser $submitter,

@@ -54,21 +54,25 @@ final class FeaturesToReorderProxy implements FeaturesToReorder
     /**
      * @return int[]
      */
+    #[\Override]
     public function getIds(): array
     {
         return $this->ids;
     }
 
+    #[\Override]
     public function getDirection(): string
     {
         return $this->direction;
     }
 
+    #[\Override]
     public function getComparedTo(): int
     {
         return $this->compared_to;
     }
 
+    #[\Override]
     public function isBefore(): bool
     {
         return $this->direction === FeatureElementToOrderInvolvedInChangeRepresentation::BEFORE;

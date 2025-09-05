@@ -38,16 +38,19 @@ final class ApacheConfRepository implements \Tuleap\SVNCore\ApacheConfRepository
         $this->repository = $repository;
     }
 
+    #[\Override]
     public function getProject(): \Project
     {
         return $this->repository->getProject();
     }
 
+    #[\Override]
     public function getFilesystemPath(): string
     {
         return $this->repository->getSystemPath();
     }
 
+    #[\Override]
     public function getURLPath(): string
     {
         return $this->repository->getPublicPath();

@@ -29,6 +29,7 @@ use Tuleap\Authentication\SplitToken\PrefixSplitTokenForSerialization;
  */
 final class PrefixTokenInvitation implements PrefixSplitTokenForSerialization
 {
+    #[\Override]
     public function getString(): string
     {
         return 'tlp-invite-';

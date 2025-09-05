@@ -47,6 +47,7 @@ final class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, Valu
     ) {
     }
 
+    #[\Override]
     public function getFromWhere(Comparison $comparison, TrackerField $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $suffix   = spl_object_hash($comparison);
@@ -68,11 +69,13 @@ final class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, Valu
         );
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         if (! ($parameters->field instanceof \Tuleap\Tracker\FormElement\Field\Date\DateField)) {
@@ -86,6 +89,7 @@ final class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, Valu
         return $value_wrapper->getValue()->format(DateFormat::DATE);
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         $min = $value_wrapper->getMinValue()->accept($this, $parameters);
@@ -104,16 +108,19 @@ final class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, Valu
         ];
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new InIsNotSupportedException();
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new MySelfIsNotSupportedException();
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new StatusOpenIsNotSupportedException();

@@ -43,6 +43,7 @@ final readonly class InvalidSelectablesCollectionBuilder implements IBuildInvali
     ) {
     }
 
+    #[\Override]
     public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection
     {
         $unique_selectables = array_unique($selectables, SORT_REGULAR);

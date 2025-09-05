@@ -39,6 +39,7 @@ final readonly class FromTrackerIn implements FromTrackerCondition
         return $this->values;
     }
 
+    #[\Override]
     public function acceptFromTrackerConditionVisitor(FromTrackerConditionVisitor $visitor, $parameters)
     {
         return $visitor->visitIn($this, $parameters);

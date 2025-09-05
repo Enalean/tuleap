@@ -37,11 +37,13 @@ final class XMLBindValueReferenceById implements XMLBindValueReference
         $this->id = $id;
     }
 
+    #[\Override]
     public function getId(XMLFormElementFlattenedCollection $form_elements): string
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getIdForFieldChange(XMLFormElementFlattenedCollection $form_elements): string
     {
         return $this->id;

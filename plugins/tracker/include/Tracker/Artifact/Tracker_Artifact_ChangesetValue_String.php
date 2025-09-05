@@ -29,6 +29,7 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitString($this);
@@ -37,6 +38,7 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
     /**
      * @see Tracker_Artifact_ChangesetValue_Text::fetchHtmlMailDiff()
      */
+    #[\Override]
     protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id)
     {
         return $formated_diff;
@@ -45,11 +47,13 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
     /**
      * @see Tracker_Artifact_ChangesetValue_Text::fetchDiffInFollowUp()
      */
+    #[\Override]
     protected function fetchDiffInFollowUp(string $formated_diff): string
     {
         return '<div class="diff">' . $formated_diff . '</div>';
     }
 
+    #[\Override]
     protected function getFullRESTRepresentation($value)
     {
         $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
@@ -63,6 +67,7 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
         return $artifact_field_value_full_representation;
     }
 
+    #[\Override]
     public function fetchDiff(array $previous, array $next, string $format): string
     {
         $string = '';

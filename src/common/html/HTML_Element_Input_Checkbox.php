@@ -33,6 +33,7 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
         }
     }
 
+    #[\Override]
     public function render()
     {
         $hp    = Codendi_HTMLPurifier::instance();
@@ -43,6 +44,7 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
         return $html;
     }
 
+    #[\Override]
     public function renderValue()
     {
         $hf    = new HTML_Element_Input_Hidden('', $this->name, 0, '');
@@ -51,6 +53,7 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
         return $html;
     }
 
+    #[\Override]
     protected function getInputType()
     {
         return 'checkbox';
@@ -59,6 +62,7 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
     /**
      * The value for a checkbox is always 1
      */
+    #[\Override]
     public function getValue()
     {
         return 1;

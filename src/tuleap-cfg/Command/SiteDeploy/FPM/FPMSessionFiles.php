@@ -29,6 +29,7 @@ final class FPMSessionFiles implements FPMSessionInterface
 {
     private const TULEAP_CONF_FILE = 'tuleap_sessions_files.part';
 
+    #[\Override]
     public function deployFreshTuleapConf(LoggerInterface $logger, string $tuleap_php_configuration_folder, string $php_configuration_folder): void
     {
         $src_file = $tuleap_php_configuration_folder . '/' . self::TULEAP_CONF_FILE;
@@ -42,6 +43,7 @@ final class FPMSessionFiles implements FPMSessionInterface
         copy($src_file, $dst_file);
     }
 
+    #[\Override]
     public function forceDeployFreshTuleapConf(
         LoggerInterface $logger,
         string $tuleap_php_configuration_folder,

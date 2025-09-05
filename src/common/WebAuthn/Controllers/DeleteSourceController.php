@@ -62,6 +62,7 @@ final class DeleteSourceController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $current_user = $this->provide_current_user->getCurrentUser();

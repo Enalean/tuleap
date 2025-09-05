@@ -35,6 +35,7 @@ class WebhookStatusLogger implements StatusLogger
         $this->dao = $dao;
     }
 
+    #[\Override]
     public function log(Webhook $webhook, $status)
     {
         $this->dao->addLog($webhook->getId(), $status);

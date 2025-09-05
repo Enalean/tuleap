@@ -33,6 +33,7 @@ class LinkedArtifactDAO extends DataAccessObject implements SearchLinkedArtifact
      * @param int[] $submitted_links_to_check
      * @psalm-param non-empty-array<int> $submitted_links_to_check
      */
+    #[\Override]
     public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
     {
         $in_statement = EasyStatement::open()->in('tracker_changeset_value_artifactlink.artifact_id IN (?*)', $submitted_links_to_check);

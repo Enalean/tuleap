@@ -38,6 +38,7 @@ class NavigationDropdownPresenter implements NavigationItem
         $this->is_active  = ($current_pane_shortname === $shortname);
     }
 
+    #[\Override]
     public function hasSubItems()
     {
         return true;

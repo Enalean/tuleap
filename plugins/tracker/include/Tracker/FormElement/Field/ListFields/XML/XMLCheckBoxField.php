@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
 final class XMLCheckBoxField extends XMLListField
 {
+    #[\Override]
     public static function getType(): string
     {
         return \Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE;

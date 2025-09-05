@@ -93,6 +93,7 @@ final class oauth2_serverPlugin extends Plugin
         bindtextdomain('tuleap-oauth2_server', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {

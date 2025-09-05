@@ -30,6 +30,7 @@ class AnonymousNotAllowedException extends RegistrationForbiddenException
         parent::__construct('Anonymous users are not allowed.');
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return dgettext('tuleap-core', 'Anonymous users are not allowed.');

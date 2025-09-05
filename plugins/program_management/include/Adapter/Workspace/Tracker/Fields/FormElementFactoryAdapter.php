@@ -33,6 +33,7 @@ final class FormElementFactoryAdapter implements RetrieveFullArtifactLinkField
     ) {
     }
 
+    #[\Override]
     public function getArtifactLinkField(
         TrackerIdentifier $tracker_identifier,
     ): ?\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField {

@@ -23,6 +23,7 @@
 
 class Rule_FRSFileName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function isValid($val)
     {
         if ($val === null) {

@@ -55,6 +55,7 @@ final class UpdatedInlineCommentNotificationToProcessBuilder implements Notifica
     ) {
     }
 
+    #[\Override]
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         return $this->inline_comment_retriever->getInlineCommentByID($event->inline_comment_id)->mapOr(

@@ -34,6 +34,7 @@ final class ProjectTemplateIDInvalidException extends Project_Creation_Exception
         $this->invalid_template_id = $invalid_template_id;
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(_('Template #%d is not valid'), $this->invalid_template_id);

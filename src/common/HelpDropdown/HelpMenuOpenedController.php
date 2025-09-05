@@ -53,6 +53,7 @@ final class HelpMenuOpenedController extends DispatchablePSR15Compatible impleme
         $this->response_factory = $response_factory;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->prometheus->increment(self::METRIC_NAME, self::HELP);

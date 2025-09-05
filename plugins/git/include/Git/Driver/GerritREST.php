@@ -67,6 +67,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger          = $logger;
     }
 
+    #[\Override]
     public function createProject(
         Git_RemoteServer_GerritServer $server,
         GitRepository $repository,
@@ -99,6 +100,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         return $gerrit_project_name;
     }
 
+    #[\Override]
     public function createProjectWithPermissionsOnly(
         Git_RemoteServer_GerritServer $server,
         Project $project,
@@ -134,11 +136,13 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger->info("Gerrit: Permissions-only project $parent_project_name successfully initialized");
     }
 
+    #[\Override]
     public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name): bool
     {
         return $this->doesTheProjectExist($server, $project_name);
     }
 
+    #[\Override]
     public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name): bool
     {
         $this->logger->info("Gerrit REST driver: Check if project $project_name already exists");
@@ -164,6 +168,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->throwGerritException('Gerrit REST driver: an error occurred while checking existence of project', $response);
     }
 
+    #[\Override]
     public function ping(Git_RemoteServer_GerritServer $server)
     {
         $this->logger->info('Gerrit REST driver: Check if server is up');
@@ -181,11 +186,13 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         return false;
     }
 
+    #[\Override]
     public function listParentProjects(Git_RemoteServer_GerritServer $server)
     {
         return [];
     }
 
+    #[\Override]
     public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, $owner)
     {
         $this->logger->info("Gerrit REST driver: Create group $group_name");
@@ -220,6 +227,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->throwGerritException("Gerrit REST driver: Unable to create group $group_name", $response);
     }
 
+    #[\Override]
     public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name)
     {
         $group_info = $this->getGroupInfoFromGerrit($server, $group_full_name);
@@ -230,6 +238,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         return $group_info['id'];
     }
 
+    #[\Override]
     public function getGroupId(Git_RemoteServer_GerritServer $server, $group_full_name)
     {
         $group_info = $this->getGroupInfoFromGerrit($server, $group_full_name);
@@ -240,6 +249,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         return $group_info['group_id'];
     }
 
+    #[\Override]
     public function doesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name)
     {
         $this->logger->info("Gerrit REST driver: Check if the group $group_name exists");
@@ -247,11 +257,13 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         return $this->getGroupInfoFromGerrit($server, $group_name) !== false;
     }
 
+    #[\Override]
     public function listGroups(Git_RemoteServer_GerritServer $server)
     {
         return;
     }
 
+    #[\Override]
     public function getAllGroups(Git_RemoteServer_GerritServer $server)
     {
         $this->logger->info('Gerrit REST driver: Get all groups');
@@ -271,6 +283,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         return $groups;
     }
 
+    #[\Override]
     public function getGerritProjectName(GitRepository $repository)
     {
         $name_builder = new Git_RemoteServer_Gerrit_ProjectNameBuilder();
@@ -278,6 +291,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         return $name_builder->getGerritProjectName($repository);
     }
 
+    #[\Override]
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name)
     {
         $this->logger->info('Gerrit REST driver: Add user ' . $user->getSSHUserName() . " in group $group_name");
@@ -297,6 +311,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger->info('Gerrit REST driver: User successfully added');
     }
 
+    #[\Override]
     public function removeUserFromGroup(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
@@ -318,6 +333,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger->info('Gerrit REST driver: User successfully removed');
     }
 
+    #[\Override]
     public function removeAllGroupMembers(Git_RemoteServer_GerritServer $server, $group_name)
     {
         $existing_members = $this->getAllMembers($server, $group_name);
@@ -344,6 +360,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         }
     }
 
+    #[\Override]
     public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name)
     {
         $this->logger->info("Gerrit REST driver: Add included group $included_group_name in group $group_name");
@@ -363,6 +380,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger->info('Gerrit REST driver: Group successfully included');
     }
 
+    #[\Override]
     public function removeAllIncludedGroups(Git_RemoteServer_GerritServer $server, $group_name)
     {
         $exiting_groups = $this->getAllIncludedGroups($server, $group_name);
@@ -389,11 +407,13 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger->info('Gerrit REST driver: included groups successfully removed');
     }
 
+    #[\Override]
     public function flushGerritCacheAccounts($server)
     {
         return;
     }
 
+    #[\Override]
     public function addSSHKeyToAccount(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
@@ -415,6 +435,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger->info('Gerrit REST driver: ssh key successfully added');
     }
 
+    #[\Override]
     public function removeSSHKeyFromAccount(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
@@ -462,6 +483,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->throwGerritException('Gerrit REST driver: Cannot get ssh keys for user', $response);
     }
 
+    #[\Override]
     public function setProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name, $parent_project_name)
     {
         $this->logger->info("Gerrit REST driver: Set project $parent_project_name as parent of $project_name");
@@ -480,11 +502,13 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->logger->info('Gerrit REST driver: parent project successfully added');
     }
 
+    #[\Override]
     public function resetProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name)
     {
         $this->setProjectInheritance($server, $project_name, self::DEFAULT_PARENT_PROJECT);
     }
 
+    #[\Override]
     public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server)
     {
         $this->logger->info('Gerrit REST driver: Check if delete plugin is activated');
@@ -510,6 +534,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         return $activated;
     }
 
+    #[\Override]
     public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name)
     {
         $this->logger->info("Gerrit REST driver: Delete project $gerrit_project_full_name");
@@ -543,6 +568,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         $this->throwGerritException("Gerrit REST driver: Cannot delete project $gerrit_project_full_name", $response);
     }
 
+    #[\Override]
     public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name)
     {
         $this->logger->info("Gerrit REST driver: Set $gerrit_project_full_name Read-Only");

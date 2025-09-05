@@ -67,6 +67,7 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject implements VerifyG
     /**
      * @psalm-return array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int}
      */
+    #[\Override]
     public function searchUniqueIntegration(Project $project, GitlabProject $gitlab_project): ?array
     {
         $sql = 'SELECT *
@@ -149,6 +150,7 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject implements VerifyG
         return count($rows) > 0;
     }
 
+    #[\Override]
     public function isTheGitlabRepositoryAlreadyIntegratedInProject(
         int $project_id,
         int $gitlab_repository_id,

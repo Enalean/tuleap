@@ -67,6 +67,7 @@ class Tracker_SystemEventManager extends SystemEventManager
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingParameter(SystemEvent_TRACKER_V3_MIGRATION::NAME, $project->getGroupId());
     }
 
+    #[\Override]
     public function getTypes()
     {
         return [

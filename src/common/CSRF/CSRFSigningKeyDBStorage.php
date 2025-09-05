@@ -43,6 +43,7 @@ final class CSRFSigningKeyDBStorage implements CSRFSigningKeyStorage
     {
     }
 
+    #[\Override]
     public function getSigningKey(): ConcealedString
     {
         if ($this->signing_key !== null) {

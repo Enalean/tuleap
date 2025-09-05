@@ -33,6 +33,7 @@ class WillBeActivatedUser implements ReadyToBeImportedUser
         $this->user = $user;
     }
 
+    #[\Override]
     public function getUserName()
     {
         return $this->user->getUserName();
@@ -47,11 +48,13 @@ class WillBeActivatedUser implements ReadyToBeImportedUser
         return $this->user;
     }
 
+    #[\Override]
     public function getRealUser(UserManager $user_manager)
     {
         return $this->user;
     }
 
+    #[\Override]
     public function process(UserManager $user_manager, LoggerInterface $logger)
     {
         $logger->info($this->user->getUserName() . ' is not alive. Nothing to do.');

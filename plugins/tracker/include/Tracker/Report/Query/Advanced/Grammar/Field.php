@@ -28,16 +28,19 @@ final readonly class Field implements Searchable, Selectable
     {
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function acceptSearchableVisitor(SearchableVisitor $visitor, $parameters)
     {
         return $visitor->visitField($this, $parameters);
     }
 
+    #[\Override]
     public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters)
     {
         return $visitor->visitField($this, $parameters);

@@ -40,6 +40,7 @@ final class OnlyOfficeSaveDocumentTokenRefresherDBStore implements OnlyOfficeSav
     ) {
     }
 
+    #[\Override]
     public function refreshToken(ConcealedString $raw_save_token, \DateTimeImmutable $now): Ok|Err
     {
         try {

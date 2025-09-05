@@ -73,6 +73,7 @@ final class DisplayAccountInformationController implements DispatchableWithReque
         );
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();

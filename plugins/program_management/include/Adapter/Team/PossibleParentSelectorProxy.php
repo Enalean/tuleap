@@ -45,11 +45,13 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
         return new self($possible_parent_selector, $retrieve_root_planning, $retrieve_artifact);
     }
 
+    #[\Override]
     public function getUser(): UserReference
     {
         return UserProxy::buildFromPFUser($this->inner_event->user);
     }
 
+    #[\Override]
     public function trackerIsInRootPlanning(): bool
     {
         $planning = $this->retrieve_root_planning->getRootPlanning($this->inner_event->user, $this->getProjectId());
@@ -59,16 +61,19 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getProjectId(): int
     {
         return (int) $this->inner_event->tracker->getGroupId();
     }
 
+    #[\Override]
     public function disableCreate(): void
     {
         $this->inner_event->disableCreate();
     }
 
+    #[\Override]
     public function setPossibleParents(int $total_size, FeatureReference ...$features): void
     {
         $artifacts = [];
@@ -88,6 +93,7 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getLimit(): int
     {
         return $this->inner_event->limit;
@@ -96,16 +102,19 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getOffset(): int
     {
         return $this->inner_event->offset;
     }
 
+    #[\Override]
     public function getTrackerId(): int
     {
         return $this->inner_event->tracker->getId();
     }
 
+    #[\Override]
     public function disableSelector(): void
     {
         $this->inner_event->disableSelector();

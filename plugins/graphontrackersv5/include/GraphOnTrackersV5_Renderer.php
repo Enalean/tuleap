@@ -63,6 +63,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         $this->form_element_factory = $form_element_factory;
     }
 
+    #[\Override]
     public function initiateSession()
     {
         $this->report_session = new Tracker_Report_Session($this->report->id);
@@ -82,6 +83,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     /**
      * Delete the renderer
      */
+    #[\Override]
     public function delete()
     {
         foreach ($this->getChartFactory()->getCharts($this) as $chart) {
@@ -99,6 +101,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      * @param HTTPRequest $request
      * @return string
      */
+    #[\Override]
     public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
     {
         $html = '';
@@ -143,6 +146,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         return $html;
     }
 
+    #[\Override]
     public function fetchAssets(BaseLayout $layout): void
     {
         $layout->addJavascriptAsset(new JavascriptViteAsset(
@@ -151,6 +155,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         ));
     }
 
+    #[\Override]
     public function fetchWidget(PFUser $user, Widget $widget): string
     {
         $html             = '';
@@ -264,6 +269,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      * Process the request
      * @param HTTPRequest $request
      */
+    #[\Override]
     public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)
     {
         $renderer_parameters = $request->get('renderer_plugin_graphontrackersv5');
@@ -324,11 +330,13 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     /**
      * Duplicate the renderer
      */
+    #[\Override]
     public function duplicate($from_renderer, $field_mapping, MappingRegistry $mapping_registry): void
     {
         $this->getChartFactory()->duplicate($from_renderer, $this, $field_mapping, $mapping_registry);
     }
 
+    #[\Override]
     public function afterProcessRequest($engine, $request, $current_user)
     {
         if (! $this->chart_to_edit) {
@@ -341,6 +349,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         return GraphOnTrackersV5_ChartFactory::instance();
     }
 
+    #[\Override]
     public function getType()
     {
         return 'plugin_graphontrackersv5';
@@ -351,6 +360,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, array $formsMapping)
     {
         parent::exportToXml($root, $formsMapping);
@@ -375,6 +385,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      *
      * @param Tracker_Report_Renderer $renderer containing the charts
      */
+    #[\Override]
     public function afterSaveObject(Tracker_Report_Renderer $renderer)
     {
         $cf = $this->getChartFactory();
@@ -403,6 +414,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      *
      * @return bool true if success, false if failure
      */
+    #[\Override]
     public function update()
     {
         $success = true;
@@ -436,6 +448,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      *
      * @return bool true if success, false if failure
      */
+    #[\Override]
     public function create()
     {
         $success = true;
@@ -458,21 +471,25 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         return $success;
     }
 
+    #[\Override]
     public function getIcon()
     {
         return 'far fa-chart-bar';
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         return [];
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         return new CssAssetCollection([]);
     }
 
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         return [new JavascriptViteAsset($this->getAssets(), 'src/loadGraphs.ts')];

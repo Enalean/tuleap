@@ -38,6 +38,7 @@ final class InsufficientPermissionToUseProjectAsTemplateException extends Projec
         $this->user    = $user;
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return _(sprintf(_('User #%d is not administrator of project #%d'), $this->user->getId(), $this->project->getID()));

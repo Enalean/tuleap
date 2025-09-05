@@ -42,6 +42,7 @@ final class PdfTemplateImageDisplayController extends DispatchablePSR15Compatibl
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $image = $request->getAttribute(PdfTemplateImage::class);

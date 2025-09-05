@@ -56,6 +56,7 @@ final class jira_importPlugin extends Plugin
         bindtextdomain('tuleap-jira_import', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -64,6 +65,7 @@ final class jira_importPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['tracker', 'agiledashboard', 'kanban', 'cardwall', 'roadmap', 'projectmilestones', 'crosstracker'];

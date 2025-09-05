@@ -39,6 +39,7 @@ final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact, VerifyFe
     ) {
     }
 
+    #[\Override]
     public function isVisible(int $artifact_id, UserIdentifier $user_identifier): bool
     {
         $user     = $this->user_retriever->getUserWithId($user_identifier);
@@ -46,6 +47,7 @@ final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact, VerifyFe
         return $artifact !== null;
     }
 
+    #[\Override]
     public function isFeatureVisibleAndInProgram(
         int $feature_id,
         UserIdentifier $user_identifier,
@@ -61,11 +63,13 @@ final class ArtifactVisibleVerifier implements VerifyIsVisibleArtifact, VerifyFe
         return $artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId();
     }
 
+    #[\Override]
     public function isVisibleFeature(int $feature_id, UserIdentifier $user): bool
     {
         return $this->isVisible($feature_id, $user);
     }
 
+    #[\Override]
     public function isUserStoryVisible(int $user_story_id, UserIdentifier $user): bool
     {
         return $this->isVisible($user_story_id, $user);

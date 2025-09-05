@@ -55,6 +55,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         return Tracker_FormElementFactory::instance()->getAllFormElementsByParentId($this->id);
     }
 
+    #[\Override]
     public function fetchMailArtifact($recipient, Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', [$recipient, $artifact, $format, $ignore_perms]);
@@ -74,6 +75,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return void
      */
+    #[\Override]
     public function prepareForDisplay()
     {
         $this->has_been_displayed = false;
@@ -82,6 +84,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         }
     }
 
+    #[\Override]
     public function getRankSelectboxDefinition()
     {
         $def             = parent::getRankSelectboxDefinition();
@@ -100,6 +103,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return string
      */
+    #[\Override]
     public function fetchAddCriteria($used, $prefix = '')
     {
         return $this->fetchOptgroup('fetchAddCriteria', 'add_criteria_container_', $used, $prefix);
@@ -113,11 +117,13 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return string
      */
+    #[\Override]
     public function fetchAddColumn($used, $prefix = '')
     {
         return $this->fetchOptgroup('fetchAddColumn', 'add_column_container_', $used, $prefix);
     }
 
+    #[\Override]
     public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         return $this->fetchOptgroup('fetchAddCardFields', 'add_cardfields_container_', $used_fields, $prefix);
@@ -160,6 +166,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
     /**
      * Transforms FormElement into a SimpleXMLElement
      */
+    #[\Override]
     public function exportToXml(
         SimpleXMLElement $parent_node,
         array &$xmlMapping,
@@ -173,6 +180,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         return $node;
     }
 
+    #[\Override]
     public function exportPermissionsToXML(SimpleXMLElement $node_perms, array $ugroups, &$xmlMapping)
     {
         parent::exportPermissionsToXML($node_perms, $ugroups, $xmlMapping);
@@ -187,6 +195,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return bool true if Tracker is ok
      */
+    #[\Override]
     public function testImport()
     {
         if ($this->formElements != null) {
@@ -205,6 +214,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return string html
      */
+    #[\Override]
     public function fetchSubmit(array $submitted_values)
     {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmit', $submitted_values);
@@ -214,6 +224,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      * Fetch the element for the submit masschange form
      * @return string
      */
+    #[\Override]
     public function fetchSubmitMasschange()
     {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmitMasschange', []);
@@ -225,6 +236,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return string html
      */
+    #[\Override]
     public function fetchArtifact(
         Artifact $artifact,
         array $submitted_values,
@@ -233,11 +245,13 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values, $additional_classes);
     }
 
+    #[\Override]
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', $artifact, $submitted_values, []);
     }
 
+    #[\Override]
     public function fetchSubmitForOverlay(array $submitted_values)
     {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmitForOverlay', $submitted_values);
@@ -249,6 +263,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return string html
      */
+    #[\Override]
     public function fetchArtifactReadOnly(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values, []);
@@ -257,6 +272,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
+    #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values, []);
@@ -332,6 +348,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return void
      */
+    #[\Override]
     public function continueGetInstanceFromXML(
         $xml,
         &$xmlMapping,
@@ -379,6 +396,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      * @param bool $force_absolute_ranking
      * @return void
      */
+    #[\Override]
     public function afterSaveObject(Tracker $tracker, $tracker_is_empty, $force_absolute_ranking)
     {
         //save sub elements
@@ -392,6 +410,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return bool
      */
+    #[\Override]
     public function isUpdateable()
     {
         return false;
@@ -402,6 +421,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return bool
      */
+    #[\Override]
     public function isSubmitable()
     {
         return false;
@@ -413,6 +433,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return string
      */
+    #[\Override]
     public function getCannotRemoveMessage()
     {
         $message = '';
@@ -428,6 +449,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return bool
      */
+    #[\Override]
     public function canBeRemovedFromUsage()
     {
         $form_elements = $this->getFormElements();
@@ -441,6 +463,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return bool
      */
+    #[\Override]
     public function userCanRead(?PFUser $user = null)
     {
         return true;
@@ -479,11 +502,13 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      *
      * @return mixed The values or null if there are no specific available values
      */
+    #[\Override]
     public function getRESTAvailableValues()
     {
         return null;
     }
 
+    #[\Override]
     public function isCollapsed(): bool
     {
         return false;
@@ -494,11 +519,13 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         return null;
     }
 
+    #[\Override]
     public function getDefaultRESTValue()
     {
         return $this->getDefaultValue();
     }
 
+    #[\Override]
     public function getRESTContent()
     {
         $content_structure = [];

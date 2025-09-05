@@ -27,11 +27,13 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 
 final class FileCopyrightSniff implements Sniff
 {
+    #[\Override]
     public function register(): array
     {
         return [T_OPEN_TAG];
     }
 
+    #[\Override]
     public function process(File $phpcsFile, $stackPtr)
     {
         $first_non_whitespace_instruction_pos = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true);

@@ -49,6 +49,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
         $this->tracker_switcher = $tracker_switcher;
     }
 
+    #[\Override]
     public function display(Codendi_Request $request, PFUser $current_user)
     {
         $this->current_user = $current_user;
@@ -56,6 +57,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
         parent::display($request, $current_user);
     }
 
+    #[\Override]
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
         return $this->fetchArtifactForm(
@@ -63,6 +65,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
         );
     }
 
+    #[\Override]
     protected function displayHeader()
     {
         $GLOBALS['HTML']->addJavascriptAsset(
@@ -108,6 +111,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
         return $html;
     }
 
+    #[\Override]
     protected function displayFooter()
     {
         $GLOBALS['HTML']->overlay_footer();

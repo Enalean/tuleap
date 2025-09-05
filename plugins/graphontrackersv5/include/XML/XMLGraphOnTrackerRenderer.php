@@ -45,6 +45,7 @@ final class XMLGraphOnTrackerRenderer extends \Tuleap\Tracker\Report\Renderer\XM
         return $new;
     }
 
+    #[\Override]
     public function export(SimpleXMLElement $renderers, XMLFormElementFlattenedCollection $form_elements): SimpleXMLElement
     {
         $renderer_xml = parent::export($renderers, $form_elements);

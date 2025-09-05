@@ -95,6 +95,7 @@ class IntegrationWebhookController extends DispatchablePSR15Compatible implement
         $this->webhook_actions                = $webhook_actions;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->logger->info('GitLab webhook received.');

@@ -30,11 +30,13 @@ class Widget_ProjectDescription extends Widget // phpcs:ignore PSR1.Classes.Clas
         parent::__construct('projectdescription');
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('include_project_home', 'project_description');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $request  = HTTPRequest::instance();
@@ -58,11 +60,13 @@ class Widget_ProjectDescription extends Widget // phpcs:ignore PSR1.Classes.Clas
         return $html;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_description', 'description');
     }
 
+    #[\Override]
     public function exportAsXML(): \SimpleXMLElement
     {
         $widget = new \SimpleXMLElement('<widget />');

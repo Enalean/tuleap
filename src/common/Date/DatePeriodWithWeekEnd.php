@@ -52,6 +52,7 @@ class DatePeriodWithWeekEnd implements DatePeriod
         return $duration;
     }
 
+    #[\Override]
     public function getStartDate(): int
     {
         return $this->start_date;
@@ -78,6 +79,7 @@ class DatePeriodWithWeekEnd implements DatePeriod
         }
     }
 
+    #[\Override]
     public function getDuration(): ?int
     {
         return $this->duration;

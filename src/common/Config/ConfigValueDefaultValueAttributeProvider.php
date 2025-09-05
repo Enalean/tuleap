@@ -42,6 +42,7 @@ final class ConfigValueDefaultValueAttributeProvider implements \ConfigValueProv
      * @return array<string, mixed>
      * @throws \ReflectionException
      */
+    #[\Override]
     public function getVariables(): array
     {
         $variables = [];

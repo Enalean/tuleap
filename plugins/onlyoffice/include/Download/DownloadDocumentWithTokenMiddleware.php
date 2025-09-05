@@ -42,6 +42,7 @@ final class DownloadDocumentWithTokenMiddleware implements MiddlewareInterface, 
     ) {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
@@ -64,6 +65,7 @@ final class DownloadDocumentWithTokenMiddleware implements MiddlewareInterface, 
         );
     }
 
+    #[\Override]
     public function getCurrentRequestUser(ServerRequestInterface $request): ?\PFUser
     {
         $user_id = $request->getAttribute(self::class);

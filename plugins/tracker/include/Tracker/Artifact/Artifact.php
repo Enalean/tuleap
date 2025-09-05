@@ -859,6 +859,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @return void
      */
+    #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         switch ($request->get('func')) {
@@ -1215,6 +1216,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @return string html
      */
+    #[\Override]
     public function fetchXRefLink()
     {
         return '<a class="cross-reference" href="/goto?' . http_build_query(
@@ -1374,6 +1376,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @return Tracker The tracker this artifact belongs to
      */
+    #[\Override]
     public function getTracker()
     {
         if (! isset($this->tracker)) {
@@ -1696,6 +1699,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId()
     {
         return (int) $this->id;

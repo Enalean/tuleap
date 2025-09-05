@@ -25,6 +25,7 @@ namespace Tuleap\Hudson;
 
 class HudsonService extends \Service
 {
+    #[\Override]
     public function getIconName(): string
     {
         return 'fas fa-sync';

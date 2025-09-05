@@ -33,6 +33,7 @@ final class GroupLinkTokenInserter implements InsertGroupLinkToken
     {
     }
 
+    #[\Override]
     public function insertToken(GroupLink $gitlab_group, ConcealedString $token): void
     {
         $encrypted_secret = SymmetricCrypto::encrypt(

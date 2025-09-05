@@ -50,6 +50,7 @@ class ImportProjectXMLCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure()
     {
         $this
@@ -65,6 +66,7 @@ class ImportProjectXMLCommand extends Command
             ->addOption('use-lame-password');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('mapping-path') === null && $input->getOption('automap') === null) {

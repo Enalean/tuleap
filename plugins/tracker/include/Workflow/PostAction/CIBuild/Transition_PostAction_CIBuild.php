@@ -71,18 +71,21 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
      *
      * @return string
      */
+    #[\Override]
     public function getShortName()
     {
         return self::SHORT_NAME;
     }
 
     /** @return string */
+    #[\Override]
     public static function getLabel()
     {
         return dgettext('tuleap-tracker', 'Launch a continuous integration build');
     }
 
     /** @return bool */
+    #[\Override]
     public function isDefined()
     {
         return ! empty($this->job_url);
@@ -96,6 +99,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if ($this->isDefined()) {
@@ -107,6 +111,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     /**
      * @see Transition_PostAction::after()
      */
+    #[\Override]
     public function after(Tracker_Artifact_Changeset $changeset)
     {
         if (! $this->isDefined()) {
@@ -136,11 +141,13 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
         return new Transition_PostAction_CIBuildDao();
     }
 
+    #[\Override]
     public function bypassPermissions(TrackerField $field)
     {
         return $this->bypass_permissions;
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitCIBuild($this);

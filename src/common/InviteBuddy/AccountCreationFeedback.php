@@ -38,6 +38,7 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
     ) {
     }
 
+    #[\Override]
     public function accountHasJustBeenCreated(\PFUser $just_created_user, RegisterFormContext $context): void
     {
         $this->dao->saveJustCreatedUserThanksToInvitation(

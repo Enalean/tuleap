@@ -48,6 +48,7 @@ final class ReviewerChange implements TimelineEvent
         return $this->date_of_the_change;
     }
 
+    #[\Override]
     public function getPostDate(): \DateTimeImmutable
     {
         return $this->date_of_the_change;

@@ -29,6 +29,7 @@ class ProgramService extends \Service implements ServiceForCreation
     private const ICON_NAME         = 'fas fa-sitemap';
     public const  SERVICE_SHORTNAME = 'plugin_program_management';
 
+    #[\Override]
     public static function forServiceCreation(\Project $project): self
     {
         return new self(
@@ -53,11 +54,13 @@ class ProgramService extends \Service implements ServiceForCreation
         );
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return self::ICON_NAME;
     }
 
+    #[\Override]
     public function getInternationalizedName(): string
     {
         $label = $this->getLabel();
@@ -69,6 +72,7 @@ class ProgramService extends \Service implements ServiceForCreation
         return $label;
     }
 
+    #[\Override]
     public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();
@@ -80,11 +84,13 @@ class ProgramService extends \Service implements ServiceForCreation
         return $description;
     }
 
+    #[\Override]
     public function getUrl(?string $url = null): string
     {
         return sprintf('/program_management/%s', urlencode($this->project->getUnixNameLowerCase()));
     }
 
+    #[\Override]
     public function urlCanChange(): bool
     {
         return false;

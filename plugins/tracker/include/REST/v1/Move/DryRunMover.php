@@ -39,6 +39,7 @@ final class DryRunMover implements MoveDryRun
     /**
      * @throws MoveArtifactSemanticsException
      */
+    #[\Override]
     public function move(
         Tracker $source_tracker,
         Tracker $destination_tracker,

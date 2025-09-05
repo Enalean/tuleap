@@ -29,11 +29,13 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 
 final class EnforcePHPUnitAttributesSniff implements Sniff
 {
+    #[\Override]
     public function register(): array
     {
         return [T_CLASS];
     }
 
+    #[\Override]
     public function process(File $phpcsFile, $stackPtr): void
     {
         if (! str_ends_with($phpcsFile->path, 'Test.php')) {

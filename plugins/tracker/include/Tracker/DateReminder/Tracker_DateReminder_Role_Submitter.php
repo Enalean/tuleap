@@ -26,6 +26,7 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
      *
      * @return String
      */
+    #[\Override]
     public function getIdentifier()
     {
         return self::IDENTIFIER;
@@ -36,6 +37,7 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
      *
      * @return String
      */
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-tracker', 'Submitter');
@@ -47,6 +49,7 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
      *
      * @return Array of PFUser
      */
+    #[\Override]
     public function getRecipientsFromArtifact(Artifact $artifact)
     {
         $recipients  = [];

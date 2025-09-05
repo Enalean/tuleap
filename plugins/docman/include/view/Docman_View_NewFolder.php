@@ -9,27 +9,32 @@
 
 class Docman_View_NewFolder extends Docman_View_New
 {
+    #[\Override]
     public function _getTitle($params)
     {
         return dgettext('tuleap-docman', 'New folder');
     }
 
+    #[\Override]
     public function _getAction()
     {
         return 'createFolder';
     }
 
+    #[\Override]
     public function _getActionText()
     {
         return dgettext('tuleap-docman', 'Create folder');
     }
 
+    #[\Override]
     public function _getNewItem()
     {
         $i = new Docman_Folder();
         return $i;
     }
 
+    #[\Override]
     public function _getGeneralProperties($params)
     {
         $html  = '';
@@ -49,6 +54,7 @@ class Docman_View_NewFolder extends Docman_View_New
         return $mdHtmlFactory->buildFieldArray($mdIter, $inheritableMda, true, $params['form_name'], $params['theme_path']);
     }
 
+    #[\Override]
     public function _getDefaultValuesFieldset($params)
     {
         $html = '';
@@ -63,6 +69,7 @@ class Docman_View_NewFolder extends Docman_View_New
         return $html;
     }
 
+    #[\Override]
     public function _getSpecificPropertiesFieldset($params)
     {
         return '';

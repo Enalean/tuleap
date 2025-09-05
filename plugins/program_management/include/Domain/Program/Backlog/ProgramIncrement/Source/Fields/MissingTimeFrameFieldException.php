@@ -42,6 +42,7 @@ final class MissingTimeFrameFieldException extends \Exception implements FieldSy
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

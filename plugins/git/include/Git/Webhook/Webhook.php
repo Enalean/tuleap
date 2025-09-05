@@ -34,6 +34,7 @@ class Webhook implements \Tuleap\Webhook\Webhook
         $this->url           = $url;
     }
 
+    #[\Override]
     public function getId()
     {
         return $this->id;
@@ -44,6 +45,7 @@ class Webhook implements \Tuleap\Webhook\Webhook
         return $this->repository_id;
     }
 
+    #[\Override]
     public function getUrl()
     {
         return $this->url;

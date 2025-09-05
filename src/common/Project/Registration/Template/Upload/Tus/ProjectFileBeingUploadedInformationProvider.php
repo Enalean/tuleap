@@ -49,6 +49,7 @@ final readonly class ProjectFileBeingUploadedInformationProvider implements TusF
      * @throws NotFoundException
      * @throws \Tuleap\Request\ForbiddenException
      */
+    #[\Override]
     public function getFileInformation(ServerRequestInterface $request): ?TusFileInformation
     {
         $id = $request->getAttribute('id');

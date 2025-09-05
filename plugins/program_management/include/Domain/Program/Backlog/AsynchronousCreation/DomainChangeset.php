@@ -54,6 +54,7 @@ final class DomainChangeset implements ChangesetIdentifier
         return ($changeset_id !== null) ? new self($changeset_id) : null;
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

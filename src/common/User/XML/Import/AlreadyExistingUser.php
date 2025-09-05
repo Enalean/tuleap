@@ -44,21 +44,25 @@ class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImp
     }
 
     /** @return array */
+    #[\Override]
     public function getCSVData()
     {
         return [];
     }
 
+    #[\Override]
     public function isActionAllowed($action)
     {
         return in_array($action, self::$ALLOWED_ACTIONS);
     }
 
+    #[\Override]
     public function process(UserManager $user_manager, LoggerInterface $logger)
     {
         $logger->info("Nothing to do for $this->username");
     }
 
+    #[\Override]
     public function getRealUser(UserManager $user_manager)
     {
         return $this->user;

@@ -54,6 +54,7 @@ class BatchResponseActionContent implements \JsonSerializable
         $this->expires_in                 = $expires_in;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

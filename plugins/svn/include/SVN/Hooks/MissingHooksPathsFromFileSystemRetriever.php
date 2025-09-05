@@ -44,6 +44,7 @@ final class MissingHooksPathsFromFileSystemRetriever implements MissingHooksPath
     /**
      * @return Ok<list<Repository>>|Err<Fault>
      */
+    #[\Override]
     public function retrieveAllMissingHooksPaths(): Ok|Err
     {
         $repositories = [];

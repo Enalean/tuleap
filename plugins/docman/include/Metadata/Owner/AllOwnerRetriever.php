@@ -40,6 +40,7 @@ final class AllOwnerRetriever implements RetrieveAllOwner
     /**
      * @return OwnerRepresentationForAutocomplete[]
      */
+    #[\Override]
     public function retrieveProjectDocumentOwnersForAutocomplete(Project $project, string $name_to_search): array
     {
         $owners_rows = $this->owner_dao->getDocumentOwnerOfProjectForAutocomplete($project, $name_to_search);

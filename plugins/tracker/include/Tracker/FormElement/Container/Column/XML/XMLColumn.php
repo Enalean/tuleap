@@ -28,6 +28,7 @@ use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
 
 final class XMLColumn extends XMLContainer
 {
+    #[\Override]
     public static function getType(): string
     {
         return Tracker_FormElementFactory::CONTAINER_COLUMN_TYPE;

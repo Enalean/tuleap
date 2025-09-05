@@ -63,11 +63,13 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         $this->backend_svn                 = $backend_svn;
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link): string
     {
         return $this->parameters;
     }
 
+    #[\Override]
     public function process(): bool
     {
         try {
@@ -121,6 +123,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         ], JSON_THROW_ON_ERROR);
     }
 
+    #[\Override]
     public function getParametersAsArray()
     {
         try {

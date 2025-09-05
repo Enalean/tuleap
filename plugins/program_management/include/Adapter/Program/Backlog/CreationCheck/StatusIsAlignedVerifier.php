@@ -45,6 +45,7 @@ final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
         $this->tracker_factory         = $tracker_factory;
     }
 
+    #[\Override]
     public function isStatusWellConfigured(
         TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,

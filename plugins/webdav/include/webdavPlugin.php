@@ -53,6 +53,7 @@ class WebDAVPlugin extends Plugin implements PluginWithConfigKeys
         $this->setScope(Plugin::SCOPE_PROJECT);
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -67,11 +68,13 @@ class WebDAVPlugin extends Plugin implements PluginWithConfigKeys
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return ['docman'];
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(WebDAVUtils::class);

@@ -158,6 +158,7 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
      *
      * @return bool
      */
+    #[\Override]
     public function httpPOST(RequestInterface $request, ResponseInterface $response)
     {
         if ($request->getMethod() != 'POST') {
@@ -226,6 +227,7 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
      *
      * @return String
      */
+    #[\Override]
     public function generateDirectoryIndex($path)
     {
         $node = $this->server->tree->getNodeForPath($path);

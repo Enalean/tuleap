@@ -31,6 +31,7 @@ final class MediaWikiCentralDatabaseParameter implements MediaWikiCentralDatabas
     {
     }
 
+    #[\Override]
     public function getCentralDatabase(): ?string
     {
         $plugin = $this->plugin_manager->getPluginByName('mediawiki');

@@ -35,14 +35,17 @@ class Docman_WikiController extends Docman_Controller
         $event_manager->addListener('plugin_docman_event_wikipage_update', $this->notificationsManager, 'somethingHappen', true);
     }
 
+    #[\Override]
     public function request()
     {
     }
 
+    #[\Override]
     public function viewsManagement()
     {
     }
 
+    #[\Override]
     public function actionsManagement()
     {
         switch ($this->request->get('action')) {
@@ -215,6 +218,7 @@ class Docman_WikiController extends Docman_Controller
         }
     }
 
+    #[\Override]
     public function process()
     {
         if ($this->request->get('action')) {
@@ -441,6 +445,7 @@ class Docman_WikiController extends Docman_Controller
     }
 
     public $item_factory;
+    #[\Override]
     public function getItemFactory()
     {
         if (! $this->item_factory) {

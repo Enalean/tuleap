@@ -27,6 +27,7 @@ final class SearchColumnsDao extends \Tuleap\DB\DataAccessObject implements IUpd
     /**
      * @return string[]
      */
+    #[\Override]
     public function searchByProjectId(int $project_id): array
     {
         return $this->getDB()->first(
@@ -38,6 +39,7 @@ final class SearchColumnsDao extends \Tuleap\DB\DataAccessObject implements IUpd
         );
     }
 
+    #[\Override]
     public function saveColumns(int $project_id, array $columns): void
     {
         $this->getDB()->tryFlatTransaction(function () use ($project_id, $columns) {

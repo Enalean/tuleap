@@ -39,6 +39,7 @@ final class ColumnCollection implements \ArrayAccess, \IteratorAggregate, \Count
     /**
      * @see \ArrayAccess
      */
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (is_null($offset)) {
@@ -51,6 +52,7 @@ final class ColumnCollection implements \ArrayAccess, \IteratorAggregate, \Count
     /**
      * @see \ArrayAccess
      */
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->columns[$offset]);
@@ -59,6 +61,7 @@ final class ColumnCollection implements \ArrayAccess, \IteratorAggregate, \Count
     /**
      * @see \ArrayAccess
      */
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         unset($this->columns[$offset]);
@@ -67,6 +70,7 @@ final class ColumnCollection implements \ArrayAccess, \IteratorAggregate, \Count
     /**
      * @see \ArrayAccess
      */
+    #[\Override]
     public function offsetGet(mixed $offset): ?\Cardwall_Column
     {
         return $this->columns[$offset] ?? null;
@@ -75,6 +79,7 @@ final class ColumnCollection implements \ArrayAccess, \IteratorAggregate, \Count
     /**
      * @see \IteratorAggregate
      */
+    #[\Override]
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->columns);
@@ -83,6 +88,7 @@ final class ColumnCollection implements \ArrayAccess, \IteratorAggregate, \Count
     /**
      * @see \Countable
      */
+    #[\Override]
     public function count(): int
     {
         return count($this->columns);

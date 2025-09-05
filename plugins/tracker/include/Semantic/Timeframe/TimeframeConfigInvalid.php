@@ -29,55 +29,66 @@ class TimeframeConfigInvalid implements IComputeTimeframes
 {
     private const NAME = 'timeframe-config-invalid';
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getConfigDescription(): string
     {
         return dgettext('tuleap-tracker', 'This semantic has invalid configuration: ' . $this->getInvalidConfigDifferentProjectsMessage());
     }
 
+    #[\Override]
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void
     {
     }
 
+    #[\Override]
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe
     {
         return null;
     }
 
+    #[\Override]
     public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isDefined(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return false;
     }
 
+    #[\Override]
     public function getStartDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return null;
     }
 
+    #[\Override]
     public function getEndDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return null;
     }
 
+    #[\Override]
     public function getDurationField(): ?\Tuleap\Tracker\FormElement\Field\NumericField
     {
         return null;
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         return DatePeriodWithOpenDays::buildFromNothingWithErrorMessage(
@@ -85,6 +96,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         return DatePeriodWithOpenDays::buildFromNothingWithErrorMessage(
@@ -95,6 +107,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         throw new \Tracker_FormElement_Chart_Field_Exception(
@@ -107,21 +120,25 @@ class TimeframeConfigInvalid implements IComputeTimeframes
         return dgettext('tuleap-tracker', 'It is inherited from a tracker of another project, this is not allowed');
     }
 
+    #[\Override]
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return null;
     }
 
+    #[\Override]
     public function userCanReadTimeframeFields(\PFUser $user): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isTimeDisplayedForEvent(): bool
     {
         return false;

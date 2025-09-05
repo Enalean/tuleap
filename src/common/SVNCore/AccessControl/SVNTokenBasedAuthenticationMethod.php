@@ -31,6 +31,7 @@ final class SVNTokenBasedAuthenticationMethod implements SVNAuthenticationMethod
     {
     }
 
+    #[\Override]
     public function isAuthenticated(string $login_name, ConcealedString $user_secret, \Project $project, ServerRequestInterface $request): ?\PFUser
     {
         $user = $this->user_provider->getUserFromSVNLoginName($login_name, $project);

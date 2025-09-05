@@ -28,6 +28,7 @@ namespace Tuleap\Config;
  */
 final class ConfigKeyNoModifier implements ConfigKeyModifier
 {
+    #[\Override]
     public function getModifierLabel(): string
     {
         return 'No';

@@ -48,6 +48,7 @@ class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys /
         bindtextdomain('tuleap-dynamic_credentials', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -63,6 +64,7 @@ class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys /
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::REST_RESOURCES);
@@ -76,6 +78,7 @@ class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys /
         return parent::getHooksAndCallbacks();
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(DynamicCredentialsSettings::class);

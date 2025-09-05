@@ -30,6 +30,7 @@ final class ItemToIndexQueueEventBased implements ItemToIndexQueue
     {
     }
 
+    #[\Override]
     public function addItemToQueue(ItemToIndex $item_to_index): void
     {
         $this->event_dispatcher->dispatch($item_to_index);

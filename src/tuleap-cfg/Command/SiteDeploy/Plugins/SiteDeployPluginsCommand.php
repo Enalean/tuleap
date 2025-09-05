@@ -38,11 +38,13 @@ final class SiteDeployPluginsCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Deploy/call plugin updates');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         PluginLoader::invalidateCache();

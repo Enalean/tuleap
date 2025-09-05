@@ -33,11 +33,13 @@ class Widget_MyMonitoredForums extends Widget //phpcs:ignore PSR1.Classes.ClassD
         parent::__construct('mymonitoredforums');
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_forums');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $purifier                 = Codendi_HTMLPurifier::instance();
@@ -123,21 +125,25 @@ class Widget_MyMonitoredForums extends Widget //phpcs:ignore PSR1.Classes.ClassD
         return $html_my_monitored_forums;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return _('Forums');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_monitored_forums', 'description');
     }
 
+    #[\Override]
     public function isAjax()
     {
         return true;
     }
 
+    #[\Override]
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
         $request  = HTTPRequest::instance();

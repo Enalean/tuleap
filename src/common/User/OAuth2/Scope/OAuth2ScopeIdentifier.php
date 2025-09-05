@@ -46,6 +46,7 @@ final class OAuth2ScopeIdentifier implements AuthenticationScopeIdentifier
      *
      * @throws InvalidOAuth2ScopeIdentifierException
      */
+    #[\Override]
     public static function fromIdentifierKey(string $identifier_key): AuthenticationScopeIdentifier
     {
         if (preg_match('/^(?:[a-z]|:|_)+$/', $identifier_key) !== 1) {
@@ -55,6 +56,7 @@ final class OAuth2ScopeIdentifier implements AuthenticationScopeIdentifier
         return new self($identifier_key);
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->identifier;

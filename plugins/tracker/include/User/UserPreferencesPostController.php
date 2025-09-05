@@ -45,6 +45,7 @@ final readonly class UserPreferencesPostController implements DispatchableWithRe
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->csrf_synchronizer_token->check(DisplayNotificationsController::URL, $request);

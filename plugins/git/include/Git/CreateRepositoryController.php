@@ -47,6 +47,7 @@ class CreateRepositoryController extends RouterLink
         $this->repository_creator = $repository_creator;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request)
     {
         switch ($request->get('action')) {

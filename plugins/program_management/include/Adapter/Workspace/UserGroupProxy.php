@@ -44,16 +44,19 @@ final class UserGroupProxy implements UserGroupAttributes
         return new self($project_ugroup->getId(), $project_ugroup->isStatic(), $project_ugroup->getTranslatedName());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function isCreatedByUser(): bool
     {
         return $this->is_created_by_user;
     }
 
+    #[\Override]
     public function getTranslatedName(): string
     {
         return $this->translated_name;

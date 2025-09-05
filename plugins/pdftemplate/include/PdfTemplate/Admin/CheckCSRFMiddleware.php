@@ -33,6 +33,7 @@ final readonly class CheckCSRFMiddleware implements MiddlewareInterface
     {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $this->token_provider->getToken()->check();

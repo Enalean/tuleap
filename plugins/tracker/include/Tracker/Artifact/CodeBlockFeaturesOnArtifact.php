@@ -56,21 +56,25 @@ final class CodeBlockFeaturesOnArtifact implements CodeBlockFeaturesInterface
         self::$instance = null;
     }
 
+    #[\Override]
     public function needsMermaid(): void
     {
         $this->code_block_features->needsMermaid();
     }
 
+    #[\Override]
     public function isMermaidNeeded(): bool
     {
         return $this->code_block_features->isMermaidNeeded();
     }
 
+    #[\Override]
     public function needsSyntaxHighlight(): void
     {
         $this->code_block_features->needsSyntaxHighlight();
     }
 
+    #[\Override]
     public function isSyntaxHighlightNeeded(): bool
     {
         return $this->code_block_features->isSyntaxHighlightNeeded();

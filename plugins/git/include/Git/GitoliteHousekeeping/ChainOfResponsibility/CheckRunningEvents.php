@@ -47,6 +47,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents extends 
         $this->response        = $response;
     }
 
+    #[\Override]
     public function execute()
     {
         if ($this->process_manager->isAlreadyRunning($this->process)) {

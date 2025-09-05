@@ -36,6 +36,7 @@ final readonly class PullRequestDescriptionUpdatedEvent implements EventSubjectT
         return new self($pull_request_id, $user_id);
     }
 
+    #[\Override]
     public static function fromWorkerEventPayload(array $payload): self
     {
         if (! isset($payload['pull_request_id'])) {
@@ -58,6 +59,7 @@ final readonly class PullRequestDescriptionUpdatedEvent implements EventSubjectT
         return $this->user_id;
     }
 
+    #[\Override]
     public function toWorkerEventPayload(): array
     {
         return [

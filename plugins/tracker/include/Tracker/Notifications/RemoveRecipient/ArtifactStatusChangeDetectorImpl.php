@@ -27,6 +27,7 @@ use Tracker_Artifact_Changeset;
 
 final class ArtifactStatusChangeDetectorImpl implements ArtifactStatusChangeDetector
 {
+    #[\Override]
     public function hasChanged(Tracker_Artifact_Changeset $changeset): bool
     {
         $previous_changeset = $changeset->getArtifact()->getPreviousChangeset((int) $changeset->getId());

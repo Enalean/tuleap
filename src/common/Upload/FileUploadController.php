@@ -62,6 +62,7 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
         );
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->tus_server->handle(

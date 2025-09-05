@@ -36,6 +36,7 @@ final class GroupLinkApiToken implements ApiToken
         return new self($token);
     }
 
+    #[\Override]
     public function getToken(): ConcealedString
     {
         return $this->token;

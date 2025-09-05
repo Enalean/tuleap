@@ -25,6 +25,7 @@ require_once('HTML_Element.php');
  */
 abstract class HTML_Element_Input extends HTML_Element
 {
+    #[\Override]
     protected function renderValue()
     {
         $hp   = Codendi_HTMLPurifier::instance();

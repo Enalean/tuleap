@@ -40,6 +40,7 @@ final class FrozenFieldsValue implements PostAction
         return $this->field_ids;
     }
 
+    #[\Override]
     public function accept(PostActionVisitor $visitor)
     {
         $visitor->visitFrozenFieldsValue($this);

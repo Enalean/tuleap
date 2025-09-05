@@ -47,16 +47,19 @@ final class TestPlanPaneInfo extends PaneInfo
         $this->milestone_id = (int) $artifact->getId();
     }
 
+    #[\Override]
     public function getIdentifier(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-testplan', 'Tests');
     }
 
+    #[\Override]
     public function getUri(): string
     {
         return self::URL
@@ -66,6 +69,7 @@ final class TestPlanPaneInfo extends PaneInfo
             . $this->milestone_id;
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fa-solid fa-check-double';

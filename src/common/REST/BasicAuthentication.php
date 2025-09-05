@@ -62,6 +62,7 @@ class BasicAuthentication implements iAuthenticate
         );
     }
 
+    #[\Override]
     public function __isAllowed() // phpcs:ignore
     {
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
@@ -88,6 +89,7 @@ class BasicAuthentication implements iAuthenticate
     /**
      * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
      */
+    #[\Override]
     public function __getWWWAuthenticateString() // phpcs:ignore
     {
         return 'Basic realm="' . AuthenticatedResource::REALM . '" Token realm="' . AuthenticatedResource::REALM . '" AccessKey realm="' . AuthenticatedResource::REALM . '"';

@@ -30,6 +30,7 @@ final class CanPrioritizeFeaturesDAO extends DataAccessObject implements Retriev
     /**
      * @return int[]
      */
+    #[\Override]
     public function searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID(int $project_id): array
     {
         $sql = 'SELECT user_group_id

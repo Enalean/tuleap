@@ -45,6 +45,7 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
      * @throws \JsonException
      * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
      */
+    #[\Override]
     public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
     {
         $iterator = JiraCollectionBuilder::iterateUntilIsLast(
@@ -75,6 +76,7 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
         }
     }
 
+    #[\Override]
     public function getScrumBoardByIdForProject(string $jira_project_key, int $jira_board_id): ?JiraBoard
     {
         $url = $this->getBoardByIdUrl($jira_board_id);

@@ -35,6 +35,7 @@ final class PermissionsByDuckTypingUpdater implements UpdatePermissionsByDuckTyp
     ) {
     }
 
+    #[\Override]
     public function updatePermissionsForDuckTypingMove(
         SimpleXMLElement $changeset_xml,
         PermissionsOnArtifactField $destination_field,

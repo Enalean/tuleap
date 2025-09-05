@@ -76,6 +76,7 @@ final class AppRevocationController extends DispatchablePSR15Compatible implemen
         $this->redirector            = $redirector;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $layout = $request->getAttribute(BaseLayout::class);

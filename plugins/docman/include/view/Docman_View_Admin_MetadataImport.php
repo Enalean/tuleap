@@ -29,11 +29,13 @@ class Docman_View_Admin_MetadataImport extends \Tuleap\Docman\View\Admin\AdminVi
     public $srcGo;
     public $dstGo;
 
+    #[\Override]
     protected function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
+    #[\Override]
     protected function getTitle(array $params): string
     {
         $pm          = ProjectManager::instance();
@@ -46,11 +48,13 @@ class Docman_View_Admin_MetadataImport extends \Tuleap\Docman\View\Admin\AdminVi
         );
     }
 
+    #[\Override]
     protected function isBurningParrotCompatiblePage(): bool
     {
         return false;
     }
 
+    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $html = '';

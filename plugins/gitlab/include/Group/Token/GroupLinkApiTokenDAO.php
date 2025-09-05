@@ -50,6 +50,7 @@ final class GroupLinkApiTokenDAO extends DataAccessObject implements GetTokenByG
         );
     }
 
+    #[\Override]
     public function getTokenByGroupId(int $group_id): string
     {
         return $this->getDB()->cell(

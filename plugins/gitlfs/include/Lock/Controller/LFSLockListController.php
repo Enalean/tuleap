@@ -79,6 +79,7 @@ class LFSLockListController implements DispatchableWithRequestNoAuthz
         $this->user_retriever        = $user_retriever;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');

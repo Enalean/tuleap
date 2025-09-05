@@ -29,6 +29,7 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
  */
 final class AzureProviderIssuerClaimValidator implements IssuerClaimValidator
 {
+    #[\Override]
     public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token): bool
     {
         foreach ($provider->getAcceptableIssuerTenantIDs() as $acceptable_issuer_tenant_id) {

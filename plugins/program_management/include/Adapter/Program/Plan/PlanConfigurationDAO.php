@@ -43,6 +43,7 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
     /**
      * @throws \Throwable
      */
+    #[\Override]
     public function save(NewPlanConfiguration $plan): void
     {
         $this->getDB()->tryFlatTransaction(function () use ($plan): void {
@@ -156,6 +157,7 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
         $this->getDB()->run($sql_workflow_post_action_clean_up);
     }
 
+    #[\Override]
     public function isPlannable(int $plannable_tracker_id): bool
     {
         $sql = 'SELECT count(*) FROM plugin_program_management_plan WHERE plannable_tracker_id = ?';
@@ -163,6 +165,7 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
         return $this->getDB()->exists($sql, $plannable_tracker_id);
     }
 
+    #[\Override]
     public function isFeature(int $potential_feature_id): bool
     {
         $sql = <<<SQL
@@ -176,6 +179,7 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
     /**
      * @return int[]
      */
+    #[\Override]
     public function getPlannableTrackersIdOfProgram(int $program_id): array
     {
         $sql = 'SELECT plannable_tracker_id FROM plugin_program_management_plan WHERE project_id = ?';
@@ -194,6 +198,7 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
         return $this->getDB()->exists($sql, $tracker->getId(), $tracker->getId(), $tracker->getId());
     }
 
+    #[\Override]
     public function isProjectUsedInPlan(ProgramForAdministrationIdentifier $administration_identifier): bool
     {
         $sql = 'SELECT 1
@@ -203,6 +208,7 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
         return $this->getDB()->exists($sql, $administration_identifier->id);
     }
 
+    #[\Override]
     public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool
     {
         $sql  = 'SELECT NULL
@@ -222,6 +228,7 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
     /**
      * @return Option<PlanConfiguration>
      */
+    #[\Override]
     public function retrievePlan(ProgramIdentifier $program_identifier): Option
     {
         $sql_config = <<<EOSQL

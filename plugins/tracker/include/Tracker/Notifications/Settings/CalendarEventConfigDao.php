@@ -37,6 +37,7 @@ final class CalendarEventConfigDao extends DataAccessObject implements CheckEven
         $this->getDB()->run($sql, $target_tracker_id, $source_tracker_id);
     }
 
+    #[\Override]
     public function shouldSendEventInNotification(int $tracker_id): bool
     {
         return $this->getDB()
@@ -50,6 +51,7 @@ final class CalendarEventConfigDao extends DataAccessObject implements CheckEven
             ) === 1;
     }
 
+    #[\Override]
     public function activateCalendarEvent(int $tracker_id): void
     {
         $this->getDB()
@@ -63,6 +65,7 @@ final class CalendarEventConfigDao extends DataAccessObject implements CheckEven
             );
     }
 
+    #[\Override]
     public function deactivateCalendarEvent(int $tracker_id): void
     {
         $this->getDB()

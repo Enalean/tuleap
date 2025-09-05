@@ -33,6 +33,7 @@ final readonly class SemanticStatusRetriever implements RetrieveSemanticStatus
     ) {
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): TrackerSemanticStatus
     {
         $field = $this->status_field_retriever->fromTracker($tracker);

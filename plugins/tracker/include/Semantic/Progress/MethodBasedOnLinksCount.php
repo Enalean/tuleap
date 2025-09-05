@@ -46,16 +46,19 @@ class MethodBasedOnLinksCount implements IComputeProgression
         $this->artifact_link_type = $artifact_link_type;
     }
 
+    #[\Override]
     public static function getMethodName(): string
     {
         return self::METHOD_NAME;
     }
 
+    #[\Override]
     public static function getMethodLabel(): string
     {
         return dgettext('tuleap-tracker', 'Artifact links count based');
     }
 
+    #[\Override]
     public function getCurrentConfigurationDescription(): string
     {
         return dgettext(
@@ -69,11 +72,13 @@ class MethodBasedOnLinksCount implements IComputeProgression
         return $this->artifact_link_type;
     }
 
+    #[\Override]
     public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
     }
 
+    #[\Override]
     public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
         $nb_total            = 0;
@@ -123,21 +128,25 @@ class MethodBasedOnLinksCount implements IComputeProgression
         return new ProgressionResult($nb_closed / $nb_total, '');
     }
 
+    #[\Override]
     public function isConfiguredAndValid(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function isConfigured(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getErrorMessage(): string
     {
         return '';
     }
 
+    #[\Override]
     public function exportToREST(\PFUser $user): ?IRepresentSemanticProgress
     {
         return new SemanticProgressBasedOnLinksCountRepresentation(
@@ -145,6 +154,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
         );
     }
 
+    #[\Override]
     public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void
     {
         $xml_semantic_progress = $root->addChild('semantic');
@@ -152,6 +162,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
         $xml_semantic_progress->addChild('artifact_link_type')->addAttribute('shortname', $this->artifact_link_type);
     }
 
+    #[\Override]
     public function saveSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return $this->dao->save(
@@ -162,6 +173,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
         );
     }
 
+    #[\Override]
     public function deleteSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return $this->dao->delete($tracker->getId());

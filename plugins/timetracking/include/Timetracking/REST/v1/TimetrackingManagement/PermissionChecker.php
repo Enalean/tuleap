@@ -36,6 +36,7 @@ final readonly class PermissionChecker implements CheckPermission
     /**
      * @return Ok<true>|Err<Fault>
      */
+    #[\Override]
     public function checkThatCurrentUserCanUpdateTheQuery(int $query_id, \PFUser $current_user): Ok|Err
     {
         $widget_information = $this->dao->getWidgetInformationFromQuery($query_id);

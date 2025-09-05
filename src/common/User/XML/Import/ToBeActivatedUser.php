@@ -43,6 +43,7 @@ class ToBeActivatedUser extends ActionToBeTakenForUser
     }
 
     /** @return array */
+    #[\Override]
     public function getCSVData()
     {
         return [
@@ -56,6 +57,7 @@ class ToBeActivatedUser extends ActionToBeTakenForUser
         ];
     }
 
+    #[\Override]
     public function isActionAllowed($action)
     {
         return in_array($action, self::$ALLOWED_ACTIONS);

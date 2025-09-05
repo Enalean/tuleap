@@ -36,6 +36,7 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
         parent::__construct($filter->md);
     }
 
+    #[\Override]
     public function getFrom()
     {
         $tables = [];
@@ -57,6 +58,7 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
         return $stmt;
     }
 
+    #[\Override]
     public function getWhere()
     {
         $where      = '';

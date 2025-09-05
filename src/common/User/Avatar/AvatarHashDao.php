@@ -27,6 +27,7 @@ use Tuleap\Option\Option;
 
 final class AvatarHashDao extends DataAccessObject implements AvatarHashStorage, AvatarHashStorageDeletor
 {
+    #[\Override]
     public function retrieve(\PFUser $user): Option
     {
         $hash = $this->getDB()->cell('SELECT hash FROM user_avatar_hash WHERE user_id = ?', $user->getId());
@@ -37,6 +38,7 @@ final class AvatarHashDao extends DataAccessObject implements AvatarHashStorage,
         return Option::fromValue($hash);
     }
 
+    #[\Override]
     public function store(\PFUser $user, string $hash): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
@@ -49,6 +51,7 @@ final class AvatarHashDao extends DataAccessObject implements AvatarHashStorage,
         );
     }
 
+    #[\Override]
     public function delete(\PFUser $user): void
     {
         $this->getDB()->delete('user_avatar_hash', ['user_id' => $user->getId()]);

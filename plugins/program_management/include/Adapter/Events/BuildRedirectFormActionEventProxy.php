@@ -40,6 +40,7 @@ final class BuildRedirectFormActionEventProxy implements BuildRedirectFormAction
         return new self($action_event->getRedirect());
     }
 
+    #[\Override]
     public function injectAndInformUserAboutUpdatingProgramItem(): void
     {
         $this->injectAndInformUserAboutProgramItemWillBeUpdated($GLOBALS['Response']);
@@ -47,6 +48,7 @@ final class BuildRedirectFormActionEventProxy implements BuildRedirectFormAction
         $this->redirect->query_parameters[ProgramRedirectionParameters::FLAG] = ProgramRedirectionParameters::REDIRECT_AFTER_UPDATE_ACTION;
     }
 
+    #[\Override]
     public function injectAndInformUserAboutCreatingIteration(IterationRedirectionParameters $iteration_redirection_parameters): void
     {
         $GLOBALS['Response']->addFeedback(
@@ -64,6 +66,7 @@ final class BuildRedirectFormActionEventProxy implements BuildRedirectFormAction
         $this->redirect->query_parameters['immediate']                                        = 'true';
     }
 
+    #[\Override]
     public function injectAndInformUserAboutUpdatingIteration(IterationRedirectionParameters $iteration_redirection_parameters): void
     {
         $GLOBALS['Response']->addFeedback(
@@ -78,6 +81,7 @@ final class BuildRedirectFormActionEventProxy implements BuildRedirectFormAction
         $this->redirect->query_parameters[IterationRedirectionParameters::PARAM_INCREMENT_ID] = $iteration_redirection_parameters->getIncrementId();
     }
 
+    #[\Override]
     public function injectAndInformUserAboutCreatingProgramIncrement(): void
     {
         $feedback_message = dgettext(

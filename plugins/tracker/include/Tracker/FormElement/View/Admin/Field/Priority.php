@@ -31,11 +31,13 @@ class Tracker_FormElement_View_Admin_Priority extends Tracker_FormElement_View_A
         return '';
     }
 
+    #[\Override]
     public function fetchAdminSpecificProperties()
     {
         return '';
     }
 
+    #[\Override]
     protected function fetchCustomHelp()
     {
         $html  = '<span class="tracker-admin-form-element-help">';

@@ -43,6 +43,7 @@ final class GitlabCommitReferenceString implements \Tuleap\Reference\ReferenceSt
         );
     }
 
+    #[\Override]
     public function getStringReference(): string
     {
         return $this->reference;

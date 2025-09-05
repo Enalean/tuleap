@@ -28,17 +28,20 @@ class Docman_MetadataHtmlLink extends \Docman_MetadataHtml
         $this->link_url = $link_url;
     }
 
+    #[\Override]
     public function getLabel($show_mandatory_information = \true)
     {
         return \dgettext('tuleap-docman', 'Url:');
     }
 
+    #[\Override]
     public function getField()
     {
         $hp = \Codendi_HTMLPurifier::instance();
         return '<input type="text" class="docman_text_field" name="item[link_url]" value="' . $hp->purify($this->link_url) . '" />';
     }
 
+    #[\Override]
     public function &getValidator()
     {
         $msg       = \dgettext('tuleap-docman', 'The URL is required.');

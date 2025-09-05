@@ -26,6 +26,7 @@ use HTTPRequest;
 
 class ReferenceAdministration extends Controler
 {
+    #[\Override]
     public function process(): void
     {
         $request = HTTPRequest::instance();

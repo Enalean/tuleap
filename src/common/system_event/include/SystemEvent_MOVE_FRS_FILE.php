@@ -22,6 +22,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
 {
     public const NAME = 'MOVE_FRS_FILE';
 
+    #[\Override]
     public function setLog(string $log): void
     {
         if (! isset($this->log) || $this->log == '') {
@@ -40,6 +41,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $txt                                     = '';
@@ -53,6 +55,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
      *
      * @return bool
      */
+    #[\Override]
     public function process()
     {
         list($project_path, $file_id, $old_path) = $this->getParametersAsArray();

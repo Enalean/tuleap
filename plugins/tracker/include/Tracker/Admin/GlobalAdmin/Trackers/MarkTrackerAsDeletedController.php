@@ -77,6 +77,7 @@ final readonly class MarkTrackerAsDeletedController implements DispatchableWithR
         return TRACKER_BASE_URL . '/' . self::DELETION_URL . '/' . urlencode((string) $tracker->getId());
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $tracker = $this->getTracker($variables);

@@ -30,6 +30,7 @@ class OpenListChangesetValueDao extends ListValueDao
         $this->table_name = 'tracker_changeset_value_openlist';
     }
 
+    #[\Override]
     public function searchById($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
@@ -40,6 +41,7 @@ class OpenListChangesetValueDao extends ListValueDao
         return $this->retrieve($sql);
     }
 
+    #[\Override]
     public function create($changeset_value_id, $value_ids)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
@@ -58,12 +60,14 @@ class OpenListChangesetValueDao extends ListValueDao
         return false;
     }
 
+    #[\Override]
     public function createNoneValue($tracker_id, $field_id)
     {
         $this->createNoneChangesetValue($tracker_id, $field_id);
         //nothing more we do not want values for openlist field
     }
 
+    #[\Override]
     public function keep($from, $to)
     {
         $from = $this->da->escapeInt($from);

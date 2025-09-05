@@ -38,12 +38,14 @@ final class ConfigDumpCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Dump Tuleap configuration for external re-use (in JSON)')
             ->addArgument('keys', InputArgument::IS_ARRAY, 'Name of the variables requested');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $keys = $input->getArgument('keys');

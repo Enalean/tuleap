@@ -44,6 +44,7 @@ final class FieldDoesNotExistException extends \RuntimeException implements Regi
         );
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

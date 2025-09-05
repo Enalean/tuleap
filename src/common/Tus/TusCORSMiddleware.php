@@ -27,6 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class TusCORSMiddleware implements MiddlewareInterface
 {
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);

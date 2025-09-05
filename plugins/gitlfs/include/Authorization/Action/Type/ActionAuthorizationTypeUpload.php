@@ -22,6 +22,7 @@ namespace Tuleap\GitLFS\Authorization\Action\Type;
 
 final class ActionAuthorizationTypeUpload implements ActionAuthorizationType
 {
+    #[\Override]
     public function getName()
     {
         return 'upload';

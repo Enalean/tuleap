@@ -38,26 +38,31 @@ final class MappedValues implements MappedValuesInterface
     /**
      * @return list<int>
      */
+    #[\Override]
     public function getValueIds(): array
     {
         return $this->value_ids;
     }
 
+    #[\Override]
     public function isEmpty(): bool
     {
         return empty($this->value_ids);
     }
 
+    #[\Override]
     public function contains(int $bind_value_id): bool
     {
         return in_array($bind_value_id, $this->value_ids, true);
     }
 
+    #[\Override]
     public function getFirstValue(): int
     {
         return reset($this->value_ids);
     }
 
+    #[\Override]
     public function removeValue(int $value): void
     {
         $key = array_search($value, $this->value_ids);

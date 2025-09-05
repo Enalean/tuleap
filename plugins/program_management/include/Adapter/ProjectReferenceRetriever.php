@@ -33,6 +33,7 @@ final class ProjectReferenceRetriever implements RetrieveProjectReference
     {
     }
 
+    #[\Override]
     public function buildFromId(int $id): ProjectReference
     {
         $team_project = $this->retrieve_full_project->getProject($id);

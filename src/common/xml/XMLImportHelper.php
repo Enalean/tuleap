@@ -45,6 +45,7 @@ class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference
         }
     }
 
+    #[\Override]
     public function getUser(SimpleXMLElement $xml_element): PFUser
     {
         $submitter = $this->user_manager->getUserByIdentifier($this->getUserFormat($xml_element));

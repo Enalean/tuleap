@@ -28,11 +28,13 @@ class Docman_Empty extends Docman_Document
         parent::__construct($data);
     }
 
+    #[\Override]
     public function accept($visitor, $params = [])
     {
         return $visitor->visitEmpty($this, $params);
     }
 
+    #[\Override]
     public function toRow()
     {
         $row              = parent::toRow();
@@ -40,6 +42,7 @@ class Docman_Empty extends Docman_Document
         return $row;
     }
 
+    #[\Override]
     public function getType()
     {
         return dgettext('tuleap-docman', 'Empty');

@@ -33,6 +33,7 @@ class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_Car
         $this->should_display_avatars = $should_display_avatars;
     }
 
+    #[\Override]
     public function shouldDisplayAvatars()
     {
         return $this->should_display_avatars;

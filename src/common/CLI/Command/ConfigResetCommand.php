@@ -44,12 +44,14 @@ final class ConfigResetCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Reset a configuration setting to its default value')
             ->addArgument('key', InputArgument::REQUIRED, 'Variable key');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getArgument('key');

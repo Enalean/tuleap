@@ -61,6 +61,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     /**
      * @see Transition_PostActionSubFactory::saveObject()
      */
+    #[\Override]
     public function saveObject(Transition_PostAction $post_action)
     {
         $short_name = $post_action->getShortName();
@@ -73,6 +74,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         );
     }
 
+    #[\Override]
     public function warmUpCacheForWorkflow(Workflow $workflow): void
     {
         $workflow_id = (int) $workflow->getId();
@@ -95,6 +97,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     /**
      * @return Transition_PostAction_Field[]
      */
+    #[\Override]
     public function loadPostActions(Transition $transition): array
     {
         $post_actions         = [];
@@ -169,6 +172,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     /**
      * @see Transition_PostActionSubFactory::duplicate()
      */
+    #[\Override]
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
     {
         $postactions = $this->loadPostActions($from_transition);
@@ -187,6 +191,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     /**
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
+    #[\Override]
     public function isFieldUsedInPostActions(TrackerField $field)
     {
         foreach (array_keys($this->post_actions_classes) as $shortname) {
@@ -200,6 +205,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     /**
      * @see Transition_PostActionSubFactory::getInstanceFromXML()
      */
+    #[\Override]
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
         $xml_tag_name          = $xml->getName();

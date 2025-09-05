@@ -29,6 +29,7 @@ final class PrefixOnlyOfficeDocumentSave implements PrefixSplitTokenForSerializa
     /**
      * @psalm-pure
      */
+    #[\Override]
     public function getString(): string
     {
         return 'tlp-oo-docsave1-';

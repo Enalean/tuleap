@@ -39,6 +39,7 @@ final class NotRootCategoryException extends ProjectCategoriesException
         );
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

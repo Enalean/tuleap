@@ -35,6 +35,7 @@ class Cardwall_UserPreferences_Autostack_AutostackRenderer extends Cardwall_User
         $this->report = $report;
     }
 
+    #[\Override]
     public function getName(Cardwall_Column $column)
     {
         return 'cardwall_renderer_' . $this->report->id . '_column_' . $column->getId();

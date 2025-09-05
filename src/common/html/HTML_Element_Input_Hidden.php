@@ -25,12 +25,14 @@ require_once('HTML_Element_Input.php');
  */
 class HTML_Element_Input_Hidden extends HTML_Element_Input
 {
+    #[\Override]
     public function render()
     {
         $html = $this->renderValue([]);
         return $html;
     }
 
+    #[\Override]
     protected function getInputType()
     {
         return 'hidden';

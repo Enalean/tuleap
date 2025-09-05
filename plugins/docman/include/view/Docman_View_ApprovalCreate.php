@@ -23,12 +23,14 @@
 
 class Docman_View_ApprovalCreate extends Docman_View_Details
 {
+    #[\Override]
     public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         return sprintf(dgettext('tuleap-docman', 'Approval table administration for %1$s'), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
+    #[\Override]
     public function _content($params, $view = null, $section = null)
     {
         $view = new Docman_View_ItemDetailsSectionApprovalCreate($params['item'], $params['default_url'], $params['theme_path']);

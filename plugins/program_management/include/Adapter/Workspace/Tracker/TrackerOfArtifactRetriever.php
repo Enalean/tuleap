@@ -38,18 +38,21 @@ final class TrackerOfArtifactRetriever implements RetrieveTrackerOfArtifact, Ret
     {
     }
 
+    #[\Override]
     public function getTrackerOfArtifact(ArtifactIdentifier $artifact): TrackerIdentifier
     {
         $full_artifact = $this->artifact_retriever->getNonNullArtifact($artifact);
         return TrackerIdentifierProxy::fromTracker($full_artifact->getTracker());
     }
 
+    #[\Override]
     public function getUserStoryTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
         return TrackerIdentifierProxy::fromTracker($artifact->getTracker());
     }
 
+    #[\Override]
     public function getFeatureTracker(FeatureIdentifier $feature): TrackerIdentifier
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($feature);

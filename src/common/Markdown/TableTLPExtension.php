@@ -29,6 +29,7 @@ use League\CommonMark\Extension\Table\TableExtension;
 
 final class TableTLPExtension implements ExtensionInterface
 {
+    #[\Override]
     public function register(EnvironmentBuilderInterface $environment): void
     {
         $environment->addExtension(new TableExtension());

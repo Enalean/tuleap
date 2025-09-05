@@ -23,6 +23,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangeFloatXMLUpdater implements Trac
     /**
      * @param mixed            $submitted_value
      */
+    #[\Override]
     public function update(SimpleXMLElement $field_change_xml, $submitted_value)
     {
         $field_change_xml->value = (float) $submitted_value;

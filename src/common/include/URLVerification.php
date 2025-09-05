@@ -389,6 +389,7 @@ class URLVerification implements CheckUserCanAccessProject, CheckUserCanAccessPr
      * @throws ProjectAccessSuspendedException
      * @throws AccessNotActiveException
      */
+    #[\Override]
     public function userCanAccessProject(PFUser $user, Project $project): true
     {
         $checker = new ProjectAccessChecker(
@@ -416,6 +417,7 @@ class URLVerification implements CheckUserCanAccessProject, CheckUserCanAccessPr
      * @throws ProjectAccessSuspendedException
      * @throws AccessNotActiveException
      */
+    #[\Override]
     public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project): void
     {
         if ($this->userCanAccessProject($user, $project)) {

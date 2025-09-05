@@ -32,6 +32,7 @@ class SubItemsDeletableVisitor implements ItemVisitor
     {
     }
 
+    #[\Override]
     public function visitFolder(\Docman_Folder $item, array $params = []): bool
     {
         if (! $this->itemIsDeletable($item)) {
@@ -56,36 +57,43 @@ class SubItemsDeletableVisitor implements ItemVisitor
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitWiki(\Docman_Wiki $item, array $params = []): bool
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitLink(\Docman_Link $item, array $params = []): bool
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitFile(\Docman_File $item, array $params = []): bool
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(\Docman_EmbeddedFile $item, array $params = []): bool
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitEmpty(\Docman_Empty $item, array $params = []): bool
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitItem(\Docman_Item $item, array $params = []): bool
     {
         return $this->itemIsDeletable($item);

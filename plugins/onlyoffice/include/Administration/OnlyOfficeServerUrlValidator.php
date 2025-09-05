@@ -31,6 +31,7 @@ final class OnlyOfficeServerUrlValidator implements ValueValidator
     {
     }
 
+    #[\Override]
     public static function buildSelf(): self
     {
         return new self(new \Valid_HTTPSURI());
@@ -39,6 +40,7 @@ final class OnlyOfficeServerUrlValidator implements ValueValidator
     /**
      * @throws InvalidConfigKeyValueException
      */
+    #[\Override]
     public function checkIsValid(string $value): void
     {
         if ($value === '') {

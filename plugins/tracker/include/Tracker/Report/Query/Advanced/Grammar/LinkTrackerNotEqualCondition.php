@@ -28,6 +28,7 @@ final class LinkTrackerNotEqualCondition implements LinkCondition
     {
     }
 
+    #[\Override]
     public function accept(LinkConditionVisitor $visitor, $parameters)
     {
         return $visitor->visitLinkTrackerNotEqualCondition($this, $parameters);

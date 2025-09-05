@@ -37,6 +37,7 @@ class ProvidedArtifactLinksTypesProxy implements ProvidedArtifactLinksTypesEvent
         return new self($validate_artifact_link_value_event);
     }
 
+    #[\Override]
     public function getUpdatedArtifactId(): int
     {
         return $this->inner_event->getArtifact()->getId();
@@ -45,11 +46,13 @@ class ProvidedArtifactLinksTypesProxy implements ProvidedArtifactLinksTypesEvent
     /**
      * @psalm-return list<array<int, string>>
      */
+    #[\Override]
     public function getProvidedArtifactLinksTypes(): array
     {
         return $this->inner_event->getSubmittedLinksWithTypes();
     }
 
+    #[\Override]
     public function setProvidedLinksAreNotValidWithMessage(string $message): void
     {
         $this->inner_event->setIsNotValid();

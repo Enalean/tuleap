@@ -46,6 +46,7 @@ class FileUploadCanceler implements TusTerminaterDataStore
         $this->dao            = $dao;
     }
 
+    #[\Override]
     public function terminateUpload(TusFileInformation $file_information): void
     {
         $file_path = $this->path_allocator->getPathForItemBeingUploaded($file_information);

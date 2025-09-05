@@ -37,6 +37,7 @@ final class ProjectInvalidFullNameException extends \RuntimeException implements
         );
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

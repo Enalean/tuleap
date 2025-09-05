@@ -48,6 +48,7 @@ final class ProjectRegistrationRESTChecker implements ProjectRegistrationChecker
         $this->submitted_fields_collection_consistency_checker = $submitted_fields_collection_consistency_checker;
     }
 
+    #[\Override]
     public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
     {
         $errors_collection = new ProjectRegistrationErrorsCollection();

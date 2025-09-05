@@ -63,6 +63,7 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
         );
     }
 
+    #[\Override]
     public function visitField(Field $field, $parameters)
     {
         return $this->field_result_builder->getResult(
@@ -73,6 +74,7 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
         );
     }
 
+    #[\Override]
     public function visitMetaData(Metadata $metadata, $parameters)
     {
         return $this->metadata_result_builder->getResult(

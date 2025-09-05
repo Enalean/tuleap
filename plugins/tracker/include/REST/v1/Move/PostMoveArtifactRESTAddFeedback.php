@@ -31,6 +31,7 @@ final class PostMoveArtifactRESTAddFeedback implements AddPostMoveArtifactFeedba
     {
     }
 
+    #[\Override]
     public function addFeedback(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user): void
     {
         $tracker_source_name      = $source_tracker->getItemName();

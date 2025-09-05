@@ -44,6 +44,7 @@ final class ProjectRetrieverMiddleware implements MiddlewareInterface
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $enriched_request = $request->withAttribute(

@@ -41,6 +41,7 @@ final class CIBuildValue implements PostAction
         return $this->job_url;
     }
 
+    #[\Override]
     public function accept(PostActionVisitor $visitor)
     {
         $visitor->visitCIBuildValue($this);

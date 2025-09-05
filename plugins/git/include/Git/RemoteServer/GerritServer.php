@@ -80,21 +80,25 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $this->id;
     }
 
+    #[\Override]
     public function getHost()
     {
         return $this->host;
     }
 
+    #[\Override]
     public function getIdentityFile()
     {
         return $this->identity_file;
     }
 
+    #[\Override]
     public function getLogin()
     {
         return $this->login;
     }
 
+    #[\Override]
     public function getSSHPort()
     {
         return $this->ssh_port;

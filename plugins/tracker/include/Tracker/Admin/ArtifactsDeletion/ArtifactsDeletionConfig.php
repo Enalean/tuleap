@@ -34,6 +34,7 @@ final class ArtifactsDeletionConfig implements ConfigurationArtifactsDeletion
     {
     }
 
+    #[\Override]
     public function getArtifactsDeletionLimit(): int
     {
         if (! isset($this->cache_artifacts_limit)) {

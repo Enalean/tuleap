@@ -54,6 +54,7 @@ class TrackerSemanticContributorFactory implements IBuildSemanticFromXML, IDupli
         return TrackerSemanticContributor::load($tracker);
     }
 
+    #[\Override]
     public function getInstanceFromXML(
         SimpleXMLElement $current_semantic_xml,
         SimpleXMLElement $all_semantics_xml,
@@ -83,6 +84,7 @@ class TrackerSemanticContributorFactory implements IBuildSemanticFromXML, IDupli
     /**
      * Duplicate the semantic from tracker source to tracker target
      */
+    #[\Override]
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();

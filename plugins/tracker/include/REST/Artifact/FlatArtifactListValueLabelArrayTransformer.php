@@ -31,6 +31,7 @@ final readonly class FlatArtifactListValueLabelArrayTransformer implements FlatA
      * @psalm-param list<string> $value_labels
      * @psalm-return Ok<list<string>>
      */
+    #[\Override]
     public function transformListValueLabels(
         int $artifact_id,
         int $field_id,

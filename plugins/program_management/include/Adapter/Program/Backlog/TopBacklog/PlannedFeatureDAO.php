@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyFeaturePlan
 
 final class PlannedFeatureDAO extends DataAccessObject implements VerifyFeaturePlanned
 {
+    #[\Override]
     public function isFeaturePlannedInAProgramIncrement(int $feature_id): bool
     {
         $sql = 'SELECT COUNT(planned_feature_artifact.id)

@@ -274,6 +274,7 @@ class ProjectXMLImporter implements ImportFromArchive //phpcs:ignore PSR1.Classe
         return $project;
     }
 
+    #[\Override]
     public function importFromArchive(
         ImportConfig $configuration,
         int $project_id,

@@ -28,6 +28,7 @@ final readonly class EllipsisBreadCrumb implements PresentableBreadCrumb
     {
     }
 
+    #[\Override]
     public function getBreadCrumbPresenter(): EllipsisBreadCrumbPresenter
     {
         return EllipsisBreadCrumbPresenter::fromEllipsis($this);

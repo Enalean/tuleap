@@ -46,6 +46,7 @@ class SemanticDoneFactory implements IBuildSemanticFromXML
         return SemanticDone::load($tracker);
     }
 
+    #[\Override]
     public function getInstanceFromXML(
         SimpleXMLElement $current_semantic_xml,
         SimpleXMLElement $all_semantics_xml,

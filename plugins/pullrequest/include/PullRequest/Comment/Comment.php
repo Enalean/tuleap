@@ -60,11 +60,13 @@ final class Comment implements TimelineEvent, TimelineComment
         return $this->user_id;
     }
 
+    #[\Override]
     public function getPostDate(): \DateTimeImmutable
     {
         return $this->post_date;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return $this->content;
@@ -80,6 +82,7 @@ final class Comment implements TimelineEvent, TimelineComment
         return $this->color;
     }
 
+    #[\Override]
     public function getFormat(): string
     {
         return $this->format;

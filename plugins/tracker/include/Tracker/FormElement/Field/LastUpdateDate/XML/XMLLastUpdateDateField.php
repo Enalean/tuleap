@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 final class XMLLastUpdateDateField extends XMLField
 {
+    #[\Override]
     public static function getType(): string
     {
         return \Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE;

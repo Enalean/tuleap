@@ -40,6 +40,7 @@ final class ServiceInstrumentationMiddleware implements MiddlewareInterface
         $this->service_name = $service_name;
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         ServiceInstrumentation::increment($this->service_name);

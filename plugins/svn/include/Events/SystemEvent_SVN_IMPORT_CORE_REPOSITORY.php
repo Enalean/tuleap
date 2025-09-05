@@ -91,6 +91,7 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
      * @throws \BackendSVNFileForSimlinkAlreadyExistsException
      * @throws \Tuleap\SVN\Repository\Exception\CannotFindRepositoryException
      */
+    #[\Override]
     public function process(): bool
     {
         return $this->getProjectFromParameters()
@@ -147,6 +148,7 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
             );
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link): string
     {
         return $this->getProjectFromParameters()->match(

@@ -35,6 +35,7 @@ class PasswordCompromiseValidator extends \PasswordValidator
         $this->pwned_password_checker = $pwned_password_checker;
     }
 
+    #[\Override]
     public function validate($password)
     {
         return ! $this->pwned_password_checker->isPasswordCompromised($password);

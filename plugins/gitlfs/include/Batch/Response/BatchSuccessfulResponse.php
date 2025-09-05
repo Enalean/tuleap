@@ -39,6 +39,7 @@ class BatchSuccessfulResponse implements \JsonSerializable
         $this->objects  = $objects;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

@@ -39,6 +39,7 @@ final class ProgramIncrementIdentifier implements TimeboxIdentifier
     {
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

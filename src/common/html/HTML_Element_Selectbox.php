@@ -43,6 +43,7 @@ class HTML_Element_Selectbox extends HTML_Element
         }
     }
 
+    #[\Override]
     public function renderValue()
     {
         $hp   = Codendi_HTMLPurifier::instance();
@@ -70,6 +71,7 @@ class HTML_Element_Selectbox extends HTML_Element
      *
      * @return void
      */
+    #[\Override]
     public function setId($id)
     {
         $this->id = $id;

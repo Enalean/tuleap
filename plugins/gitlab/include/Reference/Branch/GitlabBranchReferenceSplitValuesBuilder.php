@@ -30,6 +30,7 @@ final class GitlabBranchReferenceSplitValuesBuilder implements GitlabReferenceSp
     {
     }
 
+    #[\Override]
     public function splitRepositoryNameAndReferencedItemId(string $value, int $project_id): GitlabReferenceSplittedValues
     {
         $referenced_branch_in_project = $this->branch_reference_splitted_values_dao->getAllBranchesSplitValuesInProject(

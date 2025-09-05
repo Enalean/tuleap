@@ -111,31 +111,37 @@ final class GenericProvider implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getAuthorizationEndpoint(): string
     {
         return $this->authorization_endpoint;
     }
 
+    #[\Override]
     public function getTokenEndpoint(): string
     {
         return $this->token_endpoint;
     }
 
+    #[\Override]
     public function getUserInfoEndpoint(): string
     {
         return $this->user_info_endpoint;
     }
 
+    #[\Override]
     public function getJWKSEndpoint(): ?string
     {
         if ($this->jwks_endpoint === '') {
@@ -144,31 +150,37 @@ final class GenericProvider implements Provider
         return $this->jwks_endpoint;
     }
 
+    #[\Override]
     public function getClientId(): string
     {
         return $this->client_id;
     }
 
+    #[\Override]
     public function getClientSecret(): string
     {
         return $this->client_secret;
     }
 
+    #[\Override]
     public function isUniqueAuthenticationEndpoint(): bool
     {
         return $this->is_unique_authentication_endpoint;
     }
 
+    #[\Override]
     public function getIcon(): string
     {
         return $this->icon;
     }
 
+    #[\Override]
     public function getColor(): string
     {
         return $this->color;
     }
 
+    #[\Override]
     public function getRedirectUri(): string
     {
         return ServerHostname::HTTPSUrl() . '/plugins/openidconnectclient/';

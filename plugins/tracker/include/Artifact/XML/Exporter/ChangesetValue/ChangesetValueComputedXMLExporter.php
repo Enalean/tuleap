@@ -32,11 +32,13 @@ class ChangesetValueComputedXMLExporter extends ChangesetValueFloatXMLExporter
     {
     }
 
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return 'computed';
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

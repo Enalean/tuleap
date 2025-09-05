@@ -38,6 +38,7 @@ class ProjectDashboardRetriever implements IRetrieveDashboards
     /**
      * @return ProjectDashboard[]
      */
+    #[\Override]
     public function getAllProjectDashboards(Project $project): array
     {
         $project_dashboards = [];

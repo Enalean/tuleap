@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyFeatu
 
 final class FeatureDAO extends DataAccessObject implements VerifyFeatureIsPlannedInProgramIncrement
 {
+    #[\Override]
     public function isFeaturePlannedInProgramIncrement(int $program_increment_id, int $feature_id): bool
     {
         $sql = "SELECT NULL

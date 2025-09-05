@@ -29,6 +29,7 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
     /**
      * @return list<array{ ugroup_id: int, permission: string }>
      */
+    #[\Override]
     public function searchByProject(\Project $project): array
     {
         return $this->getDB()->run(
@@ -44,6 +45,7 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
      * @param \ProjectUGroup[] $writers
      * @param \ProjectUGroup[] $admins
      */
+    #[\Override]
     public function saveProjectPermissions(\Project $project, array $readers, array $writers, array $admins): void
     {
         $insertions = [];
@@ -116,6 +118,7 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
         );
     }
 
+    #[\Override]
     public function updateAllAnonymousAccessToRegistered(): void
     {
         $this->getDB()->update(
@@ -125,6 +128,7 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
         );
     }
 
+    #[\Override]
     public function updateAllAuthenticatedAccessToRegistered(): void
     {
         $this->getDB()->update(
@@ -134,6 +138,7 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
         );
     }
 
+    #[\Override]
     public function migrateFromLegacyPermissions(\Project $project): void
     {
         $this->getDB()->tryFlatTransaction(

@@ -30,6 +30,7 @@ class DisabledPane extends Pane
         parent::__construct($title, '', false, true);
     }
 
+    #[\Override]
     public function content()
     {
         return '';

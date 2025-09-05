@@ -43,6 +43,7 @@ final class FRSFileDownloadOldURLRedirectionController extends DispatchablePSR15
         $this->response_factory = $response_factory;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->response_factory->createResponse(301)

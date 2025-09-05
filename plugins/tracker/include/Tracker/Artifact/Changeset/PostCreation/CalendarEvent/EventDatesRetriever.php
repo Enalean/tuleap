@@ -38,6 +38,7 @@ final class EventDatesRetriever implements RetrieveEventDates
     /**
      * @return Ok<CalendarEventData>|Err<non-falsy-string>
      */
+    #[\Override]
     public function retrieveEventDates(
         CalendarEventData $calendar_event_data,
         \Tracker_Artifact_Changeset $changeset,

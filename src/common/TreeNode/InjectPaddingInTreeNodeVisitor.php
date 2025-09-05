@@ -39,6 +39,7 @@ class TreeNode_InjectPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor
         $this->collapsable = $collapsable;
     }
 
+    #[\Override]
     protected function setChildState(TreeNode $child, $state)
     {
         parent::setChildState($child, $state);

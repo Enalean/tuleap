@@ -51,6 +51,7 @@ class TrackerTemplatesRepresentation implements \JsonSerializable
         $this->tlp_color   = $tlp_color;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

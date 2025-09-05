@@ -26,16 +26,19 @@ class Docman_MetadataHtmlEmpty extends \Docman_MetadataHtml
     {
     }
 
+    #[\Override]
     public function getLabel($show_mandatory_information = \true)
     {
         return \dgettext('tuleap-docman', 'An empty document has no type. You will be able to choose document\'s type later. It\'s useful to create an entry in a hierarchy without the actual document.');
     }
 
+    #[\Override]
     public function getField()
     {
         return '';
     }
 
+    #[\Override]
     public function &getValidator()
     {
         $validator = \null;

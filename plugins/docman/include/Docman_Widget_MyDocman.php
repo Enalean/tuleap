@@ -38,11 +38,13 @@ class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDec
         $this->pluginPath = $pluginPath;
     }
 
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-docman', 'Documents under review');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $html  = '';
@@ -178,21 +180,25 @@ class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDec
         return $html;
     }
 
+    #[\Override]
     public function isAjax()
     {
         return true;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-docman', 'Document manager');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-docman', 'List the documents under review.');
     }
 
+    #[\Override]
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
         $request  = HTTPRequest::instance();
@@ -204,6 +210,7 @@ class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDec
         return $ajax_url;
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         $theme_include_assets = new IncludeAssets(

@@ -35,11 +35,13 @@ class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Changese
     {
     }
 
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return StepsDefinition::TYPE;
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

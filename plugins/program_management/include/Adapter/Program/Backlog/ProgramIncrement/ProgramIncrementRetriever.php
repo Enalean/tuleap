@@ -47,6 +47,7 @@ final class ProgramIncrementRetriever implements RetrieveProgramIncrement
     ) {
     }
 
+    #[\Override]
     public function retrieveProgramIncrementById(
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $increment_identifier,

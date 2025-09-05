@@ -23,13 +23,15 @@
 
 class Docman_View_NewVersion extends Docman_View_Details
 {
-    /* protected */ public function _getTitle($params)
+    /* protected */ #[\Override]
+    public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         return sprintf(dgettext('tuleap-docman', 'New version for %1$s'), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
-    /* protected */ public function _content($params, $view = null, $section = null)
+    /* protected */ #[\Override]
+    public function _content($params, $view = null, $section = null)
     {
         $force = isset($params['force_item']) ? $params['force_item'] : null;
         $token = isset($params['token']) ? $params['token'] : null;

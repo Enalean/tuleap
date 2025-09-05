@@ -27,21 +27,25 @@ use Tuleap\Option\Option;
 
 final class DatabaseUUIDV7Factory implements DatabaseUUIDFactory
 {
+    #[\Override]
     public function buildUUIDBytes(): string
     {
         return $this->buildUUIDBytesFromTime(new \DateTimeImmutable());
     }
 
+    #[\Override]
     public function buildUUIDBytesFromTime(\DateTimeInterface $time): string
     {
         return UuidV7::uuid7($time)->getBytes();
     }
 
+    #[\Override]
     public function buildUUIDFromBytesData(string $bytes): UUID
     {
         return new UUIDFromRamseyUUIDLibrary(UuidV7::fromBytes($bytes));
     }
 
+    #[\Override]
     public function buildUUIDFromHexadecimalString(string $string): Option
     {
         try {

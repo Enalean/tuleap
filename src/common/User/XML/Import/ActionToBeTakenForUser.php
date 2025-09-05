@@ -50,6 +50,7 @@ abstract class ActionToBeTakenForUser implements User
         $this->original_ldap_id = $original_ldap_id;
     }
 
+    #[\Override]
     public function getUserName()
     {
         return $this->username;

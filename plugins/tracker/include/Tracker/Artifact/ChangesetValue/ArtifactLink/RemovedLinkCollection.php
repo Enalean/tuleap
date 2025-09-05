@@ -41,6 +41,7 @@ class RemovedLinkCollection implements ICollectChangeOfLinksBetweenTwoChangesets
         $this->formatter = $formatter;
     }
 
+    #[\Override]
     public function add(Tracker_ArtifactLinkInfo $artifactlinkinfo)
     {
         $this->removed[] = $artifactlinkinfo;
@@ -49,6 +50,7 @@ class RemovedLinkCollection implements ICollectChangeOfLinksBetweenTwoChangesets
     /**
      * @return string
      */
+    #[\Override]
     public function fetchFormatted(PFUser $user, $format, $ignore_perms)
     {
         if (! $this->removed) {

@@ -26,6 +26,7 @@
  */
 class Valid_UInt extends \Valid_Int // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function validate($value)
     {
         $this->addRule(new \Rule_GreaterOrEqual(0));

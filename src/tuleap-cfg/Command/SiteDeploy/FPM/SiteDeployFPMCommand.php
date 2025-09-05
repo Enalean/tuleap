@@ -47,6 +47,7 @@ final class SiteDeployFPMCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Deploy PHP FPM configuration files')
@@ -55,6 +56,7 @@ final class SiteDeployFPMCommand extends Command
             ->addOption(self::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force files to be rewritten (by default existing files are not modified)');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ForgeConfig::loadInSequence();

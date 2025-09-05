@@ -39,6 +39,7 @@ final class XMLStringChangesetValue extends XMLChangesetValue
         $this->value = $value;
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $changeset_xml, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $field_change = parent::export($changeset_xml, $form_elements);

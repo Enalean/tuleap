@@ -70,6 +70,7 @@ final class CachedProgramBuilder implements BuildProgram, ProjectIsAProgramOrUse
     ) {
     }
 
+    #[\Override]
     public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void
     {
         if (isset($this->permission_cache[$project_id])) {
@@ -79,6 +80,7 @@ final class CachedProgramBuilder implements BuildProgram, ProjectIsAProgramOrUse
         $this->permission_cache[$project_id] = true;
     }
 
+    #[\Override]
     public function ensureProjectIsAProgramOrIsPartOfPlan(int $project_id, UserIdentifier $user): void
     {
         if (isset($this->permission_cache[$project_id])) {

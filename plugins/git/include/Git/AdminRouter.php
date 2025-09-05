@@ -109,6 +109,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $this->include_assets                   = $include_assets;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('git');

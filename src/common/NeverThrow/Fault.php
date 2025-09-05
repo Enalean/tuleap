@@ -79,6 +79,7 @@ readonly class Fault implements \Stringable
         return $this->exception->getTraceAsString();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->message;

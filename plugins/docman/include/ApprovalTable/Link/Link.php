@@ -41,6 +41,7 @@ class Docman_ApprovalTableLink extends Docman_ApprovalTableVersionned
         return $this->item_id;
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         parent::initFromRow($row);

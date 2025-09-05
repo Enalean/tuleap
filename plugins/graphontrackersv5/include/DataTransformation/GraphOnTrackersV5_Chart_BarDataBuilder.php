@@ -36,6 +36,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
      *
      * @param GraphOnTrackersV5_Engine_Bar $engine
      */
+    #[\Override]
     public function buildProperties($engine): void
     {
         $this->buildParentProperties($engine);

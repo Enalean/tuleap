@@ -235,6 +235,7 @@ class WikiServiceViews extends WikiViews
         return $href;
     }
 
+    #[\Override]
     protected function addStylesheets(): void
     {
         $GLOBALS['Response']->addStylesheet('/wiki/themes/Codendi/phpwiki.css');
@@ -244,6 +245,7 @@ class WikiServiceViews extends WikiViews
   /**
    * displayMenu - public
    */
+    #[\Override]
     public function displayMenu()
     {
         print '
@@ -359,6 +361,7 @@ class WikiServiceViews extends WikiViews
    * display - public
    * @access public
    */
+    #[\Override]
     public function display($view = '')
     {
         $GLOBALS['type_of_search'] = 'wiki';

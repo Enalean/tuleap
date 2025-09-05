@@ -113,6 +113,7 @@ class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever, Pr
         return $ugroup;
     }
 
+    #[\Override]
     public function getUGroup(Project $project, $ugroup_id): ?ProjectUGroup
     {
         $project_id = (int) $project->getID();
@@ -129,6 +130,7 @@ class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever, Pr
         return null;
     }
 
+    #[\Override]
     public function getProjectAdminsUGroup(Project $project): ProjectUGroup
     {
         $row = $this->getDao()->searchByGroupIdAndUGroupId(self::FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS, ProjectUGroup::PROJECT_ADMIN);
@@ -175,6 +177,7 @@ class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever, Pr
      * @param int[] $excluded_ugroups_id
      * @return ProjectUGroup[]
      */
+    #[\Override]
     public function getUGroups(Project $project, array $excluded_ugroups_id = []): array
     {
         $ugroups = [];
@@ -241,6 +244,7 @@ class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever, Pr
         return $ugroups;
     }
 
+    #[\Override]
     public function getUGroupByName(Project $project, string $name): ?ProjectUGroup
     {
         $row = $this->getDao()->searchByGroupIdAndName((int) $project->getID(), $name);
@@ -605,6 +609,7 @@ class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever, Pr
         );
     }
 
+    #[\Override]
     public function getMembershipsInAProject(\Project $project, \PFUser $user): array
     {
         $rows    = $this->getDao()->searchUgroupsUserIsMemberInProject((int) $user->getId(), (int) $project->getID());

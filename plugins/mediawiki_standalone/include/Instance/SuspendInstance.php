@@ -53,6 +53,7 @@ final class SuspendInstance implements InstanceOperation
         return new self($project);
     }
 
+    #[\Override]
     public function getRequest(RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory): RequestInterface
     {
         return $request_factory->createRequest(
@@ -61,6 +62,7 @@ final class SuspendInstance implements InstanceOperation
         );
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return self::TOPIC;

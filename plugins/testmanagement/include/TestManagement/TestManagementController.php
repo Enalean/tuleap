@@ -82,6 +82,7 @@ abstract class TestManagementController extends MVC2_PluginController
     /**
      * @return string
      */
+    #[\Override]
     protected function getTemplatesDir()
     {
         return TESTMANAGEMENT_BASE_DIR . '/templates';

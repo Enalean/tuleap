@@ -41,11 +41,13 @@ final readonly class UUIDFileIdentifier implements FileIdentifier
         return new self($uuid);
     }
 
+    #[\Override]
     public function getBytes(): string
     {
         return $this->uuid->getBytes();
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->uuid->toString();

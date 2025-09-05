@@ -54,6 +54,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
     ) {
     }
 
+    #[\Override]
     public function plan(ProgramIncrementChanged $program_increment_changed): void
     {
         $this->logger->debug('Check if we need to plan/unplan items in mirrored releases.');
@@ -81,6 +82,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         );
     }
 
+    #[\Override]
     public function planForATeam(ProgramIncrementChanged $program_increment_changed, TeamIdentifier $team_identifier): void
     {
         $this->logger->debug('Check if we need to plan/unplan items in mirrored releases.');

@@ -28,9 +28,11 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
  */
 interface JiraCloudUser extends JiraUser
 {
+    #[\Override]
     public function getDisplayName(): string;
 
     public function getJiraAccountId(): string;
 
+    #[\Override]
     public function getEmailAddress(): string;
 }

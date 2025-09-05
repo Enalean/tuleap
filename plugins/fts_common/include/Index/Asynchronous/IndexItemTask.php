@@ -68,16 +68,19 @@ final class IndexItemTask implements \Tuleap\Queue\QueueTask
         return new ItemToIndex($payload['type'], $payload['project_id'], $payload['content'], $payload['content_type'] ?? ItemToIndex::CONTENT_TYPE_PLAINTEXT, $payload['metadata']);
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return self::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return json_decode(json_encode($this->item_to_index, JSON_THROW_ON_ERROR), true, 3, JSON_THROW_ON_ERROR);
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Index item ' . $this->item_to_index->type . ' (' .  var_export($this->item_to_index->metadata, true) . ')';

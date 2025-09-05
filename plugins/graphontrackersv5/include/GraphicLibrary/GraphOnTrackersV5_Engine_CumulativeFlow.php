@@ -37,6 +37,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
     public $width;
     public $data;
 
+    #[\Override]
     public function validData(): bool
     {
         if (! $this->hasStart()) {
@@ -71,6 +72,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
     /**
      * @return null
      */
+    #[\Override]
     public function buildGraph()
     {
         return null;
@@ -114,6 +116,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
         return $this->start_date <= $this->stop_date;
     }
 
+    #[\Override]
     public function toArray()
     {
         return parent::toArray() + [

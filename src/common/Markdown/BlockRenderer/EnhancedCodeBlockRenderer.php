@@ -41,6 +41,7 @@ final class EnhancedCodeBlockRenderer implements NodeRendererInterface
         $this->code_block_features  = $code_block_features;
     }
 
+    #[\Override]
     public function render(Node $node, ChildNodeRendererInterface $childRenderer)
     {
         if (! ($node instanceof FencedCode)) {

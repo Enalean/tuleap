@@ -28,6 +28,7 @@ class ServiceTracker extends Service
 {
     public const NAME = 'tracker';
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fa-solid fa-tlp-tracker-circle';
@@ -36,6 +37,7 @@ class ServiceTracker extends Service
     /**
      * Display header for service tracker
      */
+    #[\Override]
     public function displayHeader(string $title, $breadcrumbs, array $toolbar, \Tuleap\Layout\HeaderConfiguration|array $params = []): void
     {
         $GLOBALS['HTML']->includeCalendarScripts();
@@ -58,6 +60,7 @@ class ServiceTracker extends Service
     /**
      * Say if the service is allowed for the project
      */
+    #[\Override]
     protected function isAllowed($project): bool
     {
         $plugin_manager = PluginManager::instance();
@@ -71,6 +74,7 @@ class ServiceTracker extends Service
     /**
      * Say if the service is restricted
      */
+    #[\Override]
     public function isRestricted(): bool
     {
         $plugin_manager = PluginManager::instance();
@@ -86,6 +90,7 @@ class ServiceTracker extends Service
      *
      * @see Service::isInheritedOnDuplicate()
      */
+    #[\Override]
     public function isInheritedOnDuplicate(): bool
     {
         return true;
@@ -106,6 +111,7 @@ class ServiceTracker extends Service
         ];
     }
 
+    #[\Override]
     public function getPromotedItemPresenters(PFUser $user, ?string $active_promoted_item_id): array
     {
         $retriever = new SidebarPromotedTrackerRetriever(

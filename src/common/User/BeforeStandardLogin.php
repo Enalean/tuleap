@@ -43,6 +43,7 @@ final class BeforeStandardLogin implements BeforeLogin
         $this->login_refusal = Option::nothing(string());
     }
 
+    #[\Override]
     public function getLoginName(): string
     {
         return $this->login_name;
@@ -58,16 +59,19 @@ final class BeforeStandardLogin implements BeforeLogin
         $this->user = $user;
     }
 
+    #[\Override]
     public function getUser(): ?PFUser
     {
         return $this->user;
     }
 
+    #[\Override]
     public function refuseLogin(string $feedback): void
     {
         $this->login_refusal = Option::fromValue($feedback);
     }
 
+    #[\Override]
     public function isLoginRefused(): Option
     {
         return $this->login_refusal;

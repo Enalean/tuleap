@@ -51,12 +51,14 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
         $this->repository_objects_size_retriever = $repository_objects_size_retriever;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Search for repositories active in the last 2 months with objects over the size limit')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt or json)', 'txt');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         switch ($format = $input->getOption('format')) {

@@ -48,12 +48,14 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
         return $mdHtmlFactory->buildFieldArray($mdIter, $this->mdLabelToSkip, false, $formName, $themePath);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, $params = [])
     {
         $mdIter = $item->getMetadataIterator();
         return $this->buildFieldArray($mdIter, $params);
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         $folderMetadata = ['title', 'description', 'create_date', 'update_date'];
@@ -70,31 +72,37 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitItem($item, $params);

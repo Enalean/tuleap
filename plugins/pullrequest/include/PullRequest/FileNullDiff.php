@@ -26,16 +26,19 @@ class FileNullDiff extends FileUniDiff
     {
     }
 
+    #[\Override]
     public function getLine($offset)
     {
         return $this->buildIsoLine($offset);
     }
 
+    #[\Override]
     public function getLineFromOldOffset($offset)
     {
         return $this->buildIsoLine($offset);
     }
 
+    #[\Override]
     public function getLineFromNewOffset($offset)
     {
         return $this->buildIsoLine($offset);

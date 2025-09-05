@@ -40,6 +40,7 @@ final class TeamMustHaveExplicitBacklogEnabledException extends \RuntimeExceptio
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

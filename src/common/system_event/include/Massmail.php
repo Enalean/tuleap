@@ -45,6 +45,7 @@ class Massmail extends SystemEvent
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $parameters = $this->parseParamaters();
@@ -72,6 +73,7 @@ class Massmail extends SystemEvent
      *
      * @return bool
      */
+    #[\Override]
     public function process()
     {
         $parameters = $this->parseParamaters();

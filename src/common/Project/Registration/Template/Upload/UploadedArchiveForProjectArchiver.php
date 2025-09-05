@@ -29,6 +29,7 @@ final readonly class UploadedArchiveForProjectArchiver implements ArchiveUploade
     {
     }
 
+    #[\Override]
     public function archive(\Project $project, string $uploaded_archive_path): string
     {
         $destination = $this->data_dir . '/project/' . $project->getID() . '/created-from-archive/uploaded-archive-for-' . $project->getID() . '.zip';

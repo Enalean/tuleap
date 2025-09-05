@@ -54,16 +54,19 @@ class SystemControlSystemd implements SystemControlInterface
         $this->action  = $action;
     }
 
+    #[\Override]
     public function run(): void
     {
         $this->process->run();
     }
 
+    #[\Override]
     public function isSuccessful(): bool
     {
         return $this->process->isSuccessful();
     }
 
+    #[\Override]
     public function getExitCode(): int
     {
         $exit_code = $this->process->getExitCode();
@@ -73,21 +76,25 @@ class SystemControlSystemd implements SystemControlInterface
         return $exit_code;
     }
 
+    #[\Override]
     public function getOutput(): string
     {
         return $this->process->getOutput();
     }
 
+    #[\Override]
     public function getCommandLine(): string
     {
         return $this->process->getCommandLine();
     }
 
+    #[\Override]
     public function getBeforeMessage(): string
     {
         return sprintf('%s %s...', SystemControlCommand::ACTION_WORD[$this->action], implode(', ', $this->targets));
     }
 
+    #[\Override]
     public function getErrorOutput(): string
     {
         return $this->process->getErrorOutput();

@@ -55,16 +55,19 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         $this->method = $method;
     }
 
+    #[\Override]
     public function getShortName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return dgettext('tuleap-tracker', 'Progress');
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return dgettext(
@@ -73,6 +76,7 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         );
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         $is_semantic_defined = $this->isDefined();
@@ -89,6 +93,7 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         );
     }
 
+    #[\Override]
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -126,6 +131,7 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
+    #[\Override]
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -153,21 +159,25 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         $GLOBALS['Response']->redirect($this->getUrl());
     }
 
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xml_mapping): void
     {
         $this->method->exportToXMl($root, $xml_mapping);
     }
 
+    #[\Override]
     public function exportToREST(PFUser $user): ?IRepresentSemanticProgress
     {
         return $this->method->exportToREST($user);
     }
 
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field): bool
     {
         return $this->method->isFieldUsedInComputation($field);
     }
 
+    #[\Override]
     public function save(): bool
     {
         return $this->method->saveSemanticForTracker($this->tracker);

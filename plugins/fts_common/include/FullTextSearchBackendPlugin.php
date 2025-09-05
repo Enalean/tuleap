@@ -46,6 +46,7 @@ use Tuleap\Search\ItemToIndexBatchQueue;
 
 abstract class FullTextSearchBackendPlugin extends Plugin
 {
+    #[\Override]
     public function postEnable(): void
     {
         parent::postEnable();

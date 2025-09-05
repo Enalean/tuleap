@@ -62,6 +62,7 @@ final class ReferenceURLBuilder implements ItemVisitor
         );
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         $project = $this->project_factory->getProjectById((int) $item->getGroupId());
@@ -69,16 +70,19 @@ final class ReferenceURLBuilder implements ItemVisitor
         return '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/folder/$1';
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         return $params['base_reference_link'] ?? '';
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = [])
     {
         return $params['base_reference_link'] ?? '';
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = [])
     {
         $open_item_href = $this->event_dispatcher->dispatch(
@@ -96,6 +100,7 @@ final class ReferenceURLBuilder implements ItemVisitor
         return $params['base_reference_link'] ?? '';
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         $project = $this->project_factory->getProjectById((int) $item->getGroupId());
@@ -107,6 +112,7 @@ final class ReferenceURLBuilder implements ItemVisitor
             '/$1';
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
         $project = $this->project_factory->getProjectById((int) $item->getGroupId());
@@ -114,11 +120,13 @@ final class ReferenceURLBuilder implements ItemVisitor
         return '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/preview/$1';
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         return $params['base_reference_link'] ?? '';

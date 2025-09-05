@@ -38,11 +38,13 @@ final class StartDateFieldReferenceProxy implements StartDateFieldReference
         return new self($start_date->getId(), $start_date->getLabel());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

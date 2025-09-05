@@ -46,16 +46,19 @@ final class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisit
         return (array) $value_wrapper->accept($this, new FieldValueWrapperParameters($field));
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new NowIsNotSupportedException();
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         $values = [];
@@ -75,6 +78,7 @@ final class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisit
         return $values;
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         $values = [];
@@ -85,11 +89,13 @@ final class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisit
         return $values;
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new MySelfIsNotSupportedException();
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new StatusOpenIsNotSupportedException();

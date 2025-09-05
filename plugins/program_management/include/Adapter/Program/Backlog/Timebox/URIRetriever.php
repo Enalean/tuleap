@@ -37,18 +37,21 @@ final class URIRetriever implements RetrieveUri, RetrieveUserStoryURI, RetrieveF
     {
     }
 
+    #[\Override]
     public function getUri(TimeboxIdentifier $timebox_identifier): string
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
         return $artifact->getUri();
     }
 
+    #[\Override]
     public function getUserStoryURI(UserStoryIdentifier $user_story_identifier): string
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
         return $artifact->getUri();
     }
 
+    #[\Override]
     public function getFeatureURI(FeatureIdentifier $feature_identifier): string
     {
         return $this->artifact_retriever->getNonNullArtifact($feature_identifier)->getUri();

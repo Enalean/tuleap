@@ -31,6 +31,7 @@ final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereB
     {
     }
 
+    #[\Override]
     public function getFromWhereWithComment(string $value, string $suffix): IProvideParametrizedFromAndWhereSQLFragments
     {
         $value = $this->removeEnclosingSimpleQuoteToNotFailMatchSqlQuery($value);
@@ -56,6 +57,7 @@ final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereB
         return new ParametrizedFromWhere($from, $where, [$value], $in->values());
     }
 
+    #[\Override]
     public function getFromWhereWithoutComment(string $suffix): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (

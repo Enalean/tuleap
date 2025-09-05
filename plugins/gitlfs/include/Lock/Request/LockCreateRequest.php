@@ -85,16 +85,19 @@ class LockCreateRequest implements GitLfsHTTPOperation
         return $this->path;
     }
 
+    #[\Override]
     public function getReference(): ?RequestReference
     {
         return $this->reference;
     }
 
+    #[\Override]
     public function isWrite(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function isRead(): bool
     {
         return false;

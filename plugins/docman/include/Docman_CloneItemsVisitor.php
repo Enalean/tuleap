@@ -56,6 +56,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         $this->link_version_factory = $link_version_factory;
     }
 
+    #[\Override]
     public function visitFolder($item, $params = [])
     {
         // Clone folder
@@ -85,11 +86,13 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         die('never happen');
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         $this->_cloneItem($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, $params = [])
     {
         $copied_item_id = $this->_cloneItem($item, $params);
@@ -106,21 +109,25 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
         $this->_cloneFile($item, $params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         $this->_cloneFile($item, $params);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
         $this->_cloneItem($item, $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         $copied_item_id = $this->_cloneItem($item, $params);
@@ -130,6 +137,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
     }

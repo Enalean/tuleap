@@ -38,6 +38,7 @@ class PostSaveNewChangesetLinkParentArtifact implements
         $this->parent_link_action = $parent_link_action;
     }
 
+    #[\Override]
     public function execute(
         Artifact $artifact,
         PFUser $submitter,

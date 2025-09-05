@@ -182,6 +182,7 @@ final class IterationCreation implements TimeboxMirroringOrder
         return $iterations_to_update;
     }
 
+    #[\Override]
     public function getTimebox(): TimeboxIdentifier
     {
         return $this->iteration;
@@ -192,6 +193,7 @@ final class IterationCreation implements TimeboxMirroringOrder
         return $this->iteration;
     }
 
+    #[\Override]
     public function getTracker(): TrackerIdentifier
     {
         return $this->tracker;
@@ -202,11 +204,13 @@ final class IterationCreation implements TimeboxMirroringOrder
         return $this->program_increment;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;
     }
 
+    #[\Override]
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;

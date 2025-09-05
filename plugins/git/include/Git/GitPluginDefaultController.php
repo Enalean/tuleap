@@ -51,6 +51,7 @@ class GitPluginDefaultController implements DispatchableWithRequest
      * @return void
      * @throws \Tuleap\Request\NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getProject()->usesService(GitPlugin::SERVICE_SHORTNAME)) {

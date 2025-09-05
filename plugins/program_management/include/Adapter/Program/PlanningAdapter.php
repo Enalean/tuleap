@@ -45,6 +45,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
      * @throws TopPlanningNotFoundInProjectException
      * @throws PlanningHasNoMilestoneTrackerException
      */
+    #[\Override]
     public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): TeamPlanning
     {
         $user          = $this->retrieve_user->getUserWithId($user_identifier);
@@ -64,6 +65,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
         return TeamPlanningProxy::fromPlanning($root_planning);
     }
 
+    #[\Override]
     public function retrieveRootPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user_identifier,
@@ -79,6 +81,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
         return null;
     }
 
+    #[\Override]
     public function retrieveSecondPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user,

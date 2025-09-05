@@ -46,11 +46,13 @@ class MyProjects extends \Widget
         parent::__construct('myprojects');
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return $GLOBALS['Language']->getText('my_index', 'my_projects');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $hp              = Codendi_HTMLPurifier::instance();
@@ -209,11 +211,13 @@ class MyProjects extends \Widget
         return $html;
     }
 
+    #[\Override]
     public function hasRss(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function displayRss(): void
     {
         $hp         = Codendi_HTMLPurifier::instance();
@@ -265,6 +269,7 @@ class MyProjects extends \Widget
         $rss->display();
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return $GLOBALS['Language']->getText('widget_description_my_projects', 'description');
@@ -284,6 +289,7 @@ class MyProjects extends \Widget
         return $renderer->renderToString('contact-modal', $presenter);
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         $assets = new \Tuleap\Layout\IncludeCoreAssets();

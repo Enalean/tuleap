@@ -91,6 +91,7 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSer
         );
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $json_encoded = [

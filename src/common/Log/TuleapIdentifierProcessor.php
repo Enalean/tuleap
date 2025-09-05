@@ -40,6 +40,7 @@ final class TuleapIdentifierProcessor implements ProcessorInterface
         $this->version_presenter = $version_presenter;
     }
 
+    #[\Override]
     public function __invoke(LogRecord $record): LogRecord
     {
         $record['extra']['tuleap_version_number'] = $this->version_presenter->version_number;

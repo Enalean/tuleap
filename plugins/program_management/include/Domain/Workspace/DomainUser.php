@@ -35,6 +35,7 @@ final class DomainUser implements UserIdentifier
         $this->id = $id;
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

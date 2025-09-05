@@ -29,6 +29,7 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
  */
 final class GenericProviderIssuerClaimValidator implements IssuerClaimValidator
 {
+    #[\Override]
     public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token): bool
     {
         /*

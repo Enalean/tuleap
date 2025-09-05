@@ -26,26 +26,31 @@ class SiteAdministratorPermission extends User_ForgeUserGroupPermission
 {
     public const ID = 7;
 
+    #[\Override]
     public function getId()
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getName()
     {
         return _('Platform administration');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return _('This permission grants the right to manage platform administration users. Every single user added here will be a platform administrator.');
     }
 
+    #[\Override]
     public function canBeRemoved()
     {
         return ! $this->getPermissionChecker()->checkPlatformHasMoreThanOneSiteAdministrationPermission();
     }
 
+    #[\Override]
     public function getCannotRemoveLabel()
     {
         return _('You can\'t remove the last platform administration permission.');

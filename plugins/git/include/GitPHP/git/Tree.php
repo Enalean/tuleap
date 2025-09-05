@@ -78,6 +78,7 @@ class Tree extends FilesystemObject
      * @access public
      * @param mixed $commit commit object
      */
+    #[\Override]
     public function SetCommit($commit) // @codingStandardsIgnoreLine
     {
         parent::SetCommit($commit);
@@ -232,16 +233,19 @@ class Tree extends FilesystemObject
         $this->contentsReferenced = false;
     }
 
+    #[\Override]
     public function isTree()
     {
         return true;
     }
 
+    #[\Override]
     public function isBlob()
     {
         return false;
     }
 
+    #[\Override]
     public function isSubmodule()
     {
         return false;

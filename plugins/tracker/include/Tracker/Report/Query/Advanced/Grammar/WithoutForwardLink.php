@@ -28,6 +28,7 @@ final class WithoutForwardLink implements Term
     {
     }
 
+    #[\Override]
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
         return $visitor->visitWithoutForwardLink($this, $parameters);

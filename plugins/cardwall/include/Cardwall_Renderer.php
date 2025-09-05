@@ -80,6 +80,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         return $this->field;
     }
 
+    #[\Override]
     public function initiateSession()
     {
         $this->report_session = new Tracker_Report_Session($this->report->id);
@@ -104,6 +105,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      * @return string
      */
+    #[\Override]
     public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
     {
         $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), ['sb']);
@@ -192,15 +194,18 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
     /*----- Implements below some abstract methods ----*/
 
+    #[\Override]
     public function delete()
     {
     }
 
+    #[\Override]
     public function getType()
     {
         return 'plugin_cardwall';
     }
 
+    #[\Override]
     public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)
     {
         $renderer_parameters = $request->get('renderer_cardwall');
@@ -224,6 +229,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         }
     }
 
+    #[\Override]
     public function fetchWidget(PFUser $user, Widget $widget): string
     {
         $html = '';
@@ -251,6 +257,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      * @return bool true if success, false if failure
      */
+    #[\Override]
     public function create()
     {
         $success = true;
@@ -267,6 +274,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      * @return bool true if success, false if failure
      */
+    #[\Override]
     public function update()
     {
         $success = true;
@@ -277,10 +285,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         return $success;
     }
 
+    #[\Override]
     public function duplicate($from_renderer, $field_mapping, MappingRegistry $mapping_registry): void
     {
     }
 
+    #[\Override]
     public function afterSaveObject(Tracker_Report_Renderer $renderer)
     {
         if ($renderer->getField() !== null) {
@@ -314,6 +324,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      * @param $formsMapping the form elements mapping
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, array $formsMapping)
     {
         parent::exportToXml($root, $formsMapping);
@@ -322,11 +333,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         }
     }
 
+    #[\Override]
     public function getIcon()
     {
         return 'fa fa-table';
     }
 
+    #[\Override]
     public function getJavascriptDependencies()
     {
         return [
@@ -334,6 +347,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         ];
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         $tracker_assets  = new IncludeViteAssets(

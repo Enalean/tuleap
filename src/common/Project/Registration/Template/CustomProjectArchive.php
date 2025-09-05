@@ -31,6 +31,7 @@ final readonly class CustomProjectArchive implements VerifyProjectCreationFromAr
     #[ConfigKeyInt(0)]
     public const CONFIG_KEY = 'disable_create_from_custom_archive';
 
+    #[\Override]
     public function canCreateFromCustomArchive(): bool
     {
         return (string) \ForgeConfig::get(self::CONFIG_KEY) === '0';

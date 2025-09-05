@@ -37,6 +37,7 @@ class WorkerAvailability implements IsAsyncTaskProcessingAvailable
     #[ConfigKeyValueValidator(NbBackendWorkersConfigValidator::class)]
     public const NB_BACKEND_WORKERS_CONFIG_KEY = 'sys_nb_backend_workers';
 
+    #[\Override]
     public function canProcessAsyncTasks(): bool
     {
         return $this->getWorkerCount() > 0;

@@ -51,6 +51,7 @@ class AttachmentForTusUploadCreator implements AttachmentCreator
         $this->provider              = $provider;
     }
 
+    #[\Override]
     public function createAttachment(
         PFUser $current_user,
         FilesField $field,

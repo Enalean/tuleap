@@ -52,6 +52,7 @@ class WebDAVFRS implements ICollection
      *
      * @return array
      */
+    #[\Override]
     public function getChildren()
     {
         $children = [];
@@ -75,6 +76,7 @@ class WebDAVFRS implements ICollection
      *
      * @return WebDAVFRSPackage
      */
+    #[\Override]
     public function getChild($packageName)
     {
         $packageName = $this->getUtils()->retrieveName($packageName);
@@ -99,6 +101,7 @@ class WebDAVFRS implements ICollection
      *
      * @return String
      */
+    #[\Override]
     public function getName()
     {
         return $GLOBALS['Language']->getText('plugin_webdav_common', 'files');
@@ -107,6 +110,7 @@ class WebDAVFRS implements ICollection
     /**
      * FRS don't have a last modified date.
      */
+    #[\Override]
     public function getLastModified()
     {
         return 0;
@@ -241,6 +245,7 @@ class WebDAVFRS implements ICollection
      *
      * @return void
      */
+    #[\Override]
     public function createDirectory($name)
     {
         if ($this->userCanWrite()) {
@@ -258,21 +263,25 @@ class WebDAVFRS implements ICollection
         }
     }
 
+    #[\Override]
     public function delete(): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function setName($name): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function createFile($name, $data = null): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');
     }
 
+    #[\Override]
     public function childExists($name): bool
     {
         try {

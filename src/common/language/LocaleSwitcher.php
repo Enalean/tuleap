@@ -48,6 +48,7 @@ final class LocaleSwitcher implements Disposable
         });
     }
 
+    #[\Override]
     public function dispose(): void
     {
         if ($this->previous_locale !== '') {

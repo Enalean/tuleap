@@ -61,11 +61,13 @@ final class CollectLinkedProjectsProxy implements CollectLinkedProjectsEvent
     /**
      * @psalm-readonly
      */
+    #[\Override]
     public function getSourceProject(): ProjectIdentifier
     {
         return $this->source_project;
     }
 
+    #[\Override]
     public function addTeams(): void
     {
         $collection = LinkedProjectsCollection::fromSourceProject(
@@ -77,6 +79,7 @@ final class CollectLinkedProjectsProxy implements CollectLinkedProjectsEvent
         $this->linked_projects->addChildrenProjects($collection);
     }
 
+    #[\Override]
     public function addPrograms(): void
     {
         $collection = LinkedProjectsCollection::fromSourceProject(
@@ -88,6 +91,7 @@ final class CollectLinkedProjectsProxy implements CollectLinkedProjectsEvent
         $this->linked_projects->addParentProjects($collection);
     }
 
+    #[\Override]
     public function projectCanAggregateProjects(): void
     {
         $this->linked_projects->projectCanAggregateProjects();

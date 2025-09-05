@@ -28,16 +28,19 @@ final class ManagePdfTemplates extends User_ForgeUserGroupPermission
 {
     public const ID = 11;
 
+    #[\Override]
     public function getId(): int
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return dgettext('tuleap-pdftemplate', 'PDF templates manager');
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return dgettext('tuleap-pdftemplate', 'Create and edit PDF templates');

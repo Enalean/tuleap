@@ -38,16 +38,19 @@ final class MigrateInstanceTask implements QueueTask
         $this->project_id = (int) $project->getID();
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return MigrateInstance::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return ['project_id' => $this->project_id];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Migrate MediaWiki instance #' . $this->project_id;

@@ -41,6 +41,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->addJavascriptAsset($this->ckeditor_assets);

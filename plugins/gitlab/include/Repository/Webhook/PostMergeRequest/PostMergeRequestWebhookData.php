@@ -90,16 +90,19 @@ class PostMergeRequestWebhookData implements WebhookData
         $this->source_branch     = $source_branch;
     }
 
+    #[\Override]
     public function getEventName(): string
     {
         return $this->event_name;
     }
 
+    #[\Override]
     public function getGitlabProjectId(): int
     {
         return $this->gitlab_project_id;
     }
 
+    #[\Override]
     public function getGitlabWebUrl(): string
     {
         return $this->gitlab_url;

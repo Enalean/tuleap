@@ -45,6 +45,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
         }
     }
 
+    #[\Override]
     public function &getPluginInfo()
     {
         if (! is_a($this->pluginInfo, 'PluginsAdministrationPluginInfo')) {
@@ -54,6 +55,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(\Tuleap\PluginsAdministration\PluginDisablerVerifier::class);
@@ -90,6 +92,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
         );
     }
 
+    #[\Override]
     public function process(): void
     {
         require_once('PluginsAdministration.php');

@@ -37,6 +37,7 @@ class TrackerPluginDefaultController implements DispatchableWithRequest
         $this->tracker_manager = $tracker_manager;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         require_once __DIR__ . '/../../../src/www/project/admin/permissions.php';

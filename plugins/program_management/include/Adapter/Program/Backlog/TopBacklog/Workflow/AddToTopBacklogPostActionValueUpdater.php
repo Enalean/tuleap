@@ -35,6 +35,7 @@ final class AddToTopBacklogPostActionValueUpdater implements PostActionUpdater
     {
     }
 
+    #[\Override]
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $add_to_top_backlog_post_action_value = [];

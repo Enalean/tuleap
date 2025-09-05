@@ -45,12 +45,14 @@ final class SVNCheckRepositoriesWithDuplicatedAccessFileSections extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('List SVN multi repository access files with duplicated sections.')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt or json)', 'txt');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         match ($format = $input->getOption('format')) {

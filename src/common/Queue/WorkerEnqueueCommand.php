@@ -39,6 +39,7 @@ final class WorkerEnqueueCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     public function configure(): void
     {
         $this
@@ -47,6 +48,7 @@ final class WorkerEnqueueCommand extends Command
             ->addArgument('message', InputArgument::REQUIRED, 'Json encoded message');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $topic = $input->getArgument('topic');

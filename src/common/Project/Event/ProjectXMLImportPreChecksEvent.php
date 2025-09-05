@@ -35,6 +35,7 @@ final class ProjectXMLImportPreChecksEvent implements ProjectXMLImportPreChecks
     {
     }
 
+    #[\Override]
     public function getXmlElement(): SimpleXMLElement
     {
         return $this->xml_element;

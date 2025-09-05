@@ -236,11 +236,13 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     /**
      * @return PFUser
      */
+    #[\Override]
     protected function getUser()
     {
         return UserManager::instance()->getCurrentUser();
     }
 
+    #[\Override]
     public function includeCalendarScripts()
     {
         $this->includeJavascriptSnippet("var useLanguage = '" . Codendi_HTMLPurifier::instance()->purify(substr($this->getUser()->getLocale(), 0, 2), CODENDI_PURIFIER_JS_QUOTE) . "';");
@@ -257,6 +259,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         return $feedback;
     }
 
+    #[\Override]
     public function displayStaticWidget(Widget_Static $widget)
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -710,6 +713,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         return '<div id="notification-placeholder"></div>';
     }
 
+    #[\Override]
     public function feedback($feedback)
     {
         return '';

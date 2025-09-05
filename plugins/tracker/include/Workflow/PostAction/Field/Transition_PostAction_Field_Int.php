@@ -35,6 +35,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return string
      */
+    #[\Override]
     public function getShortName()
     {
         return self::SHORT_NAME;
@@ -45,6 +46,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return string
      */
+    #[\Override]
     public static function getLabel()
     {
         return dgettext('tuleap-tracker', 'Change the value of an int field');
@@ -58,6 +60,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if ($this->getFieldId()) {
@@ -75,6 +78,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
         return new Transition_PostAction_Field_IntDao();
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitIntField($this);

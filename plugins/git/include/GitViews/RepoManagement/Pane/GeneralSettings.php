@@ -75,6 +75,7 @@ class GeneralSettings extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier()
     {
         return 'settings';
@@ -83,6 +84,7 @@ class GeneralSettings extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-git', 'General settings');
@@ -91,6 +93,7 @@ class GeneralSettings extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
+    #[\Override]
     public function getContent()
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/settings');

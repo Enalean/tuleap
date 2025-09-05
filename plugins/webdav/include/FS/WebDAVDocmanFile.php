@@ -39,6 +39,7 @@ class WebDAVDocmanFile implements IFile
     /**
      * This method is used to download the file
      */
+    #[\Override]
     public function get(): void
     {
         $version = $this->item->getCurrentVersion();
@@ -61,6 +62,7 @@ class WebDAVDocmanFile implements IFile
     /**
      * Returns the name of the file
      */
+    #[\Override]
     public function getName(): string
     {
         switch (get_class($this->item)) {
@@ -78,6 +80,7 @@ class WebDAVDocmanFile implements IFile
      *
      * @psalm-suppress ImplementedReturnTypeMismatch Return type of the library is incorrect
      */
+    #[\Override]
     public function getContentType(): string
     {
         $version = $this->item->getCurrentVersion();
@@ -87,6 +90,7 @@ class WebDAVDocmanFile implements IFile
     /**
      * Returns the file size
      */
+    #[\Override]
     public function getSize(): int
     {
         $version = $this->item->getCurrentVersion();
@@ -96,6 +100,7 @@ class WebDAVDocmanFile implements IFile
     /**
      * Returns a unique identifier of the file
      */
+    #[\Override]
     public function getETag(): string
     {
         $version = $this->item->getCurrentVersion();
@@ -107,11 +112,13 @@ class WebDAVDocmanFile implements IFile
         return (int) ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
     }
 
+    #[\Override]
     public function getLastModified(): int
     {
         return $this->item->getUpdateDate();
     }
 
+    #[\Override]
     public function delete(): void
     {
         if ($this->utils->isWriteEnabled()) {
@@ -142,6 +149,7 @@ class WebDAVDocmanFile implements IFile
      *
      * @param string|resource $data
      */
+    #[\Override]
     public function put($data): void
     {
         if ($this->utils->isWriteEnabled()) {
@@ -181,6 +189,7 @@ class WebDAVDocmanFile implements IFile
      *
      * @param string $name New name of the document
      */
+    #[\Override]
     public function setName($name): void
     {
         switch (get_class($this->item)) {

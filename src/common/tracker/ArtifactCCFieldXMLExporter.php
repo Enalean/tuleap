@@ -23,6 +23,7 @@ class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter
     public const TV3_TYPE = 'cc';
     public const TV5_TYPE = 'open_list';
 
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         $values     = array_filter(explode(',', $row['new_value']));
@@ -38,6 +39,7 @@ class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter
         $changeset_node->appendChild($field_node);
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         throw new Exception_TV3XMLException('Try to get artifact_value on a non value field: cc');

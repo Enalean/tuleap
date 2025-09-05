@@ -41,6 +41,7 @@ final class ConcealedString implements \Stringable
         return $this->value;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->value;

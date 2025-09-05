@@ -24,11 +24,13 @@ namespace Tuleap\Docman\Search;
 
 class SqlFilterItemId extends \Docman_SqlFilter
 {
+    #[\Override]
     public function getFrom(): array
     {
         return [];
     }
 
+    #[\Override]
     public function getWhere(): string
     {
         $data_access = \CodendiDataAccess::instance();

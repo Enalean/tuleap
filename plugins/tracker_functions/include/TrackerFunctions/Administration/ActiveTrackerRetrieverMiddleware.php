@@ -35,6 +35,7 @@ final class ActiveTrackerRetrieverMiddleware implements MiddlewareInterface
     {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $tracker = $this->retrieve_tracker->getTrackerById($request->getAttribute('id'));

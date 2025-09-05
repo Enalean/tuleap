@@ -47,6 +47,7 @@ final class JiraCloudChangelogEntryValueRepresentation implements ChangelogEntry
     /**
      * @throws ChangelogAPIResponseNotWellFormedException
      */
+    #[\Override]
     public static function buildFromAPIResponse(array $changelog_response): self
     {
         if (! isset($changelog_response['items'], $changelog_response['id'], $changelog_response['created'])) {
@@ -74,21 +75,25 @@ final class JiraCloudChangelogEntryValueRepresentation implements ChangelogEntry
     /**
      * @return ChangelogEntryItemsRepresentation[]
      */
+    #[\Override]
     public function getItemRepresentations(): array
     {
         return $this->item_representations;
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getCreated(): DateTimeImmutable
     {
         return $this->created;
     }
 
+    #[\Override]
     public function getChangelogOwner(): JiraUser
     {
         return $this->changelog_owner;

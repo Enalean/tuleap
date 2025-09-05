@@ -29,6 +29,7 @@ use Tuleap\Tracker\Tracker;
 
 final class TrackersPermissionsDao extends DataAccessObject implements SearchUserGroupsPermissionOnFields, SearchUserGroupsPermissionOnTrackers, SearchUserGroupsPermissionOnArtifacts
 {
+    #[\Override]
     public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, FieldPermissionType $permission): array
     {
         $fields_statement = EasyStatement::open()->in('field.id IN (?*)', $fields_id);
@@ -53,6 +54,7 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
         return array_map(static fn(array $row) => (int) $row['field_id'], $results);
     }
 
+    #[\Override]
     public function searchUserGroupsViewPermissionOnTrackers(array $user_groups, array $trackers_id): array
     {
         $trackers_statement  = EasyStatement::open()->in('tracker.id IN (?*)', $trackers_id);
@@ -90,6 +92,7 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
         return array_map(static fn(array $row) => (int) $row['tracker_id'], $results);
     }
 
+    #[\Override]
     public function searchUserGroupsSubmitPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
     {
         $ugroups_tracker_statement = EasyStatement::open()->in('tracker_permission.ugroup_id IN (?*)', $user_groups_id);
@@ -118,6 +121,7 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
         return array_map(static fn(array $row) => (int) $row['tracker_id'], $results);
     }
 
+    #[\Override]
     public function searchUserGroupsViewPermissionOnArtifacts(array $user_groups_id, array $artifacts_id): array
     {
         $artifacts_statement       = EasyStatement::open()->in('artifact.id IN (?*)', $artifacts_id);

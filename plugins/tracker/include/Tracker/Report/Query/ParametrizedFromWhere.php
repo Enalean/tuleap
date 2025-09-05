@@ -36,6 +36,7 @@ final class ParametrizedFromWhere extends ParametrizedBase
         return new self($from->getFrom(), '', $from->getParameters(), []);
     }
 
+    #[\Override]
     public function getWhere(): string|EasyStatement
     {
         return $this->where;
@@ -44,11 +45,13 @@ final class ParametrizedFromWhere extends ParametrizedBase
     /**
      * @return ParametrizedFrom[]
      */
+    #[\Override]
     public function getAllParametrizedFrom(): array
     {
         return [$this->parametrized_from];
     }
 
+    #[\Override]
     public function getWhereParameters(): array
     {
         return $this->where_parameters;

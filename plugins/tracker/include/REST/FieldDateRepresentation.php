@@ -40,6 +40,7 @@ class Tracker_REST_FormElement_FieldDateRepresentation extends Tracker_REST_Form
         $this->is_time_displayed = $is_time_displayed;
     }
 
+    #[\Override]
     public static function build(
         Tracker_FormElement $form_element,
         string $type,

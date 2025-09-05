@@ -35,6 +35,7 @@ final class ProjectRegistrationPermissionsChecker implements ProjectRegistration
         $this->permission_checker = $permission_checker;
     }
 
+    #[\Override]
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
         ProjectCreationData $project_creation_data,

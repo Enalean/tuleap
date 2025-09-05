@@ -27,6 +27,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLinkById, UpdateBranchPrefixOfGroupLink, UpdateArtifactClosureOfGroupLink, RetrieveGroupLinkedToProject, DeleteGroupLink, UpdateSynchronizationDate
 {
+    #[\Override]
     public function addNewGroup(NewGroupLink $gitlab_group): int
     {
         return (int) $this->getDB()->insertReturnId(
@@ -45,6 +46,7 @@ final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, Ve
         );
     }
 
+    #[\Override]
     public function isGroupAlreadyLinked(int $gitlab_group_id): bool
     {
         $sql  = 'SELECT NULL FROM plugin_gitlab_group WHERE gitlab_group_id = ?';
@@ -52,6 +54,7 @@ final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, Ve
         return count($rows) > 0;
     }
 
+    #[\Override]
     public function isProjectAlreadyLinked(int $project_id): bool
     {
         $sql  = 'SELECT NULL FROM plugin_gitlab_group WHERE project_id = ?';
@@ -59,6 +62,7 @@ final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, Ve
         return count($rows) > 0;
     }
 
+    #[\Override]
     public function retrieveGroupLink(int $group_link_id): ?GroupLink
     {
         $row = $this->getDB()->row(
@@ -71,6 +75,7 @@ final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, Ve
         return GroupLink::buildGroupLinkFromRow($row);
     }
 
+    #[\Override]
     public function retrieveGroupLinkedToProject(\Project $project): ?GroupLink
     {
         $row = $this->getDB()->row(
@@ -83,6 +88,7 @@ final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, Ve
         return GroupLink::buildGroupLinkFromRow($row);
     }
 
+    #[\Override]
     public function updateBranchPrefixOfGroupLink(
         int $id,
         string $prefix_branch_name,
@@ -94,6 +100,7 @@ final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, Ve
         );
     }
 
+    #[\Override]
     public function updateArtifactClosureOfGroupLink(int $id, bool $allow_artifact_closure): void
     {
         $this->getDB()->update(
@@ -103,6 +110,7 @@ final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, Ve
         );
     }
 
+    #[\Override]
     public function deleteGroupLink(GroupLink $group_link): void
     {
         $this->getDB()->tryFlatTransaction(
@@ -114,6 +122,7 @@ final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, Ve
         );
     }
 
+    #[\Override]
     public function updateSynchronizationDate(GroupLink $group_link, \DateTimeImmutable $new_date): void
     {
         $this->getDB()->update(

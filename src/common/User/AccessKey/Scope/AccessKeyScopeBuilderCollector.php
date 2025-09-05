@@ -39,6 +39,7 @@ final class AccessKeyScopeBuilderCollector implements AuthenticationScopeBuilder
         $this->builders[] = $access_key_scope_builder;
     }
 
+    #[\Override]
     public function getAuthenticationKeyScopeBuilders(): array
     {
         return $this->builders;

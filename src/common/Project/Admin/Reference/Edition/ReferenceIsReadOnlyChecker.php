@@ -31,6 +31,7 @@ final class ReferenceIsReadOnlyChecker implements CheckReferenceIsReadOnly
     {
     }
 
+    #[\Override]
     public function isReferenceReadOnly(\Reference $reference): bool
     {
         $can_be_edited = true;

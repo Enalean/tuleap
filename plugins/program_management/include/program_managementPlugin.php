@@ -314,6 +314,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         bindtextdomain('tuleap-program_management', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         $templates_dependencies = [
@@ -329,22 +330,26 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return array_merge(['tracker', 'agiledashboard', 'cardwall'], $templates_dependencies);
     }
 
+    #[\Override]
     protected function getServiceClass(): string
     {
         return ProgramService::class;
     }
 
+    #[\Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
         $event->addService($this->getServiceShortname(), $this->getServiceClass());
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return ProgramService::SERVICE_SHORTNAME;
     }
 
+    #[\Override]
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         $user_retriever    = new UserManagerAdapter(UserManager::instance());
@@ -361,6 +366,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $handler->handle(ServiceDisabledCollectorProxy::fromEvent($event));
     }
 
+    #[\Override]
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
         $user_retriever    = new UserManagerAdapter(UserManager::instance());
@@ -377,10 +383,12 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event));
     }
 
+    #[\Override]
     public function serviceIsUsed(array $params): void
     {
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {
@@ -1610,6 +1618,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Override]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());

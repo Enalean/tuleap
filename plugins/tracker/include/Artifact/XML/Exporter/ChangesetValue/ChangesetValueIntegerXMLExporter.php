@@ -26,11 +26,13 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetValueIntegerXMLExporter extends ChangesetValueXMLExporter
 {
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return 'int';
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

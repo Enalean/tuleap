@@ -37,12 +37,14 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
         $this->setOwner($owner_id, $owner_type);
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $this->renderer_title ?:
             dgettext('tuleap-tracker', 'Tracker renderer');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $renderer = $this->getRenderer();
@@ -64,16 +66,19 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
         return null;
     }
 
+    #[\Override]
     public function isAjax()
     {
         return true;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -107,6 +112,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
             ';
     }
 
+    #[\Override]
     public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -137,6 +143,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
             ';
     }
 
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -153,6 +160,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
         return db_insertid($res);
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $sql = 'SELECT * FROM tracker_widget_renderer WHERE owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
@@ -165,6 +173,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
         }
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         $content_id = false;
@@ -180,6 +189,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
         return $content_id;
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $done       = false;
@@ -209,22 +219,26 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
         return $done;
     }
 
+    #[\Override]
     public function destroy($id)
     {
         $sql = 'DELETE FROM tracker_widget_renderer WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
 
+    #[\Override]
     public function isUnique()
     {
         return false;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-tracker', 'Trackers');
     }
 
+    #[\Override]
     public function getJavascriptDependencies()
     {
         $renderer = $this->getRenderer();
@@ -234,6 +248,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
         return $renderer->getJavascriptDependencies();
     }
 
+    #[\Override]
     public function getStylesheetDependencies()
     {
         $renderer = $this->getRenderer();
@@ -243,6 +258,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
         return $renderer->getStylesheetDependencies();
     }
 
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         $renderer = $this->getRenderer();

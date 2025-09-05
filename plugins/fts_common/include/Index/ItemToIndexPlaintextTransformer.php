@@ -34,6 +34,7 @@ final class ItemToIndexPlaintextTransformer implements InsertItemsIntoIndex
     ) {
     }
 
+    #[\Override]
     public function indexItems(ItemToIndex ...$items): void
     {
         $plaintext_items = array_map(

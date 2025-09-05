@@ -94,6 +94,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
         }
     }
 
+    #[\Override]
     public function createTable($itemId, $wikiVersionId, $userId, $description, $date, $status, $notification)
     {
         $sql = 'INSERT INTO plugin_docman_approval' .

@@ -509,6 +509,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         $html = '';

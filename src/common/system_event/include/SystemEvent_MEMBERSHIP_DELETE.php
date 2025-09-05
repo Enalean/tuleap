@@ -38,6 +38,7 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent // phpcs:ignore PSR1.Cla
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $txt                      = '';
@@ -49,6 +50,7 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent // phpcs:ignore PSR1.Cla
     /**
      * Process stored event
      */
+    #[\Override]
     public function process()
     {
         list($group_id,$user_id) = $this->getParametersAsArray();

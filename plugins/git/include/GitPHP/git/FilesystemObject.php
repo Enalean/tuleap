@@ -97,6 +97,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @return string name
      */
+    #[\Override]
     public function GetName() // @codingStandardsIgnoreLine
     {
         if (! empty($this->path)) {

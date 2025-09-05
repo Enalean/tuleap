@@ -45,6 +45,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
      *     description_format: string
      * } | null
      */
+    #[\Override]
     public function searchByPullRequestId(int $pull_request_id): ?array
     {
         $sql = 'SELECT *
@@ -185,6 +186,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
         $this->getDB()->run($sql, $merge_status, $pull_request_id);
     }
 
+    #[\Override]
     public function getPaginatedPullRequests(
         int $repository_id,
         SearchCriteria $criteria,
@@ -461,6 +463,7 @@ class Dao extends DataAccessObject implements SearchPullRequest, SearchPaginated
         $this->getDB()->run($sql, $pull_request_id);
     }
 
+    #[\Override]
     public function getPaginatedPullRequestsAuthorsIds(int $repository_id, int $limit, int $offset): PullRequestsAuthorsIdsPage
     {
         return $this->getDB()->tryFlatTransaction(

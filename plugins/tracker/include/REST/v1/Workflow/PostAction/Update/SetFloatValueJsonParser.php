@@ -28,6 +28,7 @@ use Workflow;
 
 class SetFloatValueJsonParser implements PostActionUpdateJsonParser
 {
+    #[\Override]
     public function accept(array $json): bool
     {
         return isset($json['type'])
@@ -36,6 +37,7 @@ class SetFloatValueJsonParser implements PostActionUpdateJsonParser
             && $json['field_type'] === 'float';
     }
 
+    #[\Override]
     public function parse(Workflow $workflow, array $json): PostAction
     {
         if (! isset($json['field_id'])) {

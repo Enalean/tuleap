@@ -60,6 +60,7 @@ class EmptyTemplate implements TuleapTemplate
      * Actual XML file is generated "on the fly" in order to guaranty the consistency between the AgileDashboard
      * "Start Scrum" template and the "Project Creation" Scrum template
      */
+    #[\Override]
     public function getXMLPath(): string
     {
         if ($this->xml_path === null) {
@@ -76,21 +77,25 @@ class EmptyTemplate implements TuleapTemplate
         return $this->xml_path;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return $this->description;
     }
 
+    #[\Override]
     public function getGlyph(): Glyph
     {
         return $this->glyph_finder->get('default-and-company-template');
     }
 
+    #[\Override]
     public function getId(): string
     {
         return self::NAME;
@@ -99,11 +104,13 @@ class EmptyTemplate implements TuleapTemplate
     /**
      * This template is never available, we manually add it only if we need
      */
+    #[\Override]
     public function isAvailable(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isBuiltIn(): bool
     {
         return true;

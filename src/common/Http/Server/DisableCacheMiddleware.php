@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class DisableCacheMiddleware implements MiddlewareInterface
 {
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return $handler->handle($request)

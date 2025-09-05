@@ -40,11 +40,13 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
         }
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_arts');
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
@@ -72,11 +74,13 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
         return true;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -109,11 +113,13 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
             ';
     }
 
+    #[\Override]
     public function isAjax()
     {
         return true;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $html_my_artifacts = '<table style="width:100%">';
@@ -312,6 +318,7 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
         return $html_my_artifacts;
     }
 
+    #[\Override]
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
         $request  = HTTPRequest::instance();
@@ -324,11 +331,13 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
         return $ajax_url;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return _('Trackers');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_artifacts', 'description');

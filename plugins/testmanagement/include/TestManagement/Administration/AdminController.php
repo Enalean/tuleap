@@ -303,6 +303,7 @@ class AdminController extends TestManagementController
         }
     }
 
+    #[\Override]
     public function getBreadcrumbs(): Breadcrumbs
     {
         return new AdmininistrationBreadcrumbs();

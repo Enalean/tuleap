@@ -20,21 +20,25 @@
 
 class MediawikiSiteAdminResourceRestrictorDao extends RestrictedResourceDao
 {
+    #[\Override]
     public function getResourceAllowedProjectsTableName()
     {
         return 'plugin_mediawiki_site_restricted_features';
     }
 
+    #[\Override]
     public function getResourceFieldName()
     {
         return 'feature';
     }
 
+    #[\Override]
     public function isResourceRestricted($resource_id)
     {
         return true;
     }
 
+    #[\Override]
     public function searchAllowedProjectsOnResource($resource_id)
     {
         $resource_id = $this->da->escapeInt($resource_id);
@@ -46,11 +50,13 @@ class MediawikiSiteAdminResourceRestrictorDao extends RestrictedResourceDao
         return $this->retrieve($sql);
     }
 
+    #[\Override]
     public function setResourceRestricted($resource_id)
     {
         return false;
     }
 
+    #[\Override]
     public function unsetResourceRestricted($resource_id)
     {
         return false;

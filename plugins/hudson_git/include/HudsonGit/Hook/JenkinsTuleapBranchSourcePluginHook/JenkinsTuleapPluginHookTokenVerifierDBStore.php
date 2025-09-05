@@ -41,6 +41,7 @@ final class JenkinsTuleapPluginHookTokenVerifierDBStore implements JenkinsTuleap
     ) {
     }
 
+    #[\Override]
     public function isTriggerTokenValid(ConcealedString $trigger_token, DateTimeImmutable $now): bool
     {
         try {

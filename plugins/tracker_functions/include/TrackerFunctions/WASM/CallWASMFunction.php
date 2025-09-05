@@ -41,6 +41,7 @@ final class CallWASMFunction implements WASMFunctionCaller
     ) {
     }
 
+    #[\Override]
     public function callWASMFunction(string $wasm_function_path, string $payload): Ok|Err
     {
         try {

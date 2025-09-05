@@ -25,6 +25,7 @@ class AndOperand implements Logical
     {
     }
 
+    #[\Override]
     public function acceptLogicalVisitor(LogicalVisitor $visitor, $parameters)
     {
         return $visitor->visitAndOperand($this, $parameters);
@@ -35,6 +36,7 @@ class AndOperand implements Logical
         return $this->operand;
     }
 
+    #[\Override]
     public function getTail(): OrOperand|AndOperand|null
     {
         return $this->tail;

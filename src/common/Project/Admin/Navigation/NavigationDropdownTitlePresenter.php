@@ -33,6 +33,7 @@ class NavigationDropdownTitlePresenter implements NavigationDropdownItemInterfac
         $this->title = $title;
     }
 
+    #[\Override]
     public function isMenuTitle()
     {
         return true;

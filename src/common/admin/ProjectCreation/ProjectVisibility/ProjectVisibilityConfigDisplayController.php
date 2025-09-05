@@ -38,6 +38,7 @@ class ProjectVisibilityConfigDisplayController implements DispatchableWithReques
      * @throws ForbiddenException
      * @throws \Exception
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

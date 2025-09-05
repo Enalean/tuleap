@@ -48,6 +48,7 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
         bindtextdomain('tuleap-prometheus_metrics', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {

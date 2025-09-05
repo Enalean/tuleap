@@ -52,6 +52,7 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
@@ -122,6 +123,7 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
         return \Tuleap\Tracker\Tracker::getTrackerGlobalAdministrationURL($project) . '/' . self::URL;
     }
 
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_manager->getProject($variables['id']);

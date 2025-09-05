@@ -33,6 +33,7 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
         $this->nb_total  = $this->nb_open + $this->nb_closed;
     }
 
+    #[\Override]
     public function initial_effort_completion()
     {
         if ($this->cannotBeDivided($this->nb_total)) {
@@ -46,31 +47,37 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
         return $this->returnRelevantProgressBarValue($completion);
     }
 
+    #[\Override]
     public function milestone_capacity()
     {
         return '';
     }
 
+    #[\Override]
     public function milestone_has_initial_effort()
     {
         return true;
     }
 
+    #[\Override]
     public function milestone_initial_effort()
     {
         return $this->nb_total;
     }
 
+    #[\Override]
     public function milestone_initial_effort_value()
     {
         return dgettext('tuleap-cardwall', 'Some cards might be hidden');
     }
 
+    #[\Override]
     public function milestone_points_to_go()
     {
         return dgettext('tuleap-cardwall', 'cards open');
     }
 
+    #[\Override]
     public function milestone_remaining_effort()
     {
         return $this->nb_open . '/' . $this->nb_total;
@@ -90,11 +97,13 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
         return $number === 0;
     }
 
+    #[\Override]
     public function milestone_count_style()
     {
         return self::COUNT_STYLE;
     }
 
+    #[\Override]
     public function count_style_helper()
     {
         return dgettext('tuleap-cardwall', 'At least one backlog element has no initial effort. Fallback on open/closed count.');

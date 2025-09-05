@@ -30,16 +30,19 @@ final readonly class ProjectCreationFromArchiveTask implements QueueTask
     {
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return ExtractArchiveAndCreateProject::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return ['project_id' => $this->project_id, 'filename' => $this->filename, 'user_id' => $this->user_id];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return "Create project #{$this->project_id} from archive {$this->filename} for user #{$this->user_id}";

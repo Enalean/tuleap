@@ -49,38 +49,45 @@ final class AddToTopBacklogPostAction extends Transition_PostAction
         parent::__construct($transition, $id);
     }
 
+    #[\Override]
     public function getShortName(): string
     {
         return self::SHORT_NAME;
     }
 
+    #[\Override]
     public static function getLabel(): string
     {
         // Not implemented. We do not support the legacy UI for this new post action
         return '';
     }
 
+    #[\Override]
     public function isDefined(): bool
     {
         // Since we do not support the legacy UI, it is always well defined
         return true;
     }
 
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping): void
     {
         $root->addChild(self::XML_TAG_NAME);
     }
 
+    #[\Override]
     public function bypassPermissions(TrackerField $field): bool
     {
         return false;
     }
 
+    #[\Override]
     public function accept(Visitor $visitor): void
     {
         $visitor->visitExternalActions($this);
     }
 
+    #[\Override]
     public function after(Tracker_Artifact_Changeset $changeset): void
     {
         $artifact = $changeset->getArtifact();

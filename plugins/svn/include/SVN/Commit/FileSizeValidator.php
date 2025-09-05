@@ -51,6 +51,7 @@ final class FileSizeValidator implements PathValidator
         $this->logger  = $logger;
     }
 
+    #[\Override]
     public function assertPathIsValid(Repository $repository, string $transaction, string $path): void
     {
         try {

@@ -56,6 +56,7 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
         return dgettext('tuleap-git', 'Submit');
     }
 
+    #[\Override]
     public function form_action(): string
     {
         return '/plugins/git/?group_id=' . $this->project_id . '&action=admin-git-admins';

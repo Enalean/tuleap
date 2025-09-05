@@ -65,11 +65,13 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         bindTextDomain('tuleap-velocity', VELOCITY_BASE_DIR . '/site-content');
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return ['tracker', 'agiledashboard'];
     }
 
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

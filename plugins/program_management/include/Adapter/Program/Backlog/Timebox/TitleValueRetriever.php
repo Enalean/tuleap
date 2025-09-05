@@ -45,6 +45,7 @@ final readonly class TitleValueRetriever implements RetrieveTitleValueUserCanSee
     ) {
     }
 
+    #[\Override]
     public function getTitle(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?string
     {
         return $this->getArtifactTitleUserCanRead(
@@ -53,6 +54,7 @@ final readonly class TitleValueRetriever implements RetrieveTitleValueUserCanSee
         );
     }
 
+    #[\Override]
     public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier, UserIdentifier $user_identifier): ?string
     {
         return $this->getArtifactTitleUserCanRead(
@@ -61,6 +63,7 @@ final readonly class TitleValueRetriever implements RetrieveTitleValueUserCanSee
         );
     }
 
+    #[\Override]
     public function getFeatureTitle(FeatureIdentifier $feature_identifier, UserIdentifier $user_identifier): ?string
     {
         return $this->getArtifactTitleUserCanRead(

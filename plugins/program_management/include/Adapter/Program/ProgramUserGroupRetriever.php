@@ -41,6 +41,7 @@ final class ProgramUserGroupRetriever implements RetrieveProgramUserGroup
     /**
      * @throws InvalidProgramUserGroup
      */
+    #[\Override]
     public function getProjectUserGroupId(string $raw_user_group_id, ProgramForAdministrationIdentifier $program): int
     {
         try {

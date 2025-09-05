@@ -21,12 +21,14 @@
 
 class Docman_View_Move extends Docman_View_Details
 {
+    #[\Override]
     public function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
         return sprintf(dgettext('tuleap-docman', 'Move %1$s'), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
+    #[\Override]
     public function _content($params, $view = null, $section = null)
     {
         $token = isset($params['token']) ? $params['token'] : null;

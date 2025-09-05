@@ -20,6 +20,7 @@
 
 class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormElement_View_Admin_Field
 {
+    #[\Override]
     public function fetchCustomHelp()
     {
         $html  = '';
@@ -34,6 +35,7 @@ class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormEl
      *
      * @return string the HTML for the part of form for required checkbox
      */
+    #[\Override]
     protected function fetchRequired()
     {
         return '';

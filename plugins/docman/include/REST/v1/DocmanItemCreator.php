@@ -312,6 +312,7 @@ class DocmanItemCreator implements CreateOtherTypeItem
         );
     }
 
+    #[\Override]
     public function createOtherType(
         Docman_Item $parent_item,
         PFUser $user,

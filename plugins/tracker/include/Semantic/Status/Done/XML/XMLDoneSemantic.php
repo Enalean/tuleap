@@ -50,6 +50,7 @@ final class XMLDoneSemantic extends XMLSemantic
         return $new;
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $semantic = parent::export($parent_node, $form_elements);

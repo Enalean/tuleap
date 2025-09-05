@@ -79,21 +79,25 @@ final readonly class NewPullRequestNotification implements NotificationToProcess
         );
     }
 
+    #[\Override]
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
     }
 
+    #[\Override]
     public function getRecipients(): array
     {
         return $this->recipients;
     }
 
+    #[\Override]
     public function asPlaintext(): string
     {
         return $this->plain_text;
     }
 
+    #[\Override]
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

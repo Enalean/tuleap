@@ -90,6 +90,7 @@ class SerializedPluginProxy implements ConfigClassProvider
      * @param class-string $class_name
      * @throws \ReflectionException
      */
+    #[\Override]
     public function addConfigClass(string $class_name): void
     {
         $default_values_provider     = new ConfigValueDefaultValueAttributeProvider($class_name);

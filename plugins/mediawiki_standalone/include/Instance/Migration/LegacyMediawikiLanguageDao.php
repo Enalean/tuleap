@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class LegacyMediawikiLanguageDao extends DataAccessObject implements LegacyMediawikiLanguageRetriever
 {
+    #[\Override]
     public function getLanguageFor(int $project_id): string|false
     {
         return $this->getDB()->cell(

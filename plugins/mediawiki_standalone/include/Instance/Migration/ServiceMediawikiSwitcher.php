@@ -32,6 +32,7 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
     {
     }
 
+    #[\Override]
     public function switchToStandalone(\Project $project): void
     {
         $results = $this->service_dao->searchByProjectAndShortNames(

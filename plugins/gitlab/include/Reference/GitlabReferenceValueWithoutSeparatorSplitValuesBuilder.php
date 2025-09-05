@@ -29,6 +29,7 @@ final class GitlabReferenceValueWithoutSeparatorSplitValuesBuilder implements Gi
 {
     private const SEPARATOR = '/';
 
+    #[\Override]
     public function splitRepositoryNameAndReferencedItemId(string $value, int $project_id): GitlabReferenceSplittedValues
     {
         $last_separator = strrpos($value, self::SEPARATOR);

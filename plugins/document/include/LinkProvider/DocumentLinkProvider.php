@@ -43,27 +43,32 @@ class DocumentLinkProvider implements ILinkUrlProvider
         $this->project  = $project;
     }
 
+    #[\Override]
     public function getPluginLinkUrl(): string
     {
         return $this->base_url . '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) . '/';
     }
 
+    #[\Override]
     public function getShowLinkUrl(\Docman_Item $item): string
     {
         return $this->getPluginLinkUrl() . 'preview/' . urlencode((string) $item->getId());
     }
 
+    #[\Override]
     public function getDetailsLinkUrl(\Docman_Item $item): string
     {
         return $this->getPluginLinkUrl() . 'preview/' . urlencode((string) $item->getId());
     }
 
+    #[\Override]
     public function getNotificationLinkUrl(\Docman_Item $item): string
     {
         return $this->base_url . '/plugins/docman/?group_id=' . urlencode((string) $this->project->getID()) .
             '&action=details&section=notifications&id=' . urlencode((string) $item->getId());
     }
 
+    #[\Override]
     public function getHistoryUrl(\Docman_Item $item): string
     {
         return $this->base_url . '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) . '/versions/' . urlencode((string) $item->getId());

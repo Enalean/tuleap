@@ -94,6 +94,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $request_variables = $request->getAttributes();
@@ -145,6 +146,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_extractor->getProject($variables);

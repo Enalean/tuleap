@@ -94,11 +94,13 @@ final class RESTForwardLinkProxy implements ForwardLink
         return $link_payload[self::PAYLOAD_KEY_TYPE];
     }
 
+    #[\Override]
     public function getTargetArtifactId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getType(): string
     {
         return $this->type;

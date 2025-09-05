@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class MultiSelectboxFieldSpecificPropertiesDAO extends DataAccessObject implements DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
+    #[\Override]
     public function deleteFieldProperties(int $field_id): void
     {
         $this->getDB()->delete('tracker_field_msb', ['field_id' => $field_id]);
@@ -34,6 +35,7 @@ final class MultiSelectboxFieldSpecificPropertiesDAO extends DataAccessObject im
     /**
      * @return null | array{field_id: int, size: int}
      */
+    #[\Override]
     public function searchByFieldId(int $field_id): ?array
     {
         $sql = 'SELECT *
@@ -43,6 +45,7 @@ final class MultiSelectboxFieldSpecificPropertiesDAO extends DataAccessObject im
         return $this->getDB()->row($sql, $field_id);
     }
 
+    #[\Override]
     public function saveSpecificProperties(int $field_id, array $row): void
     {
         $size = 7;

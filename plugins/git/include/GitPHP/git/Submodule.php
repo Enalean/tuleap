@@ -35,21 +35,25 @@ final class Submodule extends GitObject implements GitObjectType
         return $this->path;
     }
 
+    #[\Override]
     public function getName()
     {
         return basename($this->path);
     }
 
+    #[\Override]
     public function isTree()
     {
         return false;
     }
 
+    #[\Override]
     public function isBlob()
     {
         return false;
     }
 
+    #[\Override]
     public function isSubmodule()
     {
         return true;

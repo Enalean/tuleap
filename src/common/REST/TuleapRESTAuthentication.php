@@ -30,6 +30,7 @@ class TuleapRESTAuthentication implements iAuthenticate
      */
     public $restler;
 
+    #[\Override]
     public function __isAllowed() // phpcs:ignore
     {
         $rest_authentication_flow = new RESTAuthenticationFlowIsAllowed(UserManager::build(), RESTLogger::getLogger());
@@ -44,6 +45,7 @@ class TuleapRESTAuthentication implements iAuthenticate
     /**
      * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
      */
+    #[\Override]
     public function __getWWWAuthenticateString() // phpcs:ignore
     {
         return 'Basic realm="' . AuthenticatedResource::REALM . ' ' .

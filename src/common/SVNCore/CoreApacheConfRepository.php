@@ -56,16 +56,19 @@ final class CoreApacheConfRepository implements ApacheConfRepository
         $this->url_path        = '/svnroot/' . $project->getUnixNameMixedCase();
     }
 
+    #[\Override]
     public function getProject(): Project
     {
         return $this->project;
     }
 
+    #[\Override]
     public function getFilesystemPath(): string
     {
         return $this->filesystem_path;
     }
 
+    #[\Override]
     public function getURLPath(): string
     {
         return $this->url_path;

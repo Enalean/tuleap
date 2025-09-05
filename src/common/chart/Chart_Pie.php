@@ -30,6 +30,7 @@ use Tuleap\Chart\Chart;
 */
 class Chart_Pie extends Chart
 {
+    #[\Override]
     protected function getGraphClass(): string
     {
         return \PieGraph::class;

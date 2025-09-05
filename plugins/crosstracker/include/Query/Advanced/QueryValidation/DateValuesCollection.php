@@ -60,6 +60,7 @@ final readonly class DateValuesCollection implements ValueWrapperVisitor
             ->map(static fn(array $date_values) => new self($date_values, $is_current_datetime_allowed));
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         /** @var Ok<list<string>> $ok */
@@ -67,6 +68,7 @@ final readonly class DateValuesCollection implements ValueWrapperVisitor
         return $ok;
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         if (! $this->is_current_datetime_allowed) {
@@ -77,6 +79,7 @@ final readonly class DateValuesCollection implements ValueWrapperVisitor
         return $ok;
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getMinValue()
@@ -86,6 +89,7 @@ final readonly class DateValuesCollection implements ValueWrapperVisitor
                 ->map(static fn(array $max_date_strings) => array_merge($min_date_strings, $max_date_strings)));
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new \LogicException('Should not end there');
@@ -95,6 +99,7 @@ final readonly class DateValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Err<Fault>
      */
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         return Result::err(InvalidComparisonToCurrentUserFault::build());
@@ -104,6 +109,7 @@ final readonly class DateValuesCollection implements ValueWrapperVisitor
      * @param NoValueWrapperParameters $parameters
      * @return Err<Fault>
      */
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         return Result::err(InvalidComparisonToStatusOpenFault::build());

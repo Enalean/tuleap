@@ -1167,6 +1167,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
     }
 
     protected $tracker;
+    #[\Override]
     public function getTracker(): Tracker
     {
         if (! $this->tracker) {
@@ -1332,6 +1333,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         return $rrf->createInSession($this, $name, $description, $type);
     }
 
+    #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         if ($this->isObsolete()) {

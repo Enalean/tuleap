@@ -28,24 +28,28 @@ use Tracker_ArtifactLinkInfo;
 class CSVOutputStrategy implements OutputStrategy
 {
     /** @return string */
+    #[\Override]
     public function fetchDefault(Tracker_ArtifactLinkInfo $artifact_link_info)
     {
         return $artifact_link_info->getArtifactId();
     }
 
     /** @return string */
+    #[\Override]
     public function fetchFormatted(Tracker_ArtifactLinkInfo $artifact_link_info, $formatted_value)
     {
         return $formatted_value;
     }
 
     /** @return string */
+    #[\Override]
     public function fetchWhenNoFieldToFormat(Tracker_ArtifactLinkInfo $artifact_link_info)
     {
         return $this->fetchDefault($artifact_link_info);
     }
 
     /** @return string */
+    #[\Override]
     public function fetchWhenUnsupportedField(Tracker_ArtifactLinkInfo $artifact_link_info)
     {
         return $this->fetchDefault($artifact_link_info);

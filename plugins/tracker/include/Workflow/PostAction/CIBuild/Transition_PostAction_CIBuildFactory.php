@@ -48,6 +48,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
         $this->dao = $dao;
     }
 
+    #[\Override]
     public function warmUpCacheForWorkflow(Workflow $workflow): void
     {
         $workflow_id = (int) $workflow->getId();
@@ -71,6 +72,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @return Transition_PostAction_CIBuild[]
      */
+    #[\Override]
     public function loadPostActions(Transition $transition): array
     {
         $post_actions = [];
@@ -116,6 +118,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::saveObject()
      */
+    #[\Override]
     public function saveObject(Transition_PostAction $post_action)
     {
         $this->dao->create($post_action->getTransition()->getId(), $post_action->getJobUrl());
@@ -124,6 +127,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::duplicate()
      */
+    #[\Override]
     public function duplicate(Transition $from_transition, int $to_transition_id, array $field_mapping)
     {
         $this->dao->duplicate($from_transition->getId(), $to_transition_id);
@@ -132,6 +136,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
+    #[\Override]
     public function isFieldUsedInPostActions(TrackerField $field)
     {
         return false;
@@ -140,6 +145,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::getInstanceFromXML()
      */
+    #[\Override]
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
         $postaction_attributes = $xml->attributes();

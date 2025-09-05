@@ -54,6 +54,7 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
      *
      * @throws Exception_TV3XMLException
      */
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         $all_labels = $this->getListValueLabels($row, $tracker_id);
@@ -86,11 +87,13 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
         return $value;
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         return self::LABEL_VALUES_INDEX;
     }
 
+    #[\Override]
     public function getCurrentFieldValue(array $field_value_row, $tracker_id)
     {
         return $this->current_value_exporter->getCurrentFieldValue($field_value_row, $tracker_id);

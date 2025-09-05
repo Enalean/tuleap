@@ -43,11 +43,13 @@ final class StoredReverseLink implements ReverseLink
         return new self($artifact->getId(), $row->getType() ?? \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE);
     }
 
+    #[\Override]
     public function getSourceArtifactId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getType(): string
     {
         return $this->type;

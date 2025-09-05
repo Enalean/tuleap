@@ -26,6 +26,7 @@ use SimpleXMLElement;
 
 final class XmlTrackersByPriorityOrderer implements OrderXmlTrackersByPriority
 {
+    #[\Override]
     public function getAllXmlTrackersOrderedByPriority(SimpleXMLElement $xml_input): array
     {
         $xml_trackers = [];

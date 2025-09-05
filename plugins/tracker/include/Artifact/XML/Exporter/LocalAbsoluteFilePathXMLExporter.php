@@ -24,6 +24,7 @@ use Tracker_FileInfo;
 
 class LocalAbsoluteFilePathXMLExporter implements FilePathXMLExporter
 {
+    #[\Override]
     public function getPath(Tracker_FileInfo $file_info): string
     {
         return $file_info->getPath();

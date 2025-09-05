@@ -53,26 +53,31 @@ final class ProjectProxy implements ProjectReference
         );
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->project_id;
     }
 
+    #[\Override]
     public function getProjectLabel(): string
     {
         return $this->project_label;
     }
 
+    #[\Override]
     public function getUrl(): string
     {
         return $this->project_url;
     }
 
+    #[\Override]
     public function getProjectIcon(): string
     {
         return $this->project_icon;
     }
 
+    #[\Override]
     public function getProjectShortName(): string
     {
         return $this->project_shortname;

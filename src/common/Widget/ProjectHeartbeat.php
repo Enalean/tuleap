@@ -34,21 +34,25 @@ class ProjectHeartbeat extends Widget
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     public function getTitle()
     {
         return _('Heartbeat');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return _('Displays the 30 last updated or created items in the project.');
     }
 
+    #[\Override]
     public function getIcon()
     {
         return 'fa-heartbeat';
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
@@ -66,6 +70,7 @@ class ProjectHeartbeat extends Widget
         );
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
@@ -76,6 +81,7 @@ class ProjectHeartbeat extends Widget
         ];
     }
 
+    #[\Override]
     public function exportAsXML(): \SimpleXMLElement
     {
         $widget = new \SimpleXMLElement('<widget />');

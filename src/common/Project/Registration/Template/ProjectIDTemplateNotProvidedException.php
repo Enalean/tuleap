@@ -31,6 +31,7 @@ final class ProjectIDTemplateNotProvidedException extends Project_Creation_Excep
         parent::__construct('No project ID has been provided for the template');
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return _('No project ID has been provided for the template');

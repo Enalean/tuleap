@@ -35,6 +35,7 @@ final readonly class ProjectImportNotifierStatus implements NotifyProjectImportS
     {
     }
 
+    #[\Override]
     public function notify(\Project $project, \PFUser $project_admin, NotifyProjectImportMessage $message): void
     {
         $this->locale_switcher->setLocaleForSpecificExecutionContext(

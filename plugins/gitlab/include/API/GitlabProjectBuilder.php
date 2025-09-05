@@ -63,6 +63,7 @@ class GitlabProjectBuilder implements BuildGitlabProjects
      * @throws GitlabRequestException
      * @throws GitlabResponseAPIException
      */
+    #[\Override]
     public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
     {
         $group_projects_data = $this->gitlab_api_client->getPaginatedUrl($credentials, '/groups/' . $gitlab_group_id . '/projects');

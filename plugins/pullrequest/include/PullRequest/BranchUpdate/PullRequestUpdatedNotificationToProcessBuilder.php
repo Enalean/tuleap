@@ -54,6 +54,7 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
     ) {
     }
 
+    #[\Override]
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         $pull_request_result = $this->pull_request_retriever->getPullRequestById($event->getPullRequestID());

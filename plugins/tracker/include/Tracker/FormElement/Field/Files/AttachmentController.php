@@ -92,6 +92,7 @@ class AttachmentController extends DispatchablePSR15Compatible implements Dispat
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $current_user = $this->current_request_user_provider->getCurrentRequestUser($request);

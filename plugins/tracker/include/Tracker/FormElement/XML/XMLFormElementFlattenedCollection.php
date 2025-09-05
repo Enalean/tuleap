@@ -98,11 +98,13 @@ final class XMLFormElementFlattenedCollection implements \Countable, \IteratorAg
         throw new \LogicException(sprintf('%s field does not have an %s value with label %s', $field_name, XMLBindStaticValue::class, $label));
     }
 
+    #[\Override]
     public function count(): int
     {
         return count($this->form_elements);
     }
 
+    #[\Override]
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->form_elements);

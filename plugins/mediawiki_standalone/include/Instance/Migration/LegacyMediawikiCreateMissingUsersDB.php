@@ -41,6 +41,7 @@ final class LegacyMediawikiCreateMissingUsersDB extends DataAccessObject impleme
     /**
      * @psalm-return Ok<null>|Err<Fault>
      */
+    #[\Override]
     public function create(LoggerInterface $logger, \Project $project, string $db_prefix): Ok|Err
     {
         $logger->info(self::class);

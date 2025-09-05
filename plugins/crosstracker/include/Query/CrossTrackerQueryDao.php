@@ -31,6 +31,7 @@ use Tuleap\DB\UUID;
  */
 final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQueries, InsertNewQuery, ResetIsDefaultColumn, UpdateQuery
 {
+    #[\Override]
     public function searchQueryByUuid(string $uuid_hex): ?array
     {
         return $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)->mapOr(
@@ -47,6 +48,7 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
         );
     }
 
+    #[\Override]
     public function searchQueriesByWidgetId(int $widget_id): array
     {
         $sql = 'SELECT * FROM plugin_crosstracker_query WHERE widget_id = ?';
@@ -66,6 +68,7 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
         return $row;
     }
 
+    #[\Override]
     public function update(UUID $id, string $query, string $title, string $description, bool $is_default): void
     {
         $this->getDB()->update('plugin_crosstracker_query', [
@@ -83,6 +86,7 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
         $this->getDB()->delete('plugin_crosstracker_query', ['id' => $id->getBytes()]);
     }
 
+    #[\Override]
     public function resetIsDefaultColumnByWidgetId(int $widget_id): void
     {
         $this->getDB()->update('plugin_crosstracker_query', [
@@ -90,6 +94,7 @@ final class CrossTrackerQueryDao extends DataAccessObject implements RetrieveQue
         ], ['widget_id' => $widget_id, 'is_default' => true]);
     }
 
+    #[\Override]
     public function create(string $query, string $title, string $description, int $widget_id, bool $is_default): UUID
     {
         $uuid = $this->uuid_factory->buildUUIDBytes();

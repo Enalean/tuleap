@@ -38,11 +38,13 @@ final class DescriptionFieldReferenceProxy implements DescriptionFieldReference
         return new self($field->getId(), $field->getLabel());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

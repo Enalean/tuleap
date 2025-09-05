@@ -39,6 +39,7 @@ class WillBeMappedUser implements ReadyToBeImportedUser
         $this->mapped_user = $mapped_user;
     }
 
+    #[\Override]
     public function getUserName()
     {
         return $this->username;
@@ -49,11 +50,13 @@ class WillBeMappedUser implements ReadyToBeImportedUser
         return $this->mapped_user;
     }
 
+    #[\Override]
     public function getRealUser(UserManager $user_manager)
     {
         return $this->mapped_user;
     }
 
+    #[\Override]
     public function process(UserManager $user_manager, LoggerInterface $logger)
     {
         $logger->info($this->username . ' will be mapped to ' . $this->mapped_user->getUserName());

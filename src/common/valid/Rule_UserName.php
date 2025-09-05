@@ -197,6 +197,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return bool
      */
+    #[\Override]
     public function isValid($val)
     {
         return $this->isUnixValid($val) && ! $this->isReservedName($val) && ! $this->isAlreadyUserName($val) && ! $this->isAlreadyProjectName($val) && $this->getPendingUserRename($val);
@@ -212,6 +213,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return string
      */
+    #[\Override]
     public function getErrorMessage($key = '')
     {
         return $this->error;

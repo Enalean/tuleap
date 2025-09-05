@@ -83,6 +83,7 @@ final class RemoveFromProjectController extends DispatchablePSR15Compatible
         $this->project_administrators_including_delegation_dao = $project_administrators_including_delegation_dao;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->csrf_token->check('/my/');

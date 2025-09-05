@@ -40,6 +40,7 @@ class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter
         $this->skip_files  = $skip_files;
     }
 
+    #[\Override]
     public function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id)
     {
         $dar = $this->dao->searchFilesForArtifact($artifact_id);

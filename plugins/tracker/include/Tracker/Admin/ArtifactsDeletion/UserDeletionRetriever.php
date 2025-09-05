@@ -30,6 +30,7 @@ final class UserDeletionRetriever implements RetrieveUserDeletionForLastDay
     {
     }
 
+    #[\Override]
     public function getNumberOfArtifactsDeletionsForUserInTimePeriod(PFUser $user): int
     {
         $window_start = new DateTimeImmutable('-1day');

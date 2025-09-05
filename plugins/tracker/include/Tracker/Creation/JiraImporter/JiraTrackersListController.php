@@ -61,6 +61,7 @@ class JiraTrackersListController implements DispatchableWithRequest, Dispatchabl
         $this->wrapper_builder      = $wrapper_builder;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -86,6 +87,7 @@ class JiraTrackersListController implements DispatchableWithRequest, Dispatchabl
     /**
      * @throws \Project_NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);

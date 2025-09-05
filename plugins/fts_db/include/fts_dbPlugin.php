@@ -38,6 +38,7 @@ final class fts_dbPlugin extends \Tuleap\FullTextSearchCommon\FullTextSearchBack
         bindtextdomain('tuleap-fts_db', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {
@@ -54,11 +55,13 @@ final class fts_dbPlugin extends \Tuleap\FullTextSearchCommon\FullTextSearchBack
         return $this->pluginInfo;
     }
 
+    #[\Override]
     protected function getIndexSearcher(): \Tuleap\FullTextSearchCommon\Index\SearchIndexedItem
     {
         return new \Tuleap\FullTextSearchDB\Index\SearchDAO();
     }
 
+    #[\Override]
     protected function getItemInserter(): \Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
@@ -69,11 +72,13 @@ final class fts_dbPlugin extends \Tuleap\FullTextSearchCommon\FullTextSearchBack
         );
     }
 
+    #[\Override]
     protected function getItemRemover(): \Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems
     {
         return new \Tuleap\FullTextSearchDB\Index\SearchDAO();
     }
 
+    #[\Override]
     protected function getBatchQueue(): \Tuleap\Search\ItemToIndexBatchQueue
     {
         return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserterWithMetricCollector(), self::MAX_ITEMS_PER_BATCH);

@@ -48,6 +48,7 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer //phpcs:ign
         }
     }
 
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -101,11 +102,13 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer //phpcs:ign
         );
     }
 
+    #[\Override]
     public function isAjax()
     {
         return false;
     }
 
+    #[\Override]
     public function exportAsXML(): ?\SimpleXMLElement
     {
         $renderer = $this->renderer_factory->getReportRendererById($this->renderer_id, null, false);

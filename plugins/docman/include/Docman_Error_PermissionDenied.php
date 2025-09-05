@@ -101,6 +101,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return String
      */
+    #[\Override]
     public function getRedirectLink($urlData, $language)
     {
         return $this->urlTransform($urlData);
@@ -132,6 +133,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      *
      * @return Array
      */
+    #[\Override]
     public function extractReceiver($project, $url)
     {
         $query = $this->urlQueryToArray($url);
@@ -190,6 +192,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         return Docman_ItemFactory::instance($groupId);
     }
 
+    #[\Override]
     protected function getPermissionDeniedMailBody(
         Project $project,
         PFUser $user,
@@ -212,6 +215,7 @@ Otherwise, please inform the requester (%7$s) that he will not get access to the
 %1$s.'), $user->getRealName(), $user->getUserName(), $link, $project->getPublicName(), $href_approval, $message_to_admin, $user->getEmail());
     }
 
+    #[\Override]
     protected function getPermissionDeniedMailSubject(Project $project, PFUser $user): string
     {
         return sprintf(dgettext('tuleap-docman', '%2$s requests access to a document in "%1$s"'), $project->getPublicName(), $user->getRealName());

@@ -36,6 +36,7 @@ final class TimeframeIsAlignedVerifier implements VerifyTimeframeIsAligned
     ) {
     }
 
+    #[\Override]
     public function isTimeframeWellConfigured(
         TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,

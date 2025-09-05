@@ -43,6 +43,7 @@ class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
         $this->dispatchable_with_request = $dispatchable_with_request;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $this->doesRequestAcceptGitLFSResponse($request)) {

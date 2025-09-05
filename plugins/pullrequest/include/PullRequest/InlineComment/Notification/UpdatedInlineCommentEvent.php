@@ -40,6 +40,7 @@ final class UpdatedInlineCommentEvent implements EventSubjectToNotification
         return new self($inline_comment->getId());
     }
 
+    #[\Override]
     public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
     {
         if (! isset($payload['inline_comment_id'])) {
@@ -49,6 +50,7 @@ final class UpdatedInlineCommentEvent implements EventSubjectToNotification
         return new self($payload['inline_comment_id']);
     }
 
+    #[\Override]
     public function toWorkerEventPayload(): array
     {
         return [

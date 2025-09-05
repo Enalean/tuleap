@@ -79,6 +79,7 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
      *
      * @param int $id the id of the artifact to retrieve
      */
+    #[\Override]
     public function getArtifactById($id): ?Artifact
     {
         if (! isset($this->artifacts[$id])) {
@@ -96,6 +97,7 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
      *
      * @param int $id
      */
+    #[\Override]
     public function getArtifactByIdUserCanView(PFUser $user, $id): ?Artifact
     {
         $artifact = $this->getArtifactById($id);
@@ -366,6 +368,7 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
         $this->dao = $dao;
     }
 
+    #[\Override]
     public function save(Artifact $artifact): bool
     {
         return $this->getDao()->save($artifact->getId(), $artifact->getTrackerId(), $artifact->useArtifactPermissions());

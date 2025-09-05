@@ -56,6 +56,7 @@ final class SubmissionPermissionVerifier implements VerifySubmissionPermissions
         return self::$instance;
     }
 
+    #[\Override]
     public function canUserSubmitArtifact(PFUser $user, Tracker $tracker): bool
     {
         if (isset($this->permission_cache[$tracker->getId()])) {

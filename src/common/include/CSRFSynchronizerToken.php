@@ -91,6 +91,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
      *
      * @return bool true if token valid, false otherwise
      */
+    #[\Override]
     public function isValid($token): bool
     {
         if (! is_string($token)) {
@@ -107,6 +108,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
      * @param string          $redirect_to Url to be redirected to in case of error. if null then use $url instead. Default is null
      *
      */
+    #[\Override]
     public function check(?string $redirect_to = null, ?Codendi_Request $request = null): void
     {
         if (! $request) {
@@ -135,6 +137,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
         return $renderer->renderToString('csrf_token_input', $this);
     }
 
+    #[\Override]
     public function getToken(): string
     {
         if ($this->token !== null) {
@@ -150,6 +153,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
         return $this->token->getValue();
     }
 
+    #[\Override]
     public function getTokenName(): string
     {
         return $this->token_name;

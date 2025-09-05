@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 
 final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirroredTimeboxes, RetrieveTimeboxFromMirroredTimebox, RetrieveMirroredProgramIncrementFromTeam, SearchMirrorTimeboxesFromProgram
 {
+    #[\Override]
     public function searchMirroredTimeboxes(TimeboxIdentifier $timebox): array
     {
         $sql = "SELECT parent_art.id AS id
@@ -53,6 +54,7 @@ final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirro
         return $this->getDB()->first($sql, $timebox->getId(), TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
     }
 
+    #[\Override]
     public function hasMirroredTimeboxesFromProgram(ProjectIdentifier $team, ProgramIncrement $program_increment): bool
     {
         $sql = "SELECT parent_art.id
@@ -73,6 +75,7 @@ final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirro
         return $this->getDB()->exists($sql, $team->getId(), TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, $program_increment->id);
     }
 
+    #[\Override]
     public function getTimeboxFromMirroredTimeboxId(int $mirrored_timebox_id): ?int
     {
         $sql = "SELECT linked_art.id
@@ -95,6 +98,7 @@ final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirro
         return $timebox_id;
     }
 
+    #[\Override]
     public function getMirrorId(ProgramIncrementIdentifier $program_increment, TeamIdentifier $team): ?int
     {
         $sql = <<< SQL

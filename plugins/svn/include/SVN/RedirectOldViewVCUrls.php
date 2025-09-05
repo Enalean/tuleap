@@ -48,6 +48,7 @@ class RedirectOldViewVCUrls implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $redirect_url = $this->base_url . '/' . $variables['path'];

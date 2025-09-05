@@ -40,6 +40,7 @@ use XMLImportHelper;
 
 final readonly class WorkerEventProcessorFinder implements FindWorkerEventProcessor
 {
+    #[\Override]
     public function findFromWorkerEvent(WorkerEvent $worker_event): Option
     {
         $project_manager = \ProjectManager::instance();

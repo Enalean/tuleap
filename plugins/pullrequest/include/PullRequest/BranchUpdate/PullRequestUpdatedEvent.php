@@ -91,6 +91,7 @@ final class PullRequestUpdatedEvent implements EventSubjectToNotification
         );
     }
 
+    #[\Override]
     public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
     {
         if (! isset($payload['user_id'], $payload['pr_id'], $payload['old_src'], $payload['new_src'], $payload['old_dst'], $payload['new_dst'])) {
@@ -109,6 +110,7 @@ final class PullRequestUpdatedEvent implements EventSubjectToNotification
         );
     }
 
+    #[\Override]
     public function toWorkerEventPayload(): array
     {
         return [

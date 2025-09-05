@@ -9,7 +9,8 @@
 
 class Docman_View_RawTree extends Docman_View_View
 {
-    /* protected */ public function _content($params)
+    /* protected */ #[\Override]
+    public function _content($params)
     {
         $itemFactory = new Docman_ItemFactory($params['group_id']);
 
@@ -42,6 +43,7 @@ class Docman_View_RawTree extends Docman_View_View
         return 'docman_item_type_folder';
     }
 
+    #[\Override]
     public function _javascript($params)
     {
         // force docman object to watch click on pen icon

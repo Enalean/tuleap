@@ -68,6 +68,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
     /**
      * @throws ForbiddenException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->csrf_token->check();

@@ -35,6 +35,7 @@ final readonly class SemanticTitleFieldRetriever implements RetrieveSemanticTitl
     ) {
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): ?TextField
     {
         return $this->search_title_field->searchByTrackerId($tracker->getId())

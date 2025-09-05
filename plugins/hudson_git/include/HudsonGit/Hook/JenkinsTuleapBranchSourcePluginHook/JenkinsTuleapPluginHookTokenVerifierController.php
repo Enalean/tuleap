@@ -42,6 +42,7 @@ final class JenkinsTuleapPluginHookTokenVerifierController extends DispatchableP
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $token = new ConcealedString($request->getBody()->getContents());

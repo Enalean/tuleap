@@ -50,11 +50,13 @@ class CrossTrackerSearchWidget extends Widget
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     public function loadContent($id): void
     {
         $this->content_id = $id;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
@@ -87,31 +89,37 @@ class CrossTrackerSearchWidget extends Widget
         );
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return dgettext('tuleap-crosstracker', 'Search into multiple trackers and multiple projects.');
     }
 
+    #[\Override]
     public function getIcon(): string
     {
         return 'fa-list-ul';
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-crosstracker', 'Cross trackers search');
     }
 
+    #[\Override]
     public function getCategory(): string
     {
         return dgettext('tuleap-tracker', 'Trackers');
     }
 
+    #[\Override]
     public function isUnique(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function create(Codendi_Request $request): int|false
     {
             return $this->cross_tracker_widget_creator->createWithQueries($request)->match(
@@ -120,11 +128,13 @@ class CrossTrackerSearchWidget extends Widget
             );
     }
 
+    #[\Override]
     public function destroy($id): void
     {
         $this->getWidgetDao()->deleteWidget($id);
     }
 
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -136,6 +146,7 @@ class CrossTrackerSearchWidget extends Widget
         return $this->inheritance_handler->handle($id);
     }
 
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         return [
@@ -144,6 +155,7 @@ class CrossTrackerSearchWidget extends Widget
         ];
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         return new CssAssetCollection([
@@ -164,16 +176,19 @@ class CrossTrackerSearchWidget extends Widget
         return new CrossTrackerWidgetDao();
     }
 
+    #[\Override]
     public function isManagingItsOwnSection(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function hasCustomTitle(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getPurifiedCustomTitle(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
@@ -186,6 +201,7 @@ class CrossTrackerSearchWidget extends Widget
         );
     }
 
+    #[\Override]
     public function exportAsXML(): ?SimpleXMLElement
     {
         return $this->widget_XML_exporter->generateXML($this->content_id)->match(

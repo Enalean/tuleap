@@ -97,6 +97,7 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
      *
      * @return Array
      */
+    #[\Override]
     public function fetchFormattedForJson()
     {
         return [

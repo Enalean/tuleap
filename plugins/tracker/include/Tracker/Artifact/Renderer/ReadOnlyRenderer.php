@@ -29,6 +29,7 @@ class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer
     /**
      * @return string The HTML code for artifact fields
      */
+    #[\Override]
     public function fetchFields(Artifact $artifact, array $submitted_values)
     {
         $submitted_artifact = '';

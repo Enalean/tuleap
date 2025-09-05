@@ -33,11 +33,13 @@ class Widget_MySystemEvent extends Widget //phpcs:ignore PSR1.Classes.ClassDecla
      * Get the title of the widget.
      * @return string
      */
+    #[\Override]
     public function getTitle()
     {
         return _('System events');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $hp       = Codendi_HTMLPurifier::instance();
@@ -53,6 +55,7 @@ class Widget_MySystemEvent extends Widget //phpcs:ignore PSR1.Classes.ClassDecla
      * If true, then the dashboard will be rendered faster but the page will be a little bit crappy until full load.
      * @return bool
      */
+    #[\Override]
     public function isAjax()
     {
         return true;
@@ -62,6 +65,7 @@ class Widget_MySystemEvent extends Widget //phpcs:ignore PSR1.Classes.ClassDecla
      * Get the description of the widget
      * @return string html
      */
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_system_event', 'description');

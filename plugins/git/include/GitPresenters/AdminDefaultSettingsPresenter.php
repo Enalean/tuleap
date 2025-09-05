@@ -28,6 +28,7 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
         $this->panes = $panes;
     }
 
+    #[\Override]
     public function form_action(): string
     {
         return '';

@@ -68,6 +68,7 @@ class JiraProjectListController implements DispatchableWithRequest, Dispatchable
         $this->logger               = $logger;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -88,6 +89,7 @@ class JiraProjectListController implements DispatchableWithRequest, Dispatchable
     /**
      * @throws \Project_NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);

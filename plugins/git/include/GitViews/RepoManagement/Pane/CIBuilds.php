@@ -35,6 +35,7 @@ class CIBuilds extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier(): string
     {
         return self::ID;
@@ -43,11 +44,13 @@ class CIBuilds extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-git', 'CI Builds');
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return dgettext('tuleap-git', 'CI Builds');
@@ -56,6 +59,7 @@ class CIBuilds extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
+    #[\Override]
     public function getContent(): string
     {
         $renderer  = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);

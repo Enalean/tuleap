@@ -32,6 +32,7 @@ class ExternalWebhookPresenter implements WebhookPresenter
         $this->webhook_url = $webhook_url;
     }
 
+    #[\Override]
     public function isSimple(): bool
     {
         return true;

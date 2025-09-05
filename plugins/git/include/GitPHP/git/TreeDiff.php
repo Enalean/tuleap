@@ -227,6 +227,7 @@ class TreeDiff implements \Iterator, \Countable
      *
      * Rewinds the iterator
      */
+    #[\Override]
     public function rewind(): void
     {
         if (! $this->dataRead) {
@@ -241,6 +242,7 @@ class TreeDiff implements \Iterator, \Countable
      *
      * Returns the current element in the array
      */
+    #[\Override]
     public function current(): mixed
     {
         if (! $this->dataRead) {
@@ -255,6 +257,7 @@ class TreeDiff implements \Iterator, \Countable
      *
      * Returns the current key
      */
+    #[\Override]
     public function key(): mixed
     {
         if (! $this->dataRead) {
@@ -269,6 +272,7 @@ class TreeDiff implements \Iterator, \Countable
      *
      * Advance the pointer
      */
+    #[\Override]
     public function next(): void
     {
         if (! $this->dataRead) {
@@ -283,6 +287,7 @@ class TreeDiff implements \Iterator, \Countable
      *
      * Test for a valid pointer
      */
+    #[\Override]
     public function valid(): bool
     {
         if (! $this->dataRead) {
@@ -300,6 +305,7 @@ class TreeDiff implements \Iterator, \Countable
      * @access public
      * @return int count of file changes
      */
+    #[\Override]
     public function count(): int
     {
         if (! $this->dataRead) {

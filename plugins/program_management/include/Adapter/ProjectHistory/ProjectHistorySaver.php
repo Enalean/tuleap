@@ -40,6 +40,7 @@ final class ProjectHistorySaver implements SaveTeamUpdateInProjectHistory
     ) {
     }
 
+    #[\Override]
     public function logTeamUpdate(ProgramForAdministrationIdentifier $program, UserReference $user_identifier, TeamProjectsCollection $teams, TeamCollection $new_teams): void
     {
         $team_projects = $teams->getTeamProjects();

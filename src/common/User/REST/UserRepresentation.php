@@ -43,6 +43,7 @@ class UserRepresentation extends MinimalUserRepresentation
     /**
      * @return UserRepresentation
      */
+    #[\Override]
     public static function build(PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         return new self(parent::build($user, $provide_user_avatar_url), $user->getEmail(), $user->getStatus());

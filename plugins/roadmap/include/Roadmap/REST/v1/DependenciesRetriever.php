@@ -40,6 +40,7 @@ final class DependenciesRetriever implements IRetrieveDependencies
     /**
      * @return DependenciesByNature[]
      */
+    #[\Override]
     public function getDependencies(Artifact $artifact): array
     {
         $links_by_nature = [];

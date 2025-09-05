@@ -30,6 +30,7 @@ final class GitlabTagReferenceSplitValuesBuilder implements GitlabReferenceSplit
     {
     }
 
+    #[\Override]
     public function splitRepositoryNameAndReferencedItemId(string $value, int $project_id): GitlabReferenceSplittedValues
     {
         $referenced_tag_in_project = $this->tag_reference_splitted_values_dao->getAllTagsSplitValuesInProject(

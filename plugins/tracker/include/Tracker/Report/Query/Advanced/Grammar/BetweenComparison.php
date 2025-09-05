@@ -25,21 +25,25 @@ final class BetweenComparison implements Comparison
     {
     }
 
+    #[\Override]
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
         return $visitor->visitBetweenComparison($this, $parameters);
     }
 
+    #[\Override]
     public function getSearchable(): Searchable
     {
         return $this->searchable;
     }
 
+    #[\Override]
     public function getValueWrapper(): BetweenValueWrapper
     {
         return $this->value_wrapper;
     }
 
+    #[\Override]
     public function getType(): ComparisonType
     {
         return ComparisonType::Between;

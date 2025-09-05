@@ -28,6 +28,7 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject implements StoreUse
     /**
      * Search user preferences by user id and preference name
      */
+    #[\Override]
     public function search(int $user_id, string $preference_name): array
     {
         $sql = 'SELECT * FROM user_preferences WHERE user_id = ? AND preference_name = ?';
@@ -37,6 +38,7 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject implements StoreUse
         return is_array($result) ? $result : [];
     }
 
+    #[\Override]
     public function set(int $user_id, string $preference_name, string $preference_value): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
@@ -52,6 +54,7 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject implements StoreUse
         );
     }
 
+    #[\Override]
     public function delete(int $user_id, string $preference_name): void
     {
         $this->getDB()->delete(
@@ -63,6 +66,7 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject implements StoreUse
         );
     }
 
+    #[\Override]
     public function deleteByPreferenceNameAndValue(string $preference_name, string $preference_value): void
     {
         $this->getDB()->delete(
@@ -74,6 +78,7 @@ class UserPreferencesDao extends \Tuleap\DB\DataAccessObject implements StoreUse
         );
     }
 
+    #[\Override]
     public function deletePreferenceForAllUsers(string $preference_name): void
     {
         $this->getDB()->delete('user_preferences', ['preference_name' => $preference_name]);

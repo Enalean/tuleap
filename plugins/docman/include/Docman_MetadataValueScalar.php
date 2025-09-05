@@ -71,6 +71,7 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
         return $this->valueString;
     }
 
+    #[\Override]
     public function getValue()
     {
         switch ($this->type) {
@@ -85,6 +86,7 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
         }
     }
 
+    #[\Override]
     public function setValue($v)
     {
         switch ($this->type) {
@@ -102,6 +104,7 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
         }
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         parent::initFromRow($row);

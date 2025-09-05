@@ -41,6 +41,7 @@ class Git_HTTP_CommandGitolite3 extends Git_HTTP_Command
         $this->env['GITOLITE_HTTP_HOME'] = $gitolite_home;
     }
 
+    #[\Override]
     public function getCommand(): string
     {
         return 'sudo -E -u gitolite /usr/share/gitolite3/gitolite-shell';

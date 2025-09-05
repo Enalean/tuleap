@@ -29,16 +29,19 @@ use Tuleap\Layout\JavascriptViteAsset;
 
 final readonly class LinksView extends TrackerArtifactView
 {
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-tracker', 'Links');
     }
 
+    #[\Override]
     public function getIdentifier(): string
     {
         return 'artifact-links';
     }
 
+    #[\Override]
     public function fetch(): string
     {
         $layout = $GLOBALS['HTML'];

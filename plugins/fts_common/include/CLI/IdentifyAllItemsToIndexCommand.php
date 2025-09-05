@@ -37,11 +37,13 @@ final class IdentifyAllItemsToIndexCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Identify all items that can be indexed');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->event_dispatcher->dispatch(new IdentifyAllItemsToIndexEvent());

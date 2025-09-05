@@ -43,6 +43,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
      *
      * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
+    #[\Override]
     public function searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, $with_name = true)
     {
         $fields = '';
@@ -82,6 +83,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
      *
      * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
+    #[\Override]
     public function searchDefaults($permission_type, $with_name = true)
     {
         $fields = '';
@@ -211,6 +213,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
         return $this->update($sql);
     }
 
+    #[\Override]
     public function addPermission($permission_type, $object_id, $ugroup_id)
     {
         $permission_type = $this->da->quoteSmart($permission_type);
@@ -241,6 +244,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
      *
      * @return bool
      */
+    #[\Override]
     public function clearPermission($permission_type, $object_id)
     {
         $sql = ' DELETE FROM permissions ' .
@@ -324,6 +328,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
         return $this->update($sql);
     }
 
+    #[\Override]
     public function addHistory($project_id, $permission_type, $object_id)
     {
         permission_add_history($project_id, $permission_type, $object_id);

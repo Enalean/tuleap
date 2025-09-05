@@ -35,11 +35,13 @@ final class GenerateLocalSettingsCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Write LocalSettings file')->setHidden(true);
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->instantiator->instantiateLocalSettings();

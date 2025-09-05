@@ -28,6 +28,7 @@ use Tuleap\Project\ProjectCreationData;
 
 final class ProjectRegistrationXMLChecker implements ProjectRegistrationChecker
 {
+    #[\Override]
     public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
     {
         return new ProjectRegistrationErrorsCollection();

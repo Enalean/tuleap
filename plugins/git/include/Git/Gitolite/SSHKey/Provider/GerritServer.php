@@ -43,6 +43,7 @@ class GerritServer implements IProvideKey
         }
     }
 
+    #[\Override]
     public function current(): Key
     {
         $row             = $this->gerrit_server_access_result->current();
@@ -51,21 +52,25 @@ class GerritServer implements IProvideKey
         return new Key($replication_key->getUserName(), $replication_key->getValue());
     }
 
+    #[\Override]
     public function next(): void
     {
         $this->gerrit_server_access_result->next();
     }
 
+    #[\Override]
     public function key(): mixed
     {
         return $this->gerrit_server_access_result->key();
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return $this->gerrit_server_access_result->valid();
     }
 
+    #[\Override]
     public function rewind(): void
     {
         $this->gerrit_server_access_result->rewind();

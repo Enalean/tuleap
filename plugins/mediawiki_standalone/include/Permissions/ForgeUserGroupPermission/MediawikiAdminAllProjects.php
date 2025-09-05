@@ -29,16 +29,19 @@ final class MediawikiAdminAllProjects extends User_ForgeUserGroupPermission
 {
     public const ID = 3;
 
+    #[\Override]
     public function getId()
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getName()
     {
         return dgettext('tuleap-mediawiki_standalone', 'Global MediaWiki Administrator');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-mediawiki_standalone', 'This permission grants MediaWiki administration rights for each MediaWiki of every project');

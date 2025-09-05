@@ -25,6 +25,7 @@
 
 class Docman_View_Empty extends Docman_View_Display
 {
+    #[\Override]
     public function _content($params)
     {
         $item = $params['item'];

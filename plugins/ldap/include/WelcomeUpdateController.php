@@ -61,6 +61,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         include_once __DIR__ . '/../../../src/www/include/account.php';

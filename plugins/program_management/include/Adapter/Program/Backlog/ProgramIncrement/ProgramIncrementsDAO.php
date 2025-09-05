@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsProgramIncrementTracker, RetrieveProgramIncrementTracker, RetrieveProgramIncrementLabels, VerifyIsProgramIncrement, SearchProgramIncrementLinkedToFeature, SearchProgramIncrementsOfProgram
 {
+    #[\Override]
     public function searchOpenProgramIncrements(ProgramIdentifier $program): array
     {
         $sql = 'SELECT artifact.id
@@ -56,6 +57,7 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
     /**
      * @return array{id: int}[]
      */
+    #[\Override]
     public function getProgramIncrementsLinkToFeatureId(int $artifact_id): array
     {
         $sql = "SELECT parent_art.id AS id
@@ -72,6 +74,7 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
         return $this->getDB()->run($sql, $artifact_id);
     }
 
+    #[\Override]
     public function isProgramIncrementTracker(int $tracker_id): bool
     {
         $sql  = 'SELECT NULL FROM plugin_program_management_program WHERE program_increment_tracker_id = ?';
@@ -80,6 +83,7 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
         return count($rows) > 0;
     }
 
+    #[\Override]
     public function isProgramIncrement(int $artifact_id): bool
     {
         $sql = 'SELECT 1 FROM plugin_program_management_program AS program
@@ -88,6 +92,7 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
         return $this->getDB()->exists($sql, $artifact_id);
     }
 
+    #[\Override]
     public function getProgramIncrementTrackerId(int $project_id): ?int
     {
         $sql = 'SELECT program_increment_tracker_id FROM plugin_program_management_program
@@ -102,6 +107,7 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
         return $tracker_id;
     }
 
+    #[\Override]
     public function getProgramIncrementTrackerIdFromProgramIncrement(ProgramIncrementIdentifier $program_increment): int
     {
         $sql = 'SELECT program_increment_tracker_id FROM plugin_program_management_program AS program
@@ -119,6 +125,7 @@ final class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsPro
     /**
      * @psalm-return null|array{program_increment_label: ?string, program_increment_sub_label: ?string}
      */
+    #[\Override]
     public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array
     {
         $sql = 'SELECT program_increment_label, program_increment_sub_label FROM plugin_program_management_program WHERE program_increment_tracker_id = ?';

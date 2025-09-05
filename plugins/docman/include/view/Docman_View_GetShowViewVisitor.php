@@ -27,41 +27,49 @@ use Tuleap\Docman\Item\OtherDocument;
  */
 class Docman_View_GetShowViewVisitor implements ItemVisitor
 {
+    #[\Override]
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         return (string) Docman_View_Browse::getViewForCurrentUser($item->getGroupId(), $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return 'Redirect';
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return 'Redirect';
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, $params = [])
     {
         return 'Redirect';
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
         return 'Download';
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return 'Embedded';
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return 'Empty';
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, $params = [])
     {
         return '';

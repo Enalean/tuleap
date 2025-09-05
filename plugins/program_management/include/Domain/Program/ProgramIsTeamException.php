@@ -40,6 +40,7 @@ final class ProgramIsTeamException extends \Exception implements PlanTrackerExce
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

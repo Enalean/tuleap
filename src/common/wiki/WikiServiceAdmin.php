@@ -61,6 +61,7 @@ class WikiServiceAdmin extends Controler
         }
     }
 
+    #[\Override]
     public function request()
     {
       // Default behaviour: display default view:

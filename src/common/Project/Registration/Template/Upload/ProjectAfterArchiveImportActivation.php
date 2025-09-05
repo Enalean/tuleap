@@ -36,6 +36,7 @@ final readonly class ProjectAfterArchiveImportActivation implements ActivateProj
     ) {
     }
 
+    #[\Override]
     public function activateProject(Project $project, \PFUser $project_admin): void
     {
         if ($this->shouldProjectBeApprovedByAdmin()) {

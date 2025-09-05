@@ -40,6 +40,7 @@ final class ProjectAccessLevelCannotBeChosenByUserException extends \RuntimeExce
         $this->only_acceptable_access_level = $only_acceptable_access_level;
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

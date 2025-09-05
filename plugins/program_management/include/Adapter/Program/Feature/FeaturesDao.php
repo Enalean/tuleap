@@ -34,6 +34,7 @@ final class FeaturesDao extends DataAccessObject implements RetrieveOpenFeatureC
     /**
      * @return int[]
      */
+    #[\Override]
     public function searchPlannableFeatures(ProgramIdentifier $program): array
     {
         $sql = <<<SQL
@@ -60,6 +61,7 @@ final class FeaturesDao extends DataAccessObject implements RetrieveOpenFeatureC
         return array_map(static fn(array $row): int => $row['artifact_id'], $rows);
     }
 
+    #[\Override]
     public function searchOpenFeatures(int $offset, int $limit, ProgramIdentifier ...$program_identifiers): array
     {
         if (count($program_identifiers) === 0) {
@@ -93,6 +95,7 @@ final class FeaturesDao extends DataAccessObject implements RetrieveOpenFeatureC
      *
      * @see https://dev.mysql.com/worklog/task/?id=12615
      */
+    #[\Override]
     public function retrieveOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
     {
         if (count($program_identifiers) === 0) {

@@ -47,6 +47,7 @@ class SetFloatValueUpdater implements PostActionUpdater
      * Update (and replace) all set float value post actions with those included in given collection.
      * @throws DataAccessQueryException
      */
+    #[\Override]
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateSetFloatValueActions($this->validator, $transition->getWorkflow()->getTracker());

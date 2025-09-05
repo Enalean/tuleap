@@ -65,6 +65,7 @@ class Config implements IRetrieveTestExecutionTrackerIdFromConfig
     /**
      * @return int|false
      */
+    #[\Override]
     public function getTestExecutionTrackerId(Project $project)
     {
         $tracker = $this->getTestExecutionTracker($project);

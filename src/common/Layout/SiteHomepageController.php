@@ -73,6 +73,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
      *
      * @return void
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $event_manager = EventManager::instance();

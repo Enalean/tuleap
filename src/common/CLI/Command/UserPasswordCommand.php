@@ -51,6 +51,7 @@ class UserPasswordCommand extends Command
         $this->password_sanity_checker = $password_sanity_checker;
     }
 
+    #[\Override]
     protected function configure()
     {
         $this->setDescription('Set a user password')
@@ -58,6 +59,7 @@ class UserPasswordCommand extends Command
             ->addArgument('password', InputArgument::OPTIONAL, 'New password for user');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $user_name = $input->getArgument('user_name');

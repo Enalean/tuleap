@@ -54,6 +54,7 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
     /**
      * @see Workflow_Transition_Condition::exportToXml()
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if (! $this->is_comment_required) {
@@ -68,11 +69,13 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
     /**
      * @see Workflow_Transition_Condition::saveObject()
      */
+    #[\Override]
     public function saveObject()
     {
         $this->dao->create($this->getTransition()->getId(), $this->is_comment_required);
     }
 
+    #[\Override]
     public function validate($fields_data, Artifact $artifact, string $comment_body, PFUser $current_user): bool
     {
         if (! $this->is_comment_required) {
@@ -90,6 +93,7 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
         return true;
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitCommentNotEmpty($this);

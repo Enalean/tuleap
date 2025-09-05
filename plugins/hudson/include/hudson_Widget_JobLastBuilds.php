@@ -56,6 +56,7 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget //phpcs:ignore PSR1.Cl
         $this->job_builder = $job_builder;
     }
 
+    #[\Override]
     public function getTitle()
     {
         $title = '';
@@ -67,16 +68,19 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget //phpcs:ignore PSR1.Cl
         return $title;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-hudson', 'Show the last builds for this job (last one, last successful, last failed) and the weather report. The trend is represented by a weather report (sun, thunder, etc.) meaning that the trend is good or not.');
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $this->content_id = $id;
     }
 
+    #[\Override]
     protected function initContent()
     {
         $job_id = $this->getJobIdFromWidgetConfiguration();
@@ -98,6 +102,7 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget //phpcs:ignore PSR1.Cl
         }
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $this->initContent();

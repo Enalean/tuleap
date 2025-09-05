@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class CriteriaOpenListValueDAO extends DataAccessObject implements DeleteReportCriteriaValue
 {
+    #[\Override]
     public function deleteCriteriaFieldValue(\Tracker_Report_Criteria $criteria): void
     {
         $this->getDB()->run(

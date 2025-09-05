@@ -38,6 +38,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
  */
 final class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
+    #[\Override]
     public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
@@ -49,31 +50,37 @@ final class MetadataNotEqualComparisonFromWhereBuilder implements MetadataCompar
         return $this->searchComment($comparison, $value);
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new \RuntimeException('Metadata is not supported here.');
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return (string) $value_wrapper->getValue();
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         throw new \RuntimeException('Metadata is not supported here.');
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new \RuntimeException('Metadata is not supported here.');
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new \RuntimeException('Metadata is not supported here.');
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new \RuntimeException('Metadata is not supported here.');

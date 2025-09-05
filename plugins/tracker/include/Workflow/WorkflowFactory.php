@@ -179,6 +179,7 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
         return $this->cache[$workflow_id];
     }
 
+    #[\Override]
     public function getNonNullWorkflow(Tracker $tracker): Workflow|WorkflowWithoutTransition
     {
         $workflow = $this->getWorkflowByTrackerId($tracker->getId());

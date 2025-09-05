@@ -45,21 +45,25 @@ final class WorkflowBackendLogger extends TruncateLevelLogger
     /** @var string|int */
     private $fingerprint = '';
 
+    #[\Override]
     public function debug(string|\Stringable $message, array $context = []): void
     {
         parent::debug($this->getDecoratedMessage($message), $context);
     }
 
+    #[\Override]
     public function info(string|\Stringable $message, array $context = []): void
     {
         parent::info($this->getDecoratedMessage($message), $context);
     }
 
+    #[\Override]
     public function warning(string|\Stringable $message, array $context = []): void
     {
         parent::warning($this->getDecoratedMessage($message), $context);
     }
 
+    #[\Override]
     public function error(string|\Stringable $message, array $context = []): void
     {
         parent::error($this->getDecoratedMessage($message), $context);

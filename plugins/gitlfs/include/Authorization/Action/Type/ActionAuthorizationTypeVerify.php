@@ -25,6 +25,7 @@ final class ActionAuthorizationTypeVerify implements ActionAuthorizationType
     /**
      * @return string
      */
+    #[\Override]
     public function getName()
     {
         return 'verify';

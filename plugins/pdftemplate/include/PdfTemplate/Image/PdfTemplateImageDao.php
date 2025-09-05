@@ -36,6 +36,7 @@ final class PdfTemplateImageDao extends DataAccessObject implements CreateImage,
         parent::__construct();
     }
 
+    #[\Override]
     public function create(
         PdfTemplateImageIdentifier $identifier,
         string $filename,
@@ -57,6 +58,7 @@ final class PdfTemplateImageDao extends DataAccessObject implements CreateImage,
         return new PdfTemplateImage($identifier, $filename, $filesize, $created_by, $created_date);
     }
 
+    #[\Override]
     public function retrieveAll(): array
     {
         $rows = $this->getDB()->run('SELECT * FROM plugin_pdftemplate_image ORDER BY filename ASC');
@@ -90,6 +92,7 @@ final class PdfTemplateImageDao extends DataAccessObject implements CreateImage,
         return $user;
     }
 
+    #[\Override]
     public function retrieveImage(PdfTemplateImageIdentifier $identifier): ?PdfTemplateImage
     {
         $row = $this->getDB()->row(
@@ -104,6 +107,7 @@ final class PdfTemplateImageDao extends DataAccessObject implements CreateImage,
         return $this->instantiatePdfTemplateImageFromRow($row);
     }
 
+    #[\Override]
     public function deleteImage(PdfTemplateImage $image): void
     {
         $this->getDB()->delete(

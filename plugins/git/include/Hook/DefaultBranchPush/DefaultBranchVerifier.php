@@ -30,6 +30,7 @@ final class DefaultBranchVerifier implements VerifyIsDefaultBranch
     {
     }
 
+    #[\Override]
     public function isDefaultBranch(string $refname): bool
     {
         $default_branch = $this->git_exec->getDefaultBranch();

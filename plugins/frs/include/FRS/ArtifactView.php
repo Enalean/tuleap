@@ -33,6 +33,7 @@ final readonly class ArtifactView extends TrackerArtifactView
     }
 
     /** @see TrackerArtifactView::getTitle() */
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-frs', 'File release')
@@ -40,18 +41,21 @@ final readonly class ArtifactView extends TrackerArtifactView
     }
 
     /** @see TrackerArtifactView::getIdentifier() */
+    #[\Override]
     public function getIdentifier(): string
     {
         return 'frs';
     }
 
     /** @see TrackerArtifactView::fetch() */
+    #[\Override]
     public function fetch(): string
     {
         // Nothing to fetch as the tab is a redirect to the frs
         return '';
     }
 
+    #[\Override]
     public function getURL(): string
     {
         $release_id = urlencode((string) $this->release_id);

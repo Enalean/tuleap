@@ -49,6 +49,7 @@ final class JiraSprintRetrieverFromAPI implements JiraSprintRetriever
      * @throws \JsonException
      * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
      */
+    #[\Override]
     public function getAllSprints(JiraBoard $board): array
     {
         $sprints  = [];
