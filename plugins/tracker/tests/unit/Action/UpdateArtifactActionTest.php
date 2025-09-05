@@ -501,7 +501,7 @@ final class UpdateArtifactActionTest extends TestCase
             ->withParam('my-dashboard-id', '123')
             ->build();
         $redirect_uri  = $this->getRedirectUrl();
-        $this->assertEquals('/my/?tracker=' . self::TRACKER_ID . '&dashboard_id=123', $redirect_uri->toUrl());
+        $this->assertEquals('/my/?tracker=' . self::TRACKER_ID . '&my-dashboard-id=123', $redirect_uri->toUrl());
     }
 
     public function testItReturnsOnProjectDashboardWhenDashboardIdIsProvided(): void
@@ -512,7 +512,7 @@ final class UpdateArtifactActionTest extends TestCase
             ->withParam('project-dashboard-id', '456')
             ->build();
         $redirect_uri  = $this->getRedirectUrl();
-        $this->assertEquals('/projects/myproject/?tracker=' . self::TRACKER_ID . '&dashboard_id=456', $redirect_uri->toUrl());
+        $this->assertEquals('/projects/myproject/?tracker=' . self::TRACKER_ID . '&project-dashboard-id=456', $redirect_uri->toUrl());
     }
 
     private function assertURIHasArgument(string $url, string $argument, string $argument_value): void

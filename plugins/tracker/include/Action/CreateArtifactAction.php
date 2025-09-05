@@ -285,9 +285,9 @@ class CreateArtifactAction
             $redirect_params['aid'] = $artifact_id;
         }
         if ($my_dashboard_id !== false) {
-            $redirect_params['dashboard_id'] = $my_dashboard_id;
+            $redirect_params['my-dashboard-id'] = $my_dashboard_id;
         }if ($project_dashboard_id !== false) {
-            $redirect_params['dashboard_id'] = $project_dashboard_id;
+            $redirect_params['project-dashboard-id'] = $project_dashboard_id;
         }
         return array_filter($redirect_params);
     }

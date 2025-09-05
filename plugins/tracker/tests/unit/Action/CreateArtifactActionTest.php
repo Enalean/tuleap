@@ -177,7 +177,7 @@ final class CreateArtifactActionTest extends TestCase
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
         $this->assertStringStartsWith('/my/?', $redirect_uri->toUrl());
-        $this->assertUriHasArgument($redirect_uri->toUrl(), 'dashboard_id', '9');
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'my-dashboard-id', '9');
     }
 
     public function testItRedirectsToProjectDashboard(): void
@@ -189,7 +189,7 @@ final class CreateArtifactActionTest extends TestCase
         $this->dashboard_retriever->method('getProjectDashboardById')->willReturn(Option::fromValue($project_dashboard));
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
         $this->assertStringStartsWith('/projects/testproject/?', $redirect_uri->toUrl());
-        $this->assertUriHasArgument($redirect_uri->toUrl(), 'dashboard_id', '9');
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'project-dashboard-id', '9');
     }
 
     public function testSubmitAndContinue(): void
