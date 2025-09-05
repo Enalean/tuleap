@@ -128,7 +128,6 @@ use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\CommonMarkInterpreterController;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\News\NewsDao;
-use Tuleap\News\PermissionsPerGroup;
 use Tuleap\OAuth2ServerCore\OAuth2ServerRoutes;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
 use Tuleap\Password\Administration\PasswordPolicyUpdateController;
@@ -828,11 +827,6 @@ class RouteCollector
     public static function getRssLatestNews()
     {
         return new LatestNewsController(new NewsDao(), Codendi_HTMLPurifier::instance());
-    }
-
-    public static function getNewsPermissionsPerGroup(): DispatchableWithRequest
-    {
-        return new PermissionsPerGroup();
     }
 
     public static function getProjectAdminMembersController(): DispatchableWithRequest
@@ -1697,8 +1691,6 @@ class RouteCollector
 
         $r->get('/export/rss_sfprojects.php', [self::class, 'getRssLatestProjects']);
         $r->get('/export/rss_sfnews.php', [self::class, 'getRssLatestNews']);
-
-        $r->get('/news/permissions-per-group', [self::class, 'getNewsPermissionsPerGroup']);
 
         $r->post('/csp-violation', [self::class, 'getCSPViolationReportToController']);
 

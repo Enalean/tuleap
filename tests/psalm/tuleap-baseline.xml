@@ -29995,10 +29995,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
     </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$end_date]]></code>
@@ -30015,21 +30011,17 @@
       <code><![CDATA[getDescriptionOfActiveProjectsBeforeEndDate]]></code>
       <code><![CDATA[getDistinctFilesPublished]]></code>
       <code><![CDATA[getFilesPublished]]></code>
-      <code><![CDATA[getForumsActivitiesBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getGitRead]]></code>
       <code><![CDATA[getGitWrite]]></code>
       <code><![CDATA[getIdsOfActiveProjectsBeforeEndDate]]></code>
       <code><![CDATA[getInfosFromTroveGroupLink]]></code>
       <code><![CDATA[getNameOfActiveProjectsBeforeEndDate]]></code>
-      <code><![CDATA[getNumberOfActiveForums]]></code>
       <code><![CDATA[getNumberOfCIJobs]]></code>
       <code><![CDATA[getNumberOfClosedArtifactsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfDistinctWikiPages]]></code>
       <code><![CDATA[getNumberOfDownloadedFilesBeforeEndDate]]></code>
       <code><![CDATA[getNumberOfDownloadedFilesBetweenStartDateAndEndDate]]></code>
-      <code><![CDATA[getNumberOfInactiveForums]]></code>
       <code><![CDATA[getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate]]></code>
-      <code><![CDATA[getNumberOfNewsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfOpenArtifactsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfUserAddedBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfWikiDocuments]]></code>
@@ -57929,53 +57921,6 @@
       <code><![CDATA[getWaitingPublicationNews]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsJSONPermissionsRetriever.php">
-    <MissingParamType>
-      <code><![CDATA[$selected_ugroup_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[retrieve]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsPermissionPerGroupPaneBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$selected_ugroup_id]]></code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsPermissionsManager.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-    </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[NEWS_READ = 'NEWS_READ']]></code>
-    </MissingClassConstType>
-    <MissingParamType>
-      <code><![CDATA[$project_news]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getAccessibleProjectNews]]></code>
-      <code><![CDATA[isProjectNewsPublic]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsPermissionsRepresentationBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$new]]></code>
-      <code><![CDATA[$selected_ugroup_id]]></code>
-      <code><![CDATA[$selected_ugroup_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[getNewAdminQuickLink]]></code>
-      <code><![CDATA[isUGroupAuthorizedToSeePrivateNews]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsVisibilityRepresentation.php">
-    <MissingParamType>
-      <code><![CDATA[$admin_quicklink]]></code>
-      <code><![CDATA[$is_public]]></code>
-      <code><![CDATA[$news_name]]></code>
-    </MissingParamType>
-  </file>
   <file src="src/common/News/ChooseNewsItemController.php">
     <MissingReturnType>
       <code><![CDATA[checkAccess]]></code>
@@ -58039,11 +57984,6 @@
     <MissingReturnType>
       <code><![CDATA[updatePromotedItems]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/News/PermissionsPerGroup.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$request->getProject()->getID()]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/common/Notification/Notification.php">
     <MissingParamType>
@@ -58878,8 +58818,6 @@
     <MissingReturnType>
       <code><![CDATA[addDynamicUgroups]]></code>
       <code><![CDATA[addForgeUGroups]]></code>
-      <code><![CDATA[addForum]]></code>
-      <code><![CDATA[addNews]]></code>
       <code><![CDATA[addNobody]]></code>
       <code><![CDATA[addStaticUgroups]]></code>
       <code><![CDATA[addWiki]]></code>
@@ -66133,12 +66071,6 @@
       <code><![CDATA[postProjectCreationModeration]]></code>
       <code><![CDATA[postProjectCreationVisibility]]></code>
       <code><![CDATA[postProjectCreationWebhooks]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/ApacheConfGenerator.php">
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[generate]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/SVNCore/Cache/ParameterDao.php">

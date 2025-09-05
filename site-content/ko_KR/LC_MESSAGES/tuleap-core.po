@@ -2092,9 +2092,6 @@ msgstr "뉴스"
 msgid "News approval"
 msgstr "뉴스 승인"
 
-msgid "News {{ user_group_name }} can see"
-msgstr "{{ user_group_name }}이(가) 볼 수 있는 뉴스"
-
 msgid "Next Messages"
 msgstr "다음 메시지"
 
@@ -3051,9 +3048,6 @@ msgstr "보낸 초대장"
 
 msgid "Service is not allowed in project."
 msgstr "프로젝트에서 서비스가 허용되지 않습니다."
-
-msgid "Service news is disabled for this project."
-msgstr "이 프로젝트에서 서비스 뉴스가 비활성되었습니다."
 
 msgid "Service not found in database"
 msgstr "데이터베이스에서 서비스를 찾을 수 없습니다."

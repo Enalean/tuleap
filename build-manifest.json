@@ -59,10 +59,6 @@
             "src": "src/scripts/frs-permissions-per-group/src",
             "po": "src/scripts/frs-permissions-per-group/po"
         },
-        "permissions-per-group-news": {
-            "src": "src/scripts/news-permissions-per-group/src",
-            "po": "src/scripts/news-permissions-per-group/po"
-        },
         "platform-admin-banner": {
             "src": "src/scripts/platform-admin-banner/src",
             "po": "src/scripts/platform-admin-banner/po"
