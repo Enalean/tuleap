@@ -127,7 +127,7 @@
 import { getOpenMilestones, createBaseline } from "../../api/rest-querier";
 import MilestonesSelect from "./MilestonesSelect.vue";
 import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
-import { datePicker as createDatePicker } from "tlp";
+import { datePicker as createDatePicker } from "@tuleap/tlp-date-picker";
 
 export default {
     name: "NewBaselineModal",
