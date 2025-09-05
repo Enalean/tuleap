@@ -21,6 +21,7 @@
 namespace Tuleap\REST;
 
 use Psr\Http\Message\ResponseInterface;
+use Tuleap\REST\Tests\API\ProjectsAPIHelper;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('TrackersTests')]
@@ -193,7 +194,7 @@ final class TrackersTest extends TrackerBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testGetTrackersIdReturnsPermissionsForGroupsToTrackerAdmin()
+    public function testGetTrackersIdReturnsPermissionsForGroupsToTrackerAdmin(): void
     {
         $tracker = json_decode(
             $this->getResponseByName(
@@ -205,34 +206,17 @@ final class TrackersTest extends TrackerBase
             JSON_THROW_ON_ERROR
         );
 
-        $all_user_groups   = json_decode(
-            $this->getResponse(
-                $this->request_factory->createRequest(
-                    'GET',
-                    'projects/' . $this->project_private_member_id . '/user_groups'
-                )
-            )->getBody()->getContents(),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-        $developers_ugroup = [];
-        $static_ugroup_2   = [];
-        $project_members   = [];
-        foreach ($all_user_groups as $user_group) {
-            unset($user_group['additional_information']);
-            if ($user_group['short_name'] === 'developers') {
-                $developers_ugroup = $user_group;
-            }
-            if ($user_group['short_name'] === 'static_ugroup_2') {
-                $static_ugroup_2 = $user_group;
-            }
-            if ($user_group['short_name'] === 'project_members') {
-                $project_members = $user_group;
-            }
-        }
+        $projects_api    = new ProjectsAPIHelper($this->rest_request, $this->request_factory);
+        $all_user_groups = $projects_api->getUserGroupsOfProject($this->project_private_member_id);
 
-        $this->assertEquals(
+        $expected_developers_ugroup = $all_user_groups->getUserGroupByShortName('developers');
+        unset($expected_developers_ugroup['additional_information']);
+        $expected_static_ugroup_2 = $all_user_groups->getUserGroupByShortName('static_ugroup_2');
+        unset($expected_static_ugroup_2['additional_information']);
+        $expected_project_members = $all_user_groups->getUserGroupByShortName('project_members');
+        unset($expected_project_members['additional_information']);
+
+        self::assertEquals(
             [
                 'can_access' => [
                     [
@@ -248,14 +232,14 @@ final class TrackersTest extends TrackerBase
                 'can_access_assigned_to_group'  => [],
                 'can_access_submitted_by_group' => [],
                 'can_admin'                     => [
-                    $developers_ugroup,
+                    $expected_developers_ugroup,
                 ],
             ],
             $tracker['permissions_for_groups']
         );
 
         $status_field = $this->getStatusField($tracker);
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'can_read'   => [
                     [
@@ -278,8 +262,8 @@ final class TrackersTest extends TrackerBase
                     ],
                 ],
                 'can_update' => [
-                    $project_members,
-                    $static_ugroup_2,
+                    $expected_project_members,
+                    $expected_static_ugroup_2,
                 ],
             ],
             $status_field['permissions_for_groups']

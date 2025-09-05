@@ -22,10 +22,8 @@ namespace Tuleap\REST;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
-class ProjectTest extends ProjectBase
+final class ProjectTest extends ProjectBase
 {
-    use ForgeAccessSandbox;
-
     #[\PHPUnit\Framework\Attributes\After]
     protected function resetProjectCreationConfiguration(): void
     {
@@ -1186,132 +1184,6 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/labels'));
 
         self::assertEquals(['labels' => []], json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
-    }
-
-    public function testOPTIONSUserGroups()
-    {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/user_groups'));
-
-        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
-    }
-
-    public function testGETUserGroupsContainingStaticUGroups()
-    {
-        $response        = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/user_groups'));
-        $expected_result = [
-
-            [
-                'id' => $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
-                'uri' => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
-                'label' => 'Project members',
-                'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users',
-                'key' => RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY,
-                'short_name' => 'project_members',
-                'additional_information' => ['ldap' => null],
-            ],
-            [
-                'id' => $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
-                'uri' => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
-                'label' => 'Project administrators',
-                'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
-                'key' => 'ugroup_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL . '_name_key',
-                'short_name' => 'project_admins',
-                'additional_information' => [],
-            ],
-            [
-                'id'         => $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
-                'uri'        => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
-                'label'      => RESTTestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_LABEL,
-                'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID . '/users',
-                'key'        => 'ugroup_file_manager_admin_name_key',
-                'short_name' => 'file_manager_admins',
-                'additional_information' => [],
-            ],
-            [
-                'id' => $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
-                'uri' => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
-                'label' => 'Wiki administrators',
-                'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID . '/users',
-                'key' => 'ugroup_wiki_admin_name_key',
-                'short_name' => 'wiki_admins',
-                'additional_information' => [],
-            ],
-            [
-                'id' => $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
-                'uri' => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
-                'label' => 'Forum moderators',
-                'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID . '/users',
-                'key' => 'ugroup_forum_admin_name_key',
-                'short_name' => 'forum_admins',
-                'additional_information' => [],
-            ],
-            [
-                'id'         => $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID,
-                'uri'        => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID,
-                'label'      => 'News administrators',
-                'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_NEWS_ADMIN_ID . '/users',
-                'key'        => 'ugroup_news_admin_name_key',
-                'short_name' => 'news_admins',
-                'additional_information' => [],
-
-            ],
-            [
-                'id'         => $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID,
-                'uri'        => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID,
-                'label'      => 'News writers',
-                'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_NEWS_WRITER_ID . '/users',
-                'key'        => 'ugroup_news_writer_name_key',
-                'short_name' => 'news_editors',
-                'additional_information' => [],
-            ],
-            [
-                'id' => (string) RESTTestDataBuilder::STATIC_UGROUP_1_ID,
-                'uri' => 'user_groups/' . RESTTestDataBuilder::STATIC_UGROUP_1_ID,
-                'label' => RESTTestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'users_uri' => 'user_groups/' . RESTTestDataBuilder::STATIC_UGROUP_1_ID . '/users',
-                'key' => RESTTestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'short_name' => 'static_ugroup_1',
-                'additional_information' => ['ldap' => null],
-            ],
-            [
-                'id' => (string) RESTTestDataBuilder::STATIC_UGROUP_2_ID,
-                'uri' => 'user_groups/' . RESTTestDataBuilder::STATIC_UGROUP_2_ID,
-                'label' => RESTTestDataBuilder::STATIC_UGROUP_2_LABEL,
-                'users_uri' => 'user_groups/' . RESTTestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                'key' => RESTTestDataBuilder::STATIC_UGROUP_2_LABEL,
-                'short_name' => 'static_ugroup_2',
-                'additional_information' => ['ldap' => null],
-            ],
-            [
-                'id' => (string) RESTTestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
-                'uri' => 'user_groups/' . RESTTestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
-                'label' => RESTTestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
-                'users_uri' => 'user_groups/' . RESTTestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID . '/users',
-                'key' => RESTTestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
-                'short_name' => RESTTestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
-                'additional_information' => ['ldap' => null],
-            ],
-        ];
-        self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
-    }
-
-    public function testGETUserGroupsWithSystemUserGroupsReturnsAnonymousAndRegisteredWhenAnonymousUsersCanAccessThePlatform()
-    {
-        $this->setForgeToAnonymous();
-
-        $response = $this->getResponseByName(
-            RESTTestDataBuilder::TEST_USER_1_NAME,
-            $this->request_factory->createRequest('GET', 'projects/' . $this->project_public_member_id . '/user_groups?query=' . urlencode('{"with_system_user_groups":true}'))
-        );
-
-        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $user_group_ids = [];
-        foreach ($json_response as $user_group) {
-            $user_group_ids[] = $user_group['id'];
-        }
-        self::assertContains('1', $user_group_ids); // ProjectUgroup::ANONYMOUS
-        self::assertContains('2', $user_group_ids); // ProjectUgroup::REGISTERED
     }
 
     public function testPATCHbacklogWithoutPermission()

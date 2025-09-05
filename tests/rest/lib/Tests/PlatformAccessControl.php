@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,43 +16,46 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\REST;
+namespace Tuleap\REST\Tests;
 
-use Tuleap\REST\Tests\PlatformAccessControl;
+use Tuleap\Disposable\Disposable;
+use Tuleap\REST\TuleapConfig;
 
-trait ForgeAccessSandbox
+final readonly class PlatformAccessControl implements Disposable
 {
-    private PlatformAccessControl $site_access;
+    private string $backed_up_access_level;
 
-    #[\PHPUnit\Framework\Attributes\Before]
-    public function backupSiteAccess(): void
+    public function __construct()
     {
-        $this->site_access = new PlatformAccessControl();
-    }
-
-    #[\PHPUnit\Framework\Attributes\After]
-    public function restoreSiteAccess(): void
-    {
-        $this->site_access->dispose();
+        $this->backed_up_access_level = TuleapConfig::instance()->getAccess();
     }
 
     public function setForgeToAnonymous(): void
     {
-        $this->site_access->setForgeToAnonymous();
+        TuleapConfig::instance()->setForgeToAnonymous();
     }
 
     public function setForgeToRestricted(): void
     {
-        $this->site_access->setForgeToRestricted();
+        TuleapConfig::instance()->setForgeToRestricted();
     }
 
     public function setForgeToRegular(): void
     {
-        $this->site_access->setForgeToRegular();
+        TuleapConfig::instance()->setForgeToRegular();
+    }
+
+    #[\Override]
+    public function dispose(): void
+    {
+        match ($this->backed_up_access_level) {
+            TuleapConfig::ANONYMOUS  => $this->setForgeToAnonymous(),
+            TuleapConfig::REGULAR    => $this->setForgeToRegular(),
+            TuleapConfig::RESTRICTED => $this->setForgeToRestricted(),
+        };
     }
 }

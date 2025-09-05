@@ -56,4 +56,22 @@ final readonly class ProjectsAPIHelper
             sprintf('Could not find project with shortname "%s"', $project_short_name)
         );
     }
+
+    public function getUserGroupsOfProject(
+        int $project_id,
+        string $rest_user_name = BaseTestDataBuilder::TEST_USER_1_NAME,
+    ): UserGroupsRESTCollection {
+        $response = $this->request_wrapper->getResponseByName(
+            $rest_user_name,
+            $this->request_factory->createRequest(
+                'GET',
+                sprintf('/api/projects/%s/user_groups', urlencode((string) $project_id))
+            )
+        );
+        if ($response->getStatusCode() !== 200) {
+            throw new \RuntimeException(sprintf('Could not get user groups of project id #%s', $project_id));
+        }
+        $user_groups = Json\decode($response->getBody()->getContents());
+        return new UserGroupsRESTCollection($user_groups);
+    }
 }
