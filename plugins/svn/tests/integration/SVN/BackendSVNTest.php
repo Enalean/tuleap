@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Backend;
+namespace Tuleap\SVN;
 
 use Backend;
-use BackendSVN;
 use BackendSVNFileForSimlinkAlreadyExistsException;
 use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -76,7 +76,6 @@ final class BackendSVNTest extends TestIntegrationTestCase
         $this->backend = $this->createPartialMock(BackendSVN::class, [
             'getSvnDao',
             'getProjectManager',
-            'getSVNCacheParameters',
             'chmod',
         ]);
     }

@@ -100,7 +100,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
         return new RepositoryManager(
             new Dao(),
             ProjectManager::instance(),
-            new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), \BackendSVN::instance()),
+            new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), \Tuleap\SVN\BackendSVN::instance()),
             \SvnPlugin::getLogger(),
             new System_Command(),
             new Destructor(
@@ -108,7 +108,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
                 \SvnPlugin::getLogger()
             ),
             EventManager::instance(),
-            \BackendSVN::instance(),
+            \Tuleap\SVN\BackendSVN::instance(),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
         );
     }

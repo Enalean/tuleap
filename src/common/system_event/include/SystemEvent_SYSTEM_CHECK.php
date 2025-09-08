@@ -48,7 +48,6 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent // phpcs:ignore PSR1.Classes.
     {
         $backendSystem  = BackendSystem::instance();
         $backendAliases = BackendAliases::instance();
-        $backendSVN     = BackendSVN::instance();
 
         //TODO:
         // Private project: if codeaxadm is not member of the project: check access to SVN (incl. ViewVC), Web...
@@ -59,15 +58,6 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent // phpcs:ignore PSR1.Classes.
         $backendAliases->setNeedUpdateMailAliases();
 
         $errors = [];
-
-        $project_manager = ProjectManager::instance();
-        foreach ($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
-            try {
-                $backendSVN->systemCheck($project);
-            } catch (Exception $exception) {
-                $errors[] = $exception->getMessage();
-            }
-        }
 
         $backend_logger = BackendLogger::getDefaultLogger();
         $logger         = new SystemCheckLogger($backend_logger, 'system_check');

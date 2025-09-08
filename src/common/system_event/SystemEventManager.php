@@ -137,12 +137,7 @@ class SystemEventManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     {
         if ($event instanceof ProjectStatusUpdate) {
             match ($event->status) {
-                Project::STATUS_ACTIVE => $this->createEvent(
-                    SystemEvent::TYPE_PROJECT_ACTIVE,
-                    $event->project->getID(),
-                    SystemEvent::PRIORITY_LOW
-                ),
-                Project::STATUS_SUSPENDED => null, // Nothing to do
+                Project::STATUS_ACTIVE, Project::STATUS_SUSPENDED => null, // Nothing to do
                 Project::STATUS_DELETED => $this->createEvent(
                     SystemEvent::TYPE_PROJECT_DELETE,
                     $event->project->getID(),
@@ -335,8 +330,6 @@ class SystemEventManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         switch ($type) {
             case SystemEvent::TYPE_MASSMAIL:
                 return \Tuleap\SystemEvent\Massmail::class;
-            case SystemEvent::TYPE_PROJECT_ACTIVE:
-                return \Tuleap\SystemEvent\SystemEventProjectActive::class;
             case SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE:
                 return SystemEventUserActiveStatusChange::class;
             case SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES:

@@ -84,6 +84,18 @@ msgstr ""
 msgid "Core"
 msgstr ""
 
+msgid "Could not commit repository initial layout"
+msgstr "Não foi possível comitar o layout inicial do repositório"
+
+msgid "Could not create/initialize SVN repository"
+msgstr "Não foi possível criar/inicializar o repositório SVN"
+
+msgid "Could not the access file of the SVN repository"
+msgstr "Não foi possível obter o arquivo de acesso do repositório SVN"
+
+msgid "Could not update hooks of the SVN repository"
+msgstr "Não foi possível atualizar os hooks do repositório SVN"
+
 msgid "Create a new SVN repository"
 msgstr ""
 
@@ -184,6 +196,9 @@ msgstr ""
 
 msgid "Immutable tags paths"
 msgstr ""
+
+msgid "Initial layout creation"
+msgstr "Criação do layout inicial"
 
 msgid ""
 "It is recommended to always define permissions on a user group. Applying "
@@ -396,6 +411,10 @@ msgid ""
 "the entire repository and read-only access to all other %1$s users. You can "
 "tune or even redefine the access permissions below to suit your needs."
 msgstr ""
+
+#, php-format
+msgid "The directory %s is not valid"
+msgstr "O diretório %s não é válido"
 
 msgid "The given path is not valid"
 msgstr ""

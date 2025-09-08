@@ -98,6 +98,18 @@ msgstr "Confirmer la restauration du dépôt"
 msgid "Core"
 msgstr "Core"
 
+msgid "Could not commit repository initial layout"
+msgstr "Impossible de commiter la structure initiale du dépôt"
+
+msgid "Could not create/initialize SVN repository"
+msgstr "Impossible de créer/initialiser le dépôt SVN"
+
+msgid "Could not the access file of the SVN repository"
+msgstr "Impossible d'accèder au fichier de contrôle d'accès du dépôt SVN"
+
+msgid "Could not update hooks of the SVN repository"
+msgstr "Impossible de mettre à jour les hooks du dépôt SVN"
+
 msgid "Create a new SVN repository"
 msgstr "Créer un nouveau dépôt SVN"
 
@@ -211,6 +223,9 @@ msgstr "Configuration des tags non modifiables"
 
 msgid "Immutable tags paths"
 msgstr "Chemin des tags non modifiables"
+
+msgid "Initial layout creation"
+msgstr "Création de la structure initiale"
 
 msgid ""
 "It is recommended to always define permissions on a user group. Applying "
@@ -449,6 +464,10 @@ msgstr ""
 "écriture à tous les membres du projet sur l'ensemble du dépôt et l'accès en "
 "lecture seule aux autres utilisateurs de %1$s. Vous pouvez ajuster ou même "
 "redéfinir les permissions d'accès selon vos besoins."
+
+#, php-format
+msgid "The directory %s is not valid"
+msgstr "Le répertoire %s n'est pas valide"
 
 msgid "The given path is not valid"
 msgstr "Le chemin n'est pas valide"

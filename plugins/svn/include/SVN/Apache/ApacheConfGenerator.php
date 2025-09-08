@@ -21,7 +21,7 @@
 
 namespace Tuleap\SVN\Apache;
 
-use BackendSVN;
+use Tuleap\SVN\BackendSVN;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\ProcessFactory;
@@ -36,7 +36,7 @@ final readonly class ApacheConfGenerator
 
     public static function build(): self
     {
-        return new self(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), \BackendSVN::instance());
+        return new self(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), \Tuleap\SVN\BackendSVN::instance());
     }
 
     public function generate(): void

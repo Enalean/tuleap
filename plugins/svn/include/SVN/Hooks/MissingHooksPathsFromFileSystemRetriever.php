@@ -59,22 +59,22 @@ final class MissingHooksPathsFromFileSystemRetriever implements MissingHooksPath
                 return Result::err(Fault::fromMessage('SVN repository ' . $repository_path . 'do not have `hooks` directory'));
             }
 
-            if (! $this->isHookFileValid($hooks_path . '/' . \BackendSVN::PRE_COMMIT_HOOK)) {
+            if (! $this->isHookFileValid($hooks_path . '/' . \Tuleap\SVN\BackendSVN::PRE_COMMIT_HOOK)) {
                 $repositories[] = $repository;
                 continue;
             }
 
-            if (! $this->isHookFileValid($hooks_path . '/' . \BackendSVN::POST_COMMIT_HOOK)) {
+            if (! $this->isHookFileValid($hooks_path . '/' . \Tuleap\SVN\BackendSVN::POST_COMMIT_HOOK)) {
                 $repositories[] = $repository;
                 continue;
             }
 
-            if (! $this->isHookLinkValid($hooks_path . '/' . \BackendSVN::PRE_REVPROP_CHANGE_HOOK)) {
+            if (! $this->isHookLinkValid($hooks_path . '/' . \Tuleap\SVN\BackendSVN::PRE_REVPROP_CHANGE_HOOK)) {
                 $repositories[] = $repository;
                 continue;
             }
 
-            if (! $this->isHookLinkValid($hooks_path . '/' . \BackendSVN::POST_REVPROP_CHANGE_HOOK)) {
+            if (! $this->isHookLinkValid($hooks_path . '/' . \Tuleap\SVN\BackendSVN::POST_REVPROP_CHANGE_HOOK)) {
                 $repositories[] = $repository;
             }
         }

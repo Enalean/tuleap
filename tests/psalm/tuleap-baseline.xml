@@ -29804,10 +29804,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
     </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$end_date]]></code>
@@ -29824,21 +29820,17 @@
       <code><![CDATA[getDescriptionOfActiveProjectsBeforeEndDate]]></code>
       <code><![CDATA[getDistinctFilesPublished]]></code>
       <code><![CDATA[getFilesPublished]]></code>
-      <code><![CDATA[getForumsActivitiesBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getGitRead]]></code>
       <code><![CDATA[getGitWrite]]></code>
       <code><![CDATA[getIdsOfActiveProjectsBeforeEndDate]]></code>
       <code><![CDATA[getInfosFromTroveGroupLink]]></code>
       <code><![CDATA[getNameOfActiveProjectsBeforeEndDate]]></code>
-      <code><![CDATA[getNumberOfActiveForums]]></code>
       <code><![CDATA[getNumberOfCIJobs]]></code>
       <code><![CDATA[getNumberOfClosedArtifactsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfDistinctWikiPages]]></code>
       <code><![CDATA[getNumberOfDownloadedFilesBeforeEndDate]]></code>
       <code><![CDATA[getNumberOfDownloadedFilesBetweenStartDateAndEndDate]]></code>
-      <code><![CDATA[getNumberOfInactiveForums]]></code>
       <code><![CDATA[getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate]]></code>
-      <code><![CDATA[getNumberOfNewsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfOpenArtifactsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfUserAddedBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfWikiDocuments]]></code>
@@ -30756,6 +30748,72 @@
       <code><![CDATA[$notifications]]></code>
       <code><![CDATA[$notifications_url]]></code>
     </MissingPropertyType>
+  </file>
+  <file src="plugins/svn/include/SVN/BackendSVN.php">
+    <InvalidArgument>
+      <code><![CDATA[$perms]]></code>
+      <code><![CDATA[true]]></code>
+    </InvalidArgument>
+    <MissingClassConstType>
+      <code><![CDATA[POST_COMMIT_HOOK         = 'post-commit']]></code>
+      <code><![CDATA[POST_REVPROP_CHANGE_HOOK = 'post-revprop-change']]></code>
+      <code><![CDATA[PRE_COMMIT_HOOK          = 'pre-commit']]></code>
+      <code><![CDATA[PRE_REVPROP_CHANGE_HOOK  = 'pre-revprop-change']]></code>
+    </MissingClassConstType>
+    <MissingParamType>
+      <code><![CDATA[$can_change_svn_log]]></code>
+      <code><![CDATA[$group_id]]></code>
+      <code><![CDATA[$hook_commit_path]]></code>
+      <code><![CDATA[$hook_commit_path]]></code>
+      <code><![CDATA[$hook_name]]></code>
+      <code><![CDATA[$hook_name]]></code>
+      <code><![CDATA[$hook_name]]></code>
+      <code><![CDATA[$hooks_path]]></code>
+      <code><![CDATA[$path]]></code>
+      <code><![CDATA[$post_commit_file]]></code>
+      <code><![CDATA[$post_commit_launcher]]></code>
+      <code><![CDATA[$pre_commit_file]]></code>
+      <code><![CDATA[$project_id]]></code>
+      <code><![CDATA[$project_id]]></code>
+      <code><![CDATA[$project_svnroot]]></code>
+      <code><![CDATA[$project_svnroot]]></code>
+      <code><![CDATA[$project_svnroot]]></code>
+      <code><![CDATA[$project_svnroot]]></code>
+      <code><![CDATA[$project_svnroot]]></code>
+      <code><![CDATA[$source_tool]]></code>
+      <code><![CDATA[$svnroot]]></code>
+      <code><![CDATA[$system_path]]></code>
+      <code><![CDATA[$system_path]]></code>
+      <code><![CDATA[$system_path]]></code>
+      <code><![CDATA[$tool_reference_path]]></code>
+      <code><![CDATA[$var]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$SVNApacheConfNeedUpdate]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[buildExceptionMessage]]></code>
+      <code><![CDATA[createDirectoryLayout]]></code>
+      <code><![CDATA[createRepository]]></code>
+      <code><![CDATA[deleteHook]]></code>
+      <code><![CDATA[disableCommitMessageUpdate]]></code>
+      <code><![CDATA[enableCommitMessageUpdate]]></code>
+      <code><![CDATA[enableHook]]></code>
+      <code><![CDATA[forceUpdateApacheConf]]></code>
+      <code><![CDATA[getHookPath]]></code>
+      <code><![CDATA[getSvnDao]]></code>
+      <code><![CDATA[getSvnFilesUnixGroupName]]></code>
+      <code><![CDATA[isLinkToTool]]></code>
+      <code><![CDATA[setUserAndGroup]]></code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$file_array]]></code>
+      <code><![CDATA[$file_array]]></code>
+      <code><![CDATA[readlink($path)]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyFalseOperand>
+      <code><![CDATA[realpath(__DIR__ . '/../../utils/php-launcher.sh')]]></code>
+    </PossiblyFalseOperand>
   </file>
   <file src="plugins/svn/include/SVN/Commit/CommitInfo.php">
     <MissingParamType>
@@ -65944,12 +66002,6 @@
       <code><![CDATA[postProjectCreationWebhooks]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/ApacheConfGenerator.php">
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[generate]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/SVNCore/Cache/ParameterDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -70292,72 +70344,6 @@
     <MissingReturnType>
       <code><![CDATA[restoreOwnership]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/backend/BackendSVN.php">
-    <InvalidArgument>
-      <code><![CDATA[$perms]]></code>
-      <code><![CDATA[true]]></code>
-    </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[POST_COMMIT_HOOK         = 'post-commit']]></code>
-      <code><![CDATA[POST_REVPROP_CHANGE_HOOK = 'post-revprop-change']]></code>
-      <code><![CDATA[PRE_COMMIT_HOOK          = 'pre-commit']]></code>
-      <code><![CDATA[PRE_REVPROP_CHANGE_HOOK  = 'pre-revprop-change']]></code>
-    </MissingClassConstType>
-    <MissingParamType>
-      <code><![CDATA[$can_change_svn_log]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$hook_commit_path]]></code>
-      <code><![CDATA[$hook_commit_path]]></code>
-      <code><![CDATA[$hook_name]]></code>
-      <code><![CDATA[$hook_name]]></code>
-      <code><![CDATA[$hook_name]]></code>
-      <code><![CDATA[$hooks_path]]></code>
-      <code><![CDATA[$path]]></code>
-      <code><![CDATA[$post_commit_file]]></code>
-      <code><![CDATA[$post_commit_launcher]]></code>
-      <code><![CDATA[$pre_commit_file]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_svnroot]]></code>
-      <code><![CDATA[$project_svnroot]]></code>
-      <code><![CDATA[$project_svnroot]]></code>
-      <code><![CDATA[$project_svnroot]]></code>
-      <code><![CDATA[$project_svnroot]]></code>
-      <code><![CDATA[$source_tool]]></code>
-      <code><![CDATA[$svnroot]]></code>
-      <code><![CDATA[$system_path]]></code>
-      <code><![CDATA[$system_path]]></code>
-      <code><![CDATA[$system_path]]></code>
-      <code><![CDATA[$tool_reference_path]]></code>
-      <code><![CDATA[$var]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$SVNApacheConfNeedUpdate]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[buildExceptionMessage]]></code>
-      <code><![CDATA[createDirectoryLayout]]></code>
-      <code><![CDATA[createRepository]]></code>
-      <code><![CDATA[deleteHook]]></code>
-      <code><![CDATA[disableCommitMessageUpdate]]></code>
-      <code><![CDATA[enableCommitMessageUpdate]]></code>
-      <code><![CDATA[enableHook]]></code>
-      <code><![CDATA[forceUpdateApacheConf]]></code>
-      <code><![CDATA[getHookPath]]></code>
-      <code><![CDATA[getSvnDao]]></code>
-      <code><![CDATA[getSvnFilesUnixGroupName]]></code>
-      <code><![CDATA[isLinkToTool]]></code>
-      <code><![CDATA[setUserAndGroup]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$file_array]]></code>
-      <code><![CDATA[$file_array]]></code>
-      <code><![CDATA[readlink($path)]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyFalseOperand>
-      <code><![CDATA[realpath(__DIR__ . '/../../utils/php-launcher.sh')]]></code>
-    </PossiblyFalseOperand>
   </file>
   <file src="src/common/backend/BackendSVNFileForSimlinkAlreadyExistsException.php">
     <MissingParamType>

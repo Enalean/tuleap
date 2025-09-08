@@ -987,18 +987,6 @@ msgstr "Copier la clé d'accès"
 msgid "Copyright (c) %1$s, %2$s Team, 2001-%3$d. All Rights Reserved"
 msgstr "Copyright (c) %1$s, Equipe %2$s, 2001-%3$d. Tous droits réservés"
 
-msgid "Could not commit repository initial layout"
-msgstr "Impossible de commiter la structure initiale du dépôt"
-
-msgid "Could not create/initialize SVN repository"
-msgstr "Impossible de créer/initialiser le dépôt SVN"
-
-msgid "Could not the access file of the SVN repository"
-msgstr "Impossible d'accèder au fichier de contrôle d'accès du dépôt SVN"
-
-msgid "Could not update hooks of the SVN repository"
-msgstr "Impossible de mettre à jour les hooks du dépôt SVN"
-
 msgid "Create"
 msgstr "Créer"
 
@@ -1718,9 +1706,6 @@ msgstr "Un service indisponible ne peut pas être activé."
 
 msgid "Inherited?"
 msgstr "Hérité?"
-
-msgid "Initial layout creation"
-msgstr "Création de la structure initiale"
 
 msgid "Internal error: Could not update password"
 msgstr "Erreur interne : le mot de passe n'a pas été mis à jour"
@@ -3478,10 +3463,6 @@ msgstr "Le tableau de bord \"%s\" n’existe pas."
 
 msgid "The default Administration project cannot be deleted."
 msgstr "Le projet par défaut Administration ne peut pas être supprimé."
-
-#, php-format
-msgid "The directory %s is not valid"
-msgstr "Le répertoire %s n'est valide"
 
 msgid "The display preference has been forced for each user successfully."
 msgstr ""

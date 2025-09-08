@@ -35,7 +35,6 @@ abstract class SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     // Define event types
     public const TYPE_SYSTEM_CHECK                    = 'SYSTEM_CHECK';
     public const TYPE_EDIT_SSH_KEYS                   = 'EDIT_SSH_KEYS';
-    public const TYPE_PROJECT_ACTIVE                  = 'PROJECT_ACTIVE';
     public const TYPE_PROJECT_DELETE                  = 'PROJECT_DELETE';
     public const TYPE_PROJECT_RENAME                  = 'PROJECT_RENAME';
     public const TYPE_UGROUP_MODIFY                   = 'UGROUP_MODIFY';

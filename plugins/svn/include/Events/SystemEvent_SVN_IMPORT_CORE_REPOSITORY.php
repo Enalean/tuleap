@@ -49,7 +49,7 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
      */
     private $project_manager;
     /**
-     * @var \BackendSVN
+     * @var \Tuleap\SVN\BackendSVN
      */
     private $backend_svn;
     /**
@@ -63,7 +63,7 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
 
     public static function getDependencies(
         \ProjectManager $project_manager,
-        \BackendSVN $backend_svn,
+        \Tuleap\SVN\BackendSVN $backend_svn,
         RepositoryManager $repository_manager,
         LastAccessDao $last_access_dao,
     ): array {
@@ -77,7 +77,7 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
 
     public function injectDependencies(
         \ProjectManager $project_manager,
-        \BackendSVN $backend_svn,
+        \Tuleap\SVN\BackendSVN $backend_svn,
         RepositoryManager $repository_manager,
         LastAccessDao $last_access_dao,
     ): void {
