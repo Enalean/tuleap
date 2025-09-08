@@ -21,24 +21,6 @@ import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
-import type {
-    ArtifactRepresentation,
-    ArtifactSelectable,
-    ArtifactSelectableRepresentation,
-    DateSelectableRepresentation,
-    NumericSelectableRepresentation,
-    PrettyTitleSelectableRepresentation,
-    ProjectSelectableRepresentation,
-    Selectable,
-    SelectableQueryContentRepresentation,
-    SelectableRepresentation,
-    StaticListSelectableRepresentation,
-    TextSelectableRepresentation,
-    TrackerSelectableRepresentation,
-    UserGroupListSelectableRepresentation,
-    UserListSelectableRepresentation,
-    UserSelectableRepresentation,
-} from "./cross-tracker-rest-api-types";
 import {
     LINK_TYPE_SELECTABLE_TYPE,
     ARTIFACT_SELECTABLE_TYPE,
@@ -53,8 +35,28 @@ import {
     USER_LIST_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
+import type {
+    ArtifactRepresentation,
+    ArtifactSelectable,
+    ArtifactSelectableRepresentation,
+    DateSelectableRepresentation,
+    LinkTypeSelectableRepresentation,
+    NumericSelectableRepresentation,
+    PrettyTitleSelectableRepresentation,
+    ProjectSelectableRepresentation,
+    Selectable,
+    SelectableQueryContentRepresentation,
+    SelectableRepresentation,
+    StaticListSelectableRepresentation,
+    TextSelectableRepresentation,
+    TrackerSelectableRepresentation,
+    UserGroupListSelectableRepresentation,
+    UserListSelectableRepresentation,
+    UserSelectableRepresentation,
+} from "./cross-tracker-rest-api-types";
 import type { ArtifactRow, ArtifactsTable, Cell, UserCellValue } from "../domain/ArtifactsTable";
 import {
+    LINK_TYPE_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
@@ -131,6 +133,11 @@ const isPrettyTitleSelectableRepresentation = (
 const isArtifactSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is ArtifactSelectableRepresentation => "uri" in representation;
+
+const isLinkTypeSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is LinkTypeSelectableRepresentation =>
+    "direction" in representation && typeof representation.direction === `string`;
 
 /**
  * Throw instead of returning an err, because the format of the Selected representation
@@ -273,9 +280,12 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
                 ...artifact_value,
             });
         case LINK_TYPE_SELECTABLE_TYPE:
+            if (!isLinkTypeSelectableRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
             return ok({
-                type: TEXT_CELL,
-                value: "",
+                type: LINK_TYPE_CELL,
+                ...artifact_value,
             });
         default:
             return err(Fault.fromMessage(`Selectable type is not supported`));

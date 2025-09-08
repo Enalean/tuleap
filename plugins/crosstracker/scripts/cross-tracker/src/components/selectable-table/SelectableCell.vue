@@ -57,6 +57,9 @@
         <span v-if="props.cell.type === TRACKER_CELL" class="cell" data-test="cell"
             ><span v-bind:class="getBadgeClass(props.cell.color)">{{ props.cell.name }}</span></span
         >
+        <span v-if="props.cell.type === LINK_TYPE_CELL" class="cell">
+            <link-type-cell-component v-bind:cell="props.cell" />
+        </span>
         <pretty-title-cell-component
             v-if="props.cell.type === PRETTY_TITLE_CELL"
             v-bind:cell="cell"
@@ -94,6 +97,7 @@ import type { Option } from "@tuleap/option";
 import type { ArtifactLinkDirection, Cell } from "../../domain/ArtifactsTable";
 import {
     DATE_CELL,
+    LINK_TYPE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
@@ -109,6 +113,7 @@ import UserValue from "./UserValue.vue";
 import TextCell from "./TextCell.vue";
 import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
 import type { ToggleLinks } from "../../helpers/ToggleLinksEmit";
+import LinkTypeCellComponent from "./LinkTypeCellComponent.vue";
 
 const date_formatter = strictInject(DATE_FORMATTER);
 const date_time_formatter = strictInject(DATE_TIME_FORMATTER);

@@ -35,9 +35,12 @@ import {
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import {
     DATE_CELL,
+    FORWARD_DIRECTION,
+    LINK_TYPE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
+    REVERSE_DIRECTION,
     STATIC_LIST_CELL,
     TEXT_CELL,
     TRACKER_CELL,
@@ -588,15 +591,45 @@ describe(`ArtifactsTableBuilder`, () => {
 
         it(`builds a table with "link_type" selectables`, () => {
             const link_type_column = LINK_TYPE_COLUMN_NAME;
+            const link_type_value_reverse = "Is Child Of";
+            const link_type_value_forward = "Is Parent Of";
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: LINK_TYPE_SELECTABLE_TYPE, name: link_type_column }],
-                    [ArtifactRepresentationStub.build({ [link_type_column]: { name: "" } })],
+                    [
+                        ArtifactRepresentationStub.build({
+                            [link_type_column]: {
+                                shortname: "_is_child",
+                                direction: REVERSE_DIRECTION,
+                                label: link_type_value_reverse,
+                            },
+                        }),
+                        ArtifactRepresentationStub.build({
+                            [link_type_column]: {
+                                shortname: "_is_child",
+                                direction: FORWARD_DIRECTION,
+                                label: link_type_value_forward,
+                            },
+                        }),
+                    ],
                 ),
             );
 
             expect(table.columns.has(link_type_column)).toBe(true);
+            expect(table.rows).toHaveLength(2);
+            const [first_row, second_row] = table.rows;
+            const link_value_first_row = first_row.cells.get(link_type_column);
+            if (link_value_first_row?.type !== LINK_TYPE_CELL) {
+                throw Error("Expected to find first link value");
+            }
+            expect(link_value_first_row.label).toBe(link_type_value_reverse);
+
+            const link_value_second_row = second_row.cells.get(link_type_column);
+            if (link_value_second_row?.type !== LINK_TYPE_CELL) {
+                throw Error("Expected to find second link value");
+            }
+            expect(link_value_second_row.label).toBe(link_type_value_forward);
         });
 
         it(`given a query content representation with an unsupported selectable type,
@@ -627,6 +660,7 @@ describe(`ArtifactsTableBuilder`, () => {
             yield [PROJECT_SELECTABLE_TYPE, { value: 12 }];
             yield [TRACKER_SELECTABLE_TYPE, { value: 12 }];
             yield [PRETTY_TITLE_SELECTABLE_TYPE, { value: 12 }];
+            yield [LINK_TYPE_SELECTABLE_TYPE, { value: 12 }];
         }
 
         it.each([...generateBrokenSelectedValues()])(
