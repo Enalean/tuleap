@@ -37,7 +37,7 @@
         <slot name="is_active">
             <hidden-service-is-active v-bind:is_active="service.is_active" />
         </slot>
-        <service-rank id="project-service-add-modal-rank" v-bind:value="service.rank" />
+        <service-rank id="project-service-add-modal-rank" v-bind:rank="service.rank" />
         <service-link
             id="project-service-add-modal-link"
             v-bind:link="service.link"
