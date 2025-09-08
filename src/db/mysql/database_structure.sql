@@ -1355,7 +1355,8 @@ CREATE TABLE dashboards_lines_columns_widgets (
     `rank` INT(11) NOT NULL,
     name VARCHAR(255) NOT NULL,
     content_id INT DEFAULT '0' NOT NULL,
-    INDEX col_idx(column_id)
+    INDEX col_idx(column_id),
+    INDEX idx_content_column (content_id, column_id)
 );
 
 DROP TABLE IF EXISTS project_label;
