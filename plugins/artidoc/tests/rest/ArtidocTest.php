@@ -210,11 +210,10 @@ final class ArtidocTest extends DocmanBase
 
         self::assertNotSame($artidoc_id, $new_artidoc_id);
 
-        $document_content = $this->getArtidocSections($new_artidoc_id);
+        $document_content = $this->artidoc_api->getArtidocSections($new_artidoc_id);
 
         self::assertCount(2, $document_content);
-        self::assertSame($section_1_id, $document_content[0]['artifact']['id']);
-        self::assertSame($section_2_id, $document_content[1]['artifact']['id']);
+        self::assertSame([$section_1_id, $section_2_id], $document_content->getArtifactSectionIds());
     }
 
     public function testAddNewSectionToArtidoc(): void
@@ -369,7 +368,7 @@ final class ArtidocTest extends DocmanBase
             $section_3_art_id,
         );
 
-        $uuid = $this->getSectionUuid($artidoc_id, $section_2_art_id);
+        $uuid = $this->artidoc_api->getArtidocSections($artidoc_id)->findArtifactSectionUUID($section_2_art_id);
 
         $delete_response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'artidoc_sections/' . $uuid),
@@ -407,8 +406,9 @@ final class ArtidocTest extends DocmanBase
             $section_3_art_id,
         );
 
-        $uuid1 = $this->getSectionUuid($artidoc_id, $section_1_art_id);
-        $uuid2 = $this->getSectionUuid($artidoc_id, $section_2_art_id);
+        $sections = $this->artidoc_api->getArtidocSections($artidoc_id);
+        $uuid1    = $sections->findArtifactSectionUUID($section_1_art_id);
+        $uuid2    = $sections->findArtifactSectionUUID($section_2_art_id);
 
         $order_response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'artidoc/' . $artidoc_id . '/sections')->withBody(
@@ -432,45 +432,18 @@ final class ArtidocTest extends DocmanBase
         );
     }
 
-    /**
-     * @throws \Exception
-     */
-    private function getSectionUuid(int $artidoc_id, int $section_artifact_id): string
-    {
-        $document_content = $this->getArtidocSections($artidoc_id);
-        foreach ($document_content as $section) {
-            if ($section['artifact']['id'] === $section_artifact_id) {
-                return $section['id'];
-            }
-        }
-
-        throw new \Exception('Unable to find section for art #' . $section_artifact_id . ' in ' . $artidoc_id);
-    }
-
     private function assertSectionsMatchArtifactIdsForDocument(int $artidoc_id, int ...$artifact_ids): void
     {
-        $document_content = $this->getArtidocSections($artidoc_id);
+        $document_content = $this->artidoc_api->getArtidocSections($artidoc_id);
         self::assertCount(count($artifact_ids), $document_content);
-        self::assertSame(
-            $artifact_ids,
-            array_map(
-                static fn (array $section): int => $section['artifact']['id'],
-                $document_content,
-            ),
-        );
+        self::assertSame($artifact_ids, $document_content->getArtifactSectionIds());
     }
 
     private function assertSectionsMatchContent(int $artidoc_id, string ...$titles): void
     {
-        $document_content = $this->getArtidocSections($artidoc_id);
+        $document_content = $this->artidoc_api->getArtidocSections($artidoc_id);
         self::assertCount(count($titles), $document_content);
-        self::assertSame(
-            $titles,
-            array_map(
-                static fn (array $section): string => $section['title'],
-                $document_content,
-            ),
-        );
+        self::assertSame($titles, $document_content->getTitles());
     }
 
     public function testDELETEArtidoc(): void
@@ -509,15 +482,6 @@ final class ArtidocTest extends DocmanBase
         $response_content = Json\decode($response->getBody()->getContents());
 
         return $response_content['id'];
-    }
-
-    private function getArtidocSections(int $artidoc_id): array
-    {
-        return Json\decode(
-            $this->getResponse(
-                $this->request_factory->createRequest('GET', 'artidoc/' . $artidoc_id . '/sections')
-            )->getBody()->getContents(),
-        );
     }
 
     public function testPUTPermissions(): void
@@ -581,7 +545,7 @@ final class ArtidocTest extends DocmanBase
             $section_2_id
         );
 
-        $document_content = $this->getArtidocSections($artidoc_id);
+        $document_content = $this->artidoc_api->getArtidocSections($artidoc_id);
 
         self::assertCount(2, $document_content);
 
@@ -679,11 +643,8 @@ final class ArtidocTest extends DocmanBase
             )
         );
         self::assertSame(200, $response->getStatusCode());
-        $document_content = $this->getArtidocSections($artidoc_id);
-        self::assertContains('My updated title', array_map(
-            static fn(array $section) => $section['title'] ?? null,
-            $document_content
-        ));
+        $document_content = $this->artidoc_api->getArtidocSections($artidoc_id);
+        self::assertContains('My updated title', $document_content->getTitles());
     }
 
     public function testUpdateArtifactSection(): void
@@ -697,7 +658,7 @@ final class ArtidocTest extends DocmanBase
             $req_id
         );
 
-        $document_content = $this->getArtidocSections($artidoc_id);
+        $document_content = $this->artidoc_api->getArtidocSections($artidoc_id);
 
         self::assertCount(1, $document_content);
 
@@ -717,7 +678,7 @@ final class ArtidocTest extends DocmanBase
         );
         self::assertSame(200, $response->getStatusCode());
 
-        $document_content = $this->getArtidocSections($artidoc_id);
+        $document_content = $this->artidoc_api->getArtidocSections($artidoc_id);
 
         self::assertCount(1, $document_content);
         self::assertSame('My updated title', $document_content[0]['title']);
@@ -735,7 +696,7 @@ final class ArtidocTest extends DocmanBase
         );
         self::assertSame(204, $response->getStatusCode());
 
-        $document_content = $this->getArtidocSections($artidoc_id);
+        $document_content = $this->artidoc_api->getArtidocSections($artidoc_id);
         self::assertEmpty($document_content);
     }
 
@@ -762,7 +723,7 @@ final class ArtidocTest extends DocmanBase
         self::assertSame(200, $post_response->getStatusCode());
         self::assertNotNull(Json\decode($post_response->getBody()->getContents())['id']);
 
-        $document_content = $this->getArtidocSections($id);
+        $document_content = $this->artidoc_api->getArtidocSections($id);
         return $document_content[0]['id'];
     }
 }

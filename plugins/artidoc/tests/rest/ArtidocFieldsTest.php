@@ -26,6 +26,7 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use ProjectUGroup;
 use Psl\Json;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\FieldType;
 use Tuleap\Artidoc\Tests\ArtidocAPIHelper;
 use Tuleap\Artidoc\Tests\DocumentPermissions;
 use Tuleap\Artidoc\Tests\Setup\ArtidocFieldsPreparator;
@@ -41,7 +42,17 @@ use Tuleap\Tracker\REST\Tests\TrackerRESTHelperFactory;
 #[DisableReturnValueGenerationForTestDoubles]
 final class ArtidocFieldsTest extends RestBase
 {
-    private const string ALL_FIELDS_SHORT_NAME = 'all_fields';
+    private const string PROJECT_LABEL           = 'Artidoc Fields';
+    private const string ALL_FIELDS_SHORT_NAME   = 'all_fields';
+    private const string TEXT_VALUE              = 'hermoglyphic stepfatherhood';
+    private const string STRING_VALUE            = 'ketole missal';
+    private const int    INT_VALUE               = 223;
+    private const float  FLOAT_VALUE             = 306.21;
+    private const int    COMPUTED_VALUE          = 456;
+    private const string DATE_VALUE              = '2029-03-14';
+    private const string STATIC_LIST_VALUE       = 'Dos';
+    private const string INTEGRATORS_UGROUP_NAME = 'Integrators';
+    private const string LINKED_ARTIFACT_TITLE   = 'Zannichellia vernant';
     private ProjectsAPIHelper $projects_api;
     private DocmanAPIHelper $docman_api;
     private ArtidocAPIHelper $artidoc_api;
@@ -99,7 +110,7 @@ final class ArtidocFieldsTest extends RestBase
                         ->withBody(
                             $this->stream_factory->createStream(Json\encode([
                                 'shortname'        => 'artidoc-fields-' . $now->getTimestamp(),
-                                'label'            => 'Artidoc Fields',
+                                'label'            => self::PROJECT_LABEL,
                                 'description'      => '',
                                 'is_public'        => true,
                                 'allow_restricted' => true,
@@ -169,10 +180,10 @@ final class ArtidocFieldsTest extends RestBase
         self::assertSame(200, $put_configuration_response->getStatusCode());
 
         $user_groups               = $this->projects_api->getUserGroupsOfProject($project_id);
-        $integrators_user_group_id = $user_groups->getUserGroupByShortName('Integrators')['id'];
+        $integrators_user_group_id = $user_groups->getUserGroupByShortName(self::INTEGRATORS_UGROUP_NAME)['id'];
 
         $artifact_to_link_id = $all_fields_tracker->createArtifact([
-            $all_fields_tracker->getSubmitTextValue('title', 'Zannichellia vernant'),
+            $all_fields_tracker->getSubmitTextValue('title', self::LINKED_ARTIFACT_TITLE),
         ])['id'];
 
         $project_members_id = $project_id . '_' . ProjectUGroup::PROJECT_MEMBERS;
@@ -181,13 +192,13 @@ final class ArtidocFieldsTest extends RestBase
             [
                 $all_fields_tracker->getSubmitTextValue('title', 'All fields'),
                 $all_fields_tracker->getSubmitTextValue('description', 'legpuller hexapod'),
-                ['field_id' => $text_field_id, 'value' => 'hermoglyphic stepfatherhood'],
-                ['field_id' => $string_field_id, 'value' => 'ketole missal'],
-                ['field_id' => $int_field_id, 'value' => 223],
-                ['field_id' => $float_field_id, 'value' => 306.21],
-                ['field_id' => $computed_field_id, 'manual_value' => 456],
-                ['field_id' => $date_field_id, 'value' => '2029-03-14'],
-                $all_fields_tracker->getSubmitListValue('selectbox_static', 'Dos'),
+                ['field_id' => $text_field_id, 'value' => self::TEXT_VALUE],
+                ['field_id' => $string_field_id, 'value' => self::STRING_VALUE],
+                ['field_id' => $int_field_id, 'value' => self::INT_VALUE],
+                ['field_id' => $float_field_id, 'value' => self::FLOAT_VALUE],
+                ['field_id' => $computed_field_id, 'manual_value' => self::COMPUTED_VALUE],
+                ['field_id' => $date_field_id, 'value' => self::DATE_VALUE],
+                $all_fields_tracker->getSubmitListValue('selectbox_static', self::STATIC_LIST_VALUE),
                 [
                     'field_id'       => $radio_users_id,
                     'bind_value_ids' => [
@@ -217,6 +228,164 @@ final class ArtidocFieldsTest extends RestBase
             $artidoc_id,
             BaseTestDataBuilder::TEST_USER_1_NAME,
             $artifact['id']
+        );
+
+        $sections         = $this->artidoc_api->getArtidocSections($artidoc_id);
+        $artifact_section = $sections[0];
+        if (! array_key_exists('fields', $artifact_section)) {
+            throw new \RuntimeException('Expected a "fields" key in section representation');
+        }
+        self::assertCount(15, $artifact_section['fields']);
+
+        $text_field = $artifact_section['fields'][0];
+        self::assertSame(FieldType::TEXT->value, $text_field['type']);
+        self::assertSame('Text', $text_field['label']);
+        self::assertSame(DisplayType::BLOCK->value, $text_field['display_type']);
+        self::assertStringContainsString(self::TEXT_VALUE, $text_field['value']);
+
+        self::assertSame(
+            [
+                'type'         => FieldType::TEXT->value,
+                'label'        => 'String',
+                'display_type' => DisplayType::COLUMN->value,
+                'value'        => self::STRING_VALUE,
+            ],
+            $artifact_section['fields'][1]
+        );
+
+        self::assertSame(
+            [
+                'type'         => FieldType::NUMERIC->value,
+                'label'        => 'Integer',
+                'display_type' => DisplayType::COLUMN->value,
+                'value'        => self::INT_VALUE,
+            ],
+            $artifact_section['fields'][2]
+        );
+
+        self::assertSame(
+            [
+                'type'         => FieldType::NUMERIC->value,
+                'label'        => 'Float',
+                'display_type' => DisplayType::COLUMN->value,
+                'value'        => self::FLOAT_VALUE,
+            ],
+            $artifact_section['fields'][3]
+        );
+
+        self::assertSame(
+            [
+                'type'         => FieldType::NUMERIC->value,
+                'label'        => 'Computed',
+                'display_type' => DisplayType::COLUMN->value,
+                'value'        => self::COMPUTED_VALUE,
+            ],
+            $artifact_section['fields'][4]
+        );
+
+        $date_field = $artifact_section['fields'][5];
+        self::assertSame(FieldType::DATE->value, $date_field['type']);
+        self::assertSame('Date', $date_field['label']);
+        self::assertSame(DisplayType::COLUMN->value, $date_field['display_type']);
+        self::assertIsString($date_field['value']);
+        self::assertFalse($date_field['with_time']);
+
+        self::assertSame(
+            [
+                'type'         => FieldType::PERMISSIONS->value,
+                'label'        => 'Permissions',
+                'display_type' => DisplayType::COLUMN->value,
+                'value'        => [
+                    ['label' => 'Project members'],
+                ],
+            ],
+            $artifact_section['fields'][6]
+        );
+
+        self::assertSame(
+            [
+                'type'         => FieldType::STATIC_LIST->value,
+                'label'        => 'Selectbox static',
+                'display_type' => DisplayType::COLUMN->value,
+                'value'        => [
+                    ['label' => self::STATIC_LIST_VALUE, 'tlp_color' => ''],
+                ],
+            ],
+            $artifact_section['fields'][7]
+        );
+
+        $user_list_field = $artifact_section['fields'][8];
+        self::assertSame(FieldType::USER_LIST->value, $user_list_field['type']);
+        self::assertSame('Radio users (members)', $user_list_field['label']);
+        self::assertSame(DisplayType::COLUMN->value, $user_list_field['display_type']);
+        self::assertCount(1, $user_list_field['value']);
+        self::assertSame(BaseTestDataBuilder::TEST_USER_1_DISPLAYNAME, $user_list_field['value'][0]['display_name']);
+        self::assertIsString($user_list_field['value'][0]['avatar_url']);
+
+        self::assertSame(
+            [
+                'type' => FieldType::USER_GROUPS_LIST->value,
+                'label' => 'MSB ugroups',
+                'display_type' => DisplayType::COLUMN->value,
+                'value' => [
+                    ['label' => 'Project members'],
+                    ['label' => self::INTEGRATORS_UGROUP_NAME],
+                ],
+            ],
+            $artifact_section['fields'][9]
+        );
+
+        $submitted_by_field = $artifact_section['fields'][10];
+        self::assertSame(FieldType::USER->value, $submitted_by_field['type']);
+        self::assertSame('Submitted By', $submitted_by_field['label']);
+        self::assertSame(DisplayType::COLUMN->value, $submitted_by_field['display_type']);
+        self::assertSame(BaseTestDataBuilder::TEST_USER_1_DISPLAYNAME, $submitted_by_field['value']['display_name']);
+        self::assertIsString($submitted_by_field['value']['avatar_url']);
+
+        $last_update_by_field = $artifact_section['fields'][11];
+        self::assertSame(FieldType::USER->value, $last_update_by_field['type']);
+        self::assertSame('Last Update By', $last_update_by_field['label']);
+        self::assertSame(DisplayType::COLUMN->value, $last_update_by_field['display_type']);
+        self::assertSame(BaseTestDataBuilder::TEST_USER_1_DISPLAYNAME, $last_update_by_field['value']['display_name']);
+        self::assertIsString($last_update_by_field['value']['avatar_url']);
+
+        $submitted_on_field = $artifact_section['fields'][12];
+        self::assertSame(FieldType::DATE->value, $submitted_on_field['type']);
+        self::assertSame('Submitted On', $submitted_on_field['label']);
+        self::assertSame(DisplayType::COLUMN->value, $submitted_on_field['display_type']);
+        self::assertIsString($submitted_on_field['value']);
+        self::assertTrue($submitted_on_field['with_time']);
+
+        $last_update_date_field = $artifact_section['fields'][13];
+        self::assertSame(FieldType::DATE->value, $last_update_date_field['type']);
+        self::assertSame('Last Modified On', $last_update_date_field['label']);
+        self::assertSame(DisplayType::COLUMN->value, $last_update_date_field['display_type']);
+        self::assertIsString($last_update_date_field['value']);
+        self::assertTrue($last_update_date_field['with_time']);
+
+        self::assertSame(
+            [
+                'type' => FieldType::ARTIFACT_LINK->value,
+                'label' => 'Artifact link',
+                'display_type' => DisplayType::BLOCK->value,
+                'value' => [
+                    [
+                        'link_label' => 'is Linked to',
+                        'tracker_shortname' => self::ALL_FIELDS_SHORT_NAME,
+                        'tracker_color' => 'sherwood-green',
+                        'project' => [
+                            'id' => $project_id,
+                            'label' => self::PROJECT_LABEL,
+                            'icon' => '',
+                        ],
+                        'artifact_id' => $artifact_to_link_id,
+                        'title' => self::LINKED_ARTIFACT_TITLE,
+                        'html_uri' => '/plugins/tracker/?aid=' . $artifact_to_link_id,
+                        'status' => null,
+                    ],
+                ],
+            ],
+            $artifact_section['fields'][14]
         );
     }
 }

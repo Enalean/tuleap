@@ -89,9 +89,23 @@ final readonly class ArtidocAPIHelper
             );
             if ($post_response->getStatusCode() !== 200) {
                 throw new \RuntimeException(
-                    sprintf('Could not import artifact id #%s in artidoc id #%s', $artifact_id, $artidoc_id)
+                    sprintf('Could not import artifact #%s in artidoc #%s', $artifact_id, $artidoc_id)
                 );
             }
         }
+    }
+
+    public function getArtidocSections(
+        int $artidoc_id,
+        string $rest_user_name = BaseTestDataBuilder::TEST_USER_1_NAME,
+    ): SectionsRESTCollection {
+        $response = $this->request_wrapper->getResponseByName(
+            $rest_user_name,
+            $this->request_factory->createRequest('GET', 'artidoc/' . $artidoc_id . '/sections')
+        );
+        if ($response->getStatusCode() !== 200) {
+            throw new \RuntimeException(sprintf('Could not get the sections of artidoc #%s', $artidoc_id));
+        }
+        return new SectionsRESTCollection($artidoc_id, Json\decode($response->getBody()->getContents()));
     }
 }
