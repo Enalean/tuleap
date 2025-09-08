@@ -77,7 +77,9 @@ class AppearancePresenterBuilder
             $is_login_realname,
             $is_login,
             $is_realname,
-            $display_relative_dates_preference ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue()
+            $display_relative_dates_preference ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue(),
+            FaviconVariant::isFeatureFlagEnabled(),
+            FaviconVariant::shouldDisplayFaviconVariant($user),
         );
     }
 }

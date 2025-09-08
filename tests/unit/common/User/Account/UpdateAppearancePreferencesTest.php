@@ -23,18 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
+use ForgeConfig;
+use PHPUnit\Framework\Attributes\TestWith;
 use ThemeVariant;
 use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
+use Tuleap\User\Account\Appearance\FaviconVariant;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     /**
      * @var CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
@@ -380,6 +386,72 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             $layout_inspector->getFeedback()
         );
         self::assertEquals('/account/appearance', $redirect_url);
+    }
+
+    #[TestWith([FaviconVariant::PREFERENCE_VALUE_OFF, false, null])]
+    #[TestWith([FaviconVariant::PREFERENCE_VALUE_OFF, '1', true])]
+    #[TestWith([FaviconVariant::PREFERENCE_VALUE_ON, false, false])]
+    #[TestWith([FaviconVariant::PREFERENCE_VALUE_ON, '1', null])]
+    public function testFaviconVariant(
+        string $current_favicon_variant,
+        false|string $want_favicon_variant,
+        ?bool $expected,
+    ): void {
+        ForgeConfig::setFeatureFlag(FaviconVariant::FEATURE_FLAG, '1');
+
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->expects($this->never())->method('setLanguageID');
+        $user->method('getPreference')->willReturnMap([
+            [FaviconVariant::PREFERENCE_NAME, $current_favicon_variant],
+        ]);
+
+        $this->csrf_token->expects($this->once())->method('check');
+
+        if ($expected === null) {
+            $user->expects($this->never())->method('setPreference');
+        } else {
+            $user->expects($this->once())
+                ->method('setPreference')
+                ->with(
+                    FaviconVariant::PREFERENCE_NAME,
+                    $expected ? FaviconVariant::PREFERENCE_VALUE_ON : FaviconVariant::PREFERENCE_VALUE_OFF
+                );
+        }
+
+        $builder = HTTPRequestBuilder::get()->withUser($user);
+        if ($want_favicon_variant !== false) {
+            $builder = $builder->withParam('favicon-variant', $want_favicon_variant);
+        }
+
+        $request = $builder->build();
+
+        $layout_inspector = new LayoutInspector();
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
+
+        self::assertSame(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => $expected === null
+                        ? 'Nothing changed'
+                        : 'User preferences successfully updated',
+                ],
+            ],
+            $layout_inspector->getFeedback()
+        );
+        self::assertSame('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserStillDoesNotWantCondensed(): void

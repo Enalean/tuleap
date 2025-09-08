@@ -35,6 +35,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\Account\Appearance\FaviconVariant;
 use UserHelper;
 use UserManager;
 
@@ -89,6 +90,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $this->csrf_token->check(DisplayAppearanceController::URL);
 
         $something_has_been_updated = $this->setNewColor($request, $layout, $user);
+        $something_has_been_updated = $this->setFaviconVariant($request, $layout, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewDisplayDensity($request, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewAccessibilityMode($request, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewUsernameDisplay($request, $layout, $user) || $something_has_been_updated;
@@ -215,6 +217,29 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         }
 
         $user->setPreference(ThemeVariant::PREFERENCE_NAME, $variant_color->getName());
+
+        return true;
+    }
+
+    private function setFaviconVariant(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    {
+        if (! FaviconVariant::isFeatureFlagEnabled()) {
+            return false;
+        }
+
+        $want_favicon_variant = (bool) $request->get('favicon-variant');
+
+        $current_favicon_variant = FaviconVariant::shouldDisplayFaviconVariant($user);
+        if ($current_favicon_variant === $want_favicon_variant) {
+            return false;
+        }
+
+        $user->setPreference(
+            FaviconVariant::PREFERENCE_NAME,
+            $want_favicon_variant
+                ? FaviconVariant::PREFERENCE_VALUE_ON
+                : FaviconVariant::PREFERENCE_VALUE_OFF,
+        );
 
         return true;
     }

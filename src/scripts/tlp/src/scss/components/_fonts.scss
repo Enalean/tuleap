@@ -34,3 +34,4 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
 
 // tlp-font MUST come after font-awesome, otherwise `fa`, `fa-solid`, etc. will overwrite the font-family and mix up the icons
 @use "../../fonts/tlp-font/tlp-font";
+@use "../../fonts/public-sans-font";

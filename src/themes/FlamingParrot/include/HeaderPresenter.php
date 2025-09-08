@@ -18,45 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\OpenGraph\OpenGraphPresenter;
+use Tuleap\User\Account\Appearance\FaviconVariant;
 
 class FlamingParrot_HeaderPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var string */
     private $title;
 
-    /** @var string */
-    private $img_root;
-
     /** @var OpenGraphPresenter */
     public $open_graph;
 
     /** @var string */
-    public $variant;
-
-    /** @var string */
     public $variant_color_code;
+    public string $favicon_variant;
 
     public function __construct(
+        PFUser $user,
         $title,
-        $img_root,
         OpenGraphPresenter $open_graph,
         \Tuleap\Layout\ThemeVariantColor $variant,
     ) {
         $this->title              = $title;
-        $this->img_root           = $img_root;
         $this->open_graph         = $open_graph;
-        $this->variant            = $variant->value;
         $this->variant_color_code = $variant->getHexaCode();
+
+
+        $this->favicon_variant = FaviconVariant::shouldDisplayFaviconVariant($user)
+            ? $variant->getName()
+            : ThemeVariantColor::Orange->getName();
     }
 
-    public function title()
+    public function title(): string
     {
         return html_entity_decode($this->title);
-    }
-
-    public function imgRoot()
-    {
-        return $this->img_root;
     }
 }

@@ -5,14 +5,11 @@
 
         <title>{{ title }}</title>
 
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ imgroot }}favicon/{{ color_name }}/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ imgroot }}favicon/{{ color_name }}/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ imgroot }}favicon/{{ color_name }}/favicon-16x16.png">
-        <link rel="shortcut icon" href="{{ imgroot }}favicon/{{ color_name }}/favicon.ico">
-        <link rel="manifest" href="{{ imgroot }}favicon/{{ color_name }}/site.webmanifest">
-        <link rel="mask-icon" href="{{ imgroot }}favicon/{{ color_name }}/safari-pinned-tab.svg" color="{{ color_code }}">
-        <meta name="msapplication-TileColor" content="{{ color_code }}">
-        <meta name="msapplication-config" content="{{ imgroot }}favicon/{{ color_name }}/browserconfig.xml">
+        <link rel="apple-touch-icon" sizes="180x180" href="/themes/common/images/favicon/{{ favicon_variant }}/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" href="/themes/common/images/favicon/{{ favicon_variant }}/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="/themes/common/images/favicon/{{ favicon_variant }}/favicon.svg" sizes="any" />
+        <link rel="icon" href="/themes/common/images/favicon/{{ favicon_variant }}/favicon.ico" />
+        <link rel="manifest" href="/themes/common/images/favicon/{{ favicon_variant }}/site.webmanifest" />
         <meta name="main-color" content="{{ color_code }}">
 
         {{> open-graph }}

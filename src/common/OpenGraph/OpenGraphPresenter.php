@@ -20,8 +20,6 @@
 
 namespace Tuleap\OpenGraph;
 
-use Tuleap\Layout\ThemeVariantColor;
-
 class OpenGraphPresenter
 {
     public $properties = [];
@@ -38,10 +36,9 @@ class OpenGraphPresenter
             $this->properties[] = new OpenGraphPropertyPresenter('description', $description);
         }
 
-        $color              = ThemeVariantColor::buildFromDefaultVariant();
         $this->properties[] = new OpenGraphPropertyPresenter(
             'image',
-            \Tuleap\ServerHostname::HTTPSUrl() . '/themes/common/images/opengraph/' . $color->getName() . '.png'
+            \Tuleap\ServerHostname::HTTPSUrl() . '/themes/common/images/opengraph/tuleap-logo.png'
         );
     }
 }

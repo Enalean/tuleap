@@ -30,7 +30,7 @@ class CustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private $data_dir_path;
+    private string $data_dir_path;
 
     #[\Override]
     protected function setUp(): void
@@ -50,7 +50,7 @@ class CustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItConsidersLogoNotCustomizedIfItIsTheSameAsOurs(): void
     {
         copy(
-            __DIR__ . '/../../../../../src/www/themes/BurningParrot/images/organization_logo.png',
+            __DIR__ . '/../../../../../src/www/themes/common/images/organization_logo.png',
             $this->data_dir_path . '/images/organization_logo.png',
         );
 

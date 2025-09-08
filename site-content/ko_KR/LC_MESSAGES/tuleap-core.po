@@ -3895,6 +3895,9 @@ msgstr "프로젝트 플래그로 사용"
 msgid "Use default avatar"
 msgstr "기본 사진 사용"
 
+msgid "Use theme color for favicon"
+msgstr ""
+
 #, php-format
 msgid "User #%d is not administrator of project #%d"
 msgstr "사용자 #%d님은 프로젝트 #%d의 관리자가 아닙니다."

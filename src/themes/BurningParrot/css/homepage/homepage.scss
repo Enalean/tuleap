@@ -96,17 +96,6 @@ body.homepage > #main-container {
     white-space: nowrap;
 }
 
-.homepage-welcome-standard-logo-tulip {
-    margin: 0 18px 0 0;
-    fill: var(--tlp-main-color);
-}
-
-.homepage-welcome-standard-logo-tuleap {
-    position: relative;
-    top: 8px;
-    fill: var(--tlp-dark-color);
-}
-
 $text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
     1px 1px 0 var(--tlp-white-color),
     -1px 1px 0 var(--tlp-white-color),
@@ -304,6 +293,12 @@ $text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
     @supports (mix-blend-mode: overlay) {
         mix-blend-mode: overlay;
         opacity: 0.3;
+    }
+}
+
+.theme-orange .homepage-statistic-growth-background {
+    @supports (mix-blend-mode: overlay) {
+        opacity: 0.7;
     }
 }
 

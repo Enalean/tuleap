@@ -61,8 +61,9 @@ $fade-background-color: color.mix($tlp-background-color, common.$tlp-white-color
 
 :root {
     // Fonts
-    --tlp-font-family: system-ui, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Helvetica Neue",
-        arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --tlp-font-family: "Public Sans Variable", system-ui, "Segoe UI", roboto, oxygen, ubuntu,
+        cantarell, "Helvetica Neue", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
     --tlp-font-family-mono: menlo, monaco, consolas, "Courier New", monospace;
 
     // colors
