@@ -28,6 +28,15 @@ import QueryResultsLoadingState from "./QueryResultsLoadingState.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import { QueryStub } from "../../tests/stubs/QueryStub";
+import type { User } from "@tuleap/core-rest-api-types";
+
+const mireillelabeille: User = {
+    id: 101,
+    avatar_url: "https://example.com/users/mireillelabeille/avatar-mireillelabeille.png",
+    display_name: "Mireille L'Abeille (mireillelabeille)",
+    user_url: "/users/mireillelabeille",
+};
 
 describe("QueryResults", () => {
     describe("Given there is no users in the query", () => {
@@ -36,7 +45,7 @@ describe("QueryResults", () => {
 
             const wrapper = shallowMount(QueryResults, {
                 props: {
-                    nb_users: 0,
+                    query: QueryStub.withDefaults([]),
                     widget_id: 42,
                 },
                 global: {
@@ -58,7 +67,7 @@ describe("QueryResults", () => {
 
             const wrapper = shallowMount(QueryResults, {
                 props: {
-                    nb_users: 1,
+                    query: QueryStub.withDefaults([mireillelabeille]),
                     widget_id: 42,
                 },
                 global: {
@@ -80,7 +89,7 @@ describe("QueryResults", () => {
 
             const wrapper = shallowMount(QueryResults, {
                 props: {
-                    nb_users: 1,
+                    query: QueryStub.withDefaults([mireillelabeille]),
                     widget_id: 42,
                 },
                 global: {
@@ -106,7 +115,7 @@ describe("QueryResults", () => {
 
             const wrapper = shallowMount(QueryResults, {
                 props: {
-                    nb_users: 1,
+                    query: QueryStub.withDefaults([mireillelabeille]),
                     widget_id: 42,
                 },
                 global: {

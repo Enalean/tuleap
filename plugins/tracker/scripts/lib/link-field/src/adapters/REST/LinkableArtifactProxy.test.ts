@@ -33,6 +33,7 @@ const COLOR_STATUS = "daphne-blue";
 const HTML_URI = "/plugins/tracker/?aid=" + ARTIFACT_ID;
 const PROJECT_ID = 115;
 const PROJECT_LABEL = "🐹 Guinea Pig";
+const PROJECT_LABEL_WITHOUT_ICON = "Guinea Pig";
 
 describe(`LinkableArtifactProxy`, () => {
     it(`builds a LinkableArtifact from an Artifact representation from the API`, () => {
@@ -71,6 +72,7 @@ describe(`LinkableArtifactProxy`, () => {
             project: {
                 id: PROJECT_ID,
                 label: PROJECT_LABEL,
+                label_without_icon: PROJECT_LABEL_WITHOUT_ICON,
                 uri: "uri/to/project",
                 shortname: "guinea-pig",
             },

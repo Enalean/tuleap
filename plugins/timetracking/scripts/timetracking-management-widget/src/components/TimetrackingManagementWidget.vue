@@ -36,7 +36,7 @@
     <query-results
         v-if="!is_query_being_edited"
         v-bind:widget_id="widget_id"
-        v-bind:nb_users="current_query.users_list.length"
+        v-bind:query="current_query"
     />
 </template>
 

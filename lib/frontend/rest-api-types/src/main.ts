@@ -33,6 +33,7 @@ export type ProjectReference = {
 export type ProjectResponse = {
     readonly id: number;
     readonly label: string;
+    readonly label_without_icon: string;
     readonly shortname: string;
     readonly uri: string;
 };

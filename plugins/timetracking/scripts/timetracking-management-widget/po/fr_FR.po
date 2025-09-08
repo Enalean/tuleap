@@ -15,6 +15,12 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Details"
+msgstr "Détails"
+
 msgid "Error while retrieving user times: %{error}"
 msgstr ""
 "Une erreur est survenue lors de la récupération des temps d'utilisateurs : %"
@@ -26,6 +32,9 @@ msgstr "Une erreur est survenue lors de la sauvegarde de la requête : %{error}"
 msgid "From"
 msgstr "Du"
 
+msgid "No times to display"
+msgstr "Aucun temps à afficher"
+
 msgid "No user selected"
 msgstr "Aucun utilisateur sélectionné"
 
@@ -35,14 +44,26 @@ msgstr "Il n'y a pas de temps d'utilisateurs à afficher"
 msgid "Please select some users to display their times"
 msgstr "Veuillez sélectionner des utilisateurs pour afficher leur temps"
 
+msgid "Projects"
+msgstr "Projets"
+
 msgid "Save query"
 msgstr "Enregistrer la requête"
 
 msgid "Time"
 msgstr "Temps"
 
+msgid "Times"
+msgstr "Temps"
+
+msgid "Times details by project"
+msgstr "Détails des temps par projet"
+
 msgid "To"
 msgstr "Au"
+
+msgid "Total: %{nb}"
+msgstr "Total : %{nb}"
 
 msgid "Users"
 msgstr "Utilisateurs"
@@ -59,3 +80,6 @@ msgstr[0] ""
 msgstr[1] ""
 "Vous n'avez pas la permission d'accéder au temps de ces utilisateurs, ils "
 "ont été supprimés de la liste :"
+
+msgid "∑ %{sum}"
+msgstr "∑ %{sum}"

@@ -18,5 +18,8 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { UserTimes } from "./type";
 
 export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
+export const OPEN_MODAL_DETAILS: StrictInjectionKey<(times: UserTimes) => void> =
+    Symbol("open-modal-details");
