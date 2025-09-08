@@ -51,7 +51,7 @@
 
         <service-open-in-new-tab
             id="project-service-edit-modal-new-tab"
-            v-bind:value="service.is_in_new_tab"
+            v-bind:is_in_new_tab="service.is_in_new_tab"
             v-on:input="onNewTabChange"
         />
 
