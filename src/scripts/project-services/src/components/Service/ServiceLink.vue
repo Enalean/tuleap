@@ -34,31 +34,20 @@
             v-bind:title="link_title"
             required
             v-bind:disabled="disabled"
-            v-bind:value="value"
+            v-bind:value="link"
         />
     </div>
 </template>
-<script>
-export default {
-    name: "ServiceLink",
-    props: {
-        value: {
-            type: String,
-            required: true,
-        },
-        id: {
-            type: String,
-            required: true,
-        },
-        disabled: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    computed: {
-        link_title() {
-            return this.$gettext("Please, enter a http:// or https:// link");
-        },
-    },
-};
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+
+defineProps<{
+    id: string;
+    link: string;
+    disabled: boolean;
+}>();
+
+const link_title = $gettext("Please, enter a http:// or https:// link");
 </script>

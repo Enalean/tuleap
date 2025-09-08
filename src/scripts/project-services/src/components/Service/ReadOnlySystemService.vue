@@ -41,7 +41,7 @@
         <service-rank v-else id="project-service-edit-modal-rank" v-bind:value="service.rank" />
         <service-link
             id="project-service-edit-modal-link"
-            v-bind:value="service.link"
+            v-bind:link="service.link"
             v-bind:disabled="!service.is_link_customizable"
         />
         <div class="tlp-property">
