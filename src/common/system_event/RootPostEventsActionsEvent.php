@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2016 - Present. All rights reserved
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class b201604181408_force_refresh_codendi_svnroot extends \Tuleap\ForgeUpgrade\Bucket
-{
-    public function description()
-    {
-        return 'Force refresh of codendi_svnroot file to change the svnroot in Location';
-    }
+declare(strict_types=1);
 
-    public function up()
-    {
-        exec('/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/svn/force_refresh_codendi_svnroot.php');
-    }
+namespace Tuleap\SystemEvent;
+
+
+final class RootPostEventsActionsEvent
+{
+    public const string NAME = 'rootPostEventsActionsEvent';
 }

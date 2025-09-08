@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\SystemEvent;
 
 use BackendAliases;
-use BackendSVN;
-use BackendSystem;
 use ColinODell\PsrTestLogger\TestLogger;
 use DataAccessResult;
 use Exception;
@@ -38,9 +36,7 @@ use SystemEventDao;
 use SystemEventManager;
 use SystemEventProcessor_Root;
 use SystemEventProcessRootDefaultQueue;
-use Tuleap\DB\DBConnection;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\SVNCore\ApacheConfGenerator;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -65,8 +61,6 @@ final class SystemEventProcessorRootTest extends TestCase
 
         $backend_aliases = $this->createMock(BackendAliases::class);
         $backend_aliases->method('aliasesNeedUpdate')->willReturn(false);
-        $backend_svn = $this->createMock(BackendSVN::class);
-        $backend_svn->method('getSVNApacheConfNeedUpdate')->willReturn(false);
         $this->processor = $this->getMockBuilder(SystemEventProcessor_Root::class)
             ->setConstructorArgs([
                 new SystemEventProcessRootDefaultQueue(),
@@ -74,11 +68,8 @@ final class SystemEventProcessorRootTest extends TestCase
                 $this->system_event_dao,
                 $this->logger,
                 $backend_aliases,
-                $backend_svn,
-                $this->createMock(BackendSystem::class),
+                new \EventManager(),
                 $this->site_cache,
-                $this->createMock(ApacheConfGenerator::class),
-                $this->createMock(DBConnection::class),
             ])
             ->onlyMethods([
                 'launchAs',
