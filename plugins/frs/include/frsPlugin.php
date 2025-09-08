@@ -59,6 +59,7 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         bindTextDomain('tuleap-frs', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return ['tracker'];
@@ -67,6 +68,7 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return PluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

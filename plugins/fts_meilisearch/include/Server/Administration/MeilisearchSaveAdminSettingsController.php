@@ -56,6 +56,7 @@ final class MeilisearchSaveAdminSettingsController extends DispatchablePSR15Comp
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $key_local_meilisearch_server = $this->local_meilisearch_server->getCurrentKey();

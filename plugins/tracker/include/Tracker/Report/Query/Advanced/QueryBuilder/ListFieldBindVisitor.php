@@ -60,21 +60,25 @@ final class ListFieldBindVisitor implements BindVisitor
         return $field->getBind()->accept($this, new BindParameters($field));
     }
 
+    #[\Override]
     public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters)
     {
         return $this->static_builder;
     }
 
+    #[\Override]
     public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters)
     {
         return $this->users_builder;
     }
 
+    #[\Override]
     public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters)
     {
         return $this->ugroups_builder;
     }
 
+    #[\Override]
     public function visitListBindNull(Tracker_FormElement_Field_List_Bind_Null $bind, BindParameters $parameters)
     {
     }

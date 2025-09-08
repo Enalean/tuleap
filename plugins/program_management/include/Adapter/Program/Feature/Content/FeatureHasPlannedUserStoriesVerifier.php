@@ -39,6 +39,7 @@ final class FeatureHasPlannedUserStoriesVerifier implements VerifyHasAtLeastOneP
     ) {
     }
 
+    #[\Override]
     public function hasAtLeastOnePlannedUserStory(
         FeatureIdentifier $feature,
         UserIdentifier $user,

@@ -26,21 +26,25 @@ class Templating_Presenter_ButtonDropdownsOptionTitle extends Templating_Present
         $this->label = $label;
     }
 
+    #[\Override]
     public function simple()
     {
         return false;
     }
 
+    #[\Override]
     public function submenu()
     {
         return false;
     }
 
+    #[\Override]
     public function divider()
     {
         return false;
     }
 
+    #[\Override]
     public function title()
     {
         return true;

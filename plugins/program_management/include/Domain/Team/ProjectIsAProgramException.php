@@ -38,6 +38,7 @@ final class ProjectIsAProgramException extends \Exception implements TeamExcepti
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

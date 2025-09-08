@@ -28,6 +28,7 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $txt  = '';
@@ -41,6 +42,7 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent
      *
      * @return bool
      */
+    #[\Override]
     public function process()
     {
         $this->done();

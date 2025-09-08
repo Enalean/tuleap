@@ -80,6 +80,7 @@ class Plugin implements \Tuleap\Plugin\IsProjectAllowedToUsePlugin //phpcs:ignor
         $this->scope = self::SCOPE_SYSTEM;
     }
 
+    #[\Override]
     public function isAllowed($group_id): bool
     {
         if ($group_id === null) {

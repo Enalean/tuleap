@@ -48,6 +48,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
         ];
     }
 
+    #[\Override]
     public function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
         $html  = '';
@@ -59,6 +60,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
         return $this->fetchArtifactForm($html);
     }
 
+    #[\Override]
     protected function displayHeader()
     {
         $title       = sprintf(dgettext('tuleap-tracker', 'Copy of %1$s'), $this->artifact->getXRef());
@@ -77,6 +79,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
         );
     }
 
+    #[\Override]
     public function display(Codendi_Request $request, PFUser $current_user)
     {
         parent::display($request, $current_user);
@@ -85,6 +88,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
     /**
      * @see Tracker_Artifact_ArtifactRenderer::fetchSubmitButton()
      */
+    #[\Override]
     public function fetchSubmitButton(PFUser $current_user)
     {
         $purifier            = Codendi_HTMLPurifier::instance();
@@ -119,6 +123,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
                 </div>';
     }
 
+    #[\Override]
     protected function fetchView(Codendi_Request $request, PFUser $user): string
     {
         $view_collection = new ViewCollection($this->event_manager);
@@ -127,6 +132,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer //
         return $view_collection->fetchRequestedView($request);
     }
 
+    #[\Override]
     protected function fetchTitle()
     {
         $hp    = Codendi_HTMLPurifier::instance();

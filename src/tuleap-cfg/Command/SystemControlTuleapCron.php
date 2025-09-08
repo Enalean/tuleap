@@ -50,6 +50,7 @@ class SystemControlTuleapCron implements SystemControlInterface
         $this->action         = $action;
     }
 
+    #[\Override]
     public function run(): void
     {
         switch ($this->action) {
@@ -78,11 +79,13 @@ class SystemControlTuleapCron implements SystemControlInterface
         }
     }
 
+    #[\Override]
     public function isSuccessful(): bool
     {
         return $this->isSuccessful;
     }
 
+    #[\Override]
     public function getExitCode(): int
     {
         return $this->exitCode;
@@ -103,21 +106,25 @@ class SystemControlTuleapCron implements SystemControlInterface
         chgrp($this->base_directory . '/etc/cron.d/tuleap', 0);
     }
 
+    #[\Override]
     public function getOutput(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getCommandLine(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getBeforeMessage(): string
     {
         return sprintf('%s %s...', SystemControlCommand::ACTION_WORD[$this->action], self::TARGET_NAME);
     }
 
+    #[\Override]
     public function getErrorOutput(): string
     {
         return '';

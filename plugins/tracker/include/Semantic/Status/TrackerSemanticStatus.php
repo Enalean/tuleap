@@ -81,6 +81,7 @@ class TrackerSemanticStatus extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getShortName()
     {
         return self::NAME;
@@ -91,6 +92,7 @@ class TrackerSemanticStatus extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-tracker', 'Status');
@@ -101,6 +103,7 @@ class TrackerSemanticStatus extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-tracker', 'Define the status of an artifact');
@@ -212,6 +215,7 @@ class TrackerSemanticStatus extends TrackerSemantic
         return $labels;
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         if ($this->list_field) {
@@ -236,6 +240,7 @@ class TrackerSemanticStatus extends TrackerSemantic
         return dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>');
     }
 
+    #[\Override]
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -276,6 +281,7 @@ class TrackerSemanticStatus extends TrackerSemantic
         return $disabled_values;
     }
 
+    #[\Override]
     public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         if ($request->exist('delete')) {
@@ -369,6 +375,7 @@ class TrackerSemanticStatus extends TrackerSemantic
      *
      * @return bool
      */
+    #[\Override]
     public function save()
     {
         $dao         = new StatusSemanticDAO();
@@ -417,6 +424,7 @@ class TrackerSemanticStatus extends TrackerSemantic
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         if ($this->getFieldId() && in_array($this->getFieldId(), $xml_mapping)) {
@@ -443,11 +451,13 @@ class TrackerSemanticStatus extends TrackerSemantic
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId();
     }
 
+    #[\Override]
     public function exportToREST(PFUser $user)
     {
         $field = $this->getFieldUserCanRead($user);

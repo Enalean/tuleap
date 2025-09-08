@@ -50,6 +50,7 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
         $this->json_controller   = $json_controller;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = UserManager::instance()->getUserByUserName($variables['name']);

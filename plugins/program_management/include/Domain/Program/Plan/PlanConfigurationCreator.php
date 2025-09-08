@@ -43,6 +43,7 @@ final class PlanConfigurationCreator implements CreatePlanConfiguration
     ) {
     }
 
+    #[\Override]
     public function create(PlanConfigurationChange $plan_change): void
     {
         $project           = $this->project_retriever->getProjectWithId($plan_change->project_id);

@@ -168,6 +168,7 @@ class Tracker_Report_REST extends Tracker_Report
         }
     }
 
+    #[\Override]
     public function getCriteria(): array
     {
         $rank                = 0;

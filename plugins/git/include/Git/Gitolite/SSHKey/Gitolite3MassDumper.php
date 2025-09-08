@@ -35,6 +35,7 @@ class Gitolite3MassDumper implements MassDumper
     /**
      * @return bool
      */
+    #[\Override]
     public function dumpSSHKeys(InvalidKeysCollector $invalid_keys_collector)
     {
         try {

@@ -31,6 +31,7 @@ final class ThereIsAnOngoingTransactionChecker extends DataAccessObject implemen
     #[ConfigKeyInt(0)]
     public const FEATURE_FLAG = 'check_actions_context_in_transaction';
 
+    #[\Override]
     public function checkNoOngoingTransaction(): void
     {
         $feature_flag = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG);

@@ -38,6 +38,7 @@ class DynamicUser extends \PFUser
         $this->realname     = $realname;
     }
 
+    #[\Override]
     public function getStatus()
     {
         if ($this->is_logged_in) {
@@ -46,11 +47,13 @@ class DynamicUser extends \PFUser
         return parent::getStatus();
     }
 
+    #[\Override]
     public function isSuperUser(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function setPassword(ConcealedString $password): void
     {
     }
@@ -58,14 +61,17 @@ class DynamicUser extends \PFUser
     /**
      * @param string $name
      */
+    #[\Override]
     public function setUserName($name)
     {
     }
 
+    #[\Override]
     public function setStatus($status)
     {
     }
 
+    #[\Override]
     public function setExpiryDate($expiryDate)
     {
     }
@@ -74,6 +80,7 @@ class DynamicUser extends \PFUser
      * All actions done with this user are done by human operators
      * not by internal automatic processes
      */
+    #[\Override]
     public function isATechnicalUser(): bool
     {
         return false;

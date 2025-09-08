@@ -74,12 +74,14 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Else it is the title given by the user
      * @return string
      */
+    #[\Override]
     public function getTitle()
     {
         return $this->plugin_docman_widget_embedded_title ?:
                dgettext('tuleap-docman', 'Document viewer');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         if (! $this->plugin_docman_widget_embedded_item_id) {
@@ -112,16 +114,19 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * If true, then the dashboard will be rendered faster but the page will be a little bit crappy until full load.
      * @return bool
      */
+    #[\Override]
     public function isAjax()
     {
         return true;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -151,6 +156,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
             ';
     }
 
+    #[\Override]
     public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -176,6 +182,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Clone the content of the widget (for templates)
      * @return int the id of the new content
      */
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -233,6 +240,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Lazy load the content
      * @param int|string $id the id of the content
      */
+    #[\Override]
     public function loadContent($id)
     {
         $dao  = new WidgetEmbeddedDao();
@@ -248,6 +256,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Create a new content for this widget
      * @return int|false the id of the new content
      */
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         $content_id = false;
@@ -274,6 +283,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Update the preferences
      * @return bool true if something has been updated
      */
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $done       = false;
@@ -310,6 +320,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * We must delete its content.
      * @param int $id the id of the content
      */
+    #[\Override]
     public function destroy($id)
     {
         $sql = 'DELETE FROM plugin_docman_widget_embedded WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
@@ -321,6 +332,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * It's up to the widget to decide if it is relevant.
      * @return bool
      */
+    #[\Override]
     public function isUnique()
     {
         return false;
@@ -331,6 +343,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Here are some exemple of categories used by Codendi: frs, scm, trackers + plugin's ones
      * @return string
      */
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-docman', 'Document manager');
@@ -356,6 +369,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return $item;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         // do nothing
@@ -368,26 +382,31 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return '';
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         $hp      = Codendi_HTMLPurifier::instance();
@@ -416,16 +435,19 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return $html;
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         return '';
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-docman', 'Display a docman item directly in the dashboard. <br /><em>For now, only embedded files are supported</em>.');

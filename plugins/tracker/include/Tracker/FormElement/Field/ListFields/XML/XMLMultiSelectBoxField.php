@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
 final class XMLMultiSelectBoxField extends XMLListField
 {
+    #[\Override]
     public static function getType(): string
     {
         return \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE;

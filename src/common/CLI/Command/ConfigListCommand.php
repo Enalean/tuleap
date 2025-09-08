@@ -43,11 +43,13 @@ class ConfigListCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('List configuration values that can be modified with `config-set`');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $config_keys = $this->event_manager->dispatch(new GetConfigKeys());

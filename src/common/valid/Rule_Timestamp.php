@@ -24,6 +24,7 @@
 class Rule_Timestamp extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const TIMESTAMP_REGEX = '/^[0-9]+$/';
+    #[\Override]
     public function isValid($val)
     {
         return \preg_match(self::TIMESTAMP_REGEX, $val) === 1;

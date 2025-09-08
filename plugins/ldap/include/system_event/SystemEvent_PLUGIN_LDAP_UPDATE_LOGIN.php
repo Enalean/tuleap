@@ -49,6 +49,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent // phpcs:ignore P
      *
      * @see src/common/system_event/SystemEvent::process()
      */
+    #[\Override]
     public function process()
     {
         $user_ids    = $this->getParametersAsArray();
@@ -84,6 +85,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent // phpcs:ignore P
      *
      * @param bool $with_link With link
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return $this->parameters;

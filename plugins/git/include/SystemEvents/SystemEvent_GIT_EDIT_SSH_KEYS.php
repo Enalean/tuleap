@@ -70,6 +70,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent
         return $user;
     }
 
+    #[\Override]
     public function process()
     {
         $user_id = $this->getUserIdFromParameters();
@@ -121,6 +122,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent
         return array_filter($user->getAuthorizedKeysArray());
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         if ($with_link) {

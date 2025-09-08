@@ -84,6 +84,7 @@ class TransitionRepresentationBuilder implements Visitor
     /**
      * @throws OrphanTransitionException
      */
+    #[\Override]
     public function visitPermissions(Workflow_Transition_Condition_Permissions $condition)
     {
         $project_id                      = $this->getProjectId();
@@ -95,11 +96,13 @@ class TransitionRepresentationBuilder implements Visitor
         );
     }
 
+    #[\Override]
     public function visitFieldNotEmpty(Workflow_Transition_Condition_FieldNotEmpty $condition)
     {
         $this->not_empty_field_ids = JsonCast::toArrayOfInts($condition->getFieldIds());
     }
 
+    #[\Override]
     public function visitCommentNotEmpty(Workflow_Transition_Condition_CommentNotEmpty $condition)
     {
         $this->is_comment_required = $condition->isCommentRequired();

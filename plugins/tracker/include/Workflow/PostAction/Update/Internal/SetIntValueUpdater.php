@@ -50,6 +50,7 @@ class SetIntValueUpdater implements PostActionUpdater
      * @throws OrphanTransitionException
      * @throws UnknownPostActionIdsException
      */
+    #[\Override]
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateSetIntValueActions($this->validator, $transition->getWorkflow()->getTracker());

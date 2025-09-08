@@ -77,6 +77,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
      *
      * @return Tracker_Artifact_ChangesetValue|null
      */
+    #[\Override]
     public function getValue(TrackerField $field)
     {
         if (! array_key_exists($field->getId(), $this->values)) {
@@ -88,6 +89,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
     /**
      * @return Tracker_Artifact_ChangesetValue[]
      */
+    #[\Override]
     public function getChangesetValuesHasChanged(): array
     {
         $has_changed_changeset = [];
@@ -107,6 +109,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
         return $has_changed_changeset;
     }
 
+    #[\Override]
     public function canHoldValue()
     {
         return true;
@@ -233,11 +236,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
         return Tracker_FormElementFactory::instance();
     }
 
+    #[\Override]
     public function getFollowUpDate()
     {
         return $this->submitted_on;
     }
 
+    #[\Override]
     public function getFollowupContent(string $diff_to_previous, \PFUser $current_user): string
     {
         $html = '';
@@ -273,6 +278,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
     /**
      * Fetch followup
      */
+    #[\Override]
     public function fetchFollowUp($diff_to_previous, PFUser $current_user): string
     {
         $follow_up_content = $this->getFollowupContent($diff_to_previous, $current_user);
@@ -401,6 +407,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
     /**
      * @return string html
      */
+    #[\Override]
     public function getSubmitterUrl()
     {
         if ($this->submitted_by) {
@@ -418,6 +425,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
     /**
      * @return string
      */
+    #[\Override]
     public function getHTMLAvatar()
     {
         return $this->getSubmitter()->fetchHtmlAvatar();
@@ -431,6 +439,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
         return $this->getSubmitter()->getAvatarUrl();
     }
 
+    #[\Override]
     public function getFollowUpClassnames($diff_to_previous, PFUser $user): string
     {
         $classnames = '';
@@ -723,6 +732,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
      *
      * @return string html
      */
+    #[\Override]
     public function diffToPrevious(
         $format = 'html',
         $user = null,
@@ -779,6 +789,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
         return $result;
     }
 
+    #[\Override]
     public function diffToPreviousArtifactView(PFUser $user, Tracker_Artifact_Followup_Item $previous_item)
     {
         $result = '';
@@ -890,6 +901,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
      *
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId(): string|int
     {
         return $this->id;
@@ -934,6 +946,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
         return $displayer->display((int) $this->getId());
     }
 
+    #[\Override]
     public function getFollowUpHTML(PFUser $user, Tracker_Artifact_Followup_Item $previous_item): ?string
     {
         $diff_to_previous = $this->diffToPreviousArtifactView($user, $previous_item);

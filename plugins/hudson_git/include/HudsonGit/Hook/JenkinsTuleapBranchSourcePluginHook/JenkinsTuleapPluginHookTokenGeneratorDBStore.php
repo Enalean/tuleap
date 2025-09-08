@@ -38,6 +38,7 @@ final class JenkinsTuleapPluginHookTokenGeneratorDBStore implements JenkinsTulea
     ) {
     }
 
+    #[\Override]
     public function generateTriggerToken(\DateTimeImmutable $now): ConcealedString
     {
         $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();

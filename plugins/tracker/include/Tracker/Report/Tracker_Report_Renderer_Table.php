@@ -79,6 +79,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $this->multisort = $multisort;
     }
 
+    #[\Override]
     public function initiateSession()
     {
         $this->report_session = new Tracker_Report_Session($this->report->id);
@@ -90,6 +91,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Delete the renderer
      */
+    #[\Override]
     public function delete()
     {
         $this->getSortDao()->delete($this->id);
@@ -397,6 +399,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Fetch content of the renderer
      * @return string
      */
+    #[\Override]
     public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
     {
         $html       = '';
@@ -557,6 +560,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return array of 'item_key' => {url: '', icon: '', label: ''}
      */
+    #[\Override]
     public function getOptionsMenuItems(PFUser $current_user): array
     {
         if ($current_user->isAnonymous()) {
@@ -625,6 +629,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
+    #[\Override]
     public function fetchWidget(PFUser $user, Widget $widget): string
     {
         $html                   = '';
@@ -1846,6 +1851,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Duplicate the renderer
      */
+    #[\Override]
     public function duplicate($from_report_id, $field_mapping, MappingRegistry $mapping_registry): void
     {
         //duplicate sort
@@ -1856,6 +1862,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $this->getAggregatesDao()->duplicate($from_report_id->id, $this->id, $field_mapping);
     }
 
+    #[\Override]
     public function getType()
     {
         return self::TABLE;
@@ -1865,6 +1872,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Process the request
      * @param HTTPRequest $request
      */
+    #[\Override]
     public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)
     {
         $ff = $this->getFieldFactory();
@@ -2232,6 +2240,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, array $xmlMapping)
     {
         parent::exportToXml($root, $xmlMapping);
@@ -2553,6 +2562,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return bool true if success, false if failure
      */
+    #[\Override]
     public function create()
     {
         $success = true;
@@ -2579,6 +2589,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return bool true if success, false if failure
      */
+    #[\Override]
     public function update()
     {
         $success = true;
@@ -2624,6 +2635,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param Tracker_Report_Renderer $renderer containing the columns
      */
+    #[\Override]
     public function afterSaveObject(Tracker_Report_Renderer $renderer)
     {
         $renderer->injectUnsavedColumnsInRendererDB($this);
@@ -2647,6 +2659,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return ' <i class="fa fa-caret-' . ( $is_desc ? 'down' : 'up' ) . '"></i>';
     }
 
+    #[\Override]
     public function getIcon()
     {
         return 'fa fa-list-ul';
@@ -2728,6 +2741,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return new TypePresenterFactory($type_dao, $artifact_link_usage_dao, new SystemTypePresenterBuilder(EventManager::instance()));
     }
 
+    #[\Override]
     public function getJavascriptDependencies()
     {
         return [
@@ -2735,6 +2749,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         ];
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         $tracker_assets = new IncludeViteAssets(

@@ -27,26 +27,31 @@ final class EmptyMappedValues implements MappedValuesInterface
     /**
      * @return int[]
      */
+    #[\Override]
     public function getValueIds(): array
     {
         return [];
     }
 
+    #[\Override]
     public function isEmpty(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function contains(int $bind_value_id): bool
     {
         return false;
     }
 
+    #[\Override]
     public function getFirstValue(): int
     {
         throw new \RuntimeException();
     }
 
+    #[\Override]
     public function removeValue(int $value): void
     {
     }

@@ -30,6 +30,7 @@ final readonly class SemanticVelocityDuplicator implements IDuplicateSemantic
     {
     }
 
+    #[\Override]
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
         $template = $this->dao->searchUsedVelocityField($from_tracker_id);

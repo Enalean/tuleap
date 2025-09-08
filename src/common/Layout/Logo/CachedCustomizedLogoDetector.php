@@ -60,6 +60,7 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
         return $cache_file;
     }
 
+    #[\Override]
     public function isLegacyOrganizationLogoCustomized(): bool
     {
         $information = $this->getInformationFromCacheFile();
@@ -73,6 +74,7 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
         return $information['is_legacy_organization_logo_customized'];
     }
 
+    #[\Override]
     public function isSvgOrganizationLogoCustomized(): bool
     {
         $information = $this->getInformationFromCacheFile();

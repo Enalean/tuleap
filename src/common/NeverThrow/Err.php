@@ -44,6 +44,7 @@ final readonly class Err implements IResult
      * @return Err<TError>
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $fn): Err
     {
         return new Err($this->error);
@@ -54,6 +55,7 @@ final readonly class Err implements IResult
      * @psalm-param callable(TError): TNewError $fn
      * @return Err<TNewError>
      */
+    #[\Override]
     public function mapErr(callable $fn): Err
     {
         return new Err($fn($this->error));
@@ -63,6 +65,7 @@ final readonly class Err implements IResult
      * @return Err<TError>
      * @psalm-mutation-free
      */
+    #[\Override]
     public function andThen(callable $fn): Err
     {
         return new Err($this->error);
@@ -74,6 +77,7 @@ final readonly class Err implements IResult
      * @param callable(TError): (Ok<TNewValue> | Err<TNewError>) $fn
      * @return Ok<TNewValue> | Err<TNewError>
      */
+    #[\Override]
     public function orElse(callable $fn): Ok|Err
     {
         return $fn($this->error);
@@ -84,6 +88,7 @@ final readonly class Err implements IResult
      * @param callable(TError): TReturn $err_fn
      * @return TReturn
      */
+    #[\Override]
     public function match(callable $ok_fn, callable $err_fn): mixed
     {
         return $err_fn($this->error);
@@ -95,6 +100,7 @@ final readonly class Err implements IResult
      * @return TDefaultValue
      * @psalm-mutation-free
      */
+    #[\Override]
     public function unwrapOr(mixed $default_value): mixed
     {
         return $default_value;

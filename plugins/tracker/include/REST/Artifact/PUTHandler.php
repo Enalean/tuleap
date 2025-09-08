@@ -47,6 +47,7 @@ final class PUTHandler implements HandlePUT
     ) {
     }
 
+    #[\Override]
     public function handle(
         array $values,
         Artifact $artifact,

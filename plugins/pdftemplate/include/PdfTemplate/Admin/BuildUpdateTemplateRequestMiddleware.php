@@ -45,6 +45,7 @@ final readonly class BuildUpdateTemplateRequestMiddleware implements MiddlewareI
     ) {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $user = $request->getAttribute(\PFUser::class);

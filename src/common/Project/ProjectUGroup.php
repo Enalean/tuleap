@@ -182,6 +182,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      *
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getName()
     {
         return $this->name;
@@ -213,6 +214,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      *
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
@@ -231,6 +233,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return $this->project;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $this->description;

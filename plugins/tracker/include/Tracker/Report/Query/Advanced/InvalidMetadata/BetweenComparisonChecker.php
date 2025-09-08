@@ -27,6 +27,7 @@ final class BetweenComparisonChecker implements ICheckMetadataForAComparison
 {
     public const OPERATOR = 'between()';
 
+    #[\Override]
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {
         throw new InvalidMetadataForComparisonException($metadata, self::OPERATOR);

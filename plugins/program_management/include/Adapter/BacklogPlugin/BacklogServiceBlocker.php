@@ -33,6 +33,7 @@ final class BacklogServiceBlocker implements \Tuleap\ProgramManagement\Domain\Wo
     ) {
     }
 
+    #[\Override]
     public function shouldBacklogServiceBeBlocked(ProjectIdentifier $project_identifier): bool
     {
         $project = $this->project_retriever->getProject($project_identifier->getId());

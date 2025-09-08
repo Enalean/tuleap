@@ -57,6 +57,7 @@ final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $layout = $request->getAttribute(BaseLayout::class);

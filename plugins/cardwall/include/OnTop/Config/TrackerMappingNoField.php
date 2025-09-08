@@ -24,16 +24,19 @@ class Cardwall_OnTop_Config_TrackerMappingNoField extends Cardwall_OnTop_Config_
     /**
      * @pattern Visitor
      */
+    #[\Override]
     public function accept($visitor)
     {
         return $visitor->visitTrackerMappingNoField($this);
     }
 
+    #[\Override]
     public function getField()
     {
         return null;
     }
 
+    #[\Override]
     public function getValueMappings()
     {
         return [];

@@ -66,6 +66,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitText($this);
@@ -91,16 +92,19 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->format;
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         return $this->getFullRESTValue($user);
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         return $this->getFullRESTRepresentation($this->getText());
     }
 
+    #[\Override]
     protected function getFullRESTRepresentation($value)
     {
         $post_processed_value = $this->getValue();
@@ -133,6 +137,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      *
      * @return string The value of this artifact changeset value
      */
+    #[\Override]
     public function getValue()
     {
         $interpreter = new TextValueInterpreter($this->purifier, self::getCommonMarkInterpreter($this->purifier));
@@ -144,6 +149,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      *
      * @return string|false The difference between another $changeset_value, false if no differences
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $previous_text = $changeset_value->getText();
@@ -160,6 +166,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * @return false|string
      */
+    #[\Override]
     public function mailDiff(
         $changeset_value,
         $artifact_id,
@@ -206,6 +213,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      *
      * @return string The sentence to add in changeset
      */
+    #[\Override]
     public function nodiff($format = 'html')
     {
         $next = $this->getText();

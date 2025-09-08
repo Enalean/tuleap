@@ -65,6 +65,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
         $this->config_path  = $etc_root_path . '/visitors_parameters.json';
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         if (! $this->licenses_dao->doesUserlogTableExists()) {
@@ -114,6 +115,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
         return 0;
     }
 
+    #[\Override]
     protected function configure()
     {
         $this->setDescription('Count the number of active users, visitors and outputs the number of due licenses.');

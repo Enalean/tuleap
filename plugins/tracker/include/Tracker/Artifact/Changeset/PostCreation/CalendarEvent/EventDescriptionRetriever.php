@@ -37,6 +37,7 @@ final class EventDescriptionRetriever implements RetrieveEventDescription
     /**
      * @return Ok<CalendarEventData>
      */
+    #[\Override]
     public function retrieveEventDescription(
         CalendarEventData $calendar_event_data,
         \Tracker_Artifact_Changeset $changeset,

@@ -46,6 +46,7 @@ final class JiraEpicIssuesRetrieverFromAPI implements JiraEpicIssuesRetriever
         $this->logger      = $logger;
     }
 
+    #[\Override]
     public function getIssueIds(JiraEpic $epic, string $jira_project): array
     {
         $iterator  = JiraCollectionBuilder::iterateUntilTotal(

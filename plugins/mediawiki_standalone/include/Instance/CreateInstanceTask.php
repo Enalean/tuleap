@@ -40,16 +40,19 @@ final class CreateInstanceTask implements QueueTask
         $this->short_language_code = $language_code_provider->getLanguageCode();
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return CreateInstance::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return ['project_id' => $this->project_id, 'language_code' => $this->short_language_code];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Create MediaWiki instance #' . $this->project_id;

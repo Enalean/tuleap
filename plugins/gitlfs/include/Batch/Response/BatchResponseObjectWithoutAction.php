@@ -34,6 +34,7 @@ final class BatchResponseObjectWithoutAction implements BatchResponseObject
         $this->object = $object;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

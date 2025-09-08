@@ -42,6 +42,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $txt             = '';
@@ -71,6 +72,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent
      *
      * @return bool
      */
+    #[\Override]
     public function process()
     {
         $ugroup_name     = null;

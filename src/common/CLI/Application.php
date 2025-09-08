@@ -41,6 +41,7 @@ class Application extends \Symfony\Component\Console\Application
         );
     }
 
+    #[\Override]
     public function doRun(InputInterface $input, OutputInterface $output): int
     {
         if ($input->hasParameterOption(['--version', '-V', '-v'], true)) {
@@ -76,6 +77,7 @@ class Application extends \Symfony\Component\Console\Application
         return parent::doRun($input, $output);
     }
 
+    #[\Override]
     protected function getDefaultInputDefinition(): InputDefinition
     {
         return new InputDefinition([
@@ -90,6 +92,7 @@ class Application extends \Symfony\Component\Console\Application
         ]);
     }
 
+    #[\Override]
     protected function getDefaultCommands(): array
     {
         return array_merge(

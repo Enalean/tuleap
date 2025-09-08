@@ -41,6 +41,7 @@ final class FieldRetrievalException extends \Exception implements FieldSynchroni
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

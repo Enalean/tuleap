@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 final class ExternalFieldsHaveSameTypeVerifier implements VerifyExternalFieldsHaveSameType
 {
+    #[\Override]
     public function haveBothFieldsSameType(\Tuleap\Tracker\FormElement\Field\TrackerField $source_field, \Tuleap\Tracker\FormElement\Field\TrackerField $destination_field): bool
     {
         return $source_field::class === $destination_field::class;

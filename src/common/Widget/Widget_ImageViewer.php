@@ -37,11 +37,13 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         $this->setOwner($owner_id, $owner_type);
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $this->image_title ?: 'Image';
     }
 
+    #[\Override]
     public function getContent(): string
     {
         if (! $this->image_url) {
@@ -55,11 +57,13 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             alt="' . $hp->purify($this->getTitle()) . '" /></div>';
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -91,6 +95,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             ';
     }
 
+    #[\Override]
     public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -122,6 +127,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             ';
     }
 
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -146,6 +152,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         return db_insertid($res);
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $sql = 'SELECT * FROM widget_image WHERE owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
@@ -158,6 +165,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         }
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         $content_id = false;
@@ -178,6 +186,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         return $content_id;
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $done       = false;
@@ -207,12 +216,14 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         return $done;
     }
 
+    #[\Override]
     public function destroy($id)
     {
         $sql = 'DELETE FROM widget_image WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
 
+    #[\Override]
     public function isUnique()
     {
         return false;

@@ -46,6 +46,7 @@ abstract class PermissionDeniedMailSender extends Error_PermissionDenied impleme
         $this->token                = $token;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $this->token->check('/my/');

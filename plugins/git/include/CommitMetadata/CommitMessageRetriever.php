@@ -28,6 +28,7 @@ final class CommitMessageRetriever implements RetrieveCommitMessage
     {
     }
 
+    #[\Override]
     public function getCommitMessage(string $ref): string
     {
         return $this->git_exec->getCommitMessage($ref);

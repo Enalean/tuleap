@@ -45,6 +45,7 @@ class Cardwall_OnTop_Config_Command_CreateMappingField extends Cardwall_OnTop_Co
     /**
      * @see Cardwall_OnTop_Config_Command::execute()
      */
+    #[\Override]
     public function execute(Codendi_Request $request)
     {
         if ($request->get('add_mapping_on')) {

@@ -47,6 +47,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
+    #[\Override]
     public function getResult()
     {
         return $this;
@@ -61,6 +62,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
+    #[\Override]
     public function instanciateWith($instance_callback)
     {
         $this->instance_callback = $instance_callback;
@@ -74,6 +76,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return mixed
      */
+    #[\Override]
     public function getRow()
     {
         $row = $this->current();
@@ -88,6 +91,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return int
      */
+    #[\Override]
     public function rowCount()
     {
         if ($this->pdo_statement === null) {
@@ -122,6 +126,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return mixed
      */
+    #[\Override]
     public function isError()
     {
         if ($this->pdo_statement === null) {
@@ -141,6 +146,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      * @return false|array Return the current element
      * @psalm-ignore-falsable-return
      */
+    #[\Override]
     public function current(): mixed
     {
         if ($this->result_iterator === null) {
@@ -164,6 +170,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      *
      * @deprecated
      */
+    #[\Override]
     public function next(): void
     {
         $this->result_iterator->next();
@@ -174,6 +181,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      *
      * @deprecated
      */
+    #[\Override]
     public function valid(): bool
     {
         if ($this->result_iterator === null) {
@@ -199,6 +207,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      * @deprecated
      *
      */
+    #[\Override]
     public function rewind(): void
     {
         $this->result_iterator->rewind();
@@ -209,6 +218,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      *
      * @deprecated
      */
+    #[\Override]
     public function key(): mixed
     {
         return $this->result_iterator->key();
@@ -217,6 +227,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
+    #[\Override]
     public function count(): int
     {
         return $this->rowCount();
@@ -225,6 +236,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
+    #[\Override]
     public function freeMemory()
     {
         $this->pdo_statement->closeCursor();

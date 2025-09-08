@@ -24,11 +24,13 @@ use Tuleap\Docman\Item\OtherDocument;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVisitor
 {
+    #[\Override]
     public function visitFolder(\Docman_Folder $item, $params = [])
     {
         return [];
     }
 
+    #[\Override]
     public function visitWiki(\Docman_Wiki $item, $params = [])
     {
         $pagename = '';
@@ -42,6 +44,7 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
         return [new \Docman_MetadataHtmlWiki($pagename)];
     }
 
+    #[\Override]
     public function visitLink(\Docman_Link $item, $params = [])
     {
         $link_url = '';
@@ -55,16 +58,19 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
         return [new \Docman_MetadataHtmlLink($link_url)];
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return [];
     }
 
+    #[\Override]
     public function visitFile(\Docman_File $item, $params = [])
     {
         return [new \Docman_MetadataHtmlFile($params['request'])];
     }
 
+    #[\Override]
     public function visitEmbeddedFile(\Docman_EmbeddedFile $item, $params = [])
     {
         $content = '';
@@ -75,11 +81,13 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
         return [new \Docman_MetadataHtmlEmbeddedFile($content)];
     }
 
+    #[\Override]
     public function visitEmpty(\Docman_Empty $item, $params = [])
     {
         return [new \Docman_MetadataHtmlEmpty()];
     }
 
+    #[\Override]
     public function visitItem(\Docman_Item $item, array $params = [])
     {
         throw new \LogicException('Cannot get the specific fields of a non specialized item');

@@ -25,6 +25,7 @@ class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAfterAdminEditForm()
     {
         return $this->formElement->getBind()->fetchAdminEditForm();
@@ -36,6 +37,7 @@ class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAfterAdminCreateForm()
     {
         $bf    = new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());

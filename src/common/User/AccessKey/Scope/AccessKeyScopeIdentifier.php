@@ -46,6 +46,7 @@ final class AccessKeyScopeIdentifier implements AuthenticationScopeIdentifier
      *
      * @throws InvalidScopeIdentifierKeyException
      */
+    #[\Override]
     public static function fromIdentifierKey(string $identifier_key): AuthenticationScopeIdentifier
     {
         if (preg_match('/^[^\s:]+:[^\s:]+$/', $identifier_key) !== 1) {
@@ -55,6 +56,7 @@ final class AccessKeyScopeIdentifier implements AuthenticationScopeIdentifier
         return new self($identifier_key);
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->identifier;

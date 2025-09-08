@@ -30,6 +30,7 @@ final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements SearchFil
     /**
      * @return null|array{filename_pattern: string, is_filename_pattern_enforced: int}
      */
+    #[\Override]
     public function searchFileNamePatternFromProjectId(int $project_id): ?array
     {
         $sql = 'SELECT filename_pattern, is_filename_pattern_enforced
@@ -39,6 +40,7 @@ final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements SearchFil
         return $this->getDB()->row($sql, $project_id);
     }
 
+    #[\Override]
     public function saveFilenamePattern(int $project_id, FilenamePattern $filename_pattern): void
     {
         $this->getDB()->update(
@@ -54,6 +56,7 @@ final class SettingsDAO extends \Tuleap\DB\DataAccessObject implements SearchFil
     /**
      * @return null|array{forbid_writers_to_update: int, forbid_writers_to_delete: int}
      */
+    #[\Override]
     public function searchByProjectId(int $project_id): ?array
     {
         $sql = 'SELECT forbid_writers_to_update, forbid_writers_to_delete FROM plugin_docman_project_settings WHERE group_id = ?';

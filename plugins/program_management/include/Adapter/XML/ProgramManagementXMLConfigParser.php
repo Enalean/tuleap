@@ -29,6 +29,7 @@ final class ProgramManagementXMLConfigParser implements ParseXMLConfig
 {
     private const PROGRAM_MANAGEMENT_CONFIG_XML = 'program-management-config.xml';
 
+    #[\Override]
     public function isThereAConfigToImport(string $extraction_path): bool
     {
         $xml_path = $extraction_path . '/' . self::PROGRAM_MANAGEMENT_CONFIG_XML;
@@ -40,6 +41,7 @@ final class ProgramManagementXMLConfigParser implements ParseXMLConfig
      * @throws \XML_ParseException
      * @throws CannotLoadXMLConfigFileException
      */
+    #[\Override]
     public function parseConfig(string $extraction_path): \SimpleXMLElement
     {
         $xml_path   = $extraction_path . '/' . self::PROGRAM_MANAGEMENT_CONFIG_XML;

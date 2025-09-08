@@ -28,6 +28,7 @@ class Docman_SqlFilterListAdvanced extends \Docman_SqlFilter
         parent::__construct($filter);
     }
 
+    #[\Override]
     public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt = [];

@@ -52,6 +52,7 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent
         return $this->repository_factory->getRepositoryById($this->getNewRepositoryIdFromParameters());
     }
 
+    #[\Override]
     public function process()
     {
         $old_repository = $this->getOldRepositoryFromParameters();
@@ -68,6 +69,7 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent
         $this->done();
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $old_repository = $this->getOldRepositoryFromParameters();

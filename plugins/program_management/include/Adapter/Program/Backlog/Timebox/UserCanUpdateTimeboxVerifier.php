@@ -35,6 +35,7 @@ final class UserCanUpdateTimeboxVerifier implements VerifyUserCanUpdateTimebox
     {
     }
 
+    #[\Override]
     public function canUserUpdate(TimeboxIdentifier $timebox, UserIdentifier $user): bool
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($timebox);

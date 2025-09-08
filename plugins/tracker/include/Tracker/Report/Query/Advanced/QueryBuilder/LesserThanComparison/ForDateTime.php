@@ -29,6 +29,7 @@ final class ForDateTime implements DateTimeConditionBuilder
     {
     }
 
+    #[\Override]
     public function getCondition($value, string $changeset_value_date_alias): ParametrizedSQLFragment
     {
         $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);

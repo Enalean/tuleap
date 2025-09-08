@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Action;
 
 final class AreListFieldsCompatibleVerifier implements VerifyListFieldsAreCompatible
 {
+    #[\Override]
     public function areListFieldsCompatible(
         \Tuleap\Tracker\FormElement\Field\ListField $source_field,
         \Tuleap\Tracker\FormElement\Field\ListField $destination_field,

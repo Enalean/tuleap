@@ -52,6 +52,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
     ) {
     }
 
+    #[\Override]
     public function warmUpCacheForWorkflow(Workflow $workflow): void
     {
         $workflow_id = (int) $workflow->getId();
@@ -69,6 +70,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
      * @return AddToTopBacklogPostAction[]
      * @throws \Tuleap\Tracker\Workflow\Transition\OrphanTransitionException
      */
+    #[\Override]
     public function loadPostActions(Transition $transition): array
     {
         $workflow_id = (int) $transition->getWorkflow()->getId();
@@ -106,6 +108,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
             }, []);
     }
 
+    #[\Override]
     public function saveObject(Transition_PostAction $post_action): void
     {
         $to_transition_id = (int) $post_action->getTransition()->getId();
@@ -115,11 +118,13 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
         );
     }
 
+    #[\Override]
     public function isFieldUsedInPostActions(TrackerField $field): bool
     {
         return false;
     }
 
+    #[\Override]
     public function duplicate(Transition $from_transition, int $to_transition_id, array $field_mapping): void
     {
         $postactions = $this->loadPostActions($from_transition);
@@ -130,6 +135,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
         }
     }
 
+    #[\Override]
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition): AddToTopBacklogPostAction
     {
         return new AddToTopBacklogPostAction(

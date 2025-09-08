@@ -40,6 +40,7 @@ final class RegisterFormDisplayer implements IDisplayRegisterForm
     ) {
     }
 
+    #[\Override]
     public function display(
         \HTTPRequest $request,
         BaseLayout $layout,
@@ -51,6 +52,7 @@ final class RegisterFormDisplayer implements IDisplayRegisterForm
         );
     }
 
+    #[\Override]
     public function displayWithPossibleIssue(
         \HTTPRequest $request,
         BaseLayout $layout,

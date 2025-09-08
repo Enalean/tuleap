@@ -26,11 +26,13 @@ class Docman_MetadataHtmlFile extends \Docman_MetadataHtml
     {
     }
 
+    #[\Override]
     public function getLabel($show_mandatory_information = \true)
     {
         return \dgettext('tuleap-docman', 'Content:');
     }
 
+    #[\Override]
     public function getField()
     {
         $html  = '<input type="file" name="file" />';
@@ -38,6 +40,7 @@ class Docman_MetadataHtmlFile extends \Docman_MetadataHtml
         return $html;
     }
 
+    #[\Override]
     public function &getValidator($request = \null)
     {
         if ($request === \null) {

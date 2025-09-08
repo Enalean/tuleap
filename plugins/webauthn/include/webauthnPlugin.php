@@ -34,6 +34,7 @@ final class WebAuthnPlugin extends Plugin
         bindtextdomain('tuleap-webauthn', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): Tuleap\WebAuthn\Plugin\PluginInfo
     {
         if (! $this->pluginInfo) {

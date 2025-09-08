@@ -29,6 +29,7 @@ class Docman_HtmlFilterText extends \Docman_HtmlFilter
         parent::__construct($filter);
     }
     // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    #[\Override]
     public function _valueSelectorHtml($formName = 0)
     {
         $html  = '';

@@ -53,6 +53,7 @@ class TextDiffRetriever implements DispatchableWithRequest
         $this->diff_processor                = $diff_processor;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $changeset_id = (int) $variables['changeset_id'];

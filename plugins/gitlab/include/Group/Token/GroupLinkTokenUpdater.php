@@ -33,6 +33,7 @@ final class GroupLinkTokenUpdater implements UpdateGroupLinkToken
     {
     }
 
+    #[\Override]
     public function updateToken(GroupLink $group_link, ConcealedString $token): void
     {
         $encrypted_secret = SymmetricCrypto::encrypt(

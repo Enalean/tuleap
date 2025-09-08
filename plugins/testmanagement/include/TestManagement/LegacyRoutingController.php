@@ -55,6 +55,7 @@ final class LegacyRoutingController implements DispatchableWithRequest, Dispatch
         $this->testmanagement_assets  = $testmanagement_assets;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->includeFooterJavascriptFile($this->include_core_js_assets->getFileURL('ckeditor.js'));

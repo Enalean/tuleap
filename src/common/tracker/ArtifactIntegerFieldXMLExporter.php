@@ -25,6 +25,7 @@ class ArtifactIntegerFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
     public const TV5_TYPE        = 'int';
     public const DEFAULT_VALUE   = 0;
 
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         $this->setNewValue($row);
@@ -39,6 +40,7 @@ class ArtifactIntegerFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
         }
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         return self::TV3_VALUE_INDEX;

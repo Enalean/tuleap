@@ -33,6 +33,7 @@ final class ProjectCreationDao extends DataAccessObject implements StoreProjectI
     private const TYPE_TEMPLATE = 2;
     private const TYPE_TEST     = 3;
 
+    #[\Override]
     public function create(ProjectCreationData $data): int
     {
         if (ForgeConfig::get('sys_disable_subdomains')) {

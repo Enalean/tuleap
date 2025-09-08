@@ -34,11 +34,13 @@ class ProjectContacts extends \Widget
         parent::__construct('projectcontacts');
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return $GLOBALS['Language']->getText('widget_project_contacts', 'title');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $request  = \HTTPRequest::instance();
@@ -67,11 +69,13 @@ class ProjectContacts extends \Widget
         return $html;
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return $GLOBALS['Language']->getText('widget_description_project_contacts', 'description');
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         $assets = new \Tuleap\Layout\IncludeCoreAssets();
@@ -82,6 +86,7 @@ class ProjectContacts extends \Widget
         ];
     }
 
+    #[\Override]
     public function exportAsXML(): \SimpleXMLElement
     {
         $widget = new \SimpleXMLElement('<widget />');

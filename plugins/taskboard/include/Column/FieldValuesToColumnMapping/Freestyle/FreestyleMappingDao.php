@@ -29,6 +29,7 @@ use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 final class FreestyleMappingDao extends DataAccessObject implements SearchMappedField, SearchMappedFieldValuesForColumn, VerifyMappingExists
 {
+    #[\Override]
     public function searchMappedField(TaskboardTracker $taskboard_tracker): Option
     {
         $sql             = 'SELECT field_id
@@ -46,6 +47,7 @@ final class FreestyleMappingDao extends DataAccessObject implements SearchMapped
         return Option::fromValue($mapped_field_id);
     }
 
+    #[\Override]
     public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool
     {
         $sql = 'SELECT 1
@@ -59,6 +61,7 @@ final class FreestyleMappingDao extends DataAccessObject implements SearchMapped
         );
     }
 
+    #[\Override]
     public function searchMappedFieldValuesForColumn(
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,

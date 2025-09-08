@@ -39,6 +39,7 @@ class Widget_MyRss extends Widget_Rss
         );
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_rss', 'description');

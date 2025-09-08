@@ -27,6 +27,7 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitInteger($this);
@@ -50,6 +51,7 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
      *
      * @return int the integer value
      */
+    #[\Override]
     public function getNumeric()
     {
         return $this->getInteger();
@@ -60,16 +62,19 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
      *
      * @return int The value of this artifact changeset value
      */
+    #[\Override]
     public function getValue()
     {
          return $this->getInteger();
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         return $this->getRESTRepresentation($this->getInteger());
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         return $this->getFullRESTRepresentation($this->getInteger());

@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
  */
 class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator //phpcs:ignore
 {
+    #[\Override]
     protected function canValidateField(
         Artifact $artifact,
         TrackerField $field,
@@ -34,6 +35,7 @@ class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Arti
         return true;
     }
 
+    #[\Override]
     protected function validateField(
         Artifact $artifact,
         TrackerField $field,

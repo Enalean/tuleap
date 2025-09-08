@@ -36,6 +36,7 @@ class Rule_File extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      * @param  string|array $val  One entry in $_FILES superarray (e.g. $_FILES['test'])
      * @return bool Is file upload valid or not.
      */
+    #[\Override]
     public function isValid($val)
     {
         $ok = \false;

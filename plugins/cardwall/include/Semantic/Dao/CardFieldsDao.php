@@ -28,6 +28,7 @@ class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements IR
     /**
      * @return mixed either false if error or object DataAccessResult
      */
+    #[\Override]
     public function searchByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

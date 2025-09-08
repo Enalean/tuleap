@@ -22,6 +22,7 @@ class User_ForgeUserGroupPermission_RetrieveUserMembershipInformation extends Us
 {
     public const ID = 4;
 
+    #[\Override]
     public function getId()
     {
         if (self::ID) {
@@ -29,11 +30,13 @@ class User_ForgeUserGroupPermission_RetrieveUserMembershipInformation extends Us
         }
     }
 
+    #[\Override]
     public function getName()
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_membership_name');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_membership_description');

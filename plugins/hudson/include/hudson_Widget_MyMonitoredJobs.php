@@ -46,16 +46,19 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget //phpcs:ignore 
         $this->job_builder = $job_builder;
     }
 
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-hudson', 'My Jenkins Jobs');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-hudson', 'Show an overview of all the jobs of all the projects you\'re member of. You can of course select the jobs you wish to display by selecting the preferences link of the widget.');
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
@@ -81,11 +84,13 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget //phpcs:ignore 
         return true;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -119,6 +124,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget //phpcs:ignore 
         return $html;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $purifier = Codendi_HTMLPurifier::instance();

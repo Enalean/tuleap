@@ -42,11 +42,13 @@ class ZipArchive implements ArchiveInterface
         $this->archive->close();
     }
 
+    #[\Override]
     public function extractFiles()
     {
         $this->archive->extractTo($this->extraction_path);
     }
 
+    #[\Override]
     public function getExtractionPath()
     {
         return $this->extraction_path;
@@ -66,16 +68,19 @@ class ZipArchive implements ArchiveInterface
         return trim(`mktemp -d -p $tmp_dir $template`);
     }
 
+    #[\Override]
     public function cleanUp()
     {
         exec("rm -rf $this->extraction_path");
     }
 
+    #[\Override]
     public function getProjectXML()
     {
         return $this->archive->getFromName(self::PROJECT_FILE);
     }
 
+    #[\Override]
     public function getUsersXML()
     {
         return $this->archive->getFromName(self::USER_FILE);

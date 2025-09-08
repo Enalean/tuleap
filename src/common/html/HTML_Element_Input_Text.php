@@ -31,6 +31,7 @@ class HTML_Element_Input_Text extends HTML_Element_Input
         $this->params['size'] = $size;
     }
 
+    #[\Override]
     protected function getInputType()
     {
         return 'text';

@@ -68,31 +68,37 @@ final readonly class StatusChecker implements ValueWrapperVisitor
         $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         throw new StatusToSimpleValueComparisonException((string) $value_wrapper->getValue());
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         // Do nothing, OPEN() is valid
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new ToNowComparisonException($parameters->getMetadata());
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new ToMyselfComparisonException($parameters->getMetadata());
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         throw new \LogicException('Should not end there');
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new \LogicException('Should not end there');

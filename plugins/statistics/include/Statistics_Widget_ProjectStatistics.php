@@ -44,11 +44,13 @@ class Statistics_Widget_ProjectStatistics extends Widget //phpcs:ignore PSR1.Cla
      *
      * @see Widget::getTitle()
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-statistics', 'Project statistics');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $request  = HTTPRequest::instance();
@@ -77,6 +79,7 @@ class Statistics_Widget_ProjectStatistics extends Widget //phpcs:ignore PSR1.Cla
      *
      * @see Widget::getDescription()
      */
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-statistics', 'Show project disk statistics');
@@ -89,6 +92,7 @@ class Statistics_Widget_ProjectStatistics extends Widget //phpcs:ignore PSR1.Cla
      *
      * @see Widget::getCategory()
      */
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-statistics', 'Project statistics');

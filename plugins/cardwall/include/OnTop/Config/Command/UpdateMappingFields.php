@@ -69,6 +69,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     /**
      * @see Cardwall_OnTop_Config_Command::execute()
      */
+    #[\Override]
     public function execute(Codendi_Request $request)
     {
         if (! is_array($request->get('mapping_field'))) {

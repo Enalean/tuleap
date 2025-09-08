@@ -41,6 +41,7 @@ class Tracker_Chart_BurndownView extends Tracker_Chart_Burndown
     /**
      * @return Chart
      */
+    #[\Override]
     public function buildGraph()
     {
         $user_timezone = date_default_timezone_get();

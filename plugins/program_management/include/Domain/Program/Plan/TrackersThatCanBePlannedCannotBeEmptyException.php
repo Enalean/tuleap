@@ -32,6 +32,7 @@ final class TrackersThatCanBePlannedCannotBeEmptyException extends \Exception im
         $this->i18n_message = dgettext('tuleap-program_management', 'Plannable tracker id cannot be empty');
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

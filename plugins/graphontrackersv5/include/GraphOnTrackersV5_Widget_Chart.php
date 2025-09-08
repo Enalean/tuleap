@@ -47,11 +47,13 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $this->setOwner($owner_id, $owner_type);
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $this->chart_title ?: 'Tracker Chart';
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $chart = GraphOnTrackersV5_ChartFactory::instance()->getChart(
@@ -69,16 +71,19 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         return $content;
     }
 
+    #[\Override]
     public function isAjax()
     {
         return false;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -110,6 +115,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             ';
     }
 
+    #[\Override]
     public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -138,6 +144,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             ';
     }
 
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -191,6 +198,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         );
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $sql = 'SELECT * FROM plugin_graphontrackersv5_widget_chart WHERE owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
@@ -203,6 +211,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         }
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         $content_id = false;
@@ -218,6 +227,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         return $content_id;
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $done       = false;
@@ -247,22 +257,26 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         return $done;
     }
 
+    #[\Override]
     public function destroy($id)
     {
         $sql = 'DELETE FROM plugin_graphontrackersv5_widget_chart WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
 
+    #[\Override]
     public function isUnique()
     {
         return false;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-tracker', 'Trackers');
     }
 
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         return [new JavascriptViteAsset($this->getAssets(), 'src/loadGraphs.ts')];

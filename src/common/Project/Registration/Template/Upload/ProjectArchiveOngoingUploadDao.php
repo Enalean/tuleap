@@ -28,6 +28,7 @@ use Tuleap\Tus\TusFileInformation;
 
 final class ProjectArchiveOngoingUploadDao extends DataAccessObject implements DeleteUnusedFiles, SearchFileUploadIdsAndProjectIds, SaveFileUpload, SearchFileUpload, SearchFileUploadByExpirationDate, DeleteFileUpload
 {
+    #[\Override]
     public function saveFileOnGoingUpload(InsertFileToUpload $file_to_upload): int
     {
         return (int) $this->getDB()->insertReturnId(
@@ -42,6 +43,7 @@ final class ProjectArchiveOngoingUploadDao extends DataAccessObject implements D
         );
     }
 
+    #[\Override]
     public function searchFileOngoingUploadedByIdAndUserIdAndExpirationDate(int $id, int $user_id, DateTimeImmutable $current_time): array
     {
         return $this->getDB()->row(
@@ -52,6 +54,7 @@ final class ProjectArchiveOngoingUploadDao extends DataAccessObject implements D
         );
     }
 
+    #[\Override]
     public function deleteById(TusFileInformation $file_information): void
     {
         $this->getDB()->delete('project_file_upload', [
@@ -59,16 +62,19 @@ final class ProjectArchiveOngoingUploadDao extends DataAccessObject implements D
         ]);
     }
 
+    #[\Override]
     public function deleteUnusableFile(DateTimeImmutable $current_time): void
     {
         $this->getDB()->run('DELETE FROM project_file_upload WHERE expiration_date <= ?', $current_time->getTimestamp());
     }
 
+    #[\Override]
     public function searchFileOngoingUploadById(int $id): array
     {
         return $this->getDB()->row('SELECT * FROM project_file_upload WHERE id = ?', $id);
     }
 
+    #[\Override]
     public function searchFileOngoingUploadIdsAndProjectIds(): array
     {
         return $this->getDB()->run('SELECT id, project_id FROM project_file_upload');

@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
+    #[\Override]
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
         $sql = 'REPLACE INTO tracker_staticfield_richtext (field_id, static_value)
@@ -35,6 +36,7 @@ final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implemen
         $this->getDB()->run($sql, $to_field_id, $from_field_id);
     }
 
+    #[\Override]
     public function deleteFieldProperties(int $field_id): void
     {
         $this->getDB()->delete('tracker_staticfield_richtext', ['field_id' => $field_id]);
@@ -43,6 +45,7 @@ final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implemen
     /**
      * @return null | array{field_id: int, static_value: string}
      */
+    #[\Override]
     public function searchByFieldId(int $field_id): ?array
     {
         $sql = 'SELECT *
@@ -52,6 +55,7 @@ final class RichTextFieldSpecificPropertiesDAO extends DataAccessObject implemen
         return $this->getDB()->row($sql, $field_id);
     }
 
+    #[\Override]
     public function saveSpecificProperties(int $field_id, array $row): void
     {
         if (! isset($row['static_value'])) {

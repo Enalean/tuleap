@@ -58,6 +58,7 @@ class User_ForgeUserGroupPermissionsManager implements ForgePermissionsRetriever
         return $this->permissions_dao->deletePersmissionForUGroup($user_group_id, $permission_id);
     }
 
+    #[\Override]
     public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
     {
         return $this->permissions_dao->doesUserHavePermission($user->getId(), $permission->getId());

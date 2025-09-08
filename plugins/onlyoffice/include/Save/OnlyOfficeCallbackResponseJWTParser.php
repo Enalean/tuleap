@@ -56,6 +56,7 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
     /**
      * @psalm-return Ok<Option<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
      */
+    #[\Override]
     public function parseCallbackResponseContent(
         string $response_content,
         SaveDocumentTokenData $save_token_information,

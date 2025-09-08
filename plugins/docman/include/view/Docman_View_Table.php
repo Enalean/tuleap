@@ -27,6 +27,7 @@ class Docman_View_Table extends Docman_View_Browse
     /**
      * @access: protected
      */
+    #[\Override]
     public function _content($params)
     {
         $itemFactory = new Docman_ItemFactory($params['group_id']);

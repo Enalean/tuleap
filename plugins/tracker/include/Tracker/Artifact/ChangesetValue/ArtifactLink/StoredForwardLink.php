@@ -46,11 +46,13 @@ final class StoredForwardLink implements ForwardLink
         return new self($artifact->getId(), $row['nature'] ?? \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE);
     }
 
+    #[\Override]
     public function getTargetArtifactId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getType(): string
     {
         return $this->type;

@@ -80,6 +80,7 @@ final class NewClientSecretController extends DispatchablePSR15Compatible
         return sprintf('/plugins/oauth2_server/project/%d/admin/new-client-secret', $project->getID());
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

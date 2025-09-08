@@ -47,6 +47,7 @@ final class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Co
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $save_token_information = $request->getAttribute(SaveDocumentTokenData::class);

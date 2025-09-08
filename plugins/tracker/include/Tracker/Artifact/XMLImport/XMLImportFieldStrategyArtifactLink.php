@@ -43,6 +43,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
     ) {
     }
 
+    #[\Override]
     public function getFieldData(
         TrackerField $field,
         SimpleXMLElement $field_change,

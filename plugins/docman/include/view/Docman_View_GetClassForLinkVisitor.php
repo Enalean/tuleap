@@ -29,6 +29,7 @@ use Tuleap\Docman\Item\ItemVisitor;
  */
 class Docman_View_GetClassForLinkVisitor implements ItemVisitor
 {
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): string
     {
         return $params['view']->getClassForFolderLink();
@@ -39,36 +40,43 @@ class Docman_View_GetClassForLinkVisitor implements ItemVisitor
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): string
     {
         return '';
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(\Tuleap\Docman\Item\OtherDocument $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);

@@ -28,6 +28,7 @@ use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
 
 final class DefaultBranchPushProcessorBuilder implements BuildDefaultBranchPushProcessor
 {
+    #[\Override]
     public function getProcessor(\GitRepository $repository): DefaultBranchPushProcessor
     {
         $git_exec = \Git_Exec::buildFromRepository($repository);

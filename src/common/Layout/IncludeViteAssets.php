@@ -32,6 +32,7 @@ final class IncludeViteAssets implements IncludeAssetsGeneric
         $this->manifest_file = $base_directory . '/.vite/manifest.json';
     }
 
+    #[\Override]
     public function getFileURL(string $file_name): string
     {
         return $this->getBaseURLWithTrailingSlash() . $this->getHashedName($file_name);

@@ -61,6 +61,7 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget //phpcs:ignore PSR1.Cla
         $this->job_builder = $job_builder;
     }
 
+    #[\Override]
     public function getTitle()
     {
         $title = '';
@@ -72,16 +73,19 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget //phpcs:ignore PSR1.Cla
         return $title;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-hudson', 'Show the test result trend for the selected job. To display something, your job needs to have tests. The graph will show the number of tests (failed and successful) along  time. The number of tests is increasing while the number of build and commits are increasing too.');
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $this->content_id = $id;
     }
 
+    #[\Override]
     protected function initContent()
     {
         $job_id = $this->getJobIdFromWidgetConfiguration();
@@ -109,6 +113,7 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget //phpcs:ignore PSR1.Cla
         }
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $this->initContent();

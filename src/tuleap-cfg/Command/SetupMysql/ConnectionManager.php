@@ -46,6 +46,7 @@ class ConnectionManager implements ConnectionManagerInterface
     private const string SUPPORTED_MYSQL80_VERSION_PREFIX = '8.0.';
     private const string SUPPORTED_MYSQL84_VERSION_PREFIX = '8.4.';
 
+    #[\Override]
     public function getDBWithoutDBName(
         SymfonyStyle $io,
         string $host,
@@ -147,6 +148,7 @@ class ConnectionManager implements ConnectionManagerInterface
         return Result::ok(null);
     }
 
+    #[\Override]
     public function sanityCheck(DBWrapperInterface $db): Ok|Err
     {
         return $this->checkVersion($db)

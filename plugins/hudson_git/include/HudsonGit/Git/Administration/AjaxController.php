@@ -57,6 +57,7 @@ class AjaxController implements DispatchableWithRequest
         $this->logger          = $logger;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $jenkins_url_to_test = $request->get('jenkins_url_to_test');

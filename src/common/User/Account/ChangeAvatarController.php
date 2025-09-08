@@ -55,6 +55,7 @@ class ChangeAvatarController implements DispatchableWithRequest
         $this->user_manager      = $user_manager;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $user = $request->getCurrentUser();

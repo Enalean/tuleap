@@ -51,6 +51,7 @@ abstract class DispatchablePSR15Compatible implements DispatchableWithRequest, R
         );
     }
 
+    #[\Override]
     final public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $server_request = ServerRequest::fromGlobals();

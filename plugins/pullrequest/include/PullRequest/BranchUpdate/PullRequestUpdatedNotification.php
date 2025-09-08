@@ -157,6 +157,7 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
@@ -165,6 +166,7 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getRecipients(): array
     {
         return $this->owners;
@@ -173,6 +175,7 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function asPlaintext(): string
     {
         $nb_new_commits = count($this->new_commits);
@@ -199,6 +202,7 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

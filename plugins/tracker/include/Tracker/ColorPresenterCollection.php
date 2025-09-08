@@ -37,26 +37,31 @@ class Tracker_ColorPresenterCollection implements Iterator // phpcs:ignore PSR1.
         }
     }
 
+    #[\Override]
     public function current(): array
     {
         return current($this->colors);
     }
 
+    #[\Override]
     public function key(): int
     {
         return key($this->colors);
     }
 
+    #[\Override]
     public function next(): void
     {
         next($this->colors);
     }
 
+    #[\Override]
     public function rewind(): void
     {
         reset($this->colors);
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return current($this->colors) !== false;

@@ -27,11 +27,13 @@ use Service;
 
 class GitService extends Service
 {
+    #[\Override]
     public function getIconName(): string
     {
         return 'fas fa-tlp-versioning-git';
     }
 
+    #[\Override]
     public function getInternationalizedName(): string
     {
         $label = $this->getLabel();
@@ -43,6 +45,7 @@ class GitService extends Service
         return $label;
     }
 
+    #[\Override]
     public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();
@@ -59,11 +62,13 @@ class GitService extends Service
         return GIT_BASE_URL . '/' . urlencode($project->getUnixNameLowerCase());
     }
 
+    #[\Override]
     public function getUrl(?string $url = null): string
     {
         return self::getServiceUrlForProject($this->project);
     }
 
+    #[\Override]
     public function urlCanChange(): bool
     {
         return false;

@@ -54,6 +54,7 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         return $parameters->comparison->getValueWrapper()->accept($this, $parameters);
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         $value = $value_wrapper->getValue();
@@ -142,6 +143,7 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         $simple_value_wrapper = new SimpleValueWrapper($value_wrapper->getValue()->format(DateFormat::DATETIME));
@@ -149,6 +151,7 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         return $this->visitSimpleValueWrapper($simple_value_wrapper, $parameters);
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         $min_wrapper = $value_wrapper->getMinValue();
@@ -176,16 +179,19 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to status open should have been flagged as invalid for Date semantic');
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new LogicException('Comparison with In() should have been flagged as invalid for Date semantic');
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to current user should have been flagged as invalid for Date semantic');

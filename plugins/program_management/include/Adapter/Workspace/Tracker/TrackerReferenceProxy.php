@@ -40,26 +40,31 @@ final readonly class TrackerReferenceProxy implements TrackerReference
     ) {
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->tracker_name;
     }
 
+    #[\Override]
     public function getProjectId(): int
     {
         return $this->project_id;
     }
 
+    #[\Override]
     public function getProjectLabel(): string
     {
         return $this->project_name;
     }
 
+    #[\Override]
     public function getURLToEditAField(int $field_id): string
     {
         return '/plugins/tracker/?' .

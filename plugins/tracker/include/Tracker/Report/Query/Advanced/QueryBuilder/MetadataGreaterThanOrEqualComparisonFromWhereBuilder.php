@@ -26,6 +26,7 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final class MetadataGreaterThanOrEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
 {
+    #[\Override]
     public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideParametrizedFromAndWhereSQLFragments
     {
         throw new \RuntimeException('Metadata is not supported here');

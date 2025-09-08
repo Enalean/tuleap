@@ -89,6 +89,7 @@ class Widget_Static extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration
     /**
      * Title getter
      */
+    #[\Override]
     public function getTitle()
     {
         return $this->title;
@@ -104,6 +105,7 @@ class Widget_Static extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->content = $content;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return $this->content;
@@ -114,6 +116,7 @@ class Widget_Static extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->icon = $icon;
     }
 
+    #[\Override]
     public function getIcon()
     {
         return $this->icon;

@@ -44,6 +44,7 @@ class Router implements DispatchableWithRequestNoAuthz
         $this->account_linker_controller = $account_linker_controller;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $action = $request->get('action');

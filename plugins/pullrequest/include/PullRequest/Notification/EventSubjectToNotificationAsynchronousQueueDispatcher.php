@@ -34,6 +34,7 @@ final readonly class EventSubjectToNotificationAsynchronousQueueDispatcher imple
     {
     }
 
+    #[\Override]
     public function dispatch(object $event): object
     {
         if (! $event instanceof EventSubjectToNotification) {

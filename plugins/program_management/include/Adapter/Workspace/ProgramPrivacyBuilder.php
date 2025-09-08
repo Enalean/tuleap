@@ -33,6 +33,7 @@ final class ProgramPrivacyBuilder implements BuildProgramPrivacy
     {
     }
 
+    #[\Override]
     public function build(ProgramIdentifier $program_identifier): ProgramPrivacy
     {
         $project         = $this->retrieve_full_project->getProject($program_identifier->getId());

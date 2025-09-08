@@ -136,11 +136,13 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $params['plugins_permission'][MediawikiAdminAllProjects::ID] = new MediawikiAdminAllProjects();
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['mediawiki_standalone'];
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
@@ -332,6 +334,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         echo $this->getPluginInfo()->getpropVal('answer');
     }
 
+    #[\Override]
     public function &getPluginInfo()
     {
         if (! is_a($this->pluginInfo, 'MediaWikiPluginInfo')) {
@@ -547,6 +550,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         return new MediawikiManager($this->getDao());
     }
 
+    #[\Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
@@ -557,6 +561,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
      * @see Event::SERVICE_IS_USED
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
      */
+    #[\Override]
     public function serviceIsUsed(array $params): void
     {
         if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
@@ -567,16 +572,19 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         }
     }
 
+    #[\Override]
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
         // nothing to do for mediawiki
     }
 
+    #[\Override]
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         // nothing to do for mediawiki
     }
 
+    #[\Override]
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for mediawiki
@@ -876,6 +884,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         }
     }
 
+    #[\Override]
     public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
     {
     }

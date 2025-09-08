@@ -46,6 +46,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
     ) {
     }
 
+    #[\Override]
     public function afterSuccessfullUserRegistration(
         PFUser $new_user,
         HTTPRequest $request,

@@ -62,6 +62,7 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
         $this->prometheus                  = $prometheus;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');

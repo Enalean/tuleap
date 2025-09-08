@@ -33,6 +33,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifier implements VerifyStaticFiel
     {
     }
 
+    #[\Override]
     public function canAllStaticFieldValuesBeMoved(
         \Tuleap\Tracker\FormElement\Field\ListField $source_field,
         \Tuleap\Tracker\FormElement\Field\ListField $destination_field,

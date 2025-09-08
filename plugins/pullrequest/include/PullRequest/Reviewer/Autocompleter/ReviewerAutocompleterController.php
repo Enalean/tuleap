@@ -60,6 +60,7 @@ final class ReviewerAutocompleterController extends DispatchablePSR15Compatible 
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         \Tuleap\Project\ServiceInstrumentation::increment('pullrequest');

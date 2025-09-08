@@ -42,11 +42,13 @@ final class FileBeingUploadedLocker implements TusLocker
         $this->path_allocator = $path_allocator;
     }
 
+    #[\Override]
     public function lock(TusFileInformation $file_information): bool
     {
         return sem_acquire($this->createSemaphore($file_information), true);
     }
 
+    #[\Override]
     public function unlock(TusFileInformation $file_information): void
     {
         $key = $this->getSemaphoreKey($file_information);

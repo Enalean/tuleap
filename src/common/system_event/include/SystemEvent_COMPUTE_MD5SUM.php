@@ -26,6 +26,7 @@
  */
 class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
 {
+    #[\Override]
     public function setLog(string $log): void
     {
         if (! isset($this->log) || $this->log == '') {
@@ -44,6 +45,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $txt  = '';
@@ -56,6 +58,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
      *
      * @return bool
      */
+    #[\Override]
     public function process()
     {
         $fileId = $this->getIdFromParam($this->parameters);

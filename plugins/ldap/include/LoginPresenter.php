@@ -41,6 +41,7 @@ class LDAP_LoginPresenter extends User_LoginPresenter
         $this->ldap_server_common_name = $ldap_server_common_name;
     }
 
+    #[\Override]
     public function account_login_login_with_tuleap()
     {
         return $GLOBALS['Language']->getOverridableText('account_login', 'page_title', [$this->ldap_server_common_name]);

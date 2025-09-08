@@ -48,6 +48,7 @@ class CIBuildValueUpdater implements PostActionUpdater
      * @throws UnknownPostActionIdsException
      * @throws InvalidPostActionException
      */
+    #[\Override]
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateCIBuildActions($this->validator);

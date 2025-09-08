@@ -32,6 +32,7 @@ class LockResponseErrorRepresentation implements LockResponse
         $this->message = $message;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

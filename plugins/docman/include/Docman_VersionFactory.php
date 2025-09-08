@@ -136,6 +136,7 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
         return $dao->searchNextVersionNumber($item->getId());
     }
 
+    #[\Override]
     public function deleteSpecificVersion(Docman_Item $item, int $number): bool
     {
         // The event must be processed before the version is deleted

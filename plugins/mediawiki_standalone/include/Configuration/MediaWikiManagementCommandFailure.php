@@ -35,6 +35,7 @@ final class MediaWikiManagementCommandFailure implements \Stringable
     {
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return "Exit code: $this->exit_code\nProcess command line: $this->process_command_line\nProcess output: $this->process_output";

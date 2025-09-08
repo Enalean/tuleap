@@ -100,6 +100,7 @@ use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncrementCreationProcessor
 {
+    #[\Override]
     public function getProcessor(): ProcessProgramIncrementCreation
     {
         $user_manager                   = \UserManager::instance();

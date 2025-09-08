@@ -32,6 +32,7 @@ final class IterationCannotBePlannedException extends \Exception implements Cann
         $this->i18n_message = dgettext('tuleap-program_management', 'Iteration tracker id must not be contained into plannable tracker ids');
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

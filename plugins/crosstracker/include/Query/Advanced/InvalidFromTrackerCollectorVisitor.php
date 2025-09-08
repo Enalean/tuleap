@@ -37,6 +37,7 @@ final readonly class InvalidFromTrackerCollectorVisitor implements FromTrackerCo
     ) {
     }
 
+    #[\Override]
     public function visitEqual(FromTrackerEqual $tracker_equal, $parameters): void
     {
         $from_tracker = $parameters->from_tracker;
@@ -47,6 +48,7 @@ final readonly class InvalidFromTrackerCollectorVisitor implements FromTrackerCo
         };
     }
 
+    #[\Override]
     public function visitIn(FromTrackerIn $tracker_in, $parameters): void
     {
         $from_tracker = $parameters->from_tracker;

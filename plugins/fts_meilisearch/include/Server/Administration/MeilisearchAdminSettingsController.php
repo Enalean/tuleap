@@ -43,6 +43,7 @@ final class MeilisearchAdminSettingsController implements DispatchableWithReques
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $key_local_meilisearch_server = $this->local_meilisearch_server->getCurrentKey();

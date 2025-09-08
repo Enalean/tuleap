@@ -52,6 +52,7 @@ final class AdminPermissionsController extends DispatchablePSR15Compatible imple
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

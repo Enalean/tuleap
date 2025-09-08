@@ -38,6 +38,7 @@ final class ProgramFlagsBuilder implements BuildProgramFlags
     /**
      * @return ProgramFlag[]
      */
+    #[\Override]
     public function build(ProgramIdentifier $program_identifier): array
     {
         $project = $this->retrieve_full_project->getProject($program_identifier->getId());

@@ -55,6 +55,7 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
+    #[\Override]
     public function debug(string|\Stringable $message, array $context = []): void
     {
         if ($this->should_log[\Psr\Log\LogLevel::DEBUG]) {
@@ -62,6 +63,7 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
+    #[\Override]
     public function info(string|\Stringable $message, array $context = []): void
     {
         if ($this->should_log[\Psr\Log\LogLevel::INFO]) {
@@ -69,6 +71,7 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
+    #[\Override]
     public function warning(string|\Stringable $message, array $context = []): void
     {
         if ($this->should_log[\Psr\Log\LogLevel::WARNING]) {
@@ -76,11 +79,13 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
+    #[\Override]
     public function error(string|\Stringable $message, array $context = []): void
     {
         $this->logger->error($message, $context);
     }
 
+    #[\Override]
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         switch ($level) {
@@ -111,21 +116,25 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
+    #[\Override]
     public function emergency(string|\Stringable $message, array $context = []): void
     {
         $this->logger->emergency($message, $context);
     }
 
+    #[\Override]
     public function alert(string|\Stringable $message, array $context = []): void
     {
         $this->logger->alert($message, $context);
     }
 
+    #[\Override]
     public function critical(string|\Stringable $message, array $context = []): void
     {
         $this->logger->critical($message, $context);
     }
 
+    #[\Override]
     public function notice(string|\Stringable $message, array $context = []): void
     {
         if ($this->should_log[\Psr\Log\LogLevel::DEBUG]) {

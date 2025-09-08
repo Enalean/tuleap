@@ -29,11 +29,13 @@ abstract class OtherDocument extends \Docman_Document
         parent::__construct($row);
     }
 
+    #[\Override]
     public function accept(ItemVisitor $visitor, array $params = [])
     {
         return $visitor->visitOtherDocument($this, $params);
     }
 
+    #[\Override]
     public function toRow(): array
     {
         $row              = parent::toRow();

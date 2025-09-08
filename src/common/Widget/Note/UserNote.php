@@ -28,16 +28,19 @@ class UserNote extends Note
 {
     public const NAME = 'usernote';
 
+    #[\Override]
     protected static function getName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return _('Allow to write notes on your dashboard using Markdown');
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         if ($this->owner_id === null) {

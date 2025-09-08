@@ -63,6 +63,7 @@ final class SvnRepository implements Repository
         );
     }
 
+    #[\Override]
     public function getSettingUrl(): string
     {
         return SVN_BASE_URL . '/?' . http_build_query(
@@ -74,11 +75,13 @@ final class SvnRepository implements Repository
         );
     }
 
+    #[\Override]
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
@@ -88,6 +91,7 @@ final class SvnRepository implements Repository
      * @psalm-taint-escape shell
      * @psalm-taint-escape file
      */
+    #[\Override]
     public function getName(): string
     {
         if (strpos($this->name, DIRECTORY_SEPARATOR) !== false) {
@@ -96,42 +100,50 @@ final class SvnRepository implements Repository
         return $this->name;
     }
 
+    #[\Override]
     public function getProject(): \Project
     {
         return $this->project;
     }
 
+    #[\Override]
     public function getPublicPath(): string
     {
         return '/svnplugin/' . $this->getFullName();
     }
 
+    #[\Override]
     public function getFullName(): string
     {
         return $this->getProject()->getUnixNameMixedCase() . '/' . $this->getName();
     }
 
+    #[\Override]
     public function getSystemPath(): string
     {
         return ForgeConfig::get('sys_data_dir') . '/svn_plugin/' . (int) $this->getProject()->getId() . '/' . $this->getName();
     }
 
+    #[\Override]
     public function isRepositoryCreated(): bool
     {
         return is_dir($this->getSystemPath());
     }
 
+    #[\Override]
     public function getSvnUrl(): string
     {
         return $this->getSvnDomain() . $this->getPublicPath();
     }
 
+    #[\Override]
     public function getSvnDomain(): string
     {
         // Domain name must be lowercase (issue with some SVN clients)
         return strtolower(\Tuleap\ServerHostname::HTTPSUrl());
     }
 
+    #[\Override]
     public function getHtmlPath(): string
     {
         return SVN_BASE_URL . '/?' . http_build_query(
@@ -142,46 +154,55 @@ final class SvnRepository implements Repository
         );
     }
 
+    #[\Override]
     public function canBeDeleted(): bool
     {
         return $this->isRepositoryCreated();
     }
 
+    #[\Override]
     public function getBackupPath(): ?string
     {
         return $this->backup_path;
     }
 
+    #[\Override]
     public function getSystemBackupPath(): string
     {
         return ForgeConfig::get('sys_project_backup_path') . '/svn';
     }
 
+    #[\Override]
     public function getBackupFileName(): string
     {
         return $this->getName() . $this->getDeletionDate() . '.svn';
     }
 
+    #[\Override]
     public function getDeletionDate(): ?int
     {
         return $this->deletion_date;
     }
 
+    #[\Override]
     public function setDeletionDate(int $deletion_date): void
     {
         $this->deletion_date = $deletion_date;
     }
 
+    #[\Override]
     public function isDeleted(): bool
     {
         return ! empty($this->deletion_date);
     }
 
+    #[\Override]
     public function hasDefaultPermissions(): bool
     {
         return $this->has_default_permissions;
     }
 
+    #[\Override]
     public function setDefaultPermissions(bool $use_it): void
     {
         $this->has_default_permissions = $use_it;

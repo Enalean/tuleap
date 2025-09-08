@@ -45,6 +45,7 @@ class Controller_Commit extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      * @return string template filename
      */
+    #[\Override]
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
         return 'tuleap/commit.tpl';
@@ -59,6 +60,7 @@ class Controller_Commit extends ControllerBase // @codingStandardsIgnoreLine
      * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
+    #[\Override]
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
@@ -74,6 +76,7 @@ class Controller_Commit extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
         if (isset($_GET['h'])) {
@@ -94,6 +97,7 @@ class Controller_Commit extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $commit = $this->project->GetCommit($this->params['hash']);

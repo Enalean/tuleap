@@ -44,6 +44,7 @@ class Docman_File extends Docman_Document
         return $this->currentVersion;
     }
 
+    #[\Override]
     public function getType()
     {
         $version      = $this->getCurrentVersion();
@@ -52,6 +53,7 @@ class Docman_File extends Docman_Document
         return $type;
     }
 
+    #[\Override]
     public function toRow()
     {
         $row              = parent::toRow();
@@ -59,6 +61,7 @@ class Docman_File extends Docman_Document
         return $row;
     }
 
+    #[\Override]
     public function accept($visitor, $params = [])
     {
         return $visitor->visitFile($this, $params);

@@ -41,6 +41,7 @@ final class RejectNonSiteAdministratorMiddleware implements MiddlewareInterface
         $this->user_manager = $user_manager;
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $current_user = $this->user_manager->getCurrentUser();

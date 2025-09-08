@@ -62,16 +62,19 @@ class LockVerifyRequest implements GitLfsHTTPOperation
         return new self($reference);
     }
 
+    #[\Override]
     public function isWrite(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function isRead(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function getReference(): ?RequestReference
     {
         return $this->reference;

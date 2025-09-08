@@ -39,6 +39,7 @@ class NavigationItemPresenter implements NavigationItem
         $this->shortname = $shortname;
     }
 
+    #[\Override]
     public function hasSubItems()
     {
         return false;

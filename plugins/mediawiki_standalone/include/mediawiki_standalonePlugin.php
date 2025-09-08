@@ -170,6 +170,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         bindtextdomain('tuleap-mediawiki_standalone', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {
@@ -300,22 +301,26 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         ProjectPermissionsSaver::fillProjectHistorySubEvents($params);
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return MediawikiStandaloneService::SERVICE_SHORTNAME;
     }
 
+    #[\Override]
     protected function getServiceClass(): string
     {
         return MediawikiStandaloneService::class;
     }
 
+    #[\Override]
     public function postEnable(): void
     {
         parent::postEnable();
         (new EnqueueTask())->enqueue(new UpdateMediaWikiTask());
     }
 
+    #[\Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
@@ -325,6 +330,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     /**
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
      */
+    #[\Override]
     public function serviceIsUsed(array $params): void
     {
         $service_activation_handler = new ServiceActivationHandler(new EnqueueTask(), new ProvideSiteLevelInitializationLanguageCode(), new OngoingInitializationsDao(new MediawikiFlavorUsageDao()));
@@ -352,6 +358,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         }
     }
 
+    #[\Override]
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
         (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(
@@ -359,6 +366,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
     }
 
+    #[\Override]
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(
@@ -459,6 +467,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         (new MediaWikiAsyncUpdateProcessor($this->buildUpdateScriptCaller($logger)))->process($event);
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(MediawikiHTTPClientFactory::class);
@@ -862,6 +871,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
     }
 
+    #[\Override]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
     }

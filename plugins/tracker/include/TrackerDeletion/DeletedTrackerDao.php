@@ -27,6 +27,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class DeletedTrackerDao extends DataAccessObject implements RetrieveDeletedTracker, RestoreDeletedTracker
 {
+    #[\Override]
     public function retrieveTrackersMarkAsDeleted(): array
     {
         if (ForgeConfig::getInt('sys_file_deletion_delay') === 0) {
@@ -45,6 +46,7 @@ final class DeletedTrackerDao extends DataAccessObject implements RetrieveDelete
         return $this->getDB()->q($sql, $displayed_purge_date);
     }
 
+    #[\Override]
     public function restoreTrackerMarkAsDeleted(int $tracker_id): void
     {
         $sql = 'UPDATE tracker SET

@@ -41,6 +41,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitDate($this);
@@ -80,11 +81,13 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         }
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         return $this->getFullRESTValue($user);
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         $date = null;
@@ -108,6 +111,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string The value of this artifact changeset value for the web interface, or '' if date is null (none)
      */
+    #[\Override]
     public function getValue()
     {
         return $this->getDate();
@@ -118,6 +122,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string|false The difference between another $changeset_value, false if no differneces
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $next_date = $this->getDate();
@@ -149,6 +154,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string The sentence to add in changeset
      */
+    #[\Override]
     public function nodiff($format = 'html')
     {
         if ($this->getTimestamp() != 0) {

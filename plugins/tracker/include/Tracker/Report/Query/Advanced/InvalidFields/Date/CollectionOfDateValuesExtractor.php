@@ -54,6 +54,7 @@ final class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
         }
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         $current_date_time = $value_wrapper->getValue();
@@ -61,11 +62,13 @@ final class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
         return $current_date_time->format($this->date_format);
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         $values = [];
@@ -85,16 +88,19 @@ final class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
         return $values;
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new InIsNotSupportedException();
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new MySelfIsNotSupportedException();
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new StatusOpenIsNotSupportedException();

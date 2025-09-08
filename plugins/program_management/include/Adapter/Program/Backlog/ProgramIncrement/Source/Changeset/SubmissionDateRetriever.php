@@ -36,6 +36,7 @@ final class SubmissionDateRetriever implements RetrieveChangesetSubmissionDate
     ) {
     }
 
+    #[\Override]
     public function getSubmissionDate(
         ArtifactIdentifier $artifact,
         ChangesetIdentifier $changeset_identifier,

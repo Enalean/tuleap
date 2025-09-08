@@ -30,6 +30,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Arti
      *
      * @return mixed
      */
+    #[\Override]
     public function getFieldData(
         TrackerField $field,
         SimpleXMLElement $field_change,

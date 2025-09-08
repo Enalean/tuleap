@@ -38,6 +38,7 @@ class ProjectPresentersBuilder implements ListOfProjectPresentersBuilder
     /**
      * @return ProjectPresenter[]
      */
+    #[\Override]
     public function getProjectPresenters(
         PFUser $current_user,
     ): array {

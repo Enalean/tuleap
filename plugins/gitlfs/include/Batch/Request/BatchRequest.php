@@ -173,6 +173,7 @@ class BatchRequest implements GitLfsHTTPOperation
         return $this->transfers;
     }
 
+    #[\Override]
     public function getReference(): ?RequestReference
     {
         return $this->reference;
@@ -181,11 +182,13 @@ class BatchRequest implements GitLfsHTTPOperation
     /**
      * @return bool
      */
+    #[\Override]
     public function isWrite()
     {
         return $this->getOperation()->isUpload();
     }
 
+    #[\Override]
     public function isRead()
     {
         return $this->getOperation()->isDownload();

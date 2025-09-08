@@ -31,6 +31,7 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent
     /** @var UserManager */
     private $user_manager;
 
+    #[\Override]
     public function process()
     {
         $old_user_name = $this->getParameter(0);
@@ -52,6 +53,7 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent
     /**
      * @return string a human readable representation of parameters
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return $this->parameters;

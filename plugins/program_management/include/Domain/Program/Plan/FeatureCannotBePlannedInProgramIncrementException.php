@@ -43,6 +43,7 @@ final class FeatureCannotBePlannedInProgramIncrementException extends \RuntimeEx
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

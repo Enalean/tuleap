@@ -37,6 +37,7 @@ class ConsoleLogger extends AbstractLogger implements LoggerInterface
         $this->output = $output;
     }
 
+    #[\Override]
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         $this->output->writeln($this->colorize($level, $message));

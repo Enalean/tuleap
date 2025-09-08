@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 final class IsArtifactLinkFieldVerifier implements VerifyIsArtifactLinkField
 {
+    #[\Override]
     public function isAnArtifactLinkField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;

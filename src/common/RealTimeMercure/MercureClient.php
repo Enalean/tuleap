@@ -54,6 +54,7 @@ class MercureClient implements Client
      * @param $message (MercureMessageDataPresenter) : Message to send to Mercure server
      * @throws \JsonException
      */
+    #[\Override]
     public function sendMessage(MercureMessageDataPresenter $message): void
     {
         $request_table = [

@@ -28,10 +28,12 @@ namespace Tuleap\Project;
  */
 final class SystemEventRunnerForProjectCreationFromXMLTemplate implements SystemEventRunnerInterface
 {
+    #[\Override]
     public function checkPermissions(): void
     {
     }
 
+    #[\Override]
     public function runSystemEvents(): void
     {
     }

@@ -38,6 +38,7 @@ final class SystemEventRunner implements SystemEventRunnerInterface
         $this->system_event_processor_factory = $system_event_processor_factory;
     }
 
+    #[\Override]
     public function checkPermissions(): void
     {
         // Check we have permissions to create project and run system events
@@ -46,6 +47,7 @@ final class SystemEventRunner implements SystemEventRunnerInterface
         }
     }
 
+    #[\Override]
     public function runSystemEvents(): void
     {
         $processor = $this->system_event_processor_factory->getProcessForQueue(SystemEvent::DEFAULT_QUEUE);

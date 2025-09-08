@@ -22,6 +22,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
 final class EmptyUserInfoRequest implements UserInfoRequest
 {
+    #[\Override]
     public function getHTTPRequest()
     {
         return null;

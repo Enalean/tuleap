@@ -30,16 +30,19 @@ class Docman_View_Admin_FilenamePattern extends AdminView
 {
     public const IDENTIFIER = 'admin_filename_pattern';
 
+    #[\Override]
     protected function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
+    #[\Override]
     protected function getTitle(array $params): string
     {
         return self::getTabTitle();
     }
 
+    #[\Override]
     protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
         $GLOBALS['Response']->addCssAsset(
@@ -47,6 +50,7 @@ class Docman_View_Admin_FilenamePattern extends AdminView
         );
     }
 
+    #[\Override]
     protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
         $GLOBALS['Response']->addJavascriptAsset(
@@ -54,6 +58,7 @@ class Docman_View_Admin_FilenamePattern extends AdminView
         );
     }
 
+    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $project_id = (int) $params['group_id'];

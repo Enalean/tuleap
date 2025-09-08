@@ -30,16 +30,19 @@ class ProjectNote extends Note
 {
     public const NAME = 'projectnote';
 
+    #[\Override]
     protected static function getName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return _('Allow to write informations for users on your dashboards using Markdown');
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         if ($this->owner_id === null) {
@@ -54,6 +57,7 @@ class ProjectNote extends Note
         return $this->createNote($request, $this->owner_id, $this->owner_type);
     }
 
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -65,6 +69,7 @@ class ProjectNote extends Note
         return $this->dao->duplicate($new_project->getID(), $id);
     }
 
+    #[\Override]
     public function exportAsXML(): \SimpleXMLElement
     {
         $widget = new \SimpleXMLElement('<widget />');

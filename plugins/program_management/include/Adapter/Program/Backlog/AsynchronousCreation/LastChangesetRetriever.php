@@ -34,6 +34,7 @@ final class LastChangesetRetriever implements RetrieveLastChangeset
     ) {
     }
 
+    #[\Override]
     public function retrieveLastChangesetId(TimeboxIdentifier $timebox_identifier): ?int
     {
         $iteration_artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);

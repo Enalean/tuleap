@@ -45,6 +45,7 @@ final class InvalidValueForRootCategoryException extends ProjectCategoriesExcept
         );
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

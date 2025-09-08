@@ -46,6 +46,7 @@ class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRe
         $this->widget_factory = $widget_factory;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

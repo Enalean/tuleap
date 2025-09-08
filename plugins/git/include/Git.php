@@ -371,6 +371,7 @@ class Git extends PluginController
         $this->configure_artifact_closure              = $configure_artifact_closure;
     }
 
+    #[\Override]
     protected function instantiateView()
     {
         return new GitViews(
@@ -427,6 +428,7 @@ class Git extends PluginController
         $this->project = $project;
     }
 
+    #[\Override]
     public function setPermittedActions($permittedActions)
     {
         $this->permittedActions = $permittedActions;
@@ -518,6 +520,7 @@ class Git extends PluginController
         }
     }
 
+    #[\Override]
     public function request()
     {
         $valid = new Valid_String('repo_name');
@@ -1167,6 +1170,7 @@ class Git extends PluginController
         }
     }
 
+    #[\Override]
     protected function instantiateAction($action)
     {
         $instance = new $action(

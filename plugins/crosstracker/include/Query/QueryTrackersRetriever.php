@@ -55,6 +55,7 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
     ) {
     }
 
+    #[\Override]
     public function getQueryTrackers(ParsedCrossTrackerQuery $query, PFUser $current_user, int $limit): array
     {
         return $this->retrieveForQuery($query, $current_user, $limit);

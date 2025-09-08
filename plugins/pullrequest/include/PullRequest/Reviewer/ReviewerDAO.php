@@ -57,6 +57,7 @@ class ReviewerDAO extends DataAccessObject implements SearchReviewers, SearchRep
      *  "passwordless_only": int
      *  }>
      */
+    #[\Override]
     public function searchReviewers(int $pull_request_id): array
     {
         return $this->getDB()->run(
@@ -130,6 +131,7 @@ class ReviewerDAO extends DataAccessObject implements SearchReviewers, SearchRep
         });
     }
 
+    #[\Override]
     public function searchRepositoryPullRequestsReviewersIds(int $repository_id, int $limit, int $offset): RepositoryPullRequestsReviewersIdsPage
     {
         return $this->getDB()->tryFlatTransaction(function () use ($repository_id, $limit, $offset) {

@@ -47,6 +47,7 @@ final class TusServer implements RequestHandlerInterface
         $this->data_store       = $data_store;
     }
 
+    #[\Override]
     public function handle(\Psr\Http\Message\ServerRequestInterface $request): ResponseInterface
     {
         $response = null;

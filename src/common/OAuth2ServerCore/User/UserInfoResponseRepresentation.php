@@ -76,6 +76,7 @@ final class UserInfoResponseRepresentation implements \JsonSerializable
         return Issuer::toString() . $relative_uri;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         // See https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims

@@ -33,6 +33,7 @@ class ConfigValueDatabaseProvider implements ConfigValueProvider
     /**
      * @see ConfigValueProvider::getVariables()
      */
+    #[\Override]
     public function getVariables()
     {
         $variables = [];

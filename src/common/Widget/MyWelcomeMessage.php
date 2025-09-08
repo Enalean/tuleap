@@ -41,16 +41,19 @@ class MyWelcomeMessage extends Widget
         $this->user = $user;
     }
 
+    #[\Override]
     public function getTitle()
     {
         return _('Welcome aboard');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return _('Welcome message and information for users');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $renderer = new SiteContentRenderer();
@@ -79,6 +82,7 @@ class MyWelcomeMessage extends Widget
         return $file_name;
     }
 
+    #[\Override]
     public function isUnique()
     {
         return true;

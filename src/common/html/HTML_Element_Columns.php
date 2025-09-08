@@ -48,6 +48,7 @@ class HTML_Element_Columns extends HTML_Element
         $this->components = func_get_args();
     }
 
+    #[\Override]
     public function render()
     {
         $html = '<table id="' . $this->id . '" ><tr>';

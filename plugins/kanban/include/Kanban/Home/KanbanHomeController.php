@@ -54,6 +54,7 @@ final class KanbanHomeController extends DispatchablePSR15Compatible implements 
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(PFUser::class);

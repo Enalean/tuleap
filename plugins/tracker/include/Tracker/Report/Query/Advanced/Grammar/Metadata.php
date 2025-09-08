@@ -33,16 +33,19 @@ final readonly class Metadata implements Searchable, Selectable
         $this->name = self::PREFIX . $name;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function acceptSearchableVisitor(SearchableVisitor $visitor, $parameters)
     {
         return $visitor->visitMetadata($this, $parameters);
     }
 
+    #[\Override]
     public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters)
     {
         return $visitor->visitMetaData($this, $parameters);

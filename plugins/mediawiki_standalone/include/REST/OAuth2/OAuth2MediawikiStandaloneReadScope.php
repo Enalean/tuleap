@@ -43,11 +43,13 @@ final class OAuth2MediawikiStandaloneReadScope implements AuthenticationScope
     {
         $this->definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition
         {
+            #[\Override]
             public function getName(): string
             {
                 return dgettext('tuleap-mediawiki_standalone', 'Mediawiki Standalone (read only)');
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return dgettext('tuleap-mediawiki_standalone', 'Read only access to information about Mediawiki Standalone');
@@ -58,6 +60,7 @@ final class OAuth2MediawikiStandaloneReadScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromItself(): AuthenticationScope
     {
         return new self(OAuth2ScopeIdentifier::fromIdentifierKey(self::IDENTIFIER_KEY));
@@ -66,6 +69,7 @@ final class OAuth2MediawikiStandaloneReadScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?self
     {
         if ($identifier instanceof OAuth2ScopeIdentifier && $identifier->toString() === self::IDENTIFIER_KEY) {
@@ -75,16 +79,19 @@ final class OAuth2MediawikiStandaloneReadScope implements AuthenticationScope
         return null;
     }
 
+    #[\Override]
     public function getIdentifier(): AuthenticationScopeIdentifier
     {
         return $this->identifier;
     }
 
+    #[\Override]
     public function getDefinition(): AuthenticationScopeDefinition
     {
         return $this->definition;
     }
 
+    #[\Override]
     public function covers(AuthenticationScope $scope): bool
     {
         return self::IDENTIFIER_KEY === $scope->getIdentifier()->toString();

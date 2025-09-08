@@ -41,6 +41,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitFile($this);
@@ -51,6 +52,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return int the number of files
      */
+    #[\Override]
     public function count(): int
     {
         return count($this->files);
@@ -63,6 +65,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return mixed value at given offset
      */
+    #[\Override]
     public function offsetGet($offset): mixed
     {
         return $this->files[$offset];
@@ -74,6 +77,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * @param int   $offset to modify
      * @param mixed $value  new value
      */
+    #[\Override]
     public function offsetSet($offset, $value): void
     {
         $this->files[$offset] = $value;
@@ -84,6 +88,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @param int $offset to check
      */
+    #[\Override]
     public function offsetExists($offset): bool
     {
         return isset($this->files[$offset]);
@@ -95,6 +100,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * @param int $offset to delete
      *
      */
+    #[\Override]
     public function offsetUnset($offset): void
     {
         unset($this->files[$offset]);
@@ -113,11 +119,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return Tracker_FileInfo the current one
      */
+    #[\Override]
     public function current(): mixed
     {
         return $this->files[$this->index];
     }
 
+    #[\Override]
     public function key(): int
     {
         return $this->index;
@@ -128,6 +136,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * Jump to the next Tracker_FileInfo
      */
+    #[\Override]
     public function next(): void
     {
         $this->index++;
@@ -138,11 +147,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * Reset the pointer to the start of the collection
      */
+    #[\Override]
     public function rewind(): void
     {
         $this->index = 0;
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return isset($this->files[$this->index]);
@@ -158,11 +169,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         return $this->files;
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         return $this->getFullRESTValue($user);
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         assert($this->field instanceof FilesField);
@@ -179,6 +192,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return mixed The value of this artifact changeset value
      */
+    #[\Override]
     public function getValue()
     {
         // TODO : implement
@@ -188,6 +202,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     /**
      * @return false|string
      */
+    #[\Override]
     public function mailDiff(
         $changeset_value,
         $artifact_id,
@@ -204,6 +219,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return string|false The difference between another $changeset_value, false if no differneces
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         return $this->formatDiff($changeset_value, $format, false);
@@ -238,6 +254,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return string The sentence to add in changeset
      */
+    #[\Override]
     public function nodiff($format = 'html')
     {
         if (empty($this->files)) {

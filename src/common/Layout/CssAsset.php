@@ -42,11 +42,13 @@ class CssAsset implements CssAssetGeneric
         $this->name           = $name;
     }
 
+    #[\Override]
     public function getFileURL(ThemeVariation $variant): string
     {
         return $this->include_assets->getFileURL($this->name . $variant->getFileColorSuffix() . '.css');
     }
 
+    #[\Override]
     public function getIdentifier(): string
     {
         return $this->include_assets->getPath($this->name);

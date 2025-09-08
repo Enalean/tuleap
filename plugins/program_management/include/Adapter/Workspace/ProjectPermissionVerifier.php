@@ -35,6 +35,7 @@ final class ProjectPermissionVerifier implements VerifyProjectPermission
         $this->retrieve_user = $retrieve_user;
     }
 
+    #[\Override]
     public function isProjectAdministrator(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool
     {
         $user = $this->retrieve_user->getUserWithId($user_identifier);

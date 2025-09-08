@@ -36,6 +36,7 @@ final class ArtifactLinkFieldAdmin extends Tracker_FormElement_View_Admin_Field
         parent::__construct($formElement, $allUsedElements);
     }
 
+    #[\Override]
     protected function fetchAdminSpecificProperty(string $key, array $property): string
     {
         if ($key === 'can_edit_reverse_links') {

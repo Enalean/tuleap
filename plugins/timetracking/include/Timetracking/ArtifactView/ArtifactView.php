@@ -40,18 +40,21 @@ final readonly class ArtifactView extends TrackerArtifactView
     }
 
     /** @see TrackerArtifactView::getTitle() */
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-timetracking', 'Time tracking');
     }
 
     /** @see TrackerArtifactView::getIdentifier() */
+    #[\Override]
     public function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
     /** @see TrackerArtifactView::fetch() */
+    #[\Override]
     public function fetch(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);

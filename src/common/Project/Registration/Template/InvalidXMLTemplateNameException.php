@@ -36,6 +36,7 @@ final class InvalidXMLTemplateNameException extends \RuntimeException implements
         $this->name = $name;
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(_('The XML template "%s" provided is not valid'), $this->name);

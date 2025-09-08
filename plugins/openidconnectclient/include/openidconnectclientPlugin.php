@@ -136,6 +136,7 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
     /**
      * @return OpenIDConnectClientPluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo instanceof OpenIDConnectClientPluginInfo) {
@@ -541,6 +542,7 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
         return $storage;
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $config_keys): void
     {
         $config_keys->addConfigClass(Login\Registration\AutomaticUserRegistration::class);

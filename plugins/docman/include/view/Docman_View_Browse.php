@@ -26,6 +26,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     /**
      * @access: protected
      */
+    #[\Override]
     public function _getTitle($params)
     {
         // If a title is defined in the report, use it instead of the  default one
@@ -37,6 +38,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return $title;
     }
 
+    #[\Override]
     protected function getUnconvertedTitle($params)
     {
         // If a title is defined in the report, use it instead of the
@@ -62,6 +64,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return htmlentities($params['filter']->getTitle(), ENT_COMPAT, 'UTF-8');
     }
 
+    #[\Override]
     protected function displayMode(array $params): void
     {
         $html = '';
@@ -125,6 +128,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     /**
      * @access: protected
      */
+    #[\Override]
     public function _filter($params)
     {
         $html = '';

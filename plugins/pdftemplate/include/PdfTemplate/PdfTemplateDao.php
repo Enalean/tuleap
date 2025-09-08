@@ -37,6 +37,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         parent::__construct();
     }
 
+    #[\Override]
     public function create(
         string $label,
         string $description,
@@ -77,6 +78,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         );
     }
 
+    #[\Override]
     public function retrieveAll(): array
     {
         $rows = $this->getDB()->run('SELECT * FROM plugin_pdftemplate ORDER BY label ASC');
@@ -89,6 +91,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         );
     }
 
+    #[\Override]
     public function delete(PdfTemplateIdentifier $identifier): void
     {
         $this->getDB()->delete(
@@ -99,6 +102,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         );
     }
 
+    #[\Override]
     public function retrieveTemplate(PdfTemplateIdentifier $identifier): ?PdfTemplate
     {
         $row = $this->getDB()->row(
@@ -138,6 +142,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         return $user;
     }
 
+    #[\Override]
     public function update(PdfTemplate $template): void
     {
         $this->getDB()->update(

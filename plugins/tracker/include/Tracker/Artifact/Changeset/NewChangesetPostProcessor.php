@@ -40,6 +40,7 @@ final readonly class NewChangesetPostProcessor implements ProcessChangesetPostCr
     ) {
     }
 
+    #[\Override]
     public function postProcessCreation(
         NewChangesetCreated $changeset_created,
         Artifact $artifact,

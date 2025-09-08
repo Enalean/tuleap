@@ -35,6 +35,7 @@ final class ProjectTemplateNotActiveException extends Project_Creation_Exception
         $this->project = $project;
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(_('Project #%d is not active.'), $this->project->getID());

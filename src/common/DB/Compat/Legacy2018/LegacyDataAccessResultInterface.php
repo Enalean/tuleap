@@ -48,6 +48,7 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      *
      * @return mixed
      */
+    #[\Override]
     public function getRow();
 
     /**
@@ -57,6 +58,7 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      *
      * @return int
      */
+    #[\Override]
     public function rowCount();
 
     /**
@@ -66,6 +68,7 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      *
      * @return mixed
      */
+    #[\Override]
     public function isError();
 
     /**
@@ -73,6 +76,7 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      * @return false|array Return the current element
      * @psalm-ignore-falsable-return
      */
+    #[\Override]
     public function current(): mixed;
 
     /**
@@ -80,6 +84,7 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      *
      * @deprecated
      */
+    #[\Override]
     public function next(): void;
 
     /**
@@ -87,6 +92,7 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      *
      * @deprecated
      */
+    #[\Override]
     public function valid(): bool;
 
     /**
@@ -94,6 +100,7 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      *
      * @deprecated
      */
+    #[\Override]
     public function rewind(): void;
 
     /**
@@ -101,11 +108,13 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      *
      * @deprecated
      */
+    #[\Override]
     public function key(): mixed;
 
     /**
      * @deprecated
      */
+    #[\Override]
     public function count(): int;
 
     /**

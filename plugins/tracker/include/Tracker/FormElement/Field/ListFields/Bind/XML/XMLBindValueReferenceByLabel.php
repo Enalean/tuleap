@@ -42,11 +42,13 @@ final class XMLBindValueReferenceByLabel implements XMLBindValueReference
         $this->field_name = $field_name;
     }
 
+    #[\Override]
     public function getId(XMLFormElementFlattenedCollection $form_elements): string
     {
         return $form_elements->getBindValueByLabel($this->field_name, $this->label)->id;
     }
 
+    #[\Override]
     public function getIdForFieldChange(XMLFormElementFlattenedCollection $form_elements): string
     {
         return $form_elements->getBindValueByLabel($this->field_name, $this->label)->id_for_field_change;

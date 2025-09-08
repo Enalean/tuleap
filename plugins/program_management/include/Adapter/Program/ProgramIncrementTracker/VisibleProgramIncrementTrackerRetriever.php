@@ -41,6 +41,7 @@ final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisiblePr
     ) {
     }
 
+    #[\Override]
     public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): TrackerReference
     {
         $program_id                   = $program->getId();

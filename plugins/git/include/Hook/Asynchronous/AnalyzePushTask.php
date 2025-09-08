@@ -51,11 +51,13 @@ final class AnalyzePushTask implements \Tuleap\Queue\QueueTask
         return new self($commit_hashes, (int) $push->getRepository()->getId(), (int) $push->getPusher()->getId());
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return self::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return [
@@ -65,6 +67,7 @@ final class AnalyzePushTask implements \Tuleap\Queue\QueueTask
         ];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Analyze push in git repository #' . $this->git_repository_id . ' by user #' . $this->pushing_user_id;

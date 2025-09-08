@@ -27,6 +27,7 @@ final class InComparisonChecker implements ICheckMetadataForAComparison
 {
     public const OPERATOR = 'in()';
 
+    #[\Override]
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {
         throw new InvalidMetadataForComparisonException($metadata, self::OPERATOR);

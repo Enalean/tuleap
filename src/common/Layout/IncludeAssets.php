@@ -40,6 +40,7 @@ class IncludeAssets implements IncludeAssetsGeneric
      * @throws IncludeAssetsException
      * @throws IncludeAssetsManifestException
      */
+    #[\Override]
     public function getFileURL(string $file_name): string
     {
         return $this->getBaseURLWithTrailingSlash() . $this->getHashedName($file_name);

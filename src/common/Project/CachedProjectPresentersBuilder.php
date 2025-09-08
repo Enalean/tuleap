@@ -38,6 +38,7 @@ final class CachedProjectPresentersBuilder implements ListOfProjectPresentersBui
     /**
      * @return ProjectPresenter[]
      */
+    #[\Override]
     public function getProjectPresenters(PFUser $current_user): array
     {
         if (! isset($this->cache[(int) $current_user->getId()])) {

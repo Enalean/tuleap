@@ -34,6 +34,7 @@ final class UserCanAccessProjectAdministrationVerifier implements VerifyUserCanA
         $this->membership_delegation_dao = $membership_delegation_dao;
     }
 
+    #[\Override]
     public function canUserAccessProjectAdministration(CurrentUserWithLoggedInInformation $current_user, \Project $project): bool
     {
         if (! $current_user->is_logged_in) {

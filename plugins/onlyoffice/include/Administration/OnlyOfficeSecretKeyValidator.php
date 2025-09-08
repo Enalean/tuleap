@@ -35,6 +35,7 @@ final class OnlyOfficeSecretKeyValidator implements SecretValidator
     {
     }
 
+    #[\Override]
     public static function buildSelf(): self
     {
         return new self();
@@ -43,6 +44,7 @@ final class OnlyOfficeSecretKeyValidator implements SecretValidator
     /**
      * @throws InvalidConfigKeyValueException
      */
+    #[\Override]
     public function checkIsValid(ConcealedString $value): void
     {
         if ($value->isIdenticalTo(new ConcealedString(''))) {

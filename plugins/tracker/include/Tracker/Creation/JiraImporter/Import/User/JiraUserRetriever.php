@@ -115,6 +115,7 @@ class JiraUserRetriever implements GetTuleapUserFromJiraUser
         return $tuleap_user;
     }
 
+    #[\Override]
     public function retrieveJiraAuthor(JiraUser $update_author): PFUser
     {
         if ($update_author instanceof AnonymousJiraUser) {
@@ -125,6 +126,7 @@ class JiraUserRetriever implements GetTuleapUserFromJiraUser
         return $this->retrieveUser($update_author);
     }
 
+    #[\Override]
     public function getAssignedTuleapUser(string $unique_account_identifier): PFUser
     {
         if ($this->user_cache->hasUserWithUniqueIdentifier($unique_account_identifier)) {

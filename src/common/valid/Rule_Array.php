@@ -26,6 +26,7 @@
  */
 class Rule_Array extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function isValid($val)
     {
         return \is_array($val);

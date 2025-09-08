@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class UploadedArchiveForProjectDao extends DataAccessObject implements SaveUploadedArchiveForProject, RetrieveUploadedArchiveForProject
 {
+    #[\Override]
     public function save(int $project_id, string $archive_path): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
@@ -40,6 +41,7 @@ final class UploadedArchiveForProjectDao extends DataAccessObject implements Sav
         );
     }
 
+    #[\Override]
     public function searchByProjectId(int $project_id): ?string
     {
         $row = $this->getDB()->row('SELECT archive_path FROM project_template_archive WHERE project_id = ?', $project_id);

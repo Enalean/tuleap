@@ -31,6 +31,7 @@ final class AppMatchingClientIDFilterAppTypeRetriever implements RetrieveAppMatc
     /**
      * @psalm-return array{id:int, project_id:int|null, name:string, redirect_endpoint: string, use_pkce:0|1}
      */
+    #[\Override]
     public function searchByClientId(ClientIdentifier $client_id): ?array
     {
         $app_data = $this->app_dao->searchByClientId($client_id);

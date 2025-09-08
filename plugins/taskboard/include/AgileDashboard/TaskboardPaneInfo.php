@@ -33,21 +33,25 @@ class TaskboardPaneInfo extends PaneInfo
         parent::__construct();
     }
 
+    #[\Override]
     public function getIdentifier(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-taskboard', 'Taskboard');
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fa-solid fa-tlp-taskboard';
     }
 
+    #[\Override]
     public function getUri(): string
     {
         $project = $this->milestone->getProject();

@@ -56,6 +56,7 @@ class TimeTrackingOverview extends Widget
         $this->renderer   = $renderer;
     }
 
+    #[\Override]
     public function getTitle()
     {
         if ($this->widget_title !== null) {
@@ -64,27 +65,32 @@ class TimeTrackingOverview extends Widget
         return dgettext('tuleap-timetracking', 'Timetracking overview');
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $this->content_id   = $this->report_dao->searchReportById($id);
         $this->widget_title = $this->report_dao->getReportTitleById($id);
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-timetracking', 'Displays time spent on multiple trackers');
     }
 
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-timetracking', 'Time tracking');
     }
 
+    #[\Override]
     public function isUnique()
     {
         return false;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
@@ -94,6 +100,7 @@ class TimeTrackingOverview extends Widget
         );
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         return $this->renderer->renderToString(
@@ -102,6 +109,7 @@ class TimeTrackingOverview extends Widget
         );
     }
 
+    #[\Override]
     public function getInstallPreferences()
     {
         return $this->renderer->renderToString(
@@ -113,6 +121,7 @@ class TimeTrackingOverview extends Widget
     /**
      * @throws TimetrackingOverviewWidgetNoTitle
      */
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $content_id = $request->getValidated('content_id', 'uint', 0);
@@ -123,6 +132,7 @@ class TimeTrackingOverview extends Widget
         return $this->report_dao->setReportTitleById($title, $content_id);
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         return [
@@ -130,6 +140,7 @@ class TimeTrackingOverview extends Widget
         ];
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style-bp-overview')]);
@@ -148,6 +159,7 @@ class TimeTrackingOverview extends Widget
         return $this->getCurrentUser()->getPreference('timetracking_overview_display_trackers_without_time_' . $widget_id);
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
@@ -156,6 +168,7 @@ class TimeTrackingOverview extends Widget
     /**
      * @throws TimetrackingOverviewWidgetNoTitle
      */
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         $title = $request->params['timetracking-overview-title'];
@@ -167,6 +180,7 @@ class TimeTrackingOverview extends Widget
         return $content_id;
     }
 
+    #[\Override]
     public function destroy($content_id)
     {
         $this->report_dao->delete($content_id);

@@ -103,6 +103,7 @@ class PluginManager implements RetrieveEnabledPlugins // phpcs:ignore PSR1.Class
     /**
      * @return Plugin[]
      */
+    #[\Override]
     public function getEnabledPlugins(): array
     {
         return $this->plugin_factory->getEnabledPlugins();

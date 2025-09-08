@@ -32,6 +32,7 @@ class ArtifactAttachmentXMLLinker implements ArtifactAttachmentXMLExporter
         $this->dao         = $dao;
     }
 
+    #[\Override]
     public function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id)
     {
         $dar = $this->dao->searchFilesForArtifact($artifact_id);

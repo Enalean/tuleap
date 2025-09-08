@@ -37,21 +37,25 @@ class Docman_MetadataValueList extends \Docman_MetadataValue
         $this->listOfValues = \null;
     }
 
+    #[\Override]
     public function setType($v)
     {
         return;
     }
 
+    #[\Override]
     public function getType()
     {
         return \PLUGIN_DOCMAN_METADATA_TYPE_LIST;
     }
 
+    #[\Override]
     public function setValue($v)
     {
         $this->listOfValues = $v;
     }
 
+    #[\Override]
     public function getValue()
     {
         return new \ArrayIterator($this->listOfValues);

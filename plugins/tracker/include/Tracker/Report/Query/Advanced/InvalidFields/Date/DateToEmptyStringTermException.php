@@ -55,71 +55,85 @@ final class DateToEmptyStringTermException extends InvalidFieldException impleme
         parent::__construct($message);
     }
 
+    #[\Override]
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
         throw new RuntimeException('Date should be comparable = to an empty string');
     }
 
+    #[\Override]
     public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
         throw new RuntimeException('Date should be comparable != to an empty string');
     }
 
+    #[\Override]
     public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
         return dgettext('tuleap-tracker', "The date field '%s' cannot be compared to the empty string with < operator.");
     }
 
+    #[\Override]
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
         return dgettext('tuleap-tracker', "The date field '%s' cannot be compared to the empty string with > operator.");
     }
 
+    #[\Override]
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
         return dgettext('tuleap-tracker', "The date field '%s' cannot be compared to the empty string with <= operator.");
     }
 
+    #[\Override]
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
         return dgettext('tuleap-tracker', "The date field '%s' cannot be compared to the empty string with >= operator.");
     }
 
+    #[\Override]
     public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
         return dgettext('tuleap-tracker', "The date field '%s' cannot be compared to the empty string with BETWEEN() operator.");
     }
 
+    #[\Override]
     public function visitInComparison(InComparison $comparison, $parameters)
     {
         throw new RuntimeException("The date field '%s' is not supposed to be used with IN operator.");
     }
 
+    #[\Override]
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
         throw new RuntimeException("The date field '%s' is not supposed to be used with NOT IN operator.");
     }
 
+    #[\Override]
     public function visitParenthesis(Parenthesis $parenthesis, $parameters)
     {
         throw new RuntimeException('We should not end up here.');
     }
 
+    #[\Override]
     public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
         throw new RuntimeException("The date field '%s' is not supposed to be used with WITH PARENT operator.");
     }
 
+    #[\Override]
     public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
         throw new RuntimeException("The date field '%s' is not supposed to be used with WITHOUT PARENT operator.");
     }
 
+    #[\Override]
     public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
         throw new RuntimeException("The date field '%s' is not supposed to be used with WITH CHILDREN operator.");
     }
 
+    #[\Override]
     public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
         throw new RuntimeException("The date field '%s' is not supposed to be used with WITHOUT CHILDREN operator.");

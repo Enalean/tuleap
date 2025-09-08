@@ -32,6 +32,7 @@ final readonly class ConfigKeyModifierFile implements ConfigKeyModifier
     {
     }
 
+    #[\Override]
     public function getModifierLabel(): string
     {
         return $this->path;

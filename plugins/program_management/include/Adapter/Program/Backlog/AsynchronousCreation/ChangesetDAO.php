@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyI
 
 final class ChangesetDAO extends DataAccessObject implements VerifyIsChangeset
 {
+    #[\Override]
     public function isChangeset(int $changeset_id): bool
     {
         $sql = 'SELECT COUNT(*) FROM tracker_changeset WHERE id = ?';

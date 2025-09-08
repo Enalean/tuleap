@@ -70,6 +70,7 @@ final class OAuth2ClientAuthenticationMiddleware implements MiddlewareInterface
         $this->logger                     = $logger;
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $credentials_set = $this->basic_auth_login_extractor->extract($request);

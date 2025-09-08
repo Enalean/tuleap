@@ -24,6 +24,7 @@ namespace Tuleap\Queue;
 
 class ForceSynchronousMode implements IsAsyncTaskProcessingAvailable
 {
+    #[\Override]
     public function canProcessAsyncTasks(): bool
     {
         return false;

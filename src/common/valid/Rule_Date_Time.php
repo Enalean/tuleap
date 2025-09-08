@@ -24,6 +24,7 @@
 class Rule_Date_Time extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const DAYTIME_REGEX = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?) (\d{2}):(\d{2})(?::\d{2})?$/';
+    #[\Override]
     public function isValid($val)
     {
         if (! \preg_match(self::DAYTIME_REGEX, $val, $m)) {

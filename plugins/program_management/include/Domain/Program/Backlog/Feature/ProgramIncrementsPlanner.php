@@ -64,6 +64,7 @@ final class ProgramIncrementsPlanner implements PlanProgramIncrements
     ) {
     }
 
+    #[\Override]
     public function createProgramIncrementAndReturnPlanChange(ProgramIncrementCreation $creation, TeamIdentifierCollection $teams): ProgramIncrementChanged
     {
         $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(

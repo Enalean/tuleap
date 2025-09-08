@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 final class IsPermissionsOnArtifactFieldVerifier implements VerifyIsPermissionsOnArtifactField
 {
+    #[\Override]
     public function isPermissionsOnArtifactField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $field instanceof \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;

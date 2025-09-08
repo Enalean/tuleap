@@ -67,6 +67,7 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     ) {
     }
 
+    #[\Override]
     public function collect(\Tuleap\Tracker\Tracker $source_tracker, \Tuleap\Tracker\Tracker $destination_tracker, Artifact $artifact, \PFUser $user, LoggerInterface $logger): DuckTypedMoveFieldCollection
     {
         foreach ($this->retrieve_used_fields->getUsedFields($source_tracker) as $source_field) {

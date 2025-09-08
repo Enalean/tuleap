@@ -36,6 +36,7 @@ final class FieldValuesGathererRetriever implements RetrieveFieldValuesGatherer
     ) {
     }
 
+    #[\Override]
     public function getFieldValuesGatherer(TimeboxMirroringOrder $order): GatherFieldValues
     {
         $full_artifact  = $this->artifact_retriever->getNonNullArtifact($order->getTimebox());

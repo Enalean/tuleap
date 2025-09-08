@@ -64,16 +64,19 @@ final class NotEqualFieldComparisonVisitor implements
     }
 
     /** @return FieldFromWhereBuilder */
+    #[\Override]
     public function getFromWhereBuilder(TrackerField $field)
     {
         return $field->accept($this);
     }
 
+    #[\Override]
     public function visitArtifactLink(ArtifactLinkField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitDate(DateField $field)
     {
         return new DateTimeFieldFromWhereBuilder(
@@ -84,6 +87,7 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitFile(FilesField $field)
     {
         return new NotEqualComparison\ForFile(
@@ -91,6 +95,7 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitFloat(FloatField $field)
     {
         return new NotEqualComparison\ForFloat(
@@ -98,6 +103,7 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitInteger(IntegerField $field)
     {
         return new NotEqualComparison\ForInteger(
@@ -105,21 +111,25 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitOpenList(OpenListField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitPermissionsOnArtifact(PermissionsOnArtifactField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitString(StringField $field)
     {
         return $this->visitText($field);
     }
 
+    #[\Override]
     public function visitText(TextField $field)
     {
         return new NotEqualComparison\ForText(
@@ -128,21 +138,25 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitRadiobutton(RadioButtonField $field)
     {
         return $this->visitList($field);
     }
 
+    #[\Override]
     public function visitCheckbox(CheckboxField $field)
     {
         return $this->visitList($field);
     }
 
+    #[\Override]
     public function visitMultiSelectbox(MultiSelectboxField $field)
     {
         return $this->visitList($field);
     }
 
+    #[\Override]
     public function visitSelectbox(SelectboxField $field)
     {
         return $this->visitList($field);
@@ -178,6 +192,7 @@ final class NotEqualFieldComparisonVisitor implements
         return $bind_builder->getFromWhereBuilder($field);
     }
 
+    #[\Override]
     public function visitSubmittedBy(SubmittedByField $field)
     {
         return new ListReadOnlyFieldFromWhereBuilder(
@@ -189,6 +204,7 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitLastModifiedBy(LastUpdateByField $field)
     {
         return new ListReadOnlyFieldFromWhereBuilder(
@@ -200,26 +216,31 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitArtifactId(ArtifactIdField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitPerTrackerArtifactId(PerTrackerArtifactIdField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitCrossReferences(CrossReferencesField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitBurndown(BurndownField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitLastUpdateDate(LastUpdateDateField $field)
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
@@ -230,6 +251,7 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitSubmittedOn(SubmittedOnField $field)
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
@@ -240,16 +262,19 @@ final class NotEqualFieldComparisonVisitor implements
         );
     }
 
+    #[\Override]
     public function visitComputed(ComputedField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitExternalField(TrackerFormElementExternalField $element)
     {
         return null;
     }
 
+    #[\Override]
     public function visitPriority(PriorityField $field)
     {
         return null;

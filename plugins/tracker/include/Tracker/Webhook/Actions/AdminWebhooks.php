@@ -56,6 +56,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
     /**
      * Process the request
      */
+    #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
     {
         $this->displayHeader($layout, dgettext('tuleap-tracker', 'Webhooks'));

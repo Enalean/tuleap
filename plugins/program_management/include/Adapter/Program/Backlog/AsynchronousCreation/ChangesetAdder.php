@@ -47,6 +47,7 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
     ) {
     }
 
+    #[\Override]
     public function addChangeset(MirroredTimeboxChangeset $changeset): void
     {
         $full_artifact    = $this->artifact_retriever->getNonNullArtifact($changeset->mirrored_timebox);
@@ -64,6 +65,7 @@ final class ChangesetAdder implements AddChangeset, AddArtifactLinkChangeset
         }
     }
 
+    #[\Override]
     public function addArtifactLinkChangeset(ArtifactLinkChangeset $changeset): void
     {
         $full_artifact    = $this->artifact_retriever->getNonNullArtifact($changeset->mirrored_program_increment);

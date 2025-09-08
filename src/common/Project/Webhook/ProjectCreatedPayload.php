@@ -74,6 +74,7 @@ class ProjectCreatedPayload implements Payload
     /**
      * @return array
      */
+    #[\Override]
     public function getPayload()
     {
         return $this->payload;

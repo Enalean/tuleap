@@ -64,6 +64,7 @@ final class ProcessSystemEventsCommand extends Command
         $this->lock_factory                   = $lock_factory;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -71,6 +72,7 @@ final class ProcessSystemEventsCommand extends Command
             ->addArgument('queue', InputArgument::REQUIRED, sprintf('Which queue should be run. Default queue is `%s`', SystemEvent::DEFAULT_QUEUE));
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $request_queue = $input->getArgument('queue');

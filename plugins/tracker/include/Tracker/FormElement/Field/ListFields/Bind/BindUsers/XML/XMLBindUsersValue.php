@@ -34,6 +34,7 @@ final class XMLBindUsersValue implements XMLBindValue
     ) {
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $bind, \SimpleXMLElement $values): void
     {
         $item = $values->addChild('item');

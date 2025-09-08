@@ -37,6 +37,7 @@ final readonly class IterationUpdateDispatcher implements DispatchIterationUpdat
     ) {
     }
 
+    #[\Override]
     public function dispatchUpdate(IterationUpdate $update): void
     {
         $representation = PendingIterationUpdateRepresentation::fromIterationUpdate($update);

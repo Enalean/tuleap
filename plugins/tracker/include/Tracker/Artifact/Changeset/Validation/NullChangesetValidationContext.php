@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext
  */
 final class NullChangesetValidationContext implements ChangesetValidationContext
 {
+    #[\Override]
     public function getArtifactLinkContext(): ArtifactLinkValidationContext
     {
         // Default to Manual Action

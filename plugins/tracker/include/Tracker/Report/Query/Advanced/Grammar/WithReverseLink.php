@@ -28,6 +28,7 @@ final class WithReverseLink implements Term
     {
     }
 
+    #[\Override]
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
         return $visitor->visitWithReverseLink($this, $parameters);

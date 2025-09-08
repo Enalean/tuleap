@@ -51,6 +51,7 @@ final class AggregateAuthenticationScopeBuilder implements AuthenticationScopeBu
         return new self(...$event->getAuthenticationKeyScopeBuilders());
     }
 
+    #[\Override]
     public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope
     {
         foreach ($this->builders as $builder) {
@@ -63,6 +64,7 @@ final class AggregateAuthenticationScopeBuilder implements AuthenticationScopeBu
         return null;
     }
 
+    #[\Override]
     public function buildAllAvailableAuthenticationScopes(): array
     {
         $key_scope_sets = [];

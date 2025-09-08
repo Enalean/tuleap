@@ -33,6 +33,7 @@ final class GitRepositoryRetriever implements RetrieveGitRepository
     {
     }
 
+    #[\Override]
     public function getRepository(int $repository_id, \PFUser $user): Ok|Err
     {
         $repository = $this->repository_factory->getRepositoryById($repository_id);

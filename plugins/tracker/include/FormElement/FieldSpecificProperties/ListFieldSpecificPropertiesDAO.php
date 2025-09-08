@@ -27,6 +27,7 @@ use Tuleap\Option\Option;
 
 class ListFieldSpecificPropertiesDAO extends DataAccessObject implements DuplicateSpecificProperties, DeleteSpecificProperties
 {
+    #[\Override]
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
         $sql = 'REPLACE INTO tracker_field_list (field_id, bind_type)
@@ -36,6 +37,7 @@ class ListFieldSpecificPropertiesDAO extends DataAccessObject implements Duplica
         $this->getDB()->run($sql, $to_field_id, $from_field_id);
     }
 
+    #[\Override]
     public function deleteFieldProperties(int $field_id): void
     {
         $this->getDB()->delete('tracker_field_list', ['field_id' => $field_id]);

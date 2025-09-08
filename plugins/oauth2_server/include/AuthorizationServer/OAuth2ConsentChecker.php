@@ -42,6 +42,7 @@ final class OAuth2ConsentChecker implements ConsentChecker
      * @param AuthenticationScope[] $scopes
      * @psalm-param non-empty-list<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
+    #[\Override]
     public function isConsentRequired(array $prompt_values, \PFUser $user, OAuth2App $client_app, array $scopes): bool
     {
         $require_consent = in_array(PromptParameterValuesExtractor::PROMPT_CONSENT, $prompt_values, true);

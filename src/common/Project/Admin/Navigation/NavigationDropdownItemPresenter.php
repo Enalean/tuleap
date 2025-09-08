@@ -35,6 +35,7 @@ class NavigationDropdownItemPresenter implements NavigationDropdownItemInterface
         $this->identifier = ($identifier) ?: 'dropdown-default-identifier';
     }
 
+    #[\Override]
     public function isMenuTitle()
     {
         return false;

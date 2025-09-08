@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class FunctionDao extends DataAccessObject implements CheckFunctionIsActivated, UpdateFunctionActivation
 {
+    #[\Override]
     public function isFunctionActivated(int $tracker_id): bool
     {
         $config = $this->getDB()->cell(
@@ -40,6 +41,7 @@ final class FunctionDao extends DataAccessObject implements CheckFunctionIsActiv
         return $config === 1;
     }
 
+    #[\Override]
     public function deactivateFunction(int $tracker_id): void
     {
         $this->getDB()
@@ -53,6 +55,7 @@ final class FunctionDao extends DataAccessObject implements CheckFunctionIsActiv
             );
     }
 
+    #[\Override]
     public function activateFunction(int $tracker_id): void
     {
         $this->getDB()

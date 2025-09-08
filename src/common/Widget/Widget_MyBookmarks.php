@@ -33,11 +33,13 @@ class Widget_MyBookmarks extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         parent::__construct('mybookmarks');
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_bookmarks');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $html_my_bookmarks = '';
@@ -68,6 +70,7 @@ class Widget_MyBookmarks extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         return $html_my_bookmarks;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_bookmarks', 'description');

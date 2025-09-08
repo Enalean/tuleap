@@ -32,11 +32,13 @@ class Docman_Widget_MyDocmanSearch extends Widget //phpcs:ignore PSR1.Classes.Cl
         $this->_pluginPath = $pluginPath;
     }
 
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-docman', 'Document Id Search');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $html    = '';
@@ -156,11 +158,13 @@ class Docman_Widget_MyDocmanSearch extends Widget //phpcs:ignore PSR1.Classes.Cl
         return 0;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-docman', 'Document manager');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-docman', 'Redirect to document with given id.');

@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class XMLImportFieldStrategyComputed implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
 {
+    #[\Override]
     public function getFieldData(
         TrackerField $field,
         SimpleXMLElement $field_change,

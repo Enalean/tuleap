@@ -41,6 +41,7 @@ final class UploadedArchiveForProjectController extends DispatchablePSR15Compati
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

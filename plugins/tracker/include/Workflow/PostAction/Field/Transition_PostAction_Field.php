@@ -73,6 +73,7 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
      *
      * @return bool
      */
+    #[\Override]
     public function bypassPermissions(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId() && $this->bypass_permissions;

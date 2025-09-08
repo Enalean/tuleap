@@ -23,6 +23,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdater implements Tr
     /**
      * @param mixed            $submitted_value
      */
+    #[\Override]
     public function update(SimpleXMLElement $field_change_xml, $submitted_value)
     {
         $field_change_xml->value = (int) $submitted_value;

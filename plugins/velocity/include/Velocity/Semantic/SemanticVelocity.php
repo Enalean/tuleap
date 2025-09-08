@@ -66,16 +66,19 @@ class SemanticVelocity extends TrackerSemantic
         $this->velocity_field = $velocity_field;
     }
 
+    #[\Override]
     public function getShortName()
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-velocity', 'Velocity');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-velocity', 'Define the field to use to compute velocity.');
@@ -99,6 +102,7 @@ class SemanticVelocity extends TrackerSemantic
         );
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         $renderer           = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
@@ -112,6 +116,7 @@ class SemanticVelocity extends TrackerSemantic
         return $renderer->renderToString('velocity-intro', $velocity_presenter);
     }
 
+    #[\Override]
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -141,6 +146,7 @@ class SemanticVelocity extends TrackerSemantic
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
+    #[\Override]
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -192,6 +198,7 @@ class SemanticVelocity extends TrackerSemantic
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
 
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         if (! $this->semantic_done->isSemanticDefined()) {
@@ -210,6 +217,7 @@ class SemanticVelocity extends TrackerSemantic
         }
     }
 
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId();
@@ -224,6 +232,7 @@ class SemanticVelocity extends TrackerSemantic
         return $this->velocity_field->getId();
     }
 
+    #[\Override]
     public function save()
     {
         $this->getSemanticDao()->addField($this->getTracker()->getId(), $this->getFieldId());

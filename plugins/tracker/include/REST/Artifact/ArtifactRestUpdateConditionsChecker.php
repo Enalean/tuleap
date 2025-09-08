@@ -31,6 +31,7 @@ final class ArtifactRestUpdateConditionsChecker implements CheckArtifactRestUpda
     /**
      * @throws RestException
      */
+    #[\Override]
     public function checkIfArtifactUpdateCanBePerformedThroughREST(\PFUser $user, Artifact $artifact): void
     {
         if (! $artifact->userCanUpdate($user)) {

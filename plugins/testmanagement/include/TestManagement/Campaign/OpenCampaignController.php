@@ -48,6 +48,7 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
         $this->status_updater     = $status_updater;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         try {

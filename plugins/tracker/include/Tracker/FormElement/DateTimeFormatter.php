@@ -30,6 +30,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         parent::__construct($field);
     }
 
+    #[\Override]
     public function validate($value)
     {
         $is_valid = true;
@@ -67,17 +68,20 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         return $format;
     }
 
+    #[\Override]
     public function getFieldDataForCSVPreview(array $date_explode)
     {
         return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2]
             . ' ' . $date_explode[3] . ':' . $date_explode[4];
     }
 
+    #[\Override]
     public function formatDate($timestamp)
     {
         return format_date(self::DATE_TIME_FORMAT, (float) $timestamp, '');
     }
 
+    #[\Override]
     public function formatDateForDisplay($timestamp)
     {
         return self::format($timestamp);
@@ -88,6 +92,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         return format_date($GLOBALS['Language']->getText('system', 'datefmt_time'), (float) $timestamp, '');
     }
 
+    #[\Override]
     protected function getDatePicker($value, array $errors): string
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(

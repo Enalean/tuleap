@@ -25,6 +25,7 @@ use Tuleap\Layout\HeaderConfigurationBuilder;
 
 class ServiceDocman extends \Service
 {
+    #[\Override]
     public function displayHeader(string $title, $breadcrumbs, array $toolbar, HeaderConfiguration|array $params = []): void
     {
         $GLOBALS['HTML']->includeCalendarScripts();
@@ -42,11 +43,13 @@ class ServiceDocman extends \Service
         );
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fas fa-folder-open';
     }
 
+    #[\Override]
     public function getInternationalizedName(): string
     {
         $label = $this->getLabel();
@@ -58,6 +61,7 @@ class ServiceDocman extends \Service
         return $label;
     }
 
+    #[\Override]
     public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();
@@ -69,11 +73,13 @@ class ServiceDocman extends \Service
         return $description;
     }
 
+    #[\Override]
     public function getUrl(?string $url = null): string
     {
         return '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) . '/';
     }
 
+    #[\Override]
     public function urlCanChange(): bool
     {
         return false;

@@ -41,26 +41,31 @@ final class CollectionOfSVNAccessFileFaults implements \Iterator
         $this->faults[] = $fault;
     }
 
+    #[\Override]
     public function current(): Fault
     {
         return $this->faults[$this->index];
     }
 
+    #[\Override]
     public function next(): void
     {
         $this->index++;
     }
 
+    #[\Override]
     public function key(): int
     {
         return $this->index;
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return isset($this->faults[$this->index]);
     }
 
+    #[\Override]
     public function rewind(): void
     {
         $this->index = 0;

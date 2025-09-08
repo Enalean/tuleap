@@ -50,6 +50,7 @@ final class IterationUpdateProcessor implements ProcessIterationUpdate
     ) {
     }
 
+    #[\Override]
     public function processUpdate(IterationUpdate $update): void
     {
         $this->logger->debug(

@@ -55,6 +55,7 @@ class WebhookDeleteController implements DispatchableWithRequest
         $this->dao             = $dao;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $webhook_id = $request->get('webhook_id');

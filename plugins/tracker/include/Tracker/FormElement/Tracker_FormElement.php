@@ -214,6 +214,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
         return $this->rank;
     }
 
+    #[\Override]
     public function isUsed(): bool
     {
         return $this->use_it;
@@ -260,6 +261,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      *
      * @return void
      */
+    #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         $func = (string) $request->get('func');
@@ -370,6 +372,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      *
      * @return Tracker
      */
+    #[\Override]
     public function getTracker()
     {
         if (! $this->tracker) {
@@ -393,6 +396,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      *
      * @return int
      */
+    #[\Override]
     public function getTrackerId()
     {
         return $this->tracker_id;
@@ -491,6 +495,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
         ];
     }
 
+    #[\Override]
     public function fetchFormattedForJson()
     {
         return [
@@ -882,6 +887,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Transforms FormElement into a SimpleXMLElement
      */
+    #[\Override]
     public function exportToXml(
         SimpleXMLElement $parent_node,
         array &$xmlMapping,
@@ -1006,6 +1012,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      *
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId()
     {
         return $this->id;
@@ -1377,6 +1384,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      *
      * @return array
      */
+    #[\Override]
     public function getPermissionsByUgroupId()
     {
         return [];
@@ -1404,6 +1412,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * @return bool say if the field is a unique one
      */
+    #[\Override]
     public static function getFactoryUniqueField()
     {
         return false;

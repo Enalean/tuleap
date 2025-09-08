@@ -65,6 +65,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->event_manager->dispatch(new BeforeLostPasswordConfirm());

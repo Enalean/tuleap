@@ -66,6 +66,7 @@ class EditController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws \Tuleap\Request\NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         try {

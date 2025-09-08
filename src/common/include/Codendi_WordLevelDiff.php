@@ -41,6 +41,7 @@ class Codendi_WordLevelDiff extends \Codendi_MappedDiff // phpcs:ignore PSR1.Cla
         return [$m[0], $m[1]];
     }
 
+    #[\Override]
     public function orig()
     {
         $orig = new \Codendi_HWLDF_WordAccumulator();
@@ -55,6 +56,7 @@ class Codendi_WordLevelDiff extends \Codendi_MappedDiff // phpcs:ignore PSR1.Cla
     }
 
     //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    #[\Override]
     public function _fin()
     {
         $fin = new \Codendi_HWLDF_WordAccumulator();

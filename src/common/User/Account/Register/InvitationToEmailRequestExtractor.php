@@ -39,6 +39,7 @@ final class InvitationToEmailRequestExtractor implements IExtractInvitationToEma
     ) {
     }
 
+    #[\Override]
     public function getInvitationToEmail(\Codendi_Request $request): ?InvitationToEmail
     {
         $token = $request->get('invitation-token');

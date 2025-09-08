@@ -35,6 +35,7 @@ class DefaultSettingsRouter extends RouterLink
         $this->index_controller = $index_controller;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request)
     {
         switch ($request->get('action')) {

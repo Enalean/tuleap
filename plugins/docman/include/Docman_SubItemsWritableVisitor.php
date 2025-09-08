@@ -47,6 +47,7 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
         $this->fldCounter = 0;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         // Recurse
@@ -81,36 +82,43 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
         return false;
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         return false;

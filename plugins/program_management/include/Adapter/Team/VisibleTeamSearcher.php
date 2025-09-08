@@ -45,6 +45,7 @@ final class VisibleTeamSearcher implements SearchVisibleTeamsOfProgram
     ) {
     }
 
+    #[\Override]
     public function searchTeamIdsOfProgram(ProgramIdentifier $program, UserIdentifier $user): array
     {
         $team_ids = $this->teams_searcher->searchTeamIdsOfProgram($program->getId());
@@ -63,6 +64,7 @@ final class VisibleTeamSearcher implements SearchVisibleTeamsOfProgram
         return $team_ids;
     }
 
+    #[\Override]
     public function searchTeamWithIdInProgram(ProgramIdentifier $program, UserIdentifier $user, int $team_id): int
     {
         if (! $this->verify_is_team_of_program->isATeamFromProgram($program->getId(), $team_id)) {

@@ -36,16 +36,19 @@ final class GenericQueueTask implements QueueTask
     {
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return $this->topic;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return $this->payload;
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return $this->message;

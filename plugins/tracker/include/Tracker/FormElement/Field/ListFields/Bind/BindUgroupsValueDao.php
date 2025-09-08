@@ -29,6 +29,7 @@ class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsVa
     /**
      * @psalm-return array{id: int, field_id: int, ugroup_id: int, is_hidden: int} | null
      */
+    #[\Override]
     public function searchById(int $id): ?array
     {
         $sql = '
@@ -58,6 +59,7 @@ class BindUgroupsValueDao extends DataAccessObject implements SearchUserGroupsVa
     /**
      * @psalm-return array{id: int, field_id: int, ugroup_id: int, is_hidden: int} | null
      */
+    #[\Override]
     public function searchByFieldIdAndGroupId(int $field_id, int $ugroup_id): ?array
     {
         $sql = '

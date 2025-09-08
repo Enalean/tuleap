@@ -30,6 +30,7 @@
 class Rule_Date extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const DAY_REGEX = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?)$/';
+    #[\Override]
     public function isValid($val)
     {
         if (\preg_match(self::DAY_REGEX, $val, $m)) {

@@ -41,33 +41,40 @@ final class EqualComparisonChecker implements ICheckMetadataForAComparison, Valu
 {
     public const OPERATOR = '=';
 
+    #[\Override]
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {
         $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new CommentToNowComparisonException();
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new CommentToMySelfComparisonException();
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new CommentToStatusOpenComparisonException();

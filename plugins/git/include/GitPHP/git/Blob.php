@@ -437,6 +437,7 @@ class Blob extends FilesystemObject
         }
     }
 
+    #[\Override]
     public function isTree()
     {
         return false;
@@ -445,11 +446,13 @@ class Blob extends FilesystemObject
     /**
      * @return bool
      */
+    #[\Override]
     public function isBlob()
     {
         return true;
     }
 
+    #[\Override]
     public function isSubmodule()
     {
         return false;

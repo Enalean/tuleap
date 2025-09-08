@@ -74,6 +74,7 @@ class JenkinsServer implements \JsonSerializable
         return $this->project;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

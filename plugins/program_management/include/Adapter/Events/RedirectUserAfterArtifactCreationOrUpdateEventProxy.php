@@ -43,6 +43,7 @@ final class RedirectUserAfterArtifactCreationOrUpdateEventProxy implements Redir
         );
     }
 
+    #[\Override]
     public function setQueryParameter(IterationRedirectionParameters $parameters): void
     {
         $this->redirect->query_parameters[IterationRedirectionParameters::FLAG]               = $parameters->getValue();
@@ -50,26 +51,31 @@ final class RedirectUserAfterArtifactCreationOrUpdateEventProxy implements Redir
         );
     }
 
+    #[\Override]
     public function setProgramIncrementQueryParameter(ProgramRedirectionParameters $parameters): void
     {
         $this->redirect->query_parameters[ProgramRedirectionParameters::FLAG] = $parameters->getValue();
     }
 
+    #[\Override]
     public function setBaseUrl(string $url): void
     {
         $this->redirect->base_url = $url;
     }
 
+    #[\Override]
     public function resetQueryParameters(): void
     {
         $this->redirect->query_parameters = [];
     }
 
+    #[\Override]
     public function isContinueMode(): bool
     {
         return Tracker_Artifact_Redirect::STATE_CONTINUE === $this->redirect->mode;
     }
 
+    #[\Override]
     public function isStayMode(): bool
     {
         return Tracker_Artifact_Redirect::STATE_STAY === $this->redirect->mode;

@@ -192,6 +192,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
         );
     }
 
+    #[\Override]
     public function getProjectById(int $project_id): \Project
     {
         return $this->getProject($project_id);
@@ -200,6 +201,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
     /**
      * @throws Project_NotFoundException
      */
+    #[\Override]
     public function getValidProjectById(int $project_id): \Project
     {
         return $this->getValidProject($project_id);
@@ -265,6 +267,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
     /**
      * @return Project[]
      */
+    #[\Override]
     public function getProjectsByStatus(string $status): array
     {
         $projects = [];
@@ -411,6 +414,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
         return $p;
     }
 
+    #[\Override]
     public function getProjectByCaseInsensitiveUnixName($name): ?Project
     {
         $dar = $this->_getDao()->searchByCaseInsensitiveUnixGroupName($name);
@@ -420,6 +424,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
         return null;
     }
 
+    #[\Override]
     public function activateWithNotifications(Project $project): bool
     {
         if ($this->activateWithoutNotifications($project)) {
@@ -431,6 +436,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
         return false;
     }
 
+    #[\Override]
     public function activateWithoutNotifications(Project $project): bool
     {
         if ($this->_getDao()->updateStatus($project->getId(), 'A')) {
@@ -467,6 +473,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
      * @throws SwitchingBackToPendingException
      * @throws CannotDeletedDefaultAdminProjectException
      */
+    #[\Override]
     public function updateStatus(Project $project, string $status): void
     {
         UpdateStatusChecker::checkProjectStatusCanBeUpdated($project, $status)->match(
@@ -498,6 +505,7 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
         }
     }
 
+    #[\Override]
     public function renameProject(Project $project, string $new_name): bool
     {
         //Remove the project from the cache, because it will be modified

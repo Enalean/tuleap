@@ -77,6 +77,7 @@ final class TokenRevocationController extends DispatchablePSR15Compatible implem
         $this->access_token_revoker  = $access_token_revoker;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $app = $request->getAttribute(OAuth2ClientAuthenticationMiddleware::class);

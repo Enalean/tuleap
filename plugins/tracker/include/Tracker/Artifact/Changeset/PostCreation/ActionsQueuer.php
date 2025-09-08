@@ -41,6 +41,7 @@ final readonly class ActionsQueuer implements PostCreationActionsQueuer
         );
     }
 
+    #[\Override]
     public function queuePostCreation(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
     {
         $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);

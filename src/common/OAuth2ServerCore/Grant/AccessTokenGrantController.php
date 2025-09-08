@@ -73,6 +73,7 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
         $this->logger                                    = $logger;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $app = $request->getAttribute(OAuth2ClientAuthenticationMiddleware::class);

@@ -76,16 +76,19 @@ final class LogUsersOutInstanceTask implements QueueTask
         return new self(null, $user_id);
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return LogUsersOutInstance::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return ['project_id' => $this->project_id, 'user_id' => $this->user_id];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         $log_out_phrase = 'Log-out users';

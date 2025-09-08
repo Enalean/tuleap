@@ -22,6 +22,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_StaticField
 {
+    #[\Override]
     protected function fetchReadOnly()
     {
         $html  = '';
@@ -29,6 +30,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         return $html;
     }
 
+    #[\Override]
     public function fetchAdmin($tracker)
     {
         $html       = '';
@@ -58,6 +60,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
      *
      * @return string html
      */
+    #[\Override]
     protected function fetchAdminFormElement()
     {
         $html = '<hr class="tracker-admin-linebreak" id="tracker-admin-formElements_' . $this->id . '" size="1" />';
@@ -73,6 +76,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
      *
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getLabel()
     {
         $label = parent::getLabel();
@@ -86,26 +90,31 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getDescription(): string
     {
         return '';
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Line Break');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'An invisible Line Break');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/arrow-curve-180-gray.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/arrow-curve-180-gray--plus.png');

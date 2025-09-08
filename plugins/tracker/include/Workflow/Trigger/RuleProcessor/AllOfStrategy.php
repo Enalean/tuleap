@@ -49,6 +49,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_W
      * @see Tracker_Workflow_Trigger_RulesProcessor_Strategy::allPrecondtionsAreMet
      * @return bool
      */
+    #[\Override]
     public function allPrecondtionsAreMet()
     {
         $siblings = $this->siblings_retriever->getSiblingsWithoutPermissionChecking($this->artifact);

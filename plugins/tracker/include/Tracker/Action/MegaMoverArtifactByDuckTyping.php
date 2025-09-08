@@ -49,6 +49,7 @@ final class MegaMoverArtifactByDuckTyping implements MoveArtifactByDuckTyping
     ) {
     }
 
+    #[\Override]
     public function move(
         Artifact $artifact,
         Tracker $source_tracker,

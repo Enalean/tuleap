@@ -49,47 +49,55 @@ class XMLCriteriaValueCache implements CacheInterface
         self::$instance = [];
     }
 
+    #[\Override]
     public function get(string $key, mixed $default = null): mixed
     {
         return $this->value[$key];
     }
 
+    #[\Override]
     public function set(string $key, mixed $value, int|\DateInterval|null $ttl = null): true
     {
         $this->value[$key] = $value;
         return true;
     }
 
+    #[\Override]
     public function delete(string $key): bool
     {
         //Does nothing
         return false;
     }
 
+    #[\Override]
     public function clear(): bool
     {
         $this->value = [];
         return true;
     }
 
+    #[\Override]
     public function getMultiple(iterable $keys, $default = null): array
     {
         //Does Nothing
         return [];
     }
 
+    #[\Override]
     public function setMultiple(iterable $values, int|\DateInterval|null $ttl = null): false
     {
         //Does Nothing
         return false;
     }
 
+    #[\Override]
     public function deleteMultiple(iterable $keys): false
     {
         //Does Nothing
         return false;
     }
 
+    #[\Override]
     public function has(string $key): bool
     {
         return array_key_exists($key, $this->value);

@@ -38,6 +38,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
     /**
      * @return list<DocumentServer>
      */
+    #[\Override]
     public function retrieveAll(): array
     {
         return $this->getDB()->tryFlatTransaction(
@@ -101,6 +102,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
     /**
      * @throws DocumentServerNotFoundException
      */
+    #[\Override]
     public function retrieveById(string $uuid_hex): DocumentServer
     {
         return $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)->match(
@@ -149,6 +151,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         return $this->getDB()->cell('SELECT COUNT(id) FROM plugin_onlyoffice_document_server') > 1;
     }
 
+    #[\Override]
     public function delete(string $uuid_hex): void
     {
         $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)->apply(
@@ -164,6 +167,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         );
     }
 
+    #[\Override]
     public function create(string $url, ConcealedString $secret_key): void
     {
         $this->getDB()->tryFlatTransaction(
@@ -185,6 +189,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         );
     }
 
+    #[\Override]
     public function update(string $uuid_hex, string $url, ConcealedString $secret_key): void
     {
         $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)->mapOr(
@@ -197,6 +202,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         );
     }
 
+    #[\Override]
     public function restrict(UUID $id, array $project_ids): void
     {
         $data_to_insert = [];
@@ -225,6 +231,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         );
     }
 
+    #[\Override]
     public function unrestrict(UUID $id): void
     {
         $this->getDB()->tryFlatTransaction(

@@ -34,6 +34,7 @@ final class BatchResponseObjectWithNotFoundError implements BatchResponseObject
         $this->object = $object;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

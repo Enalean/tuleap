@@ -37,6 +37,7 @@ final class LegacyMediawikiCreateAndPromoteUserProcess implements LegacyMediawik
     /**
      * @psalm-return Ok<null>|Err<Fault>
      */
+    #[\Override]
     public function create(LoggerInterface $logger, Project $project, string $rev_user_text): Ok|Err
     {
         try {

@@ -31,6 +31,7 @@ class Docman_ApprovalTableFileDao extends Docman_ApprovalTableItemDao
         return $this->retrieve($sql);
     }
 
+    #[\Override]
     public function getTableByItemId($item_id, $fields = '*')
     {
         return $this->getLatestTableByItemId($item_id, $fields);

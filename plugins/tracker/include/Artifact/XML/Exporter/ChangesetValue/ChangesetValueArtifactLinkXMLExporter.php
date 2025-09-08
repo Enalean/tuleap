@@ -36,11 +36,13 @@ class ChangesetValueArtifactLinkXMLExporter extends ChangesetValueXMLExporter
     ) {
     }
 
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return 'art_link';
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

@@ -29,6 +29,7 @@ final class ForSubmittedOn implements DateTimeReadOnlyConditionBuilder
     {
     }
 
+    #[\Override]
     public function getCondition($value): ParametrizedSQLFragment
     {
         $min_value = $value['min_value'];

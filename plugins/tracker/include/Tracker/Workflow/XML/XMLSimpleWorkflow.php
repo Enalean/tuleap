@@ -57,6 +57,7 @@ final class XMLSimpleWorkflow implements XMLWorkflow
         return $new;
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $workflow = $parent_node->addChild('simple_workflow');

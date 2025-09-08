@@ -49,16 +49,19 @@ final class ProcessPendingItemsToIndexTask implements \Tuleap\Queue\QueueTask
         $index_fn();
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return self::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return [];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Process pending items for full-text-search indexation';

@@ -83,6 +83,7 @@ class AddController implements DispatchableWithRequest
      * @throws \Tuleap\Request\ForbiddenException
      * @throws \Tuleap\Request\NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);

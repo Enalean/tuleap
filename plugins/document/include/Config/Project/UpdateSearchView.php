@@ -41,11 +41,13 @@ class UpdateSearchView implements DispatchableWithProject, DispatchableWithReque
      *
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): \Project
     {
         return $this->project_extractor->getProject($variables);
     }
 
+    #[\Override]
     public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);

@@ -55,11 +55,13 @@ final class RESTReverseLinkProxy implements ReverseLink
         return $link_payload->type;
     }
 
+    #[\Override]
     public function getSourceArtifactId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getType(): string
     {
         return $this->type;

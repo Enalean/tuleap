@@ -51,11 +51,13 @@ final class PrepareStartMeilisearchServerCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Prepare environment to start the local Meilisearch server')->setHidden(true);
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->getMeilisearchDataVersion()->apply(

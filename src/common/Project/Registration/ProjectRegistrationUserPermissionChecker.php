@@ -42,6 +42,7 @@ class ProjectRegistrationUserPermissionChecker implements CheckProjectRegistrati
      * @throws AnonymousNotAllowedException
      * @throws RestrictedUsersNotAllowedException
      */
+    #[\Override]
     public function checkUserCreateAProject(PFUser $user): void
     {
         $this->checkUserHasThePermissionToCreateProject($user);

@@ -85,6 +85,7 @@ class SaveLicenseAgreementController implements DispatchableWithRequest
         );
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);

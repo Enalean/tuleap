@@ -28,6 +28,7 @@ use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifact
 
 final class CanPermissionsBeFullyMovedVerifier implements VerifyPermissionsCanBeFullyMoved
 {
+    #[\Override]
     public function canAllPermissionsBeFullyMoved(
         PermissionsOnArtifactField $source_field,
         PermissionsOnArtifactField $destination_field,

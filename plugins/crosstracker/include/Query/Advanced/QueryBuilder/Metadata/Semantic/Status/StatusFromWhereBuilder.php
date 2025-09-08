@@ -67,6 +67,7 @@ final class StatusFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters): ParametrizedWhere
     {
         $tracker_ids = [];
@@ -85,26 +86,31 @@ final class StatusFromWhereBuilder implements ValueWrapperVisitor
         };
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to current date time should have been flagged as invalid for Status semantic');
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to a simple value should have been flagged as invalid for Status semantic');
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison with Between() should have been flagged as invalid for Status semantic');
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new LogicException('Comparison with In() should have been flagged as invalid for Status semantic');
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to current user should have been flagged as invalid for Status semantic');

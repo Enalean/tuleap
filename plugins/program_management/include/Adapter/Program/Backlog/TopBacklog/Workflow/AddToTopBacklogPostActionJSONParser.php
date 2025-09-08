@@ -34,11 +34,13 @@ final class AddToTopBacklogPostActionJSONParser implements PostActionUpdateJsonP
     {
     }
 
+    #[\Override]
     public function accept(array $json): bool
     {
         return isset($json['type']) && $json['type'] === AddToTopBacklogPostAction::SHORT_NAME;
     }
 
+    #[\Override]
     public function parse(Workflow $workflow, array $json): PostAction
     {
         $tracker_id = $workflow->getTrackerId();

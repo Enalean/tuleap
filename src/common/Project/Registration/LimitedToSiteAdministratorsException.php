@@ -30,6 +30,7 @@ class LimitedToSiteAdministratorsException extends RegistrationForbiddenExceptio
         parent::__construct('Only site administrators can create projects.');
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return dgettext('tuleap-core', 'Only site administrators can create projects.');

@@ -41,6 +41,7 @@ final class UserRolesCheckerJiraServer implements UserRolesCheckerInterface
      * @throws \JsonException
      * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
      */
+    #[\Override]
     public function checkUserIsAdminOfJiraProject(
         JiraClient $jira_client,
         LoggerInterface $logger,

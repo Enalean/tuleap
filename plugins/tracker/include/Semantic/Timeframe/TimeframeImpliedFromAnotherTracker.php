@@ -49,11 +49,13 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         $this->links_retriever                         = $links_retriever;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getConfigDescription(): string
     {
         return sprintf(
@@ -62,21 +64,25 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function getStartDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return null;
     }
 
+    #[\Override]
     public function getEndDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return null;
     }
 
+    #[\Override]
     public function getDurationField(): ?\Tuleap\Tracker\FormElement\Field\NumericField
     {
         return null;
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -98,6 +104,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         }
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangeset(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -122,6 +129,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
     /**
      * @throws \Tracker_FormElement_Chart_Field_Exception
      */
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetChartRendering(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays
     {
         if ($changeset === null) {
@@ -146,6 +154,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         }
     }
 
+    #[\Override]
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void
     {
         $implied_from_tracker_id = $this->semantic_timeframe_implied_from_tracker->getTracker()->getId();
@@ -155,6 +164,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         $semantic->addChild('inherited_from_tracker')->addAttribute('id', \Tuleap\Tracker\Tracker::XML_ID_PREFIX . $implied_from_tracker_id);
     }
 
+    #[\Override]
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe
     {
         $implied_from_tracker = $this->semantic_timeframe_implied_from_tracker->getTracker();
@@ -167,6 +177,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return $dao->save(
@@ -178,6 +189,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         );
     }
 
+    #[\Override]
     public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         if (! ($field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField)) {
@@ -190,6 +202,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
             || $field_tracker_id === $this->semantic_timeframe_implied_from_tracker->getTracker()->getId();
     }
 
+    #[\Override]
     public function isDefined(): bool
     {
         return true;
@@ -216,11 +229,13 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         return $reversely_linked_artifacts[0];
     }
 
+    #[\Override]
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return $this->semantic_timeframe_implied_from_tracker->getTracker();
     }
 
+    #[\Override]
     public function userCanReadTimeframeFields(\PFUser $user): bool
     {
         return $this->semantic_timeframe_implied_from_tracker
@@ -228,6 +243,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
             ->userCanReadTimeframeFields($user);
     }
 
+    #[\Override]
     public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): bool
     {
         $logger->debug('TimeframeImpliedFromAnotherTracker::isAllSetToZero -> call implied isAllSetToZero');
@@ -236,6 +252,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
             ->isAllSetToZero($changeset, $user, $logger);
     }
 
+    #[\Override]
     public function isTimeDisplayedForEvent(): bool
     {
         return $this->semantic_timeframe_implied_from_tracker

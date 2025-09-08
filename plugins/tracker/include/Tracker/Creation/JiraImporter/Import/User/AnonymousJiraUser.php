@@ -28,16 +28,19 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
  */
 final class AnonymousJiraUser implements JiraUser
 {
+    #[\Override]
     public function getDisplayName(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getEmailAddress(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getUniqueIdentifier(): string
     {
         return '';

@@ -38,11 +38,13 @@ final class DurationFieldReferenceProxy implements DurationFieldReference
         return new self($duration_field->getId(), $duration_field->getLabel());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

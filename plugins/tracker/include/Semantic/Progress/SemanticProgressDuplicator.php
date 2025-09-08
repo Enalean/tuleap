@@ -36,6 +36,7 @@ class SemanticProgressDuplicator implements IDuplicateSemantic
         $this->dao = $dao;
     }
 
+    #[\Override]
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
         $row = $this->dao->searchByTrackerId($from_tracker_id);

@@ -104,6 +104,7 @@ class StringField extends TextField
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
+    #[\Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $changeset_value = null;
@@ -120,6 +121,7 @@ class StringField extends TextField
         return $changeset_value;
     }
 
+    #[\Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         $html  = '';
@@ -136,6 +138,7 @@ class StringField extends TextField
         return $html;
     }
 
+    #[\Override]
     protected function fetchSubmitValueMasschange(): string
     {
         $html  = '';
@@ -162,6 +165,7 @@ class StringField extends TextField
      *
      * @return string
      */
+    #[\Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $value = $value ? $value->getValue() : '';
@@ -180,6 +184,7 @@ class StringField extends TextField
      * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      * @param array $submitted_values The value already submitted by the user
      */
+    #[\Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -209,6 +214,7 @@ class StringField extends TextField
      * Display the html field in the admin ui
      * @return string html
      */
+    #[\Override]
     protected function fetchAdminFormElement()
     {
         $hp    = Codendi_HTMLPurifier::instance();
@@ -225,26 +231,31 @@ class StringField extends TextField
         return $html;
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'String');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'A single line text');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field--plus.png');
     }
 
+    #[\Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $hp   = Codendi_HTMLPurifier::instance();
@@ -260,6 +271,7 @@ class StringField extends TextField
      * Ugly legacy hack to display fields in columns
      * @return bool
      */
+    #[\Override]
     public function takesTwoColumns()
     {
         return $this->getProperty('size') > 40;
@@ -273,6 +285,7 @@ class StringField extends TextField
      *
      * @return bool true if the value is considered ok
      */
+    #[\Override]
     protected function validate(Artifact $artifact, $value)
     {
         $rule_is_a_string = $this->getRuleString();
@@ -318,6 +331,7 @@ class StringField extends TextField
      *
      * @return bool true on success or false on failure
      */
+    #[\Override]
     public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value): bool
     {
         return TrackerField::isValidRegardingRequiredProperty($artifact, $submitted_value);
@@ -331,11 +345,13 @@ class StringField extends TextField
     /**
      * @see TrackerField::hasChanges()
      */
+    #[\Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         return $old_value->getText() !== (string) $new_value;
     }
 
+    #[\Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -353,6 +369,7 @@ class StringField extends TextField
         return $res;
     }
 
+    #[\Override]
     public function addChangesetValueToSearchIndex(ItemToIndexQueue $index_queue, Tracker_Artifact_ChangesetValue $changeset_value): void
     {
         assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_String);
@@ -379,21 +396,25 @@ class StringField extends TextField
      *
      * @return mixed The default value for this field, or null if no default value defined
      */
+    #[\Override]
     public function getDefaultValue()
     {
         return $this->getProperty('default_value');
     }
 
+    #[\Override]
     public function getRestFieldData($value)
     {
         return $this->getFieldData($value);
     }
 
+    #[\Override]
     public function isEmpty($value, Artifact $artifact)
     {
         return trim($value) == '';
     }
 
+    #[\Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitString($this);

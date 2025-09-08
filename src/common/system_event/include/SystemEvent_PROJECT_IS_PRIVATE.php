@@ -49,6 +49,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $txt                                 = '';
@@ -60,6 +61,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
     /**
      * Process stored event
      */
+    #[\Override]
     public function process()
     {
         list($group_id, $project_is_private) = $this->getParametersAsArray();

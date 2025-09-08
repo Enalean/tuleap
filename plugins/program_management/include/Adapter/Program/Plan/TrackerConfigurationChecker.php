@@ -37,6 +37,7 @@ final class TrackerConfigurationChecker implements CheckNewIterationTracker, Che
     ) {
     }
 
+    #[\Override]
     public function checkIterationTrackerIsValid(
         int $iteration_tracker_id,
         ProgramForAdministrationIdentifier $program,
@@ -44,6 +45,7 @@ final class TrackerConfigurationChecker implements CheckNewIterationTracker, Che
         $this->checkTrackerIsValid($iteration_tracker_id, $program);
     }
 
+    #[\Override]
     public function checkProgramIncrementTrackerIsValid(
         int $program_increment_tracker_id,
         ProgramForAdministrationIdentifier $program,
@@ -51,6 +53,7 @@ final class TrackerConfigurationChecker implements CheckNewIterationTracker, Che
         $this->checkTrackerIsValid($program_increment_tracker_id, $program);
     }
 
+    #[\Override]
     public function checkPlannableTrackerIsValid(
         int $plannable_tracker_id,
         ProgramForAdministrationIdentifier $program,

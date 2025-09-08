@@ -43,6 +43,7 @@ class Docman_MetadataHtmlDate extends \Docman_MetadataHtml
         return $field;
     }
 
+    #[\Override]
     public function getValue()
     {
         $v = $this->md->getValue();

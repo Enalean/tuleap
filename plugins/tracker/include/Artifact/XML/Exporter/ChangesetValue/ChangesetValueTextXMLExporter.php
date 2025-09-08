@@ -32,11 +32,13 @@ class ChangesetValueTextXMLExporter extends ChangesetValueXMLExporter
     {
     }
 
+    #[\Override]
     protected function getFieldChangeType(): string
     {
         return Tracker_FormElementFactory::FIELD_TEXT_TYPE;
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

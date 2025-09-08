@@ -37,6 +37,7 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
 {
     private const DEFAULT_MIN_LENGTH_FOR_FTS = 3;
 
+    #[\Override]
     public function indexItems(PlaintextItemToIndex ...$items): void
     {
         $this->getDB()->tryFlatTransaction(
@@ -102,6 +103,7 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
         $this->getDB()->insertMany('plugin_fts_db_metadata', $metadata_to_insert);
     }
 
+    #[\Override]
     public function searchItems(string $keywords, int $limit, int $offset): SearchResultPage
     {
         return $this->getDB()->tryFlatTransaction(
@@ -182,11 +184,13 @@ final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIn
         return $results;
     }
 
+    #[\Override]
     public function deleteIndexedItems(IndexedItemsToRemove $items_to_remove): void
     {
         $this->deleteIndexedItemsFromIDs($this->searchMatchingEntries($items_to_remove));
     }
 
+    #[\Override]
     public function deleteIndexedItemsPerProjectID(int $project_id): void
     {
         $this->deleteIndexedItemsFromIDs(

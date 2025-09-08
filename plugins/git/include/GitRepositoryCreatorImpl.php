@@ -21,6 +21,7 @@
 
 abstract class GitRepositoryCreatorImpl implements GitRepositoryCreator
 {
+    #[\Override]
     public function isNameValid($name)
     {
         $len = strlen($name);
@@ -38,6 +39,7 @@ abstract class GitRepositoryCreatorImpl implements GitRepositoryCreator
      *
      * @return string
      */
+    #[\Override]
     public function getAllowedCharsInNamePattern()
     {
         //alphanums, underscores, slashes and dash

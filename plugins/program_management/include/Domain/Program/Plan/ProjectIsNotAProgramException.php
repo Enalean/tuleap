@@ -38,6 +38,7 @@ final class ProjectIsNotAProgramException extends \Exception implements PlanTrac
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

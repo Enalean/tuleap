@@ -31,6 +31,7 @@ class ConfigValueFileProvider implements ConfigValueProvider
     /**
      * @see ConfigValueProvider::getVariables()
      */
+    #[\Override]
     public function getVariables()
     {
         if (! is_file($this->file)) {

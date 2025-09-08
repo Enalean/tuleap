@@ -65,6 +65,7 @@ class TrackerSemanticContributor extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getShortName()
     {
         return self::CONTRIBUTOR_SEMANTIC_SHORTNAME;
@@ -75,6 +76,7 @@ class TrackerSemanticContributor extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-tracker', 'Contributor/assignee');
@@ -85,6 +87,7 @@ class TrackerSemanticContributor extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-tracker', 'Define the contributor/assignee of an artifact');
@@ -114,6 +117,7 @@ class TrackerSemanticContributor extends TrackerSemantic
         return $this->list_field;
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         $html = dgettext('tuleap-tracker', 'The contributor(s)/assignee(s) are the person(s) who are responsible for the work needed to complete the artifact.');
@@ -131,6 +135,7 @@ class TrackerSemanticContributor extends TrackerSemantic
         return $html;
     }
 
+    #[\Override]
     public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         $this->tracker->displayAdminItemHeaderBurningParrot(
@@ -160,6 +165,7 @@ class TrackerSemanticContributor extends TrackerSemantic
      *
      * @return void
      */
+    #[\Override]
     public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         if ($request->exist('update')) {
@@ -197,6 +203,7 @@ class TrackerSemanticContributor extends TrackerSemantic
      *
      * @return bool true if success, false otherwise
      */
+    #[\Override]
     public function save()
     {
         $dao = new TrackerSemanticContributorDao();
@@ -242,6 +249,7 @@ class TrackerSemanticContributor extends TrackerSemantic
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         if ($this->getFieldId() && in_array($this->getFieldId(), $xml_mapping)) {
@@ -262,6 +270,7 @@ class TrackerSemanticContributor extends TrackerSemantic
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId();

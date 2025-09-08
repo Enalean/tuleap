@@ -134,6 +134,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
         return array_key_exists($value_id, $this->getAllValues());
     }
 
+    #[\Override]
     public function fetchFormattedForJson()
     {
         $values = [];

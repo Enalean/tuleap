@@ -55,6 +55,7 @@ final class StartMigrationController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->token_provider->getCSRF()->check();

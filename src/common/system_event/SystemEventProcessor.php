@@ -57,11 +57,13 @@ abstract class SystemEventProcessor implements IRunInAMutex
         $this->logger               = $logger;
     }
 
+    #[\Override]
     public function getProcess()
     {
         return $this->process;
     }
 
+    #[\Override]
     public function execute($queue)
     {
         $executed_events_ids = $this->loopOverEventsForOwner($this->getOwner(), $queue);

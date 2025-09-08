@@ -29,6 +29,7 @@ final class ForSubmittedOn implements DateTimeReadOnlyConditionBuilder
     {
     }
 
+    #[\Override]
     public function getCondition($value): ParametrizedSQLFragment
     {
         $floored_timestamp = $this->date_time_value_rounder->getFlooredTimestampFromDateTime((string) $value);

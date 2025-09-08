@@ -60,6 +60,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
         $this->template_renderer     = $template_renderer_factory->getRenderer(__DIR__ . '/../../templates/admin/');
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

@@ -28,6 +28,7 @@
  */
 class Rule_WhiteList extends \Rule_Comparator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function isValid($val)
     {
         if (\is_array($this->ref) && \count($this->ref) > 0 && \in_array($val, $this->ref)) {

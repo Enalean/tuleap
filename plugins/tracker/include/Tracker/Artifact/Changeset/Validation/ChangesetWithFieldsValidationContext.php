@@ -39,6 +39,7 @@ final class ChangesetWithFieldsValidationContext implements ChangesetValidationC
         $this->artifact_link_context = $artifact_link_context;
     }
 
+    #[\Override]
     public function getArtifactLinkContext(): ArtifactLinkValidationContext
     {
         return $this->artifact_link_context;

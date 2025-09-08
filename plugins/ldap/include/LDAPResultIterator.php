@@ -49,6 +49,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
     /**
      * Return the number of entries in a result set.
      */
+    #[\Override]
     public function count(): int
     {
         if ($this->list && array_key_exists('count', $this->list)) {
@@ -73,6 +74,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * @param $pos int
      */
+    #[\Override]
     public function seek($pos): void
     {
         $this->key   = $pos;
@@ -115,6 +117,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * Standard function implemented from Iterator interface
      */
+    #[\Override]
     public function current(): LDAPResult
     {
         return new LDAPResult($this->list[$this->key], $this->ldapParams);
@@ -125,6 +128,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * Standard function implemented from Iterator interface
      */
+    #[\Override]
     public function key(): int
     {
         return $this->key;
@@ -135,6 +139,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * Standard function implemented from Iterator interface
      */
+    #[\Override]
     public function next(): void
     {
         $this->valid = (++$this->key < $this->count());
@@ -145,6 +150,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * Standard function implemented from Iterator interface
      */
+    #[\Override]
     public function rewind(): void
     {
         $this->valid = true;
@@ -156,6 +162,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * Standard function implemented from Iterator interface
      */
+    #[\Override]
     public function valid(): bool
     {
         return $this->valid;

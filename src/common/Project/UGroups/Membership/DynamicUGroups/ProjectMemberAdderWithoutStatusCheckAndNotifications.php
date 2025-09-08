@@ -42,6 +42,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotifications implements ProjectMem
         return new self(AddProjectMember::build());
     }
 
+    #[\Override]
     public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         try {
@@ -53,6 +54,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotifications implements ProjectMem
         }
     }
 
+    #[\Override]
     public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         $this->add_project_member->addProjectMember($user, $project, $project_admin);

@@ -38,6 +38,7 @@ final class OAuth2ConsentRequiredResponseBuilder implements ConsentRequiredRespo
     /**
      * @psalm-param non-empty-list<\Tuleap\Authentication\Scope\AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
+    #[\Override]
     public function buildConsentRequiredResponse(
         ServerRequestInterface $request,
         OAuth2App $client_app,

@@ -124,6 +124,7 @@ final class KanbanPlugin extends Plugin implements PluginWithService
         bindTextDomain('tuleap-kanban', __DIR__ . '/../../kanban/site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -132,6 +133,7 @@ final class KanbanPlugin extends Plugin implements PluginWithService
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['tracker', 'cardwall'];
@@ -707,37 +709,44 @@ final class KanbanPlugin extends Plugin implements PluginWithService
         return BackendLogger::getDefaultLogger();
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return KanbanService::SERVICE_SHORTNAME;
     }
 
+    #[\Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
         $event->addService(KanbanService::SERVICE_SHORTNAME, KanbanService::class);
     }
 
+    #[\Override]
     public function serviceIsUsed(array $params): void
     {
         // nothing to do for kanban
     }
 
+    #[\Override]
     public function projectServiceBeforeActivation(\Tuleap\Project\Event\ProjectServiceBeforeActivation $event): void
     {
         // nothing to do for kanban
     }
 
+    #[\Override]
     public function serviceDisabledCollector(\Tuleap\Project\Service\ServiceDisabledCollector $event): void
     {
         // nothing to do for kanban
     }
 
+    #[\Override]
     public function addMissingService(\Tuleap\Project\Service\AddMissingService $event): void
     {
         $event->addService(KanbanService::forServiceCreation($event->project));
     }
 
+    #[\Override]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());

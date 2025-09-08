@@ -77,36 +77,43 @@ class PostActionCollection implements PostActionVisitor
         }
     }
 
+    #[\Override]
     public function visitFrozenFieldsValue(FrozenFieldsValue $frozen_fields_action)
     {
         $this->frozen_fields_actions[] = $frozen_fields_action;
     }
 
+    #[\Override]
     public function visitCIBuildValue(CIBuildValue $ci_build_action)
     {
         $this->ci_build_actions[] = $ci_build_action;
     }
 
+    #[\Override]
     public function visitSetDateValue(SetDateValue $set_date_value_action)
     {
         $this->set_date_value_actions[] = $set_date_value_action;
     }
 
+    #[\Override]
     public function visitSetIntValue(SetIntValue $set_int_value_action)
     {
         $this->set_int_value_actions[] = $set_int_value_action;
     }
 
+    #[\Override]
     public function visitSetFloatValue(SetFloatValue $set_float_value_action)
     {
         $this->set_float_value_actions[] = $set_float_value_action;
     }
 
+    #[\Override]
     public function visitHiddenFieldsetsValue(HiddenFieldsetsValue $hidden_fieldsets_value)
     {
         $this->hidden_fieldsets_actions[] = $hidden_fieldsets_value;
     }
 
+    #[\Override]
     public function visitExternalPostActionValue(PostAction $post_action_value)
     {
         $this->external_post_actions[] = $post_action_value;

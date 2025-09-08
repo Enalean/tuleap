@@ -36,6 +36,7 @@ final class UserManagerAdapter implements RetrieveUser, VerifyIsUser
         $this->user_manager = $user_manager;
     }
 
+    #[\Override]
     public function getUserWithId(UserIdentifier $user_identifier): \PFUser
     {
         $user_id = $user_identifier->getId();
@@ -48,6 +49,7 @@ final class UserManagerAdapter implements RetrieveUser, VerifyIsUser
         return $user;
     }
 
+    #[\Override]
     public function isUser(int $user_id): bool
     {
         $user = $this->user_manager->getUserById($user_id);

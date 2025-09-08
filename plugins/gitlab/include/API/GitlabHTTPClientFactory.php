@@ -37,6 +37,7 @@ class GitlabHTTPClientFactory implements BuildGitlabHttpClient
         $this->client = $client;
     }
 
+    #[\Override]
     public function buildHTTPClient(Credentials $gitlab_credentials): PluginClient
     {
         return new PluginClient(

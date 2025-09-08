@@ -34,6 +34,7 @@ final class ProgressTooltipEntry implements OtherSemanticTooltipEntryFetcher
     ) {
     }
 
+    #[\Override]
     public function fetchTooltipEntry(Artifact $artifact, \PFUser $user): string
     {
         $semantic            = $this->progress_builder->getSemantic($artifact->getTracker());

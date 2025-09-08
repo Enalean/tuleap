@@ -53,11 +53,13 @@ class MethodBasedOnEffort implements IComputeProgression
         $this->remaining_effort_field = $remaining_effort_field;
     }
 
+    #[\Override]
     public static function getMethodName(): string
     {
         return self::METHOD_NAME;
     }
 
+    #[\Override]
     public static function getMethodLabel(): string
     {
         return dgettext('tuleap-tracker', 'Effort based');
@@ -73,6 +75,7 @@ class MethodBasedOnEffort implements IComputeProgression
         return $this->remaining_effort_field->getId();
     }
 
+    #[\Override]
     public function getCurrentConfigurationDescription(): string
     {
         return sprintf(
@@ -85,6 +88,7 @@ class MethodBasedOnEffort implements IComputeProgression
         );
     }
 
+    #[\Override]
     public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         $field_id = $field->getId();
@@ -93,6 +97,7 @@ class MethodBasedOnEffort implements IComputeProgression
             || $field_id === $this->remaining_effort_field->getId();
     }
 
+    #[\Override]
     public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
         if (! $this->canUserReadBothFields($user)) {
@@ -162,21 +167,25 @@ class MethodBasedOnEffort implements IComputeProgression
             $this->remaining_effort_field->userCanRead($user);
     }
 
+    #[\Override]
     public function isConfiguredAndValid(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function isConfigured(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getErrorMessage(): string
     {
         return '';
     }
 
+    #[\Override]
     public function exportToREST(\PFUser $user): ?IRepresentSemanticProgress
     {
         if (! $this->canUserReadBothFields($user)) {
@@ -189,6 +198,7 @@ class MethodBasedOnEffort implements IComputeProgression
         );
     }
 
+    #[\Override]
     public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void
     {
         $total_effort_field_ref     = array_search($this->total_effort_field->getId(), $xml_mapping);
@@ -205,6 +215,7 @@ class MethodBasedOnEffort implements IComputeProgression
         $xml_semantic_progress->addChild('remaining_effort_field')->addAttribute('REF', $remaining_effort_field_ref);
     }
 
+    #[\Override]
     public function saveSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return $this->dao->save(
@@ -215,6 +226,7 @@ class MethodBasedOnEffort implements IComputeProgression
         );
     }
 
+    #[\Override]
     public function deleteSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return $this->dao->delete($tracker->getId());

@@ -60,16 +60,19 @@ final class RemoveItemsFromIndexTask implements \Tuleap\Queue\QueueTask
         return new IndexedItemsToRemove($payload['type'], $payload['metadata']);
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return self::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return json_decode(json_encode($this->indexed_items_to_remove, JSON_THROW_ON_ERROR), true, 3, JSON_THROW_ON_ERROR);
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Remove some indexed items ' . $this->indexed_items_to_remove->type . ' (' .  var_export($this->indexed_items_to_remove->metadata, true) . ')';

@@ -30,41 +30,49 @@ class DefaultLicenseAgreement implements LicenseAgreementInterface
 {
     public const ID = 0;
 
+    #[\Override]
     public function getAsJson(): string
     {
         return '{}';
     }
 
+    #[\Override]
     public function getId(): int
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return 'Code eXchange Corporate Policy';
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter
     {
         return new LicenseOptionPresenter($this->getId(), $this->getTitle(), $selected_agreement->getId() === $this->getId());
     }
 
+    #[\Override]
     public function isModifiable(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isViewable(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function canBeDeleted(): bool
     {
         return false;

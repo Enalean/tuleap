@@ -40,6 +40,7 @@ class JiraServerChangelogEntryItemsRepresentation implements ChangelogEntryItems
     /**
      * @throws ChangelogAPIResponseNotWellFormedException
      */
+    #[\Override]
     public static function buildFromAPIResponse(array $response): ?self
     {
         if (! array_key_exists('field', $response)) {
@@ -64,26 +65,31 @@ class JiraServerChangelogEntryItemsRepresentation implements ChangelogEntryItems
         );
     }
 
+    #[\Override]
     public function getFieldId(): string
     {
         return $this->field;
     }
 
+    #[\Override]
     public function getFrom(): ?string
     {
         return $this->from;
     }
 
+    #[\Override]
     public function getFromString(): ?string
     {
         return $this->from_string;
     }
 
+    #[\Override]
     public function getTo(): ?string
     {
         return $this->to;
     }
 
+    #[\Override]
     public function getToString(): ?string
     {
         return $this->toString;

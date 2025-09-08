@@ -29,6 +29,7 @@ final class PrefixOnlyOfficeDocumentDownload implements PrefixSplitTokenForSeria
     /**
      * @psalm-pure
      */
+    #[\Override]
     public function getString(): string
     {
         return 'tlp-oo-doc1-';

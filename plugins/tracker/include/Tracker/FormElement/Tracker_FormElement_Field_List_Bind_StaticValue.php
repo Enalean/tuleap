@@ -58,6 +58,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
      *
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId()
     {
         return $this->id;
@@ -68,12 +69,14 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
      * @param int $id
      * @return \Tracker_FormElement_Field_List_Bind_StaticValue
      */
+    #[\Override]
     public function setId($id)
     {
         $this->id = (int) $id;
         return $this;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;
@@ -130,6 +133,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         return $this;
     }
 
+    #[\Override]
     public function getDataset(ListField $field): array
     {
         $decorators = $field->getDecorators();
@@ -145,6 +149,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         return [];
     }
 
+    #[\Override]
     public function getFullRESTValue(TrackerField $field)
     {
         $color          = null;

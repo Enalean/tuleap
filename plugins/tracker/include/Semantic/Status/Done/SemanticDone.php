@@ -88,6 +88,7 @@ class SemanticDone extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getShortName()
     {
         return self::NAME;
@@ -98,6 +99,7 @@ class SemanticDone extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-tracker', 'Done');
@@ -108,11 +110,13 @@ class SemanticDone extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-tracker', 'Define the closed status that are considered Done');
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/semantics');
@@ -137,6 +141,7 @@ class SemanticDone extends TrackerSemantic
         return $renderer->renderToString('done-intro', $presenter);
     }
 
+    #[\Override]
     public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         $this->tracker->displayAdminItemHeaderBurningParrot(
@@ -258,6 +263,7 @@ class SemanticDone extends TrackerSemantic
      *
      * @return void
      */
+    #[\Override]
     public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         $tracker_id = $this->tracker->getId();
@@ -371,6 +377,7 @@ class SemanticDone extends TrackerSemantic
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         $status_field = $this->semantic_status->getField();
@@ -402,6 +409,7 @@ class SemanticDone extends TrackerSemantic
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field)
     {
         return $this->semantic_status->isUsedInSemantics($field);
@@ -412,6 +420,7 @@ class SemanticDone extends TrackerSemantic
      *
      * @return bool true if success, false otherwise
      */
+    #[\Override]
     public function save()
     {
         /* This method is called in the Tracker XML import context

@@ -67,6 +67,7 @@ final class FPMSessionRedis implements FPMSessionInterface
         $this->use_tls          = $use_tls;
     }
 
+    #[\Override]
     public function deployFreshTuleapConf(
         LoggerInterface $logger,
         string $tuleap_php_configuration_folder,
@@ -83,6 +84,7 @@ final class FPMSessionRedis implements FPMSessionInterface
         }
     }
 
+    #[\Override]
     public function forceDeployFreshTuleapConf(
         LoggerInterface $logger,
         string $tuleap_php_configuration_folder,

@@ -35,6 +35,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 // phpcs
      *
      * @param Burndown_Engine $engine object
      */
+    #[\Override]
     public function buildProperties($engine): void
     {
         parent::buildProperties($engine);

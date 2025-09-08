@@ -45,6 +45,7 @@ class DocmanFilesUploadLimitsAdminSaveController implements DispatchableWithRequ
      * Is able to process a request routed by FrontRouter
      *
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

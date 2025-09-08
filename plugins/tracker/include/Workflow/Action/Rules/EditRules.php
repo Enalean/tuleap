@@ -124,6 +124,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         return $source_field_is_date && $target_field_is_date;
     }
 
+    #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
     {
         if ($this->shouldAddUpdateOrDeleteRules($request)) {

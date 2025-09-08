@@ -24,6 +24,7 @@ use Service as CoreService;
 
 class Service extends CoreService
 {
+    #[\Override]
     public function getInternationalizedName(): string
     {
         $label = $this->getLabel();
@@ -35,6 +36,7 @@ class Service extends CoreService
         return $label;
     }
 
+    #[\Override]
     public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();
@@ -46,6 +48,7 @@ class Service extends CoreService
         return $description;
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fas fa-check-double';

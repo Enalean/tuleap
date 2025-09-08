@@ -85,6 +85,7 @@ final class ValueDao extends DataAccessObject implements SearchFieldValue, Delet
     /**
      * @psalm-return array{"changeset_value_id": int, "value": string} | null
      */
+    #[\Override]
     public function searchById(int $changeset_value_id): ?array
     {
         $sql = '
@@ -95,6 +96,7 @@ final class ValueDao extends DataAccessObject implements SearchFieldValue, Delet
         return $this->getDB()->row($sql, $changeset_value_id) ?: null;
     }
 
+    #[\Override]
     public function delete(int $changeset_value_id): void
     {
         $this->getDB()->delete('tracker_changeset_value_encrypted', ['changeset_value_id' => $changeset_value_id]);

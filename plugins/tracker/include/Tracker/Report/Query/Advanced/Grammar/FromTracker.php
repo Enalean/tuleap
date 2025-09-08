@@ -40,6 +40,7 @@ final readonly class FromTracker implements FromSomething
         return $this->condition;
     }
 
+    #[\Override]
     public function acceptFromSomethingVisitor(FromSomethingVisitor $visitor, $parameters)
     {
         return $visitor->visitTracker($this, $parameters);

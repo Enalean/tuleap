@@ -39,6 +39,7 @@ final class SaveDocumentWithTokenMiddleware implements MiddlewareInterface
     ) {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $save_token = new ConcealedString($request->getQueryParams()['token'] ?? '');

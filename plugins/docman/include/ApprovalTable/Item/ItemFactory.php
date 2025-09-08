@@ -27,6 +27,7 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory
         return new Docman_ApprovalTableItem();
     }
 
+    #[\Override]
     protected function _updateTableWithLastId($dstTable)
     {
         $dstTable->setItemId($this->item->getId());
@@ -35,6 +36,7 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory
     /**
      * Create a new approval table
      */
+    #[\Override]
     public function createTable($userId, $import)
     {
         return $this->newTableEmpty($userId);
@@ -46,6 +48,7 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory
      * @param $table ApprovalTable
      * @return int new table id
      */
+    #[\Override]
     public function _createTable($table)
     {
         return $this->_getDao()->createTable(
@@ -59,6 +62,7 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory
         );
     }
 
+    #[\Override]
     public function _getTable()
     {
         $table = null;
@@ -71,12 +75,14 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory
         return $table;
     }
 
+    #[\Override]
     public function userAccessedSinceLastUpdate($user)
     {
         return true;
     }
 
     // Class accessor
+    #[\Override]
     public function _getDao()
     {
         return new Docman_ApprovalTableItemDao(CodendiDataAccess::instance());

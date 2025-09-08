@@ -99,6 +99,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -201,6 +202,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByUnixName($variables['project_name']);

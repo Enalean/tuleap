@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Service;
 
 final class CheckPromotedTrackerConfiguration implements PromotedTrackerConfigurationChecker
 {
+    #[\Override]
     public function isProjectAllowedToPromoteTrackersInSidebar(\Project $project): bool
     {
         $list_of_project_ids_with_promoted_trackers_in_sidebar = \ForgeConfig::getFeatureFlagArrayOfInt(PromotedTrackerConfiguration::FEATURE_FLAG);

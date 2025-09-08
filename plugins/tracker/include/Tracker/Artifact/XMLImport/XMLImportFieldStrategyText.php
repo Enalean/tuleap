@@ -30,6 +30,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyText implements Tracker_A
      *
      * @return mixed
      */
+    #[\Override]
     public function getFieldData(
         TrackerField $field,
         SimpleXMLElement $field_change,

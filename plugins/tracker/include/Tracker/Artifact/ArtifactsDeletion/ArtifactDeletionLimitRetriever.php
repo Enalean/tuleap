@@ -34,6 +34,7 @@ final class ArtifactDeletionLimitRetriever implements RetrieveActionDeletionLimi
      * @throws ArtifactsDeletionLimitReachedException
      * @throws DeletionOfArtifactsIsNotAllowedException
      */
+    #[\Override]
     public function getNumberOfArtifactsAllowedToDelete(PFUser $user): int
     {
         $limit = $this->config->getArtifactsDeletionLimit();

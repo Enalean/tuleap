@@ -125,6 +125,7 @@ class WikiService extends Controler
   /**
    * Bind http request with views and actions
    */
+    #[\Override]
     public function request()
     {
         if (! isset($this->view)) {

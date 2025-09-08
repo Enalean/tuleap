@@ -30,6 +30,7 @@ final class PdfTemplateImageStorage implements StorePdfTemplateImage, DeleteImag
 {
     private const STORAGE_PATH = '/pdftemplate/images/';
 
+    #[\Override]
     public function storeUploadedImage(string $uploaded_path, PdfTemplateImageIdentifier $identifier): bool
     {
         $destination = $this->getPath($identifier);
@@ -45,6 +46,7 @@ final class PdfTemplateImageStorage implements StorePdfTemplateImage, DeleteImag
         return ForgeConfig::get('sys_data_dir') . self::STORAGE_PATH . $identifier->toString();
     }
 
+    #[\Override]
     public function delete(PdfTemplateImage $image): void
     {
         $path = $this->getPath($image->identifier);

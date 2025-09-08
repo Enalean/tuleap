@@ -25,6 +25,7 @@ use Tuleap\DB\DataAccessObject;
 
 class CreateBranchPrefixDao extends DataAccessObject implements SaveIntegrationBranchPrefix
 {
+    #[\Override]
     public function setCreateBranchPrefixForIntegration(int $integration_id, string $prefix): void
     {
         $sql = 'REPLACE INTO plugin_gitlab_repository_integration_create_branch_prefix

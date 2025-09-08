@@ -31,6 +31,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
+    #[\Override]
     public function fetchArtifact(
         Artifact $artifact,
         array $submitted_values,
@@ -51,6 +52,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
+    #[\Override]
     public function fetchArtifactReadOnly(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchWithColumnGroup('fetchArtifactReadOnly', [$artifact, $submitted_values]);
@@ -61,6 +63,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values, []);
     }
 
+    #[\Override]
     public function fetchMailArtifact($recipient, Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchWithColumnGroup('fetchMailArtifact', [$recipient, $artifact, $format, $ignore_perms]);
@@ -74,6 +77,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
+    #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchWithColumnGroup('fetchArtifactCopyMode', [$artifact, $submitted_values]);
@@ -90,6 +94,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
+    #[\Override]
     public function fetchSubmit(array $submitted_values)
     {
         return $this->fetchWithColumnGroup('fetchSubmit', [$submitted_values]);
@@ -103,6 +108,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     /**
      * Fetch the element for the submit masschange form
      */
+    #[\Override]
     public function fetchSubmitMasschange()
     {
         return $this->fetchWithColumnGroup('fetchSubmitMasschange', []);
@@ -118,6 +124,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAdmin($tracker)
     {
         return $this->fetchWithColumnGroup('fetchAdmin', [$tracker]);
@@ -180,21 +187,25 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $html;
     }
 
+    #[\Override]
     protected function fetchArtifactPrefix()
     {
         return $this->fetchColumnPrefix();
     }
 
+    #[\Override]
     protected function fetchArtifactSuffix()
     {
         return $this->fetchColumnSuffix();
     }
 
+    #[\Override]
     protected function fetchMailArtifactPrefix($format)
     {
         return '';
     }
 
+    #[\Override]
     protected function fetchMailArtifactSuffix($format)
     {
         return '';
@@ -218,21 +229,25 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $html;
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Column');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Group fields in a column');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/layout-2.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/layout-2--plus.png');
@@ -242,12 +257,14 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      * Display the html field in the admin ui
      * @return string html
      */
+    #[\Override]
     protected function fetchAdminFormElement()
     {
         $html = '';
         return $html;
     }
 
+    #[\Override]
     protected function getXMLInternalRepresentation(): XMLFormElement
     {
         return new XMLColumn($this->getXMLId(), $this->getName());

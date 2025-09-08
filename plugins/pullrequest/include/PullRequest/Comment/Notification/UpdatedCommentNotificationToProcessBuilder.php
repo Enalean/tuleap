@@ -54,6 +54,7 @@ final readonly class UpdatedCommentNotificationToProcessBuilder implements Notif
     ) {
     }
 
+    #[\Override]
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         return $this->comment_retriever->getCommentByID($event->comment_id)->mapOr(

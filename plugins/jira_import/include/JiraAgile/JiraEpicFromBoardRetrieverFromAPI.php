@@ -47,6 +47,7 @@ final class JiraEpicFromBoardRetrieverFromAPI implements JiraEpicFromBoardRetrie
     /**
      * @return JiraEpic[]
      */
+    #[\Override]
     public function getEpics(JiraBoard $board): array
     {
         $iterator = JiraCollectionBuilder::iterateUntilIsLast(

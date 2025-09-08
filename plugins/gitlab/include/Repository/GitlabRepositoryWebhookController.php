@@ -95,6 +95,7 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
         $this->webhook_actions                = $webhook_actions;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->logger->info('Previous GitLab webhook received.');

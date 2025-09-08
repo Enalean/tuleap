@@ -98,6 +98,7 @@ final readonly class PullRequestNewInlineCommentNotification implements Notifica
         );
     }
 
+    #[\Override]
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
@@ -106,11 +107,13 @@ final readonly class PullRequestNewInlineCommentNotification implements Notifica
     /**
      * @return \PFUser[]
      */
+    #[\Override]
     public function getRecipients(): array
     {
         return $this->recipients_without_change_user;
     }
 
+    #[\Override]
     public function asPlaintext(): string
     {
         return sprintf(
@@ -124,6 +127,7 @@ final readonly class PullRequestNewInlineCommentNotification implements Notifica
         );
     }
 
+    #[\Override]
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

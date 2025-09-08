@@ -51,6 +51,7 @@ class ReferenceGetTooltipChainJson extends ReferenceGetTooltipChain
         $this->emitter               = $emitter;
     }
 
+    #[\Override]
     public function process(
         \Reference $reference,
         \Project $project,

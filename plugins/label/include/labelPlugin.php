@@ -42,6 +42,7 @@ class labelPlugin extends Plugin
     /**
      * @return Tuleap\Label\Plugin\PluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

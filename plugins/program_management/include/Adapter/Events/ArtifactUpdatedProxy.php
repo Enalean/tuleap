@@ -60,26 +60,31 @@ final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
         return new self($artifact, $tracker, $user, $changeset, $old_changeset);
     }
 
+    #[\Override]
     public function getArtifact(): ArtifactIdentifier
     {
         return $this->artifact;
     }
 
+    #[\Override]
     public function getTracker(): TrackerIdentifier
     {
         return $this->tracker;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;
     }
 
+    #[\Override]
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
     }
 
+    #[\Override]
     public function getOldChangeset(): ChangesetIdentifier
     {
         return $this->old_changeset;

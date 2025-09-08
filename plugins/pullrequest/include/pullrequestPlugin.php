@@ -124,6 +124,7 @@ class pullrequestPlugin extends Plugin
         bindtextdomain('tuleap-pullrequest', __DIR__ . '/../site-content/');
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return 'plugin_pullrequest';
@@ -132,6 +133,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see Plugin::getDependencies()
      */
+    #[\Override]
     public function getDependencies()
     {
         return ['git'];
@@ -158,6 +160,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @return Tuleap\PullRequest\PluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

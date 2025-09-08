@@ -63,6 +63,7 @@ final class PasswordPolicyDisplayController implements DispatchableWithRequest
         $this->password_configuration_retriever = $password_configuration_retriever;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $request->checkUserIsSuperUser();

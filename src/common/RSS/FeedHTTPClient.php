@@ -47,6 +47,7 @@ final class FeedHTTPClient implements HeaderAwareClientInterface
         $this->http_request_factory = $http_request_factory;
     }
 
+    #[\Override]
     public function get($uri, array $headers = []): ResponseInterface
     {
         $request = $this->http_request_factory->createRequest('GET', $uri);

@@ -28,6 +28,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
  */
 class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     protected function canValidateField(
         Artifact $artifact,
         TrackerField $field,
@@ -37,6 +38,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
         return ! ($field->isRequired() && ! $field->userCanSubmit($user));
     }
 
+    #[\Override]
     protected function validateField(
         Artifact $artifact,
         TrackerField $field,

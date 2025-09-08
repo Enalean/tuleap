@@ -48,6 +48,7 @@ class ProjectAccessChecker implements CheckProjectAccess
      * @throws AccessNotActiveException
      * @throws AccessArchiveNotImportedYetException
      */
+    #[\Override]
     public function checkUserCanAccessProject(PFUser $user, Project $project): void
     {
         if ($project->isError()) {

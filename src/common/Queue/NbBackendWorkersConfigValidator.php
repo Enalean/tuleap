@@ -31,11 +31,13 @@ final class NbBackendWorkersConfigValidator implements ValueValidator
     {
     }
 
+    #[\Override]
     public static function buildSelf(): ValueValidator
     {
         return new self();
     }
 
+    #[\Override]
     public function checkIsValid(string $value): void
     {
         if ((int) $value <= 0) {

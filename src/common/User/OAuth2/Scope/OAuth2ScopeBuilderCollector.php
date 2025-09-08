@@ -34,6 +34,7 @@ final class OAuth2ScopeBuilderCollector implements AuthenticationScopeBuilderCol
      */
     private $builders = [];
 
+    #[\Override]
     public function getAuthenticationKeyScopeBuilders(): array
     {
         return $this->builders;

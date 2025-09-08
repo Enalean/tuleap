@@ -82,6 +82,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
      * @throws NotFoundException
      * @throws ForbiddenException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-admin.js'));

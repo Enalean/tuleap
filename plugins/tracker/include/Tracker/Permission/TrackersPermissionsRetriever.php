@@ -69,6 +69,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         );
     }
 
+    #[\Override]
     public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnItems
     {
         if ($fields === []) {
@@ -114,6 +115,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         return new UserPermissionsOnItems($user, $permission, $allowed, $not_allowed);
     }
 
+    #[\Override]
     public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers, TrackerPermissionType $permission): UserPermissionsOnItems
     {
         if ($trackers === []) {
@@ -202,6 +204,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         return false;
     }
 
+    #[\Override]
     public function retrieveUserPermissionOnArtifacts(PFUser $user, array $artifacts, ArtifactPermissionType $permission): UserPermissionsOnItems
     {
         if ($artifacts === []) {

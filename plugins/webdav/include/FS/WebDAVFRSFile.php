@@ -34,6 +34,7 @@ class WebDAVFRSFile implements IFile
     /**
      * This method is used to download the file
      */
+    #[\Override]
     public function get(): void
     {
         // Log the download in the Log system
@@ -53,6 +54,7 @@ class WebDAVFRSFile implements IFile
         exit();
     }
 
+    #[\Override]
     public function put($data): void
     {
         if (! file_put_contents($this->file->getFileLocation(), $data)) {
@@ -67,6 +69,7 @@ class WebDAVFRSFile implements IFile
         ]);
     }
 
+    #[\Override]
     public function getName(): string
     {
         /* The file name is preceded by its id to keep
@@ -75,11 +78,13 @@ class WebDAVFRSFile implements IFile
         return basename($this->file->getFileName());
     }
 
+    #[\Override]
     public function getLastModified(): int
     {
         return $this->file->getPostDate();
     }
 
+    #[\Override]
     public function getSize(): int
     {
         return $this->file->getFileSize();
@@ -88,6 +93,7 @@ class WebDAVFRSFile implements IFile
     /**
      * Returns a unique identifier of the file
      */
+    #[\Override]
     public function getETag(): string
     {
         return '"' . $this->utils->getIncomingFileMd5Sum($this->file->getFileLocation()) . '"';
@@ -100,6 +106,7 @@ class WebDAVFRSFile implements IFile
      *
      * @psalm-suppress ImplementedReturnTypeMismatch Return type of the library is incorrect
      */
+    #[\Override]
     public function getContentType()
     {
         if (file_exists($this->file->getFileLocation()) && filesize($this->file->getFileLocation())) {
@@ -113,6 +120,7 @@ class WebDAVFRSFile implements IFile
         return $this->project;
     }
 
+    #[\Override]
     public function delete(): void
     {
         if ($this->utils->userCanWrite($this->user, $this->getProject()->getGroupId())) {
@@ -125,6 +133,7 @@ class WebDAVFRSFile implements IFile
         }
     }
 
+    #[\Override]
     public function setName($name): void
     {
         throw new \Sabre\DAV\Exception\NotFound('Operation not supported');

@@ -51,6 +51,7 @@ final readonly class ChangesetValuesContainerBuilder implements BuildChangesetVa
     /**
      * @throws Tracker_FormElement_InvalidFieldValueException
      */
+    #[\Override]
     public function buildChangesetValuesContainer(array $fields_data, Tracker $tracker, Artifact $artifact, PFUser $user): ChangesetValuesContainer
     {
         return new ChangesetValuesContainer($fields_data, $this->getFieldDataForArtifactLinkField($tracker, $artifact, $user, $fields_data));
@@ -59,6 +60,7 @@ final readonly class ChangesetValuesContainerBuilder implements BuildChangesetVa
     /**
      * @throws Tracker_FormElement_InvalidFieldValueException
      */
+    #[\Override]
     public function buildInitialChangesetValuesContainer(array $fields_data, Tracker $tracker, PFUser $user): InitialChangesetValuesContainer
     {
         return new InitialChangesetValuesContainer($fields_data, $this->getFieldDataForArtifactLinkField($tracker, null, $user, $fields_data));

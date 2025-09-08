@@ -50,6 +50,7 @@ class PluginsAdministrationViews extends Views
         );
     }
 
+    #[\Override]
     public function header()
     {
         $title = dgettext('tuleap-pluginsadministration', 'Plugins');
@@ -60,11 +61,13 @@ class PluginsAdministrationViews extends Views
         );
     }
 
+    #[\Override]
     public function footer()
     {
         $GLOBALS['HTML']->footer([]);
     }
 
+    #[\Override]
     public function display($view = '')
     {
         $renderer       = new AdminPageRenderer();

@@ -45,6 +45,7 @@ final class UpdateMaxFileSizeController implements DispatchableWithRequest
         $this->config_set = $config_set;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

@@ -74,6 +74,7 @@ class WidgetRendererDao extends DataAccessObject implements SearchWidgetsByTrack
         return (int) $this->getDB()->lastInsertId();
     }
 
+    #[\Override]
     public function searchByTrackerId(int $tracker_id): array
     {
         $sql = <<<SQL

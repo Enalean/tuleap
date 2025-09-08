@@ -110,6 +110,7 @@ class ArtifactLinkField extends TrackerField
     /**
      * Display the html form in the admin ui
      */
+    #[\Override]
     protected function fetchAdminFormElement(): string
     {
         $hp    = Codendi_HTMLPurifier::instance();
@@ -127,6 +128,7 @@ class ArtifactLinkField extends TrackerField
         return $html;
     }
 
+    #[\Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $html = '<input type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
@@ -138,6 +140,7 @@ class ArtifactLinkField extends TrackerField
         return $html;
     }
 
+    #[\Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -182,6 +185,7 @@ class ArtifactLinkField extends TrackerField
      * Display the field as a Changeset value.
      * Used in CSV data export.
      */
+    #[\Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         $arr    = [];
@@ -210,6 +214,7 @@ class ArtifactLinkField extends TrackerField
         );
     }
 
+    #[\Override]
     public function fetchRawValue(mixed $value): string
     {
         assert($value instanceof ArtifactLinkChangesetValue);
@@ -223,6 +228,7 @@ class ArtifactLinkField extends TrackerField
      *
      * @return mixed The values or null if there are no specific available values
      */
+    #[\Override]
     public function getRESTAvailableValues()
     {
         return null;
@@ -232,11 +238,13 @@ class ArtifactLinkField extends TrackerField
      * @return array
      * @deprecated
      */
+    #[\Override]
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
         return [];
     }
 
+    #[\Override]
     public function getFieldDataFromRESTValueByField($value, ?Artifact $artifact = null)
     {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
@@ -250,12 +258,14 @@ class ArtifactLinkField extends TrackerField
      *
      * @return array
      */
+    #[\Override]
     public function getFieldData($value, ?Artifact $artifact = null)
     {
         $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromString($value);
         return $this->getDataLikeWebUI($submitted_ids, [$value], $artifact);
     }
 
+    #[\Override]
     public function getFieldDataFromCSVValue($csv_value, ?Artifact $artifact = null)
     {
         return $this->getFieldData($csv_value, $artifact);
@@ -277,6 +287,7 @@ class ArtifactLinkField extends TrackerField
         return $this->getFieldDataBuilder()->getDataLikeWebUI($new_values, $removed_values, $submitted_values);
     }
 
+    #[\Override]
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         $user_manager   = UserManager::instance();
@@ -295,6 +306,7 @@ class ArtifactLinkField extends TrackerField
         return $this->renderParentSelector($prefill_parent, $name, $this->getPossibleParentSelector($current_user, $can_create));
     }
 
+    #[\Override]
     public function fetchSubmitForOverlay(array $submitted_values)
     {
         $prefill_parent = '';
@@ -329,6 +341,7 @@ class ArtifactLinkField extends TrackerField
         return $link_ids;
     }
 
+    #[\Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
@@ -410,11 +423,13 @@ class ArtifactLinkField extends TrackerField
         }
     }
 
+    #[\Override]
     public function getQuerySelect(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getQueryFrom()
     {
         return '';
@@ -424,6 +439,7 @@ class ArtifactLinkField extends TrackerField
      * Return the dao of the criteria value used with this field.
      * @return Tracker_Report_Criteria_ValueDao
      */
+    #[\Override]
     protected function getCriteriaDao()
     {
         return new Tracker_Report_Criteria_ArtifactLink_ValueDao();
@@ -692,6 +708,7 @@ class ArtifactLinkField extends TrackerField
      *
      * @return void
      */
+    #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         switch ($request->get('func')) {
@@ -917,6 +934,7 @@ class ArtifactLinkField extends TrackerField
         return $html;
     }
 
+    #[\Override]
     public function isAlwaysInEditMode(): bool
     {
         return $this->canEditReverseLinks();
@@ -927,6 +945,7 @@ class ArtifactLinkField extends TrackerField
      *
      * @param array $submitted_values The value already submitted by the user
      */
+    #[\Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -1049,6 +1068,7 @@ class ArtifactLinkField extends TrackerField
      * @param Artifact $artifact The artifact
      * @param ?Tracker_Artifact_ChangesetValue $value The actual value of the field
      */
+    #[\Override]
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -1087,11 +1107,13 @@ class ArtifactLinkField extends TrackerField
         );
     }
 
+    #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return '';
     }
 
+    #[\Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -1127,6 +1149,7 @@ class ArtifactLinkField extends TrackerField
         );
     }
 
+    #[\Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         if ($this->canEditReverseLinks()) {
@@ -1188,6 +1211,7 @@ class ArtifactLinkField extends TrackerField
      *
      * @return string html
      */
+    #[\Override]
     protected function fetchSubmitValueMasschange(): string
     {
         $prefill_new_values = dgettext('tuleap-tracker', 'Unchanged');
@@ -1198,6 +1222,7 @@ class ArtifactLinkField extends TrackerField
         return $this->fetchHtmlWidgetMasschange($name, $artifact_links, $prefill_new_values, $read_only);
     }
 
+    #[\Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html = '';
@@ -1215,6 +1240,7 @@ class ArtifactLinkField extends TrackerField
     /**
      * @return ArtifactLinkFieldValueDao
      */
+    #[\Override]
     protected function getValueDao()
     {
         return new ArtifactLinkFieldValueDao();
@@ -1223,6 +1249,7 @@ class ArtifactLinkField extends TrackerField
     /**
      * Fetch the html code to display the field value in artifact
      */
+    #[\Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -1258,6 +1285,7 @@ class ArtifactLinkField extends TrackerField
         return $output;
     }
 
+    #[\Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
@@ -1270,6 +1298,7 @@ class ArtifactLinkField extends TrackerField
      * @param int $value_id The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      */
+    #[\Override]
     public function getChangesetValue($changeset, $value_id, $has_changed): ArtifactLinkChangesetValue
     {
         $rows                   = $this->getValueDao()->searchById($value_id, $this->id);
@@ -1290,6 +1319,7 @@ class ArtifactLinkField extends TrackerField
         );
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $value = $changeset->getValue($this);
@@ -1387,6 +1417,7 @@ class ArtifactLinkField extends TrackerField
     /**
      * @see TrackerField::hasChanges()
      */
+    #[\Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         if (! $old_value instanceof ArtifactLinkChangesetValue) {
@@ -1401,21 +1432,25 @@ class ArtifactLinkField extends TrackerField
         return $old_value->hasChanges($submitted_value);
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Artifact Link');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Links to other artifacts');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/artifact-chain.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/artifact-chain--plus.png');
@@ -1424,6 +1459,7 @@ class ArtifactLinkField extends TrackerField
     /**
      * @return bool say if the field is a unique one
      */
+    #[\Override]
     public static function getFactoryUniqueField()
     {
         return true;
@@ -1437,6 +1473,7 @@ class ArtifactLinkField extends TrackerField
      *
      * @return bool true if the value is considered ok
      */
+    #[\Override]
     public function isValid(Artifact $artifact, $value)
     {
         $this->has_errors = ! $this->validate($artifact, $value);
@@ -1444,6 +1481,7 @@ class ArtifactLinkField extends TrackerField
         return ! $this->has_errors;
     }
 
+    #[\Override]
     public function validateFieldWithPermissionsAndRequiredStatus(
         Artifact $artifact,
         $submitted_value,
@@ -1479,6 +1517,7 @@ class ArtifactLinkField extends TrackerField
      *
      * @return bool true on success or false on failure
      */
+    #[\Override]
     public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value)
     {
         if ((! is_array($submitted_value) || empty($value['new_values'])) && $this->isRequired()) {
@@ -1499,6 +1538,7 @@ class ArtifactLinkField extends TrackerField
      *
      * @return bool true if the submitted value is empty
      */
+    #[\Override]
     public function isEmpty($submitted_value, Artifact $artifact)
     {
         if ($submitted_value === null) {
@@ -1530,6 +1570,7 @@ class ArtifactLinkField extends TrackerField
      * @deprecated Use ArtifactLinkValidator instead
      *
      */
+    #[\Override]
     protected function validate(Artifact $artifact, $value)
     {
         return true;
@@ -1567,6 +1608,7 @@ class ArtifactLinkField extends TrackerField
     /**
      * @see TrackerField::postSaveNewChangeset()
      */
+    #[\Override]
     public function postSaveNewChangeset(
         Artifact $artifact,
         PFUser $submitter,
@@ -1610,6 +1652,7 @@ class ArtifactLinkField extends TrackerField
         );
     }
 
+    #[\Override]
     public function saveNewChangeset(
         Artifact $artifact,
         ?Tracker_Artifact_Changeset $old_changeset,
@@ -1655,6 +1698,7 @@ class ArtifactLinkField extends TrackerField
         return $value;
     }
 
+    #[\Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -1774,6 +1818,7 @@ class ArtifactLinkField extends TrackerField
      *
      * @param array $fields_data
      */
+    #[\Override]
     public function augmentDataFromRequest(&$fields_data)
     {
         $request_data_augmentor = new RequestDataAugmentor();
@@ -1784,6 +1829,7 @@ class ArtifactLinkField extends TrackerField
         );
     }
 
+    #[\Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitArtifactLink($this);
@@ -1889,6 +1935,7 @@ class ArtifactLinkField extends TrackerField
         return new ArtifactLinkFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         return '';

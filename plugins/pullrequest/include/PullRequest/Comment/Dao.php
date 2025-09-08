@@ -24,6 +24,7 @@ use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater, CommentUpdater, CommentSearcher, CreateComment
 {
+    #[\Override]
     public function create(NewComment $comment): int
     {
         $this->getDB()->insert(
@@ -69,6 +70,7 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
      *     last_edition_date: int|null
      * }|null
      */
+    #[\Override]
     public function searchByCommentID(int $comment_id): ?array
     {
         $sql = 'SELECT id, pull_request_id, user_id, post_date, content, parent_id, color, format, last_edition_date
@@ -87,12 +89,14 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
         return $this->getDB()->run($sql, $pull_request_id);
     }
 
+    #[\Override]
     public function setThreadColor(int $pull_request_id, string $color): void
     {
         $sql = 'UPDATE plugin_pullrequest_comments SET color = ? WHERE id= ?';
         $this->getDB()->run($sql, $color, $pull_request_id);
     }
 
+    #[\Override]
     public function updateComment(Comment $new_comment): void
     {
         $this->getDB()->update(

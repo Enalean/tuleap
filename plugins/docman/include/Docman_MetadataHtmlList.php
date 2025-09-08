@@ -43,6 +43,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
         return $name;
     }
 
+    #[\Override]
     public function getValue($hideNone = \false)
     {
         $vIter = $this->md->getValue();
@@ -108,6 +109,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
         return $html;
     }
 
+    #[\Override]
     public function &getValidator()
     {
         $validator = \null;

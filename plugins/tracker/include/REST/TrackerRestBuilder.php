@@ -47,6 +47,7 @@ class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTReprese
     ) {
     }
 
+    #[\Override]
     public function getTrackerRepresentationInTrackerContext(PFUser $user, Tracker $tracker): CompleteTrackerRepresentation
     {
         return $this->buildTrackerRepresentation(
@@ -59,6 +60,7 @@ class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTReprese
         );
     }
 
+    #[\Override]
     public function getTrackerRepresentationInArtifactContext(PFUser $user, Artifact $artifact): CompleteTrackerRepresentation
     {
         $tracker = $artifact->getTracker();

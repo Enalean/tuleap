@@ -51,6 +51,7 @@ final class RESTCurrentUserMiddleware implements MiddlewareInterface, ProvideCur
         $this->basic_rest_authentication = $basic_rest_authentication;
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $this->basic_rest_authentication->__isAllowed();
@@ -63,6 +64,7 @@ final class RESTCurrentUserMiddleware implements MiddlewareInterface, ProvideCur
         return $handler->handle($request->withAttribute(self::class, $current_user));
     }
 
+    #[\Override]
     public function getCurrentRequestUser(ServerRequestInterface $request): ?\PFUser
     {
         $user = $request->getAttribute(self::class);

@@ -23,6 +23,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater implements Track
     /**
      * @param mixed            $submitted_value
      */
+    #[\Override]
     public function update(SimpleXMLElement $field_change_xml, $submitted_value)
     {
         $this->removeExistingValuesNodes($field_change_xml);

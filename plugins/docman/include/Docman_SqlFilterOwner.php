@@ -29,6 +29,7 @@ class Docman_SqlFilterOwner extends \Docman_SqlFilter
         $this->field = 'user.user_name';
     }
 
+    #[\Override]
     public function getFrom()
     {
         $tables = [];

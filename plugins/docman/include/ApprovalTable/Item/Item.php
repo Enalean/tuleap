@@ -24,6 +24,7 @@ class Docman_ApprovalTableItem extends Docman_ApprovalTable
 {
     public $itemId = null;
 
+    #[\Override]
     public function initFromRow($row)
     {
         parent::initFromRow($row);

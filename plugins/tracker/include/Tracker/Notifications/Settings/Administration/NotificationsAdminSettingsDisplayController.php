@@ -54,6 +54,7 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
         $this->user_manager    = $user_manager;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->getTrackerFromTrackerID($this->tracker_factory, $variables['id']);

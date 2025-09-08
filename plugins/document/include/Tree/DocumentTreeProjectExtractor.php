@@ -39,6 +39,7 @@ class DocumentTreeProjectExtractor implements IExtractProjectFromVariables
      *
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByUnixName($variables['project_name']);

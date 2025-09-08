@@ -30,6 +30,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $this->token = $token;
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         $item_type = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);

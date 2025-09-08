@@ -55,27 +55,32 @@ class SemanticTimeframe extends TrackerSemantic
         $this->timeframe = $timeframe;
     }
 
+    #[\Override]
     public function getShortName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return dgettext('tuleap-tracker', 'Timeframe');
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return dgettext('tuleap-tracker', 'Define the field to use to compute artifacts timeframes.');
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         $presenter = $this->getCurrentConfigurationPresenter();
         return $this->getRenderer()->renderToString('semantic-timeframe-current-configuration', $presenter);
     }
 
+    #[\Override]
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -121,6 +126,7 @@ class SemanticTimeframe extends TrackerSemantic
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
+    #[\Override]
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -149,16 +155,19 @@ class SemanticTimeframe extends TrackerSemantic
         $GLOBALS['Response']->redirect($this->getUrl());
     }
 
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xml_mapping): void
     {
         $this->timeframe->exportToXML($root, $xml_mapping);
     }
 
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field): bool
     {
         return $this->timeframe->isFieldUsed($field);
     }
 
+    #[\Override]
     public function save(): bool
     {
         return $this->timeframe->save($this->tracker, new SemanticTimeframeDao());
@@ -189,6 +198,7 @@ class SemanticTimeframe extends TrackerSemantic
         return $this->timeframe->isDefined();
     }
 
+    #[\Override]
     public function exportToREST(PFUser $user): ?IRepresentSemanticTimeframe
     {
         return $this->timeframe->exportToREST($user);

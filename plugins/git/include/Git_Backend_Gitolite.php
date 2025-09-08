@@ -82,6 +82,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
      * @return bool
      */
+    #[\Override]
     public function isInitialized(GitRepository $repository)
     {
         $init = $this->driver->isInitialized($this->getGitRootPath() . '/' . $repository->getPath());
@@ -97,6 +98,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return bool
      */
+    #[\Override]
     public function isCreated(GitRepository $repository)
     {
         return $this->driver->isRepositoryCreated($this->getGitRootPath() . '/' . $repository->getPath());
@@ -107,6 +109,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return array
      */
+    #[\Override]
     public function getAccessURL(GitRepository $repository)
     {
         $transports    = [];
@@ -126,6 +129,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return String
      */
+    #[\Override]
     public function getGitRootPath()
     {
         return ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/';
@@ -154,6 +158,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return bool
      */
+    #[\Override]
     public function isNameAvailable($newName)
     {
         return ! file_exists($this->getGitRootPath() . '/' . $newName);
@@ -228,6 +233,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return bool
      */
+    #[\Override]
     public function userCanRead($user, $repository)
     {
         if ($user->isMember($repository->getProjectId(), 'A')) {
@@ -253,6 +259,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return bool
      */
+    #[\Override]
     public function save($repository)
     {
         return $this->getDao()->save($repository);
@@ -263,6 +270,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @param GitRepository $repository
      */
+    #[\Override]
     public function changeRepositoryMailingList($repository)
     {
         return true;
@@ -275,6 +283,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return bool
      */
+    #[\Override]
     public function changeRepositoryMailPrefix($repository)
     {
         return $this->changeRepositoryMailingList($repository);
@@ -288,6 +297,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return bool true if success, false otherwise
      */
+    #[\Override]
     public function renameProject(Project $project, $newName)
     {
         if (is_dir($this->driver->getRepositoriesPath() . '/' . $project->getUnixName())) {
@@ -341,16 +351,19 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         }
     }
 
+    #[\Override]
     public function canBeDeleted(GitRepository $repository)
     {
         return true;
     }
 
+    #[\Override]
     public function markAsDeleted(GitRepository $repository)
     {
         $this->getDao()->delete($repository);
     }
 
+    #[\Override]
     public function delete(GitRepository $repository)
     {
         $this->updateRepoConf($repository);
@@ -362,6 +375,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $this->getDriver()->delete($repository->getFullPath());
     }
 
+    #[\Override]
     public function deleteArchivedRepository(GitRepository $repository)
     {
         $this->logger->debug('Delete backup ' . $repository->getBackupPath());
@@ -377,6 +391,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return bool
      */
+    #[\Override]
     public function archiveBeforePurge(GitRepository $repository)
     {
         $backup = \ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::BACKUP_DIR);

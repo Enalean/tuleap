@@ -66,6 +66,7 @@ final readonly class GitRepositoryBrowserController implements DispatchableWithR
      *
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
@@ -84,6 +85,7 @@ final readonly class GitRepositoryBrowserController implements DispatchableWithR
      * @throws ForbiddenException
      * @return void
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);

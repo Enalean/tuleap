@@ -50,16 +50,19 @@ use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 final class BetweenFieldComparisonVisitor implements Tracker_FormElement_FieldVisitor, FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
+    #[\Override]
     public function getFromWhereBuilder(TrackerField $field)
     {
         return $field->accept($this);
     }
 
+    #[\Override]
     public function visitArtifactLink(ArtifactLinkField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitDate(DateField $field)
     {
         return new DateTimeFieldFromWhereBuilder(
@@ -70,11 +73,13 @@ final class BetweenFieldComparisonVisitor implements Tracker_FormElement_FieldVi
         );
     }
 
+    #[\Override]
     public function visitFile(FilesField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitFloat(FloatField $field)
     {
         return new BetweenComparison\ForFloat(
@@ -82,6 +87,7 @@ final class BetweenFieldComparisonVisitor implements Tracker_FormElement_FieldVi
         );
     }
 
+    #[\Override]
     public function visitInteger(IntegerField $field)
     {
         return new BetweenComparison\ForInteger(
@@ -89,76 +95,91 @@ final class BetweenFieldComparisonVisitor implements Tracker_FormElement_FieldVi
         );
     }
 
+    #[\Override]
     public function visitOpenList(OpenListField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitPermissionsOnArtifact(PermissionsOnArtifactField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitString(StringField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitText(TextField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitRadiobutton(RadioButtonField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitCheckbox(CheckboxField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitMultiSelectbox(MultiSelectboxField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitSelectbox(SelectboxField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitSubmittedBy(SubmittedByField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitLastModifiedBy(LastUpdateByField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitArtifactId(ArtifactIdField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitPerTrackerArtifactId(PerTrackerArtifactIdField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitCrossReferences(CrossReferencesField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitBurndown(BurndownField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitLastUpdateDate(LastUpdateDateField $field)
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
@@ -169,6 +190,7 @@ final class BetweenFieldComparisonVisitor implements Tracker_FormElement_FieldVi
         );
     }
 
+    #[\Override]
     public function visitSubmittedOn(SubmittedOnField $field)
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
@@ -179,16 +201,19 @@ final class BetweenFieldComparisonVisitor implements Tracker_FormElement_FieldVi
         );
     }
 
+    #[\Override]
     public function visitComputed(ComputedField $field)
     {
         return null;
     }
 
+    #[\Override]
     public function visitExternalField(TrackerFormElementExternalField $element)
     {
         return null;
     }
 
+    #[\Override]
     public function visitPriority(PriorityField $field)
     {
         return null;

@@ -45,6 +45,7 @@ class ComputedDao extends FloatValueDao
         return $this->retrieveFirstRow($sql);
     }
 
+    #[\Override]
     public function create($changeset_value_id, $value)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
@@ -55,6 +56,7 @@ class ComputedDao extends FloatValueDao
         return $this->update($sql);
     }
 
+    #[\Override]
     public function keep($from, $to)
     {
         $from = $this->da->escapeInt($from);

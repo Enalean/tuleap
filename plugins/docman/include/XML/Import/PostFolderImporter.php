@@ -27,6 +27,7 @@ use SimpleXMLElement;
 
 class PostFolderImporter implements PostImporter
 {
+    #[\Override]
     public function postImport(NodeImporter $node_importer, SimpleXMLElement $node, Docman_Item $item): void
     {
         foreach ($node->item as $child) {

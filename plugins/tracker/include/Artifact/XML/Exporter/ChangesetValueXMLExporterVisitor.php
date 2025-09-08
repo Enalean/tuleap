@@ -81,61 +81,73 @@ readonly class ChangesetValueXMLExporterVisitor implements Tracker_Artifact_Chan
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value, $mapping['values']);
     }
 
+    #[\Override]
     public function visitArtifactLink(ArtifactLinkChangesetValue $changeset_value): ChangesetValueArtifactLinkXMLExporter
     {
         return $this->artlink_exporter;
     }
 
+    #[\Override]
     public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value): ChangesetValueDateXMLExporter
     {
         return $this->date_exporter;
     }
 
+    #[\Override]
     public function visitFile(Tracker_Artifact_ChangesetValue_File $changeset_value): ChangesetValueFileXMLExporter
     {
         return $this->file_exporter;
     }
 
+    #[\Override]
     public function visitFloat(Tracker_Artifact_ChangesetValue_Float $changeset_value): ChangesetValueFloatXMLExporter
     {
         return $this->float_exporter;
     }
 
+    #[\Override]
     public function visitInteger(Tracker_Artifact_ChangesetValue_Integer $changeset_value): ChangesetValueIntegerXMLExporter
     {
         return $this->integer_exporter;
     }
 
+    #[\Override]
     public function visitList(Tracker_Artifact_ChangesetValue_List $changeset_value): ChangesetValueListXMLExporter
     {
         return $this->list_exporter;
     }
 
+    #[\Override]
     public function visitOpenList(Tracker_Artifact_ChangesetValue_OpenList $changeset_value): ChangesetValueOpenListXMLExporter
     {
         return $this->open_list_exporter;
     }
 
+    #[\Override]
     public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value): ChangesetValuePermissionsOnArtifactXMLExporter
     {
         return $this->perms_exporter;
     }
 
+    #[\Override]
     public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value): ChangesetValueStringXMLExporter
     {
         return $this->string_exporter;
     }
 
+    #[\Override]
     public function visitText(Tracker_Artifact_ChangesetValue_Text $changeset_value): ChangesetValueTextXMLExporter
     {
         return $this->text_exporter;
     }
 
+    #[\Override]
     public function visitComputed(ChangesetValueComputed $changeset_value): ChangesetValueComputedXMLExporter
     {
         return $this->computed_exporter;
     }
 
+    #[\Override]
     public function visitExternalField(Tracker_Artifact_ChangesetValue $changeset_value): ChangesetValueXMLExporter
     {
         $external_exporter = $this->collector->collectExporter($changeset_value);

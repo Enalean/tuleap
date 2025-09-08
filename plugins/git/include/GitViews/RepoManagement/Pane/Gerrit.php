@@ -85,6 +85,7 @@ class Gerrit extends Pane
     /**
      * @return bool true if the pane can be displayed
      */
+    #[\Override]
     public function canBeDisplayed()
     {
         return $this->gerrit_can_migrate_checker->canMigrate($this->repository->getProject());
@@ -93,6 +94,7 @@ class Gerrit extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier()
     {
         return 'gerrit';
@@ -101,6 +103,7 @@ class Gerrit extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-git', 'Gerrit');
@@ -109,6 +112,7 @@ class Gerrit extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
+    #[\Override]
     public function getContent()
     {
         if ($this->repository->isMigratedToGerrit()) {

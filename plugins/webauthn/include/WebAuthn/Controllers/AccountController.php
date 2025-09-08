@@ -55,6 +55,7 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();

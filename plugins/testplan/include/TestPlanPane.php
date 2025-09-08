@@ -39,6 +39,7 @@ final class TestPlanPane extends AgileDashboard_Pane
      * @return string eg: 'cardwall'
      * @see PaneInfo::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier(): string
     {
         return $this->pane_info->getIdentifier();
@@ -49,6 +50,7 @@ final class TestPlanPane extends AgileDashboard_Pane
      *
      * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
+    #[\Override]
     public function getFullContent(): string
     {
         return '';
@@ -60,6 +62,7 @@ final class TestPlanPane extends AgileDashboard_Pane
      *
      * @return string eg: '<table>...</table>'
      */
+    #[\Override]
     public function getMinimalContent(): string
     {
         return '';

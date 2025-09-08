@@ -42,11 +42,13 @@ final class TimeframeValueRetriever implements RetrieveTimeframeValueUserCanSee
     ) {
     }
 
+    #[\Override]
     public function getStartDateValueTimestamp(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?int
     {
         return $this->loadTimePeriod($timebox_identifier, $user_identifier)?->getStartDate();
     }
 
+    #[\Override]
     public function getEndDateValueTimestamp(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?int
     {
         return $this->loadTimePeriod($timebox_identifier, $user_identifier)?->getEndDate();

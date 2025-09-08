@@ -43,6 +43,7 @@ final class ConfigValueEnvironmentProvider implements \ConfigValueProvider
     /**
      * @return array<string, mixed>
      */
+    #[\Override]
     public function getVariables(): array
     {
         $variables = [];

@@ -55,6 +55,7 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
      * @param int[] $array_of_label_ids
      * @throws UnknownLabelException
      */
+    #[\Override]
     public function addLabelsInTransaction($item_id, array $array_of_label_ids)
     {
         if (empty($array_of_label_ids)) {
@@ -84,6 +85,7 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
      * @param int $item_id
      * @param int[] $array_of_label_ids
      */
+    #[\Override]
     public function removeLabelsInTransaction($item_id, array $array_of_label_ids)
     {
         if (empty($array_of_label_ids)) {
@@ -102,6 +104,7 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
         $this->update($sql);
     }
 
+    #[\Override]
     public function searchLabelsUsedInProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
@@ -146,6 +149,7 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
         return $this->retrieve($sql);
     }
 
+    #[\Override]
     public function deleteInTransaction($project_id, $label_id)
     {
         $project_id = $this->da->escapeInt($project_id);
@@ -162,6 +166,7 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
         $this->update($sql);
     }
 
+    #[\Override]
     public function mergeLabelsInTransaction($project_id, $label_id, array $label_ids_to_merge)
     {
         if (count($label_ids_to_merge) === 0) {

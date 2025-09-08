@@ -47,6 +47,7 @@ class ArtifactCreator implements CreateArtifact
     ) {
     }
 
+    #[\Override]
     public function create(
         PFUser $submitter,
         TrackerReference $tracker_reference,

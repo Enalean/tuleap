@@ -36,6 +36,7 @@ final class MoveArtifactActionEventProxy implements ForbidArtifactMoveAction
         return new self($event);
     }
 
+    #[\Override]
     public function forbidArtifactMove(string $reason): void
     {
         $this->event->setCanNotBeMoveDueToExternalPlugin($reason);

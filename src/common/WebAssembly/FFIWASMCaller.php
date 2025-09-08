@@ -63,6 +63,7 @@ final class FFIWASMCaller implements WASMCaller
     ) {
     }
 
+    #[\Override]
     public function call(string $wasm_path, string $module_input, WASMCallerRuntimeSettings $runtime_settings): Option
     {
         $config = [

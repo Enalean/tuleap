@@ -43,12 +43,14 @@ class PlatformAccessControlCommand extends Command
     public const NAME                    = '--platform-access-control';
     public const ACCESS_CONTROL_ARGUMENT = 'access_control_level';
 
+    #[\Override]
     protected function configure()
     {
         $this->setName(self::NAME)->setDescription('Show or set the platform access control');
         $this->addArgument(self::ACCESS_CONTROL_ARGUMENT, InputArgument::OPTIONAL);
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $current_platform_access_value = ForgeConfig::get(ForgeAccess::CONFIG);

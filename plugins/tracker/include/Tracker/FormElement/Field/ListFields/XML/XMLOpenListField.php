@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
 final class XMLOpenListField extends XMLListField
 {
+    #[\Override]
     public static function getType(): string
     {
         return \Tracker_FormElementFactory::FIELD_OPEN_LIST_TYPE;

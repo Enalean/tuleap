@@ -104,6 +104,7 @@ class AccessControl extends Pane
     /**
      * @return string
      */
+    #[\Override]
     public function content()
     {
         $project_id = $this->project->getID();

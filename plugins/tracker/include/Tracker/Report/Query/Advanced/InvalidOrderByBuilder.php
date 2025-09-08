@@ -27,6 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderBy;
 
 final class InvalidOrderByBuilder implements IBuildInvalidOrderBy
 {
+    #[\Override]
     public function buildInvalidOrderBy(OrderBy $order_by): ?InvalidOrderBy
     {
         throw new LogicException('Should not be called in Tracker report context');

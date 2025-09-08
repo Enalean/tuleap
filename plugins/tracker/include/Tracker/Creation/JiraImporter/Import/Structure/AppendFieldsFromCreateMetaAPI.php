@@ -39,6 +39,7 @@ final class AppendFieldsFromCreateMetaAPI implements AppendFieldsFromCreate
     /**
      * @return JiraFieldAPIRepresentation[]
      */
+    #[\Override]
     public function appendFromCreate(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
         $meta_url = ClientWrapper::JIRA_CORE_BASE_URL . '/issue/createmeta?projectKeys=' . urlencode($jira_project_key) .

@@ -37,6 +37,7 @@ final class ProgramsSearcher implements SearchLinkedProjects
     /**
      * @return \Project[]
      */
+    #[\Override]
     public function searchLinkedProjects(\Project $source_project): array
     {
         $program_ids      = $this->program_ids_searcher->searchProgramIdsOfTeam((int) $source_project->getID());

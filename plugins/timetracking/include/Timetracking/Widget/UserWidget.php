@@ -35,31 +35,37 @@ class UserWidget extends Widget
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-timetracking', 'Personal time tracking');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-timetracking', 'Displays your time tracking of the whole platform.');
     }
 
+    #[\Override]
     public function isUnique()
     {
         return true;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return false;
     }
 
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-timetracking', 'Time tracking');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
@@ -67,6 +73,7 @@ class UserWidget extends Widget
         return $renderer->renderToString('widget', ['dashboard_id' => $this->dashboard_id]);
     }
 
+    #[\Override]
     public function getIcon()
     {
         return 'fa-clock-o';
@@ -75,6 +82,7 @@ class UserWidget extends Widget
     /**
      * @return JavascriptAssetGeneric[]
      */
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         return [

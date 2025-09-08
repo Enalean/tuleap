@@ -37,6 +37,7 @@ final class EnhancedCodeBlockExtension implements ExtensionInterface
         $this->code_block_features = $code_block_features;
     }
 
+    #[\Override]
     public function register(EnvironmentBuilderInterface $environment): void
     {
         $environment->addRenderer(FencedCode::class, new EnhancedCodeBlockRenderer($this->code_block_features, new FencedCodeRenderer()), 1);

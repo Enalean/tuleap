@@ -25,16 +25,19 @@ class Templating_Presenter_ButtonDropdownsOptionDivider extends Templating_Prese
     {
     }
 
+    #[\Override]
     public function simple()
     {
         return false;
     }
 
+    #[\Override]
     public function submenu()
     {
         return false;
     }
 
+    #[\Override]
     public function divider()
     {
         return true;

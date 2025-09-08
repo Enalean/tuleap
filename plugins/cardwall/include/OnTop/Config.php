@@ -66,11 +66,13 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
         $this->tracker_mapping_factory = $tracker_mapping_factory;
     }
 
+    #[\Override]
     public function getTracker()
     {
         return $this->tracker;
     }
 
+    #[\Override]
     public function isEnabled()
     {
         return $this->dao->isEnabled($this->tracker->getId());
@@ -81,11 +83,13 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
         return $this->dao->isFreestyleEnabled($this->tracker->getId());
     }
 
+    #[\Override]
     public function enable()
     {
         return $this->dao->enable($this->tracker->getId());
     }
 
+    #[\Override]
     public function disable()
     {
         return $this->dao->disable($this->tracker->getId());
@@ -96,6 +100,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
      *
      * @return ColumnCollection
      */
+    #[\Override]
     public function getDashboardColumns()
     {
         return $this->column_factory->getDashboardColumns($this->tracker);
@@ -105,6 +110,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
      * Get Columns from the values of a $field
      * @return ColumnCollection
      */
+    #[\Override]
     public function getRendererColumns(ListField $cardwall_field)
     {
         return $this->column_factory->getRendererColumns($cardwall_field);
@@ -113,6 +119,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
     /**
      * @return ColumnCollection
      */
+    #[\Override]
     public function getFilteredRendererColumns(ListField $cardwall_field, array $filter)
     {
         return $this->column_factory->getFilteredRendererColumns($cardwall_field, $filter);
@@ -122,6 +129,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
      *
      * @return Cardwall_OnTop_Config_TrackerMapping[]
      */
+    #[\Override]
     public function getMappings()
     {
         if (! isset($this->cached_mappings[$this->tracker->getId()])) {
@@ -130,6 +138,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
         return $this->cached_mappings[$this->tracker->getId()];
     }
 
+    #[\Override]
     public function getTrackers()
     {
         return $this->tracker_mapping_factory->getTrackers($this->tracker);
@@ -139,12 +148,14 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
      *
      * @return Cardwall_OnTop_Config_TrackerMapping | null
      */
+    #[\Override]
     public function getMappingFor(Tracker $mapping_tracker)
     {
         $mappings = $this->getMappings();
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
     }
 
+    #[\Override]
     public function isInColumn(
         Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
@@ -169,6 +180,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
      *
      * @return Cardwall_MappingCollection
      */
+    #[\Override]
     public function getCardwallMappings(array $fields, ColumnCollection $cardwall_columns)
     {
         $mappings = new Cardwall_MappingCollection();
@@ -193,6 +205,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
         return $mappings;
     }
 
+    #[\Override]
     public function fillMappingsWithOnTopMappings(
         Cardwall_MappingCollection $mappings,
         ColumnCollection $columns,

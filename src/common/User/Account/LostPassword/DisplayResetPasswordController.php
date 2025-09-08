@@ -53,6 +53,7 @@ final class DisplayResetPasswordController implements DispatchableWithBurningPar
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $required_confirm_hash = new \Valid_String('confirm_hash');

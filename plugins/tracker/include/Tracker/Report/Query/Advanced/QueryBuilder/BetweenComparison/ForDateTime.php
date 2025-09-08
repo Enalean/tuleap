@@ -29,6 +29,7 @@ final class ForDateTime implements DateTimeConditionBuilder
     {
     }
 
+    #[\Override]
     public function getCondition($value, string $changeset_value_date_alias): ParametrizedSQLFragment
     {
         $min_value = $value['min_value'];

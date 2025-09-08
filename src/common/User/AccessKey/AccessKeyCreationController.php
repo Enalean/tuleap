@@ -59,6 +59,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
         $this->csrf_token = $csrf_token;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();

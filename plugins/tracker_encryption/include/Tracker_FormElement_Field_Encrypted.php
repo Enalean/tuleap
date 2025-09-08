@@ -36,6 +36,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
     /**
      * @return string html
      */
+    #[\Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
@@ -63,31 +64,37 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
     /**
      * @return string html
      */
+    #[\Override]
     protected function fetchAdminFormElement()
     {
         return $this->fetchSubmitValue([]);
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker_encryption', 'Encrypted field');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
           return dgettext('tuleap-tracker_encryption', 'Encrypted field');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/lock.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/lock.png');
     }
 
+    #[\Override]
     protected function validate(Artifact $artifact, $value)
     {
         $last_changeset_value = $this->getLastChangesetValue($artifact);
@@ -119,6 +126,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
         return $tracker_key->getFieldSize($key);
     }
 
+    #[\Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -141,30 +149,36 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
         }
     }
 
+    #[\Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitExternalField($this);
     }
 
+    #[\Override]
     public function getRESTAvailableValues()
     {
     }
 
+    #[\Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }
 
+    #[\Override]
     public function fetchRawValue(mixed $value): string
     {
         return '';
     }
 
+    #[\Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return Option::nothing(ParametrizedFromWhere::class);
     }
 
+    #[\Override]
     public function getQueryFrom()
     {
         $R1 = 'R1_' . $this->id;
@@ -175,6 +189,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . ' )';
     }
 
+    #[\Override]
     public function getQuerySelect(): string
     {
         $R2 = 'R2_' . $this->id;
@@ -182,10 +197,12 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
         return "$R2.value AS " . $this->getQuerySelectName();
     }
 
+    #[\Override]
     protected function getCriteriaDao()
     {
     }
 
+    #[\Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -211,6 +228,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
     /**
      * @return string
      */
+    #[\Override]
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -224,6 +242,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
         return $purifier->purify($value->getValue());
     }
 
+    #[\Override]
     protected function getHiddenArtifactValueForEdition(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -252,6 +271,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
         return $this->fetchInput($value, 'text');
     }
 
+    #[\Override]
     protected function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -261,16 +281,19 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
+    #[\Override]
     protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }
 
+    #[\Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return '';
     }
 
+    #[\Override]
     protected function getValueDao()
     {
         return new ValueDao(
@@ -278,6 +301,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
         );
     }
 
+    #[\Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
@@ -289,6 +313,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
      * @param bool $has_changed
      *
      */
+    #[\Override]
     public function getChangesetValue($changeset, $value_id, $has_changed): ?Tracker_Artifact_ChangesetValue
     {
         $row = $this->getValueDao()->searchById($value_id);
@@ -299,6 +324,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
         return new ChangesetValue($value_id, $changeset, $this, $has_changed, $row['value']);
     }
 
+    #[\Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -309,25 +335,30 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
         return (string) $value;
     }
 
+    #[\Override]
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
     }
 
+    #[\Override]
     public function canBeUsedAsReportCriterion()
     {
         return false;
     }
 
+    #[\Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         return $old_value->getValue() !== $new_value;
     }
 
+    #[\Override]
     public function getFormAdminVisitor(TrackerField $element, array $used_element)
     {
         return new Tracker_FormElement_View_Admin_Field($element, $used_element);
     }
 
+    #[\Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;

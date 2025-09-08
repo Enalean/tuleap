@@ -35,12 +35,14 @@ final class IsOpenRetriever implements VerifyIsOpen, VerifyFeatureIsOpen
     {
     }
 
+    #[\Override]
     public function isOpen(UserStoryIdentifier $user_story_identifier): bool
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
         return $artifact->isOpen();
     }
 
+    #[\Override]
     public function isFeatureOpen(FeatureIdentifier $feature): bool
     {
         return $this->artifact_retriever->getNonNullArtifact($feature)->isOpen();

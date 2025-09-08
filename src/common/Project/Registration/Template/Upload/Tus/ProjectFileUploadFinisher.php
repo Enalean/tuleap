@@ -43,6 +43,7 @@ final readonly class ProjectFileUploadFinisher implements TusFinisherDataStore
     ) {
     }
 
+    #[\Override]
     public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $file_path = $this->upload_path_allocator->getPathForItemBeingUploaded($file_information);

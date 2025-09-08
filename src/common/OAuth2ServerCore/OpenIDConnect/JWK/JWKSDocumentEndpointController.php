@@ -54,6 +54,7 @@ final class JWKSDocumentEndpointController extends DispatchablePSR15Compatible i
         $this->json_response_builder = $json_response_builder;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $keys = [];

@@ -33,6 +33,7 @@ class Transition_PostAction_Field_FloatDao extends Transition_PostAction_FieldDa
     /**
      * @see Transition_PostAction_FieldDao
      */
+    #[\Override]
     protected function escapeValue($value)
     {
         return floatval($value);

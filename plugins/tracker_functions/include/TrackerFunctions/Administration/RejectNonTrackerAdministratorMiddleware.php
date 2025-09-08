@@ -35,6 +35,7 @@ final class RejectNonTrackerAdministratorMiddleware implements MiddlewareInterfa
     {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $tracker = $request->getAttribute(\Tuleap\Tracker\Tracker::class);

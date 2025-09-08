@@ -102,6 +102,7 @@ class GitPullRequestReferenceDAO extends DataAccessObject implements GetReferenc
         return $this->getDB()->single($sql, [$repository_id]);
     }
 
+    #[\Override]
     public function getReferenceByPullRequestId(int $pull_request_id): array
     {
         return $this->getDB()->row('SELECT * FROM plugin_pullrequest_git_reference WHERE pr_id = ?', $pull_request_id);

@@ -99,6 +99,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         return $html;
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         $html  = '<div class="docman_help">' . dgettext('tuleap-docman', '<ul><li>The whole folder sub-tree is taken in account for these statistics.</li><li>To compute the size, only the last versions of "file" and "embedded file" documents are taken in account.</li></ul>') . '</div>';

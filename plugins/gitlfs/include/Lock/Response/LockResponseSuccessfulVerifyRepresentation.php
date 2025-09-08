@@ -38,6 +38,7 @@ class LockResponseSuccessfulVerifyRepresentation implements LockResponse
         $this->theirs_lock_representations = $theirs_lock_representations;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

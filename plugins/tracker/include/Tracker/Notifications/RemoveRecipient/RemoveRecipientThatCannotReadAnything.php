@@ -40,6 +40,7 @@ final class RemoveRecipientThatCannotReadAnything implements RecipientRemovalStr
      *
      * @psalm-return array<string, Recipient>
      */
+    #[\Override]
     public function removeRecipient(
         LoggerInterface $logger,
         Tracker_Artifact_Changeset $changeset,

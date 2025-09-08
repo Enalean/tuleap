@@ -53,6 +53,7 @@ class ServiceSvn extends Service
         parent::__construct($project, $data);
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fas fa-tlp-versioning-svn';
@@ -203,6 +204,7 @@ class ServiceSvn extends Service
         ];
     }
 
+    #[\Override]
     public function getInternationalizedName(): string
     {
         $label = $this->getLabel();
@@ -214,6 +216,7 @@ class ServiceSvn extends Service
         return $label;
     }
 
+    #[\Override]
     public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();

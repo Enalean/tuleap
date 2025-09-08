@@ -49,6 +49,7 @@ final class MediawikiHTTPClientFactory implements MediawikiClientFactory
     /**
      * @throws ConfigurationErrorException
      */
+    #[\Override]
     public function getHTTPClient(): ClientInterface
     {
         try {

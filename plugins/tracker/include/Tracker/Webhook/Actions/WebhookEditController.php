@@ -65,6 +65,7 @@ class WebhookEditController implements DispatchableWithRequest
         $this->validator       = $validator;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $webhook_id = $request->get('webhook_id');

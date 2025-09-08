@@ -39,6 +39,7 @@ final class OnlyOfficeDownloadDocumentTokenGeneratorDBStore implements OnlyOffic
     ) {
     }
 
+    #[\Override]
     public function generateDownloadToken(
         \PFUser $user,
         OnlyOfficeDocument $document,

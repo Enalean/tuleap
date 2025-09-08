@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class IterationsDAO extends DataAccessObject implements VerifyIsIterationTracker, RetrieveIterationTracker, RetrieveIterationLabels, VerifyIsIteration
 {
+    #[\Override]
     public function isIterationTracker(int $tracker_id): bool
     {
         $sql  = 'SELECT NULL FROM plugin_program_management_program WHERE iteration_tracker_id = ?';
@@ -41,6 +42,7 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
         return count($rows) > 0;
     }
 
+    #[\Override]
     public function isIteration(int $artifact_id): bool
     {
         $sql = 'SELECT COUNT(*) FROM plugin_program_management_program AS program
@@ -49,6 +51,7 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
         return $this->getDB()->exists($sql, $artifact_id);
     }
 
+    #[\Override]
     public function getIterationTrackerId(ProgramIdentifier $program_identifier): ?int
     {
         $sql = 'SELECT iteration_tracker_id FROM plugin_program_management_program
@@ -63,6 +66,7 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
         return $tracker_id;
     }
 
+    #[\Override]
     public function getIterationTrackerIdFromIteration(IterationIdentifier $iteration): int
     {
         $sql = <<<SQL
@@ -82,6 +86,7 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
     /**
      * @psalm-return null|array{iteration_label: ?string, iteration_sub_label: ?string}
      */
+    #[\Override]
     public function getIterationLabels(int $iteration_tracker_id): ?array
     {
         $sql       = 'SELECT iteration_label, iteration_sub_label FROM plugin_program_management_program WHERE iteration_tracker_id = ?';

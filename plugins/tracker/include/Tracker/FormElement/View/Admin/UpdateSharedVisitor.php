@@ -28,6 +28,7 @@ class Tracker_FormElement_View_Admin_UpdateSharedVisitor extends Tracker_FormEle
      *
      * @return String
      */
+    #[\Override]
     protected function fetchForm()
     {
         $html = '';

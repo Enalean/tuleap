@@ -39,6 +39,7 @@ final readonly class TusServer implements RequestHandlerInterface
     ) {
     }
 
+    #[\Override]
     public function handle(\Psr\Http\Message\ServerRequestInterface $request): ResponseInterface
     {
         $response = null;

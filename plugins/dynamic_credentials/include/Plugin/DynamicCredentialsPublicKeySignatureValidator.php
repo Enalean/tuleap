@@ -30,11 +30,13 @@ use Tuleap\Cryptography\Exception\InvalidKeyException;
 
 final class DynamicCredentialsPublicKeySignatureValidator implements ValueValidator
 {
+    #[\Override]
     public static function buildSelf(): ValueValidator
     {
         return new self();
     }
 
+    #[\Override]
     public function checkIsValid(string $value): void
     {
         $decoded_value = base64_decode($value, true);

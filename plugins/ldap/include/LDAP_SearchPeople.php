@@ -33,6 +33,7 @@ class LDAP_SearchPeople extends Search_SearchPeople
         $this->ldap    = $ldap;
     }
 
+    #[\Override]
     public function search(Search_SearchQuery $query, Search_SearchResults $search_results)
     {
         $limit = $query->getNumberOfResults();

@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
  */
 class NewChangesetFieldsWithoutRequiredValidationValidator extends Tracker_Artifact_Changeset_FieldsValidator
 {
+    #[\Override]
     protected function canValidateField(
         Artifact $artifact,
         TrackerField $field,
@@ -37,6 +38,7 @@ class NewChangesetFieldsWithoutRequiredValidationValidator extends Tracker_Artif
         return true;
     }
 
+    #[\Override]
     protected function validateField(
         Artifact $artifact,
         TrackerField $field,

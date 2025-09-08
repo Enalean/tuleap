@@ -40,6 +40,7 @@ final class ArtifactIdentifierProxy implements ArtifactIdentifier
         return new self($artifact->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

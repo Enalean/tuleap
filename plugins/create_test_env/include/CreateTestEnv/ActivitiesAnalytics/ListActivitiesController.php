@@ -56,6 +56,7 @@ class ListActivitiesController implements DispatchableWithRequest, DispatchableW
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser() && ! $this->forge_user_group_permissions_manager->doesUserHavePermission($request->getCurrentUser(), new DisplayUserActivities())) {

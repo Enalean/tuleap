@@ -63,6 +63,7 @@ final class PullRequestPane extends Pane
     /**
      * @return string
      */
+    #[\Override]
     public function content()
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(PULLREQUEST_BASE_DIR . '/templates');

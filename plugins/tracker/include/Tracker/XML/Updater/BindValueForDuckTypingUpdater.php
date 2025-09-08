@@ -37,6 +37,7 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
     ) {
     }
 
+    #[\Override]
     public function updateValueForDuckTypingMove(
         SimpleXMLElement $changeset_xml,
         \Tuleap\Tracker\FormElement\Field\ListField $source_field,

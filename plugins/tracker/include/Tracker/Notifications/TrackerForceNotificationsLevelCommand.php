@@ -76,6 +76,7 @@ class TrackerForceNotificationsLevelCommand extends Command
         $this->tracker_dao                  = $tracker_dao;
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $notification_level = $this->checkNotificationLevelParameter($input);
@@ -96,6 +97,7 @@ class TrackerForceNotificationsLevelCommand extends Command
         return 0;
     }
 
+    #[\Override]
     protected function configure()
     {
         $this->setDescription('Force tracker notification level to all trackers of projects')

@@ -29,6 +29,7 @@ final class XMLDateField extends XMLField
 {
     private bool $display_datetime = false;
 
+    #[\Override]
     public static function getType(): string
     {
         return \Tracker_FormElementFactory::FIELD_DATE_TYPE;
@@ -45,6 +46,7 @@ final class XMLDateField extends XMLField
         return $new;
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $form_elements): \SimpleXMLElement
     {
         $field = parent::export($form_elements);

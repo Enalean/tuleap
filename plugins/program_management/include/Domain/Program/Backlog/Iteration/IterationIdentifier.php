@@ -87,6 +87,7 @@ final class IterationIdentifier implements TimeboxIdentifier
         return new self($event->getArtifact()->getId());
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

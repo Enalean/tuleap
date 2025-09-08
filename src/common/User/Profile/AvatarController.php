@@ -54,6 +54,7 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
         $this->avatar_generator = $avatar_generator;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         // Avatar is a public information for all authenticated users

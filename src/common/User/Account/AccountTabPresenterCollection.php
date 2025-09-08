@@ -61,26 +61,31 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
         $this->user         = $user;
     }
 
+    #[\Override]
     public function current(): mixed
     {
         return current($this->sections);
     }
 
+    #[\Override]
     public function next(): void
     {
         next($this->sections);
     }
 
+    #[\Override]
     public function key(): string
     {
         return key($this->sections);
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return key($this->sections) !== null;
     }
 
+    #[\Override]
     public function rewind(): void
     {
         reset($this->sections);

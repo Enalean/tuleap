@@ -47,6 +47,7 @@ final class FileBeingUploadedWriter implements TusWriter
     /**
      * @inheritdoc
      */
+    #[\Override]
     public function writeChunk(TusFileInformation $file_information, int $offset, $input_source): int
     {
         if (! \is_resource($input_source)) {

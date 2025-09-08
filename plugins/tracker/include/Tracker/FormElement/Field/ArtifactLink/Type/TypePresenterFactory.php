@@ -50,6 +50,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
     }
 
     /** @return TypePresenter[] */
+    #[\Override]
     public function getAllTypes(): array
     {
         $types = $this->getDefaultTypes();
@@ -73,6 +74,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
      * @return TypePresenter[]
      * @psalm-return list<TypePresenter>
      */
+    #[\Override]
     public function getAllUsableTypesInProject(Project $project): array
     {
         $types = $this->getAllTypesEditableInProject($project);
@@ -86,6 +88,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
     }
 
     /** @return TypePresenter[] */
+    #[\Override]
     public function getOnlyVisibleTypes(): array
     {
         return array_filter(
@@ -150,6 +153,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
     }
 
     /** @return TypePresenter[] */
+    #[\Override]
     public function getAllCurrentlyUsedTypePresentersByTracker(\Tuleap\Tracker\Tracker $tracker): array
     {
         $types = [];
@@ -165,6 +169,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
         return array_filter($types);
     }
 
+    #[\Override]
     public function getFromShortname(?string $shortname): ?TypePresenter
     {
         $presenter = $this->retrieve_system_type_presenter->getSystemTypeFromShortname($shortname);

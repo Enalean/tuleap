@@ -22,21 +22,25 @@ namespace Tuleap\TestManagement\Criterion;
 
 class StatusAll implements ISearchOnStatus
 {
+    #[\Override]
     public function shouldRetrieveOpenCampaigns(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function shouldRetrieveClosedCampaigns(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function shouldRetrieveOnlyOpenCampaigns(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function shouldRetrieveOnlyClosedCampaigns(): bool
     {
         return false;

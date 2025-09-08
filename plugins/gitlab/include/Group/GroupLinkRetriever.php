@@ -36,6 +36,7 @@ final class GroupLinkRetriever implements RetrieveGroupLink
     /**
      * @return Ok<GroupLink> | Err<Fault>
      */
+    #[\Override]
     public function retrieveGroupLink(int $group_link_id): Ok|Err
     {
         $group_link = $this->group_link_retriever->retrieveGroupLink($group_link_id);

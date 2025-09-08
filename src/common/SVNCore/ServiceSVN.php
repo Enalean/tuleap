@@ -21,6 +21,7 @@
 
 class ServiceSVN extends Service
 {
+    #[\Override]
     public function getIconName(): string
     {
         return 'fas fa-tlp-versioning-svn';

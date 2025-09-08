@@ -40,11 +40,13 @@ final class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement
         return $this->getLabel();
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;
     }
 
+    #[\Override]
     public function getJsonId()
     {
         return self::OPEN_PREFIX . $this->getId();
@@ -55,6 +57,7 @@ final class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement
         return $this->getLabel();
     }
 
+    #[\Override]
     public function getFullRESTValue(TrackerField $field)
     {
         if (! $field instanceof OpenListField) {

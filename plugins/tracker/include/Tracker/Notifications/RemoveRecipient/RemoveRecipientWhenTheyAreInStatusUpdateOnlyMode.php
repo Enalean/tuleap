@@ -42,6 +42,7 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode implements Recipien
      *
      * @psalm-return array<string, Recipient>
      */
+    #[\Override]
     public function removeRecipient(
         LoggerInterface $logger,
         Tracker_Artifact_Changeset $changeset,

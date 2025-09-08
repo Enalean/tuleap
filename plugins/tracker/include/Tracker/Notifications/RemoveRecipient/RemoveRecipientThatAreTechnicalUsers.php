@@ -34,6 +34,7 @@ final class RemoveRecipientThatAreTechnicalUsers implements RecipientRemovalStra
      *
      * @psalm-return array<string, Recipient>
      */
+    #[\Override]
     public function removeRecipient(
         LoggerInterface $logger,
         Tracker_Artifact_Changeset $changeset,

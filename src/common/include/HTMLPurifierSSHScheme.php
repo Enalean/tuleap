@@ -27,6 +27,7 @@ class HTMLPurifierSSHScheme extends \HTMLPurifier_URIScheme
     public $hierarchical = true;
     public $secure       = true;
 
+    #[\Override]
     public function doValidate(&$uri, $config, $context)
     {
         return true;

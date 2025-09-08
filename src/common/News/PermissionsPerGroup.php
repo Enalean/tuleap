@@ -43,6 +43,7 @@ class PermissionsPerGroup implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {

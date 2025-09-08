@@ -46,11 +46,13 @@ class AdministrationPresenter extends GitPresenters_AdminPresenter
         $this->jenkins_server_presenters = $jenkins_server_presenters;
     }
 
+    #[\Override]
     public function form_action(): string
     {
         return '';
     }
 
+    #[\Override]
     public function csrf_token(): CSRFSynchronizerToken
     {
         return $this->csrf_token;

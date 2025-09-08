@@ -45,6 +45,7 @@ final readonly class Ok implements IResult
      * @psalm-param callable(TValue): TNewValue $fn
      * @return Ok<TNewValue>
      */
+    #[\Override]
     public function map(callable $fn): Ok
     {
         return new Ok($fn($this->value));
@@ -54,6 +55,7 @@ final readonly class Ok implements IResult
      * @return Ok<TValue>
      * @psalm-mutation-free
      */
+    #[\Override]
     public function mapErr(callable $fn): Ok
     {
         return new Ok($this->value);
@@ -65,6 +67,7 @@ final readonly class Ok implements IResult
      * @param callable(TValue): (Ok<TNewValue> | Err<TNewError>) $fn
      * @return Ok<TNewValue> | Err<TNewError>
      */
+    #[\Override]
     public function andThen(callable $fn): Ok|Err
     {
         return $fn($this->value);
@@ -74,6 +77,7 @@ final readonly class Ok implements IResult
      * @return Ok<TValue>
      * @psalm-mutation-free
      */
+    #[\Override]
     public function orElse(callable $fn): Ok
     {
         return new Ok($this->value);
@@ -84,6 +88,7 @@ final readonly class Ok implements IResult
      * @param callable(TValue): TReturn $ok_fn
      * @return TReturn
      */
+    #[\Override]
     public function match(callable $ok_fn, callable $err_fn): mixed
     {
         return $ok_fn($this->value);
@@ -93,6 +98,7 @@ final readonly class Ok implements IResult
      * @return TValue
      * @psalm-mutation-free
      */
+    #[\Override]
     public function unwrapOr(mixed $default_value): mixed
     {
         return $this->value;

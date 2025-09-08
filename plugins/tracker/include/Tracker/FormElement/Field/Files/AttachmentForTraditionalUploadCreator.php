@@ -33,6 +33,7 @@ class AttachmentForTraditionalUploadCreator implements AttachmentCreator
     {
     }
 
+    #[\Override]
     public function createAttachment(
         \PFUser $current_user,
         FilesField $field,

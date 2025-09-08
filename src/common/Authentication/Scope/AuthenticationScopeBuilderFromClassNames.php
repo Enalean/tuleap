@@ -45,6 +45,7 @@ final class AuthenticationScopeBuilderFromClassNames implements AuthenticationSc
     /**
      * @psalm-suppress InvalidReturnType It's not possible to express templating inside a class-string
      */
+    #[\Override]
     public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope
     {
         foreach ($this->classnames as $classname) {
@@ -58,6 +59,7 @@ final class AuthenticationScopeBuilderFromClassNames implements AuthenticationSc
         return null;
     }
 
+    #[\Override]
     public function buildAllAvailableAuthenticationScopes(): array
     {
         $scopes = [];

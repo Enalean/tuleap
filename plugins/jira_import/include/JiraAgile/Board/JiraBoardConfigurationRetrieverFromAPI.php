@@ -44,6 +44,7 @@ class JiraBoardConfigurationRetrieverFromAPI implements JiraBoardConfigurationRe
         $this->logger = $logger;
     }
 
+    #[\Override]
     public function getScrumBoardConfiguration(JiraBoard $jira_board): ?JiraBoardConfiguration
     {
         $url = $this->getBoardConfigurationURL($jira_board);

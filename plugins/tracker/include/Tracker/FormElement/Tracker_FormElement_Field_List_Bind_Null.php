@@ -36,6 +36,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return array all values of the field
      */
+    #[\Override]
     public function getAllValues()
     {
         return [];
@@ -47,6 +48,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return mixed The values or null if there are no specific available values
      */
+    #[\Override]
     public function getRESTAvailableValues()
     {
         return [];
@@ -60,6 +62,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return mixed the field data corresponding to the alue for artifact submision
      */
+    #[\Override]
     public function getFieldData($submitted_value, $is_multiple)
     {
         return [];
@@ -68,6 +71,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return array
      */
+    #[\Override]
     public function getValue($value_id)
     {
         return [];
@@ -76,6 +80,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return array
      */
+    #[\Override]
     public function getChangesetValues($changeset_id)
     {
         return [];
@@ -86,6 +91,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @param mixed $value the value of the field
      * @return string
      */
+    #[\Override]
     public function fetchRawValue($value)
     {
         return '';
@@ -96,6 +102,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
+    #[\Override]
     public function fetchRawValueFromChangeset($changeset)
     {
         return '';
@@ -104,6 +111,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return string
      */
+    #[\Override]
     public function formatCriteriaValue($value_id)
     {
         return '';
@@ -112,6 +120,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return string
      */
+    #[\Override]
     public function formatMailCriteriaValue($value_id)
     {
         return '';
@@ -120,6 +129,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return string
      */
+    #[\Override]
     public function formatChangesetValue($value)
     {
         return '';
@@ -128,11 +138,13 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return string
      */
+    #[\Override]
     public function formatChangesetValueForCSV($value)
     {
         return '';
     }
 
+    #[\Override]
     public function getCriteriaFromWhere($criteria_value): Option
     {
         return Option::nothing(ParametrizedFromWhere::class);
@@ -142,6 +154,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * Get the "select" statement to retrieve field values
      * @see getQueryFrom
      */
+    #[\Override]
     public function getQuerySelect(): string
     {
         return '';
@@ -156,6 +169,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return string
      */
+    #[\Override]
     public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list')
     {
         return '';
@@ -168,6 +182,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return Tracker_FormElement_Field_List_BindValue
      */
+    #[\Override]
     public function getValueFromRow($row)
     {
         return null;
@@ -177,13 +192,14 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * Get the sql fragment used to retrieve value for a changeset to display the bindvalue in table rows for example.
      * Used by OpenList.
      *
-     * @return array {
+     * @return array [
      *                  'bindtable_select'     => "user.user_name, user.realname, CONCAT(user.realname,' (',user.user_name,')') AS full_name",
      *                  'bindtable_select_nb'  => 3,
      *                  'bindtable_from'       => 'user',
      *                  'bindtable_join_on_id' => 'user.user_id',
-     *              }
+     *              ]
      */
+    #[\Override]
     public function getBindtableSqlFragment()
     {
         return [];
@@ -192,6 +208,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * Get the "order by" statement to retrieve field values
      */
+    #[\Override]
     public function getQueryOrderby(): string
     {
         return '';
@@ -200,16 +217,19 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * Get the "group by" statement to retrieve field values
      */
+    #[\Override]
     public function getQueryGroupby(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getDao()
     {
         return null;
     }
 
+    #[\Override]
     public function getValueDao()
     {
         return null;
@@ -220,6 +240,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAdminEditForm()
     {
         return '';
@@ -232,6 +253,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return string html
      */
+    #[\Override]
     public static function fetchAdminCreateForm($field)
     {
         return '';
@@ -240,6 +262,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * Transforms Bind into a SimpleXMLElement
      */
+    #[\Override]
     public function exportBindToXml(
         SimpleXMLElement $root,
         array &$xmlMapping,
@@ -256,11 +279,13 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @Return array the BindValue(s)
      */
+    #[\Override]
     public function getBindValues($bindvalue_ids = null)
     {
         return [];
     }
 
+    #[\Override]
     public function getBindValuesForIds(array $bindvalue_ids)
     {
         return [];
@@ -271,41 +296,49 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @param array $value_mapping An array associating old value ids to new value ids.
      */
+    #[\Override]
     public function fixOriginalValueIds(array $value_mapping)
     {
         return [];
     }
 
+    #[\Override]
     public function getQuerySelectAggregate($functions)
     {
         return [];
     }
 
+    #[\Override]
     protected function getRESTBindingList()
     {
         return [];
     }
 
+    #[\Override]
     public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value)
     {
         return [];
     }
 
+    #[\Override]
     public function getType()
     {
         return self::TYPE;
     }
 
+    #[\Override]
     public function getFieldDataFromRESTObject(array $rest_data, ListField $field)
     {
         return;
     }
 
+    #[\Override]
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
     {
         return;
     }
 
+    #[\Override]
     public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
         return $visitor->visitListBindNull($this, $parameters);
@@ -315,6 +348,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @param int $bindvalue_id
      * @return Tracker_FormElement_Field_List_BindValue
      */
+    #[\Override]
     public function getBindValueById($bindvalue_id)
     {
         return new Tracker_FormElement_Field_List_Bind_StaticValue_None();
@@ -323,6 +357,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return Tracker_FormElement_Field_List_BindValue[]
      */
+    #[\Override]
     public function getAllValuesWithActiveUsersOnly(): array
     {
         return [];

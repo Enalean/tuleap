@@ -42,6 +42,7 @@ final class BindValueLabelProxy implements BindValueLabel
         return new self($bind_value->getLabel());
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

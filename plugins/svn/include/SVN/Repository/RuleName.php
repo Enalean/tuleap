@@ -40,6 +40,7 @@ class RuleName extends Rule
         $this->dao     = $dao;
     }
 
+    #[\Override]
     public function isValid($val)
     {
         return preg_match('/^' . self::PATTERN_REPOSITORY_NAME . '\z/i', $val) &&

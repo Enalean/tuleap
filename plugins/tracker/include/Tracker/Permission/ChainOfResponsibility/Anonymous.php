@@ -27,6 +27,7 @@ use Tuleap\Tracker\Tracker;
  */
 class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tracker_Permission_Command
 {
+    #[\Override]
     public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter)
     {
         switch ($request->getPermissionType(ProjectUGroup::ANONYMOUS)) {
@@ -49,6 +50,7 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tr
         $this->applyNextCommand($request, $permissions_setter);
     }
 
+    #[\Override]
     protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id)
     {
         $GLOBALS['Response']->addFeedback(

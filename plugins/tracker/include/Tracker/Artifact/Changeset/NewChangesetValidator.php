@@ -44,6 +44,7 @@ final readonly class NewChangesetValidator implements ValidateNewChangeset
      * @throws \Tracker_Exception
      * @throws LinkToParentWithoutCurrentArtifactChangeException
      */
+    #[\Override]
     public function validateNewChangeset(NewChangeset $new_changeset, ?string $email, \Workflow $workflow): void
     {
         $artifact    = $new_changeset->getArtifact();

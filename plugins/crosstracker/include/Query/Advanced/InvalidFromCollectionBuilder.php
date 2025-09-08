@@ -46,6 +46,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
     ) {
     }
 
+    #[\Override]
     public function buildCollectionOfInvalidFrom(From $from, PFUser $user): InvalidFromCollection
     {
         $collection = new InvalidFromCollection();
@@ -63,6 +64,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
         return $collection;
     }
 
+    #[\Override]
     public function visitTracker(FromTracker $from_tracker, $parameters): void
     {
         if (! in_array($from_tracker->getTarget(), AllowedFrom::ALLOWED_TRACKER)) {
@@ -79,6 +81,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
         );
     }
 
+    #[\Override]
     public function visitProject(FromProject $from_project, $parameters): void
     {
         if (! in_array($from_project->getTarget(), AllowedFrom::ALLOWED_PROJECT)) {

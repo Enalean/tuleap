@@ -55,6 +55,7 @@ final class VersionBeingUploadedInformationProvider implements TusFileInformatio
         $this->path_allocator = $path_allocator;
     }
 
+    #[\Override]
     public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request): ?TusFileInformation
     {
         $version_id = $request->getAttribute('id');

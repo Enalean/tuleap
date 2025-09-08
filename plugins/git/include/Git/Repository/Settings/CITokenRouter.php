@@ -36,6 +36,7 @@ class CITokenRouter extends RouterLink
         $this->controller = $controller;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request)
     {
         switch ($request->get('action')) {

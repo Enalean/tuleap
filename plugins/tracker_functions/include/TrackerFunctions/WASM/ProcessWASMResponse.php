@@ -42,6 +42,7 @@ final readonly class ProcessWASMResponse implements WASMResponseProcessor
     ) {
     }
 
+    #[\Override]
     public function processResponse(Ok|Err $wasm_response): Ok|Err
     {
         return $wasm_response->match(

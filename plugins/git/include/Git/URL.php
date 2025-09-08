@@ -181,11 +181,13 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         return $this->query_string;
     }
 
+    #[\Override]
     public function isWrite()
     {
         return preg_match('%(/|\?service=)git-receive-pack$%', $this->uri) === 1;
     }
 
+    #[\Override]
     public function isRead()
     {
         return ! $this->isWrite();

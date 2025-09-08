@@ -58,6 +58,7 @@ class WebhookCreateController implements DispatchableWithRequest
         $this->validator       = $validator;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker_id  = $request->get('tracker_id');

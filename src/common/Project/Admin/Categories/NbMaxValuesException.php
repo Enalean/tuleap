@@ -42,6 +42,7 @@ final class NbMaxValuesException extends ProjectCategoriesException
         );
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

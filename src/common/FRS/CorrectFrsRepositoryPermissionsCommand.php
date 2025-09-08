@@ -49,11 +49,13 @@ class CorrectFrsRepositoryPermissionsCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure()
     {
         $this->setDescription('Set the FRS repository with the originals permissions.');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $count_changes = 0;

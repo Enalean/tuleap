@@ -42,6 +42,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class userlogPlugin extends Plugin implements DispatchableWithRequest, DispatchableWithBurningParrot //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function &getPluginInfo()
     {
         if (! $this->pluginInfo instanceof \UserLogPluginInfo) {
@@ -109,6 +110,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
         $userlog_access_storage->storeUserlogAccess($userlog_access);
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
         $assets = new IncludeAssets(

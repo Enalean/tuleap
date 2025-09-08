@@ -39,6 +39,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
         $this->workflow_update_checker = $workflow_update_checker;
     }
 
+    #[\Override]
     protected function canValidateField(
         Artifact $artifact,
         TrackerField $field,
@@ -50,6 +51,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
         return ! (! $last_changeset && $field->isRequired() && ! $field->userCanSubmit($user));
     }
 
+    #[\Override]
     protected function validateField(
         Artifact $artifact,
         TrackerField $field,

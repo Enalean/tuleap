@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
 class ArtifactLinkFieldValueDao extends FieldValueDao
 {
+    #[\Override]
     public function searchById($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);

@@ -23,6 +23,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Docman extends Docman_View_ProjectHeader
 {
+    #[\Override]
     protected function getToolbar(array $params)
     {
         $tools = [];

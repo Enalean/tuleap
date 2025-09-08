@@ -28,31 +28,37 @@ use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_Pie;
 
 class D3CompatibleChartVisitor implements Visitor
 {
+    #[\Override]
     public function visitBarChart(GraphOnTrackersV5_Chart_Bar $chart)
     {
         return true;
     }
 
+    #[\Override]
     public function visitBurndown(GraphOnTrackersV5_Chart_Burndown $chart)
     {
         return false;
     }
 
+    #[\Override]
     public function visitCumulativeFlowChart(GraphOnTrackersV5_Chart_CumulativeFlow $chart)
     {
         return true;
     }
 
+    #[\Override]
     public function visitGantt(GraphOnTrackersV5_Chart_Gantt $chart)
     {
         return false;
     }
 
+    #[\Override]
     public function visitGroupedBarChart(GraphOnTrackersV5_Chart_Bar $chart)
     {
         return true;
     }
 
+    #[\Override]
     public function visitPieChart(GraphOnTrackersV5_Chart_Pie $chart)
     {
         return true;

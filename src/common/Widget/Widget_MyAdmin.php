@@ -34,6 +34,7 @@ class Widget_MyAdmin extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->user_is_super_admin = $user_is_super_admin;
     }
 
+    #[\Override]
     public function getTitle()
     {
         if ($this->user_is_super_admin) {
@@ -43,11 +44,13 @@ class Widget_MyAdmin extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_admin_description');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $html_my_admin = '<table width="100%" class="tlp-table">';

@@ -38,6 +38,7 @@ final class FeatureNotFoundException extends \Exception implements FeatureExcept
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

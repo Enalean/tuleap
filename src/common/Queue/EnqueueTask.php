@@ -38,6 +38,7 @@ final class EnqueueTask implements EnqueueTaskInterface
         }
     }
 
+    #[\Override]
     public function enqueue(QueueTask $event): void
     {
         try {

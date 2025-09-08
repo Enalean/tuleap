@@ -83,6 +83,7 @@ class PostAdminReleaseNoteLinkController implements DispatchableWithRequest
         );
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();

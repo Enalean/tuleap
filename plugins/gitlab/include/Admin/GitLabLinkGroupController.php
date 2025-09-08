@@ -62,6 +62,7 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
@@ -115,6 +116,7 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);

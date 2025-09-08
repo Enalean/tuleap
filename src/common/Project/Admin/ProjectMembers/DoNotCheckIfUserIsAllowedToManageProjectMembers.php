@@ -27,6 +27,7 @@ namespace Tuleap\Project\Admin\ProjectMembers;
  */
 final class DoNotCheckIfUserIsAllowedToManageProjectMembers implements EnsureUserCanManageProjectMembers
 {
+    #[\Override]
     public function checkUserCanManageProjectMembers(\PFUser $user, \Project $project): void
     {
         return;

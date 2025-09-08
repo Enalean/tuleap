@@ -45,6 +45,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
      * @access protected
      * @return string template filename
      */
+    #[\Override]
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
@@ -66,6 +67,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
      * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
+    #[\Override]
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
@@ -81,6 +83,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
      *
      * @access protected
      */
+    #[\Override]
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
         parent::ReadQuery();
@@ -103,6 +106,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadHeaders() // @codingStandardsIgnoreLine
     {
         parent::LoadHeaders();
@@ -124,6 +128,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $commit = $this->project->GetCommit($this->params['hash']);

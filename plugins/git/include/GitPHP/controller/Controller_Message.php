@@ -43,6 +43,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      * @return string template filename
      */
+    #[\Override]
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
         return 'tuleap/message.tpl';
@@ -57,6 +58,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
+    #[\Override]
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         // This isn't a real controller
@@ -70,6 +72,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
     }
@@ -81,6 +84,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadHeaders() // @codingStandardsIgnoreLine
     {
         if (isset($this->params['statuscode']) && ! empty($this->params['statuscode'])) {
@@ -95,6 +99,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $this->tpl->assign('message', $this->params['message']);

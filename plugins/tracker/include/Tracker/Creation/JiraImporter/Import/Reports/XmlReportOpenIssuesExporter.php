@@ -47,6 +47,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
         $this->report_table_exporter     = $report_table_exporter;
     }
 
+    #[\Override]
     public function exportJiraLikeReport(
         SimpleXMLElement $reports_node,
         StatusValuesCollection $status_values_collection,

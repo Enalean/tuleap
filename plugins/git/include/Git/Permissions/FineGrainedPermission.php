@@ -55,16 +55,19 @@ class FineGrainedPermission implements Permission
         return $this->repository_id;
     }
 
+    #[\Override]
     public function getPattern()
     {
         return $this->pattern;
     }
 
+    #[\Override]
     public function getWritersUgroup()
     {
         return $this->writers_ugroups;
     }
 
+    #[\Override]
     public function getRewindersUgroup()
     {
         return $this->rewinders_ugroups;

@@ -34,6 +34,7 @@ class CardwallPaneInfo extends PaneInfo
     /**
      * @see AgileDashboard_Pane::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier()
     {
         return self::IDENTIFIER;
@@ -42,16 +43,19 @@ class CardwallPaneInfo extends PaneInfo
     /**
      * @see AgileDashboard_Pane::getTitle()
      */
+    #[\Override]
     public function getTitle()
     {
         return 'Card Wall';
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fa-solid fa-table';
     }
 
+    #[\Override]
     public function getUri(): string
     {
         return '/plugins/agiledashboard/?' .

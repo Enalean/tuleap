@@ -49,6 +49,7 @@ class WorkerSystemCtlCommand extends Command
         $this->worker_availability = $worker_availability;
     }
 
+    #[\Override]
     protected function configure()
     {
         $this
@@ -57,6 +58,7 @@ class WorkerSystemCtlCommand extends Command
             ->addArgument('action', InputArgument::REQUIRED, 'Possible actions: start|stop');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         switch ($input->getArgument('action')) {

@@ -129,6 +129,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
         self::clearInstance();
     }
 
+    #[\Override]
     public function getTrackerById($tracker_id): ?Tracker
     {
         if (! isset($this->trackers[$tracker_id])) {
@@ -175,6 +176,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
     /**
      * @return Tracker[]
      */
+    #[\Override]
     public function getTrackersByProjectIdUserCanView(int|string $project_id, PFUser $user): array
     {
         $trackers = [];
@@ -191,6 +193,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
     /**
      * @return Tracker[]
      */
+    #[\Override]
     public function getTrackersByProjectIdUserCanAdministrate(int|string $project_id, PFUser $user): array
     {
         $trackers = [];

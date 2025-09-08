@@ -28,11 +28,13 @@ abstract class HudsonJobWidget extends HudsonWidget
 
     public $job_id;
 
+    #[\Override]
     public function isUnique()
     {
         return false;
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         $content_id = false;
@@ -55,6 +57,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         return $content_id;
     }
 
+    #[\Override]
     public function destroy($id)
     {
         $db = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
@@ -66,6 +69,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         );
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $select_id = 'job-' . $widget_id;
@@ -73,11 +77,13 @@ abstract class HudsonJobWidget extends HudsonWidget
         return $this->buildPreferencesForm($select_id);
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getInstallPreferences()
     {
         $select_id = 'widget-job-id';
@@ -122,6 +128,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         return $html;
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));

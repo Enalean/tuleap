@@ -32,6 +32,7 @@ final class ArtifactFactoryAdapter implements RetrieveFullArtifact
     {
     }
 
+    #[\Override]
     public function getNonNullArtifact(ArtifactIdentifier $artifact_identifier): Artifact
     {
         $artifact = $this->artifact_factory->getArtifactById($artifact_identifier->getId());

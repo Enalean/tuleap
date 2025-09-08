@@ -62,6 +62,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return bool
      */
+    #[\Override]
     public function isExistingValue($value_id)
     {
         $import_spotter = Spotter::instance();
@@ -91,6 +92,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
+    #[\Override]
     public function formatCriteriaValue($value_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
@@ -100,6 +102,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
+    #[\Override]
     public function formatMailCriteriaValue($value_id)
     {
         return $this->format($this->getValue($value_id));
@@ -110,6 +113,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string
      */
+    #[\Override]
     public function formatChangesetValue($value)
     {
         if ($value->getId() == 100) {
@@ -122,6 +126,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
+    #[\Override]
     public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences)
     {
         return $value->fetchCard($display_preferences);
@@ -130,6 +135,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
+    #[\Override]
     public function formatChangesetValueForCSV($value)
     {
         if ($value->getId() == 100) {
@@ -142,6 +148,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
+    #[\Override]
     public function formatChangesetValueWithoutLink($value)
     {
         return Codendi_HTMLPurifier::instance()->purify($value->getLabel());
@@ -150,6 +157,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return array
      */
+    #[\Override]
     public function getChangesetValues($changeset_id)
     {
         $uh     = UserHelper::instance();
@@ -163,6 +171,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return Tracker_FormElement_Field_List_Bind_UsersValue | null
      */
+    #[\Override]
     public function getValue($value_id)
     {
         if ($value_id == 100) {
@@ -188,6 +197,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return array | null The values or null if there are no specific available values
      */
+    #[\Override]
     public function getRESTAvailableValues()
     {
         $ugroups = [];
@@ -212,6 +222,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return array the list of all ugroups with id and name
      */
+    #[\Override]
     protected function getRESTBindingList()
     {
         $ugroups = [];
@@ -305,6 +316,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
+    #[\Override]
     public function getAllValues()
     {
         return $this->getAllValuesByUGroupList($this->value_function);
@@ -313,6 +325,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
+    #[\Override]
     public function getAllValuesWithActiveUsersOnly(): array
     {
         if ($this->values === null) {
@@ -354,6 +367,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return Tracker_FormElement_Field_List_BindValue
      */
+    #[\Override]
     public function getValueFromRow($row)
     {
         return new Tracker_FormElement_Field_List_Bind_UsersValue(
@@ -368,13 +382,14 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * Get the sql fragment used to retrieve value for a changeset to display the bindvalue in table rows for example.
      * Used by OpenList.
      *
-     * @return array {
+     * @return array [
      *                  'select'     => "user.user_name, user.realname, CONCAT(user.realname,' (',user.user_name,')') AS full_name",
      *                  'select_nb'  => 3,
      *                  'from'       => 'user',
      *                  'join_on_id' => 'user.user_id',
-     *              }
+     *              ]
      */
+    #[\Override]
     public function getBindtableSqlFragment()
     {
         return [
@@ -395,6 +410,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return mixed the field data corresponding to the value for artifact submision (user_id)
      */
+    #[\Override]
     public function getFieldData($submitted_value, $is_multiple)
     {
         $values = $this->getAllValues();
@@ -427,6 +443,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * Get the "select" statement to retrieve field values
      * @see getQueryFrom
      */
+    #[\Override]
     public function getQuerySelect(): string
     {
         $R2 = 'R2_' . $this->field->id;
@@ -442,6 +459,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string
      */
+    #[\Override]
     public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list')
     {
         $R1 = 'R1_' . $this->field->id;
@@ -456,6 +474,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Get the "order by" statement to retrieve field values
      */
+    #[\Override]
     public function getQueryOrderby(): string
     {
         if (! $this->getField()->isUsed()) {
@@ -469,6 +488,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Get the "group by" statement to retrieve field values
      */
+    #[\Override]
     public function getQueryGroupby(): string
     {
         if (! $this->getField()->isUsed()) {
@@ -505,6 +525,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *               - selectbox: count group by
      *               - multiselectbox: all (else it breaks other computations)
      */
+    #[\Override]
     public function getQuerySelectAggregate($functions)
     {
         $R1       = 'R1_' . $this->field->id;
@@ -544,6 +565,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @param mixed $value the value of the field
      * @return string
      */
+    #[\Override]
     public function fetchRawValue($value)
     {
         return $this->format($this->getValue($value));
@@ -554,6 +576,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
+    #[\Override]
     public function fetchRawValueFromChangeset($changeset)
     {
         $value        = '';
@@ -567,6 +590,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return implode(',', $values_array);
     }
 
+    #[\Override]
     public function getDao()
     {
         return new BindUsersDao();
@@ -580,6 +604,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $this->userManager;
     }
 
+    #[\Override]
     public function getValueDao()
     {
         return new UserDao();
@@ -592,6 +617,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string html
      */
+    #[\Override]
     public static function fetchAdminCreateForm($field)
     {
         return self::fetchSelectUsers('formElement_data[bind][value_function][]', $field, []);
@@ -602,6 +628,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAdminEditForm()
     {
         $html  = '';
@@ -693,6 +720,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return void
      */
+    #[\Override]
     public function process($params, $no_redirect = false)
     {
         foreach ($params as $key => $value) {
@@ -714,6 +742,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return parent::process($params, $no_redirect);
     }
 
+    #[\Override]
     protected function filterDefaultValues(array $bind_default): array
     {
         if (empty($bind_default)) {
@@ -735,6 +764,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Transforms Bind into a SimpleXMLElement
      */
+    #[\Override]
     public function exportBindToXml(
         SimpleXMLElement $root,
         array &$xmlMapping,
@@ -789,6 +819,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @Return array the BindValue(s)
      */
+    #[\Override]
     public function getBindValues($bindvalue_ids = null)
     {
         $values = $this->getAllValuesWithActiveUsersOnly();
@@ -807,6 +838,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @Return Tracker_FormElement_Field_List_BindValue[]
      */
+    #[\Override]
     public function getBindValuesForIds(array $bindvalue_ids)
     {
         $values = $this->getValuesCollectionContainingIds($bindvalue_ids);
@@ -841,6 +873,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return void
      */
+    #[\Override]
     public function saveObject()
     {
         $dao = new BindUsersDao();
@@ -855,6 +888,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string[]
      */
+    #[\Override]
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value)
     {
         $recipients = [];
@@ -871,6 +905,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return bool
      */
+    #[\Override]
     public function isNotificationsSupported()
     {
         return true;
@@ -899,22 +934,26 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @see Tracker_FormElement_Field_Shareable
      */
+    #[\Override]
     public function fixOriginalValueIds(array $value_mapping)
     {
         // Nothing to do: user value ids stay the same accross projects.
     }
 
+    #[\Override]
     public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value)
     {
         // returns an empty array as it doesn't make sense with Users
         return [];
     }
 
+    #[\Override]
     public function getType()
     {
         return self::TYPE;
     }
 
+    #[\Override]
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {
         $user_representation = new UserListValueRepresentation();
@@ -927,6 +966,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $representation;
     }
 
+    #[\Override]
     public function getDefaultRESTValues()
     {
         $bind_values = $this->getBindValuesForIds(array_keys($this->getDefaultValues()));
@@ -939,6 +979,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $rest_array;
     }
 
+    #[\Override]
     public function getFieldDataFromRESTObject(array $rest_data, ListField $field)
     {
         if (isset($rest_data['id']) && is_numeric($rest_data['id'])) {
@@ -975,6 +1016,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return OpenListField::BIND_PREFIX . $user->getId();
     }
 
+    #[\Override]
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
     {
         $user_manager = UserManager::instance();
@@ -987,6 +1029,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),);
     }
 
+    #[\Override]
     public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
         return $visitor->visitListBindUsers($this, $parameters);
@@ -995,6 +1038,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @param int $bindvalue_id
      */
+    #[\Override]
     public function getBindValueById($bindvalue_id): Tracker_FormElement_Field_List_BindValue
     {
         return new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $bindvalue_id);

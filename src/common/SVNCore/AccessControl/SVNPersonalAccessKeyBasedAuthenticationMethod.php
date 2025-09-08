@@ -41,6 +41,7 @@ final class SVNPersonalAccessKeyBasedAuthenticationMethod implements SVNAuthenti
     ) {
     }
 
+    #[\Override]
     public function isAuthenticated(
         string $login_name,
         ConcealedString $user_secret,

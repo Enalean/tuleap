@@ -150,6 +150,7 @@ final class tracker_functionsPlugin extends Plugin
         bindtextdomain('tuleap-tracker_functions', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): Tuleap\TrackerFunctions\Plugin\PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -158,6 +159,7 @@ final class tracker_functionsPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['tracker'];

@@ -98,6 +98,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
     /**
      * @return LdapPluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo instanceof LdapPluginInfo) {
@@ -1019,6 +1020,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
+    #[\Override]
     public function getAdministrationOptions()
     {
         $this->updateAdministrationOptions();
@@ -1394,6 +1396,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
         (new CreateUserFromEmail($this->getLdap(), $this->getLdapUserManager(), $this->getLogger()))->process($event);
     }
 
+    #[\Override]
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
         $event->addConfigClass(\LDAP::class);

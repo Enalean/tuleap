@@ -48,6 +48,7 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * @return string
      */
+    #[\Override]
     public function getValue()
     {
         return $this->value;
@@ -56,6 +57,7 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * @return string|false
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $previous = explode(PHP_EOL, $changeset_value->getValue());
@@ -95,6 +97,7 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
         return '<div class="diff">' . $formated_diff . '</div>';
     }
 
+    #[\Override]
     public function nodiff($format = 'html')
     {
     }
@@ -103,6 +106,7 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
+    #[\Override]
     public function getRESTValue(PFUser $user)
     {
         return $this->getFullRESTValue($user);
@@ -112,11 +116,13 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         return $this->getFullRESTRepresentation($this->getValue());
     }
 
+    #[\Override]
     protected function getFullRESTRepresentation($value)
     {
         $artifact_field_value_full_representation = new EncryptedRepresentation();
@@ -133,6 +139,7 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitExternalField($this);

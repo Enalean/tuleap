@@ -25,6 +25,7 @@ final class BetweenValueWrapper implements ValueWrapper
     {
     }
 
+    #[\Override]
     public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitBetweenValueWrapper($this, $parameters);

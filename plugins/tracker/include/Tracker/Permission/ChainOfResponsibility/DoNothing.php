@@ -24,6 +24,7 @@ class Tracker_Permission_ChainOfResponsibility_DoNothing extends Tracker_Permiss
     {
     }
 
+    #[\Override]
     public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter)
     {
     }

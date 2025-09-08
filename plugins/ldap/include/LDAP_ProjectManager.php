@@ -34,6 +34,7 @@ class LDAP_ProjectManager implements UsesLDAPAuthProvider
     /**
      * Return true if project uses LDAP for SVN authentication
      */
+    #[\Override]
     public function hasSVNLDAPAuth(int $project_id): bool
     {
         if (! isset($this->cacheSVNLDAP[$project_id])) {

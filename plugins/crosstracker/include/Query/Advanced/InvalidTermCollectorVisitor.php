@@ -80,46 +80,55 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         );
     }
 
+    #[\Override]
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitInComparison(InComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
@@ -138,29 +147,34 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         );
     }
 
+    #[\Override]
     public function visitParenthesis(Parenthesis $parenthesis, $parameters)
     {
         $this->visitOrExpression($parenthesis->or_expression, $parameters);
     }
 
+    #[\Override]
     public function visitAndExpression(AndExpression $and_expression, $parameters)
     {
         $and_expression->getExpression()->acceptTermVisitor($this, $parameters);
         $this->visitTail($and_expression->getTail(), $parameters);
     }
 
+    #[\Override]
     public function visitOrExpression(OrExpression $or_expression, $parameters)
     {
         $or_expression->getExpression()->acceptLogicalVisitor($this, $parameters);
         $this->visitTail($or_expression->getTail(), $parameters);
     }
 
+    #[\Override]
     public function visitOrOperand(OrOperand $or_operand, $parameters)
     {
         $or_operand->getOperand()->acceptLogicalVisitor($this, $parameters);
         $this->visitTail($or_operand->getTail(), $parameters);
     }
 
+    #[\Override]
     public function visitAndOperand(AndOperand $and_operand, $parameters)
     {
         $and_operand->getOperand()->acceptTermVisitor($this, $parameters);
@@ -176,11 +190,13 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         }
     }
 
+    #[\Override]
     public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
         $this->visitRelationshipCondition($condition, $parameters);
     }
 
+    #[\Override]
     public function visitWithoutReverseLink(WithoutReverseLink $term, $parameters)
     {
         $this->visitRelationshipCondition($term, $parameters);
@@ -189,11 +205,13 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         }
     }
 
+    #[\Override]
     public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
         $this->visitRelationshipCondition($condition, $parameters);
     }
 
+    #[\Override]
     public function visitWithoutForwardLink(WithoutForwardLink $term, $parameters)
     {
         $this->visitRelationshipCondition($term, $parameters);
@@ -213,16 +231,19 @@ final readonly class InvalidTermCollectorVisitor implements LogicalVisitor, Term
         }
     }
 
+    #[\Override]
     public function visitLinkArtifactCondition(LinkArtifactCondition $condition, $parameters)
     {
         // It's always ok
     }
 
+    #[\Override]
     public function visitLinkTrackerEqualCondition(LinkTrackerEqualCondition $condition, $parameters)
     {
         // It's always ok
     }
 
+    #[\Override]
     public function visitLinkTrackerNotEqualCondition(LinkTrackerNotEqualCondition $condition, $parameters)
     {
         $parameters->getInvalidSearchablesCollection()->addInvalidSearchableError(

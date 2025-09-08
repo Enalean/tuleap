@@ -48,6 +48,7 @@ abstract class XMLContainer extends XMLFormElement
         return new static(FieldNameFormatter::getFormattedName($tracker->item_name . '_' . $name), $name);
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $form_elements): \SimpleXMLElement
     {
         $node = parent::export($form_elements);
@@ -90,6 +91,7 @@ abstract class XMLContainer extends XMLFormElement
         return $new;
     }
 
+    #[\Override]
     public function exportPermissions(\SimpleXMLElement $form_elements): void
     {
     }

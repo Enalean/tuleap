@@ -43,6 +43,7 @@ final class ActivateFunctionController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $tracker = $request->getAttribute(\Tuleap\Tracker\Tracker::class);

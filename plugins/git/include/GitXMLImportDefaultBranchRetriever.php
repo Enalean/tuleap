@@ -28,6 +28,7 @@ final class GitXMLImportDefaultBranchRetriever implements RetrieveGitDefaultBran
     private const LEGACY_DEFAULT_GIT_BRANCH = 'master';
     private const DEFAULT_GIT_BRANCH        = 'main';
 
+    #[\Override]
     public function retrieveDefaultBranchFromXMLContent(\Git_Exec $git_exec, \SimpleXMLElement $repository_info): string
     {
         $all_branches = $git_exec->getAllBranchesSortedByCreationDate();

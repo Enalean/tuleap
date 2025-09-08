@@ -29,6 +29,7 @@ class Cardwall_SwimlineSolo extends Cardwall_Swimline
         $this->cells       = $cells;
     }
 
+    #[\Override]
     public function getCardPresenter()
     {
         return null;

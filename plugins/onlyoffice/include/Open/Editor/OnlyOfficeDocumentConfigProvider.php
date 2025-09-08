@@ -41,6 +41,7 @@ final class OnlyOfficeDocumentConfigProvider implements ProvideOnlyOfficeConfigD
     /**
      * @psalm-return Ok<OnlyOfficeDocumentConfig>|Err<Fault>
      */
+    #[\Override]
     public function getDocumentConfig(\PFUser $user, int $item_id, \DateTimeImmutable $now): Ok|Err
     {
         return $this->document_provider

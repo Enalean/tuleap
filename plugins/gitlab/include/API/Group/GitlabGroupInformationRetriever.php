@@ -38,6 +38,7 @@ final class GitlabGroupInformationRetriever implements RetrieveGitlabGroupInform
      * @throws GitlabResponseAPIException
      * @throws GitlabRequestException
      */
+    #[\Override]
     public function getGitlabGroupFromGitlabApi(Credentials $credential, GitlabGroupPOSTRepresentation $representation): GitlabGroupApiDataRepresentation
     {
         $gitlab_group_data = $this->gitlab_client->getUrl($credential, '/groups/' . urlencode((string) $representation->gitlab_group_id));

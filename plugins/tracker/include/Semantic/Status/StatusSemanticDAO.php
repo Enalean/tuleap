@@ -30,6 +30,7 @@ use Tuleap\Option\Option;
 
 class StatusSemanticDAO extends DataAccessObject implements SearchStatusField, SearchStatusOpenValues
 {
+    #[\Override]
     public function searchFieldByTrackerId(int $tracker_id): Option
     {
         $sql      = 'SELECT field_id FROM tracker_semantic_status WHERE tracker_id = ?';
@@ -39,6 +40,7 @@ class StatusSemanticDAO extends DataAccessObject implements SearchStatusField, S
             : Option::nothing(\Psl\Type\int());
     }
 
+    #[\Override]
     public function searchOpenValuesByFieldId(int $field_id): array
     {
         $sql = 'SELECT open_value_id FROM tracker_semantic_status WHERE field_id = ?';

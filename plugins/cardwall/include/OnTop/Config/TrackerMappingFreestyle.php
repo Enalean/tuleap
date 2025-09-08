@@ -21,11 +21,13 @@
 
 class Cardwall_OnTop_Config_TrackerMappingFreestyle extends Cardwall_OnTop_Config_TrackerMappingField
 {
+    #[\Override]
     public function accept($visitor)
     {
         return $visitor->visitTrackerMappingFreestyle($this);
     }
 
+    #[\Override]
     public function isCustom()
     {
         return true;

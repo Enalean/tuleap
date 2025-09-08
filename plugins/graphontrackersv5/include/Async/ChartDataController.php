@@ -65,6 +65,7 @@ final class ChartDataController extends DispatchablePSR15Compatible
         $this->json_response_builder = $json_response_builder;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $report_id    = $request->getAttribute('report_id');

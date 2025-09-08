@@ -45,6 +45,7 @@ final readonly class MoveItemUriVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): string
     {
         return '/api/docman_folders/' . urlencode((string) $item->getId());
@@ -53,6 +54,7 @@ final readonly class MoveItemUriVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): string
     {
         return '/api/docman_wikis/' . urlencode((string) $item->getId());
@@ -61,6 +63,7 @@ final readonly class MoveItemUriVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): string
     {
         return '/api/docman_links/' . urlencode((string) $item->getId());
@@ -69,6 +72,7 @@ final readonly class MoveItemUriVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): string
     {
         return '/api/docman_files/' . urlencode((string) $item->getId());
@@ -77,6 +81,7 @@ final readonly class MoveItemUriVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         return '/api/docman_embedded_files/' . urlencode((string) $item->getId());
@@ -85,6 +90,7 @@ final readonly class MoveItemUriVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): string
     {
         return '/api/docman_empty_documents/' . urlencode((string) $item->getId());
@@ -93,6 +99,7 @@ final readonly class MoveItemUriVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): string
     {
         return '';
@@ -101,6 +108,7 @@ final readonly class MoveItemUriVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = []): string
     {
         return $this->dispatcher

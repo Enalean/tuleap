@@ -31,6 +31,7 @@ final class PrefixedLogger extends AbstractLogger
     {
     }
 
+    #[\Override]
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         $prefixed_message = $this->prefix . $message;

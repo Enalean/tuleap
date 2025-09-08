@@ -34,6 +34,7 @@ class FeedbackSerializer implements ISerializeFeedback
         $this->dao = $feedback_dao;
     }
 
+    #[\Override]
     public function serialize(\PFUser $user, NewFeedback ...$feedbacks): void
     {
         $logs = array_map(

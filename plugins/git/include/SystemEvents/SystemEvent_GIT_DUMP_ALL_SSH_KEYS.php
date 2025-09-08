@@ -39,6 +39,7 @@ class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent
         $this->logger      = $logger;
     }
 
+    #[\Override]
     public function process()
     {
         $this->logger->debug('Dump all user ssh keys');
@@ -51,6 +52,7 @@ class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent
         $this->done();
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return '';

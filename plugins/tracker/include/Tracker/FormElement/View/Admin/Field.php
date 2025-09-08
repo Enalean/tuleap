@@ -34,6 +34,7 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAdminSpecificProperties()
     {
         $html = '';

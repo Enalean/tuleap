@@ -63,6 +63,7 @@ final class RedirectToProviderForAuthorizationController extends DispatchablePSR
         $this->authorization_request_creator = $authorization_request_creator;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $provider_id = $request->getAttribute('provider_id');

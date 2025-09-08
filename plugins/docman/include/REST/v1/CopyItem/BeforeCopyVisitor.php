@@ -67,41 +67,49 @@ final class BeforeCopyVisitor implements ItemVisitor
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleItem($item, $params['destination'], $this->isFolderTitleConflictingVerifier());
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): ItemBeingCopiedExpectation
     {
         throw new LogicException('Cannot copy a non specialized item');

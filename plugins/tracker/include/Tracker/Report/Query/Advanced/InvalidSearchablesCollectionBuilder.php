@@ -34,6 +34,7 @@ final class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchab
         $this->invalid_comparison_collector = $invalid_comparison_collector;
     }
 
+    #[\Override]
     public function buildCollectionOfInvalidSearchables(Logical $parsed_expert_query): InvalidSearchablesCollection
     {
         $invalid_searchables_collection = new InvalidSearchablesCollection();

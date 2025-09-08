@@ -52,6 +52,7 @@ final class PullRequestMergedEvent implements EventSubjectToNotification
         return new self($pull_request->getId(), (int) $user->getId());
     }
 
+    #[\Override]
     public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
     {
         if (! isset($payload['user_id'], $payload['pr_id'])) {
@@ -71,6 +72,7 @@ final class PullRequestMergedEvent implements EventSubjectToNotification
         return $this->pull_request_id;
     }
 
+    #[\Override]
     public function toWorkerEventPayload(): array
     {
         return [

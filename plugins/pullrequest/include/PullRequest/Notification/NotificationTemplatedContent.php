@@ -46,6 +46,7 @@ final class NotificationTemplatedContent implements NotificationEnhancedContent
         $this->presenter     = $presenter;
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->renderer->renderToString(

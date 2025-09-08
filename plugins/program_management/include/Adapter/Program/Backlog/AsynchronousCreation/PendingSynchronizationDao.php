@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 final class PendingSynchronizationDao extends DataAccessObject implements VerifyIsSynchronizationPending, StorePendingTeamSynchronization, ClearPendingTeamSynchronization, CleanPendingSynchronizationDaily, StoreTeamSynchronizationErrorHasOccurred, VerifyTeamSynchronizationHasError
 {
+    #[\Override]
     public function hasSynchronizationPending(ProgramIdentifier $program_identifier, TeamIdentifier $team_identifier): bool
     {
         $sql = '
@@ -47,6 +48,7 @@ final class PendingSynchronizationDao extends DataAccessObject implements Verify
         return $this->getDB()->exists($sql, $program_identifier->getId(), $team_identifier->getId());
     }
 
+    #[\Override]
     public function storePendingTeamSynchronization(ProgramIdentifier $program_identifier, TeamIdentifier $team_identifier): void
     {
         $this->getDB()->insert(
@@ -60,6 +62,7 @@ final class PendingSynchronizationDao extends DataAccessObject implements Verify
         );
     }
 
+    #[\Override]
     public function storeErrorHasOccurred(int $program_id, int $team_id): void
     {
         $this->getDB()->update(
@@ -72,6 +75,7 @@ final class PendingSynchronizationDao extends DataAccessObject implements Verify
         );
     }
 
+    #[\Override]
     public function clearPendingTeamSynchronisation(ProgramIdentifier $program_identifier, TeamIdentifier $team_identifier): void
     {
         $this->getDB()->delete(
@@ -83,6 +87,7 @@ final class PendingSynchronizationDao extends DataAccessObject implements Verify
         );
     }
 
+    #[\Override]
     public function dailyClean(int $timestamp): void
     {
         $sql = 'DELETE FROM plugin_program_management_team_synchronizations_pending WHERE timestamp < ?';
@@ -90,6 +95,7 @@ final class PendingSynchronizationDao extends DataAccessObject implements Verify
         $this->getDB()->run($sql, $timestamp);
     }
 
+    #[\Override]
     public function hasASynchronizationError(ProgramIdentifier $program_identifier, ProjectReference $team_identifier): bool
     {
         $sql = '

@@ -110,6 +110,7 @@ class HTTPRequest extends Codendi_Request
      * @param string $variable Name of the parameter to get.
      * @param array $array Name of the parameter to get.
      */
+    #[\Override]
     public function _get($variable, $array)
     {
         if ($this->_exist($variable, $array)) {

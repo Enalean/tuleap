@@ -42,6 +42,7 @@ final readonly class FieldTypeRetrieverWrapper implements RetrieveFieldType
     {
     }
 
+    #[\Override]
     public function getType(Tracker_FormElement $form_element): string
     {
         if ($form_element instanceof DateField && $form_element->isTimeDisplayed()) {

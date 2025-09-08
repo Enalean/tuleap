@@ -92,6 +92,7 @@ class XMLExportVisitor implements ItemVisitor
     /**
      * @return Option<SimpleXMLElement>
      */
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): Option
     {
         $type = str_replace('docman_', '', strtolower($item::class));
@@ -112,6 +113,7 @@ class XMLExportVisitor implements ItemVisitor
     /**
      * @return Option<SimpleXMLElement>
      */
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): Option
     {
         return $this->visitItem($item, $params)
@@ -136,6 +138,7 @@ class XMLExportVisitor implements ItemVisitor
     /**
      * @return Option<SimpleXMLElement>
      */
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         $this->logger->warning(
@@ -152,6 +155,7 @@ class XMLExportVisitor implements ItemVisitor
     /**
      * @return Option<SimpleXMLElement>
      */
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): Option
     {
         $this->logger->warning(
@@ -168,6 +172,7 @@ class XMLExportVisitor implements ItemVisitor
     /**
      * @return Option<SimpleXMLElement>
      */
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): Option
     {
         return $this->visitDocument($item, $params)
@@ -181,6 +186,7 @@ class XMLExportVisitor implements ItemVisitor
     /**
      * @return Option<SimpleXMLElement>
      */
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): Option
     {
         return $this->visitDocument($item, $params)
@@ -200,6 +206,7 @@ class XMLExportVisitor implements ItemVisitor
     /**
      * @return Option<SimpleXMLElement>
      */
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): Option
     {
         return $this->visitFile($item, $params);
@@ -208,6 +215,7 @@ class XMLExportVisitor implements ItemVisitor
     /**
      * @return Option<SimpleXMLElement>
      */
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): Option
     {
         return $this->visitDocument($item, $params);

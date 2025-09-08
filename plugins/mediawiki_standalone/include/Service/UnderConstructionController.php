@@ -49,6 +49,7 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
     /**
      * @throws \Tuleap\Request\NotFoundException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -79,6 +80,7 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
     /**
      * @throws \Tuleap\Request\NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         if (! isset($variables[self::PROJECT_NAME_VARIABLE_NAME])) {

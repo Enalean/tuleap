@@ -36,11 +36,13 @@ final class SiteDeployRealtimeCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Deploy Tuleap Realtime (NodeJS based)');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         (new SiteDeployRealtime())->deploy();

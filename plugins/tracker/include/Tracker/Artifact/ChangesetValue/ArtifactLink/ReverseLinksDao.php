@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class ReverseLinksDao extends DataAccessObject implements SearchReverseLinks
 {
+    #[\Override]
     public function searchReverseLinksById(int $artifact_id): array
     {
         $sql = <<<SQL

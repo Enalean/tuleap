@@ -51,6 +51,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $event_adder->addLogEvents();
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         return $this->item_representation_builder->buildItemRepresentation(
@@ -65,6 +66,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         );
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         $wiki_representation = null;
@@ -88,6 +90,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         );
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = [])
     {
         $link_properties = null;
@@ -120,6 +123,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         );
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = [])
     {
         $item_version    = $this->docman_version_factory->getCurrentVersionForItem($item);
@@ -141,6 +145,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         );
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         if ($this->isADirectAccessToDocument($params)) {
@@ -182,6 +187,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         );
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
         return $this->item_representation_builder->buildItemRepresentation(
@@ -195,6 +201,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         );
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return $this->event_manager
@@ -207,6 +214,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             )->buildItemRepresentation();
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         return $this->item_representation_builder->buildItemRepresentation($item, $params['current_user'], null);

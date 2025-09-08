@@ -40,6 +40,7 @@ final class FieldChangeArtifactLinksUpdater implements UpdateArtifactLinkXML
     ) {
     }
 
+    #[\Override]
     public function updateArtifactLinks(
         SimpleXMLElement $changeset_xml,
         \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $destination_field,

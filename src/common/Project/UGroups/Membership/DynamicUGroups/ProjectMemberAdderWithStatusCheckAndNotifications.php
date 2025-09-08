@@ -68,6 +68,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         );
     }
 
+    #[\Override]
     public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         try {
@@ -93,6 +94,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
      * @throws NoEmailForUserException
      * @throws UserIsNotAllowedToManageProjectMembersException
      */
+    #[\Override]
     public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         if (! $user->isActive() && ! $user->isRestricted()) {

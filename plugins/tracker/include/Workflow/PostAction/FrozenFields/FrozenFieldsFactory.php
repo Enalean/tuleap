@@ -45,6 +45,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
         $this->frozen_fields_retriever = $frozen_fields_retriever;
     }
 
+    #[\Override]
     public function warmUpCacheForWorkflow(Workflow $workflow): void
     {
         $this->frozen_fields_retriever->warmUpCacheForWorkflow($workflow);
@@ -53,6 +54,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
     /**
      * @return FrozenFields[]
      */
+    #[\Override]
     public function loadPostActions(Transition $transition): array
     {
         try {
@@ -69,6 +71,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      *
      * @return void
      */
+    #[\Override]
     public function saveObject(Transition_PostAction $post_action)
     {
         $to_transition_id = $post_action->getTransition()->getId();
@@ -86,6 +89,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      *
      * @return bool
      */
+    #[\Override]
     public function isFieldUsedInPostActions(TrackerField $field)
     {
         return $this->frozen_dao->isFieldUsedInPostAction($field->getId());
@@ -99,6 +103,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      * @param array      $field_mapping    the field mapping
      *
      */
+    #[\Override]
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
     {
         $postactions = $this->loadPostActions($from_transition);
@@ -127,6 +132,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      *
      * @return FrozenFields|null The  Transition_PostAction object, or null if error
      */
+    #[\Override]
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
         $fields = [];

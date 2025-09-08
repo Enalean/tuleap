@@ -71,6 +71,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         return new RichTextFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function fetchReadOnly()
     {
         $html  = '';
@@ -80,6 +81,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         return $html;
     }
 
+    #[\Override]
     public function fetchAdmin($tracker)
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
@@ -105,6 +107,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
      * Display the html field in the admin ui
      * @return string html
      */
+    #[\Override]
     protected function fetchAdminFormElement()
     {
         $html  = '';
@@ -114,26 +117,31 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         return $html;
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Static Text');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'A static rich text element');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/edit-drop-cap.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/edit-drop-cap--plus.png');
     }
 
+    #[\Override]
     public function getDefaultValue()
     {
         return $this->getRichText();

@@ -39,6 +39,7 @@ final class PlanTrackerDoesNotBelongToProjectException extends \Exception implem
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

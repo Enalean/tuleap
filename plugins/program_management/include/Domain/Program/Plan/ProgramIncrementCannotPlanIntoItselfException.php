@@ -32,6 +32,7 @@ final class ProgramIncrementCannotPlanIntoItselfException extends \Exception imp
         $this->i18n_message = dgettext('tuleap-program_management', 'Program Increment tracker id must not be contained into plannable tracker ids');
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

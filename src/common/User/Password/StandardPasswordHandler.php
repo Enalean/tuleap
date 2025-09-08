@@ -31,6 +31,7 @@ final readonly class StandardPasswordHandler implements PasswordHandler
     private const ALGO          = PASSWORD_ARGON2ID;
     private const ALGO_SETTINGS = ['memory_cost' => 65536, 'time_cost' => 10, 'threads' => 1];
 
+    #[\Override]
     public function verifyHashPassword(
         ConcealedString $plain_password,
         #[\SensitiveParameter]
@@ -39,6 +40,7 @@ final readonly class StandardPasswordHandler implements PasswordHandler
         return \password_verify($plain_password->getString(), $hash_password);
     }
 
+    #[\Override]
     public function computeHashPassword(ConcealedString $plain_password): string
     {
         $password_hash = \password_hash($plain_password->getString(), self::ALGO, self::ALGO_SETTINGS);
@@ -48,6 +50,7 @@ final readonly class StandardPasswordHandler implements PasswordHandler
         return $password_hash;
     }
 
+    #[\Override]
     public function isPasswordNeedRehash(
         #[\SensitiveParameter]
         string $hash_password,

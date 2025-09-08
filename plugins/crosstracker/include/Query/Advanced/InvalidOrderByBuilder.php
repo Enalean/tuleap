@@ -51,11 +51,13 @@ final readonly class InvalidOrderByBuilder implements IBuildInvalidOrderBy, Sele
     ) {
     }
 
+    #[\Override]
     public function buildInvalidOrderBy(OrderBy $order_by): ?InvalidOrderBy
     {
         return $order_by->getFilter()->acceptSelectableVisitor($this, new InvalidOrderByBuilderParameters($this->trackers, $this->user));
     }
 
+    #[\Override]
     public function visitField(Field $field, $parameters): ?InvalidOrderBy
     {
         return $this->field_checker->checkFieldIsValidForOrderBy($field, $parameters)
@@ -65,6 +67,7 @@ final readonly class InvalidOrderByBuilder implements IBuildInvalidOrderBy, Sele
             );
     }
 
+    #[\Override]
     public function visitMetaData(Metadata $metadata, $parameters): ?InvalidOrderBy
     {
         try {

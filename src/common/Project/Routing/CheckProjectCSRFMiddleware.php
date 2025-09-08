@@ -33,6 +33,7 @@ final class CheckProjectCSRFMiddleware implements MiddlewareInterface
     {
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

@@ -32,6 +32,7 @@ class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_F
      *
      * @return SelectboxField | null
      */
+    #[\Override]
     public function getField(Tracker $tracker)
     {
         $field = TrackerSemanticStatusFactory::instance()->getByTracker($tracker)->getField();

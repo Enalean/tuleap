@@ -24,6 +24,7 @@ final class UserOperationDownload implements UserOperation
 {
     public const NAME = 'download';
 
+    #[\Override]
     public function getName()
     {
         return self::NAME;

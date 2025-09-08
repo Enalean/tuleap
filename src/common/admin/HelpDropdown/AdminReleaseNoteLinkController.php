@@ -92,6 +92,7 @@ final class AdminReleaseNoteLinkController implements DispatchableWithRequest, D
         );
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();

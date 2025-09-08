@@ -59,16 +59,19 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * @see src/common/Widget/Widget#getTitle()
      * @return String
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-projectlinks', 'Project Links');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-projectlinks', 'Create links between projects.');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $request = HTTPRequest::instance();
@@ -215,6 +218,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         return new ProjectLinksDao(CodendiDataAccess::instance());
     }
 
+    #[\Override]
     public function getStylesheetDependencies()
     {
         $include_assets = new IncludeAssets(

@@ -45,6 +45,7 @@ final class ReviewerChangeEvent implements EventSubjectToNotification
         return new self($change_id);
     }
 
+    #[\Override]
     public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
     {
         if (! isset($payload['change_id'])) {
@@ -59,6 +60,7 @@ final class ReviewerChangeEvent implements EventSubjectToNotification
         return $this->change_id;
     }
 
+    #[\Override]
     public function toWorkerEventPayload(): array
     {
         return [

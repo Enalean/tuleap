@@ -32,6 +32,7 @@ final class PlannableTrackersRetriever implements RetrievePlannableTrackers
     {
     }
 
+    #[\Override]
     public function getPlannableTrackersOfProgram(int $program_id): array
     {
         $tracker_reference_list    = [];

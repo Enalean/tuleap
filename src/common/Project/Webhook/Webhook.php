@@ -45,6 +45,7 @@ class Webhook implements \Tuleap\Webhook\Webhook
     /**
      * @return int
      */
+    #[\Override]
     public function getId()
     {
         return $this->id;
@@ -61,6 +62,7 @@ class Webhook implements \Tuleap\Webhook\Webhook
     /**
      * @return string
      */
+    #[\Override]
     public function getUrl()
     {
         return $this->url;

@@ -44,21 +44,25 @@ final class ServiceDisabledCollectorProxy implements ServiceDisabledCollectorEve
         return new self($event, ProjectProxy::buildFromProject($event->getProject()), UserProxy::buildFromPFUser($event->getUser()));
     }
 
+    #[\Override]
     public function isForServiceShortName(string $service): bool
     {
         return $this->event->isForService($service);
     }
 
+    #[\Override]
     public function getProjectIdentifier(): ProjectIdentifier
     {
         return $this->project_identifier;
     }
 
+    #[\Override]
     public function disableWithMessage(string $message): void
     {
         $this->event->setIsDisabled($message);
     }
 
+    #[\Override]
     public function getUserIdentifier(): UserIdentifier
     {
         return $this->user_identifier;

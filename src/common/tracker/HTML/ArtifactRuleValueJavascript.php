@@ -39,6 +39,7 @@ class ArtifactRuleValueJavascript extends ArtifactRuleValueView
         parent::__construct($rule);
     }
 
+    #[\Override]
     public function fetch()
     {
         $output  = '{id:' . (int) $this->rule->id . ', ';

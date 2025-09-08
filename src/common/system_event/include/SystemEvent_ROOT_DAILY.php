@@ -33,6 +33,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return '-';
@@ -41,6 +42,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
     /**
      * Process stored event
      */
+    #[\Override]
     public function process()
     {
         $logger = BackendLogger::getDefaultLogger();

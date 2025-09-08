@@ -46,6 +46,7 @@ class create_test_envPlugin extends Plugin
         bindtextdomain('tuleap-create_test_env', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -61,6 +62,7 @@ class create_test_envPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return ['tracker'];

@@ -32,6 +32,7 @@ final class UserInfoRequestWithData implements UserInfoRequest
         $this->request = $request;
     }
 
+    #[\Override]
     public function getHTTPRequest()
     {
         return $this->request;

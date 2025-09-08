@@ -36,6 +36,7 @@ class StatusLogger implements \Tuleap\Webhook\StatusLogger
      * @param $status
      * @throws WebhookLoggerDataAccessException
      */
+    #[\Override]
     public function log(\Tuleap\Webhook\Webhook $webhook, $status)
     {
         $has_been_saved = $this->dao->save($webhook->getId(), $_SERVER['REQUEST_TIME'], $status);

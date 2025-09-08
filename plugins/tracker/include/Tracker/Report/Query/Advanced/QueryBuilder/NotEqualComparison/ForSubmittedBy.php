@@ -36,6 +36,7 @@ final class ForSubmittedBy implements ListReadOnlyConditionBuilder
         $this->user_manager = $user_manager;
     }
 
+    #[\Override]
     public function getCondition(array $values): ParametrizedSQLFragment
     {
         $value = $values[0];

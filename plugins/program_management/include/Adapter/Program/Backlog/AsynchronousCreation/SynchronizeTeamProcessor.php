@@ -50,6 +50,7 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
     ) {
     }
 
+    #[\Override]
     public function processTeamSynchronization(TeamSynchronizationEvent $event): void
     {
         $this->logger->debug(

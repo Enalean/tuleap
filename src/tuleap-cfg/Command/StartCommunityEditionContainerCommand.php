@@ -79,6 +79,7 @@ final class StartCommunityEditionContainerCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -90,6 +91,7 @@ final class StartCommunityEditionContainerCommand extends Command
             ->addOption(self::OPTION_SKIP_INSTALL_ALL, '', InputOption::VALUE_NONE, 'Do not install plugins (default is to auto install and activate plugins defined by the env variable PLUGINS_TO_ENABLE_FIRST_INSTALL)');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {

@@ -32,6 +32,7 @@ final class BatchResponseActionsForDownloadOperation implements BatchResponseAct
         $this->download_action = $download_action;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return ['download' => $this->download_action];

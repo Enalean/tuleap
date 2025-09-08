@@ -51,6 +51,7 @@ final class EmailNotificationAttachmentProvider implements ProvideEmailNotificat
     /**
      * @return MailAttachment[]
      */
+    #[\Override]
     public function getAttachments(
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,

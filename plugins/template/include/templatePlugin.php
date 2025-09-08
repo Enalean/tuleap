@@ -33,6 +33,7 @@ final class templatePlugin extends Plugin
         bindtextdomain('tuleap-template', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -46,6 +47,7 @@ final class templatePlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return 'plugin_template';

@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement\Step\Execution\Field;
 
 class ViewAdmin extends \Tracker_FormElement_View_Admin_Field
 {
+    #[\Override]
     protected function fetchRequired()
     {
         return '';

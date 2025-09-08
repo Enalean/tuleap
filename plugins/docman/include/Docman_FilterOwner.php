@@ -28,11 +28,13 @@ class Docman_FilterOwner extends \Docman_Filter
         parent::__construct($md);
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         $this->setValue($row['value_string']);
     }
 
+    #[\Override]
     public function _urlMatchUpdate($request)  // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (parent::_urlMatchUpdate($request)) {

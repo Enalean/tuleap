@@ -32,6 +32,7 @@ class FrequenciesSample extends Sample
         parent::__construct();
     }
 
+    #[\Override]
     protected function getDataSQLQuery($filter, $startDate, $endDate)
     {
         $sql = sprintf('SELECT %s(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as ' . $this->getFilter() . ', SUM(git_read) as c' .
@@ -42,6 +43,7 @@ class FrequenciesSample extends Sample
         return $sql;
     }
 
+    #[\Override]
     protected function getMonthDataSQLQuery($startDate, $endDate)
     {
         $sql = sprintf('SELECT month(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as month, SUM(git_read) as c, YEAR(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as year' .
@@ -53,6 +55,7 @@ class FrequenciesSample extends Sample
         return $sql;
     }
 
+    #[\Override]
     protected function getDayDataSQLQuery($startDate, $endDate)
     {
         $sql = sprintf('SELECT day(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as day, SUM(git_read) as c, MONTH(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as month, YEAR(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as year' .

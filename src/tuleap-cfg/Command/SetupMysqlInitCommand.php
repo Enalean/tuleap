@@ -66,6 +66,7 @@ final class SetupMysqlInitCommand extends Command
         parent::__construct('setup:mysql-init');
     }
 
+    #[\Override]
     public function getHelp(): string
     {
         $ssl_opt       = MysqlCommandHelper::OPT_SSL;
@@ -91,6 +92,7 @@ final class SetupMysqlInitCommand extends Command
         EOT;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->command_helper->addOptions($this);
@@ -111,6 +113,7 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_SKIP_SANITY_CHECK, '', InputOption::VALUE_NONE, 'Skip sanity check (db versions and mode), should be used in dev only');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

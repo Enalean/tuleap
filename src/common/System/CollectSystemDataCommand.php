@@ -48,6 +48,7 @@ final class CollectSystemDataCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     public function configure(): void
     {
         $this
@@ -68,6 +69,7 @@ final class CollectSystemDataCommand extends Command
             ->addArgument('path', InputArgument::REQUIRED, 'Path where data will be collected');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $current_date = new \DateTimeImmutable();

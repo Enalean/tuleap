@@ -32,6 +32,7 @@ class AuthenticatedResource implements iUseAuthentication
 
     protected $is_authenticated;
 
+    #[\Override]
     public function __setAuthenticationStatus($is_authenticated = false) // phpcs:ignore
     {
         $this->is_authenticated = $is_authenticated;

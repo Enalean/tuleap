@@ -40,6 +40,7 @@ class SystemEvent_MEDIAWIKI_TO_CENTRAL_DB extends SystemEvent
         $this->move_to_central_db = $move_to_central_db;
     }
 
+    #[\Override]
     public function process()
     {
         if (! $this->move_to_central_db->testDatabaseAvailability()) {
@@ -65,6 +66,7 @@ class SystemEvent_MEDIAWIKI_TO_CENTRAL_DB extends SystemEvent
         return (int) $parameters[0];
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         if ($this->areAllProjectsMigrated()) {

@@ -64,6 +64,7 @@ final class ReplayImportCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -77,6 +78,7 @@ final class ReplayImportCommand extends Command
             ->addOption('tracker-name', '', InputOption::VALUE_REQUIRED, 'New name for tracker');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $logger = new ConsoleLogger($output, [LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL]);

@@ -52,6 +52,7 @@ final class ConfigurationResponseRepresentation implements \JsonSerializable
         $this->supported_languages         = $supported_languages;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $issuer = Issuer::toString();

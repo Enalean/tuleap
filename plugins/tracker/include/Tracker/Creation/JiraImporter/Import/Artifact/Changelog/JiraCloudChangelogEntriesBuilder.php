@@ -41,6 +41,7 @@ final class JiraCloudChangelogEntriesBuilder implements ChangelogEntriesBuilder
      * @return ChangelogEntryValueRepresentation[]
      * @throws JiraConnectionException
      */
+    #[\Override]
     public function buildEntriesCollectionForIssue(string $jira_issue_key): array
     {
         $this->logger->debug('  Start build changelog entries collection ...');

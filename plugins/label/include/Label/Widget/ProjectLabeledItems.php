@@ -83,21 +83,25 @@ class ProjectLabeledItems extends Widget
         $this->labels_presenter_builder = new ProjectLabelBuilder();
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $this->content_id = $id;
     }
 
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-label', 'Labeled Items');
     }
 
+    #[\Override]
     public function hasCustomTitle()
     {
         return $this->getPurifiedCustomTitle() !== '';
     }
 
+    #[\Override]
     public function getPurifiedCustomTitle()
     {
         $config_labels = $this->config_retriever->getLabelsConfig($this->content_id);
@@ -111,16 +115,19 @@ class ProjectLabeledItems extends Widget
         );
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-label', 'Displays items with configured labels in the project. For example you can search all Pull Requests labeled "Emergency" and "v3.0"');
     }
 
+    #[\Override]
     public function isUnique()
     {
         return false;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $config_labels = $this->config_retriever->getLabelsConfig($this->content_id);
@@ -132,11 +139,13 @@ class ProjectLabeledItems extends Widget
         );
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $selected_labels = $this->getProjectSelectedLabelsPresenter();
@@ -148,6 +157,7 @@ class ProjectLabeledItems extends Widget
         );
     }
 
+    #[\Override]
     public function getInstallPreferences()
     {
         $selected_labels = [];
@@ -159,6 +169,7 @@ class ProjectLabeledItems extends Widget
         );
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         $this->storeContentId();
@@ -174,6 +185,7 @@ class ProjectLabeledItems extends Widget
         $this->content_id = $this->dao->create();
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $project_labels = $this->getProjectAllLabelsPresenter();
@@ -241,11 +253,13 @@ class ProjectLabeledItems extends Widget
         return $project_labels;
     }
 
+    #[\Override]
     public function destroy($id)
     {
         $this->dao->removeLabelByContentId($id);
     }
 
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         return [
@@ -254,6 +268,7 @@ class ProjectLabeledItems extends Widget
         ];
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         return CssViteAsset::buildCollectionFromMainFileName($this->getAssets(), 'scripts/configure-widget/index.js');
@@ -283,6 +298,7 @@ class ProjectLabeledItems extends Widget
         return HTTPRequest::instance()->getProject();
     }
 
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,

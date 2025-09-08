@@ -62,56 +62,67 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
         $parsed_query->acceptLogicalVisitor($this, new SizeValidatorParameters(0));
     }
 
+    #[\Override]
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitInComparison(InComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
+    #[\Override]
     public function visitParenthesis(Parenthesis $parenthesis, $parameters)
     {
         $this->visitOrExpression($parenthesis->or_expression, $parameters);
     }
 
+    #[\Override]
     public function visitAndExpression(AndExpression $and_expression, $parameters)
     {
         $this->incrementSize($parameters);
@@ -121,6 +132,7 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
         $this->visitTail($and_expression->getTail(), $parameters);
     }
 
+    #[\Override]
     public function visitOrExpression(OrExpression $or_expression, $parameters)
     {
         $this->incrementSize($parameters);
@@ -130,6 +142,7 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
         $this->visitTail($or_expression->getTail(), $parameters);
     }
 
+    #[\Override]
     public function visitOrOperand(OrOperand $or_operand, $parameters)
     {
         $this->incrementSize($parameters);
@@ -139,6 +152,7 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
         $this->visitTail($or_operand->getTail(), $parameters);
     }
 
+    #[\Override]
     public function visitAndOperand(AndOperand $and_operand, $parameters)
     {
         $this->incrementSize($parameters);
@@ -182,21 +196,25 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
         $this->checkSize($parameters->getSize());
     }
 
+    #[\Override]
     public function visitWithReverseLink(WithReverseLink $condition, $parameters)
     {
         $this->incrementSize($parameters);
     }
 
+    #[\Override]
     public function visitWithoutReverseLink(WithoutReverseLink $condition, $parameters)
     {
         $this->incrementSize($parameters);
     }
 
+    #[\Override]
     public function visitWithForwardLink(WithForwardLink $condition, $parameters)
     {
         $this->incrementSize($parameters);
     }
 
+    #[\Override]
     public function visitWithoutForwardLink(WithoutForwardLink $condition, $parameters)
     {
         $this->incrementSize($parameters);

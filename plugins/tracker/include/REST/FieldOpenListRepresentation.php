@@ -40,6 +40,7 @@ class Tracker_REST_FormElement_FieldOpenListRepresentation extends Tracker_REST_
         $this->hint = $hint;
     }
 
+    #[\Override]
     public static function build(
         Tracker_FormElement $form_element,
         string $type,

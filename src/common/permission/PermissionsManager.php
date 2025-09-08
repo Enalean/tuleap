@@ -199,6 +199,7 @@ class PermissionsManager implements IPermissionsManagerNG
         return $ugroups;
     }
 
+    #[\Override]
     public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type)
     {
         $ugroups = [];
@@ -212,6 +213,7 @@ class PermissionsManager implements IPermissionsManagerNG
         return $ugroups;
     }
 
+    #[\Override]
     public function getAuthorizedUGroupIdsForProjectWithoutDefaultValues(Project $project, $object_id, $permission_type)
     {
         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType((string) $object_id, $permission_type, false);
@@ -235,6 +237,7 @@ class PermissionsManager implements IPermissionsManagerNG
      * @return PermissionsNormalizerOverrideCollection
      * @throws PermissionDaoException
      */
+    #[\Override]
     public function savePermissions(Project $project, $object_id, $permission_type, array $ugroup_ids)
     {
         return $this->doSavePermissions($project, $object_id, $permission_type, $ugroup_ids, true);

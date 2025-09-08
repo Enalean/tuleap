@@ -33,6 +33,7 @@ class StepExecutionChangesetValueDao extends \Tuleap\Tracker\FormElement\Field\F
      * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @psalm-ignore-falsable-return
      */
+    #[\Override]
     public function searchById($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);

@@ -29,6 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class ForceDisableErrorDisplayMiddleware implements MiddlewareInterface
 {
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         ini_set('display_errors', 'off');

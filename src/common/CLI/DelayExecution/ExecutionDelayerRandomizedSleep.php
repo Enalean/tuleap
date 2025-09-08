@@ -37,6 +37,7 @@ final class ExecutionDelayerRandomizedSleep implements ExecutionDelayer
         $this->max_randomization_delay = $max_randomization_delay;
     }
 
+    #[\Override]
     public function delay(): void
     {
         $sleep_time = random_int(0, $this->max_randomization_delay);

@@ -43,6 +43,7 @@ abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgn
      *
      * @access protected
      */
+    #[\Override]
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
         if (! isset($this->params['plain']) || $this->params['plain'] != true) {
@@ -85,6 +86,7 @@ abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgn
      *
      * @access protected
      */
+    #[\Override]
     protected function LoadHeaders() // @codingStandardsIgnoreLine
     {
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {

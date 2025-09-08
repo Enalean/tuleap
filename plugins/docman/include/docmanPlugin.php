@@ -234,6 +234,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
@@ -334,6 +335,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         }
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -1728,6 +1730,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         $cleaner->deleteDanglingVersionToUpload(new DateTimeImmutable());
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(self::class);

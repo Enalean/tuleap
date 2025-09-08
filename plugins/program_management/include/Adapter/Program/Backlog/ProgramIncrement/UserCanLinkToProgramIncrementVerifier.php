@@ -36,6 +36,7 @@ final class UserCanLinkToProgramIncrementVerifier implements VerifyUserCanLinkTo
     ) {
     }
 
+    #[\Override]
     public function canUserLinkToProgramIncrement(
         ProgramIncrementTrackerIdentifier $program_increment_tracker,
         UserIdentifier $user,

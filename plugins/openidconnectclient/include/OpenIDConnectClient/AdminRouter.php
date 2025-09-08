@@ -46,6 +46,7 @@ class AdminRouter implements DispatchableWithRequest, DispatchableWithBurningPar
         $this->csrf_token = $csrf_token;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();

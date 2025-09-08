@@ -78,6 +78,7 @@ class ScrumTemplate implements TuleapTemplate
      * Actual XML file is generated "on the fly" in order to guaranty the consistency between the AgileDashboard
      * "Start Scrum" template and the "Project Creation" Scrum template
      */
+    #[\Override]
     public function getXMLPath(): string
     {
         if ($this->xml_path === null) {
@@ -112,26 +113,31 @@ class ScrumTemplate implements TuleapTemplate
         return $path;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return $this->description;
     }
 
+    #[\Override]
     public function getGlyph(): Glyph
     {
         return $this->glyph_finder->get(self::NAME);
     }
 
+    #[\Override]
     public function getId(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function isAvailable(): bool
     {
         if (! file_exists(self::AGILEDASHBOARD_XML)) {
@@ -147,6 +153,7 @@ class ScrumTemplate implements TuleapTemplate
         return $this->available;
     }
 
+    #[\Override]
     public function isBuiltIn(): bool
     {
         return true;

@@ -44,6 +44,7 @@ final class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifac
     /**
      * @throws NatureAnalyzerException
      */
+    #[\Override]
     public function retrieveProjectOfMirroredArtifact(ArtifactIdentifier $artifact, UserIdentifier $user_identifier): ProjectIdentifier
     {
         $program_increment_id = $this->timebox_retriever->getTimeboxFromMirroredTimeboxId($artifact->getId());

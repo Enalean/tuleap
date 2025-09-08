@@ -50,11 +50,13 @@ final class RecentlyVisitedProjectDashboardDao extends DataAccessObject implemen
         return $this->getDB()->run($sql, $user_id, $maximum_visits);
     }
 
+    #[\Override]
     public function deleteVisitByUserId(int $user_id): void
     {
         $this->getDB()->delete('project_dashboards_recently_visited', ['user_id' => $user_id]);
     }
 
+    #[\Override]
     public function deleteVisitByDashboardId(int $dashboard_id): void
     {
         $this->getDB()->delete('project_dashboards_recently_visited', ['dashboard_id' => $dashboard_id]);

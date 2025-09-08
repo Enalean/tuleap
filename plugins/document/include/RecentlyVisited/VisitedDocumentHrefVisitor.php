@@ -46,16 +46,19 @@ final readonly class VisitedDocumentHrefVisitor implements ItemVisitor
     ) {
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = [])
     {
         return '/plugins/docman/?' . http_build_query([
@@ -65,6 +68,7 @@ final readonly class VisitedDocumentHrefVisitor implements ItemVisitor
         ]);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = [])
     {
         $item_version = $this->docman_version_factory->getCurrentVersionForItem($item);
@@ -78,16 +82,19 @@ final readonly class VisitedDocumentHrefVisitor implements ItemVisitor
         return '/plugins/docman/download/' . urlencode((string) $item->getId());
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
         return $this->visitItem($item, $params);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         return '/plugins/document/'
@@ -96,6 +103,7 @@ final readonly class VisitedDocumentHrefVisitor implements ItemVisitor
             . urlencode((string) $item->getId());
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         $other_document_href = $this->event_manager->dispatch(new VisitedOtherDocumentHref($item))->getHref();

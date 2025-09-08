@@ -585,6 +585,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * @psalm-taint-escape file
      */
+    #[\Override]
     public function getUserName(): string
     {
         return $this->user_name ?? '';
@@ -689,6 +690,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getAuthorizedKeysArray(): array
     {
         return array_filter(explode(self::SSH_KEY_SEPARATOR, $this->authorized_keys ?? ''));
@@ -849,6 +851,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      *
      * @return Project[]
      */
+    #[\Override]
     public function getGroups()
     {
         $projects = [];

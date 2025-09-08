@@ -26,6 +26,7 @@
  */
 class Rule_NoCr extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function isValid($val)
     {
         if (\is_string($val) && \strpos($val, \chr(0xa)) === \false && \strpos($val, \chr(0xd)) === \false && \strpos($val, \chr(0x0)) === \false) {

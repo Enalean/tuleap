@@ -35,6 +35,7 @@ class tee_containerPlugin extends Plugin
         bindtextdomain('tuleap-tee_container', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {

@@ -46,6 +46,7 @@ class SemanticDoneDuplicator implements IDuplicateSemantic
     /**
      * Duplicate the semantic from tracker source to tracker target
      */
+    #[\Override]
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
         $result = $this->semantic_done_dao->getSelectedValues($from_tracker_id);

@@ -30,6 +30,7 @@ class Codendi_DiffOp_Change extends \Codendi_DiffOp // phpcs:ignore PSR1.Classes
         $this->fin  = $fin;
     }
 
+    #[\Override]
     public function reverse()
     {
         return new \Codendi_DiffOp_Change($this->fin, $this->orig);

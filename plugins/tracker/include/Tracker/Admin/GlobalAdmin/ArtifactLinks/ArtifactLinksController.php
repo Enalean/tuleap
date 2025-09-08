@@ -96,6 +96,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         $this->permissions_checker     = $permissions_checker;
     }
 
+    #[\Override]
     public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
@@ -285,6 +286,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         return new CSRFSynchronizerToken(self::getURL($project));
     }
 
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_manager->getProject($variables['id']);

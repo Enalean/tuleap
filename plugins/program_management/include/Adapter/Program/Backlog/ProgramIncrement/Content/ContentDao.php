@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 
 final class ContentDao extends DataAccessObject implements SearchFeatures
 {
+    #[\Override]
     public function searchFeatures(ProgramIncrementIdentifier $program_increment): array
     {
         $sql = <<<SQL

@@ -38,21 +38,25 @@ final class ActiveJiraCloudUser implements JiraCloudUser
         $this->email_address   = $update_author['emailAddress'] ?? self::NO_EMAIL_ADDRESS_SHARED;
     }
 
+    #[\Override]
     public function getDisplayName(): string
     {
         return $this->display_name;
     }
 
+    #[\Override]
     public function getJiraAccountId(): string
     {
         return $this->jira_account_id;
     }
 
+    #[\Override]
     public function getEmailAddress(): string
     {
         return $this->email_address;
     }
 
+    #[\Override]
     public function getUniqueIdentifier(): string
     {
         return $this->getJiraAccountId();

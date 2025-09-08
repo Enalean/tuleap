@@ -56,6 +56,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         return $parameters->comparison->getValueWrapper()->accept($this, $parameters);
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return match ($parameters->comparison->getType()) {
@@ -222,6 +223,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         return match ($parameters->comparison->getType()) {
@@ -390,6 +392,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         $simple_value_wrapper = new SimpleValueWrapper((string) $value_wrapper->getValue());
@@ -404,16 +407,19 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         };
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to status open should have been flagged as invalid for AssignedTo semantic');
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to current date time should have been flagged as invalid for AssignedTo semantic');
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison with Between() should have been flagged as invalid for AssignedTo semantic');

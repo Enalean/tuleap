@@ -90,6 +90,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         $this->header_options_provider   = $header_options_provider;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('testplan');

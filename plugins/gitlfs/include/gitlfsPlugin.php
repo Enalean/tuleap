@@ -81,6 +81,7 @@ class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
         bindtextdomain('tuleap-gitlfs', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -90,11 +91,13 @@ class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return ['git'];
     }
 
+    #[\Override]
     public function getHooksAndCallbacks()
     {
         $this->addHook(CollectRoutesEvent::NAME);
@@ -465,6 +468,7 @@ class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
         }
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(self::class);

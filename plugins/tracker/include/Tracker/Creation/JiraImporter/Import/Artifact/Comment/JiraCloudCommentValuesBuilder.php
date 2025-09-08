@@ -41,6 +41,7 @@ final class JiraCloudCommentValuesBuilder implements CommentValuesBuilder
      * @return Comment[]
      * @throws JiraConnectionException
      */
+    #[\Override]
     public function buildCommentCollectionForIssue(string $jira_issue_key): array
     {
         $this->logger->debug('Start build comment collection ...');

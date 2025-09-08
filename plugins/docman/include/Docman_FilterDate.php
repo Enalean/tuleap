@@ -36,6 +36,7 @@ class Docman_FilterDate extends \Docman_Filter
         }
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         $this->setOperator($row['value_date_op']);
@@ -78,6 +79,7 @@ class Docman_FilterDate extends \Docman_Filter
         return \false;
     }
 
+    #[\Override]
     public function getUrlParameters()
     {
         $param = [];
@@ -90,6 +92,7 @@ class Docman_FilterDate extends \Docman_Filter
         return $param;
     }
 
+    #[\Override]
     public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // Simple date

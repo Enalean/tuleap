@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 final class XMLFileField extends XMLField
 {
+    #[\Override]
     public static function getType(): string
     {
         return \Tracker_FormElementFactory::FIELD_FILE_TYPE;

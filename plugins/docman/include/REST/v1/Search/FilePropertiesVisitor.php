@@ -40,26 +40,31 @@ final class FilePropertiesVisitor implements ItemVisitor
     ) {
     }
 
+    #[\Override]
     public function visitFolder(\Docman_Folder $item, array $params = [])
     {
         return null;
     }
 
+    #[\Override]
     public function visitWiki(\Docman_Wiki $item, array $params = [])
     {
         return null;
     }
 
+    #[\Override]
     public function visitLink(\Docman_Link $item, array $params = [])
     {
         return null;
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
         return null;
     }
 
+    #[\Override]
     public function visitFile(\Docman_File $item, array $params = [])
     {
         $version = $this->version_factory->getCurrentVersionForItem($item);
@@ -88,16 +93,19 @@ final class FilePropertiesVisitor implements ItemVisitor
         );
     }
 
+    #[\Override]
     public function visitEmbeddedFile(\Docman_EmbeddedFile $item, array $params = [])
     {
         return null;
     }
 
+    #[\Override]
     public function visitEmpty(\Docman_Empty $item, array $params = [])
     {
         return null;
     }
 
+    #[\Override]
     public function visitItem(\Docman_Item $item, array $params = [])
     {
         return null;

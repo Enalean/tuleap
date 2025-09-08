@@ -34,6 +34,7 @@ final class DefaultBranchRetriever implements RetrieveRepositoryDefaultBranch
     /**
      * @return Ok<string>|Err<Fault>
      */
+    #[\Override]
     public function getRepositoryDefaultBranch(GitRepository $repository): Ok|Err
     {
         $git_exec            = \Git_Exec::buildFromRepository($repository);

@@ -24,11 +24,13 @@ class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
 {
     public const IDENTIFIER = 'admin_view';
 
+    #[\Override]
     protected function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
+    #[\Override]
     protected function getTitle(array $params): string
     {
         return dgettext('tuleap-docman', 'Display');
@@ -44,6 +46,7 @@ class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'Define the default view for the document manager.');
     }
 
+    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $sBo    = Docman_SettingsBo::instance($params['group_id']);

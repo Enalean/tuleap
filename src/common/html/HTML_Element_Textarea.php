@@ -25,6 +25,7 @@ require_once('HTML_Element.php');
  */
 class HTML_Element_Textarea extends HTML_Element
 {
+    #[\Override]
     protected function renderValue()
     {
         $hp    = Codendi_HTMLPurifier::instance();

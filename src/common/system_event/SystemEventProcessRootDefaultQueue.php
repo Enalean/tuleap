@@ -27,16 +27,19 @@ class SystemEventProcessRootDefaultQueue implements SystemEventProcess
     /**
      * @see SystemEventProcess::getLockName()
      */
+    #[\Override]
     public function getLockName()
     {
         return 'tuleap_process_system_events';
     }
 
+    #[\Override]
     public function getQueue()
     {
         return SystemEvent::DEFAULT_QUEUE;
     }
 
+    #[\Override]
     public function getCommandName()
     {
         return 'tuleap.php process-system-events ' . $this->getQueue();

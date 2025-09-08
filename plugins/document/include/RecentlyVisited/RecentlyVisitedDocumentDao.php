@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class RecentlyVisitedDocumentDao extends DataAccessObject implements RecordVisit, DeleteVisitByItemId
 {
+    #[\Override]
     public function save(int $user_id, int $item_id, int $created_on): void
     {
         $this->getDB()->run(
@@ -59,6 +60,7 @@ final class RecentlyVisitedDocumentDao extends DataAccessObject implements Recor
         $this->getDB()->delete('plugin_document_item_recently_visited', ['user_id' => $user_id]);
     }
 
+    #[\Override]
     public function deleteVisitByItemId(int $item_id): void
     {
         $this->getDB()->delete('plugin_document_item_recently_visited', ['item_id' => $item_id]);

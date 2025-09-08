@@ -57,6 +57,7 @@ class InviteBuddyAdminController implements DispatchableWithRequest, Dispatchabl
         return new CSRFSynchronizerToken(self::URL);
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser() || ! $this->configuration->canSiteAdminConfigureTheFeature()) {

@@ -123,6 +123,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
      *
      * @param class-string $class_name
      */
+    #[\Override]
     public function addConfigClass(string $class_name): void
     {
         $this->annotated_classes[] = $class_name;
@@ -131,6 +132,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
     /**
      * @return string[]
      */
+    #[\Override]
     public function getKeysThatCanBeModifiedWithConfigSet(): array
     {
         $this->initWhiteList();
@@ -157,6 +159,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
     /**
      * @throws UnknownConfigKeyException
      */
+    #[\Override]
     public function getKeyMetadata(string $key): ConfigKeyMetadata
     {
         $this->initWhiteList();

@@ -86,6 +86,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         return new Docman_ApprovalTableWiki();
     }
 
+    #[\Override]
     public function _createTable($table)
     {
         return $this->_getDao()->createTable(
@@ -99,6 +100,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         );
     }
 
+    #[\Override]
     protected function _updateTableWithLastId($dstTable)
     {
         $wikiVersionId = $this->_getDao()->getLastWikiVersionIdByItemId($this->item->getId());
@@ -106,6 +108,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         $dstTable->setWikiVersionId($wikiVersionId);
     }
 
+    #[\Override]
     public function _getTable()
     {
         return $this->getTableFromVersion($this->item->getId(), $this->wikiVersionId);
@@ -125,18 +128,21 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         return $table;
     }
 
+    #[\Override]
     public function getLastDocumentVersionNumber()
     {
         $lastVersionId = $this->_getDao()->getLastWikiVersionIdByItemId($this->item->getId());
         return $lastVersionId;
     }
 
+    #[\Override]
     public function userAccessedSinceLastUpdate($user)
     {
         return $this->_getDao()->userAccessedSince($user->getId(), $this->item->getPagename(), $this->item->getGroupId(), $this->wikiVersionId);
     }
 
     // Class accessor
+    #[\Override]
     public function _getDao()
     {
         return new Docman_ApprovalTableWikiDao(CodendiDataAccess::instance());

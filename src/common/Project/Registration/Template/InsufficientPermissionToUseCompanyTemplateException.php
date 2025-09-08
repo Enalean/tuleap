@@ -30,6 +30,7 @@ final class InsufficientPermissionToUseCompanyTemplateException extends Project_
         parent::__construct(sprintf(_("Template %d is not valid: you don't have the permission to the access the project."), $project->getId()));
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return $this->message;

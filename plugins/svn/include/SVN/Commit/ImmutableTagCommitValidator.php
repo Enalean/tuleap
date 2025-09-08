@@ -53,6 +53,7 @@ final class ImmutableTagCommitValidator implements PathValidator
     /**
      * @throws SVN_CommitToTagDeniedException
      */
+    #[\Override]
     public function assertPathIsValid(Repository $repository, string $transaction, string $path): void
     {
         $this->assertCommitIsNotDoneInImmutableTag($repository, $path);

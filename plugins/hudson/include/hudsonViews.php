@@ -33,6 +33,7 @@ class hudsonViews extends Views
         $this->View($controler, $view);
     }
 
+    #[\Override]
     public function header()
     {
         $request  = HTTPRequest::instance();
@@ -68,6 +69,7 @@ class hudsonViews extends Views
         return help_button('ci.html' . $section, $help_label);
     }
 
+    #[\Override]
     public function footer()
     {
         $GLOBALS['HTML']->footer([]);

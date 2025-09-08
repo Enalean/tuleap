@@ -24,6 +24,7 @@
 
 class Docman_View_AjaxReferenceTooltip extends Docman_View_View
 {
+    #[\Override]
     public function display($params = [])
     {
         $html_purifier = Codendi_HTMLPurifier::instance();

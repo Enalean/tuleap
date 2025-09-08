@@ -45,6 +45,7 @@ final readonly class InvalidSearchableCollectorVisitor implements SearchableVisi
      * @param InvalidSearchableCollectorParameters $parameters
      * @return void
      */
+    #[\Override]
     public function visitField(Field $searchable_field, $parameters)
     {
         $this->field_checker->checkFieldIsValidForSearch($searchable_field, $parameters)
@@ -66,6 +67,7 @@ final readonly class InvalidSearchableCollectorVisitor implements SearchableVisi
     /**
      * @param InvalidSearchableCollectorParameters $parameters
      */
+    #[\Override]
     public function visitMetadata(Metadata $metadata, $parameters): void
     {
         $invalid_searchables_collection = $parameters->invalid_comparison_parameters->getInvalidSearchablesCollection();

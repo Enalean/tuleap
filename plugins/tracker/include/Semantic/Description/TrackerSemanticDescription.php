@@ -60,6 +60,7 @@ class TrackerSemanticDescription extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getShortName()
     {
          return self::NAME;
@@ -70,6 +71,7 @@ class TrackerSemanticDescription extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-tracker', 'Description');
@@ -80,6 +82,7 @@ class TrackerSemanticDescription extends TrackerSemantic
      *
      * @return string
      */
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-tracker', 'Define the description of an artifact');
@@ -109,6 +112,7 @@ class TrackerSemanticDescription extends TrackerSemantic
         return $this->text_field;
     }
 
+    #[\Override]
     public function fetchForSemanticsHomepage(): string
     {
         $warning = '';
@@ -142,6 +146,7 @@ class TrackerSemanticDescription extends TrackerSemantic
             $content;
     }
 
+    #[\Override]
     public function displayAdmin(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -165,6 +170,7 @@ class TrackerSemanticDescription extends TrackerSemantic
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
+    #[\Override]
     public function process(
         TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
@@ -193,6 +199,7 @@ class TrackerSemanticDescription extends TrackerSemantic
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
 
+    #[\Override]
     public function save(): bool
     {
         $dao = new DescriptionSemanticDAO();
@@ -214,6 +221,7 @@ class TrackerSemanticDescription extends TrackerSemantic
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xml_mapping)
     {
         if ($this->getFieldId() && in_array($this->getFieldId(), $xml_mapping)) {
@@ -234,6 +242,7 @@ class TrackerSemanticDescription extends TrackerSemantic
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
+    #[\Override]
     public function isUsedInSemantics(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId();

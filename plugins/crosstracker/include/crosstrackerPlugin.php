@@ -62,11 +62,13 @@ class crosstrackerPlugin extends Plugin
         bindtextdomain('tuleap-crosstracker', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['tracker'];
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {

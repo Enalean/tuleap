@@ -64,6 +64,7 @@ final readonly class InvalidSelectablesCollectorVisitor implements SelectableVis
     /**
      * @param InvalidSelectableCollectorParameters $parameters
      */
+    #[\Override]
     public function visitField(Field $field, $parameters): void
     {
         $this->field_checker->checkFieldIsValidForSelect($field, $parameters)
@@ -81,6 +82,7 @@ final readonly class InvalidSelectablesCollectorVisitor implements SelectableVis
             );
     }
 
+    #[\Override]
     public function visitMetaData(Metadata $metadata, $parameters): void
     {
         try {

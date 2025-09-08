@@ -47,6 +47,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
         $this->hidden_fieldsets_retriever = $hidden_fieldsets_retriever;
     }
 
+    #[\Override]
     public function warmUpCacheForWorkflow(Workflow $workflow): void
     {
         $this->hidden_fieldsets_retriever->warmUpCacheForWorkflow($workflow);
@@ -55,6 +56,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
     /**
      * @return HiddenFieldsets[]
      */
+    #[\Override]
     public function loadPostActions(Transition $transition): array
     {
         try {
@@ -71,6 +73,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      *
      * @return void
      */
+    #[\Override]
     public function saveObject(Transition_PostAction $post_action)
     {
         $to_transition_id = (int) $post_action->getTransition()->getId();
@@ -94,6 +97,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      *
      * @return bool
      */
+    #[\Override]
     public function isFieldUsedInPostActions(TrackerField $field)
     {
         // No field used in this post action, only fieldsets.
@@ -108,6 +112,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      * @param array $field_mapping the field mapping
      *
      */
+    #[\Override]
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
     {
         $postactions = $this->loadPostActions($from_transition);
@@ -141,6 +146,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      *
      * @return Transition_PostAction|null The  Transition_PostAction object, or null if error
      */
+    #[\Override]
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
         $fieldsets = [];

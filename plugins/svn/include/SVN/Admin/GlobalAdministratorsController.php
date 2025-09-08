@@ -65,6 +65,7 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
         return SVN_BASE_URL . '/' . urlencode((string) $project->getUnixNameMixedCase()) . '/admin';
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -92,6 +93,7 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
         );
     }
 
+    #[\Override]
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);

@@ -33,11 +33,13 @@ class Docman_Folder extends Docman_Item
         $this->_resetItems();
     }
 
+    #[\Override]
     public function getType()
     {
         return dgettext('tuleap-docman', 'Folder');
     }
 
+    #[\Override]
     public function toRow()
     {
         $row              = parent::toRow();
@@ -79,6 +81,7 @@ class Docman_Folder extends Docman_Item
         $this->_items = $items;
     }
 
+    #[\Override]
     public function accept($visitor, $params = [])
     {
         return $visitor->visitFolder($this, $params);

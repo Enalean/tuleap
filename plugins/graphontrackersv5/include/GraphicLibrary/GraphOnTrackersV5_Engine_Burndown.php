@@ -36,6 +36,7 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
     public int $width          = 0;
     public int $height         = 0;
 
+    #[\Override]
     public function validData(): bool
     {
         if ($this->duration && $this->duration > 1) {
@@ -49,6 +50,7 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
     /**
      * @return Chart
      */
+    #[\Override]
     public function buildGraph()
     {
         $burndown = new Tracker_Chart_Burndown($this->data);

@@ -44,6 +44,7 @@ final class RemoveFeatureException extends \RuntimeException implements FeatureE
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

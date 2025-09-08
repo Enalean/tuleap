@@ -44,6 +44,7 @@ final class UpdateProjectAccessFileSystemEvent extends \SystemEvent
         return (int) $parameters[0];
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link): string
     {
         $project_id = $this->getProjectIdFromParameters();
@@ -57,6 +58,7 @@ final class UpdateProjectAccessFileSystemEvent extends \SystemEvent
         $this->event_dispatcher = $event_dispatcher;
     }
 
+    #[\Override]
     public function process(): void
     {
         $project_id = $this->getProjectIdFromParameters();

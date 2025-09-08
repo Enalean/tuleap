@@ -30,11 +30,13 @@ class ClearCachesCommand extends Command
 {
     public const NAME = '-c, --clear-caches';
 
+    #[\Override]
     protected function configure()
     {
         $this->setName(self::NAME)->setDescription('Clear caches');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $site_cache = new SiteCache(new ConsoleLogger($output));

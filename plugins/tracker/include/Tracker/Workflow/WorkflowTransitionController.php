@@ -55,6 +55,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         $this->event_manager   = $event_manager;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['tracker_id']);

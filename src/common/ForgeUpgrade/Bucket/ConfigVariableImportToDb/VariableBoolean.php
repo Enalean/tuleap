@@ -42,16 +42,19 @@ final readonly class VariableBoolean implements Variable
         return new self($name_in_file, $name_in_db, $default_value);
     }
 
+    #[\Override]
     public function getNameInFile(): string
     {
         return $this->name_in_file;
     }
 
+    #[\Override]
     public function getNameInDb(): string
     {
         return $this->name_in_db;
     }
 
+    #[\Override]
     public function getValueAsString(mixed $value): string
     {
         return match ($value) {

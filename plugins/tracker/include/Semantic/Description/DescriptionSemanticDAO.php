@@ -28,6 +28,7 @@ use Tuleap\Option\Option;
 
 final class DescriptionSemanticDAO extends DataAccessObject implements SearchDescriptionField, SearchTrackersWithoutDescriptionSemantic
 {
+    #[\Override]
     public function searchByTrackerId(int $tracker_id): Option
     {
         $sql      = 'SELECT field_id FROM tracker_semantic_description WHERE tracker_id = ?';
@@ -51,11 +52,13 @@ final class DescriptionSemanticDAO extends DataAccessObject implements SearchDes
         $this->getDB()->delete('tracker_semantic_description', ['tracker_id' => $tracker_id]);
     }
 
+    #[\Override]
     public function countTrackersWithoutDescriptionSemantic(array $tracker_ids): int
     {
         return count($this->getTrackerIdsWithoutDescriptionSemantic($tracker_ids));
     }
 
+    #[\Override]
     public function getTrackerIdsWithoutDescriptionSemantic(array $tracker_ids): array
     {
         if ($tracker_ids === []) {

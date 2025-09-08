@@ -28,21 +28,25 @@ class Tracker_FormElement_Shared extends ProvideFactoryButtonInformation
      */
     private $tracker;
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return 'Shared field';
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return 'Use a field defined in another tracker';
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/-shared-field.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-shared-field.png');
@@ -51,6 +55,7 @@ class Tracker_FormElement_Shared extends ProvideFactoryButtonInformation
     /**
      * @return bool say if the field is a unique one
      */
+    #[\Override]
     public static function getFactoryUniqueField()
     {
         return false;
@@ -88,6 +93,7 @@ class Tracker_FormElement_Shared extends ProvideFactoryButtonInformation
         $this->rank          = $rank;
     }
 
+    #[\Override]
     public function getTrackerId(): int
     {
         return $this->tracker_id;

@@ -28,6 +28,7 @@ final class WithForwardLink implements Term
     {
     }
 
+    #[\Override]
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
         return $visitor->visitWithForwardLink($this, $parameters);

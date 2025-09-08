@@ -37,6 +37,7 @@ final class StatusValueMapper implements MapStatusByValue
     {
     }
 
+    #[\Override]
     public function mapStatusValueByDuckTyping(StatusValue $source_value, StatusFieldReference $target_field): array
     {
         $matching_values = [];

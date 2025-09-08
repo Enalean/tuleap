@@ -34,6 +34,7 @@ class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent
         $this->migration_manager = $migration_manager;
     }
 
+    #[\Override]
     public function process()
     {
         $parameters = $this->getParametersAsArray();
@@ -110,6 +111,7 @@ class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent
         return false;
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return $this->parameters;

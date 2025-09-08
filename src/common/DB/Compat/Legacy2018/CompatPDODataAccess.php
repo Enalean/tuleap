@@ -53,6 +53,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @psalm-taint-source sql
      * @psalm-taint-source html
      */
+    #[\Override]
     public function query($sql, $params = [])
     {
         if (! empty($params)) {
@@ -89,6 +90,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return false|int or 0 if the previous query does not generate an AUTO_INCREMENT value, or FALSE if no MySQL connection was established
      */
+    #[\Override]
     public function lastInsertId()
     {
         try {
@@ -105,6 +107,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return int
      */
+    #[\Override]
     public function affectedRows()
     {
         if ($this->latest_statement === null) {
@@ -122,6 +125,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @deprecated
      * @return string a MySQL error
      */
+    #[\Override]
     public function isError()
     {
         $error_info = [];
@@ -143,6 +147,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
     /**
      * @deprecated
      */
+    #[\Override]
     public function getErrorMessage()
     {
         $error_info = [];
@@ -165,6 +170,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return string
      */
+    #[\Override]
     public function quoteSmart($value, $params = [])
     {
         return $this->db_connection->getDB()->quote((string) $value);
@@ -178,6 +184,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return string
      */
+    #[\Override]
     public function quoteSmartSchema($value, $params = [])
     {
         return $this->db_connection->getDB()->escapeIdentifier((string) $value);
@@ -188,6 +195,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @deprecated
      * @static
      */
+    #[\Override]
     public function quoteSmartImplode($glue, $pieces, $params = [])
     {
         $str         = '';
@@ -207,6 +215,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @deprecated
      */
+    #[\Override]
     public function escapeInt($v, $null = CODENDI_DB_NOT_NULL): string
     {
         if ($null === CODENDI_DB_NULL && $v === '') {
@@ -218,6 +227,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
     /**
      * @deprecated
      */
+    #[\Override]
     public function escapeFloat($value)
     {
         if ($value === '') {
@@ -235,6 +245,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * $return string
      */
+    #[\Override]
     public function escapeIntImplode(array $ints)
     {
         return implode(',', array_map([$this, 'escapeInt'], $ints));
@@ -252,6 +263,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return string
      */
+    #[\Override]
     public function escapeLikeValue($value)
     {
         $value = $value ?? '';
@@ -262,6 +274,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @deprecated
      * @return string
      */
+    #[\Override]
     public function quoteLikeValueSurround($value)
     {
         return $this->quoteSmart('%' . $this->escapeLikeValue($value) . '%');
@@ -271,6 +284,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @deprecated
      * @return string
      */
+    #[\Override]
     public function quoteLikeValueSuffix($value)
     {
         return $this->quoteSmart($this->escapeLikeValue($value) . '%');
@@ -280,6 +294,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @deprecated
      * @return string
      */
+    #[\Override]
     public function quoteLikeValuePrefix($value)
     {
         return $this->quoteSmart('%' . $this->escapeLikeValue($value));
@@ -294,6 +309,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return int The number of rows in a result set on success, or FALSE on failure.
      */
+    #[\Override]
     public function numRows($result)
     {
         if (! $result) {
@@ -315,6 +331,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @psalm-taint-source sql
      * @psalm-taint-source html
      */
+    #[\Override]
     public function fetch($result)
     {
         if (! $result) {
@@ -339,6 +356,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @psalm-taint-source sql
      * @psalm-taint-source html
      */
+    #[\Override]
     public function fetchArray($result)
     {
         return $this->fetch($result);
@@ -354,6 +372,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return bool Returns TRUE on success or FALSE on failure.
      */
+    #[\Override]
     public function dataSeek($result, $row_number)
     {
         if (! $result) {
@@ -367,6 +386,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * Start a sql transaction
      * @deprecated
      */
+    #[\Override]
     public function startTransaction()
     {
         if ($this->db_connection->getDB()->getPdo()->inTransaction()) {
@@ -383,6 +403,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * Rollback a sql transaction
      * @deprecated
      */
+    #[\Override]
     public function rollback()
     {
         if (! $this->db_connection->getDB()->getPdo()->inTransaction()) {
@@ -399,6 +420,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * Commit a sql transaction
      * @deprecated
      */
+    #[\Override]
     public function commit()
     {
         if (! $this->db_connection->getDB()->getPdo()->inTransaction()) {

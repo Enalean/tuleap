@@ -45,6 +45,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
         $this->autoflush = false;
     }
 
+    #[\Override]
     public function execute(Git_RemoteServer_GerritServer $server)
     {
         $driver      = $this->getDriver($server);

@@ -56,6 +56,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         bindtextdomain('tuleap-project_ownership', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

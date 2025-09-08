@@ -36,6 +36,7 @@ final class TrackerPrivateCommentInformationRetriever implements RetrieveTracker
         $this->tracker_private_comment_ugroup_enabled_dao = $tracker_private_comment_ugroup_enabled_dao;
     }
 
+    #[\Override]
     public function doesTrackerAllowPrivateComments(Tracker $tracker): bool
     {
         return $this->tracker_private_comment_ugroup_enabled_dao->isTrackerEnabledPrivateComment($tracker->getId());

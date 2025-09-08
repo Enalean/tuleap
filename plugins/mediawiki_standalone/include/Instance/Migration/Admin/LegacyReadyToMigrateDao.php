@@ -39,6 +39,7 @@ final class LegacyReadyToMigrateDao extends DataAccessObject implements ProjectR
         );
     }
 
+    #[\Override]
     public function isProjectReadyToBeMigrated(int $project_id): bool
     {
         return $this->getDB()->exists(

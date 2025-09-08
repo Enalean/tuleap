@@ -81,6 +81,7 @@ final class UserStoryIdentifier implements ArtifactIdentifier
         return $user_stories;
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->identifier;

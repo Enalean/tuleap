@@ -32,6 +32,7 @@ class ProjectMemberAdder implements AddProjectMembers
     {
     }
 
+    #[\Override]
     public function addProjectMember(Project $project, PFUser $user): bool
     {
         return $this->dao->addUserToGroup((int) $project->getID(), $user->getUserName());

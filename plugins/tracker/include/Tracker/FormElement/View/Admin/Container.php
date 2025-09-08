@@ -25,6 +25,7 @@ class Tracker_FormElement_View_Admin_Container extends Tracker_FormElement_View_
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAdminFormPermissionLink()
     {
         return '';

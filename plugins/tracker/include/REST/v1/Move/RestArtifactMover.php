@@ -53,6 +53,7 @@ final class RestArtifactMover implements MoveRestArtifact
      * @throws ArtifactsDeletionLimitReachedException
      * @throws MoveArtifactNoValuesToProcessException
      */
+    #[\Override]
     public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): void
     {
         $this->performMoveBasedOnDuckTyping($source_tracker, $target_tracker, $artifact, $user, $should_populate_feedback_on_success, $logger);

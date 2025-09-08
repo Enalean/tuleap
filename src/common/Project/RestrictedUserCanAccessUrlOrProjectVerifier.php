@@ -51,6 +51,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         $this->request_uri   = $request_uri;
     }
 
+    #[\Override]
     public function isRestrictedUserAllowedToAccess(PFUser $user, ?Project $project = null): bool
     {
         // This assume that we already checked that project is accessible to restricted prior to function call.

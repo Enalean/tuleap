@@ -40,16 +40,19 @@ class ArchiveDeletedItemFileProvider implements ArchiveDeletedItemProvider
         $this->prefix       = $prefix;
     }
 
+    #[\Override]
     public function getArchivePath(): string
     {
         return $this->archive_path;
     }
 
+    #[\Override]
     public function getPrefix(): string
     {
         return $this->prefix;
     }
 
+    #[\Override]
     public function purge(): void
     {
         // noop

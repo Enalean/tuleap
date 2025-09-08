@@ -34,6 +34,7 @@ final class AddToTopBacklogPostActionDAO extends DataAccessObject implements Sea
     /**
      * @psalm-return list<array{id: int, transition_id: int}>
      */
+    #[\Override]
     public function searchByWorkflowId(WorkflowIdentifier $workflow_identifier): array
     {
         $sql = 'SELECT plugin_program_management_workflow_action_add_top_backlog.id, plugin_program_management_workflow_action_add_top_backlog.transition_id
@@ -47,6 +48,7 @@ final class AddToTopBacklogPostActionDAO extends DataAccessObject implements Sea
     /**
      * @return array{id: int}|null
      */
+    #[\Override]
     public function searchByTransitionID(int $transition_id): ?array
     {
         $sql = 'SELECT id
@@ -56,6 +58,7 @@ final class AddToTopBacklogPostActionDAO extends DataAccessObject implements Sea
         return $this->getDB()->row($sql, $transition_id);
     }
 
+    #[\Override]
     public function createPostActionForTransitionID(int $transition_id): void
     {
         $this->getDB()->insert(
@@ -64,6 +67,7 @@ final class AddToTopBacklogPostActionDAO extends DataAccessObject implements Sea
         );
     }
 
+    #[\Override]
     public function deleteTransitionPostActions(int $transition_id): void
     {
         $sql = 'DELETE

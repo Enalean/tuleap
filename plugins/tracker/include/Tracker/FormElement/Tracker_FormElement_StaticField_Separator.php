@@ -22,6 +22,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_StaticField
 {
+    #[\Override]
     protected function fetchReadOnly()
     {
         $html  = '';
@@ -29,6 +30,7 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
         return $html;
     }
 
+    #[\Override]
     public function fetchAdmin($tracker)
     {
         $html       = '';
@@ -57,6 +59,7 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
      * Display the html field in the admin ui
      * @return string html
      */
+    #[\Override]
     protected function fetchAdminFormElement()
     {
         $html = '<hr class="tracker-admin-separator" id="tracker-admin-formElements_' . $this->id . '" size="1" />';
@@ -72,6 +75,7 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
      *
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getLabel()
     {
         $label = parent::getLabel();
@@ -85,26 +89,31 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getDescription(): string
     {
         return '';
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Separator');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'A Line to separate elements');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-splitter-horizontal.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-splitter-horizontal--plus.png');

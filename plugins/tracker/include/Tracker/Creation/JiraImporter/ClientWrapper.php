@@ -174,6 +174,7 @@ abstract class ClientWrapper implements JiraClient
     /**
      * @throws JiraConnectionException|\JsonException
      */
+    #[\Override]
     final public function getUrl(string $url): ?array
     {
         $request_url         = $this->base_url . $url;
@@ -210,6 +211,7 @@ abstract class ClientWrapper implements JiraClient
         return json_decode($body_contents, true, 512, JSON_OBJECT_AS_ARRAY & JSON_THROW_ON_ERROR);
     }
 
+    #[\Override]
     final public function getAttachmentContents(Attachment $attachment): string
     {
         $request  = $this->factory->createRequest('GET', $attachment->getContentUrl());
@@ -217,7 +219,9 @@ abstract class ClientWrapper implements JiraClient
         return $response->getBody()->getContents();
     }
 
+    #[\Override]
     abstract public function isJiraCloud(): bool;
 
+    #[\Override]
     abstract public function isJiraServer9(): bool;
 }

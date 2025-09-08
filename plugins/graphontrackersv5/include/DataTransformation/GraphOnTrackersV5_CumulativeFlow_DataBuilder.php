@@ -58,6 +58,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
      *
      * @param GraphOnTrackersV5_Engine_CumulativeFlow $engine object
      */
+    #[\Override]
     public function buildProperties($engine)
     {
         parent::buildProperties($engine);

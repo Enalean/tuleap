@@ -77,6 +77,7 @@ final class ProjectXmlExportController extends DispatchablePSR15Compatible imple
         }
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $request_variables = $request->getAttributes();
@@ -103,6 +104,7 @@ final class ProjectXmlExportController extends DispatchablePSR15Compatible imple
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): \Project
     {
         if (! isset($variables['project_id'])) {

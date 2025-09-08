@@ -79,6 +79,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
         return $parameters[0];
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return 'Artifact_id : ' . $this->getArtifactIdFromParameters();
@@ -102,6 +103,7 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
         $this->date_retriever             = $date_retriever;
     }
 
+    #[\Override]
     public function process()
     {
         return TimezoneWrapper::wrapTimezone(

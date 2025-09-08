@@ -43,6 +43,7 @@ class document_generationPlugin extends Plugin
         bindtextdomain('tuleap-document_generation', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -51,11 +52,13 @@ class document_generationPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['tracker'];
     }
 
+    #[\Override]
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(GetExportOptionsMenuItemsEvent::NAME);

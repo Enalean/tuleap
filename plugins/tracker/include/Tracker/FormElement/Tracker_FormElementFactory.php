@@ -227,6 +227,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         unset($this->formElements[$form_element->getId()]);
     }
 
+    #[\Override]
     public function getType(Tracker_FormElement $form_element): string
     {
         $all_classnames = array_merge(
@@ -281,6 +282,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         }
     }
 
+    #[\Override]
     public function getUsedFormElementFieldById(int $id): ?TrackerField
     {
         $field = $this->getUsedFormElementById($id);
@@ -339,6 +341,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $this->used_formElements[$id];
     }
 
+    #[\Override]
     public function getUsedFieldByName(int $tracker_id, string $field_name): ?TrackerField
     {
         if (! isset($this->used_form_element_fields_by_name[$tracker_id])) {
@@ -521,6 +524,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * @todo Check the type of the field.
      *
      */
+    #[\Override]
     public function getFieldById($field_id): ?TrackerField
     {
         $field = $this->getFormElementById($field_id);
@@ -555,6 +559,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * All fields used by the tracker
      * @return TrackerField[]
      */
+    #[\Override]
     public function getUsedFields(\Tuleap\Tracker\Tracker $tracker): array
     {
         return $this->getUsedFormElementsByType($tracker, $this->getFieldsSQLTypes());
@@ -577,6 +582,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      *
      * @return Array $fields_data
      */
+    #[\Override]
     public function getUsedFieldsWithDefaultValue(Tracker $tracker, array $fields_data, PFUser $user): array
     {
         $fields = $this->getUsedFields($tracker);
@@ -718,6 +724,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * @return ArtifactLinkField[]
      */
+    #[\Override]
     public function getUsedArtifactLinkFields(Tracker $tracker): array
     {
         return $this->getUsedFormElementsByType($tracker, [self::FIELD_ARTIFACT_LINKS]);
@@ -732,6 +739,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $this->getUsedFormElementsByType($tracker, ['fieldset']);
     }
 
+    #[\Override]
     public function getAnArtifactLinkField(PFUser $user, Tracker $tracker): ?ArtifactLinkField
     {
         $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
@@ -804,6 +812,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
             ->instanciateWith([$this, 'getCachedInstanceFromRow']);
     }
 
+    #[\Override]
     public function getUsedListFieldById(
         \Tuleap\Tracker\Tracker $tracker,
         int $field_id,
@@ -984,6 +993,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * @return Tracker_FormElement[]
      */
+    #[\Override]
     public function getUsedFormElementForTracker(Tracker $tracker): array
     {
         $tracker_id = $tracker->getId();

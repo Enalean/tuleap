@@ -30,6 +30,7 @@ final readonly class UserAvatarUrlProvider implements ProvideUserAvatarUrl, Prov
     {
     }
 
+    #[\Override]
     public function getAvatarUrl(\PFUser $user): string
     {
         if ($user->isAnonymous() || ! $user->hasAvatar()) {
@@ -39,6 +40,7 @@ final readonly class UserAvatarUrlProvider implements ProvideUserAvatarUrl, Prov
         return \Tuleap\ServerHostname::HTTPSUrl() . $this->getAbsoluteUrl($user);
     }
 
+    #[\Override]
     public function getDefaultAvatarUrl(): string
     {
         return \Tuleap\ServerHostname::HTTPSUrl() . \PFUser::DEFAULT_AVATAR_URL;

@@ -45,6 +45,7 @@ final class CachedSemanticTitleFieldRetriever implements RetrieveSemanticTitleFi
     {
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): ?TextField
     {
         if (isset($this->semantics_cache[$tracker->getId()])) {

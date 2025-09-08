@@ -102,6 +102,7 @@ final readonly class ExtractArchiveAndCreateProject implements WorkerEventProces
         );
     }
 
+    #[\Override]
     public function process(): void
     {
         $project = $this->project_manager->getValidProjectById($this->project_id);

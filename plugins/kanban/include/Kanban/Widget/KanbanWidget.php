@@ -71,11 +71,13 @@ abstract class KanbanWidget extends Widget
         );
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         return $this->widget_kanban_creator->create($request, $this->owner_id, $this->owner_type);
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         $kanban_name     = $this->kanban_title ?: 'Kanban';
@@ -96,11 +98,13 @@ abstract class KanbanWidget extends Widget
         return $kanban_name;
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return dgettext('tuleap-kanban', 'Displays a board to see the tasks to do, in progress, done etc. Please go on a kanban to add it.');
     }
 
+    #[\Override]
     public function getIcon()
     {
         return 'fa-columns';
@@ -109,6 +113,7 @@ abstract class KanbanWidget extends Widget
     /**
      * @param int $id
      */
+    #[\Override]
     public function loadContent($id): void
     {
         $widget = $this->widget_kanban_retriever->searchWidgetById($id, $this->owner_id, $this->owner_type);
@@ -126,6 +131,7 @@ abstract class KanbanWidget extends Widget
         }
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $is_empty = true;
@@ -172,6 +178,7 @@ abstract class KanbanWidget extends Widget
         return $this->renderer->renderToString('widget-kanban', $widget_kanban_presenter);
     }
 
+    #[\Override]
     public function getCategory(): string
     {
         return dgettext('tuleap-kanban', 'Kanban');
@@ -180,26 +187,31 @@ abstract class KanbanWidget extends Widget
     /**
      * @param int $id
      */
+    #[\Override]
     public function destroy($id): void
     {
         $this->widget_kanban_deletor->delete($id, $this->owner_id, $this->owner_type);
     }
 
+    #[\Override]
     public function canBeAddedFromWidgetList(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isUnique(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getImageSource(): string
     {
         return '/themes/common/images/widgets/add-kanban-widget-from-kanban.png';
     }
 
+    #[\Override]
     public function getImageTitle(): string
     {
         return dgettext('tuleap-kanban', 'Add Kanban to dashboard');
@@ -210,12 +222,14 @@ abstract class KanbanWidget extends Widget
         return new IncludeAssets(__DIR__ . '/../../../scripts/kanban/frontend-assets', '/assets/kanban/kanban');
     }
 
+    #[\Override]
     public function getJavascriptDependencies(): array
     {
         $provider = new KanbanJavascriptDependenciesProvider($this->getIncludeAssets());
         return $provider->getDependencies();
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getIncludeAssets(), 'kanban-style')]);
@@ -224,11 +238,13 @@ abstract class KanbanWidget extends Widget
     /**
      * @param string $widget_id
      */
+    #[\Override]
     public function hasPreferences($widget_id): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         $tracker_reports_builder = new TrackerReportBuilder(
@@ -249,6 +265,7 @@ abstract class KanbanWidget extends Widget
         );
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request): void
     {
         $this->widget_kanban_config_updater->updateConfiguration(
@@ -278,6 +295,7 @@ abstract class KanbanWidget extends Widget
      * @param int $owner_id
      * @param string $owner_type
      */
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,

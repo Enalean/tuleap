@@ -60,6 +60,7 @@ final readonly class FromBuilderVisitor implements FromSomethingVisitor
         return new ParametrizedAndFromWhere($left, $right);
     }
 
+    #[\Override]
     public function visitTracker(FromTracker $from_tracker, $parameters)
     {
         return $from_tracker->getCondition()->acceptFromTrackerConditionVisitor(
@@ -68,6 +69,7 @@ final readonly class FromBuilderVisitor implements FromSomethingVisitor
         );
     }
 
+    #[\Override]
     public function visitProject(FromProject $from_project, $parameters)
     {
         return $from_project->getCondition()->acceptFromProjectConditionVisitor(

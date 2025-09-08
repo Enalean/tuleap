@@ -36,11 +36,13 @@ final class SiteDeployMercureCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Deploy mercure configuration');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         (new SiteDeployMercure())->deploy();

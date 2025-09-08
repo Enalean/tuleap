@@ -28,6 +28,7 @@ class ToBeCreatedUser extends ActionToBeTakenForUser
     public const ACTION = 'create';
 
     /** @return array */
+    #[\Override]
     public function getCSVData()
     {
         return [
@@ -42,6 +43,7 @@ class ToBeCreatedUser extends ActionToBeTakenForUser
         ];
     }
 
+    #[\Override]
     public function isActionAllowed($action)
     {
         return in_array($action, self::$ALLOWED_ACTIONS);

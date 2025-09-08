@@ -45,6 +45,7 @@ class Statistics_Formatter_Svn extends Statistics_Formatter_Scm
      *
      * @return String
      */
+    #[\Override]
     public function getStats()
     {
         $this->addHeader('SVN');

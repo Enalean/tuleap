@@ -42,6 +42,7 @@ final class UserSettingsController implements DispatchableWithRequest
         );
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $request->checkUserIsSuperUser();

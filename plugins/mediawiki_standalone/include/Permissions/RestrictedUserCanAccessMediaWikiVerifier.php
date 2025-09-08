@@ -29,6 +29,7 @@ use Tuleap\Project\RestrictedUserCanAccessVerifier;
 
 final class RestrictedUserCanAccessMediaWikiVerifier implements RestrictedUserCanAccessVerifier
 {
+    #[\Override]
     public function isRestrictedUserAllowedToAccess(PFUser $user, ?Project $project = null): bool
     {
         return $project && $project->allowsRestricted();

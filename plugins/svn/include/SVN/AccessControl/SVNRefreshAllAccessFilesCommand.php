@@ -57,6 +57,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<comment>Start refresh access files:</comment>');
@@ -101,6 +102,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
         }
     }
 
+    #[\Override]
     protected function configure()
     {
         $this->setDescription('restore SVN multi repository access files.');

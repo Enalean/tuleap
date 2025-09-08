@@ -33,6 +33,7 @@ class Docman_View_New_FolderSelection extends Docman_View_Docman
         echo '<h2 class="project-header-title">' . dgettext('tuleap-docman', 'New document - Parent Folder Selection') . '</h2>';
     }
 
+    #[\Override]
     public function _content($params)
     {
         $html = '';

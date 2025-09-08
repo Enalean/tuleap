@@ -22,6 +22,7 @@ namespace Tuleap\RealTimeMercure;
 
 class NullClient implements Client
 {
+    #[\Override]
     public function sendMessage(MercureMessageDataPresenter $message): void
     {
     }

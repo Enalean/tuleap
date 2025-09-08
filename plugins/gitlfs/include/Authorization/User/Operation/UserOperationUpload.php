@@ -24,6 +24,7 @@ final class UserOperationUpload implements UserOperation
 {
     public const NAME = 'upload';
 
+    #[\Override]
     public function getName()
     {
         return self::NAME;

@@ -36,6 +36,7 @@ final class ParseExceptionWithErrors extends XML_ParseException
         parent::__construct(sprintf('XML parse errors. %d errors found by jing', count($errors)), $rng_path, $indented_xml);
     }
 
+    #[\Override]
     public function getErrors(): array
     {
         return $this->errors;

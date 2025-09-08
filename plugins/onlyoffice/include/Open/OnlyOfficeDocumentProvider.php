@@ -37,6 +37,7 @@ final class OnlyOfficeDocumentProvider implements ProvideOnlyOfficeDocument
     /**
      * @psalm-return Ok<OnlyOfficeDocument>|Err<Fault>
      */
+    #[\Override]
     public function getDocument(\PFUser $user, int $item_id): Ok|Err
     {
         return $this->docman_file_last_version_provider

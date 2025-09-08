@@ -98,16 +98,19 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
      *
      * @return bool
      */
+    #[\Override]
     public function isValid($val)
     {
         return $this->isStartingWithAlphanumericCharacter($val) && $this->isDNSCompliant($val) && parent::isValid($val) && $this->isNameAvailable($val) && $this->getPendingProjectRename($val);
     }
 
+    #[\Override]
     protected function _getErrorExists() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $GLOBALS['Language']->getText('rule_group_name', 'error_exists');
     }
 
+    #[\Override]
     protected function _getErrorNoSpaces() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $GLOBALS['Language']->getText('include_account', 'project_spaces');

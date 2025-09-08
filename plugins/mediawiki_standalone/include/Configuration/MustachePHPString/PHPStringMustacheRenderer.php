@@ -28,6 +28,7 @@ use Tuleap\Templating\TemplateCacheInterface;
 
 final class PHPStringMustacheRenderer extends MustacheRenderer
 {
+    #[\Override]
     protected function getEngine(\Mustache_Loader $loader, TemplateCacheInterface $template_cache): MustacheEngine
     {
         return new MustacheEngine(

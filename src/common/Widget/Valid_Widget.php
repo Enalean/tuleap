@@ -25,6 +25,7 @@
  */
 class Valid_Widget_Owner extends Valid_String
 {
+    #[\Override]
     public function validate($value)
     {
         $this->addRule(new Rule_Widget_Owner());

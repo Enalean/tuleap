@@ -40,6 +40,7 @@ final class HiddenFieldsetsValue implements PostAction
         return $this->fieldset_ids;
     }
 
+    #[\Override]
     public function accept(PostActionVisitor $visitor)
     {
         $visitor->visitHiddenFieldsetsValue($this);

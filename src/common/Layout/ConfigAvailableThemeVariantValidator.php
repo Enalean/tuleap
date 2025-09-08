@@ -29,11 +29,13 @@ final class ConfigAvailableThemeVariantValidator implements ValueValidator
     {
     }
 
+    #[\Override]
     public static function buildSelf(): ValueValidator
     {
         return new self();
     }
 
+    #[\Override]
     public function checkIsValid(string $value): void
     {
         $variant_names = explode(',', $value);

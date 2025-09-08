@@ -33,6 +33,7 @@ final class SVNPasswordBasedAuthenticationMethod implements SVNAuthenticationMet
     {
     }
 
+    #[\Override]
     public function isAuthenticated(string $login_name, ConcealedString $user_secret, \Project $project, ServerRequestInterface $request): ?\PFUser
     {
         try {

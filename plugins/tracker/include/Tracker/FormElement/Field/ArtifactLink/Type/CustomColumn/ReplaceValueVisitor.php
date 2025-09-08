@@ -75,21 +75,25 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         return $this->field->accept($this);
     }
 
+    #[\Override]
     public function visitArtifactLink(ArtifactLinkField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitDate(DateField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitFile(FilesField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitFloat(FloatField $field)
     {
         $changeset_value = $this->changeset->getValue($field);
@@ -100,6 +104,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         return $changeset_value->getFloat();
     }
 
+    #[\Override]
     public function visitInteger(IntegerField $field)
     {
         $changeset_value = $this->changeset->getValue($field);
@@ -110,16 +115,19 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         return $changeset_value->getInteger();
     }
 
+    #[\Override]
     public function visitOpenList(OpenListField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitPermissionsOnArtifact(PermissionsOnArtifactField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitString(StringField $field)
     {
         $purifier        = Codendi_HTMLPurifier::instance();
@@ -131,51 +139,61 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         return $purifier->purify($changeset_value->getText(), CODENDI_PURIFIER_STRIP_HTML);
     }
 
+    #[\Override]
     public function visitText(TextField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitArtifactId(ArtifactIdField $field)
     {
         return $this->changeset->getArtifact()->getId();
     }
 
+    #[\Override]
     public function visitPerTrackerArtifactId(PerTrackerArtifactIdField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitBurndown(BurndownField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitCheckbox(CheckboxField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitCrossReferences(CrossReferencesField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitLastUpdateDate(LastUpdateDateField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitMultiSelectbox(MultiSelectboxField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitRadiobutton(RadioButtonField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitSelectbox(SelectboxField $field)
     {
         $changeset_value = $this->changeset->getValue($field);
@@ -194,31 +212,37 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         return $first_value->getLabel();
     }
 
+    #[\Override]
     public function visitSubmittedBy(SubmittedByField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitLastModifiedBy(LastUpdateByField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitSubmittedOn(SubmittedOnField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitComputed(ComputedField $field)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitExternalField(TrackerFormElementExternalField $element)
     {
         throw new UnsupportedFieldException();
     }
 
+    #[\Override]
     public function visitPriority(PriorityField $field)
     {
         throw new UnsupportedFieldException();

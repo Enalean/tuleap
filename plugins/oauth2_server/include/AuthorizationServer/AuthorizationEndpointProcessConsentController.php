@@ -95,6 +95,7 @@ final class AuthorizationEndpointProcessConsentController extends DispatchablePS
     /**
      * @throws ForbiddenException
      */
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->user_manager->getCurrentUser();

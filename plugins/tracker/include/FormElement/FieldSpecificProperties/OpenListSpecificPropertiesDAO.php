@@ -26,11 +26,13 @@ use Tuleap\DB\DataAccessObject;
 
 final class OpenListSpecificPropertiesDAO extends DataAccessObject implements DeleteSpecificProperties, SearchSpecificProperties, SaveSpecificFieldProperties
 {
+    #[\Override]
     public function deleteFieldProperties(int $field_id): void
     {
         $this->getDB()->delete('tracker_field_openlist', ['field_id' => $field_id]);
     }
 
+    #[\Override]
     public function saveSpecificProperties(int $field_id, array $row): void
     {
         $hint = $row['hint'] ?? '';
@@ -43,6 +45,7 @@ final class OpenListSpecificPropertiesDAO extends DataAccessObject implements De
     /**
      * @return null | array{field_id: int, hint: string}
      */
+    #[\Override]
     public function searchByFieldId(int $field_id): ?array
     {
         $sql = 'SELECT *

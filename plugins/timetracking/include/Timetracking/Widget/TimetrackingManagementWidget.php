@@ -48,16 +48,19 @@ class TimetrackingManagementWidget extends Widget
         $this->dao = $dao;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-timetracking', 'Timetracking management');
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return dgettext('tuleap-timetracking', 'Displays aggregated time per user over a given period, with a view of time spent on each project.');
     }
 
+    #[\Override]
     public function isUnique(): true
     {
         return true;
@@ -66,16 +69,19 @@ class TimetrackingManagementWidget extends Widget
     /**
      * @param string $widget_id
      */
+    #[\Override]
     public function hasPreferences($widget_id): false
     {
         return false;
     }
 
+    #[\Override]
     public function getCategory(): string
     {
         return dgettext('tuleap-timetracking', 'Time tracking');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $widget_config = TimetrackingManagementWidgetConfig::fromId(
@@ -95,6 +101,7 @@ class TimetrackingManagementWidget extends Widget
         ]);
     }
 
+    #[\Override]
     public function getIcon(): string
     {
         return 'fa-clock-o';
@@ -103,6 +110,7 @@ class TimetrackingManagementWidget extends Widget
     /**
      * @return JavascriptAssetGeneric[]
      */
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         return [
@@ -116,6 +124,7 @@ class TimetrackingManagementWidget extends Widget
         ];
     }
 
+    #[\Override]
     public function create(Codendi_Request $request): int
     {
         return $this->dao->create(PredefinedTimePeriod::LAST_7_DAYS);
@@ -124,6 +133,7 @@ class TimetrackingManagementWidget extends Widget
     /**
      * @param string $id
      */
+    #[\Override]
     public function destroy($id): void
     {
         $this->dao->delete((int) $id);
@@ -132,6 +142,7 @@ class TimetrackingManagementWidget extends Widget
     /**
      * @param string $id
      */
+    #[\Override]
     public function loadContent($id): void
     {
         $this->content_id = $id;

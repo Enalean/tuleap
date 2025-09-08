@@ -26,6 +26,7 @@ use Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent;
  */
 class SystemEvent_USER_RENAME extends SystemEvent
 {
+    #[\Override]
     public function setLog(string $log): void
     {
         if (! isset($this->log) || $this->log == '') {
@@ -44,6 +45,7 @@ class SystemEvent_USER_RENAME extends SystemEvent
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $txt                      = '';
@@ -57,6 +59,7 @@ class SystemEvent_USER_RENAME extends SystemEvent
      *
      * @return bool
      */
+    #[\Override]
     public function process()
     {
         list($user_id, $new_name) = $this->getParametersAsArray();

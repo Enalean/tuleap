@@ -35,6 +35,7 @@ class DashboardWidgetRetriever implements IRetrieveDashboardWidgets
     /**
      * @return DashboardWidgetLine[]
      */
+    #[\Override]
     public function getAllWidgets(int $dashboard_id, string $dashboard_type): array
     {
         $widgets_by_line = [];

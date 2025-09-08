@@ -34,6 +34,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @deprecated
      * @return bool
      */
+    #[\Override]
     public function getRow()
     {
         return false;
@@ -44,6 +45,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @deprecated
      * @return int
      */
+    #[\Override]
     public function rowCount()
     {
         return 0;
@@ -54,6 +56,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @deprecated
      * @return bool
      */
+    #[\Override]
     public function isError()
     {
         return false;
@@ -63,6 +66,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @see IProvideDataAccessResult
      * @deprecated
      */
+    #[\Override]
     public function current(): bool
     {
         return false;
@@ -72,6 +76,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @see IProvideDataAccessResult
      * @deprecated
      */
+    #[\Override]
     public function next(): void
     {
     }
@@ -80,6 +85,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @see IProvideDataAccessResult
      * @deprecated
      */
+    #[\Override]
     public function valid(): bool
     {
         return false;
@@ -89,6 +95,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @see IProvideDataAccessResult
      * @deprecated
      */
+    #[\Override]
     public function rewind(): void
     {
     }
@@ -97,6 +104,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @see IProvideDataAccessResult
      * @deprecated
      */
+    #[\Override]
     public function key(): bool
     {
         return false;
@@ -106,6 +114,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
      * @see IProvideDataAccessResult
      * @deprecated
      */
+    #[\Override]
     public function count(): int
     {
         return 0;

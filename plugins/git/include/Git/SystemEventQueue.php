@@ -32,16 +32,19 @@ class Git_SystemEventQueue extends SystemEventQueue
         $this->logger = $logger;
     }
 
+    #[\Override]
     public function getName()
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-git', 'Git');
     }
 
+    #[\Override]
     public function getLogger()
     {
         return $this->logger;

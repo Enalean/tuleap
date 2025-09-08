@@ -32,6 +32,7 @@ final readonly class InvalidDefinedTransport implements MailerInterface
     {
     }
 
+    #[\Override]
     public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         // We don't send any mail if the transport if not defined to either "sendmail" or "smtp"

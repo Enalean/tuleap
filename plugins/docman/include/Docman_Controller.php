@@ -393,6 +393,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
         }
     }
 
+    #[\Override]
     public function request()
     {
         if (
@@ -1778,6 +1779,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
         return $isAllowed;
     }
 
+    #[\Override]
     public function actionsManagement()
     {
         // Redefine actions classes names building.
@@ -1791,6 +1793,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
         $wa->process($this->action, $this->_actionParams);
     }
 
+    #[\Override]
     public function viewsManagement()
     {
         if ($this->view !== null) {

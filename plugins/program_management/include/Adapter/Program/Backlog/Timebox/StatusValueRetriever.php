@@ -35,6 +35,7 @@ final class StatusValueRetriever implements RetrieveStatusValueUserCanSee
     {
     }
 
+    #[\Override]
     public function getLabel(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?string
     {
         $artifact     = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);

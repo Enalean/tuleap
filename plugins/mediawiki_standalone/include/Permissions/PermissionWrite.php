@@ -29,6 +29,7 @@ final class PermissionWrite implements Permission
 {
     public const NAME = 'WRITE';
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;

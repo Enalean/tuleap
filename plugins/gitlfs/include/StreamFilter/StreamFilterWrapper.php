@@ -27,6 +27,7 @@ final class StreamFilterWrapper extends \php_user_filter
      */
     private $user_filter;
 
+    #[\Override]
     public function onCreate(): bool
     {
         if (! $this->params instanceof FilterInterface) {
@@ -38,6 +39,7 @@ final class StreamFilterWrapper extends \php_user_filter
         return true;
     }
 
+    #[\Override]
     public function filter($in, $out, &$consumed, $closing): int
     {
         while ($bucket = \stream_bucket_make_writeable($in)) {
@@ -52,6 +54,7 @@ final class StreamFilterWrapper extends \php_user_filter
         return PSFS_PASS_ON;
     }
 
+    #[\Override]
     public function onClose(): void
     {
         $this->user_filter->filterDetachedEvent();

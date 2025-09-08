@@ -163,6 +163,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
         return '';
     }
 
+    #[\Override]
     public function setFrom($email)
     {
         list($email, $name) = $this->cleanupMailFormat($email);
@@ -175,11 +176,13 @@ class Codendi_Mail implements Codendi_Mail_Interface
         $this->message->getHeaders()->remove('From');
     }
 
+    #[\Override]
     public function setSubject($subject)
     {
         $this->message->subject($subject);
     }
 
+    #[\Override]
     public function getSubject()
     {
         return $this->message->getSubject();
@@ -190,6 +193,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      * @param String  $to
      * @param bool $raw
      */
+    #[\Override]
     public function setTo($to, $raw = false)
     {
         list($to,) = $this->cleanupMailFormat($to);
@@ -219,6 +223,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      *
      * @return String
      */
+    #[\Override]
     public function getTo()
     {
         return $this->getRecipientsFromHeader('To');
@@ -229,6 +234,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      * @param String  $bcc
      * @param bool $raw
      */
+    #[\Override]
     public function setBcc($bcc, $raw = false)
     {
         if (! $raw) {
@@ -257,6 +263,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      *
      * @return String
      */
+    #[\Override]
     public function getBcc()
     {
         return $this->getRecipientsFromHeader('Bcc');
@@ -267,6 +274,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      * @param String  $cc
      * @param bool $raw
      */
+    #[\Override]
     public function setCc($cc, $raw = false)
     {
         if (! $raw) {
@@ -295,6 +303,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      *
      * @return String
      */
+    #[\Override]
     public function getCc()
     {
         return $this->getRecipientsFromHeader('Cc');
@@ -379,6 +388,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
     /**
      * @param String $body
      */
+    #[\Override]
     public function setBody($body)
     {
         $this->setBodyHtml($body);
@@ -389,6 +399,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      *
      * @return String
      */
+    #[\Override]
     public function getBody()
     {
         return $this->getBodyHtml();
@@ -433,6 +444,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      *
      * @return bool
      */
+    #[\Override]
     public function send()
     {
         $status = true;
@@ -487,6 +499,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
         $headers->remove('Bcc');
     }
 
+    #[\Override]
     public function addAdditionalHeader($name, $value): void
     {
         $this->message->getHeaders()->addHeader($name, $value);

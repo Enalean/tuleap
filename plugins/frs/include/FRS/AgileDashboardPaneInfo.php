@@ -33,28 +33,33 @@ class AgileDashboardPaneInfo extends PaneInfo
     }
 
     /** @see PaneInfo::getIdentifier */
+    #[\Override]
     public function getIdentifier()
     {
         return 'frs';
     }
 
+    #[\Override]
     public function isExternalLink()
     {
         return true;
     }
 
     /** @see PaneInfo::getTitle */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-frs', 'File release');
     }
 
+    #[\Override]
     public function getUri(): string
     {
         $release_id = urlencode((string) $this->release_id);
         return "/frs/release/$release_id/release-notes";
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return 'fa-regular fa-copy';

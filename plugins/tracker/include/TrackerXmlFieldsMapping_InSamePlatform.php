@@ -20,11 +20,13 @@
 
 class TrackerXmlFieldsMapping_InSamePlatform implements TrackerXmlFieldsMapping
 {
+    #[\Override]
     public function getNewValueId($old_value_id)
     {
         return $old_value_id;
     }
 
+    #[\Override]
     public function getNewOpenValueId($old_value_id)
     {
         return $old_value_id;

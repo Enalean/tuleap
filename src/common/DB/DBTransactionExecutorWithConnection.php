@@ -39,6 +39,7 @@ final class DBTransactionExecutorWithConnection implements DBTransactionExecutor
      * @throws \Throwable
      * @return mixed
      */
+    #[\Override]
     public function execute(callable $atomic_operations)
     {
         return $this->db_connection->getDB()->tryFlatTransaction($atomic_operations);

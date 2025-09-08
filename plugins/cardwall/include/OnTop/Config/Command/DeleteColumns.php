@@ -55,6 +55,7 @@ class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_
     /**
      * @see Cardwall_OnTop_Config_Command::execute()
      */
+    #[\Override]
     public function execute(Codendi_Request $request)
     {
         if ($request->get('column')) {

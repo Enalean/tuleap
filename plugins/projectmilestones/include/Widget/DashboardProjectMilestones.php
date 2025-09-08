@@ -88,46 +88,55 @@ class DashboardProjectMilestones extends Widget
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return $this->project_milestones_widget_retriever->getTitle($this->project, $this->http->getCurrentUser());
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return dgettext('tuleap-projectmilestones', 'A widget for milestones monitoring.');
     }
 
+    #[\Override]
     public function getIcon(): string
     {
         return 'fa-map-signs';
     }
 
+    #[\Override]
     public function getJavascriptAssets(): array
     {
         return $this->project_milestones_widget_retriever->getJavascriptDependencies();
     }
 
+    #[\Override]
     public function getStylesheetDependencies(): CssAssetCollection
     {
         return $this->project_milestones_widget_retriever->getStylesheetDependencies();
     }
 
+    #[\Override]
     public function getCategory()
     {
         return dgettext('tuleap-projectmilestones', 'Backlog');
     }
 
+    #[\Override]
     public function isUnique()
     {
         return false;
     }
 
+    #[\Override]
     public function hasPreferences($widget_id)
     {
         return true;
     }
 
+    #[\Override]
     public function loadContent($id)
     {
         $project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
@@ -149,11 +158,13 @@ class DashboardProjectMilestones extends Widget
         }
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return $this->project_milestones_widget_retriever->getContent($this->project, $this->root_planning);
     }
 
+    #[\Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         if (! $this->project) {
@@ -163,6 +174,7 @@ class DashboardProjectMilestones extends Widget
         return $this->project_milestones_widget_retriever->getPreferences($widget_id, $this->project, $this->http->getCurrentUser(), $this->csrf_token);
     }
 
+    #[\Override]
     public function getInstallPreferences()
     {
         return $this->getRenderer()->renderToString(
@@ -171,6 +183,7 @@ class DashboardProjectMilestones extends Widget
         );
     }
 
+    #[\Override]
     public function updatePreferences(Codendi_Request $request)
     {
         $this->project_milestones_widget_retriever->updatePreferences($request);
@@ -182,6 +195,7 @@ class DashboardProjectMilestones extends Widget
      * @param string     $owner_type
      * @return int|string
      */
+    #[\Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -199,6 +213,7 @@ class DashboardProjectMilestones extends Widget
         }
     }
 
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         return $this->project_milestones_widget_retriever->create($request);
@@ -207,6 +222,7 @@ class DashboardProjectMilestones extends Widget
     /**
      * @param string $id
      */
+    #[\Override]
     public function destroy($id)
     {
         $this->project_milestones_dao->delete((int) $id);
@@ -217,6 +233,7 @@ class DashboardProjectMilestones extends Widget
         return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
     }
 
+    #[\Override]
     public function exportAsXML(): \SimpleXMLElement
     {
         $widget = new \SimpleXMLElement('<widget />');

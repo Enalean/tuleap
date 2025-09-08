@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 
 final class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBacklogStore, RemovePlannedFeaturesFromTopBacklog, VerifyIsInTopBacklog
 {
+    #[\Override]
     public function isInTheExplicitTopBacklog(int $artifact_id): bool
     {
         return $this->getDB()->exists(
@@ -42,6 +43,7 @@ final class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements T
     /**
      * @psalm-param non-empty-array<int> $artifact_ids
      */
+    #[\Override]
     public function addArtifactsToTheExplicitTopBacklog(array $artifact_ids): void
     {
         $statement_artifacts = EasyStatement::open()->in('all_feature_non_present_in_top_backlog_artifact.id IN (?*)', $artifact_ids);
@@ -76,6 +78,7 @@ final class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements T
     /**
      * @psalm-param non-empty-array<int> $artifact_ids
      */
+    #[\Override]
     public function removeArtifactsFromExplicitTopBacklog(array $artifact_ids): void
     {
         $statement_artifacts = EasyStatement::open()->in('artifact_id IN (?*)', $artifact_ids);
@@ -85,6 +88,7 @@ final class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements T
         );
     }
 
+    #[\Override]
     public function removeFeaturesPlannedInAProgramIncrementFromTopBacklog(int $potential_program_increment_id): void
     {
         $this->getDB()->run(

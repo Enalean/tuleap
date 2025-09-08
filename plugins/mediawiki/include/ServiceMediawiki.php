@@ -22,6 +22,7 @@ use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdm
 
 class ServiceMediawiki extends Service
 {
+    #[\Override]
     public function getIconName(): string
     {
         return 'fas fa-tlp-mediawiki';
@@ -44,6 +45,7 @@ class ServiceMediawiki extends Service
         return TemplateRendererFactory::build()->getRenderer(dirname(MEDIAWIKI_BASE_DIR) . '/templates');
     }
 
+    #[\Override]
     public function displayHeader(string $title, $breadcrumbs = [], array $toolbar = [], \Tuleap\Layout\HeaderConfiguration|array $params = []): void
     {
         $breadcrumb_builder = new \Tuleap\Mediawiki\MediawikiBreadcrumbBuilder(
@@ -76,11 +78,13 @@ class ServiceMediawiki extends Service
         return $has_special_permission || $user->isMember($this->project->getID(), 'A');
     }
 
+    #[\Override]
     public function getUrl(?string $url = null): string
     {
         return sprintf('/plugins/mediawiki/wiki/%s', urlencode($this->project->getUnixName()));
     }
 
+    #[\Override]
     public function urlCanChange(): bool
     {
         return false;

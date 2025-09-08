@@ -47,6 +47,7 @@ final class OnlyOfficeGlobalEditorJWTokenProvider implements ProvideOnlyOfficeGl
     /**
      * @psalm-return Ok<non-empty-string>|Err<Fault>
      */
+    #[\Override]
     public function getGlobalEditorJWToken(\PFUser $user, int $item_id, DateTimeImmutable $now): Ok|Err
     {
         return $this->config_document_provider->getDocumentConfig($user, $item_id, $now)

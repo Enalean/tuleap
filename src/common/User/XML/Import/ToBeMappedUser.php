@@ -47,6 +47,7 @@ class ToBeMappedUser extends ActionToBeTakenForUser
     }
 
     /** @return array */
+    #[\Override]
     public function getCSVData()
     {
         $matching = [];
@@ -70,6 +71,7 @@ class ToBeMappedUser extends ActionToBeTakenForUser
         ];
     }
 
+    #[\Override]
     public function isActionAllowed($action)
     {
         return $action === self::ACTION;

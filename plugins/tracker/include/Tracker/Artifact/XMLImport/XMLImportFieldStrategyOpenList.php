@@ -50,6 +50,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
      *
      * @return mixed
      */
+    #[\Override]
     public function getFieldData(
         TrackerField $field,
         SimpleXMLElement $field_change,

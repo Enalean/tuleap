@@ -25,25 +25,30 @@ class NullChildrenCollector extends Tracker_XML_ChildrenCollector
 {
     public const MAX = 50;
 
+    #[\Override]
     public function addChild($artifact_id, $parent_id)
     {
     }
 
+    #[\Override]
     public function getAllChildrenIds()
     {
         return [];
     }
 
+    #[\Override]
     public function pop()
     {
         return;
     }
 
+    #[\Override]
     public function getAllParents()
     {
         return [];
     }
 
+    #[\Override]
     public function getChildrenForParent($parent_id)
     {
         return [];

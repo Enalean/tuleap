@@ -80,36 +80,43 @@ class ScalarFieldMapping implements FieldMapping
         );
     }
 
+    #[\Override]
     public function getJiraFieldId(): string
     {
         return $this->jira_field_id;
     }
 
+    #[\Override]
     public function getXMLId(): string
     {
         return $this->xml_id;
     }
 
+    #[\Override]
     public function getFieldName(): string
     {
         return $this->field_name;
     }
 
+    #[\Override]
     public function getType(): string
     {
         return $this->type;
     }
 
+    #[\Override]
     public function getBindType(): ?string
     {
         return null;
     }
 
+    #[\Override]
     public function getJiraFieldLabel(): string
     {
         return $this->jira_field_label;
     }
 
+    #[\Override]
     public function getJiraFieldSchema(): ?string
     {
         return $this->jira_field_schema;

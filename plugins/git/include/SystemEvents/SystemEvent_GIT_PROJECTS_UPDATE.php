@@ -46,6 +46,7 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent
         return array_map('intval', $this->getParametersAsArray());
     }
 
+    #[\Override]
     public function process()
     {
         foreach ($this->getProjectIdsFromParameters() as $project_id) {
@@ -59,6 +60,7 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent
         $this->done();
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return implode(', ', $this->getParametersAsArray());

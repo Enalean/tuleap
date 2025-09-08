@@ -27,6 +27,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_DoNothing extends Git_Gitol
     {
     }
 
+    #[\Override]
     public function execute()
     {
         // do nothing

@@ -44,6 +44,7 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
     /**
      * @psalm-return Ok<DocmanFileLastVersion>|Err<Fault>
      */
+    #[\Override]
     public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err
     {
         $item = $this->item_factory->getItemFromDb($item_id);

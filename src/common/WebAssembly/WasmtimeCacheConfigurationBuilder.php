@@ -29,6 +29,7 @@ final class WasmtimeCacheConfigurationBuilder implements WASMCacheConfigurationB
     /**
      * @psalm-return Option<non-empty-string>
      */
+    #[\Override]
     public function buildCacheConfiguration(): Option
     {
         $cache_path = self::getCachePath();

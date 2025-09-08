@@ -28,6 +28,7 @@ use League\CommonMark\Extension\ExtensionInterface;
 
 final class AutolinkExtension implements ExtensionInterface
 {
+    #[\Override]
     public function register(EnvironmentBuilderInterface $environment): void
     {
         $environment->addInlineParser(new UrlAutolinkParser(['http', 'https']));

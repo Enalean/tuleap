@@ -49,6 +49,7 @@ class WebhookRouter extends RouterLink
         $this->delete_controller = $delete_controller;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request)
     {
         switch ($request->get('action')) {

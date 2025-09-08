@@ -33,6 +33,7 @@ final class OngoingTransactionCheckerPlugin implements Plugin
     {
     }
 
+    #[\Override]
     public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
         $this->transaction_checker->checkNoOngoingTransaction();

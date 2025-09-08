@@ -68,47 +68,55 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
         $this->does_item_has_expected_type_visitor = $does_item_has_expected_type_visitor;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): void
     {
         $this->checkExpectedType($item);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): void
     {
         $this->throwItemHasNotTheRightType();

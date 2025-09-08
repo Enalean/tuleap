@@ -78,6 +78,7 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
         $this->locale_switcher                 = $locale_switcher;
     }
 
+    #[\Override]
     public function execute(NotificationToProcess $notification): void
     {
         $pull_request           = $notification->getPullRequest();

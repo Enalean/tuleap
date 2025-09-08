@@ -22,16 +22,19 @@ class SystemEventQueueStatistics extends SystemEventQueue
 {
     public const NAME = 'statistics';
 
+    #[\Override]
     public function getName()
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getOwner()
     {
         return SystemEvent::OWNER_ROOT;
     }
 
+    #[\Override]
     public function getLabel()
     {
         return dgettext('tuleap-statistics', 'Statistics');

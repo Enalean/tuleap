@@ -28,17 +28,20 @@ class Docman_MetadataHtmlWiki extends \Docman_MetadataHtml
         $this->pagename = $pagename;
     }
 
+    #[\Override]
     public function getLabel($show_mandatory_information = \true)
     {
         return \dgettext('tuleap-docman', 'Page Name:');
     }
 
+    #[\Override]
     public function getField()
     {
         $hp = \Codendi_HTMLPurifier::instance();
         return '<input type="text" class="docman_text_field" name="item[wiki_page]" value="' . $hp->purify($this->pagename) . '" /> ';
     }
 
+    #[\Override]
     public function &getValidator()
     {
         $msg       = \dgettext('tuleap-docman', 'The page name is required.');

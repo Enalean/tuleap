@@ -38,6 +38,7 @@ final class PlanTrackerNotFoundException extends \Exception implements ProgramTr
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

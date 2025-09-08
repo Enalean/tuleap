@@ -83,6 +83,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -198,6 +199,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);

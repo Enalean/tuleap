@@ -96,6 +96,7 @@ class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.Cla
         $this->planning_factory             = PlanningFactory::build();
     }
 
+    #[\Override]
     public function getIdentifier()
     {
         return $this->info->getIdentifier();
@@ -104,6 +105,7 @@ class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.Cla
     /**
      * @see AgileDashboard_Pane::getFullContent()
      */
+    #[\Override]
     public function getFullContent()
     {
         return $this->getPaneContent('agiledashboard-fullpane');
@@ -112,6 +114,7 @@ class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.Cla
     /**
      * @see AgileDashboard_Pane::getMinimalContent()
      */
+    #[\Override]
     public function getMinimalContent()
     {
         return $this->getPaneContent('agiledashboard-minimalpane');
@@ -120,6 +123,7 @@ class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.Cla
     /**
      * @return list<string>
      */
+    #[\Override]
     public function getBodyClass(): array
     {
         return ['agiledashboard-body'];

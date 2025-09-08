@@ -47,6 +47,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
      *
      * @return null|Tracker_Artifact_ChangesetValue or null if not found
      */
+    #[\Override]
     public function getValue(TrackerField $field)
     {
         return null;
@@ -55,6 +56,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
     /**
      * @return Tracker_Artifact_ChangesetValue[]
      */
+    #[\Override]
     public function getChangesetValuesHasChanged(): array
     {
         return [];
@@ -65,6 +67,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
      *
      * @return array of Tracker_Artifact_ChangesetValue, or empty array if not found
      */
+    #[\Override]
     public function getValues()
     {
         return null;
@@ -73,6 +76,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
     /**
      * fetch followup
      */
+    #[\Override]
     public function fetchFollowUp($diff_to_previous, PFUser $current_user): string
     {
         return '';
@@ -85,6 +89,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
      *
      * @return bool true if the user can edit
      */
+    #[\Override]
     public function userCanEdit(?PFUser $user = null)
     {
         return false;
@@ -98,6 +103,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
      *
      * @return void
      */
+    #[\Override]
     public function updateComment($body, $user, $comment_format, $timestamp)
     {
     }
@@ -109,6 +115,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
      *
      * @return void
      */
+    #[\Override]
     public function delete(PFUser $user)
     {
     }
@@ -118,6 +125,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
      *
      * @return Tracker_Artifact_Changeset_Comment|null The comment of this changeset, or null if no comments
      */
+    #[\Override]
     public function getComment(): ?Tracker_Artifact_Changeset_Comment
     {
         return null;
@@ -130,6 +138,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
      *
      * @return bool true if there are changes in fields_data regarding this changeset, false if nothing has changed
      */
+    #[\Override]
     public function hasChanges($fields_data)
     {
         return true;
@@ -140,6 +149,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
      *
      * @return string The field difference between the previous changeset. or false if no changes
      */
+    #[\Override]
     public function diffToPrevious(
         $format = 'html',
         $user = null,
@@ -155,16 +165,19 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpc
     * @param String $diff
     *
     */
+    #[\Override]
     public function displayDiff($diff, $format, $field)
     {
         return false;
     }
 
+    #[\Override]
     public function getTracker()
     {
         return null;
     }
 
+    #[\Override]
     public function executePostCreationActions(bool $send_notifications): void
     {
     }

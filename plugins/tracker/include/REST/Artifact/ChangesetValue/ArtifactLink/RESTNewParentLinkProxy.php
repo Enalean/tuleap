@@ -51,6 +51,7 @@ final class RESTNewParentLinkProxy implements NewParentLink
         return new self($int);
     }
 
+    #[\Override]
     public function getParentArtifactId(): int
     {
         return $this->id;

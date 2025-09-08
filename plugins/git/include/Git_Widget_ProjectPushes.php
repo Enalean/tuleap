@@ -43,11 +43,13 @@ class Git_Widget_ProjectPushes extends Widget
      *
      * @return string
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-git', 'Last Git pushes');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $request     = HTTPRequest::instance();
@@ -67,6 +69,7 @@ class Git_Widget_ProjectPushes extends Widget
      *
      * @return string
      */
+    #[\Override]
     public function getCategory()
     {
         return _('Source code management');
@@ -77,6 +80,7 @@ class Git_Widget_ProjectPushes extends Widget
      *
      * @return String
      */
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-git', 'Display last Git pushes of the project.');

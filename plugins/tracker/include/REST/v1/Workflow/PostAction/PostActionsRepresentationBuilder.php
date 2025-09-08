@@ -66,6 +66,7 @@ class PostActionsRepresentationBuilder implements Visitor
         return $this->post_action_representations;
     }
 
+    #[\Override]
     public function visitCIBuild(Transition_PostAction_CIBuild $post_action)
     {
         $this->post_action_representations[] = RunJobRepresentation::build(
@@ -77,6 +78,7 @@ class PostActionsRepresentationBuilder implements Visitor
     /**
      * @throws UnsupportedDateValueException
      */
+    #[\Override]
     public function visitDateField(Transition_PostAction_Field_Date $post_action)
     {
         $this->post_action_representations[] = SetFieldValueRepresentation::forDate(
@@ -86,6 +88,7 @@ class PostActionsRepresentationBuilder implements Visitor
         );
     }
 
+    #[\Override]
     public function visitIntField(Transition_PostAction_Field_Int $post_action)
     {
         $this->post_action_representations[] = SetFieldValueRepresentation::forInt(
@@ -95,6 +98,7 @@ class PostActionsRepresentationBuilder implements Visitor
         );
     }
 
+    #[\Override]
     public function visitFloatField(Transition_PostAction_Field_Float $post_action)
     {
         $this->post_action_representations[] = SetFieldValueRepresentation::forFloat(
@@ -104,6 +108,7 @@ class PostActionsRepresentationBuilder implements Visitor
         );
     }
 
+    #[\Override]
     public function visitFrozenFields(FrozenFields $frozen_fields)
     {
         $this->post_action_representations[] = FrozenFieldsRepresentation::build(
@@ -112,6 +117,7 @@ class PostActionsRepresentationBuilder implements Visitor
         );
     }
 
+    #[\Override]
     public function visitHiddenFieldsets(HiddenFieldsets $hidden_fieldsets)
     {
         $fieldset_ids = [];
@@ -125,6 +131,7 @@ class PostActionsRepresentationBuilder implements Visitor
         );
     }
 
+    #[\Override]
     public function visitExternalActions(Transition_PostAction $post_action)
     {
         $event = new PostActionVisitExternalActionsEvent($post_action);

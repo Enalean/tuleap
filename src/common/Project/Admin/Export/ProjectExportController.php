@@ -48,6 +48,7 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -72,6 +73,7 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): \Project
     {
         if (! isset($variables['project_id'])) {

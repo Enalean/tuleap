@@ -26,6 +26,7 @@ use Symfony\Component\Process\Process;
 
 final class CurrentCPUInformation implements CPUInformation
 {
+    #[\Override]
     public function wordSize(): int
     {
         // This is a good enough assumption given the underlying OS only support
@@ -33,6 +34,7 @@ final class CurrentCPUInformation implements CPUInformation
         return PHP_INT_SIZE;
     }
 
+    #[\Override]
     public function l1CacheLineSize(): int
     {
         // \posix_sysconf() is PHP 8.3+

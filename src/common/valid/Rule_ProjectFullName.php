@@ -35,6 +35,7 @@ class Rule_ProjectFullName extends \Rule_UserName // phpcs:ignore PSR1.Classes.C
      *
      * @return bool
      */
+    #[\Override]
     public function isValid($val)
     {
         $val = \trim($val);
@@ -46,6 +47,7 @@ class Rule_ProjectFullName extends \Rule_UserName // phpcs:ignore PSR1.Classes.C
      *
      * @return string
      */
+    #[\Override]
     public function getErrorMessage($key = '')
     {
         return $this->error;

@@ -24,11 +24,13 @@
 
 class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
 {
+    #[\Override]
     public function getOwner()
     {
         return SystemEvent::OWNER_APP;
     }
 
+    #[\Override]
     protected function postEventsActions(array $executed_events_ids, $queue_name)
     {
         $params = [
@@ -42,6 +44,7 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
         );
     }
 
+    #[\Override]
     public function getProcessOwner()
     {
         return ForgeConfig::get('sys_http_user');

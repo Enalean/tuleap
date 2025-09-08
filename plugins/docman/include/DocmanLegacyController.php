@@ -54,6 +54,7 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
         $this->dao                       = $dao;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         (
@@ -70,6 +71,7 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
         )->process($request, $request->getCurrentUser());
     }
 
+    #[\Override]
     public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
     {
         return in_array(

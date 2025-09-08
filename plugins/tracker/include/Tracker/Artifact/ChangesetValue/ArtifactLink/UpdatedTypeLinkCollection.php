@@ -57,6 +57,7 @@ class UpdatedTypeLinkCollection implements ICollectChangeOfLinksBetweenTwoChange
         $this->formatter   = $formatter;
     }
 
+    #[\Override]
     public function add(Tracker_ArtifactLinkInfo $artifactlinkinfo)
     {
         $this->changed[] = $artifactlinkinfo;
@@ -65,6 +66,7 @@ class UpdatedTypeLinkCollection implements ICollectChangeOfLinksBetweenTwoChange
     /**
      * @return string
      */
+    #[\Override]
     public function fetchFormatted(PFUser $user, $format, $ignore_perms)
     {
         $source = $this->source_type->forward_label;

@@ -37,6 +37,7 @@ final class AlwaysSuccessfulRequestHandler implements RequestHandlerInterface
         $this->response_factory = $response_factory;
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->response_factory->createResponse();

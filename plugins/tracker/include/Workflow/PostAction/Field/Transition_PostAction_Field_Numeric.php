@@ -50,6 +50,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      *
      * @return bool
      */
+    #[\Override]
     public function isDefined()
     {
         return $this->getField() && ($this->value !== null);
@@ -71,6 +72,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      *
      * @return void
      */
+    #[\Override]
     public function before(array &$fields_data, PFUser $current_user)
     {
         // Do something only if the value and the float field are properly defined

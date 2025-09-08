@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 final class FieldIsExternalVerifier implements VerifyIsExternalField
 {
+    #[\Override]
     public function isAnExternalField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $field instanceof TrackerFormElementExternalField;

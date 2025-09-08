@@ -22,11 +22,13 @@ class Tracker_SystemEvent_Tv3Tv5Queue extends SystemEventQueue
 {
     public const NAME = 'tv3_tv5_migration';
 
+    #[\Override]
     public function getName()
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getLabel()
     {
         return $GLOBALS['Language']->getText('admin_system_events', 'tv3tv5_queue');

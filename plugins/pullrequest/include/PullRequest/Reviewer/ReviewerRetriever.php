@@ -41,6 +41,7 @@ class ReviewerRetriever implements RetrieveReviewers
     /**
      * @return \PFUser[]
      */
+    #[\Override]
     public function getReviewers(PullRequest $pull_request): array
     {
         $user_rows = $this->reviewer_dao->searchReviewers($pull_request->getId());

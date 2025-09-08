@@ -39,6 +39,7 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumns extends Cardwall_OnTo
     /**
      * @see Cardwall_OnTop_Config_Command::execute()
      */
+    #[\Override]
     public function execute(Codendi_Request $request)
     {
         $please_enable = $request->get('use_freestyle_columns');

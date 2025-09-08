@@ -46,11 +46,13 @@ class User implements IProvideKey
         $this->rewind();
     }
 
+    #[\Override]
     public function current(): Key
     {
         return new Key($this->current_username, $this->user_ssh_key_iterator->current());
     }
 
+    #[\Override]
     public function next(): void
     {
         $this->current_position++;
@@ -67,16 +69,19 @@ class User implements IProvideKey
         $this->user_with_ssh_keys->next();
     }
 
+    #[\Override]
     public function key(): int
     {
         return $this->current_position;
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return $this->user_ssh_key_iterator->valid();
     }
 
+    #[\Override]
     public function rewind(): void
     {
         $this->user_with_ssh_keys->rewind();

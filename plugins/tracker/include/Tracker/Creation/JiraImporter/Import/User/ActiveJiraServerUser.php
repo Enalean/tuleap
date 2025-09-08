@@ -40,16 +40,19 @@ final class ActiveJiraServerUser implements JiraUser
         return new self($user_json['name'], $user_json['displayName'], $user_json['emailAddress'] ?? JiraUser::NO_EMAIL_ADDRESS_SHARED);
     }
 
+    #[\Override]
     public function getDisplayName(): string
     {
         return $this->display_name;
     }
 
+    #[\Override]
     public function getEmailAddress(): string
     {
         return $this->email_address;
     }
 
+    #[\Override]
     public function getUniqueIdentifier(): string
     {
         return $this->username;

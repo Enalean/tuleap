@@ -38,6 +38,7 @@ final class KanbanService extends \Service implements ServiceForCreation
     public const INSTRUMENTATION_NAME = 'kanban';
 
 
+    #[\Override]
     public static function forServiceCreation(\Project $project): self
     {
         return new self(
@@ -59,26 +60,31 @@ final class KanbanService extends \Service implements ServiceForCreation
         );
     }
 
+    #[\Override]
     public function getIconName(): string
     {
         return self::ICON_NAME;
     }
 
+    #[\Override]
     public function getInternationalizedName(): string
     {
         return dgettext('tuleap-kanban', 'Kanban');
     }
 
+    #[\Override]
     public function getProjectAdministrationName(): string
     {
         return dgettext('tuleap-kanban', 'Kanban');
     }
 
+    #[\Override]
     public function getInternationalizedDescription(): string
     {
         return dgettext('tuleap-kanban', 'Kanban boards');
     }
 
+    #[\Override]
     public function urlCanChange(): bool
     {
         return false;
@@ -101,6 +107,7 @@ final class KanbanService extends \Service implements ServiceForCreation
         );
     }
 
+    #[\Override]
     public function getUrl(?string $url = null): string
     {
         return KanbanServiceHomepageUrlBuilder::getUrl($this->project);
@@ -109,6 +116,7 @@ final class KanbanService extends \Service implements ServiceForCreation
     /**
      * @return list<SidebarPromotedItemPresenter>
      */
+    #[\Override]
     public function getPromotedItemPresenters(\PFUser $user, ?string $active_promoted_item_id): array
     {
         $kanban_factory = new KanbanFactory(

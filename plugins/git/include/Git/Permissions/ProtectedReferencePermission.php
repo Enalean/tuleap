@@ -35,6 +35,7 @@ class ProtectedReferencePermission implements Permission
     /**
      * @return string
      */
+    #[\Override]
     public function getPattern()
     {
         return $this->pattern;
@@ -43,6 +44,7 @@ class ProtectedReferencePermission implements Permission
     /**
      * @return array
      */
+    #[\Override]
     public function getWritersUgroup()
     {
         return [];
@@ -51,6 +53,7 @@ class ProtectedReferencePermission implements Permission
     /**
      * @return array
      */
+    #[\Override]
     public function getRewindersUgroup()
     {
         return [];

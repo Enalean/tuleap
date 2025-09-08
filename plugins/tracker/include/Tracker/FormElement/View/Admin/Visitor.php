@@ -80,6 +80,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
      *
      * @param Tracker_FormElement $element
      */
+    #[\Override]
     public function visit(/*Tracker_FormElement*/ $element)
     {
         $this->element = $element;
@@ -99,6 +100,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         }
     }
 
+    #[\Override]
     public function visitArtifactLink(ArtifactLinkField $field)
     {
         $this->element      = $field;
@@ -109,41 +111,49 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         );
     }
 
+    #[\Override]
     public function visitDate(DateField $field)
     {
         $this->visitField($field);
     }
 
+    #[\Override]
     public function visitFile(FilesField $field)
     {
         $this->visitField($field);
     }
 
+    #[\Override]
     public function visitFloat(FloatField $field)
     {
         $this->visitField($field);
     }
 
+    #[\Override]
     public function visitInteger(IntegerField $field)
     {
         $this->visitField($field);
     }
 
+    #[\Override]
     public function visitOpenList(OpenListField $field)
     {
         $this->visitList($field);
     }
 
+    #[\Override]
     public function visitString(StringField $field)
     {
         $this->visitField($field);
     }
 
+    #[\Override]
     public function visitText(TextField $field)
     {
         $this->visitField($field);
     }
 
+    #[\Override]
     public function visitComputed(ComputedField $element)
     {
         $this->element      = $element;
@@ -156,35 +166,41 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Field($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitArtifactId(ArtifactIdField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_ArtifactId($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitPerTrackerArtifactId(PerTrackerArtifactIdField $element)
     {
         $this->visitArtifactId($element);
     }
 
+    #[\Override]
     public function visitCrossReferences(CrossReferencesField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_CrossReferences($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitBurndown(BurndownField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Burndown($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitLastUpdateDate(LastUpdateDateField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_LastUpdateDate($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitPermissionsOnArtifact(PermissionsOnArtifactField $element)
     {
         $this->element      = $element;
@@ -197,42 +213,49 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_List($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitSelectbox(SelectboxField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Selectbox($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitSubmittedBy(SubmittedByField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_SubmittedBy($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitLastModifiedBy(LastUpdateByField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_LastModifiedBy($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitSubmittedOn(SubmittedOnField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_SubmittedOn($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitMultiSelectbox(MultiSelectboxField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_MultiSelectbox($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitCheckbox(CheckboxField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Checkbox($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitRadiobutton(RadioButtonField $element)
     {
         $this->element      = $element;
@@ -264,12 +287,14 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Shared($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitPriority(PriorityField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Priority($element, $this->allUsedElements);
     }
 
+    #[\Override]
     public function visitExternalField(TrackerFormElementExternalField $element)
     {
         $this->element      = $element;

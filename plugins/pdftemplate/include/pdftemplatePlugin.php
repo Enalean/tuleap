@@ -81,6 +81,7 @@ class PdfTemplatePlugin extends Plugin
         bindtextdomain('tuleap-pdftemplate', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {

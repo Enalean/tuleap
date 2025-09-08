@@ -37,6 +37,7 @@ class VersionDao extends DataAccessObject implements ICountVersions
         return $this->getDB()->run($sql, $id, $offset, $limit);
     }
 
+    #[\Override]
     public function countByItemId(int $id): int
     {
         return $this->getDB()->single(

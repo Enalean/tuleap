@@ -62,6 +62,7 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         $this->errors_listing_builder = $errors_listing_builder;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): void
     {
         $items    = $item->getAllItems();
@@ -78,18 +79,22 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         }
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): void
     {
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): void
     {
     }
 
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = []): void
     {
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): void
     {
         try {
@@ -104,6 +109,7 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         }
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
     {
         $name          = $item->getTitle();
@@ -112,10 +118,12 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         $this->addFileToArchive($item, $this->getName($document_path, $name . '.html'));
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): void
     {
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): void
     {
     }

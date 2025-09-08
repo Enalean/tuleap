@@ -88,6 +88,7 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
     /**
      * @throws ForbiddenException
      */
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->user_manager->getCurrentUser();

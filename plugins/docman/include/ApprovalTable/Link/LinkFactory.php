@@ -75,6 +75,7 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
      * @param $table ApprovalTable
      * @return int new table id
      */
+    #[\Override]
     public function _createTable($table)
     {
         return $this->dao->createTable(
@@ -88,12 +89,14 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
         );
     }
 
+    #[\Override]
     public function _updateTableWithLastId($dstTable)
     {
         $currentVersion = $this->item->getCurrentVersion();
         $dstTable->setVersionId($currentVersion->getId());
     }
 
+    #[\Override]
     public function _getTable()
     {
         return $this->getTableFromVersion($this->itemVersion);
@@ -113,18 +116,21 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
         return $table;
     }
 
+    #[\Override]
     public function getLastDocumentVersionNumber()
     {
         $currentItemVersion = $this->item->getCurrentVersion();
         return $currentItemVersion->getNumber();
     }
 
+    #[\Override]
     public function userAccessedSinceLastUpdate($user)
     {
         $log = new Docman_Log();
         return $log->userAccessedSince($user->getId(), $this->item->getId(), $this->itemVersion->getDate());
     }
 
+    #[\Override]
     public function _getDao()
     {
         return $this->dao;

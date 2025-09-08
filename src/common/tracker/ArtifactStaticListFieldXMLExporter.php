@@ -44,6 +44,7 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
         ];
     }
 
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         $field_node = $this->getNode(self::TV5_TYPE, $row);
@@ -75,6 +76,7 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
         throw new Exception_TV3XMLException("Unknown label for $artifact_id $value");
     }
 
+    #[\Override]
     public function getCurrentFieldValue(array $field_value_row, $tracker_id)
     {
         if (! isset($this->artifact_field_value_not_accurate[$field_value_row['field_name']])) {
@@ -82,6 +84,7 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
         }
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         return self::TV3_VALUE_INDEX;

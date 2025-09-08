@@ -75,6 +75,7 @@ class TroveCat implements JsonSerializable
         return $this->children;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

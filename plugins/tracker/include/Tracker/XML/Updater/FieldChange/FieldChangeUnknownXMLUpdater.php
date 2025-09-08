@@ -23,6 +23,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater implements Tr
     /**
      * @param mixed            $submitted_value
      */
+    #[\Override]
     public function update(SimpleXMLElement $field_change_xml, $submitted_value)
     {
         //do nothing

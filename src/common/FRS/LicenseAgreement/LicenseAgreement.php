@@ -48,41 +48,49 @@ class LicenseAgreement implements LicenseAgreementInterface
         $this->content = $content;
     }
 
+    #[\Override]
     public function getAsJson(): string
     {
         return \json_encode(['id' => $this->id, 'title' => $this->title, 'content' => $this->content]);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return $this->content;
     }
 
+    #[\Override]
     public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter
     {
         return new LicenseOptionPresenter($this->getId(), $this->getTitle(), $selected_agreement->getId() === $this->getId());
     }
 
+    #[\Override]
     public function isModifiable(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function isViewable(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function canBeDeleted(): bool
     {
         return true;

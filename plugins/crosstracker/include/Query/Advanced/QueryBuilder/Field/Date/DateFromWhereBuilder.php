@@ -88,6 +88,7 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         return "CVDate_$suffix";
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         $comparison                 = $parameters->comparison;
@@ -197,6 +198,7 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         $simple_value_wrapper = new SimpleValueWrapper($value_wrapper->getValue()->format(DateFormat::DATE));
@@ -204,6 +206,7 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         return $this->visitSimpleValueWrapper($simple_value_wrapper, $parameters);
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         $comparison                 = $parameters->comparison;
@@ -229,16 +232,19 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
         );
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to status open should have been flagged as invalid for Date fields');
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new LogicException('Comparison with In() should have been flagged as invalid for Date fields');
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to current user should have been flagged as invalid for Date fields');

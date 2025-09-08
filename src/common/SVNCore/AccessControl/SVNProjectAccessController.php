@@ -81,6 +81,7 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible imple
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $credentials_set = $this->basic_auth_login_extractor->extract($request);

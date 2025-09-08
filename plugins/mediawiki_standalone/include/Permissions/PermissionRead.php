@@ -29,6 +29,7 @@ final class PermissionRead implements Permission
 {
     public const NAME = 'READ';
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;

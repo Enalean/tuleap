@@ -195,6 +195,7 @@ class LDAP_UserManager implements LdapLoginFromTuleapUserIdProvider //phpcs:igno
      * @param int[] $user_ids
      * @return array<array{user_id: int, ldap_uid: string, status: string}>
      */
+    #[\Override]
     public function getLdapLoginFromUserIds(array $user_ids): array
     {
         return $this->getDao()->searchLdapLoginFromUserIds($user_ids);

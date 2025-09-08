@@ -68,6 +68,7 @@ class ArtifactLinkChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitArtifactLink($this);
@@ -111,6 +112,7 @@ class ArtifactLinkChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @return string|false The difference between another $changeset_value, false if no differences
      */
+    #[\Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $this->setCurrentUserIfUserIsNotDefined($user);
@@ -152,6 +154,7 @@ class ArtifactLinkChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @return string The sentence to add in changeset
      */
+    #[\Override]
     public function nodiff($format = 'html')
     {
         $next = $this->getValue();
@@ -167,11 +170,13 @@ class ArtifactLinkChangesetValue extends Tracker_Artifact_ChangesetValue
         }
     }
 
+    #[\Override]
     public function getRESTValue(PFUser $user): ArtifactFieldValueArtifactLinksFullRepresentation
     {
         return $this->getFullRESTValue($user);
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user): ArtifactFieldValueArtifactLinksFullRepresentation
     {
         $outgoing_links = $this->getAllOutgoingArtifactIdsUserCanSee($user);
@@ -234,6 +239,7 @@ class ArtifactLinkChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @return array<int, Tracker_ArtifactLinkInfo> The value of this artifact changeset value
      */
+    #[\Override]
     public function getValue(): array
     {
         return $this->artifact_links;

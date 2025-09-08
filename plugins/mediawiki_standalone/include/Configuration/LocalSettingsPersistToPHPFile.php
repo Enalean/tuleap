@@ -33,6 +33,7 @@ final class LocalSettingsPersistToPHPFile implements LocalSettingsPersist
     {
     }
 
+    #[\Override]
     public function persist(LocalSettingsRepresentation $representation): void
     {
         $path = $this->path_setting_directory . '/' . self::FILE_NAME;

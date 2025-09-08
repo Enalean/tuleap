@@ -35,6 +35,7 @@ final class SendMessagesForAdmins implements MessageSender
     ) {
     }
 
+    #[\Override]
     public function sendMessages(array $messages, Tracker_Artifact_Changeset $changeset): Ok|Err
     {
         foreach ($messages as $message) {

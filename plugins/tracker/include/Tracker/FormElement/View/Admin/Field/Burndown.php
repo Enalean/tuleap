@@ -20,6 +20,7 @@
 
 class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_View_Admin_Field
 {
+    #[\Override]
     protected function fetchRequired()
     {
         return '';

@@ -26,6 +26,7 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final readonly class AdministrationCSRFTokenProvider implements CSRFTokenProvider
 {
+    #[\Override]
     public function getToken(): CSRFSynchronizerTokenInterface
     {
         return new \CSRFSynchronizerToken(IndexPdfTemplateController::ROUTE);

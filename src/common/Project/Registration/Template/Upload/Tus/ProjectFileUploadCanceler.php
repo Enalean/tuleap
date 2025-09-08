@@ -33,6 +33,7 @@ final readonly class ProjectFileUploadCanceler implements TusTerminaterDataStore
     {
     }
 
+    #[\Override]
     public function terminateUpload(TusFileInformation $file_information): void
     {
         $this->file_ongoing_upload_dao->deleteByID($file_information);

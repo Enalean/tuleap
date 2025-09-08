@@ -107,6 +107,7 @@ final class XMLBindStaticValue implements XMLBindValue
         return $new;
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $bind, \SimpleXMLElement $values): void
     {
         $item = $values->addChild('item');

@@ -28,6 +28,7 @@ namespace Tuleap\Config;
  */
 final class ConfigKeyModifierDatabase implements ConfigKeyModifier
 {
+    #[\Override]
     public function getModifierLabel(): string
     {
         return 'config-set';

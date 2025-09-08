@@ -39,6 +39,7 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
         $this->current_value_exporter = $current_value_exporter;
     }
 
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         $values = explode(',', $row['new_value']);
@@ -63,6 +64,7 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
         return $value;
     }
 
+    #[\Override]
     public function getCurrentFieldValue(array $field_value_row, $tracker_id)
     {
         return $this->current_value_exporter->getCurrentFieldValue($field_value_row, $tracker_id);
@@ -74,11 +76,13 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
                $value === self::SYS_VALUE_NONE_FR;
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         return self::LABEL_VALUES_INDEX;
     }
 
+    #[\Override]
     public function isValueEqual($history_field_value, $field_value)
     {
         $value1 = explode(',', $history_field_value);

@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\Planning\Admin\ModificationBan;
  */
 final class MilestoneTrackerUpdateProhibited implements ModificationBan
 {
+    #[\Override]
     public function getMessage(): string
     {
         return dgettext(

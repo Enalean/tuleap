@@ -29,16 +29,19 @@ class DisplayUserActivities extends User_ForgeUserGroupPermission
 {
     public const ID = 10;
 
+    #[\Override]
     public function getId()
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getName()
     {
         return dgettext('tuleap-create_test_env', 'Access create test environment activities');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return dgettext('tuleap-create_test_env', 'Access create test environment activities');

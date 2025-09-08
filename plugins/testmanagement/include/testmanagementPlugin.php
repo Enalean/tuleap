@@ -158,11 +158,13 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         }
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return ['tracker'];
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
@@ -180,6 +182,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         return $project->usesService($this->getServiceShortname());
     }
 
+    #[\Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
@@ -190,11 +193,13 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
      * @see Event::SERVICE_IS_USED
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
      */
+    #[\Override]
     public function serviceIsUsed(array $params): void
     {
         // nothing to do for TTM
     }
 
+    #[\Override]
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
         $service_short_name = $this->getServiceShortname();
@@ -229,11 +234,13 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         $event->setWarningMessage($message);
     }
 
+    #[\Override]
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         // nothing to do for TTM
     }
 
+    #[\Override]
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for TTM
@@ -430,6 +437,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     /**
      * @return TestManagementPluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -438,6 +446,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(\Tuleap\TestManagement\IndexPresenter::class);
@@ -885,6 +894,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         $checker->checkPostActions($event);
     }
 
+    #[\Override]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());

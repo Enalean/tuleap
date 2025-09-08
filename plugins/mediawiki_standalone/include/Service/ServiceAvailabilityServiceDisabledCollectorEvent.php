@@ -31,16 +31,19 @@ final class ServiceAvailabilityServiceDisabledCollectorEvent implements ServiceA
     {
     }
 
+    #[\Override]
     public function isForService(string $service_shortname): bool
     {
         return $this->event->isForService($service_shortname);
     }
 
+    #[\Override]
     public function getProject(): \Project
     {
         return $this->event->getProject();
     }
 
+    #[\Override]
     public function cannotBeActivated(string $reason): void
     {
         $this->event->setIsDisabled($reason);

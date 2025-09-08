@@ -28,6 +28,7 @@ use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeIdentifierSearcherDAO;
 
 class OAuth2AccessTokenScopeDAO extends DataAccessObject implements OAuth2ScopeIdentifierSaverDAO, OAuth2ScopeIdentifierSearcherDAO
 {
+    #[\Override]
     public function saveScopeKeysByID(int $id, string ...$scope_keys): void
     {
         $data_to_insert = [];
@@ -39,6 +40,7 @@ class OAuth2AccessTokenScopeDAO extends DataAccessObject implements OAuth2ScopeI
         $this->getDB()->insertMany('oauth2_access_token_scope', $data_to_insert);
     }
 
+    #[\Override]
     public function searchScopeIdentifiersByOAuth2SplitTokenID(int $id): array
     {
         return $this->getDB()->run(

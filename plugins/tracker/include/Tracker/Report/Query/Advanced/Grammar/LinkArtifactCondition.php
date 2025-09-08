@@ -28,6 +28,7 @@ final class LinkArtifactCondition implements LinkCondition
     {
     }
 
+    #[\Override]
     public function accept(LinkConditionVisitor $visitor, $parameters)
     {
         return $visitor->visitLinkArtifactCondition($this, $parameters);

@@ -9,7 +9,8 @@
 
 class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements Visitor*/
 {
-    /* protected */ public function _content($params)
+    /* protected */ #[\Override]
+    public function _content($params)
     {
         echo '<select name="ordering">';
         echo '<option value="beginning" ' . ($params['force_ordering'] === 'beginning' ? 'selected="selected"' : '') . '>' . dgettext('tuleap-docman', 'At the beginning') . '</option>';

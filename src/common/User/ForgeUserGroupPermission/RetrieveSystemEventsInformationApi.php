@@ -26,16 +26,19 @@ class RetrieveSystemEventsInformationApi extends User_ForgeUserGroupPermission
 {
     public const ID = 6;
 
+    #[\Override]
     public function getId()
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getName()
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'system_event_api_name');
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'system_event_api_description');

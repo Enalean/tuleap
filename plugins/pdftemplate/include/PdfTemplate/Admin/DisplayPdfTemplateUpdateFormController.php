@@ -55,6 +55,7 @@ final readonly class DisplayPdfTemplateUpdateFormController implements Dispatcha
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();

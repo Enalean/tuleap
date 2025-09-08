@@ -65,6 +65,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
      *
      * @return array
      */
+    #[\Override]
     public function fetchFormattedForJson()
     {
         return [

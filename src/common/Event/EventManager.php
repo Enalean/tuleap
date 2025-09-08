@@ -138,6 +138,7 @@ class EventManager implements EventDispatcherInterface // phpcs:ignore
      * @return object
      *   The Event that was passed, now modified by listeners.
      */
+    #[\Override]
     public function dispatch(object $event): object
     {
         foreach ($this->getListenersForEvent($event) as $hook) {

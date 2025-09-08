@@ -25,11 +25,13 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 final class JiraServer9Client extends ClientWrapper
 {
+    #[\Override]
     public function isJiraCloud(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isJiraServer9(): bool
     {
         return true;

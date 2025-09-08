@@ -51,6 +51,7 @@ class FileBeingUploadedInformationProvider implements TusFileInformationProvider
         $this->dao            = $dao;
     }
 
+    #[\Override]
     public function getFileInformation(ServerRequestInterface $request): ?TusFileInformation
     {
         $id = $request->getAttribute('id');

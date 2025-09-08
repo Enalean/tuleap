@@ -46,6 +46,7 @@ final class RejectNonHTTPSRequestMiddleware implements MiddlewareInterface
         $this->stream_factory   = $stream_factory;
     }
 
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($request->getUri()->getScheme() !== 'https') {

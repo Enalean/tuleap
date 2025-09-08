@@ -46,6 +46,7 @@ final class CachedSemanticDescriptionFieldRetriever implements RetrieveSemanticD
     {
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): ?\Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         if (isset($this->semantics_cache[$tracker->getId()])) {

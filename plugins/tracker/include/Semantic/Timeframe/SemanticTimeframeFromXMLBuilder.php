@@ -45,6 +45,7 @@ class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
         $this->semantic_timeframe_builder    = $semantic_timeframe_builder;
     }
 
+    #[\Override]
     public function getInstanceFromXML(
         SimpleXMLElement $current_semantic_xml,
         SimpleXMLElement $all_semantics_xml,

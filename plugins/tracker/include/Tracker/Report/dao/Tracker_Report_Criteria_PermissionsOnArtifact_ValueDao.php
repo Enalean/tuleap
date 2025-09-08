@@ -26,6 +26,7 @@ class Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao extends Tracker_Rep
         $this->table_name = 'tracker_report_criteria_permissionsonartifact_value';
     }
 
+    #[\Override]
     public function save($id, $value)
     {
         $values = isset($value['values']) ? $value['values'] : null;

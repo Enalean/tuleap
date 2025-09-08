@@ -42,11 +42,13 @@ final class ForceRegenerationDefaultAvatarCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Remove all the generated default avatars to force their regeneration.');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $user_with_default_avatar_rows = $this->user_dao->searchUsersWithDefaultAvatar();

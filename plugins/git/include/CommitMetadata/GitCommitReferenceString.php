@@ -40,6 +40,7 @@ final class GitCommitReferenceString implements \Tuleap\Reference\ReferenceStrin
         );
     }
 
+    #[\Override]
     public function getStringReference(): string
     {
         return $this->reference;

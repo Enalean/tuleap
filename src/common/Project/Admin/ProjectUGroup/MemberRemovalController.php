@@ -139,6 +139,7 @@ class MemberRemovalController implements DispatchableWithRequest
      * @throws NotFoundException
      * @throws ForbiddenException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);

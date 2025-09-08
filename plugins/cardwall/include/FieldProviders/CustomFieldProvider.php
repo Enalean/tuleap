@@ -41,6 +41,7 @@ class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProv
     /**
      * @return SelectboxField | null
      */
+    #[\Override]
     public function getField(Tracker $tracker)
     {
         return $this->field;

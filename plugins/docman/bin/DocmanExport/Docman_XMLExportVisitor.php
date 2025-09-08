@@ -62,6 +62,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
         $this->dataPath = $path;
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = [])
     {
         $type = str_replace('docman_', '', strtolower($item::class));
@@ -137,6 +138,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
         }
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         $this->statistics['nb_folder']++;
@@ -158,6 +160,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $this->visitItem($item);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         $this->statistics['nb_wiki']++;
@@ -166,6 +169,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $node;
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = [])
     {
         $this->statistics['nb_link']++;
@@ -174,6 +178,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $node;
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = [])
     {
         $this->statistics['nb_file']++;
@@ -193,18 +198,21 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $n;
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         $this->statistics['nb_embedded']++;
         return $this->visitFile($item);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
         $this->statistics['nb_empty']++;
         return $this->visitDocument($item);
     }
 
+    #[\Override]
     public function visitOtherDocument(\Tuleap\Docman\Item\OtherDocument $item, array $params = [])
     {
         return $this->visitDocument($item);

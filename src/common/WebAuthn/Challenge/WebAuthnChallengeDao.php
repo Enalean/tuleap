@@ -31,6 +31,7 @@ final class WebAuthnChallengeDao extends DataAccessObject implements SaveWebAuth
 {
     private const VALIDITY_TIME_IN_SECONDS = 60 * 2;
 
+    #[\Override]
     public function saveChallenge(int $user_id, string $challenge): void
     {
         $this->getDB()->tryFlatTransaction(
@@ -50,6 +51,7 @@ final class WebAuthnChallengeDao extends DataAccessObject implements SaveWebAuth
         );
     }
 
+    #[\Override]
     public function searchChallenge(int $user_id): Option
     {
         return $this->getDB()->tryFlatTransaction(

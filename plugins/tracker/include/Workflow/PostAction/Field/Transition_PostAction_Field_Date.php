@@ -65,6 +65,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return string
      */
+    #[\Override]
     public function getShortName()
     {
         return self::SHORT_NAME;
@@ -85,6 +86,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return string
      */
+    #[\Override]
     public static function getLabel()
     {
         return dgettext('tuleap-tracker', 'Change the value of a date field');
@@ -95,6 +97,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return bool
      */
+    #[\Override]
     public function isDefined()
     {
         return $this->getField() && ($this->value_type === self::CLEAR_DATE || $this->value_type === self::FILL_CURRENT_TIME);
@@ -108,6 +111,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return void
      */
+    #[\Override]
     public function before(array &$fields_data, PFUser $current_user)
     {
         // Do something only if the value_type and the date field are properly defined
@@ -143,6 +147,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return void
      */
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if ($this->getFieldId()) {
@@ -162,6 +167,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
         return new Transition_PostAction_Field_DateDao();
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitDateField($this);

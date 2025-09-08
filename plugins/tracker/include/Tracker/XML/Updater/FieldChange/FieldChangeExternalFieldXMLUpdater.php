@@ -30,6 +30,7 @@ class FieldChangeExternalFieldXMLUpdater implements Tracker_XML_Updater_FieldCha
     {
     }
 
+    #[\Override]
     public function update(SimpleXMLElement $field_change_xml, $submitted_value): void
     {
         assert(is_array($submitted_value));

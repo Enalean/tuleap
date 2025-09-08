@@ -31,6 +31,7 @@ final readonly class ContributorFieldRetriever implements RetrieveContributorFie
     {
     }
 
+    #[\Override]
     public function getContributorField(Tracker $tracker): ?ListField
     {
         return $this->factory->getByTracker($tracker)->getField();

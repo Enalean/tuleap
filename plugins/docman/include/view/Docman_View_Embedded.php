@@ -21,6 +21,7 @@
 
 class Docman_View_Embedded extends Docman_View_Display
 {
+    #[\Override]
     public function _content($params)
     {
         $version = $params['item']->getCurrentVersion();

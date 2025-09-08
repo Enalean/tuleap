@@ -30,41 +30,49 @@ class NoLicenseToApprove implements LicenseAgreementInterface
 {
     public const ID = -1;
 
+    #[\Override]
     public function getAsJson(): string
     {
         return '{}';
     }
 
+    #[\Override]
     public function getId(): int
     {
         return self::ID;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return _('No license to approve');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter
     {
         return new LicenseOptionPresenter($this->getId(), _('No'), $selected_agreement->getId() === $this->getId());
     }
 
+    #[\Override]
     public function isModifiable(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isViewable(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function canBeDeleted(): bool
     {
         return false;

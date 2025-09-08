@@ -78,6 +78,7 @@ final class StartContainerCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -88,6 +89,7 @@ final class StartContainerCommand extends Command
             ->addOption(self::OPTION_DEBUG, '', InputOption::VALUE_NONE, 'If something is failing, container will hang, available for debug');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());

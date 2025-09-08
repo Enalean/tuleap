@@ -48,6 +48,7 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
         $this->resource_restrictor = $resource_restrictor;
     }
 
+    #[\Override]
     public function process()
     {
         try {
@@ -104,6 +105,7 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
         return (int) $parameters[0];
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         if ($this->areAllProjectsMigrated()) {

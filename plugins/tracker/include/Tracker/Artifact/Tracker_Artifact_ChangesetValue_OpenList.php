@@ -29,6 +29,7 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
     /**
      * @return mixed
      */
+    #[\Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitOpenList($this);
@@ -39,6 +40,7 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
      *
      * @return array of int The values of this artifact changeset value
      */
+    #[\Override]
     public function getValue()
     {
         $values = $this->getListValues();
@@ -49,11 +51,13 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
         return $array;
     }
 
+    #[\Override]
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {
         return $value->getAPIValue();
     }
 
+    #[\Override]
     public function getFullRESTValue(PFUser $user)
     {
         $full_values = [];

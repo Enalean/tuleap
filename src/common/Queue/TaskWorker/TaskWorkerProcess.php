@@ -39,6 +39,7 @@ final class TaskWorkerProcess implements TaskWorker
     ) {
     }
 
+    #[\Override]
     public function run(WorkerEventContent $worker_event_content): void
     {
         $process = new Process(

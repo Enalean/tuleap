@@ -42,6 +42,7 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformer implements TransformD
     /**
      * @psalm-return Ok<OnlyOfficeDocument>|Err<Fault>
      */
+    #[\Override]
     public function transformToOnlyOfficeDocument(DocmanFileLastVersion $file_last_version): Ok|Err
     {
         $servers = $this->servers_retriever->retrieveAll();

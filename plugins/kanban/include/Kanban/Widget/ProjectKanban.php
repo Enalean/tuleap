@@ -58,6 +58,7 @@ class ProjectKanban extends KanbanWidget
         );
     }
 
+    #[\Override]
     public function exportAsXML(): ?\SimpleXMLElement
     {
         if (! $this->kanban_id) {

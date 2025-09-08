@@ -34,6 +34,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent // phpcs:ignore PSR1.Classes.
      *
      * @return string
      */
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return '-';
@@ -42,6 +43,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent // phpcs:ignore PSR1.Classes.
     /**
      * Process stored event
      */
+    #[\Override]
     public function process()
     {
         $backendSystem  = BackendSystem::instance();

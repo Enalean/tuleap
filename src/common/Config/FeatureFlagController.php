@@ -40,6 +40,7 @@ final class FeatureFlagController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $params = $request->getQueryParams();

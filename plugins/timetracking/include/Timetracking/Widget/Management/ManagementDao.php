@@ -55,6 +55,7 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
         );
     }
 
+    #[\Override]
     public function saveQueryWithDates(
         int $query_id,
         DateTimeImmutable $start_date,
@@ -72,6 +73,7 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
         });
     }
 
+    #[\Override]
     public function saveQueryWithPredefinedTimePeriod(
         int $query_id,
         PredefinedTimePeriod $predefined_time_period,
@@ -107,6 +109,7 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
         }
     }
 
+    #[\Override]
     public function getUsersByQueryId(int $id): array
     {
         $sql = 'SELECT user_id
@@ -115,6 +118,7 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
         return $this->getDB()->column($sql, [$id]);
     }
 
+    #[\Override]
     public function getWidgetInformationFromQuery(int $query_id): ?array
     {
         $sql = 'SELECT dashboard_id, user_id
@@ -139,6 +143,7 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
     /**
      * @return null|array{id: int, start_date: string|null, end_date: string|null, predefined_time_period: string|null}
      */
+    #[\Override]
     public function searchQueryById(int $id): ?array
     {
         $sql = 'SELECT *
@@ -151,6 +156,7 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
     /**
      * @return int[]
      */
+    #[\Override]
     public function searchUsersByQueryId(int $id): array
     {
         $sql = 'SELECT user_id

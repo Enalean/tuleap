@@ -67,6 +67,7 @@ final readonly class SelectBuilderVisitor implements SelectableVisitor
         return $fragments;
     }
 
+    #[\Override]
     public function visitField(Field $field, $parameters)
     {
         return $this->field_select_from_builder->getSelectFrom(
@@ -76,6 +77,7 @@ final readonly class SelectBuilderVisitor implements SelectableVisitor
         );
     }
 
+    #[\Override]
     public function visitMetaData(Metadata $metadata, $parameters)
     {
         return $this->metadata_select_from_builder->getSelectFrom($metadata, $parameters->target_artifact_id_for_reverse_links, $parameters->artifact_ids);

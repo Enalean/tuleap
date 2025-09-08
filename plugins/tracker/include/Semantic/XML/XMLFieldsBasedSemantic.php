@@ -44,6 +44,7 @@ final class XMLFieldsBasedSemantic extends XMLSemantic
         return $new;
     }
 
+    #[\Override]
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $child = parent::export($parent_node, $form_elements);

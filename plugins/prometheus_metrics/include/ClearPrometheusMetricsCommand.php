@@ -39,11 +39,13 @@ final class ClearPrometheusMetricsCommand extends Command
         $this->flushable_storage = $flushable_storage;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Clear Prometheus metrics');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->flushable_storage->flush();

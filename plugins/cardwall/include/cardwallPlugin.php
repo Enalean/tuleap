@@ -89,6 +89,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public const RENDERER_TYPE = 'plugin_cardwall';
 
 
+    #[\Override]
     public function getHooksAndCallbacks()
     {
         if (defined('TRACKER_BASE_URL')) {
@@ -125,6 +126,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     /**
      * @see Plugin::getDependencies()
      */
+    #[\Override]
     public function getDependencies()
     {
         return ['tracker'];
@@ -281,6 +283,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
     }
 
+    #[\Override]
     public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {

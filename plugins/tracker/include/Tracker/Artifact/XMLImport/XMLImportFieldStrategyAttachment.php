@@ -40,6 +40,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
      * @return mixed
      * @throws Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException
      */
+    #[\Override]
     public function getFieldData(
         TrackerField $field,
         SimpleXMLElement $field_change,

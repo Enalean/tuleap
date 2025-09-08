@@ -48,6 +48,7 @@ final class RejectNonProjectAdministratorMiddleware implements MiddlewareInterfa
     /**
      * @throws ForbiddenException
      */
+    #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

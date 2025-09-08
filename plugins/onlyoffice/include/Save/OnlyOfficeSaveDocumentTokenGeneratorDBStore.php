@@ -39,6 +39,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStore implements OnlyOfficeSav
     ) {
     }
 
+    #[\Override]
     public function generateSaveToken(
         \PFUser $user,
         OnlyOfficeDocument $document,

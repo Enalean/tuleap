@@ -51,6 +51,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();

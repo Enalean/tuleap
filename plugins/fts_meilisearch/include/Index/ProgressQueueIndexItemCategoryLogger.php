@@ -29,6 +29,7 @@ final class ProgressQueueIndexItemCategoryLogger implements ProgressQueueIndexIt
     {
     }
 
+    #[\Override]
     public function iterate(iterable $iterable): iterable
     {
         $this->logger->info('Indexing ' . $this->item_category);

@@ -59,6 +59,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
     ) {
     }
 
+    #[\Override]
     public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
         $this->logger->debug("CustomCodeExecutionTask called on artifact #{$changeset->getArtifact()->getId()} for changeset #{$changeset->getId()}");

@@ -74,6 +74,7 @@ final class DocmanOtherTypePOSTRepresentation implements CanContainACopyRepresen
      */
     public $copy;
 
+    #[\Override]
     public static function getNonCopyRequiredObjectProperties(): array
     {
         return self::REQUIRED_NON_COPY_PROPERTIES;

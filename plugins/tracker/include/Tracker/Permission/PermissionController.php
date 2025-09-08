@@ -38,11 +38,13 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
         $this->presenter_builder = new Tracker_Permission_PermissionPresenterBuilder();
     }
 
+    #[\Override]
     public function getTracker()
     {
         return $this->tracker;
     }
 
+    #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         if ($request->get('update')) {

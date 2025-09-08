@@ -30,6 +30,7 @@ final readonly class UUIDFileIdentifierFactory implements FileIdentifierFactory
     {
     }
 
+    #[\Override]
     public function buildIdentifier(): FileIdentifier
     {
         return UUIDFileIdentifier::fromUUID(
@@ -37,6 +38,7 @@ final readonly class UUIDFileIdentifierFactory implements FileIdentifierFactory
         );
     }
 
+    #[\Override]
     public function buildFromBytesData(string $bytes): FileIdentifier
     {
         return UUIDFileIdentifier::fromUUID($this->uuid_factory->buildUUIDFromBytesData($bytes));
@@ -45,6 +47,7 @@ final readonly class UUIDFileIdentifierFactory implements FileIdentifierFactory
     /**
      * @throws InvalidFileIdentifierStringException
      */
+    #[\Override]
     public function buildFromHexadecimalString(string $string): FileIdentifier
     {
         return $this->uuid_factory->buildUUIDFromHexadecimalString($string)

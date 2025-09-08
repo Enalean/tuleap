@@ -59,6 +59,7 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

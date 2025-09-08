@@ -55,6 +55,7 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
         return $parameters[1] ?? null;
     }
 
+    #[\Override]
     public function process()
     {
         $repository = $this->getRepositoryFromParameters();
@@ -92,6 +93,7 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
         $this->done();
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $html_purifier  = Codendi_HTMLPurifier::instance();

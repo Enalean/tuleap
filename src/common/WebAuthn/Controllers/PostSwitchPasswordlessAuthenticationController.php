@@ -42,6 +42,7 @@ final class PostSwitchPasswordlessAuthenticationController implements Dispatchab
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $this->provide_current_user->getCurrentUser();

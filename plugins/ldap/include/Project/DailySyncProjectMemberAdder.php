@@ -35,6 +35,7 @@ class DailySyncProjectMemberAdder implements AddProjectMembers
     ) {
     }
 
+    #[\Override]
     public function addProjectMember(Project $project, PFUser $user): bool
     {
         $this->project_member_adder->addProjectMemberWithFeedback($user, $project, $this->user_manager->getUserAnonymous());

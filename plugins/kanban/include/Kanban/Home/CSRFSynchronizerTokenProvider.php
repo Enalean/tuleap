@@ -28,6 +28,7 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class CSRFSynchronizerTokenProvider implements ProjectCSRFSynchronizerTokenProvider
 {
+    #[\Override]
     public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
     {
         return new \CSRFSynchronizerToken(KanbanServiceHomepageUrlBuilder::getUrl($project));

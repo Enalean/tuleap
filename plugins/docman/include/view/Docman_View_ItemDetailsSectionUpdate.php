@@ -33,6 +33,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $this->token = $token;
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         return $this->item->accept($this);
@@ -63,11 +64,13 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): string
     {
         return '';
     }
 
+    #[\Override]
     public function visitDocument(Docman_Document $item, array $params = []): string
     {
         $content = '';
@@ -86,26 +89,31 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): string
     {
         return '';
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         return $this->visitFile($item, $params);
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): string
     {
         $content = '';

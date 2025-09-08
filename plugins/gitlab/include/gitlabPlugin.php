@@ -182,6 +182,7 @@ class gitlabPlugin extends Plugin
         bindtextdomain('tuleap-gitlab', __DIR__ . '/../site-content');
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -190,6 +191,7 @@ class gitlabPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return ['git', 'tracker'];

@@ -351,6 +351,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(ReferenceAdministrationWarningsCollectorEvent::NAME);
     }
 
+    #[\Override]
     public function getHooksAndCallbacks()
     {
         $this->addHook(HeartbeatsEntryCollection::NAME);
@@ -378,6 +379,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return parent::getHooksAndCallbacks();
     }
 
+    #[\Override]
     #[ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
@@ -388,21 +390,25 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
      * @see Event::SERVICE_IS_USED
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
      */
+    #[\Override]
     public function serviceIsUsed(array $params): void
     {
         // nothing to do for git
     }
 
+    #[\Override]
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
         // nothing to do for git
     }
 
+    #[\Override]
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         // nothing to do for git
     }
 
+    #[\Override]
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for git
@@ -443,6 +449,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
@@ -455,6 +462,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
+    #[\Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -483,6 +491,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(LegacyConfigInc::class);
@@ -2784,6 +2793,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
+    #[\Override]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());

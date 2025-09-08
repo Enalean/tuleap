@@ -41,6 +41,7 @@ final readonly class ArtifactsDeletionInTrackerAdminController implements Dispat
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker      = $this->retrieve_tracker->getTrackerById($variables['tracker_id']);

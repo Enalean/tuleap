@@ -35,6 +35,7 @@ final readonly class MediaWikiManagementCommandCallable implements MediaWikiMana
     ) {
     }
 
+    #[\Override]
     public function wait(): Ok|Err
     {
         return ($this->actions_to_execute)();

@@ -66,6 +66,7 @@ class JiraAllIssuesMultiTrackersInXmlExporter implements JiraAllIssuesInXmlExpor
      *
      * @throws JiraConnectionException
      */
+    #[\Override]
     public function exportAllProjectIssuesToXml(
         \SimpleXMLElement $trackers_xml,
         PlatformConfiguration $jira_platform_configuration,

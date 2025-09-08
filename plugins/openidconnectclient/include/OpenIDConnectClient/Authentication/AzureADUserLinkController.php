@@ -42,6 +42,7 @@ class AzureADUserLinkController implements DispatchableWithRequest, Dispatchable
         $this->login_controller = $login_controller;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->login_controller->login($request, $request->get('return_to'), RequestTime::getTimestamp());

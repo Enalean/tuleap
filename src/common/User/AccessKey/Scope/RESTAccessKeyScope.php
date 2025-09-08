@@ -49,11 +49,13 @@ final class RESTAccessKeyScope implements AuthenticationScope
         $this->identifier = $identifier;
         $this->definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition
         {
+            #[\Override]
             public function getName(): string
             {
                 return _('REST');
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return _('Access to the REST API');
@@ -64,6 +66,7 @@ final class RESTAccessKeyScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromItself(): AuthenticationScope
     {
         return new self(
@@ -74,6 +77,7 @@ final class RESTAccessKeyScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
     {
         if (self::isScopeIdentifier($identifier)) {
@@ -93,16 +97,19 @@ final class RESTAccessKeyScope implements AuthenticationScope
         return $identifier->toString() === self::IDENTIFIER_KEY;
     }
 
+    #[\Override]
     public function getIdentifier(): AuthenticationScopeIdentifier
     {
         return $this->identifier;
     }
 
+    #[\Override]
     public function getDefinition(): AuthenticationScopeDefinition
     {
         return $this->definition;
     }
 
+    #[\Override]
     public function covers(AuthenticationScope $scope): bool
     {
         return self::IDENTIFIER_KEY === $scope->getIdentifier()->toString();

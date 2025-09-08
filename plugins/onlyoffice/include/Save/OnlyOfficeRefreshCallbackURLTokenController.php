@@ -45,6 +45,7 @@ final class OnlyOfficeRefreshCallbackURLTokenController extends \Tuleap\Request\
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->callback_url_save_token_identifier_extractor

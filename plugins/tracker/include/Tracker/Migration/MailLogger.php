@@ -33,6 +33,7 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
     {
     }
 
+    #[\Override]
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         $this->log_stack[] = "[$level] " . $this->generateLogWithException($level, $message, $context);

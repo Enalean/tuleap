@@ -35,6 +35,7 @@ final class ProgramIncrementInfoBuilder implements BuildProgramIncrementInfo
     {
     }
 
+    #[\Override]
     public function build(UserIdentifier $user_identifier, ProgramIncrementIdentifier $increment_identifier): ProgramIncrementInfo
     {
         $increment = $this->retrieve_program_increments->retrieveProgramIncrementById($user_identifier, $increment_identifier);

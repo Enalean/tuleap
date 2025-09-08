@@ -100,6 +100,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         $this->field_dao           = $field_dao;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
@@ -178,6 +179,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         return \Tuleap\Tracker\Tracker::getTrackerGlobalAdministrationURL($project);
     }
 
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_manager->getProject($variables['id']);

@@ -102,6 +102,7 @@ final class HTTPOutboundResponseMetricCollector implements Plugin
     {
     }
 
+    #[\Override]
     public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
         return $next($request)->then(

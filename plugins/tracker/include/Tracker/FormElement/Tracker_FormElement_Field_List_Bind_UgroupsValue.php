@@ -35,6 +35,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_For
         $this->ugroup = $ugroup;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->ugroup->getTranslatedName();
@@ -68,6 +69,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_For
         return $this->ugroup->getUsers()->getNames();
     }
 
+    #[\Override]
     public function getAPIValue()
     {
         return $this->getUGroupName();
@@ -83,6 +85,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_For
         return $this->ugroup;
     }
 
+    #[\Override]
     public function getFullRESTValue(TrackerField $field)
     {
         $ugroup_manager = new UGroupManager();
@@ -91,6 +94,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_For
         return new MinimalUserGroupRepresentation($project->getID(), $ugroup_manager->getById($this->getUgroupId()));
     }
 
+    #[\Override]
     public function getRESTId()
     {
         $project_id = $this->getProject()->getID();

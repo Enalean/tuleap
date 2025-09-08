@@ -48,6 +48,7 @@ final class WorkflowVerifier implements VerifySynchronizedFieldsAreNotUsedInWork
         $this->tracker_factory       = $tracker_factory;
     }
 
+    #[\Override]
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,

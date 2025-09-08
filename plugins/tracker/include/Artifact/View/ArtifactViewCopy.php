@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\View;
 final readonly class ArtifactViewCopy extends ArtifactViewEdit
 {
     /** @see ArtifactViewEdit::getURL() */
+    #[\Override]
     public function getURL(): string
     {
         return TRACKER_BASE_URL . '/?' . http_build_query(
@@ -35,12 +36,14 @@ final readonly class ArtifactViewCopy extends ArtifactViewEdit
     }
 
     /** @see ArtifactViewEdit::getTitle() */
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-tracker', 'Artifact');
     }
 
     /** @see ArtifactViewEdit::fetch() */
+    #[\Override]
     public function fetch(): string
     {
         self::fetchEditViewJSCode();

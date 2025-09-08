@@ -32,11 +32,13 @@ use PHP_CodeSniffer\Sniffs\Sniff;
  */
 final class DisallowUsageOfSelfForMockExpectsSniff implements Sniff
 {
+    #[\Override]
     public function register(): array
     {
         return [T_SELF];
     }
 
+    #[\Override]
     public function process(File $phpcsFile, $stackPtr): void
     {
         if (! str_ends_with($phpcsFile->path, 'Test.php')) {

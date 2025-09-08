@@ -68,6 +68,7 @@ class SemanticTimeframeBuilder implements BuildSemanticTimeframe
         );
     }
 
+    #[\Override]
     public function getSemantic(Tracker $tracker): SemanticTimeframe
     {
         if (array_key_exists($tracker->getId(), $this->instances)) {

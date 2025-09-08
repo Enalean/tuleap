@@ -48,6 +48,7 @@ readonly class ReferenceAdministrationBrowseController implements DispatchableWi
      * @throws ForbiddenException
      * @throws NotFoundException
      */
+    #[\Override]
     public function process(\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
@@ -70,6 +71,7 @@ readonly class ReferenceAdministrationBrowseController implements DispatchableWi
     /**
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): \Project
     {
         if (! isset($variables['project_id'])) {

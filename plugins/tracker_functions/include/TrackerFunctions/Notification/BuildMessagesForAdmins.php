@@ -44,6 +44,7 @@ final class BuildMessagesForAdmins implements MessageBuilder
     ) {
     }
 
+    #[\Override]
     public function buildMessagesForAdmins(array $admins, Tracker_Artifact_Changeset $changeset): Ok
     {
         $messages = [];

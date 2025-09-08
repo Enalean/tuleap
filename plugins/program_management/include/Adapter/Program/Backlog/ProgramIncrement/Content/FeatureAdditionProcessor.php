@@ -41,6 +41,7 @@ final class FeatureAdditionProcessor implements AddFeature
     ) {
     }
 
+    #[\Override]
     public function add(FeatureAddition $feature_addition): void
     {
         $program_increment_id = $feature_addition->program_increment->getId();

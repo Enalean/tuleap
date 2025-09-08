@@ -28,6 +28,7 @@ use Workflow;
 
 class SetIntValueJsonParser implements PostActionUpdateJsonParser
 {
+    #[\Override]
     public function accept(array $json): bool
     {
         return isset($json['type'])
@@ -36,6 +37,7 @@ class SetIntValueJsonParser implements PostActionUpdateJsonParser
             && $json['field_type'] === 'int';
     }
 
+    #[\Override]
     public function parse(Workflow $workflow, array $json): PostAction
     {
         if (! isset($json['field_id'])) {

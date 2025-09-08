@@ -219,6 +219,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
+    #[\Override]
     public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -234,6 +235,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
@@ -505,6 +507,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
+    #[\Override]
     #[ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
@@ -514,21 +517,25 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     /**
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
      */
+    #[\Override]
     public function serviceIsUsed(array $params): void
     {
         // nothing to do for svn
     }
 
+    #[\Override]
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
         // nothing to do for svn
     }
 
+    #[\Override]
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         // nothing to do for svn
     }
 
+    #[\Override]
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for svn
@@ -1238,6 +1245,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         (new \Tuleap\SVN\Repository\SvnCoreAccess($this->getRepositoryManager()))->process($svn_core_access);
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $config_keys): void
     {
         $config_keys->addConfigClass(FileSizeValidator::class);
@@ -1272,6 +1280,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
+    #[\Override]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
     }

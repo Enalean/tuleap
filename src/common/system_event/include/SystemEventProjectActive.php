@@ -24,11 +24,13 @@ use SystemEvent;
 
 class SystemEventProjectActive extends SystemEvent
 {
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return 'project: ' . $this->verbalizeProjectId($this->getIdFromParam(), $with_link);
     }
 
+    #[\Override]
     public function process(): void
     {
         \BackendSVN::instance()->setSVNApacheConfNeedUpdate();

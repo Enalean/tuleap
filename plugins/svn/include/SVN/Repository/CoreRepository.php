@@ -48,6 +48,7 @@ final class CoreRepository implements Repository
         return new self($project, self::TO_BE_CREATED_REPOSITORY_ID, true);
     }
 
+    #[\Override]
     public function getSettingUrl(): string
     {
         return SVN_BASE_URL . '/?' . http_build_query(
@@ -59,57 +60,68 @@ final class CoreRepository implements Repository
         );
     }
 
+    #[\Override]
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->project->getUnixNameMixedCase();
     }
 
+    #[\Override]
     public function getProject(): \Project
     {
         return $this->project;
     }
 
+    #[\Override]
     public function getPublicPath(): string
     {
         return '/svnroot/' . $this->getName();
     }
 
+    #[\Override]
     public function getFullName(): string
     {
         return $this->project->getUnixNameMixedCase();
     }
 
+    #[\Override]
     public function getSystemPath(): string
     {
         return rtrim(ForgeConfig::get('svn_prefix'), '/') . '/' . $this->getName();
     }
 
+    #[\Override]
     public function isRepositoryCreated(): bool
     {
         return is_dir($this->getSystemPath());
     }
 
+    #[\Override]
     public function getSvnUrl(): string
     {
         return $this->getSvnDomain() . $this->getPublicPath();
     }
 
+    #[\Override]
     public function getSvnDomain(): string
     {
         // Domain name must be lowercase (issue with some SVN clients)
         return strtolower(\Tuleap\ServerHostname::HTTPSUrl());
     }
 
+    #[\Override]
     public function getHtmlPath(): string
     {
         return SVN_BASE_URL . '/?' . http_build_query(
@@ -120,46 +132,55 @@ final class CoreRepository implements Repository
         );
     }
 
+    #[\Override]
     public function canBeDeleted(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function getBackupPath(): ?string
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
     }
 
+    #[\Override]
     public function getSystemBackupPath(): string
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
     }
 
+    #[\Override]
     public function getBackupFileName(): string
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
     }
 
+    #[\Override]
     public function getDeletionDate(): ?int
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
     }
 
+    #[\Override]
     public function setDeletionDate(int $deletion_date): void
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
     }
 
+    #[\Override]
     public function isDeleted(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function hasDefaultPermissions(): bool
     {
         return $this->has_default_permissions;
     }
 
+    #[\Override]
     public function setDefaultPermissions(bool $use_it): void
     {
         $this->has_default_permissions = $use_it;

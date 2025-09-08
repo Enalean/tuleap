@@ -83,6 +83,7 @@ final class StepDefinitionRepresentation implements \JsonSerializable
         $this->rank                        = $rank;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         $json_representation = [

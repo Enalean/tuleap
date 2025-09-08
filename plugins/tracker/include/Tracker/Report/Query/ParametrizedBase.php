@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Report\Query;
 
 abstract class ParametrizedBase implements IProvideParametrizedFromAndWhereSQLFragments
 {
+    #[\Override]
     public function getFrom(): string
     {
         $unique_parametrized_from = array_unique($this->getAllParametrizedFrom());
@@ -39,6 +40,7 @@ abstract class ParametrizedBase implements IProvideParametrizedFromAndWhereSQLFr
         );
     }
 
+    #[\Override]
     public function getFromParameters(): array
     {
         $unique_parametrized_from = array_unique($this->getAllParametrizedFrom());

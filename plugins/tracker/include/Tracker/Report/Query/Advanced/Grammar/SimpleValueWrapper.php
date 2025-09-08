@@ -25,6 +25,7 @@ final class SimpleValueWrapper implements ValueWrapper
     {
     }
 
+    #[\Override]
     public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitSimpleValueWrapper($this, $parameters);

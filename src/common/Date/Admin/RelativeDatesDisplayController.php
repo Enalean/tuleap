@@ -58,6 +58,7 @@ class RelativeDatesDisplayController implements DispatchableWithRequest, Dispatc
     /**
      * @throws ForbiddenException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

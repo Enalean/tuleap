@@ -58,6 +58,7 @@ final class ProgramIncrementTrackerIdentifier implements TrackerIdentifier
         return new self($program_increment_tracker_id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

@@ -48,11 +48,13 @@ class AddedLinkByTypeCollection implements ICollectChangeOfLinksBetweenTwoChange
         $this->formatter = $formatter;
     }
 
+    #[\Override]
     public function add(Tracker_ArtifactLinkInfo $artifactlinkinfo)
     {
         $this->added[] = $artifactlinkinfo;
     }
 
+    #[\Override]
     public function fetchFormatted(PFUser $user, $format, $ignore_perms): string
     {
         if ($this->type->shortname) {

@@ -20,6 +20,7 @@
 
 class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormElement_View_Admin_Field_List
 {
+    #[\Override]
     protected function fetchCustomHelp()
     {
         $html  = '';
@@ -29,6 +30,7 @@ class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormEleme
         return $html;
     }
 
+    #[\Override]
     protected function fetchRequired()
     {
         return '';
@@ -40,6 +42,7 @@ class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormEleme
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAfterAdminCreateForm()
     {
         // Don't display the values because this is a special field
@@ -51,6 +54,7 @@ class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormEleme
      *
      * @return string html
      */
+    #[\Override]
     public function fetchAfterAdminEditForm()
     {
         // Don't display the values because this is a special field

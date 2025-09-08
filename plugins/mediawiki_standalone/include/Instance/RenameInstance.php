@@ -56,6 +56,7 @@ final class RenameInstance implements InstanceOperation
         return new self($project, $payload['new_name']);
     }
 
+    #[\Override]
     public function getRequest(RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory): RequestInterface
     {
         return $request_factory->createRequest(
@@ -64,6 +65,7 @@ final class RenameInstance implements InstanceOperation
         );
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return self::TOPIC;

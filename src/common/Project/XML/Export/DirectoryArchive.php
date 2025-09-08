@@ -35,10 +35,12 @@ class DirectoryArchive implements ArchiveInterface
         mkdir($this->archive_path, 0700, true);
     }
 
+    #[\Override]
     public function close()
     {
     }
 
+    #[\Override]
     public function addEmptyDir($dirname)
     {
         if (! is_dir($this->archive_path . DIRECTORY_SEPARATOR . $dirname)) {
@@ -46,21 +48,25 @@ class DirectoryArchive implements ArchiveInterface
         }
     }
 
+    #[\Override]
     public function addFile($localname, $path_to_filesystem)
     {
         return copy($path_to_filesystem, $this->archive_path . DIRECTORY_SEPARATOR . $localname);
     }
 
+    #[\Override]
     public function addFromString($localname, $contents)
     {
         file_put_contents($this->archive_path . DIRECTORY_SEPARATOR . $localname, $contents);
     }
 
+    #[\Override]
     public function getArchivePath()
     {
         return $this->archive_path;
     }
 
+    #[\Override]
     public function isADirectory()
     {
         return true;

@@ -107,6 +107,7 @@ final class FeatureIdentifier implements ArtifactIdentifier
         return $features;
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

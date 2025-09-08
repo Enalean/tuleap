@@ -46,6 +46,7 @@ class Docman_ApprovalTableWiki extends Docman_ApprovalTableVersionned
         return $this->wikiVersionId;
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         parent::initFromRow($row);

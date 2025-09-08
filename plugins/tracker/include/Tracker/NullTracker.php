@@ -34,6 +34,7 @@ class NullTracker extends Tracker // phpcs:ignore PSR1.Classes.ClassDeclaration.
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getId(): int
     {
         return 0;
@@ -42,6 +43,7 @@ class NullTracker extends Tracker // phpcs:ignore PSR1.Classes.ClassDeclaration.
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getName()
     {
     }

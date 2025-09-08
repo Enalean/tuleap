@@ -57,6 +57,7 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
         return $this->valueEnd;
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         $this->setValueStart($row['value_date1']);
@@ -73,6 +74,7 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
         return $this->fieldNameEnd;
     }
 
+    #[\Override]
     public function getUrlParameters()
     {
         $param                        = [];
@@ -81,6 +83,7 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
         return $param;
     }
 
+    #[\Override]
     public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $fieldExist = \false;

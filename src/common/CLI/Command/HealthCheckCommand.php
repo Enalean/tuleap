@@ -42,6 +42,7 @@ final class HealthCheckCommand extends Command
         $this->request_factory = $request_factory;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         // The command is hidden for now:
@@ -57,6 +58,7 @@ final class HealthCheckCommand extends Command
      * See https://docs.docker.com/engine/reference/builder/#healthcheck
      * @psalm-return 0|1
      */
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $host = ServerHostname::hostnameWithHTTPSPort();

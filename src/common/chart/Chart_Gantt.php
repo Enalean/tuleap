@@ -69,6 +69,7 @@ class Chart_Gantt extends Chart
         $this->scale->actinfo->vgrid->SetColor($header_color);
     }
 
+    #[\Override]
     protected function getGraphClass(): string
     {
         return \GanttGraph::class;

@@ -47,6 +47,7 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
      *
      * @return string the $inner encapsuled in the wrapper
      */
+    #[\Override]
     protected function getMainWrapper($inner)
     {
         return '<select multiple size="7" id="fork_repositories_repo" name="repos[]" data-test="fork-reporitory-selectbox">' . $inner . '</select>';
@@ -60,6 +61,7 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
      *
      * @return string the $inner encapsulated in its own wrapper
      */
+    #[\Override]
     protected function getItemWrapper(GitRepository $repo, $inner)
     {
         if ($repo->getBackend() instanceof Git_Backend_Gitolite) {

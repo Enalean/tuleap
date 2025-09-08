@@ -74,6 +74,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
         );
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->addJavascriptAsset(new JavascriptAsset($this->assets, 'project/header-background-admin.js'));

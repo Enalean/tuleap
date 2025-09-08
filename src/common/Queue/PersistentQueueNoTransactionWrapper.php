@@ -32,6 +32,7 @@ final class PersistentQueueNoTransactionWrapper implements PersistentQueue
     ) {
     }
 
+    #[\Override]
     public function pushSinglePersistentMessage(string $topic, mixed $content): void
     {
         $this->transaction_checker->checkNoOngoingTransaction();
@@ -39,11 +40,13 @@ final class PersistentQueueNoTransactionWrapper implements PersistentQueue
         $this->queue->pushSinglePersistentMessage($topic, $content);
     }
 
+    #[\Override]
     public function listen(string $queue_id, string $topic, callable $callback): void
     {
         $this->queue->listen($queue_id, $topic, $callback);
     }
 
+    #[\Override]
     public function getStatistics(): PersistentQueueStatistics
     {
         return $this->queue->getStatistics();

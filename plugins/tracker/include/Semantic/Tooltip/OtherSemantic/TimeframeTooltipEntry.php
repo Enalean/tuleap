@@ -38,6 +38,7 @@ final class TimeframeTooltipEntry implements OtherSemanticTooltipEntryFetcher
     ) {
     }
 
+    #[\Override]
     public function fetchTooltipEntry(Artifact $artifact, \PFUser $user): string
     {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());

@@ -37,6 +37,7 @@ final class FromWhereSearchableVisitor implements SearchableVisitor
     {
     }
 
+    #[\Override]
     public function visitField(Field $field, $parameters)
     {
         $formelement = $this->getFormElementFromComparison($parameters->getComparison(), $parameters->getTracker());
@@ -58,6 +59,7 @@ final class FromWhereSearchableVisitor implements SearchableVisitor
         return $formelement;
     }
 
+    #[\Override]
     public function visitMetaData(Metadata $metadata, $parameters)
     {
         return $parameters->getMetadataComparisonFromWhereBuilder()->getFromWhere($metadata, $parameters->getComparison());

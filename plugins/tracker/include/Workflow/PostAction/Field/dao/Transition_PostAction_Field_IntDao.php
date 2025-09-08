@@ -33,6 +33,7 @@ class Transition_PostAction_Field_IntDao extends Transition_PostAction_FieldDao
     /**
      * @see Transition_PostAction_FieldDao
      */
+    #[\Override]
     protected function escapeValue($value)
     {
         return $this->da->escapeInt($value);

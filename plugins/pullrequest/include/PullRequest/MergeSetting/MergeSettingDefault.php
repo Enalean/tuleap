@@ -25,6 +25,7 @@ final class MergeSettingDefault implements MergeSetting
     /**
      * @return bool
      */
+    #[\Override]
     public function isMergeCommitAllowed()
     {
         return true;

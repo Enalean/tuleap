@@ -30,6 +30,7 @@ class Docman_FilterGlobalText extends \Docman_FilterText
         $this->dynTextFields = $dynTextFields;
     }
 
+    #[\Override]
     public function initFromRow($row)
     {
         $this->setValue($row['value_string']);

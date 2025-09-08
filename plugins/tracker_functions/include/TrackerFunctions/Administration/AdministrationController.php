@@ -57,6 +57,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->getTracker((int) $variables['id']);
@@ -126,6 +127,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         return '/tracker_functions/' . urlencode((string) $tracker->getId()) . '/admin';
     }
 
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this

@@ -32,6 +32,7 @@ final readonly class ProgramServiceIsEnabledVerifier implements VerifyProgramSer
     ) {
     }
 
+    #[\Override]
     public function hasProgramEnabled(int $source_project_id): bool
     {
         return $this->certifier->certifyProgramServiceEnabled(

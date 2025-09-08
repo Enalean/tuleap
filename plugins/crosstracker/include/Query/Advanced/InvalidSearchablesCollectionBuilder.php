@@ -51,6 +51,7 @@ final class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchab
         $this->user                         = $user;
     }
 
+    #[\Override]
     public function buildCollectionOfInvalidSearchables(Logical $parsed_expert_query): InvalidSearchablesCollection
     {
         $invalid_searchables_collection = new InvalidSearchablesCollection();

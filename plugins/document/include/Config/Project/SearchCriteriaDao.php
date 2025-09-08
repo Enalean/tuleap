@@ -27,6 +27,7 @@ final class SearchCriteriaDao extends \Tuleap\DB\DataAccessObject implements IUp
     /**
      * @return string[]
      */
+    #[\Override]
     public function searchByProjectId(int $project_id): array
     {
         return $this->getDB()->first(
@@ -38,6 +39,7 @@ final class SearchCriteriaDao extends \Tuleap\DB\DataAccessObject implements IUp
         );
     }
 
+    #[\Override]
     public function saveCriteria(int $project_id, array $criteria): void
     {
         $this->getDB()->tryFlatTransaction(function () use ($project_id, $criteria) {

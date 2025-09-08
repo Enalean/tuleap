@@ -29,6 +29,7 @@ final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject impl
     /**
      * @return null | array{field_id: int, can_edit_reverse_links: 0|1}
      */
+    #[\Override]
     public function searchByFieldId(int $field_id): ?array
     {
         $sql = 'SELECT field_id, can_edit_reverse_links FROM plugin_tracker_field_artifact_link WHERE field_id = ?';
@@ -68,6 +69,7 @@ final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject impl
         );
     }
 
+    #[\Override]
     public function saveSpecificProperties(int $field_id, array $row): void
     {
         $can_edit_reverse_links = $row['can_edit_reverse_links'] ?? 0;
@@ -76,6 +78,7 @@ final class ArtifactLinkFieldSpecificPropertiesDAO extends DataAccessObject impl
         $this->getDB()->run($sql, $field_id, $can_edit_reverse_links);
     }
 
+    #[\Override]
     public function duplicate(int $from_field_id, int $to_field_id): void
     {
         $sql = 'REPLACE INTO plugin_tracker_field_artifact_link (field_id, can_edit_reverse_links)

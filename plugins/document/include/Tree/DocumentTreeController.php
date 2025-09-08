@@ -63,6 +63,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('document');
@@ -125,6 +126,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
      *
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): Project
     {
         return $this->project_extractor->getProject($variables);

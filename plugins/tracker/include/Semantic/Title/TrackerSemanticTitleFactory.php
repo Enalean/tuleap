@@ -50,6 +50,7 @@ class TrackerSemanticTitleFactory implements IBuildSemanticFromXML, IDuplicateSe
         return self::$instance;
     }
 
+    #[\Override]
     public function getInstanceFromXML(
         SimpleXMLElement $current_semantic_xml,
         SimpleXMLElement $all_semantics_xml,
@@ -70,6 +71,7 @@ class TrackerSemanticTitleFactory implements IBuildSemanticFromXML, IDuplicateSe
     /**
      * Duplicate the semantic from tracker source to tracker target
      */
+    #[\Override]
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
         $new_dao = new TitleSemanticDAO();

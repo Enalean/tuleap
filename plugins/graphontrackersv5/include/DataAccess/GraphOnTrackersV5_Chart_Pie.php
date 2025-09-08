@@ -33,6 +33,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
 {
     protected $field_base;
 
+    #[\Override]
     public function loadFromSession()
     {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
@@ -45,23 +46,27 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         }
     }
 
+    #[\Override]
     public function loadFromDb()
     {
         $arr              = $this->getDao()->searchById($this->id)->getRow();
         $this->field_base = $arr['field_base'] ?? null;
     }
 
+    #[\Override]
     public function registerInSession()
     {
         parent::registerInSession();
         $this->report_session->set("$this->id.field_base", $this->field_base);
     }
 
+    #[\Override]
     protected function getDao()
     {
         return new GraphOnTrackersV5_Chart_PieDao();
     }
 
+    #[\Override]
     public static function create($graphic_report, $id, $rank, $title, $description, $width, $height)
     {
         $session = self::getSession($graphic_report->report->id, $graphic_report->id);
@@ -81,16 +86,19 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         return $this->field_base = $field_base;
     }
 
+    #[\Override]
     protected function getEngine()
     {
         return new GraphOnTrackersV5_Engine_Pie();
     }
 
+    #[\Override]
     protected function getChartDataBuilder($artifacts)
     {
         return new GraphOnTrackersV5_Chart_PieDataBuilder($this, $artifacts);
     }
 
+    #[\Override]
     public function getProperties()
     {
         return array_merge(
@@ -120,6 +128,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         return $this->getDao()->save($this->id, $this->getField_base());
     }
 
+    #[\Override]
     protected function updateSpecificProperties($row)
     {
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
@@ -132,6 +141,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         return true;
     }
 
+    #[\Override]
     public function userCanVisualize()
     {
         $ff                  = Tracker_FormElementFactory::instance();
@@ -143,11 +153,13 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         }
     }
 
+    #[\Override]
     public function getChartType()
     {
         return 'pie';
     }
 
+    #[\Override]
     public function getSpecificRow()
     {
         return [
@@ -165,6 +177,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
      *
      * @return array containing the properties
      */
+    #[\Override]
     public function arrayOfSpecificProperties()
     {
         return [
@@ -178,6 +191,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
      * @param SimpleXMLElement $xml characterising the chart
      * @param array $formsMapping associating xml IDs to real fields
      */
+    #[\Override]
     public function setSpecificPropertiesFromXML($xml, $formsMapping)
     {
         if (isset($formsMapping[(string) $xml['base']])) {
@@ -185,6 +199,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         }
     }
 
+    #[\Override]
     public function exportToXml(SimpleXMLElement $root, $formsMapping)
     {
         parent::exportToXML($root, $formsMapping);
@@ -193,6 +208,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         }
     }
 
+    #[\Override]
     public function accept(Visitor $visitor)
     {
         return $visitor->visitPieChart($this);

@@ -33,6 +33,7 @@ final class InsertItemsIntoIndexMetricCollector implements InsertItemsIntoIndex
     ) {
     }
 
+    #[\Override]
     public function indexItems(ItemToIndex ...$items): void
     {
         $nb_items = count($items);

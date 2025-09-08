@@ -39,11 +39,13 @@ final class SanityCheckCommand extends Command
 {
     public const NAME = 'sanity-check';
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setName(self::NAME)->setDescription('Check server\'s ability to run Tuleap');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $stderr = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;

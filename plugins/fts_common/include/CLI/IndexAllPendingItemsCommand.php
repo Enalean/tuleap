@@ -41,11 +41,13 @@ final class IndexAllPendingItemsCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Index all pending items');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<info>Start queueing items into the index queue</info>');

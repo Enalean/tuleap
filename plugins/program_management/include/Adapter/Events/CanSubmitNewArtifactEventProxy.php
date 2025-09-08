@@ -41,16 +41,19 @@ final class CanSubmitNewArtifactEventProxy implements CanSubmitNewArtifactEvent
         return new self(TrackerReferenceProxy::fromTracker($event->getTracker()), $event, UserProxy::buildFromPFUser($event->getUser()));
     }
 
+    #[\Override]
     public function getTrackerReference(): TrackerReference
     {
         return $this->tracker_reference;
     }
 
+    #[\Override]
     public function disableArtifactSubmission(): void
     {
         $this->event->disableArtifactSubmission();
     }
 
+    #[\Override]
     public function getUserIdentifier(): UserReference
     {
         return $this->user_identifier;

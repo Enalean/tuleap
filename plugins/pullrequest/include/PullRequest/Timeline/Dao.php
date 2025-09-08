@@ -55,6 +55,7 @@ class Dao extends DataAccessObject implements SearchMergeEvent, SearchAbandonEve
     /**
      * @psalm-return null|array{type: int, post_date: int, user_id: int}
      */
+    #[\Override]
     public function searchMergeEventForPullRequest(int $pull_request_id): ?array
     {
         $sql = '
@@ -68,6 +69,7 @@ class Dao extends DataAccessObject implements SearchMergeEvent, SearchAbandonEve
     /**
      * @psalm-return null|array{type: int, post_date: int, user_id: int}
      */
+    #[\Override]
     public function searchAbandonEventForPullRequest(int $pull_request_id): ?array
     {
         $sql = '

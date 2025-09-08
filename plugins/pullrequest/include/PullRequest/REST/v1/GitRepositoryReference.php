@@ -43,6 +43,7 @@ class GitRepositoryReference extends \Tuleap\Git\REST\v1\GitRepositoryReference
     {
     }
 
+    #[\Override]
     public function build(GitRepository $repository)
     {
         parent::build($repository);

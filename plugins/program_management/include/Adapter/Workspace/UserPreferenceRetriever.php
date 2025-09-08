@@ -31,6 +31,7 @@ final class UserPreferenceRetriever implements RetrieveUserPreference
     {
     }
 
+    #[\Override]
     public function retrieveUserPreference(UserIdentifier $user_identifier, string $preference_name): ?string
     {
         return $this->retrieve_user->getUserWithId($user_identifier)->getPreference($preference_name) ?: null;

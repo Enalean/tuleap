@@ -87,6 +87,7 @@ final readonly class TextFromWhereBuilder implements ValueWrapperVisitor
         return "CVText_$suffix";
     }
 
+    #[\Override]
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         $comparison                 = $parameters->comparison;
@@ -139,26 +140,31 @@ final readonly class TextFromWhereBuilder implements ValueWrapperVisitor
         return '%' . $this->db->escapeLikeValue((string) $value) . '%';
     }
 
+    #[\Override]
     public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to status open should have been flagged as invalid for Text fields');
     }
 
+    #[\Override]
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to current date time should have been flagged as invalid for Text fields');
     }
 
+    #[\Override]
     public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison with Between() should have been flagged as invalid for Text fields');
     }
 
+    #[\Override]
     public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
         throw new LogicException('Comparison with In() should have been flagged as invalid for Text fields');
     }
 
+    #[\Override]
     public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
     {
         throw new LogicException('Comparison to current user should have been flagged as invalid for Text fields');

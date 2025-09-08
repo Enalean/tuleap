@@ -70,6 +70,7 @@ class SystemControlCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $help  = "systemctl is a wrapper for commands to init system\n";
@@ -83,6 +84,7 @@ class SystemControlCommand extends Command
             ->setHelp($help);
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $action = $input->getArgument('action');

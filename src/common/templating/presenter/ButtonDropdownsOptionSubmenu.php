@@ -30,21 +30,25 @@ class Templating_Presenter_ButtonDropdownsOptionSubmenu extends Templating_Prese
         $this->sub_options = $sub_options;
     }
 
+    #[\Override]
     public function simple()
     {
         return false;
     }
 
+    #[\Override]
     public function submenu()
     {
         return true;
     }
 
+    #[\Override]
     public function divider()
     {
         return false;
     }
 
+    #[\Override]
     public function title()
     {
         return false;

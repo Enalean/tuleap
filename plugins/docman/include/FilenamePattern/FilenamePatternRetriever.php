@@ -31,6 +31,7 @@ final class FilenamePatternRetriever implements RetrieveFilenamePattern
     {
     }
 
+    #[\Override]
     public function getPattern(int $project_id): FilenamePattern
     {
         $row = $this->settings_dao->searchFileNamePatternFromProjectId($project_id);

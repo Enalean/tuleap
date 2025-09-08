@@ -31,6 +31,7 @@ class CachedProjectAccessChecker implements CheckProjectAccess
     {
     }
 
+    #[\Override]
     public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
     {
         if (isset($this->cache[$user->getId()][$project->getID()])) {

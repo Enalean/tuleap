@@ -30,6 +30,7 @@ class RestrictedUsersNotAllowedException extends RegistrationForbiddenException
         parent::__construct('Restricted users cannot create projects.');
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return dgettext('tuleap-core', 'Restricted users cannot create projects.');

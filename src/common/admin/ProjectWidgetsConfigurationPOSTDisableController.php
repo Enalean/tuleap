@@ -49,6 +49,7 @@ class ProjectWidgetsConfigurationPOSTDisableController implements DispatchableWi
         $this->disabled_project_widgets_dao = $disabled_project_widgets_dao;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

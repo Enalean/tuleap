@@ -40,6 +40,7 @@ final readonly class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDa
     ) {
     }
 
+    #[\Override]
     public function isArtifactOutOfDate(
         Artifact $artifact,
         DateTimeImmutable $now,

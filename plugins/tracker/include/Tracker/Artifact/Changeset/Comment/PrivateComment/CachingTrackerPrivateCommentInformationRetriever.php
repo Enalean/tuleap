@@ -40,6 +40,7 @@ final class CachingTrackerPrivateCommentInformationRetriever implements Retrieve
         $this->tracker_private_comment_information_retriever = $tracker_private_comment_information_retriever;
     }
 
+    #[\Override]
     public function doesTrackerAllowPrivateComments(Tracker $tracker): bool
     {
         $tracker_id = $tracker->getId();

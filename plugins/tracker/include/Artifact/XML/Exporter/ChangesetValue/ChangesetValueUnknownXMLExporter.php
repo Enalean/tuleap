@@ -26,11 +26,13 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetValueUnknownXMLExporter extends ChangesetValueXMLExporter
 {
+    #[\Override]
     protected function getFieldChangeType()
     {
         return null;
     }
 
+    #[\Override]
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,

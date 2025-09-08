@@ -39,6 +39,7 @@ final readonly class FromProjectEqual implements FromProjectCondition
         return $this->value;
     }
 
+    #[\Override]
     public function acceptFromProjectConditionVisitor(FromProjectConditionVisitor $visitor, $parameters)
     {
         return $visitor->visitEqual($this, $parameters);

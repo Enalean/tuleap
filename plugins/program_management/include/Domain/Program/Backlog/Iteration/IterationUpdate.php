@@ -78,6 +78,7 @@ final class IterationUpdate implements TimeboxMirroringOrder
         return new self($event->getIteration(), $iteration_tracker, $event->getChangeset(), $event->getUser());
     }
 
+    #[\Override]
     public function getTimebox(): TimeboxIdentifier
     {
         return $this->iteration;
@@ -88,16 +89,19 @@ final class IterationUpdate implements TimeboxMirroringOrder
         return $this->iteration;
     }
 
+    #[\Override]
     public function getTracker(): TrackerIdentifier
     {
         return $this->tracker;
     }
 
+    #[\Override]
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;

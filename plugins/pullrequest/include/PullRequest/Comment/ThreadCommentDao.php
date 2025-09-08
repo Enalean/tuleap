@@ -26,6 +26,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class ThreadCommentDao extends DataAccessObject implements CountThreads
 {
+    #[\Override]
     public function countAllThreadsOfPullRequest(int $id): int
     {
         $sql = "SELECT global.id

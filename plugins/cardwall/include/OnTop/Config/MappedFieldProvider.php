@@ -47,6 +47,7 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
         $this->config                   = $config;
     }
 
+    #[\Override]
     public function getField(Tracker $tracker)
     {
         $mapping = $this->config->getMappingFor($tracker);

@@ -29,6 +29,7 @@ final class ParametrizedOrFromWhere extends ParametrizedBase
     ) {
     }
 
+    #[\Override]
     public function getWhere(): string|EasyStatement
     {
         if ($this->left->getWhere() === '') {
@@ -45,11 +46,13 @@ final class ParametrizedOrFromWhere extends ParametrizedBase
     /**
      * @return ParametrizedFrom[]
      */
+    #[\Override]
     public function getAllParametrizedFrom(): array
     {
         return array_merge($this->left->getAllParametrizedFrom(), $this->right->getAllParametrizedFrom());
     }
 
+    #[\Override]
     public function getWhereParameters(): array
     {
         return array_merge($this->left->getWhereParameters(), $this->right->getWhereParameters());

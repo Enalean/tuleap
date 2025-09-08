@@ -69,6 +69,7 @@ class ErrorChart extends Chart
         return $text;
     }
 
+    #[\Override]
     protected function getGraphClass(): string
     {
         return \CanvasGraph::class;

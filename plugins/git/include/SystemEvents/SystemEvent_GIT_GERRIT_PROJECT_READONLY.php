@@ -51,6 +51,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent
         $this->driver_factory     = $driver_factory;
     }
 
+    #[\Override]
     public function process()
     {
         $parameters = $this->getParametersAsArray();
@@ -106,6 +107,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent
         return true;
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return $this->parameters;

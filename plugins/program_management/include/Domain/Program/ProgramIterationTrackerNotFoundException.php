@@ -41,6 +41,7 @@ final class ProgramIterationTrackerNotFoundException extends \Exception implemen
         );
     }
 
+    #[\Override]
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

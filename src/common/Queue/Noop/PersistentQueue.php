@@ -25,14 +25,17 @@ use Tuleap\Queue\PersistentQueueStatistics;
 
 class PersistentQueue implements \Tuleap\Queue\PersistentQueue
 {
+    #[\Override]
     public function pushSinglePersistentMessage(string $topic, mixed $content): void
     {
     }
 
+    #[\Override]
     public function listen(string $queue_id, string $topic, callable $callback): void
     {
     }
 
+    #[\Override]
     public function getStatistics(): PersistentQueueStatistics
     {
         return PersistentQueueStatistics::emptyQueue();

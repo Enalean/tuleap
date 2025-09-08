@@ -64,6 +64,7 @@ class AdministrationLayoutHelper implements LayoutHelper
      * @throws \Tuleap\Request\ForbiddenException
      * @throws \Tuleap\Request\NotFoundException
      */
+    #[\Override]
     public function renderInProjectAdministrationLayout(
         \HTTPRequest $request,
         string $project_id,

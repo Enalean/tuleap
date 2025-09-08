@@ -73,6 +73,7 @@ class WidgetFactory implements IBuildInstanceOfWidgets
         $this->event_manager                    = $event_manager;
     }
 
+    #[\Override]
     public function getInstanceByWidgetName(string $widget_name): ?\Widget
     {
         $widget             = null;

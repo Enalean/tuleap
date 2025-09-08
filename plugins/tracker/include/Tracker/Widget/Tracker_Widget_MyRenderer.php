@@ -39,6 +39,7 @@ class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer
         );
     }
 
+    #[\Override]
     public function isAjax()
     {
         return false;

@@ -28,6 +28,7 @@ use Tuleap\Project\REST\UserGroupRepresentation;
 
 final class UGroupRepresentationBuilder implements BuildUGroupRepresentation
 {
+    #[\Override]
     public function getUGroupRepresentation(int $project_id, int $ugroup_id): string
     {
         return UserGroupRepresentation::getRESTIdForProject($project_id, $ugroup_id);

@@ -54,11 +54,13 @@ final class SearchView extends AdminView implements DispatchableWithBurningParro
         return dgettext('tuleap-document', 'Configure search interface');
     }
 
+    #[\Override]
     protected function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
+    #[\Override]
     protected function getTitle(array $params): string
     {
         return dgettext('tuleap-document', 'Configure search interface');
@@ -68,11 +70,13 @@ final class SearchView extends AdminView implements DispatchableWithBurningParro
      *
      * @throws NotFoundException
      */
+    #[\Override]
     public function getProject(array $variables): \Project
     {
         return $this->project_extractor->getProject($variables);
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('document');

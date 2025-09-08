@@ -56,6 +56,7 @@ class BreadCrumb implements PresentableBreadCrumb
         return $this->classname;
     }
 
+    #[\Override]
     public function getBreadCrumbPresenter(): BreadCrumbPresenter
     {
         return new BreadCrumbPresenter(

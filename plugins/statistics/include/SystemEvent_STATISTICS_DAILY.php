@@ -56,6 +56,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent
         $this->disk_usage_manager    = $disk_usage_manager;
     }
 
+    #[\Override]
     public function process()
     {
         if ($this->todayIsSunday()) {
@@ -134,6 +135,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent
         db_query($sql);
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         return '';

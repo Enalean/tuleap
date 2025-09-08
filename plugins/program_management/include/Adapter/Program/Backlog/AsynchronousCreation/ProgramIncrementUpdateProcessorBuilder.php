@@ -80,6 +80,7 @@ use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrementUpdateProcessor
 {
+    #[\Override]
     public function getProcessor(): ProcessProgramIncrementUpdate
     {
         $logger                   = \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger();

@@ -30,6 +30,7 @@ final class ProjectDescriptionMandatoryException extends \RuntimeException imple
         parent::__construct('`description` is required.');
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return dgettext('tuleap-core', '`description` is required.');

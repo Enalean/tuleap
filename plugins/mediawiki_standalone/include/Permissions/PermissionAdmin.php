@@ -29,6 +29,7 @@ final class PermissionAdmin implements Permission
 {
     public const NAME = 'ADMIN';
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;

@@ -23,6 +23,7 @@
 
 class Rule_GreaterThan extends \Rule_Comparator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function isValid($val)
     {
         if (\is_numeric($val) && $val > $this->ref) {

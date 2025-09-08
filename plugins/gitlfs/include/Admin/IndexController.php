@@ -51,6 +51,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
      *
      * @return void
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

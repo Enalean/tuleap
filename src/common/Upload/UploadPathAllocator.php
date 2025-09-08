@@ -36,6 +36,7 @@ final class UploadPathAllocator implements PathAllocator
         $this->base_path = $base_path;
     }
 
+    #[\Override]
     public function getPathForItemBeingUploaded(TusFileInformation $file_information): string
     {
         return $this->base_path . '/' . $file_information->getID();

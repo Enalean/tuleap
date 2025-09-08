@@ -27,6 +27,7 @@ use Tuleap\Option\Option;
 
 final class VariableProviderFromEnvironment implements VariableProviderInterface
 {
+    #[\Override]
     public function get(string $key): string
     {
         $value = getenv($key);
@@ -36,6 +37,7 @@ final class VariableProviderFromEnvironment implements VariableProviderInterface
         throw new \RuntimeException(sprintf('No variable named `%s` found in environment', $key));
     }
 
+    #[\Override]
     public function getOr(string $key): Option
     {
         $value = getenv($key);

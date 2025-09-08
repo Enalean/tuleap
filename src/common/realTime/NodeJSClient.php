@@ -64,6 +64,7 @@ class NodeJSClient implements Client
      *
      * @param $message (MessageDataPresenter) : Message to send to Node.js server
      */
+    #[\Override]
     public function sendMessage(MessageDataPresenter $message): void
     {
         $request = $this->request_factory->createRequest('POST', self::SERVER_URL . '/message')

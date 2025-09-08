@@ -35,6 +35,7 @@ namespace Tuleap\Tracker\FormElement\XML;
  */
 final class XMLFormElementImpl extends XMLFormElement
 {
+    #[\Override]
     public function exportPermissions(\SimpleXMLElement $form_elements): void
     {
     }

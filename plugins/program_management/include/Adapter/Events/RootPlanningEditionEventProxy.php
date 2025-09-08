@@ -40,11 +40,13 @@ final class RootPlanningEditionEventProxy implements RootPlanningEditionEvent
         return new self($event, ProjectProxy::buildFromProject($event->getProject()));
     }
 
+    #[\Override]
     public function getProjectIdentifier(): ProjectIdentifier
     {
         return $this->project_identifier;
     }
 
+    #[\Override]
     public function prohibitMilestoneTrackerModification(): void
     {
         $this->event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());

@@ -37,6 +37,7 @@ final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
     }
 
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Override]
     public function form_action(): string
     {
         return '';

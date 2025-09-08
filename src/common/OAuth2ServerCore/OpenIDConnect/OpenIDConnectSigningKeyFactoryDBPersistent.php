@@ -61,6 +61,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectS
     /**
      * @return SigningPublicKey[]
      */
+    #[\Override]
     public function getPublicKeys(\DateTimeImmutable $current_time): array
     {
         $pem_public_keys = $this->dao->searchPublicKeys();
@@ -77,6 +78,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectS
         return $public_keys;
     }
 
+    #[\Override]
     public function getKey(\DateTimeImmutable $current_time): SigningPrivateKey
     {
         $encryption_key = $this->key_factory->getEncryptionKey();

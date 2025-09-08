@@ -119,6 +119,7 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
+    #[\Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -312,6 +313,7 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
+    #[\Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ProjectQuotaManager::class);

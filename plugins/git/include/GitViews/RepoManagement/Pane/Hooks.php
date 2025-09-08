@@ -77,6 +77,7 @@ class Hooks extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
+    #[\Override]
     public function getIdentifier()
     {
         return self::ID;
@@ -85,6 +86,7 @@ class Hooks extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
+    #[\Override]
     public function getTitle()
     {
         return dgettext('tuleap-git', 'Webhooks');
@@ -93,6 +95,7 @@ class Hooks extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
+    #[\Override]
     public function getContent()
     {
         $description            = dgettext('tuleap-git', 'You can define several generic webhooks.');

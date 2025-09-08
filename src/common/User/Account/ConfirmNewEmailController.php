@@ -55,6 +55,7 @@ final class ConfirmNewEmailController implements DispatchableWithRequest
         );
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $confirmation_hash = $request->getValidated('confirm_hash', 'string', '');

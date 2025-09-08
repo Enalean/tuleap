@@ -46,6 +46,7 @@ final class PlatformUsersGetterSingleton implements PlatformUsersGetter
     /**
      * @return array<int, Tracker_FormElement_Field_List_Bind_UsersValue>
      */
+    #[\Override]
     public function getRegisteredUsers(\UserHelper $user_helper): array
     {
         if (! isset($this->registered_users)) {

@@ -37,6 +37,7 @@ final class JiraBoardProjectsRetrieverFromAPI implements JiraBoardProjectsRetrie
     ) {
     }
 
+    #[\Override]
     public function getBoardProjects(int $jira_board_id): JiraProjectCollection
     {
         $collection = new JiraProjectCollection();

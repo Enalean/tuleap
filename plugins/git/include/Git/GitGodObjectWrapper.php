@@ -36,6 +36,7 @@ class GitGodObjectWrapper extends RouterLink
         $this->god_object = $god_object;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request)
     {
         $this->god_object->process();

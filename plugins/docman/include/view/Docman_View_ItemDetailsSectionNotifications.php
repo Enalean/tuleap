@@ -61,6 +61,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $this->ugroups_to_be_notified_builder = $ugroups_to_be_notified_builder;
     }
 
+    #[\Override]
     public function getContent($params = [])
     {
         $content  = '<dl><fieldset><legend>' . dgettext('tuleap-docman', 'Notifications') . '</legend>';
@@ -122,31 +123,37 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         return $content;
     }
 
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
     }
 
+    #[\Override]
     public function visitOtherDocument(\Tuleap\Docman\Item\OtherDocument $item, array $params = []): string
     {
         return $this->visitDocument($item, $params);
@@ -157,11 +164,13 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         return '';
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): string
     {
         return '';
     }
 
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         $content  = '<blockquote>';

@@ -28,21 +28,25 @@ use Tuleap\Tracker\Tracker;
  */
 class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     public function getTracker()
     {
         return null;
     }
 
+    #[\Override]
     public function isEnabled()
     {
         return false;
     }
 
+    #[\Override]
     public function enable()
     {
         return false;
     }
 
+    #[\Override]
     public function disable()
     {
         return false;
@@ -53,6 +57,7 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig // phpcs:igno
      *
      * @return ColumnCollection
      */
+    #[\Override]
     public function getDashboardColumns()
     {
         return new ColumnCollection();
@@ -62,21 +67,25 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig // phpcs:igno
      * Get Columns from the values of a $field
      * @return ColumnCollection
      */
+    #[\Override]
     public function getRendererColumns(ListField $cardwall_field)
     {
         return new ColumnCollection();
     }
 
+    #[\Override]
     public function getFilteredRendererColumns(ListField $cardwall_field, array $filter)
     {
         return new ColumnCollection();
     }
 
+    #[\Override]
     public function getMappings()
     {
         return false;
     }
 
+    #[\Override]
     public function getTrackers()
     {
         return false;
@@ -86,11 +95,13 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig // phpcs:igno
      *
      * @return Cardwall_OnTop_Config_TrackerMapping
      */
+    #[\Override]
     public function getMappingFor(Tracker $mapping_tracker)
     {
         return null;
     }
 
+    #[\Override]
     public function isInColumn(
         Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
@@ -107,11 +118,13 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig // phpcs:igno
      *
      * @return Cardwall_MappingCollection
      */
+    #[\Override]
     public function getCardwallMappings(array $fields, ColumnCollection $cardwall_columns)
     {
         return false;
     }
 
+    #[\Override]
     public function fillMappingsWithOnTopMappings(
         Cardwall_MappingCollection $mappings,
         ColumnCollection $columns,

@@ -41,6 +41,7 @@ class EmailDoesNotMatchUser extends ActionToBeTakenForUser
     }
 
     /** @return array */
+    #[\Override]
     public function getCSVData()
     {
         return [
@@ -56,6 +57,7 @@ class EmailDoesNotMatchUser extends ActionToBeTakenForUser
         ];
     }
 
+    #[\Override]
     public function isActionAllowed($action)
     {
         return $action === self::$ACTION;

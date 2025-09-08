@@ -27,11 +27,13 @@ enum StatusCriterion: string implements SearchOnStatus
     case OPEN   = 'open';
     case CLOSED = 'closed';
 
+    #[\Override]
     public function shouldOnlyRetrieveOpenPullRequests(): bool
     {
         return $this === self::OPEN;
     }
 
+    #[\Override]
     public function shouldOnlyRetrieveClosedPullRequests(): bool
     {
         return $this === self::CLOSED;

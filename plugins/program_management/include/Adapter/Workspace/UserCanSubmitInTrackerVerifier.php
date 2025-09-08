@@ -34,6 +34,7 @@ final class UserCanSubmitInTrackerVerifier implements VerifyUserCanSubmit
     {
     }
 
+    #[\Override]
     public function canUserSubmitArtifact(UserIdentifier $user_identifier, TrackerReference $tracker): bool
     {
         $full_tracker = $this->tracker_factory->getTrackerById($tracker->getId());

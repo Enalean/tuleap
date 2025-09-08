@@ -51,6 +51,7 @@ class RegenerateConfigurationCommand extends Command
         $this->system_event_manager = $system_event_manager;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Force the re-generation of the Gitolite configuration')
@@ -67,6 +68,7 @@ class RegenerateConfigurationCommand extends Command
             );
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $should_all_configurations_be_regenerated = $input->getOption('all');

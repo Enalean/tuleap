@@ -38,6 +38,7 @@ final class ArchiveWithoutDataChecker implements CheckArchiveContent, Dispatchab
     ) {
     }
 
+    #[\Override]
     public function checkArchiveContent(\SimpleXMLElement $xml_element): Ok|Err
     {
         $errors = new ArchiveWithoutDataCheckerErrorCollection($xml_element, $this->logger);

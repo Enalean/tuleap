@@ -49,6 +49,7 @@ class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
         $this->max_size_upload   = $max_size;
     }
 
+    #[\Override]
     public static function build(
         Tracker_FormElement $form_element,
         string $type,

@@ -55,6 +55,7 @@ class FileReference extends \Reference
         $this->reference_value = $reference_value;
     }
 
+    #[\Override]
     public function getLink(): string
     {
         if (! $this->reference_value) {

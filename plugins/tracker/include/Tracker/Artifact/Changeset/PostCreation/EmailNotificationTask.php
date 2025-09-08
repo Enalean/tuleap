@@ -58,6 +58,7 @@ final class EmailNotificationTask implements PostCreationTask
     ) {
     }
 
+    #[\Override]
     public function execute(Tracker_Artifact_Changeset $changeset, PostCreationTaskConfiguration $configuration): void
     {
         $tracker = $changeset->getTracker();

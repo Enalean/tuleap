@@ -49,6 +49,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Cl
      * @param int $id Id of the project
      * @param int $userId User Id
      */
+    #[\Override]
     protected function addUserToGroup($id, $userId): bool
     {
         $user = $this->user_manager->getUserById($userId);
@@ -73,6 +74,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Cl
      *
      * @return bool
      */
+    #[\Override]
     protected function removeUserFromGroup($id, $userId)
     {
         $this->logInProjectHistory($id, $userId);
@@ -87,6 +89,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Cl
      *
      * @return Array
      */
+    #[\Override]
     protected function getDbGroupMembersIds($groupId)
     {
         $project = $this->project_manager->getProject($groupId);
@@ -98,6 +101,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Cl
      *
      * @return LDAP_ProjectGroupDao
      */
+    #[\Override]
     protected function getDao()
     {
         return $this->dao;
@@ -136,6 +140,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Cl
         }
     }
 
+    #[\Override]
     protected function diffDbAndDirectory($option): void
     {
         parent::diffDbAndDirectory($option);

@@ -79,6 +79,7 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
      * @inheritDoc
      * @throws InvalidCiphertextException
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();

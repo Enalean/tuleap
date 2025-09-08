@@ -37,11 +37,13 @@ final class SiteDeployImagesCommand extends Command
         parent::__construct(self::NAME);
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Deploy images such as logos');
     }
 
+    #[\Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         ForgeConfig::loadInSequence();

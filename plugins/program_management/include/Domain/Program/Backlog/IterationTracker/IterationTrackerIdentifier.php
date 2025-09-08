@@ -105,6 +105,7 @@ final class IterationTrackerIdentifier implements TrackerIdentifier
         return new self($iteration_tracker_id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

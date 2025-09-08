@@ -37,6 +37,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
 {
     public const NAME = 'SystemEvent_SVN_RESTORE_REPOSITORY';
 
+    #[\Override]
     public function process()
     {
         $parameters = $this->getParametersAsArray();
@@ -70,6 +71,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
         return true;
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $project_id    = $this->getRequiredParameter(0);
@@ -85,6 +87,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
         return $repository_manager->getByIdAndProject($repository_id, $project);
     }
 
+    #[\Override]
     protected function getProject($project_id)
     {
         $project_manager = ProjectManager::instance();

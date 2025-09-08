@@ -37,16 +37,19 @@ final class RenameInstanceTask implements QueueTask
         $this->project_id = (int) $project->getID();
     }
 
+    #[\Override]
     public function getTopic(): string
     {
         return RenameInstance::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return ['project_id' => $this->project_id, 'new_name' => $this->new_name];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Rename MediaWiki instance #' . $this->project_id . ' to ' . $this->new_name;

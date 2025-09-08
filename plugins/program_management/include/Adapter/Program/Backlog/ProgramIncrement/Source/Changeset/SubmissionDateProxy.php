@@ -41,6 +41,7 @@ final class SubmissionDateProxy implements SubmissionDate
         return new self((int) $changeset->getSubmittedOn());
     }
 
+    #[\Override]
     public function getValue(): int
     {
         return $this->value;

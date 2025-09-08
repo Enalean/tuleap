@@ -48,6 +48,7 @@ class DBConnection implements ReconnectAfterALongRunningProcess
         return $this->db;
     }
 
+    #[\Override]
     public function reconnectAfterALongRunningProcess(): void
     {
         if ($this->db === null) {

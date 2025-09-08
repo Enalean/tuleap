@@ -24,6 +24,7 @@
 
 class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstractRenderer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
         $html             = parent::fetchFormContent($request, $current_user);
@@ -55,16 +56,19 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
         }
     }
 
+    #[\Override]
     protected function enhanceRedirect(Codendi_Request $request): void
     {
         // does nothing (there is no redirect, it's meant to be inline)
     }
 
+    #[\Override]
     protected function displayHeader()
     {
         $GLOBALS['HTML']->overlay_header();
     }
 
+    #[\Override]
     protected function displayFooter()
     {
         $GLOBALS['HTML']->overlay_footer();

@@ -26,6 +26,7 @@ require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/MembershipCommand.php';
 
 class Git_Driver_Gerrit_MembershipCommand_RemoveBinding extends Git_Driver_Gerrit_MembershipCommand
 {
+    #[\Override]
     public function execute(Git_RemoteServer_GerritServer $server)
     {
         $driver     = $this->getDriver($server);

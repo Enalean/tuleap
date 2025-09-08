@@ -28,11 +28,13 @@ use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 final class XMLStepDefinition extends XMLField
 {
+    #[\Override]
     public static function getType(): string
     {
         return StepsDefinition::TYPE;
     }
 
+    #[\Override]
     protected function getXMLTagName(): string
     {
         return \Tracker_FormElement::XML_TAG_EXTERNAL_FIELD;

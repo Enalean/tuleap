@@ -48,6 +48,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
     ) {
     }
 
+    #[\Override]
     public function updateFromDuckTypingCollection(
         PFUser $current_user,
         SimpleXMLElement $artifact_xml,

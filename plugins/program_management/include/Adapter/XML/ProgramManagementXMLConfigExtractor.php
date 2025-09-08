@@ -41,6 +41,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         $this->ugroup_retriever = $ugroup_retriever;
     }
 
+    #[\Override]
     public function getIncrementsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
     {
         $source_tracker_ref = $this->getTargetAttributeValueInXMLNode($xml_config->increments->source_tracker, 'REF');
@@ -52,6 +53,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return (int) $created_trackers_mapping[$source_tracker_ref];
     }
 
+    #[\Override]
     public function getIterationsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): ?int
     {
         if (! $xml_config->iterations) {
@@ -67,6 +69,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return (int) $created_trackers_mapping[$source_tracker_ref];
     }
 
+    #[\Override]
     public function getIncrementsPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
     {
         $trackers_ids = [];
@@ -82,6 +85,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return $trackers_ids;
     }
 
+    #[\Override]
     public function getUgroupsIdsThatCanPrioritizeIncrements(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
     {
         $ugroups_that_can_prioritize = [];
@@ -100,6 +104,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return $ugroups_that_can_prioritize;
     }
 
+    #[\Override]
     public function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string
     {
         if ($xml_config->increments->section_name) {
@@ -109,6 +114,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return null;
     }
 
+    #[\Override]
     public function getCustomProgramIncrementsMilestonesName(SimpleXMLElement $xml_config): ?string
     {
         if ($xml_config->increments->milestones_name) {
@@ -118,6 +124,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return null;
     }
 
+    #[\Override]
     public function getCustomIterationsSectionName(SimpleXMLElement $xml_config): ?string
     {
         if ($xml_config->iterations && $xml_config->iterations->section_name) {
@@ -127,6 +134,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return null;
     }
 
+    #[\Override]
     public function getCustomIterationsMilestonesName(SimpleXMLElement $xml_config): ?string
     {
         if ($xml_config->iterations && $xml_config->iterations->milestones_name) {

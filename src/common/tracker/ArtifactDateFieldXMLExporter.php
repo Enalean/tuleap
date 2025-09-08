@@ -28,21 +28,25 @@ class ArtifactDateFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
 
     public const SPECIAL_DATE_FIELD = 'close_date';
 
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
     }
 
+    #[\Override]
     protected function getNodeValue($value)
     {
         return $this->node_helper->getDateNodeFromTimestamp('value', $value);
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         return self::TV3_VALUE_INDEX;
     }
 
+    #[\Override]
     public function getCurrentFieldValue(array $field_value_row, $tracker_id)
     {
         if ($field_value_row['field_name'] === self::SPECIAL_DATE_FIELD) {

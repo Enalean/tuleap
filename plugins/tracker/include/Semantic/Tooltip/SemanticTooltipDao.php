@@ -34,6 +34,7 @@ class SemanticTooltipDao extends DataAccessObject implements IRetrieveSemanticDA
         $this->table_name = 'tracker_tooltip';
     }
 
+    #[\Override]
     public function searchByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

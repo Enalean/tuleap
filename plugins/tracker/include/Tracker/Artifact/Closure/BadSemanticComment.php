@@ -43,6 +43,7 @@ final class BadSemanticComment implements BadSemanticCommentInCommonMarkFormat
         );
     }
 
+    #[\Override]
     public function getBody(): string
     {
         return $this->comment;

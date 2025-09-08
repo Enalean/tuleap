@@ -59,11 +59,13 @@ final readonly class OrderByBuilderVisitor implements SelectableVisitor
         return $order_by->getFilter()->acceptSelectableVisitor($this, new OrderByBuilderParameters($order_by->getDirection(), $user, $trackers));
     }
 
+    #[\Override]
     public function visitField(Field $field, $parameters): ParametrizedFromOrder
     {
         return $this->field_builder->getFromOrder($field, $parameters);
     }
 
+    #[\Override]
     public function visitMetaData(Metadata $metadata, $parameters): ParametrizedFromOrder
     {
         return $this->metadata_builder->getFromOrder($metadata, $parameters);

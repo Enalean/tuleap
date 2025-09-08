@@ -27,6 +27,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class MediawikiFlavorUsageDao extends DataAccessObject implements MediawikiFlavorUsage
 {
+    #[\Override]
     public function wasLegacyMediawikiUsed(\Project $project): bool
     {
         return $this->getDB()->exists(
@@ -40,6 +41,7 @@ final class MediawikiFlavorUsageDao extends DataAccessObject implements Mediawik
                );
     }
 
+    #[\Override]
     public function wasStandaloneMediawikiUsed(\Project $project): bool
     {
         if (

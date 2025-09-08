@@ -59,11 +59,13 @@ final class QueueSystemCheckCommand extends Command
         $this->execution_delayed_launcher = $execution_delayed_launcher;
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Put a SYSTEM_CHECK event in processing queue');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->execution_delayed_launcher->execute(function () {

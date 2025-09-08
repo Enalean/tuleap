@@ -49,6 +49,7 @@ class SetDateValueUpdater implements PostActionUpdater
      * @throws InvalidPostActionException
      * @throws OrphanTransitionException
      */
+    #[\Override]
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateSetDateValueActions($this->validator, $transition->getWorkflow()->getTracker());

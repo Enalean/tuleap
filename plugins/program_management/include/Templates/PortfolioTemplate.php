@@ -56,31 +56,37 @@ final class PortfolioTemplate implements CategorisedTemplate
         $this->template_category = TemplateCategorySAFe::build();
     }
 
+    #[\Override]
     public function getId(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    #[\Override]
     public function getDescription(): string
     {
         return $this->description;
     }
 
+    #[\Override]
     public function getGlyph(): Glyph
     {
         return $this->glyph_finder->get('tuleap-program-management-' . self::NAME);
     }
 
+    #[\Override]
     public function isBuiltIn(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function getXMLPath(): string
     {
         if ($this->xml_path !== null) {
@@ -99,6 +105,7 @@ final class PortfolioTemplate implements CategorisedTemplate
         return $this->xml_path;
     }
 
+    #[\Override]
     public function isAvailable(): bool
     {
         if ($this->available === null) {
@@ -110,6 +117,7 @@ final class PortfolioTemplate implements CategorisedTemplate
         return $this->available;
     }
 
+    #[\Override]
     public function getTemplateCategory(): TemplateCategory
     {
         return $this->template_category;

@@ -62,6 +62,7 @@ final class ContentModifier implements ModifyContent
     ) {
     }
 
+    #[\Override]
     public function modifyContent(int $program_increment_id, ContentChange $content_change, UserIdentifier $user): void
     {
         if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {

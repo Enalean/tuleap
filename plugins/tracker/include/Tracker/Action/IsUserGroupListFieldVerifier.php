@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 final class IsUserGroupListFieldVerifier implements VerifyIsUserGroupListField
 {
+    #[\Override]
     public function isUserGroupListField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         if (! $field instanceof \Tuleap\Tracker\FormElement\Field\ListField) {

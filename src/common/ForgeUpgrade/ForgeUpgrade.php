@@ -144,6 +144,7 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
         $this->displayAlreadyAppliedForAllBuckets();
     }
 
+    #[\Override]
     public function recordOnlyCore(): void
     {
         $this->doRecordOnly(

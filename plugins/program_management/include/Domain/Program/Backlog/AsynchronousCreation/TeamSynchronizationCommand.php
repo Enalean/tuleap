@@ -50,16 +50,19 @@ final class TeamSynchronizationCommand implements CommandTeamSynchronization
         );
     }
 
+    #[\Override]
     public function getProgramId(): int
     {
         return $this->program_id;
     }
 
+    #[\Override]
     public function getTeamId(): int
     {
         return $this->team_id;
     }
 
+    #[\Override]
     public function getUserId(): int
     {
         return $this->user_id;

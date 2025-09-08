@@ -120,6 +120,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
@@ -128,6 +129,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getRecipients(): array
     {
         return $this->recipients;
@@ -136,6 +138,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function asPlaintext(): string
     {
         return sprintf(
@@ -149,6 +152,7 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

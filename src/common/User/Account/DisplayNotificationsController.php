@@ -50,6 +50,7 @@ final readonly class DisplayNotificationsController implements DispatchableWithR
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $user = $request->getCurrentUser();

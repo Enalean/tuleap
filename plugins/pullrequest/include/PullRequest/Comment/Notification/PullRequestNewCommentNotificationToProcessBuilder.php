@@ -54,6 +54,7 @@ final readonly class PullRequestNewCommentNotificationToProcessBuilder implement
     ) {
     }
 
+    #[\Override]
     public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         return $this->comment_retriever->getCommentByID($event->getCommentID())->mapOr(

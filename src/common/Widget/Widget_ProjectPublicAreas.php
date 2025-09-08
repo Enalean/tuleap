@@ -31,11 +31,13 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
         parent::__construct('projectpublicareas');
     }
 
+    #[\Override]
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('include_project_home', 'public_areas');
     }
 
+    #[\Override]
     public function getContent(): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -186,6 +188,7 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
         return $html;
     }
 
+    #[\Override]
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_public_areas', 'description');

@@ -43,6 +43,7 @@ final class VersionUploadCanceler implements TusTerminaterDataStore
         $this->dao            = $dao;
     }
 
+    #[\Override]
     public function terminateUpload(TusFileInformation $file_information): void
     {
         $this->dao->deleteByVersionID($file_information->getID());

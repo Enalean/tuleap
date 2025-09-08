@@ -29,11 +29,13 @@ final class JavascriptViteAsset extends JavascriptAssetGeneric
         parent::__construct($assets, $script_name);
     }
 
+    #[\Override]
     public function getType(): string
     {
         return 'module';
     }
 
+    #[\Override]
     public function getAssociatedCSSAssets(): CssAssetCollection
     {
         return CssViteAsset::buildCollectionFromMainFileName($this->assets, $this->script_name);

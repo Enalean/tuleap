@@ -37,6 +37,7 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
     ) {
     }
 
+    #[\Override]
     public function displayConfirmationForAdmin(BaseLayout $layout, \PFUser $new_user, ConcealedString $password): void
     {
         $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/create/');
@@ -52,6 +53,7 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
         $layout->footer(FooterConfiguration::withoutContent());
     }
 
+    #[\Override]
     public function displayConfirmationLinkSent(BaseLayout $layout, \PFUser $new_user): void
     {
         $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/create/');
@@ -66,6 +68,7 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
         $layout->footer(FooterConfiguration::withoutContent());
     }
 
+    #[\Override]
     public function displayWaitForApproval(BaseLayout $layout, \PFUser $new_user): void
     {
         $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/create/');
@@ -80,6 +83,7 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
         $layout->footer(FooterConfiguration::withoutContent());
     }
 
+    #[\Override]
     public function displayConfirmationLinkError(BaseLayout $layout): void
     {
         $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/account/create/');

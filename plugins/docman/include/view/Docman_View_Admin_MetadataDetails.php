@@ -27,11 +27,13 @@ class Docman_View_Admin_MetadataDetails extends \Tuleap\Docman\View\Admin\AdminV
 {
     public const IDENTIFIER = 'admin_md_details';
 
+    #[\Override]
     protected function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
+    #[\Override]
     protected function getTitle(array $params): string
     {
         return sprintf(
@@ -40,6 +42,7 @@ class Docman_View_Admin_MetadataDetails extends \Tuleap\Docman\View\Admin\AdminV
         );
     }
 
+    #[\Override]
     protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
         $GLOBALS['Response']->addJavascriptAsset(
@@ -47,6 +50,7 @@ class Docman_View_Admin_MetadataDetails extends \Tuleap\Docman\View\Admin\AdminV
         );
     }
 
+    #[\Override]
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $metadata = $params['md'];

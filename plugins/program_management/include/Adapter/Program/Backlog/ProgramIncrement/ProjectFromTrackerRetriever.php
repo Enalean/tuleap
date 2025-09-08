@@ -35,6 +35,7 @@ final class ProjectFromTrackerRetriever implements RetrieveProjectFromTracker
     {
     }
 
+    #[\Override]
     public function fromTrackerReference(TrackerReference $tracker): ProjectReference
     {
         $full_tracker = $this->tracker_retriever->getNonNullTracker($tracker);

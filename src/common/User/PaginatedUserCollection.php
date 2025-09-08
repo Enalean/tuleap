@@ -55,6 +55,7 @@ class PaginatedUserCollection implements Countable
     /**
      * @see Countable
      */
+    #[\Override]
     public function count(): int
     {
         return count($this->users);

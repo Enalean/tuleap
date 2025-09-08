@@ -47,6 +47,7 @@ class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
         $this->comparator     = $comparator;
     }
 
+    #[\Override]
     public function isLegacyOrganizationLogoCustomized(): bool
     {
         if (! $this->isLegacyOrganizationLogoDeployed()) {
@@ -56,6 +57,7 @@ class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
         return $this->isLegacyOrganizationLogoDifferentThanOurs();
     }
 
+    #[\Override]
     public function isSvgOrganizationLogoCustomized(): bool
     {
         return $this->logo_retriever->getSvgPath() !== null

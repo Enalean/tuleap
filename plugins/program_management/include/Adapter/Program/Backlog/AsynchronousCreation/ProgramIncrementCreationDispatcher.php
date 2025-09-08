@@ -38,6 +38,7 @@ final readonly class ProgramIncrementCreationDispatcher implements DispatchProgr
     ) {
     }
 
+    #[\Override]
     public function dispatchCreation(ProgramIncrementCreation $creation): void
     {
         $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);

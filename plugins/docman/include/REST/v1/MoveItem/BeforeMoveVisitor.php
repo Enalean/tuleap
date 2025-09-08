@@ -70,6 +70,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
+    #[\Override]
     public function visitFolder(Docman_Folder $item, array $params = []): void
     {
         $folder_to_move = $item;
@@ -94,6 +95,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
+    #[\Override]
     public function visitWiki(Docman_Wiki $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
@@ -102,6 +104,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
+    #[\Override]
     public function visitOtherDocument(OtherDocument $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
@@ -110,6 +113,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
+    #[\Override]
     public function visitLink(Docman_Link $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
@@ -118,6 +122,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
+    #[\Override]
     public function visitFile(Docman_File $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
@@ -126,6 +131,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
+    #[\Override]
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
@@ -134,11 +140,13 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
+    #[\Override]
     public function visitEmpty(Docman_Empty $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
     }
 
+    #[\Override]
     public function visitItem(Docman_Item $item, array $params = []): void
     {
         throw new LogicException('Cannot move a non specialized item');

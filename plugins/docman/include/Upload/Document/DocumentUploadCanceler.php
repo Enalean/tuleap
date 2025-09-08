@@ -43,6 +43,7 @@ final class DocumentUploadCanceler implements TusTerminaterDataStore
         $this->dao            = $dao;
     }
 
+    #[\Override]
     public function terminateUpload(TusFileInformation $file_information): void
     {
         $this->dao->deleteByItemID($file_information->getID());

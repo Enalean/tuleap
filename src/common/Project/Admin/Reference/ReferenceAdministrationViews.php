@@ -61,6 +61,7 @@ class ReferenceAdministrationViews extends Views
         );
     }
 
+    #[\Override]
     public function header(): void
     {
         if (
@@ -82,6 +83,7 @@ class ReferenceAdministrationViews extends Views
         );
     }
 
+    #[\Override]
     public function footer(): void
     {
         project_admin_footer([]);

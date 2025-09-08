@@ -105,16 +105,19 @@ final class IterationUpdateEventProxy implements IterationUpdateEvent
         return new self($iteration, $user, $changeset);
     }
 
+    #[\Override]
     public function getIteration(): IterationIdentifier
     {
         return $this->iteration;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;
     }
 
+    #[\Override]
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;

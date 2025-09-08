@@ -26,11 +26,13 @@ final class DynamicCredentialStaticStorage implements DynamicCredentialIdentifie
 {
     private static ?string $identifier = null;
 
+    #[\Override]
     public function setIdentifier(string $identifier): void
     {
         self::$identifier = $identifier;
     }
 
+    #[\Override]
     public function getIdentifier(): ?string
     {
         return self::$identifier;

@@ -37,6 +37,7 @@ class WrapperLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         $this->prefix[] = $prefix;
     }
 
+    #[\Override]
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         $this->logger->log($level, $this->formatMessage($message), $context);

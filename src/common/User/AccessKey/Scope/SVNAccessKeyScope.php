@@ -41,11 +41,13 @@ final class SVNAccessKeyScope implements AuthenticationScope
     {
         $this->definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition
         {
+            #[\Override]
             public function getName(): string
             {
                 return _('SVN');
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return _('Access to SVN repositories');
@@ -56,6 +58,7 @@ final class SVNAccessKeyScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromItself(): AuthenticationScope
     {
         return new self(
@@ -66,6 +69,7 @@ final class SVNAccessKeyScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
     {
         if (self::isScopeIdentifier($identifier)) {
@@ -85,16 +89,19 @@ final class SVNAccessKeyScope implements AuthenticationScope
         return $identifier->toString() === self::IDENTIFIER_KEY;
     }
 
+    #[\Override]
     public function getIdentifier(): AuthenticationScopeIdentifier
     {
         return $this->identifier;
     }
 
+    #[\Override]
     public function getDefinition(): AuthenticationScopeDefinition
     {
         return $this->definition;
     }
 
+    #[\Override]
     public function covers(AuthenticationScope $scope): bool
     {
         return self::IDENTIFIER_KEY === $scope->getIdentifier()->toString();

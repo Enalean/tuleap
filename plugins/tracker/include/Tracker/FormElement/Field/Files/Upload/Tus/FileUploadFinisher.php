@@ -46,6 +46,7 @@ class FileUploadFinisher implements TusFinisherDataStore
         $this->form_element_factory = $form_element_factory;
     }
 
+    #[\Override]
     public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $row = $this->dao->searchFileOngoingUploadById($file_information->getID());

@@ -33,6 +33,7 @@ class ProjectOwnerStatusNotificationSystemEvent extends \SystemEvent
      */
     private $mail_sender;
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         list($group_id, $new_status) = $this->getParametersAsArray();
@@ -42,6 +43,7 @@ class ProjectOwnerStatusNotificationSystemEvent extends \SystemEvent
         return 'Notify members of project ' . $this->verbalizeProjectId($group_id, $with_link) . ' is now ' . $status_label;
     }
 
+    #[\Override]
     public function process()
     {
         list($group_id, $new_status) = $this->getParametersAsArray();

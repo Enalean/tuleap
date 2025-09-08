@@ -37,6 +37,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         $this->layout = $layout;
     }
 
+    #[\Override]
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
         return $this->fetchArtifactForm(
@@ -44,6 +45,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         );
     }
 
+    #[\Override]
     protected function displayHeader()
     {
         $include_assets = new \Tuleap\Layout\IncludeViteAssets(
@@ -98,6 +100,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         return $html;
     }
 
+    #[\Override]
     protected function displayFooter()
     {
         $this->tracker->displayFooter($this->layout);

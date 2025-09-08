@@ -58,6 +58,7 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
     ) {
     }
 
+    #[\Override]
     public function saveDocument(
         SaveDocumentTokenData $save_token_information,
         Option $optional_response_data,

@@ -41,6 +41,7 @@ final class OpenListUserGroupsByDuckTypingUpdater implements UpdateOpenListUserG
     ) {
     }
 
+    #[\Override]
     public function updateUserGroupsForDuckTypingMove(SimpleXMLElement $changeset_xml, OpenListField $source_field, OpenListField $destination_field, int $index): void
     {
         $list_value_ids = $changeset_xml->field_change[$index]->value;

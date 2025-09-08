@@ -39,6 +39,7 @@ class Rule_Email extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $this->separator = $separator;
     }
 
+    #[\Override]
     public function isValid($val): bool
     {
         if ($this->separator !== \null) {

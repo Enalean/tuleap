@@ -37,6 +37,7 @@ class SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG extends SystemEvent
         $this->project_manager = $project_manager;
     }
 
+    #[\Override]
     public function process()
     {
         $project_id = $this->getProjectIdFromParameters();
@@ -65,6 +66,7 @@ class SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG extends SystemEvent
         return $parameters[0];
     }
 
+    #[\Override]
     public function verbalizeParameters($with_link)
     {
         $project_id = $this->getProjectIdFromParameters();

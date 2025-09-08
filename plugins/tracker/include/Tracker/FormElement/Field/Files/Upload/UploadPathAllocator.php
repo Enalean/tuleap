@@ -45,6 +45,7 @@ final class UploadPathAllocator implements PathAllocator
         $this->form_element_factory = $form_element_factory;
     }
 
+    #[\Override]
     public function getPathForItemBeingUploaded(TusFileInformation $file_information): string
     {
         return $this->getDelegatedUploadPathAllocator($file_information)

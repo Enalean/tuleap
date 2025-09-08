@@ -28,6 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 
 final class InvalidFromCollectionBuilder implements IBuildInvalidFromCollection
 {
+    #[\Override]
     public function buildCollectionOfInvalidFrom(From $from, PFUser $user): InvalidFromCollection
     {
         throw new LogicException('Should not be called in Tracker report context');

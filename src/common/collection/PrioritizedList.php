@@ -38,12 +38,14 @@ class PrioritizedList extends LinkedList
     /**
      * add the element add the end of the PrioritizedList
      */
+    #[\Override]
     public function add($element, $priority = 0)
     {
         $this->elements[]              = $element;
         $this->priorities[$priority][] = count($this->elements) - 1;
     }
 
+    #[\Override]
     public function iterator()
     {
         $tab = [];

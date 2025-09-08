@@ -37,6 +37,7 @@ class DeletedArtifactLinksProxy implements DeletedArtifactLinksEvent
         return new self($validate_artifact_link_value_event);
     }
 
+    #[\Override]
     public function getUpdatedArtifactId(): int
     {
         return $this->inner_event->getArtifact()->getId();
@@ -45,11 +46,13 @@ class DeletedArtifactLinksProxy implements DeletedArtifactLinksEvent
     /**
      * @return int[]
      */
+    #[\Override]
     public function getDeletedArtifactLinksIds(): array
     {
         return $this->inner_event->getSubmittedLinksForDeletion();
     }
 
+    #[\Override]
     public function setDeletedLinksAreNotValidWithMessage(string $message): void
     {
         $this->inner_event->setIsNotValid();

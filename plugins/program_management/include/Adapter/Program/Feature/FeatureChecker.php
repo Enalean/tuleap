@@ -36,6 +36,7 @@ final class FeatureChecker implements CheckIsValidFeature
     ) {
     }
 
+    #[\Override]
     public function checkIsFeature(int $feature_id, UserIdentifier $user): void
     {
         if (! $this->feature_verifier->isFeature($feature_id)) {

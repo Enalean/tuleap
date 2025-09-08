@@ -47,6 +47,7 @@ final class UserStoryInOneMirrorPlanner implements PlanUserStoryInOneMirror
     ) {
     }
 
+    #[\Override]
     public function planInOneMirror(
         ProgramIncrementIdentifier $program_increment,
         MirroredProgramIncrementIdentifier $mirrored_program_increment,

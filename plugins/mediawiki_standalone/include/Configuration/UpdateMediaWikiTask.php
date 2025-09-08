@@ -29,16 +29,19 @@ final class UpdateMediaWikiTask implements QueueTask
 {
     public const TOPIC = 'tuleap.mediawiki-standalone.farm-install-update';
 
+    #[\Override]
     public function getTopic(): string
     {
         return self::TOPIC;
     }
 
+    #[\Override]
     public function getPayload(): array
     {
         return [];
     }
 
+    #[\Override]
     public function getPreEnqueueMessage(): string
     {
         return 'Installing and updating MediaWiki';

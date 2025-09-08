@@ -60,6 +60,7 @@ readonly class ArtifactViewEdit extends TrackerArtifactView
     }
 
     /** @see TrackerArtifactView::getURL() */
+    #[\Override]
     public function getURL(): string
     {
         return TRACKER_BASE_URL . '/?' . http_build_query(
@@ -70,18 +71,21 @@ readonly class ArtifactViewEdit extends TrackerArtifactView
     }
 
     /** @see TrackerArtifactView::getTitle() */
+    #[\Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-tracker', 'Artifact');
     }
 
     /** @see TrackerArtifactView::getIdentifier() */
+    #[\Override]
     public function getIdentifier(): string
     {
         return 'edit';
     }
 
     /** @see TrackerArtifactView::fetch() */
+    #[\Override]
     public function fetch(): string
     {
         $html  = '';

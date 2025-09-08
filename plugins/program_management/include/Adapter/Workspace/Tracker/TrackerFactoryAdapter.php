@@ -38,6 +38,7 @@ final class TrackerFactoryAdapter implements SearchTrackersOfProgram, RetrieveFu
     /**
      * @return TrackerReference[]
      */
+    #[\Override]
     public function searchAllTrackersOfProgram(ProgramForAdministrationIdentifier $program): array
     {
         $trackers           = $this->tracker_factory->getTrackersByGroupId($program->id);
@@ -50,11 +51,13 @@ final class TrackerFactoryAdapter implements SearchTrackersOfProgram, RetrieveFu
         return $tracker_references;
     }
 
+    #[\Override]
     public function getTrackerFromId(int $tracker_id): ?\Tuleap\Tracker\Tracker
     {
         return $this->tracker_factory->getTrackerById($tracker_id);
     }
 
+    #[\Override]
     public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tuleap\Tracker\Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_identifier->getId());

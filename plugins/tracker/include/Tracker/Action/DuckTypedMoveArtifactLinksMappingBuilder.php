@@ -37,6 +37,7 @@ final class DuckTypedMoveArtifactLinksMappingBuilder implements BuildArtifactLin
     ) {
     }
 
+    #[\Override]
     public function buildMapping(
         Tracker $source_tracker,
         Artifact $artifact,

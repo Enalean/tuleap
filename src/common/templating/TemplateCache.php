@@ -25,11 +25,13 @@ class TemplateCache implements TemplateCacheInterface
     public const CACHE_FOLDER_NAME = 'template_engine';
 
 
+    #[\Override]
     public function getPath(): ?string
     {
         return \ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . self::CACHE_FOLDER_NAME;
     }
 
+    #[\Override]
     public function invalidate(): void
     {
         $path = $this->getPath();

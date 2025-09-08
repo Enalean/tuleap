@@ -52,6 +52,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->prometheus->increment(

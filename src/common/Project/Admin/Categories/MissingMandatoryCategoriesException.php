@@ -39,6 +39,7 @@ final class MissingMandatoryCategoriesException extends ProjectCategoriesExcepti
         );
     }
 
+    #[\Override]
     public function getI18NMessage(): string
     {
         return sprintf(

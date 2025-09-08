@@ -33,6 +33,7 @@ class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter
         $this->dao = $dao;
     }
 
+    #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
         $new_attachment = $this->extractFirstDifference($row['old_value'], $row['new_value']);
@@ -105,6 +106,7 @@ class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter
         return '';
     }
 
+    #[\Override]
     public function getFieldValueIndex()
     {
         throw new Exception_TV3XMLException('Try to get artifact_value on a non value field: attachment');

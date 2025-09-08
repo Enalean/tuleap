@@ -49,6 +49,7 @@ final class ProgramIncrementUpdateProcessor implements ProcessProgramIncrementUp
     ) {
     }
 
+    #[\Override]
     public function processUpdate(ProgramIncrementUpdate $update): void
     {
         $this->logger->debug(

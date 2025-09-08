@@ -53,6 +53,7 @@ final class DisplayTuleapPMParamsController implements DispatchableWithRequest, 
         $this->renderer             = $renderer;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

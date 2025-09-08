@@ -63,6 +63,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
      * string will be html instead of plain/text
      *
      */
+    #[\Override]
     public function verbalizeParameters($with_link): string
     {
         $txt  = '';
@@ -73,6 +74,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
     /**
      * Process stored event
      */
+    #[\Override]
     public function process()
     {
         // Check parameters

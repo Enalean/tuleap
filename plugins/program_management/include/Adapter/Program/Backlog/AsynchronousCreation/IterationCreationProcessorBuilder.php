@@ -92,6 +92,7 @@ use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 final class IterationCreationProcessorBuilder implements BuildIterationCreationProcessor
 {
+    #[\Override]
     public function getProcessor(): ProcessIterationCreation
     {
         $logger                   = \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger();

@@ -43,6 +43,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     /**
      * @return Tuleap\TrackerEncryption\Plugin\PluginInfo
      */
+    #[\Override]
     public function getPluginInfo()
     {
         if (!$this->pluginInfo) {
@@ -51,11 +52,13 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         return $this->pluginInfo;
     }
 
+    #[\Override]
     public function getDependencies()
     {
         return array('tracker');
     }
 
+    #[\Override]
     public function getServiceShortname(): string
     {
         return 'plugin_tracker_encryption';
@@ -127,6 +130,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     );
     }
 
+    #[\Override]
     public function process() : void
     {
         $request = HTTPRequest::instance();

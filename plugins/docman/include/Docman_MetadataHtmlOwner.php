@@ -26,6 +26,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_MetadataHtmlOwner extends \Docman_MetadataHtmlString
 {
+    #[\Override]
     public function getValue()
     {
         $v = $this->md->getValue();
@@ -38,6 +39,7 @@ class Docman_MetadataHtmlOwner extends \Docman_MetadataHtmlString
         }
     }
 
+    #[\Override]
     public function _getField()
     {
         $name  = $this->_getFieldName();

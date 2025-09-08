@@ -40,6 +40,7 @@ class ProjectVisibilityConfigUpdateController implements DispatchableWithRequest
         $this->visibility_config_manager = $visibility_config_manager;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {

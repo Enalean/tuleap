@@ -33,6 +33,7 @@ final class ReverseLinksRetriever implements RetrieveReverseLinks
     ) {
     }
 
+    #[\Override]
     public function retrieveReverseLinks(
         Artifact $artifact,
         \PFUser $user,

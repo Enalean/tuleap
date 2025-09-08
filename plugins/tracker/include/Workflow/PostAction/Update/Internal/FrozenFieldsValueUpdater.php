@@ -47,6 +47,7 @@ class FrozenFieldsValueUpdater implements PostActionUpdater
      * @throws InvalidPostActionException
      * @throws \Tuleap\Tracker\Workflow\Transition\OrphanTransitionException
      */
+    #[\Override]
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateFrozenFieldsActions(

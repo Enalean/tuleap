@@ -51,6 +51,7 @@ final class FieldCanBeEasilyMigratedVerifier implements VerifyFieldCanBeEasilyMi
     ) {
     }
 
+    #[\Override]
     public function canFieldBeEasilyMigrated(
         \Tuleap\Tracker\FormElement\Field\TrackerField $source_field,
         \Tuleap\Tracker\FormElement\Field\TrackerField $destination_field,

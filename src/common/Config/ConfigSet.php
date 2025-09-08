@@ -39,6 +39,7 @@ final class ConfigSet implements ConfigUpdater
      * @throws UnknownConfigKeyException
      * @throws \Tuleap\Cryptography\Exception\CannotPerformIOOperationException
      */
+    #[\Override]
     public function set(string $key, string|ConcealedString $value): void
     {
         $key_metadata = $this->config_keys->getKeyMetadata($key);

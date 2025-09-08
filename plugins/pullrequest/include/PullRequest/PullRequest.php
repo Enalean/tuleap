@@ -70,6 +70,7 @@ class PullRequest implements Labelable
         return $updated_pull_request;
     }
 
+    #[\Override]
     public function getId()
     {
         return $this->id;

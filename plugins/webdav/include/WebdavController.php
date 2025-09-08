@@ -66,6 +66,7 @@ final class WebdavController implements DispatchableWithRequestNoAuthz
         $this->server_builder = $server_builder;
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $this->server_builder->getServerOnSubPath($this->authentication->authenticate())->start();

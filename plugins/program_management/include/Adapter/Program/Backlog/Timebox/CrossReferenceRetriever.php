@@ -37,18 +37,21 @@ final class CrossReferenceRetriever implements RetrieveCrossRef, RetrieveUserSto
     {
     }
 
+    #[\Override]
     public function getXRef(TimeboxIdentifier $timebox_identifier): string
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
         return $artifact->getXRef();
     }
 
+    #[\Override]
     public function getUserStoryCrossRef(UserStoryIdentifier $user_story_identifier): string
     {
         $artifact = $this->artifact_retriever->getNonNullArtifact($user_story_identifier);
         return $artifact->getXRef();
     }
 
+    #[\Override]
     public function getFeatureCrossReference(FeatureIdentifier $feature_identifier): string
     {
         return $this->artifact_retriever->getNonNullArtifact($feature_identifier)->getXRef();
