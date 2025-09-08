@@ -53,4 +53,12 @@ final readonly class RESTTestDefinition
     {
         return $this->json['all_requirements'];
     }
+
+    public function getStepIds(): array
+    {
+        return array_map(
+            static fn (array $step) => $step['id'],
+            $this->json['steps'],
+        );
+    }
 }
