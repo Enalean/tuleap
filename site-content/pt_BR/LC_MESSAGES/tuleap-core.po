@@ -1478,9 +1478,6 @@ msgstr "O Fórum agora está sendo monitorado"
 msgid "Forum is restricted"
 msgstr "Fórum é restrito"
 
-msgid "Forums"
-msgstr "Fóruns"
-
 msgid ""
 "Forums and News services are deprecated. They will be completely removed in "
 "March 2025."
@@ -3191,9 +3188,6 @@ msgstr "Página inicial do site"
 
 msgid "Site news"
 msgstr "Notícias do site"
-
-msgid "Site news approval"
-msgstr "Aprovação de notícias do site"
 
 #, php-format
 msgid "Skip invalid key %1$s"

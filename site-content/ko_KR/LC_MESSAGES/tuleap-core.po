@@ -1446,9 +1446,6 @@ msgstr "포럼은 현재 모니터링 중입니다."
 msgid "Forum is restricted"
 msgstr "포럼이 제한되어 있습니다."
 
-msgid "Forums"
-msgstr "포럼"
-
 msgid ""
 "Forums and News services are deprecated. They will be completely removed in "
 "March 2025."
@@ -3129,9 +3126,6 @@ msgstr "사이트 홈페이지"
 
 msgid "Site news"
 msgstr "사이트 뉴스"
-
-msgid "Site news approval"
-msgstr "사이트 뉴스 승인"
 
 #, php-format
 msgid "Skip invalid key %1$s"
