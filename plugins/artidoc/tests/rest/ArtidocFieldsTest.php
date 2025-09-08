@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use ProjectUGroup;
 use Psl\Json;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\FieldType;
 use Tuleap\Artidoc\Tests\ArtidocAPIHelper;
@@ -42,17 +43,20 @@ use Tuleap\Tracker\REST\Tests\TrackerRESTHelperFactory;
 #[DisableReturnValueGenerationForTestDoubles]
 final class ArtidocFieldsTest extends RestBase
 {
-    private const string PROJECT_LABEL           = 'Artidoc Fields';
-    private const string ALL_FIELDS_SHORT_NAME   = 'all_fields';
-    private const string TEXT_VALUE              = 'hermoglyphic stepfatherhood';
-    private const string STRING_VALUE            = 'ketole missal';
-    private const int    INT_VALUE               = 223;
-    private const float  FLOAT_VALUE             = 306.21;
-    private const int    COMPUTED_VALUE          = 456;
-    private const string DATE_VALUE              = '2029-03-14';
-    private const string STATIC_LIST_VALUE       = 'Dos';
-    private const string INTEGRATORS_UGROUP_NAME = 'Integrators';
-    private const string LINKED_ARTIFACT_TITLE   = 'Zannichellia vernant';
+    private const string PROJECT_LABEL                 = 'Artidoc Fields';
+    private const string ALL_FIELDS_TRACKER_SHORT_NAME = 'all_fields';
+    private const string TEST_CASE_TRACKER_SHORT_NAME  = 'test_case';
+    private const string TEXT_VALUE                    = 'hermoglyphic stepfatherhood';
+    private const string STRING_VALUE                  = 'ketole missal';
+    private const int    INT_VALUE                     = 223;
+    private const float  FLOAT_VALUE                   = 306.21;
+    private const int    COMPUTED_VALUE                = 456;
+    private const string DATE_VALUE                    = '2029-03-14';
+    private const string STATIC_LIST_VALUE             = 'Dos';
+    private const string INTEGRATORS_UGROUP_NAME       = 'Integrators';
+    private const string LINKED_ARTIFACT_TITLE         = 'Zannichellia vernant';
+    private const string STEP_DEFINITION_DESCRIPTION   = 'rorulent triradiate';
+    private const string STEP_DEFINITION_EXPECTATION   = 'generating rosebush';
     private ProjectsAPIHelper $projects_api;
     private DocmanAPIHelper $docman_api;
     private ArtidocAPIHelper $artidoc_api;
@@ -78,12 +82,6 @@ final class ArtidocFieldsTest extends RestBase
         );
         $real_project_id     = $this->createProject($template_project_id);
         $root_folder_id      = $this->docman_api->getRootFolderID($real_project_id);
-        $artidoc_json        = $this->artidoc_api->createArtidoc(
-            $root_folder_id,
-            'Artidoc with fields',
-            DocumentPermissions::buildProjectMembersCanManage($real_project_id)
-        );
-        $artidoc_id          = $artidoc_json['id'];
 
         $trackers           = new TrackerRESTHelperFactory(
             $this->rest_request,
@@ -92,9 +90,11 @@ final class ArtidocFieldsTest extends RestBase
             $real_project_id,
             BaseTestDataBuilder::TEST_USER_1_NAME
         );
-        $all_fields_tracker = $trackers->getTrackerRest(self::ALL_FIELDS_SHORT_NAME);
+        $all_fields_tracker = $trackers->getTrackerRest(self::ALL_FIELDS_TRACKER_SHORT_NAME);
+        $this->configureAllFieldTypes($all_fields_tracker, $root_folder_id, $real_project_id);
 
-        $this->configureAllFieldTypes($all_fields_tracker, $artidoc_id, $real_project_id);
+        $test_case_tracker = $trackers->getTrackerRest(self::TEST_CASE_TRACKER_SHORT_NAME);
+        $this->configureStepsDefinition($test_case_tracker, $root_folder_id, $real_project_id);
     }
 
     private function createProject(int $template_project_id): int
@@ -129,9 +129,15 @@ final class ArtidocFieldsTest extends RestBase
 
     private function configureAllFieldTypes(
         TrackerRESTHelper $all_fields_tracker,
-        int $artidoc_id,
+        int $root_folder_id,
         int $project_id,
     ): void {
+        $artidoc_id = $this->artidoc_api->createArtidoc(
+            $root_folder_id,
+            'Artidoc with fields',
+            DocumentPermissions::buildProjectMembersCanManage($project_id)
+        )['id'];
+
         $string_field_id           = $all_fields_tracker->getFieldByShortName('string')['field_id'];
         $text_field_id             = $all_fields_tracker->getFieldByShortName('text')['field_id'];
         $int_field_id              = $all_fields_tracker->getFieldByShortName('integer')['field_id'];
@@ -371,7 +377,7 @@ final class ArtidocFieldsTest extends RestBase
                 'value' => [
                     [
                         'link_label' => 'is Linked to',
-                        'tracker_shortname' => self::ALL_FIELDS_SHORT_NAME,
+                        'tracker_shortname' => self::ALL_FIELDS_TRACKER_SHORT_NAME,
                         'tracker_color' => 'sherwood-green',
                         'project' => [
                             'id' => $project_id,
@@ -387,5 +393,74 @@ final class ArtidocFieldsTest extends RestBase
             ],
             $artifact_section['fields'][14]
         );
+    }
+
+    private function configureStepsDefinition(
+        TrackerRESTHelper $test_case_tracker,
+        int $root_folder_id,
+        int $project_id,
+    ): void {
+        $artidoc_id = $this->artidoc_api->createArtidoc(
+            $root_folder_id,
+            'Artidoc with Steps definition',
+            DocumentPermissions::buildProjectMembersCanManage($project_id)
+        )['id'];
+
+        $summary_field_id          = $test_case_tracker->getFieldByShortName('summary')['field_id'];
+        $steps_definition_field_id = $test_case_tracker->getFieldByShortName('steps')['field_id'];
+
+        $put_configuration_response = $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'artidoc/' . urlencode((string) $artidoc_id) . '/configuration'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    Json\encode([
+                        'selected_tracker_ids' => [$test_case_tracker->getTrackerID()],
+                        'fields'               => [
+                            ['field_id' => $steps_definition_field_id, 'display_type' => DisplayType::BLOCK->value],
+                        ],
+                    ])
+                )
+            )
+        );
+        self::assertSame(200, $put_configuration_response->getStatusCode());
+
+        $artifact = $test_case_tracker->createArtifact(
+            [
+                ['field_id' => $summary_field_id, 'value' => 'Test Case'],
+                [
+                    'field_id' => $steps_definition_field_id,
+                    'value' => [
+                        [
+                            'description'             => self::STEP_DEFINITION_DESCRIPTION,
+                            'description_format'      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                            'expected_results'        => self::STEP_DEFINITION_EXPECTATION,
+                            'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->artidoc_api->importExistingArtifactInArtidoc(
+            $artidoc_id,
+            BaseTestDataBuilder::TEST_USER_1_NAME,
+            $artifact['id']
+        );
+
+        $sections         = $this->artidoc_api->getArtidocSections($artidoc_id);
+        $artifact_section = $sections[0];
+        if (! array_key_exists('fields', $artifact_section)) {
+            throw new \RuntimeException('Expected a "fields" key in section representation');
+        }
+        self::assertCount(1, $artifact_section['fields']);
+
+        $steps_definition_field = $artifact_section['fields'][0];
+        self::assertSame(FieldType::STEPS_DEFINITION->value, $steps_definition_field['type']);
+        self::assertSame('Steps definition', $steps_definition_field['label']);
+        self::assertSame(DisplayType::BLOCK->value, $steps_definition_field['display_type']);
+        self::assertStringContainsString(self::STEP_DEFINITION_DESCRIPTION, $steps_definition_field['value'][0]['description']);
+        self::assertStringContainsString(self::STEP_DEFINITION_EXPECTATION, $steps_definition_field['value'][0]['expected_results']);
     }
 }
