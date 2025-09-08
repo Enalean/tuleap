@@ -34,71 +34,17 @@ use Tuleap\StatisticsCore\StatisticsServiceUsage;
 
 class CSVBuilder
 {
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    /**
-     * @var Statistics_ServicesUsageDao
-     */
-    private $services_usage_dao;
-
-    /**
-     * @var Statistics_Services_UsageFormatter
-     */
-    private $services_usage_formatter;
-
-    /**
-     * @var PluginManager
-     */
-    private $plugin_manager;
-
-    /**
-     * @var Project_CustomDescription_CustomDescriptionFactory
-     */
-    private $custom_description_factory;
-
-    /**
-     * @var Project_CustomDescription_CustomDescriptionValueDao
-     */
-    private $custom_description_value_dao;
-
-    /**
-     * @var TroveCatDao
-     */
-    private $trove_cat_dao;
-
-    /**
-     * @var TroveCatFactory
-     */
-    private $trove_cat_factory;
-
-    /**
-     * @var Statistics_DiskUsageManager
-     */
-    private $disk_usage_manager;
-
     public function __construct(
-        Statistics_ServicesUsageDao $services_usage_dao,
-        Statistics_Services_UsageFormatter $services_usage_formatter,
-        Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
-        Project_CustomDescription_CustomDescriptionValueDao $custom_description_value_dao,
-        TroveCatDao $trove_cat_dao,
-        TroveCatFactory $trove_cat_factory,
-        Statistics_DiskUsageManager $disk_usage_manager,
-        PluginManager $plugin_manager,
-        EventManager $event_manager,
+        private readonly Statistics_ServicesUsageDao $services_usage_dao,
+        private readonly Statistics_Services_UsageFormatter $services_usage_formatter,
+        private readonly Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
+        private readonly Project_CustomDescription_CustomDescriptionValueDao $custom_description_value_dao,
+        private readonly TroveCatDao $trove_cat_dao,
+        private readonly TroveCatFactory $trove_cat_factory,
+        private readonly Statistics_DiskUsageManager $disk_usage_manager,
+        private readonly PluginManager $plugin_manager,
+        private readonly EventManager $event_manager,
     ) {
-        $this->services_usage_dao           = $services_usage_dao;
-        $this->services_usage_formatter     = $services_usage_formatter;
-        $this->custom_description_factory   = $custom_description_factory;
-        $this->custom_description_value_dao = $custom_description_value_dao;
-        $this->trove_cat_dao                = $trove_cat_dao;
-        $this->trove_cat_factory            = $trove_cat_factory;
-        $this->disk_usage_manager           = $disk_usage_manager;
-        $this->event_manager                = $event_manager;
-        $this->plugin_manager               = $plugin_manager;
     }
 
     public function buildServiceUsageCSVContent($start_date, $end_date)
@@ -150,11 +96,6 @@ class CSVBuilder
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDownloadedFilesBeforeEndDate(), 'Downloaded files (before end date)');
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate(), 'Downloaded files (between start date and end date)');
 
-        //Forums
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfActiveForums(), 'Active forums');
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfInactiveForums(), 'Inactive forums');
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getForumsActivitiesBetweenStartDateAndEndDate(), 'Forums activities');
-
         //PHPWiki
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfWikiDocuments(), 'Wiki documents');
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate(), 'Modified wiki pages');
@@ -167,9 +108,6 @@ class CSVBuilder
         //Docman
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAddedDocumentBetweenStartDateAndEndDate(), 'Added documents');
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getDeletedDocumentBetweenStartDateAndEndDate(), 'Deleted documents');
-
-        //News
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfNewsBetweenStartDateAndEndDate(), 'News');
 
         //CI
         $ci_plugin = $this->plugin_manager->getPluginByName('hudson');

@@ -36,7 +36,6 @@ final class FrequenciesLabels implements Dispatchable
         $this->labels = [
             'session'   => dgettext('tuleap-statistics', 'Sessions'),
             'user'      => dgettext('tuleap-statistics', 'Users'),
-            'forum'     => dgettext('tuleap-statistics', 'Messages in forums'),
             'filedl'    => dgettext('tuleap-statistics', 'Files downloaded'),
             'file'      => dgettext('tuleap-statistics', 'Files released'),
             'groups'    => dgettext('tuleap-statistics', 'Project created'),

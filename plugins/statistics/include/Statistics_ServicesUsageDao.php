@@ -21,7 +21,7 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
-class Statistics_ServicesUsageDao extends DataAccessObject
+class Statistics_ServicesUsageDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private $end_date;
     private $start_date;
@@ -268,42 +268,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getNumberOfActiveForums()
-    {
-        $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id ) AS result
-                FROM forum_group_list fg, forum f
-                WHERE fg.group_forum_id =f.group_forum_id
-                    AND f.date <= $this->end_date
-                    AND fg.is_public != 9
-                GROUP BY  fg.group_id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function getNumberOfInactiveForums()
-    {
-        $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id ) AS result
-                FROM forum_group_list fg, forum f
-                WHERE fg.group_forum_id =f.group_forum_id
-                    AND f.date <= $this->end_date
-                    AND fg.is_public = 9
-                GROUP BY  fg.group_id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function getForumsActivitiesBetweenStartDateAndEndDate()
-    {
-        $sql = "SELECT group_id,COUNT(DISTINCT f.msg_id ) AS result
-                FROM forum_group_list fg, forum f
-                WHERE fg.group_forum_id =f.group_forum_id
-                    AND f.date <= $this->end_date
-                    AND f.date >= $this->start_date
-                GROUP BY  fg.group_id";
-
-        return $this->retrieve($sql);
-    }
-
     public function getNumberOfWikiDocuments()
     {
         $sql = 'SELECT group_id, COUNT( DISTINCT id) AS result
@@ -393,17 +357,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject
                 FROM plugin_docman_item
                 WHERE delete_date >= $this->start_date
                     AND delete_date <= $this->end_date
-                GROUP BY  group_id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function getNumberOfNewsBetweenStartDateAndEndDate()
-    {
-        $sql = "SELECT group_id, COUNT(id) AS result
-                FROM news_bytes
-                WHERE date >= $this->start_date
-                    AND date <= $this->end_date
                 GROUP BY  group_id";
 
         return $this->retrieve($sql);

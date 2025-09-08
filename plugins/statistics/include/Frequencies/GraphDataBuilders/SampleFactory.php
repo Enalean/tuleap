@@ -56,10 +56,6 @@ class SampleFactory
                 $this->sample = new UserSample();
                 break;
 
-            case 'forum':
-                $this->sample = new ForumSample();
-                break;
-
             case 'filedl':
                 $this->sample = new FiledSample();
                 break;
