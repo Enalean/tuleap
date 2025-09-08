@@ -33,8 +33,8 @@ use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 class BacklogItemDao extends DataAccessObject
 {
-    public const STATUS_OPEN   = 1;
-    public const STATUS_CLOSED = 0;
+    public const int STATUS_OPEN   = 1;
+    public const int STATUS_CLOSED = 0;
 
     /**
      * @return array<array{id: int}>

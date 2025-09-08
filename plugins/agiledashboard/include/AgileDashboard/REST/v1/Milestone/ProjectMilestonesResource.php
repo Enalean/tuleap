@@ -35,7 +35,7 @@ use Tuleap\REST\Header;
  */
 class ProjectMilestonesResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     /**
      * @var FilteringQueryParser

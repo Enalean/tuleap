@@ -36,9 +36,9 @@ use Tuleap\Tracker\REST\TrackerReference;
  */
 class MilestoneRepresentation
 {
-    public const ROUTE      = 'milestones';
-    public const ALL_FIELDS = 'all';
-    public const SLIM       = 'slim';
+    public const string ROUTE      = 'milestones';
+    public const string ALL_FIELDS = 'all';
+    public const string SLIM       = 'slim';
 
     /**
      * @var int

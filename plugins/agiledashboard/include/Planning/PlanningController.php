@@ -62,7 +62,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * 'tracker' => The Planning Tracker of the planning that is being configured
      * 'view'    => The HTML to be fetched
      */
-    public const AGILEDASHBOARD_EVENT_PLANNING_CONFIG = 'agiledashboard_event_planning_config';
+    public const string AGILEDASHBOARD_EVENT_PLANNING_CONFIG = 'agiledashboard_event_planning_config';
 
     /**
      * Update a planning
@@ -71,9 +71,9 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * 'tracker' => The Planning Tracker of the planning that is being configured
      * 'request' => The standard request object
      */
-    public const AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE = 'agiledashboard_event_planning_config_update';
+    public const string AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE = 'agiledashboard_event_planning_config_update';
 
-    public const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
+    public const string AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
 
     private Project $project;
 

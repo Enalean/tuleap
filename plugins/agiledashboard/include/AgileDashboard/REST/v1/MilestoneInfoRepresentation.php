@@ -25,7 +25,7 @@ use Tuleap\REST\JsonCast;
  */
 class MilestoneInfoRepresentation
 {
-    public const ROUTE = 'milestones';
+    public const string ROUTE = 'milestones';
 
     /** @var int */
     public $id;

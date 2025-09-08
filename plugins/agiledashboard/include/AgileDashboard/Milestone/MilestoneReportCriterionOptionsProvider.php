@@ -26,8 +26,8 @@ use Tuleap\Tracker\Tracker;
  */
 class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const TOP_BACKLOG_IDENTIFIER   = '0';
-    public const TOP_BACKLOG_OPTION_ENTRY = 'Top Backlog';
+    public const string TOP_BACKLOG_IDENTIFIER   = '0';
+    public const string TOP_BACKLOG_OPTION_ENTRY = 'Top Backlog';
 
     /** @var AgileDashboard_Planning_NearestPlanningTrackerProvider */
     private $nearest_planning_tracker_provider;

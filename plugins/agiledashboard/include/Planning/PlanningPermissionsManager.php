@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PlanningPermissionsManager
+class PlanningPermissionsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const PERM_PRIORITY_CHANGE = 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE';
+    public const string PERM_PRIORITY_CHANGE = 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE';
 
     public function getPlanningPermissionForm($planning_id, $group_id, $permission, $html_element_name)
     {

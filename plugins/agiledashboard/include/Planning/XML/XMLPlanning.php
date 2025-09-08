@@ -29,12 +29,12 @@ use SimpleXMLElement;
 
 final class XMLPlanning
 {
-    public const NODE_PLANNING = 'planning';
-    public const NODE_BACKLOGS = 'backlogs';
-    public const NODE_BACKLOG  = 'backlog';
+    public const string NODE_PLANNING = 'planning';
+    public const string NODE_BACKLOGS = 'backlogs';
+    public const string NODE_BACKLOG  = 'backlog';
 
-    private const NODE_PERMISSIONS = 'permissions';
-    private const NODE_PERMISSION  = 'permission';
+    private const string NODE_PERMISSIONS = 'permissions';
+    private const string NODE_PERMISSION  = 'permission';
 
     /**
      * @var string

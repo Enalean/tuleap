@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class Planning_MilestoneSelectorController extends MVC2_PluginController
+class Planning_MilestoneSelectorController extends MVC2_PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Modify the redirect parameters when attempt to display a planning without specific Milestone selected
@@ -28,7 +28,7 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController
      * Expected results
      * 'redirect_parameters' => Input/Output parameter, array of 'key' => 'value'
      */
-    public const AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT = 'agiledashboard_event_milestone_selector_redirect';
+    public const string AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT = 'agiledashboard_event_milestone_selector_redirect';
 
     private $milestone_factory;
 

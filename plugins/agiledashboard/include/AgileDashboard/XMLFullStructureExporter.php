@@ -20,7 +20,7 @@
 
 class AgileDashboard_XMLFullStructureExporter
 {
-    public const AGILEDASHBOARD_EXPORT_XML = 'agiledashboard_export_xml';
+    public const string AGILEDASHBOARD_EXPORT_XML = 'agiledashboard_export_xml';
 
     /** @var EventManager */
     private $event_manager;

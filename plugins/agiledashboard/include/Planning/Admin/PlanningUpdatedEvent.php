@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 final class PlanningUpdatedEvent implements Dispatchable
 {
-    public const NAME = 'planningUpdatedEvent';
+    public const string NAME = 'planningUpdatedEvent';
 
     /**
      * @var Planning

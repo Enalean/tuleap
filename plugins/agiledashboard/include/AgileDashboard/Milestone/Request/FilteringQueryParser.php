@@ -29,8 +29,8 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 
 class FilteringQueryParser
 {
-    private const STATUS_OPEN   = 'open';
-    private const STATUS_CLOSED = 'closed';
+    private const string STATUS_OPEN   = 'open';
+    private const string STATUS_CLOSED = 'closed';
 
     /**
      * @throws MalformedQueryParameterException

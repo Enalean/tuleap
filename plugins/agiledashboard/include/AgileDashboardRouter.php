@@ -60,8 +60,8 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
  */
 class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    private const PANE_KANBAN = 'kanban';
-    private const PANE_CHARTS = 'charts';
+    private const string PANE_KANBAN = 'kanban';
+    private const string PANE_CHARTS = 'charts';
     /**
      * @var Service|null
      */

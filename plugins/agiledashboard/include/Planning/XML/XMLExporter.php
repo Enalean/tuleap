@@ -31,12 +31,12 @@ use SimpleXMLElement;
 
 class XMLExporter
 {
-    public const NODE_PLANNINGS = 'plannings';
+    public const string NODE_PLANNINGS = 'plannings';
 
     /**
      * @todo move me to tracker class
      */
-    public const TRACKER_ID_PREFIX = 'T';
+    public const string TRACKER_ID_PREFIX = 'T';
 
     /**
      * @var PlanningPermissionsManager

@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 interface IBacklogItem
 {
-    public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    public const string REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
 
     public function setInitialEffort(?float $value): void;
 

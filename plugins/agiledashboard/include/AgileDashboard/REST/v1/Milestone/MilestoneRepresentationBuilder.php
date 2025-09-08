@@ -35,7 +35,7 @@ class MilestoneRepresentationBuilder
      * 'milestone'                                  => The Milestone object
      * 'milestone_representation_reference_holder' => The reference to a RESt representation of the milestone
      */
-    public const AGILEDASHBOARD_EVENT_REST_GET_MILESTONE = 'agiledashboard_event_rest_get_milestone';
+    public const string AGILEDASHBOARD_EVENT_REST_GET_MILESTONE = 'agiledashboard_event_rest_get_milestone';
 
     /**
      * @var \Planning_MilestoneFactory

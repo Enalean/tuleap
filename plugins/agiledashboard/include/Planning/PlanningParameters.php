@@ -23,11 +23,11 @@
  */
 class PlanningParameters // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const NAME                = 'name';
-    public const BACKLOG_TITLE       = 'backlog_title';
-    public const PLANNING_TITLE      = 'plan_title';
-    public const BACKLOG_TRACKER_IDS = 'backlog_tracker_ids';
-    public const PLANNING_TRACKER_ID = 'planning_tracker_id';
+    public const string NAME                = 'name';
+    public const string BACKLOG_TITLE       = 'backlog_title';
+    public const string PLANNING_TITLE      = 'plan_title';
+    public const string BACKLOG_TRACKER_IDS = 'backlog_tracker_ids';
+    public const string PLANNING_TRACKER_ID = 'planning_tracker_id';
 
     /**
      * @var string

@@ -31,7 +31,7 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
 {
     #[FeatureFlagConfigKey('Allow milestones in sidebar. 0 to disallow, 1 to allow. By default they are allowed. Guarded by allow_milestones_in_sidebar_dev_mode feature flag.')]
     #[ConfigKeyInt(1)]
-    public const FEATURE_FLAG = 'allow_milestones_in_sidebar';
+    public const string FEATURE_FLAG = 'allow_milestones_in_sidebar';
 
     private const SHOULD_SIDEBAR_DISPLAY_LAST_MILESTONES_WHEN_NO_CONFIG = true;
 

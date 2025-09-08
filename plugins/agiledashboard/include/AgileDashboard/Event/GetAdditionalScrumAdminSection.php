@@ -24,7 +24,7 @@ namespace Tuleap\AgileDashboard\Event;
 
 class GetAdditionalScrumAdminSection
 {
-    public const NAME = 'getAdditionalScrumAdminSection';
+    public const string NAME = 'getAdditionalScrumAdminSection';
 
     /**
      * @var IScrumAdminSectionControllers[]

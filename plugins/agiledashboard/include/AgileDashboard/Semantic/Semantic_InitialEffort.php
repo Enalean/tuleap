@@ -30,7 +30,7 @@ use Tuleap\Tracker\Tracker;
 
 class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME = 'initial_effort';
+    public const string NAME = 'initial_effort';
 
     /**
      * @var TrackerField

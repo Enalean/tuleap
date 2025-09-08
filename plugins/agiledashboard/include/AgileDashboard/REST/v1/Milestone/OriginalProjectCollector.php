@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class OriginalProjectCollector implements Dispatchable
 {
-    public const NAME = 'externalParentCollector';
+    public const string NAME = 'externalParentCollector';
     /**
      * @var Artifact
      */

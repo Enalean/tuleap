@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class RootPlanningEditionEvent implements Dispatchable
 {
-    public const NAME = 'rootPlanningEditionEvent';
+    public const string NAME = 'rootPlanningEditionEvent';
     /**
      * @var \Project
      * @psalm-readonly

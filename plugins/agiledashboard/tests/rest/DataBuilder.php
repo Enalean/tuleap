@@ -35,9 +35,9 @@ use Tuleap\REST\RESTTestDataBuilder;
 
 class DataBuilder extends RESTTestDataBuilder
 {
-    public const RELEASE_TRACKER_SHORTNAME          = 'rel';
-    public const PROJECT_BURNUP_SHORTNAME           = 'burnup';
-    public const EXPLICIT_BACKLOG_PROJECT_SHORTNAME = 'explicitadbacklog';
+    public const string RELEASE_TRACKER_SHORTNAME          = 'rel';
+    public const string PROJECT_BURNUP_SHORTNAME           = 'burnup';
+    public const string EXPLICIT_BACKLOG_PROJECT_SHORTNAME = 'explicitadbacklog';
 
     private SystemEventManager $system_event_manager;
     private SystemEventRunner $system_event_runner;
