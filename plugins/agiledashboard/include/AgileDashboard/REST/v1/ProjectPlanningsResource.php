@@ -29,7 +29,7 @@ use Tuleap\REST\Header;
  */
 class ProjectPlanningsResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     public function get(PFUser $user, Project $project, $limit, $offset)
     {

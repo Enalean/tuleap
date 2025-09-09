@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class DetailsChartPresentersRetriever implements Dispatchable
 {
-    public const NAME = 'detailsChartPresentersRetriever';
+    public const string NAME = 'detailsChartPresentersRetriever';
     /**
      * @var Planning_Milestone
      */

@@ -27,8 +27,8 @@ namespace Tuleap\AgileDashboard\Milestone\Request;
  */
 final class PeriodQuery
 {
-    public const FUTURE  = 'future';
-    public const CURRENT = 'current';
+    public const string FUTURE  = 'future';
+    public const string CURRENT = 'current';
     /**
      * @var string
      */

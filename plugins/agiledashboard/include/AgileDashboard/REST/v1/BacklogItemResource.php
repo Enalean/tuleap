@@ -66,7 +66,7 @@ use UserManager;
  */
 class BacklogItemResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 100;
+    public const int MAX_LIMIT = 100;
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;

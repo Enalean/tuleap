@@ -28,7 +28,7 @@ use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
  */
 class AgileDashboard_CardRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const ROUTE = 'cards';
+    public const string ROUTE = 'cards';
 
     /** @var string */
     public $id;

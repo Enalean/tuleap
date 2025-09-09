@@ -68,7 +68,7 @@ use UserManager;
 
 class Burnup extends TrackerField implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
 {
-    public const TYPE = 'burnup';
+    public const string TYPE = 'burnup';
 
     #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)

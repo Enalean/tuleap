@@ -27,7 +27,7 @@ use Tuleap\Tracker\Tracker;
 
 class PlanningV2PaneInfo extends PaneInfo
 {
-    public const IDENTIFIER = 'planning-v2';
+    public const string IDENTIFIER = 'planning-v2';
 
     /** @var Tracker */
     private $submilestone_tracker;

@@ -124,7 +124,7 @@ class MilestoneResource extends AuthenticatedResource
      * 'version'   => API version
      * 'milestone' => Milestone on which cardwall is requested
      */
-    public const AGILEDASHBOARD_EVENT_REST_GET_CARDWALL = 'agiledashboard_event_rest_get_cardwall';
+    public const string AGILEDASHBOARD_EVENT_REST_GET_CARDWALL = 'agiledashboard_event_rest_get_cardwall';
 
     /**
      * RESt call for burndown GET
@@ -135,8 +135,8 @@ class MilestoneResource extends AuthenticatedResource
      * 'milestone' => Milestone on which burndown is requested
      * 'burndown'  => OUT the \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
-    public const AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN = 'agiledashboard_event_rest_get_burndown';
-    public const MAX_LIMIT                              = 100;
+    public const string AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN = 'agiledashboard_event_rest_get_burndown';
+    public const int MAX_LIMIT                                 = 100;
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;

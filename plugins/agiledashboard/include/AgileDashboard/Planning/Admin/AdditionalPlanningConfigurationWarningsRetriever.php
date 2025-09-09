@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
 
 final class AdditionalPlanningConfigurationWarningsRetriever implements Dispatchable
 {
-    public const NAME = 'additionalPlanningConfigurationWarningsRetriever';
+    public const string NAME = 'additionalPlanningConfigurationWarningsRetriever';
 
     /**
      * @var PlanningWarningPossibleMisconfigurationPresenter[]

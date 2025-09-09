@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class PlanningAdministrationDelegation implements Dispatchable
 {
-    public const NAME = 'planningAdministrationDelegation';
+    public const string NAME = 'planningAdministrationDelegation';
 
     /**
      * @var \Project

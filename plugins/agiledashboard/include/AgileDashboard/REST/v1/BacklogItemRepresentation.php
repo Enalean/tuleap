@@ -32,11 +32,11 @@ use Tuleap\Tracker\REST\TrackerReference;
  */
 final readonly class BacklogItemRepresentation
 {
-    public const BACKLOG_ROUTE = 'backlog';
+    public const string BACKLOG_ROUTE = 'backlog';
 
-    public const CONTENT_ROUTE = 'content';
+    public const string CONTENT_ROUTE = 'content';
 
-    public const ROUTE = 'backlog_items';
+    public const string ROUTE = 'backlog_items';
 
     private function __construct(
         public int $id,

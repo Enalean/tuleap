@@ -29,7 +29,7 @@ use Tuleap\Tracker\REST\TrackerReference;
  */
 readonly class PlanningRepresentationBase
 {
-    public const ROUTE = 'plannings';
+    public const string ROUTE = 'plannings';
 
     public function __construct(
         public int $id,

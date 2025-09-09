@@ -25,8 +25,8 @@ use Tuleap\AgileDashboard\v1\Artifact\BurnupRepresentation;
 
 class BurnupFieldPresenter
 {
-    private const EFFORT_MODE         = 'effort';
-    private const COUNT_ELEMENTS_MODE = 'count';
+    private const string EFFORT_MODE         = 'effort';
+    private const string COUNT_ELEMENTS_MODE = 'count';
 
     /**
      * @var string

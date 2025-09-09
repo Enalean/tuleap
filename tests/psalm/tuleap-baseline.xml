@@ -6,30 +6,11 @@
       <code><![CDATA[$rng_path]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItemDao.php">
-    <MissingClassConstType>
-      <code><![CDATA[STATUS_CLOSED = 0]]></code>
-      <code><![CDATA[STATUS_OPEN   = 1]]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Event/GetAdditionalScrumAdminSection.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getAdditionalScrumAdminSection']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/UnplannedCriterionOptionsProvider.php">
-    <MissingClassConstType>
-      <code><![CDATA[UNPLANNED_IDENTIFIER = -1]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
     <InvalidReturnType>
       <code><![CDATA[getQueryFrom]]></code>
       <code><![CDATA[keepValue]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[TYPE = 'burnup']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$can_burnup_be_regenerated]]></code>
       <code><![CDATA[$submitted_values]]></code>
@@ -54,10 +35,6 @@
     </InvalidOperand>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupFieldPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[COUNT_ELEMENTS_MODE = 'count']]></code>
-      <code><![CDATA[EFFORT_MODE         = 'effort']]></code>
-    </MissingClassConstType>
     <PossiblyFalsePropertyAssignmentValue>
       <code><![CDATA[json_encode($burnup_representation)]]></code>
     </PossiblyFalsePropertyAssignmentValue>
@@ -76,11 +53,6 @@
       <code><![CDATA[key($this->items)]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/IBacklogItem.php">
-    <MissingClassConstType>
-      <code><![CDATA[REMAINING_EFFORT_FIELD_NAME = 'remaining_effort']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/IBacklogItemCollection.php">
     <MissingTemplateParam>
       <code><![CDATA[Iterator]]></code>
@@ -91,60 +63,15 @@
       <code><![CDATA[$first_tracker_id]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneReportCriterionOptionsProvider.php">
-    <MissingClassConstType>
-      <code><![CDATA[TOP_BACKLOG_IDENTIFIER   = '0']]></code>
-      <code><![CDATA[TOP_BACKLOG_OPTION_ENTRY = 'Top Backlog']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneReportCriterionProvider.php">
-    <MissingClassConstType>
-      <code><![CDATA[ANY        = '']]></code>
-      <code><![CDATA[FIELD_NAME = 'agiledashboard_milestone']]></code>
-      <code><![CDATA[UNPLANNED  = -1]]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Details/DetailsChartPresentersRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'detailsChartPresentersRetriever']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Details/DetailsPaneInfo.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'details']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Details/DetailsPresenterBuilder.php">
     <InvalidOperand>
       <code><![CDATA[$milestone->getArtifactId()]]></code>
     </InvalidOperand>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/PaneInfoCollector.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'agiledashboardEventAdditionalPanesOnMilestone']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Planning/PlanningV2PaneInfo.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'planning-v2']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Planning/SubmilestoneFinder.php">
     <PossiblyNullArgument>
       <code><![CDATA[$tracker_id]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/TopPlanning/TopPlanningV2PaneInfo.php">
-    <MissingClassConstType>
-      <code><![CDATA[ACTION     = 'show-top']]></code>
-      <code><![CDATA[IDENTIFIER = 'topplanning-v2']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Request/FilteringQueryParser.php">
-    <MissingClassConstType>
-      <code><![CDATA[STATUS_CLOSED = 'closed']]></code>
-      <code><![CDATA[STATUS_OPEN   = 'open']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Planning/NearestPlanningTrackerProvider.php">
     <DeprecatedMethod>
@@ -234,9 +161,6 @@
       <code><![CDATA[public function get($id)]]></code>
       <code><![CDATA[public function getChildren($id, $limit = 10, $offset = 0)]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 100]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$limit]]></code>
@@ -279,9 +203,6 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/CardRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'cards']]></code>
-    </MissingClassConstType>
     <MissingClosureParamType>
       <code><![CDATA[$value]]></code>
     </MissingClosureParamType>
@@ -330,16 +251,6 @@
       <code><![CDATA[checkAddedIdsBelongToTheProjectTopBacklogTrackers]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Milestone/MilestoneRepresentationBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[AGILEDASHBOARD_EVENT_REST_GET_MILESTONE = 'agiledashboard_event_rest_get_milestone']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Milestone/ProjectMilestonesResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/MilestoneContentUpdater.php">
     <MissingParamType>
       <code><![CDATA[$linked_artifact_id]]></code>
@@ -353,19 +264,11 @@
     <InvalidOperand>
       <code><![CDATA[$this->id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'milestones']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/MilestoneRepresentation.php">
     <InvalidOperand>
       <code><![CDATA[$artifact_id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[ALL_FIELDS = 'all']]></code>
-      <code><![CDATA[ROUTE      = 'milestones']]></code>
-      <code><![CDATA[SLIM       = 'slim']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$has_user_priority_change_permission]]></code>
       <code><![CDATA[$representation_type]]></code>
@@ -397,11 +300,6 @@
       <code><![CDATA[$milestone->getProject()->getId()]]></code>
       <code><![CDATA[$milestone->getProject()->getId()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN = 'agiledashboard_event_rest_get_burndown']]></code>
-      <code><![CDATA[AGILEDASHBOARD_EVENT_REST_GET_CARDWALL = 'agiledashboard_event_rest_get_cardwall']]></code>
-      <code><![CDATA[MAX_LIMIT                              = 100]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$id]]></code>
@@ -494,9 +392,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/MilestonesCardwallRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'cardwall']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$planning_id]]></code>
     </MissingParamType>
@@ -554,18 +449,10 @@
       <code><![CDATA[$planning_id]]></code>
     </InvalidOperand>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/PlanningRepresentationBase.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'plannings']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/PlanningResource.php">
     <InvalidDocblock>
       <code><![CDATA[public function getMilestones($id, $limit = 10, $offset = 0)]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 100]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$limit]]></code>
@@ -593,10 +480,6 @@
       <code><![CDATA[$project->getId()]]></code>
       <code><![CDATA[$project->getId()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT              = 100]]></code>
-      <code><![CDATA[TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
@@ -622,9 +505,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/ProjectPlanningsResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
@@ -696,18 +576,10 @@
       <code><![CDATA[type]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v2/BacklogRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'backlog_items']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v2/ProjectBacklogResource.php">
     <InvalidScalarArgument>
       <code><![CDATA[$project->getId()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
@@ -766,9 +638,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Semantic/Semantic_InitialEffort.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'initial_effort']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$_instances]]></code>
     </MissingPropertyType>
@@ -826,10 +695,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Workflow/AddToTopBacklog.php">
-    <MissingClassConstType>
-      <code><![CDATA[SHORT_NAME   = 'add_to_top_backlog']]></code>
-      <code><![CDATA[XML_TAG_NAME = 'postaction_add_to_top_backlog']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
@@ -849,9 +714,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/XMLFullStructureExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[AGILEDASHBOARD_EXPORT_XML = 'agiledashboard_export_xml']]></code>
-    </MissingClassConstType>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$params]]></code>
     </PossiblyUndefinedVariable>
@@ -886,10 +748,6 @@
     <DeprecatedMethod>
       <code><![CDATA[userIsAdmin]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[PANE_CHARTS = 'charts']]></code>
-      <code><![CDATA[PANE_KANBAN = 'kanban']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[buildController]]></code>
       <code><![CDATA[executeAction]]></code>
@@ -920,12 +778,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[array]]></code>
     </InvalidNullableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[ACTION      = 'action']]></code>
-      <code><![CDATA[ARTIFACT_ID = 'aid']]></code>
-      <code><![CDATA[PANE        = 'pane']]></code>
-      <code><![CDATA[PLANNING_ID = 'planning_id']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/agiledashboard/include/PermissionsPerGroup/AgileDashboardJSONPermissionsRetriever.php">
     <MissingParamType>
@@ -967,19 +819,11 @@
       <code><![CDATA[getPlanningAdminQuickLink]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/Planning/AllowedAdditionalPanesToDisplayCollector.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'allowedAdditionalPanesToDisplayCollector']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/agiledashboard/include/Planning/ArtifactLinker.php">
     <DeprecatedMethod>
       <code><![CDATA[linkArtifact]]></code>
       <code><![CDATA[linkArtifact]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[LINK_TO_MILESTONE_PARAMETER = 'link-to-milestone']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/ArtifactMilestone.php">
     <DeprecatedMethod>
@@ -993,9 +837,6 @@
     <InvalidReturnType>
       <code><![CDATA[int]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[PROMOTED_ITEM_PREFIX = 'milestone-']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$artifacts]]></code>
       <code><![CDATA[$capacity]]></code>
@@ -1020,11 +861,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/agiledashboard/include/Planning/Milestone.php">
-    <MissingClassConstType>
-      <code><![CDATA[CAPACITY_FIELD_NAME         = 'capacity']]></code>
-      <code><![CDATA[DURATION_FIELD_NAME         = 'duration']]></code>
-      <code><![CDATA[REMAINING_EFFORT_FIELD_NAME = 'remaining_effort']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$capacity]]></code>
       <code><![CDATA[$remaining_effort]]></code>
@@ -1136,9 +972,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/MilestoneSelectorController.php">
-    <MissingClassConstType>
-      <code><![CDATA[AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT = 'agiledashboard_event_milestone_selector_redirect']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$milestone_factory]]></code>
     </MissingPropertyType>
@@ -1202,11 +1035,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$project->getID()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[AGILEDASHBOARD_EVENT_PLANNING_CONFIG = 'agiledashboard_event_planning_config']]></code>
-      <code><![CDATA[AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE = 'agiledashboard_event_planning_config_update']]></code>
-      <code><![CDATA[AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[addBurnupWarning]]></code>
       <code><![CDATA[addOtherWarnings]]></code>
@@ -1290,13 +1118,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/PlanningParameters.php">
-    <MissingClassConstType>
-      <code><![CDATA[BACKLOG_TITLE       = 'backlog_title']]></code>
-      <code><![CDATA[BACKLOG_TRACKER_IDS = 'backlog_tracker_ids']]></code>
-      <code><![CDATA[NAME                = 'name']]></code>
-      <code><![CDATA[PLANNING_TITLE      = 'plan_title']]></code>
-      <code><![CDATA[PLANNING_TRACKER_ID = 'planning_tracker_id']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$array]]></code>
       <code><![CDATA[$key]]></code>
@@ -1307,9 +1128,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/PlanningPermissionsManager.php">
-    <MissingClassConstType>
-      <code><![CDATA[PERM_PRIORITY_CHANGE = 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
@@ -1392,10 +1210,6 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/agiledashboard/include/Planning/XML/XMLExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[NODE_PLANNINGS = 'plannings']]></code>
-      <code><![CDATA[TRACKER_ID_PREFIX = 'T']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$tracker_id]]></code>
@@ -1474,11 +1288,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[AGILEDASHBOARD_EVENT_REST_RESOURCES = 'agiledashboard_event_rest_resources']]></code>
-      <code><![CDATA[PLUGIN_SHORTNAME = 'plugin_agiledashboard']]></code>
-      <code><![CDATA[USER_PREF_DISPLAY_SPLIT_MODAL = 'should_display_agiledashboard_split_modal']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$parameters]]></code>

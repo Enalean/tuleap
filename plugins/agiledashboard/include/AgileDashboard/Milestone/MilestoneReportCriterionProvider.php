@@ -27,9 +27,9 @@ use Tuleap\Tracker\Tracker;
  */
 class AgileDashboard_Milestone_MilestoneReportCriterionProvider // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const FIELD_NAME = 'agiledashboard_milestone';
-    public const ANY        = '';
-    public const UNPLANNED  = -1;
+    public const string FIELD_NAME = 'agiledashboard_milestone';
+    public const string ANY        = '';
+    public const int UNPLANNED     = -1;
 
     /** @var AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider */
     private $options_provider;

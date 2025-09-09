@@ -49,7 +49,7 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
  */
 class ProjectBacklogResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;

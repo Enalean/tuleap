@@ -26,7 +26,7 @@ use Tuleap\Tracker\REST\TrackerReference;
  */
 class BacklogRepresentation
 {
-    public const ROUTE = 'backlog_items';
+    public const string ROUTE = 'backlog_items';
 
     /**
      * @var BacklogItemRepresentation[]

@@ -26,9 +26,9 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 interface Planning_Milestone // @codingStandardsIgnoreLine
 {
-    public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
-    public const CAPACITY_FIELD_NAME         = 'capacity';
-    public const DURATION_FIELD_NAME         = 'duration';
+    public const string REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    public const string CAPACITY_FIELD_NAME         = 'capacity';
+    public const string DURATION_FIELD_NAME         = 'duration';
 
     /**
      * @return int The project identifier.

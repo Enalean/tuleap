@@ -22,12 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_PaneRedirectionExtractor
+class AgileDashboard_PaneRedirectionExtractor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const ARTIFACT_ID = 'aid';
-    public const PANE        = 'pane';
-    public const PLANNING_ID = 'planning_id';
-    public const ACTION      = 'action';
+    public const string ARTIFACT_ID = 'aid';
+    public const string PANE        = 'pane';
+    public const string PLANNING_ID = 'planning_id';
+    public const string ACTION      = 'action';
 
     /**
      * Get the parameters to redirect to proper pane on the AgileDashboard

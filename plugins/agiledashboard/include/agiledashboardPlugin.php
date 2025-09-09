@@ -196,11 +196,11 @@ require_once 'constants.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
-    public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
+    public const string PLUGIN_SHORTNAME = 'plugin_agiledashboard';
 
-    public const AGILEDASHBOARD_EVENT_REST_RESOURCES = 'agiledashboard_event_rest_resources';
+    public const string AGILEDASHBOARD_EVENT_REST_RESOURCES = 'agiledashboard_event_rest_resources';
 
-    public const USER_PREF_DISPLAY_SPLIT_MODAL = 'should_display_agiledashboard_split_modal';
+    public const string USER_PREF_DISPLAY_SPLIT_MODAL = 'should_display_agiledashboard_split_modal';
 
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;

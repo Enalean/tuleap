@@ -26,7 +26,7 @@ use Tuleap\Tracker\Milestone\PaneInfo;
 
 class DetailsPaneInfo extends PaneInfo
 {
-    public const IDENTIFIER = 'details';
+    public const string IDENTIFIER = 'details';
 
     public function __construct(private Planning_Milestone $milestone)
     {

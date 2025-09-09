@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class BlockScrumAccess implements Dispatchable
 {
-    public const NAME = 'blockScrumAccess';
+    public const string NAME = 'blockScrumAccess';
 
     /**
      * @var Project
