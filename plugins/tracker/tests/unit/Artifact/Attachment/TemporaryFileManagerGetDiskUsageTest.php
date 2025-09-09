@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\Attachment;
 
 use ForgeConfig;
 use PFUser;
-use System_Command;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
 use Tuleap\ForgeConfigSandbox;
@@ -55,7 +54,6 @@ final class TemporaryFileManagerGetDiskUsageTest extends TestCase
         $this->file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
             RetrieveUserByIdStub::withUser($this->user),
             $dao,
-            new System_Command(),
             3,
             new DBTransactionExecutorPassthrough(),
         );

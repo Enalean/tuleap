@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\Artifact\Attachment;
 use ForgeConfig;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use System_Command;
 use TestHelper;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
@@ -56,7 +55,6 @@ final class TemporaryFileManagerPurgeTest extends TestCase
         $this->file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
             RetrieveUserByIdStub::withUser(new PFUser(['user_id' => 101, 'language_id' => 'en_US'])),
             $this->dao,
-            new System_Command(),
             3,
             new DBTransactionExecutorPassthrough(),
         );

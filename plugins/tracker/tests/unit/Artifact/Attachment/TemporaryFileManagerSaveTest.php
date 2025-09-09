@@ -25,10 +25,10 @@ namespace Tuleap\Tracker\Artifact\Attachment;
 
 use ForgeConfig;
 use PFUser;
-use System_Command;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
@@ -37,14 +37,16 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 final class TemporaryFileManagerSaveTest extends TestCase
 {
     use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     private Tracker_Artifact_Attachment_TemporaryFileManager $file_manager;
     private string $cache_dir;
     private PFUser $user;
 
-    public function setUp(): void
+    #[\Override]
+    protected function setUp(): void
     {
-        $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
+        $this->cache_dir = $this->getTmpDir();
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
 
         $this->user = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
@@ -55,17 +57,11 @@ final class TemporaryFileManagerSaveTest extends TestCase
         $this->file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
             RetrieveUserByIdStub::withUser($this->user),
             $dao,
-            new System_Command(),
             3,
             new DBTransactionExecutorPassthrough(),
         );
 
         ForgeConfig::set('sys_max_size_upload', 10);
-    }
-
-    public function tearDown(): void
-    {
-        exec('rm -rf ' . escapeshellarg($this->cache_dir));
     }
 
     public function testItCanSaveATemporaryFilesIfQuotaIsNotExceeded(): void

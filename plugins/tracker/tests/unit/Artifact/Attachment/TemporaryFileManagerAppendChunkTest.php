@@ -26,11 +26,11 @@ namespace Tuleap\Tracker\Artifact\Attachment;
 use ForgeConfig;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use System_Command;
 use Tracker_Artifact_Attachment_TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
@@ -39,6 +39,7 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 final class TemporaryFileManagerAppendChunkTest extends TestCase
 {
     use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     private Tracker_Artifact_Attachment_TemporaryFile $empty_file;
     private Tracker_Artifact_Attachment_TemporaryFile $wrong_path_file;
@@ -48,7 +49,7 @@ final class TemporaryFileManagerAppendChunkTest extends TestCase
 
     public function setUp(): void
     {
-        $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
+        $this->cache_dir = $this->getTmpDir();
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
 
         $this->dao = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManagerDao::class);
@@ -57,7 +58,6 @@ final class TemporaryFileManagerAppendChunkTest extends TestCase
         $this->file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
             RetrieveUserByIdStub::withUser(new PFUser(['user_id' => 101, 'language_id' => 'en_US'])),
             $this->dao,
-            new System_Command(),
             3,
             new DBTransactionExecutorPassthrough(),
         );
@@ -87,11 +87,6 @@ final class TemporaryFileManagerAppendChunkTest extends TestCase
         );
     }
 
-    public function tearDown(): void
-    {
-        exec('rm -rf ' . escapeshellarg($this->cache_dir));
-    }
-
     public function testItThrowsExceptionIfOffsetIsNotValid(): void
     {
         $this->expectException('Tracker_Artifact_Attachment_InvalidOffsetException');
@@ -110,7 +105,7 @@ final class TemporaryFileManagerAppendChunkTest extends TestCase
     {
         $filepath = $this->cache_dir . '/rest_attachement_temp_101_' . $this->empty_file->getTemporaryName();
 
-        $this->dao->method('updateFileInfo');
+        $this->dao->method('updateFileInfo')->willReturn(true);
 
         $this->file_manager->appendChunk(base64_encode('le content'), $this->empty_file, 1);
 
@@ -125,5 +120,11 @@ final class TemporaryFileManagerAppendChunkTest extends TestCase
         $this->file_manager->appendChunk(base64_encode('le too big content'), $this->empty_file, 1);
 
         self::assertEquals('', file_get_contents($filepath));
+    }
+
+    public function testThrowsWhenContentIsNotBase64Encoded(): void
+    {
+        $this->expectException(InvalidBase64ContentChunkException::class);
+        $this->file_manager->appendChunk('wrong', $this->empty_file, 1);
     }
 }

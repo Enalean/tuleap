@@ -465,7 +465,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
             $this->getUserManager(),
             new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
-            new System_Command(),
             ForgeConfig::get('sys_file_deletion_delay'),
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection())
         );

@@ -23,12 +23,10 @@ namespace Tuleap\Tracker\REST\v1;
 use ForgeConfig;
 use Luracast\Restler\RestException;
 use PFUser;
-use System_Command;
-use Tracker_Artifact_Attachment_CannotCreateException as CannotCreateException;
 use Tracker_Artifact_Attachment_ChunkTooBigException as ChunkTooBigException;
 use Tracker_Artifact_Attachment_FileNotFoundException as FileNotFoundException;
 use Tracker_Artifact_Attachment_InvalidOffsetException as InvalidOffsetException;
-use Tracker_Artifact_Attachment_InvalidPathException as InvalidPathException;
+use Tracker_Artifact_Attachment_TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFile as TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager as FileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao as FileManagerDao;
@@ -36,7 +34,10 @@ use Tracker_Exception;
 use Tracker_FileInfo_InvalidFileInfoException as InvalidFileInfoException;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_NoChangeException;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\Artifact\Attachment\InvalidBase64ContentChunkException;
 use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
 use Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
@@ -55,18 +56,19 @@ class ArtifactTemporaryFilesResource
 
     /** @var \Tracker_Artifact_Attachment_TemporaryFileManager */
     private $file_manager;
+    private DBTransactionExecutorWithConnection $transaction_executor;
 
     public function __construct()
     {
         $this->user = UserManager::instance()->getCurrentUser();
 
-        $this->file_manager = new FileManager(
+        $this->file_manager         = new FileManager(
             UserManager::instance(),
             new FileManagerDao(),
-            new System_Command(),
             ForgeConfig::get('sys_file_deletion_delay'),
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection())
         );
+        $this->transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
     }
 
     /**
@@ -168,32 +170,31 @@ class ArtifactTemporaryFilesResource
      * @param string $name          Name of the file {@from body}
      * @param string $mimetype      Mime-Type of the file {@from body}
      * @param string $content       First chunk of the file (base64-encoded) {@from body}
-     * @param string $description   Description of the file {@from body}
+     * @param ?string $description   Description of the file {@from body}
      *
      * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
-     * @throws RestException 500
      * @throws RestException 403
      */
-    protected function post($name, $mimetype, $content, $description = null)
+    protected function post(string $name, string $mimetype, string $content, ?string $description = null)
     {
         try {
-            $this->file_manager->validateChunkSize($this->user, $content);
-
-            $file         = $this->file_manager->save($this->user, $name, $description, $mimetype);
-            $chunk_offset = 1;
-            $append       = $this->file_manager->appendChunk($content, $file, $chunk_offset);
-        } catch (CannotCreateException $e) {
-            $this->raiseError(500);
+            $file = $this->transaction_executor->execute(
+                function () use ($name, $description, $mimetype, $content): Tracker_Artifact_Attachment_TemporaryFile {
+                    $file         = $this->file_manager->save($this->user, $name, $description, $mimetype);
+                    $chunk_offset = 1;
+                    $append       = $this->file_manager->appendChunk($content, $file, $chunk_offset);
+                    if (! $append) {
+                        $this->raiseError(500);
+                    }
+                    return $file;
+                }
+            );
         } catch (ChunkTooBigException $e) {
             $this->raiseError(400, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
-        } catch (InvalidPathException $e) {
-            $this->raiseError(500, $e->getMessage());
         } catch (QuotaExceededException $e) {
             $this->raiseError(400, 'You exceeded your quota. Please remove existing temporary files before continuing.');
-        }
-
-        if (! $append) {
-            $this->raiseError(500);
+        } catch (InvalidBase64ContentChunkException $ex) {
+            $this->raiseError(400, 'Uploaded content does not seem to be properly base64 encoded');
         }
 
         $this->sendAllowHeadersForArtifactFiles();
@@ -230,7 +231,6 @@ class ArtifactTemporaryFilesResource
         $file = $this->getFile($id);
 
         try {
-            $this->file_manager->validateChunkSize($this->user, $content);
             $this->file_manager->appendChunk($content, $file, $offset);
         } catch (ChunkTooBigException $e) {
             $this->raiseError(400, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
@@ -238,6 +238,8 @@ class ArtifactTemporaryFilesResource
             $this->raiseError(400, 'Invalid offset received. Expected: ' . ($file->getCurrentChunkOffset() + 1));
         } catch (QuotaExceededException $e) {
             $this->raiseError(400, 'You exceeded your quota. Please remove existing temporary files before continuing.');
+        } catch (InvalidBase64ContentChunkException $ex) {
+            $this->raiseError(400, 'Uploaded content does not seem to be properly base64 encoded');
         }
 
         $this->sendAllowHeadersForArtifactFilesId();
