@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\XML;
 
+use Override;
 use PlanningParameters;
 use SimpleXMLElement;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
@@ -32,6 +33,7 @@ final class AgileDashboardXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase 
 
     private array $tracker_mappings;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->importer = new AgileDashboardXMLImporter();
