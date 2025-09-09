@@ -25,9 +25,9 @@ namespace Tuleap\CrossTracker\Query\Advanced\FromBuilder;
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\AllowedFrom;
-use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
@@ -40,7 +40,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVisitor
 {
     public function __construct(
-        private CrossTrackerWidgetRetriever $cross_tracker_widget_retriever,
+        private RetrieveCrossTrackerWidget $cross_tracker_widget_retriever,
     ) {
     }
 
@@ -84,7 +84,7 @@ final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVi
                     throw new LogicException('Not expected to handle a query not associated with a project');
                 }
             );
-            if ($widget === null || $widget instanceof UserCrossTrackerWidget) {
+            if (! $widget instanceof ProjectCrossTrackerWidget) {
                 throw new LogicException('Project id not found');
             }
             $where             .= ' AND project.group_id = ?';

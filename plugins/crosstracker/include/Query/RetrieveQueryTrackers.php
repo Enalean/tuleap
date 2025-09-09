@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query;
 
 use PFUser;
+use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
@@ -36,5 +37,5 @@ interface RetrieveQueryTrackers
      * @throws MissingFromException
      * @throws FromIsInvalidException
      */
-    public function getQueryTrackers(ParsedCrossTrackerQuery $query, PFUser $current_user, int $limit): array;
+    public function getQueryTrackers(RetrieveCrossTrackerWidget $retriever, ParsedCrossTrackerQuery $query, PFUser $current_user, int $limit): array;
 }
