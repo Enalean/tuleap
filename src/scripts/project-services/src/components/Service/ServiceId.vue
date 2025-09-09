@@ -18,16 +18,10 @@
   -->
 
 <template>
-    <input type="hidden" name="service_id" v-bind:value="value" />
+    <input type="hidden" name="service_id" v-bind:value="id" />
 </template>
-<script>
-export default {
-    name: "ServiceId",
-    props: {
-        value: {
-            type: Number,
-            required: true,
-        },
-    },
-};
+<script setup lang="ts">
+defineProps<{
+    id: number | null;
+}>();
 </script>
