@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Query\Advanced;
+namespace Tuleap\CrossTracker\Widget;
 
-use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
-use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
-
-final readonly class WidgetInProjectChecker
+/**
+ * psalm-immutable
+ */
+final readonly class CrossTrackerWidgetRetriever implements RetrieveCrossTrackerWidget
 {
-    public function __construct(private RetrieveCrossTrackerWidget $cross_tracker_widget_retriever)
+    public function __construct(public CrossTrackerWidgetDao $dao)
     {
     }
 
-    public function isWidgetInProjectDashboard(int $widget_id): bool
+    #[\Override]
+    public function retrieveWidgetById(int $widget_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null
     {
-        $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
-
-        return $widget instanceof ProjectCrossTrackerWidget;
+        return $this->dao->searchCrossTrackerWidgetDashboardById($widget_id);
     }
 }

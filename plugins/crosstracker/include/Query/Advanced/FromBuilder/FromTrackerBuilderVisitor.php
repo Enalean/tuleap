@@ -25,7 +25,9 @@ namespace Tuleap\CrossTracker\Query\Advanced\FromBuilder;
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\AllowedFrom;
-use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
@@ -38,7 +40,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVisitor
 {
     public function __construct(
-        private SearchCrossTrackerWidget $widget_retriever,
+        private CrossTrackerWidgetRetriever $cross_tracker_widget_retriever,
     ) {
     }
 
@@ -74,20 +76,19 @@ final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVi
         $where_parameters = $names;
 
         if ($parameters->is_tracker_condition_alone) {
-            $row = $parameters->widget_id->match(
-                /** @return array{dashboard_id: int, dashboard_type: string, user_id: int, project_id: int}|null */
-                function (int $widget_id): ?array {
-                    return $this->widget_retriever->searchCrossTrackerWidgetDashboardById($widget_id);
+            $widget = $parameters->widget_id->match(
+                function (int $widget_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null {
+                    return $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
                 },
                 function (): never {
                     throw new LogicException('Not expected to handle a query not associated with a project');
                 }
             );
-            if ($row === null || $row['dashboard_type'] !== 'project') {
+            if ($widget === null || $widget instanceof UserCrossTrackerWidget) {
                 throw new LogicException('Project id not found');
             }
             $where             .= ' AND project.group_id = ?';
-            $where_parameters[] = $row['project_id'];
+            $where_parameters[] = $widget->getProjectId();
         }
 
         return new ParametrizedFromWhere('', $where, [], $where_parameters);

@@ -30,7 +30,6 @@ final class SearchCrossTrackerWidgetStub implements SearchCrossTrackerWidget
     {
     }
 
-    #[\Override]
     public function searchCrossTrackerWidgetDashboardById(int $content_id): ?array
     {
         return $this->row;

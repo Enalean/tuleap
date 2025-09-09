@@ -102,6 +102,7 @@ use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\ProjectNam
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\Query\Advanced\WidgetInProjectChecker;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Markdown\CommonMarkInterpreter;
@@ -246,14 +247,15 @@ final class CrossTrackerArtifactQueryFactoryBuilder
 
     private function getFromBuilderVisitor(): FromBuilderVisitor
     {
-        $event_manager = EventManager::instance();
-        $widget_dao    = new CrossTrackerWidgetDao();
+        $event_manager                  = EventManager::instance();
+        $widget_dao                     = new CrossTrackerWidgetDao();
+        $cross_tracker_widget_retriever = new CrossTrackerWidgetRetriever($widget_dao);
         return new FromBuilderVisitor(
-            new FromTrackerBuilderVisitor($widget_dao),
+            new FromTrackerBuilderVisitor($cross_tracker_widget_retriever),
             new FromProjectBuilderVisitor(
-                $widget_dao,
                 ProjectManager::instance(),
                 $event_manager,
+                $cross_tracker_widget_retriever
             ),
         );
     }
@@ -436,14 +438,14 @@ final class CrossTrackerArtifactQueryFactoryBuilder
             $this->getFromBuilderVisitor(),
             TrackersPermissionsRetriever::build(),
             new CrossTrackerTQLQueryDao(),
-            new WidgetInProjectChecker($widget_dao),
-            $widget_dao,
+            new WidgetInProjectChecker(new CrossTrackerWidgetRetriever($widget_dao)),
             ProjectManager::instance(),
             EventManager::instance(),
             new TrackersListAllowedByPlugins(
                 EventManager::instance(),
                 TrackerFactory::instance()
             ),
+            new CrossTrackerWidgetRetriever($widget_dao),
         );
     }
 }

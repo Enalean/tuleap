@@ -30,7 +30,7 @@ use Tuleap\CrossTracker\Query\Advanced\InvalidFromProjectCollectorVisitor;
 use Tuleap\CrossTracker\Query\Advanced\InvalidFromTrackerCollectorVisitor;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\CrossTrackerTQLQueryDao;
 use Tuleap\CrossTracker\Query\Advanced\WidgetInProjectChecker;
-use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
@@ -48,10 +48,10 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
         private RetrieveUserPermissionOnTrackers $trackers_permissions,
         private CrossTrackerTQLQueryDao $tql_query_dao,
         private WidgetInProjectChecker $in_project_checker,
-        private SearchCrossTrackerWidget $widget_retriever,
         private ProjectByIDFactory $project_factory,
         private EventDispatcherInterface $event_dispatcher,
         private TrackersListAllowedByPlugins $trackers_list_allowed_by_plugins,
+        private CrossTrackerWidgetRetriever $widget_retriever,
     ) {
     }
 
@@ -75,9 +75,9 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
                 new InvalidFromTrackerCollectorVisitor($this->in_project_checker),
                 new InvalidFromProjectCollectorVisitor(
                     $this->in_project_checker,
-                    $this->widget_retriever,
                     $this->project_factory,
                     $this->event_dispatcher,
+                    $this->widget_retriever
                 ),
                 $query->getWidgetId(),
             ),

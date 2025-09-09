@@ -28,7 +28,8 @@ use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Query\Advanced\AllowedFrom;
 use Tuleap\CrossTracker\Query\Advanced\InvalidFromProjectCollectorVisitor;
-use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProject;
@@ -44,9 +45,9 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 final readonly class FromProjectBuilderVisitor implements FromProjectConditionVisitor
 {
     public function __construct(
-        private SearchCrossTrackerWidget $widget_retriever,
         private ProjectByIDFactory $project_factory,
         private EventDispatcherInterface $event_dispatcher,
+        private CrossTrackerWidgetRetriever $cross_tracker_widget_retriever,
     ) {
     }
 
@@ -105,11 +106,11 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
     {
         return $parameters->widget_id->match(
             function (int $widget_id): int {
-                $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($widget_id);
-                if ($row === null || $row['dashboard_type'] !== 'project') {
+                $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
+                if ($widget === null || $widget instanceof UserCrossTrackerWidget) {
                     throw new LogicException('Project id not found');
                 }
-                return $row['project_id'];
+                return $widget->getProjectId();
             },
             function (): never {
                 throw new LogicException('Could not find the project ID of a query not associated with a widget');
@@ -125,12 +126,12 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
         return $parameters->widget_id->match(
             /** @return list<int> */
             function (int $widget_id) use ($parameters): array {
-                $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($widget_id);
-                if ($row === null || $row['dashboard_type'] !== 'project') {
+                $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
+
+                if ($widget === null || $widget instanceof UserCrossTrackerWidget) {
                     throw new LogicException('Project id not found');
                 }
-                $project_id      = $row['project_id'];
-                $project         = $this->project_factory->getValidProjectById($project_id);
+                $project         = $this->project_factory->getValidProjectById($widget->getProjectId());
                 $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
                 assert($linked_projects instanceof CollectLinkedProjects);
                 return array_values(array_map(

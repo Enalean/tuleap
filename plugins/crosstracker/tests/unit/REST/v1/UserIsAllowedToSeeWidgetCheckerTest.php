@@ -24,8 +24,11 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tuleap\CrossTracker\Tests\Stub\Widget\SearchCrossTrackerWidgetStub;
-use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Tests\Stub\Widget\RetrieveCrossTrackerWidgetStub;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\include\CheckUserCanAccessProjectAndIsAdmin;
@@ -56,23 +59,23 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
         $GLOBALS['Language']->method('getText')->willReturnCallback(static fn(string $msg) => $msg);
     }
 
-    private function checkUserIsAllowedToSeeWidget(SearchCrossTrackerWidget $cross_tracker_dao): void
+    private function checkUserIsAllowedToSeeWidget(UserCrossTrackerWidget|ProjectCrossTrackerWidget $widget): void
     {
         $user_is_allowed_to_see_widget_checker = new UserIsAllowedToSeeWidgetChecker(
-            $cross_tracker_dao,
             $this->project_manager,
             $this->url_verification,
+            RetrieveCrossTrackerWidgetStub::withWidget($widget),
         );
 
         $user_is_allowed_to_see_widget_checker->checkUserIsAllowedToSeeWidget($this->user, 1);
     }
 
-    private function checkUserIsAllowedToUpdateWidget(SearchCrossTrackerWidget $cross_tracker_dao): void
+    private function checkUserIsAllowedToUpdateWidget(UserCrossTrackerWidget|ProjectCrossTrackerWidget $widget): void
     {
         $user_is_allowed_to_see_widget_checker = new UserIsAllowedToSeeWidgetChecker(
-            $cross_tracker_dao,
             $this->project_manager,
             $this->url_verification,
+            RetrieveCrossTrackerWidgetStub::withWidget($widget)
         );
 
         $user_is_allowed_to_see_widget_checker->checkUserIsAllowedToUpdateWidget($this->user, 1);
@@ -80,44 +83,29 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
 
     public function testItThrowsExceptionWhenTheCurrentUserWantToSeeAnotherUserWidget(): void
     {
-        $this->user        = UserTestBuilder::buildWithId(104);
-        $cross_tracker_dao = SearchCrossTrackerWidgetStub::withExistingWidget(
-            [
-                'dashboard_type' => 'user',
-                'user_id'        => 105,
-            ]
-        );
+        $this->user = UserTestBuilder::buildWithId(104);
+        $widget     = UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, 105);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->checkUserIsAllowedToSeeWidget($cross_tracker_dao);
+        $this->checkUserIsAllowedToSeeWidget($widget);
     }
 
     public function testTheUserCanViewTheUserWidget(): void
     {
-        $this->user        = UserTestBuilder::buildWithId(104);
-        $cross_tracker_dao = SearchCrossTrackerWidgetStub::withExistingWidget(
-            [
-                'dashboard_type' => 'user',
-                'user_id'        => 104,
-            ]
-        );
+        $widget = UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
 
-        $this->checkUserIsAllowedToSeeWidget($cross_tracker_dao);
+        $this->checkUserIsAllowedToSeeWidget($widget);
 
         self::expectNotToPerformAssertions();
     }
 
     public function testItThrowsExceptionWhenTheCurrentUserWantToSeeFromPrivateProjectWithoutAccess(): void
     {
-        $cross_tracker_dao      = SearchCrossTrackerWidgetStub::withExistingWidget(
-            [
-                'dashboard_type' => 'project',
-                'project_id'     => 105,
-            ]
-        );
-        $this->project_manager  = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(105)->build());
+        $project                = ProjectTestBuilder::aProject()->withId(105)->build();
+        $widget                 = ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $this->project_manager  = ProjectByIDFactoryStub::buildWith($project);
         $this->url_verification = CheckUserCanAccessProjectStub::build()->withPrivateProjectForUser(
             ProjectTestBuilder::aProject()->withId(105)->build(),
             $this->user,
@@ -126,87 +114,63 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->checkUserIsAllowedToSeeWidget($cross_tracker_dao);
+        $this->checkUserIsAllowedToSeeWidget($widget);
     }
 
     public function testTheUserCanViewTheProjectWidget(): void
     {
-        $cross_tracker_dao     = SearchCrossTrackerWidgetStub::withExistingWidget(
-            [
-                'dashboard_type' => 'project',
-                'project_id'     => 105,
-            ]
-        );
-        $this->project_manager = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(105)->build());
+        $project               = ProjectTestBuilder::aProject()->withId(105)->build();
+        $widget                = ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $this->project_manager = ProjectByIDFactoryStub::buildWith($project);
 
-        $this->checkUserIsAllowedToSeeWidget($cross_tracker_dao);
+        $this->checkUserIsAllowedToSeeWidget($widget);
 
         self::expectNotToPerformAssertions();
     }
 
     public function testTheUserCanUpdateTheProjectWidget(): void
     {
-        $cross_tracker_dao      = SearchCrossTrackerWidgetStub::withExistingWidget(
-            [
-                'dashboard_type' => 'project',
-                'project_id'     => 105,
-            ]
-        );
         $project                = ProjectTestBuilder::aProject()->withId(105)->build();
+        $widget                 = ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
         $this->user             = UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build();
         $this->project_manager  = ProjectByIDFactoryStub::buildWith($project);
         $this->url_verification = CheckUserCanAccessProjectStub::build()->withUserAdminOf($this->user, $project);
 
-        $this->checkUserIsAllowedToUpdateWidget($cross_tracker_dao);
+        $this->checkUserIsAllowedToUpdateWidget($widget);
 
         self::expectNotToPerformAssertions();
     }
 
     public function testTheUserCannotUpdateTheProjectWidget(): void
     {
-        $cross_tracker_dao      = SearchCrossTrackerWidgetStub::withExistingWidget(
-            [
-                'dashboard_type' => 'project',
-                'project_id'     => 105,
-            ]
-        );
-        $this->project_manager  = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(105)->build());
+        $project                = ProjectTestBuilder::aProject()->withId(105)->build();
+        $widget                 = ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getId());
+        $this->project_manager  = ProjectByIDFactoryStub::buildWith($project);
         $this->url_verification = CheckUserCanAccessProjectStub::build();
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->checkUserIsAllowedToUpdateWidget($cross_tracker_dao);
+        $this->checkUserIsAllowedToUpdateWidget($widget);
     }
 
     public function testTheUserCanUpdateTheUserWidget(): void
     {
-        $cross_tracker_dao = SearchCrossTrackerWidgetStub::withExistingWidget(
-            [
-                'dashboard_type' => 'user',
-                'user_id'        => 105,
-            ]
-        );
-        $this->user        = UserTestBuilder::buildWithId(105);
+        $widget = UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
 
-        $this->checkUserIsAllowedToUpdateWidget($cross_tracker_dao);
+        $this->checkUserIsAllowedToUpdateWidget($widget);
 
         self::expectNotToPerformAssertions();
     }
 
     public function testTheUserCannotUpdateTheUserWidget(): void
     {
-        $cross_tracker_dao = SearchCrossTrackerWidgetStub::withExistingWidget(
-            [
-                'dashboard_type' => 'user',
-                'user_id'        => 105,
-            ]
-        );
-        $this->user        = UserTestBuilder::buildWithId(215);
+        $widget     = UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, (int) $this->user->getId());
+        $this->user = UserTestBuilder::buildWithId(215);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->checkUserIsAllowedToUpdateWidget($cross_tracker_dao);
+        $this->checkUserIsAllowedToUpdateWidget($widget);
     }
 }

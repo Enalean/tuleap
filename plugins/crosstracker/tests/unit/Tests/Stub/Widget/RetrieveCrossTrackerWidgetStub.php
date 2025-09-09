@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Query\Advanced;
+namespace Tuleap\CrossTracker\Tests\Stub\Widget;
 
+use Override;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 
-final readonly class WidgetInProjectChecker
+final readonly class RetrieveCrossTrackerWidgetStub implements RetrieveCrossTrackerWidget
 {
-    public function __construct(private RetrieveCrossTrackerWidget $cross_tracker_widget_retriever)
+    private function __construct(public ProjectCrossTrackerWidget|UserCrossTrackerWidget|null $widget)
     {
     }
 
-    public function isWidgetInProjectDashboard(int $widget_id): bool
+    public static function withWidget(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget): self
     {
-        $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
+        return new self($widget);
+    }
 
-        return $widget instanceof ProjectCrossTrackerWidget;
+    #[Override]
+    public function retrieveWidgetById(int $widget_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null
+    {
+        return $this->widget;
     }
 }
