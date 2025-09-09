@@ -22,6 +22,7 @@ import { createGettext } from "vue3-gettext";
 import type { GlobalMountOptions } from "@vue/test-utils/dist/types";
 import type { Pinia } from "pinia";
 import { createTestingPinia as officialCreateTestingPinia } from "@pinia/testing";
+import { REPORT_ID } from "../../src/injection-symbols";
 
 export function createTestingPinia(
     option?: Parameters<typeof officialCreateTestingPinia>[0],
@@ -32,6 +33,6 @@ export function createTestingPinia(
 export function getGlobalTestOptions(pinia: Pinia): GlobalMountOptions {
     return {
         plugins: [createGettext({ silent: true }), pinia],
-        provide: { report_id: 1 },
+        provide: { [REPORT_ID.valueOf()]: 1 },
     };
 }

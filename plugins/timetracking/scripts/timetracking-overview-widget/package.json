@@ -15,6 +15,7 @@
     "@tuleap/plugin-timetracking-time-formatters": "workspace:*",
     "@tuleap/tlp-badge": "workspace:^",
     "@tuleap/tlp-date-picker": "workspace:^",
+    "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "neverthrow": "^6.0.0",
     "pinia": "^2.0.21",
