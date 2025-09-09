@@ -95,6 +95,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
@@ -1264,13 +1265,14 @@ class MilestoneResource extends AuthenticatedResource
         Header::allowOptionsGet();
     }
 
-    private function getBacklogItemRepresentationFactory()
+    private function getBacklogItemRepresentationFactory(): BacklogItemRepresentationFactory
     {
         $color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
         return new BacklogItemRepresentationFactory(
             $color_builder,
             UserManager::instance(),
-            new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
+            new ProjectBackgroundConfiguration(new ProjectBackgroundDao()),
+            SubmissionPermissionVerifier::instance(),
         );
     }
 

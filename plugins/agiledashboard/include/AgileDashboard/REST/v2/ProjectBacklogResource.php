@@ -41,6 +41,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
@@ -124,7 +125,10 @@ class ProjectBacklogResource
         }
 
         $backlog_item_representations        = [];
-        $backlog_item_representation_factory = new BacklogItemRepresentationFactory(new ProjectBackgroundConfiguration(new ProjectBackgroundDao()));
+        $backlog_item_representation_factory = new BacklogItemRepresentationFactory(
+            new ProjectBackgroundConfiguration(new ProjectBackgroundDao()),
+            SubmissionPermissionVerifier::instance(),
+        );
 
         foreach ($backlog_items as $backlog_item) {
             $backlog_item_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);

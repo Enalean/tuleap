@@ -3662,9 +3662,6 @@ msgstr ""
 msgid "This tracker has no workflow."
 msgstr ""
 
-msgid "This tracker is deleted"
-msgstr ""
-
 msgid ""
 "This tracker's notifications are disabled, when you use @ to mention "
 "someone, no email will be sent."
@@ -4308,7 +4305,7 @@ msgid ""
 "required fields"
 msgstr ""
 
-msgid "You cannot access to this tracker"
+msgid "You cannot access this tracker or it does not exist"
 msgstr ""
 
 msgid ""

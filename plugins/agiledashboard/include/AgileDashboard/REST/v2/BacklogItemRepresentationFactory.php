@@ -24,22 +24,31 @@ namespace Tuleap\AgileDashboard\REST\v2;
 use Cardwall_Semantic_CardFields;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use UserManager;
 
-final class BacklogItemRepresentationFactory
+final readonly class BacklogItemRepresentationFactory
 {
-    public function __construct(private readonly ProjectBackgroundConfiguration $project_background_configuration)
-    {
+    public function __construct(
+        private ProjectBackgroundConfiguration $project_background_configuration,
+        private VerifySubmissionPermissions $verify_tracker_submission_permissions,
+    ) {
     }
 
     public function createBacklogItemRepresentation(IBacklogItem $backlog_item): BacklogItemRepresentation
     {
-        return BacklogItemRepresentation::build($backlog_item, $this->getBacklogItemCardFields($backlog_item), $this->project_background_configuration);
+        $current_user = UserManager::instance()->getCurrentUser();
+        return BacklogItemRepresentation::build(
+            $backlog_item,
+            $this->getBacklogItemCardFields($backlog_item, $current_user),
+            $this->project_background_configuration,
+            $this->verify_tracker_submission_permissions,
+            $current_user,
+        );
     }
 
-    private function getBacklogItemCardFields(IBacklogItem $backlog_item): array
+    private function getBacklogItemCardFields(IBacklogItem $backlog_item, \PFUser $current_user): array
     {
-        $current_user         = UserManager::instance()->getCurrentUser();
         $card_fields_semantic = $this->getCardFieldsSemantic($backlog_item);
         $card_fields          = [];
 

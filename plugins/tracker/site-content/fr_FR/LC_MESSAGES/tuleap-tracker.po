@@ -4174,9 +4174,6 @@ msgstr "Ce tracker n'existe pas."
 msgid "This tracker has no workflow."
 msgstr "Ce tracker n'a pas de workflow."
 
-msgid "This tracker is deleted"
-msgstr "Ce tracker a été supprimé"
-
 msgid ""
 "This tracker's notifications are disabled, when you use @ to mention "
 "someone, no email will be sent."
@@ -4938,8 +4935,8 @@ msgstr ""
 "Vous ne pouvez pas soumettre d'artifacts car vous devez avoir le droit de "
 "soumettre tous les champs requis"
 
-msgid "You cannot access to this tracker"
-msgstr "Vous n'avez pas accès à ce tracker"
+msgid "You cannot access this tracker or it does not exist"
+msgstr "Vous n'avez pas accès à ce tracker ou il n'existe pas"
 
 msgid ""
 "You cannot define the <em>title</em> semantic since there isn't any text "
