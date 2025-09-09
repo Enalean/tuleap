@@ -312,14 +312,13 @@ final readonly class CrossTrackerArtifactQueryFactory
             $additional_from_where,
             $additional_from_order,
             $tracker_ids,
-            $limit,
-            $offset
         );
+        $total_size            = count($artifact_ids);
         $artifact_ids          = array_map(
             static fn(Artifact $artifact) => $artifact->getId(),
             $this->permission_on_artifacts_retriever->retrieveUserPermissionOnArtifacts(
                 $current_user,
-                $this->getArtifacts($artifact_ids),
+                $this->getArtifacts(array_slice($artifact_ids, $offset, $limit)),
                 ArtifactPermissionType::PERMISSION_VIEW,
             )->allowed,
         );
@@ -327,11 +326,6 @@ final readonly class CrossTrackerArtifactQueryFactory
         if ($artifact_ids === []) {
             return new CrossTrackerQueryContentRepresentation([], [], 0);
         }
-
-        $total_size = $this->expert_query_dao->countArtifactsMatchingQuery(
-            $additional_from_where,
-            $tracker_ids,
-        );
 
         $this->instrumentation->updateSelectCount(count($query->parsed_query->getSelect()));
         $select_from_fragments = $this->select_builder->buildSelectFrom($query->parsed_query->getSelect(), $trackers, $current_user, $target_artifact_id_for_reverse_links, $artifact_ids);
