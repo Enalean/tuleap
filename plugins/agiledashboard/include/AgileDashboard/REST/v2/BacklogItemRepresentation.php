@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\REST\JsonCast;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 
@@ -90,14 +91,12 @@ class BacklogItemRepresentation
     /**
      * @var array
      */
-    public $accept;
-
-    /**
-     * @var array
-     */
     public $card_fields = [];
 
-    public function __construct(
+    /**
+     * @psalm-param array{trackers: list<TrackerReference>} $accept
+     */
+    private function __construct(
         int $id,
         string $label,
         string $status,
@@ -109,7 +108,7 @@ class BacklogItemRepresentation
         ProjectReference $project,
         ?BacklogItemParentReference $parent,
         bool $has_children,
-        array $accept,
+        public array $accept,
         array $card_fields,
     ) {
         $this->id             = $id;
@@ -123,7 +122,6 @@ class BacklogItemRepresentation
         $this->project        = $project;
         $this->parent         = $parent;
         $this->has_children   = $has_children;
-        $this->accept         = $accept;
         $this->card_fields    = $card_fields;
     }
 
@@ -131,10 +129,12 @@ class BacklogItemRepresentation
         IBacklogItem $backlog_item,
         array $card_fields,
         ProjectBackgroundConfiguration $project_background_configuration,
+        VerifySubmissionPermissions $verify_tracker_submission_permissions,
+        \PFUser $current_user,
     ): self {
         $parent      = null;
         $item_parent = $backlog_item->getParent();
-        if ($item_parent !== null) {
+        if ($item_parent !== null && $item_parent->userCanView($current_user)) {
             $parent = BacklogItemParentReference::build($item_parent, $project_background_configuration);
         }
 
@@ -150,17 +150,26 @@ class BacklogItemRepresentation
             new ProjectReference($backlog_item->getArtifact()->getTracker()->getProject()),
             $parent,
             $backlog_item->hasChildren(),
-            self::addAllowedSubItemTypes($backlog_item),
+            self::addAllowedSubItemTypes($backlog_item, $current_user, $verify_tracker_submission_permissions),
             $card_fields
         );
     }
 
-    private static function addAllowedSubItemTypes(IBacklogItem $backlog_item): array
-    {
+    /**
+     * @return array{trackers: list<TrackerReference>}
+     */
+    private static function addAllowedSubItemTypes(
+        IBacklogItem $backlog_item,
+        \PFUser $current_user,
+        VerifySubmissionPermissions $verify_tracker_submission_permissions,
+    ): array {
         $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
 
         $accept = ['trackers' => []];
         foreach ($child_trackers as $child_tracker) {
+            if (! $verify_tracker_submission_permissions->canUserSubmitArtifact($current_user, $child_tracker)) {
+                continue;
+            }
             $reference = TrackerReference::build($child_tracker);
 
             $accept['trackers'][] = $reference;

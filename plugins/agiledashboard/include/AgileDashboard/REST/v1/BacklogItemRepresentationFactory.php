@@ -27,14 +27,16 @@ use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use UserManager;
 
-final class BacklogItemRepresentationFactory
+final readonly class BacklogItemRepresentationFactory
 {
     public function __construct(
-        private readonly BackgroundColorBuilder $background_color_builder,
-        private readonly UserManager $user_manager,
-        private readonly ProjectBackgroundConfiguration $project_background_configuration,
+        private BackgroundColorBuilder $background_color_builder,
+        private UserManager $user_manager,
+        private ProjectBackgroundConfiguration $project_background_configuration,
+        private VerifySubmissionPermissions $verify_tracker_submission_permissions,
     ) {
     }
 
@@ -55,6 +57,8 @@ final class BacklogItemRepresentationFactory
             $card_fields,
             $background_color,
             $this->project_background_configuration,
+            $current_user,
+            $this->verify_tracker_submission_permissions,
         );
     }
 

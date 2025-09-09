@@ -41,10 +41,9 @@ class TrackerPermissionsChecker
     }
 
     /**
-     * @throws RestException 403
      * @throws RestException 404
      */
-    public function checkRead(PFUser $user, Tracker $tracker)
+    public function checkRead(PFUser $user, Tracker $tracker): void
     {
         ProjectAuthorization::userCanAccessProject(
             $user,
@@ -52,19 +51,11 @@ class TrackerPermissionsChecker
             $this->url_verification
         );
 
-        if ($tracker->isDeleted()) {
+        if ($tracker->isDeleted() || ! $tracker->userCanView($user)) {
             throw new RestException(
                 404,
                 null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', 'This tracker is deleted')]
-            );
-        }
-
-        if (! $tracker->userCanView($user)) {
-            throw new RestException(
-                403,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', 'You cannot access to this tracker')]
+                ['i18n_error_message' => dgettext('tuleap-tracker', 'You cannot access this tracker or it does not exist')]
             );
         }
     }

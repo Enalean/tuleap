@@ -24,6 +24,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 
@@ -38,6 +39,9 @@ final readonly class BacklogItemRepresentation
 
     public const string ROUTE = 'backlog_items';
 
+    /**
+     * @psalm-param array{trackers: list<TrackerReference>} $accept
+     */
     private function __construct(
         public int $id,
         public string $label,
@@ -62,13 +66,22 @@ final readonly class BacklogItemRepresentation
         array $card_fields,
         BackgroundColor $background_color,
         ProjectBackgroundConfiguration $project_background_configuration,
+        \PFUser $current_user,
+        VerifySubmissionPermissions $verify_tracker_submission_permissions,
     ): self {
-        $item_parent = $backlog_item->getParent();
+        $item_parent_reference = null;
+        $item_parent           = $backlog_item->getParent();
+        if ($item_parent !== null && $item_parent->userCanView($current_user)) {
+            $item_parent_reference = BacklogItemParentReference::build($item_parent, $project_background_configuration);
+        }
 
         $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
 
         $accept = ['trackers' => []];
         foreach ($child_trackers as $child_tracker) {
+            if (! $verify_tracker_submission_permissions->canUserSubmitArtifact($current_user, $child_tracker)) {
+                continue;
+            }
             $reference = TrackerReference::build($child_tracker);
 
             $accept['trackers'][] = $reference;
@@ -85,7 +98,7 @@ final readonly class BacklogItemRepresentation
             JsonCast::toFloat($backlog_item->getInitialEffort()),
             JsonCast::toFloat($backlog_item->getRemainingEffort()),
             ArtifactReference::build($backlog_item->getArtifact()),
-            $item_parent !== null ? BacklogItemParentReference::build($item_parent, $project_background_configuration) : null,
+            $item_parent_reference,
             new ProjectReference($backlog_item->getArtifact()->getTracker()->getProject()),
             $backlog_item->hasChildren(),
             $accept,

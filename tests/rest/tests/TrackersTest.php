@@ -520,7 +520,6 @@ final class TrackersTest extends TrackerBase
         $response = $this->getResponse($this->request_factory->createRequest('GET', "trackers/$this->deleted_tracker_id"));
 
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertStringContainsString('deleted', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']);
     }
 
     public function testGetParentArtifacts(): void

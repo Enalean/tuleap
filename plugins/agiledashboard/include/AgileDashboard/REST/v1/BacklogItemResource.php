@@ -47,6 +47,7 @@ use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
@@ -440,13 +441,14 @@ class BacklogItemResource extends AuthenticatedResource
         return $this->user_manager->getCurrentUser();
     }
 
-    private function getBacklogItemRepresentationFactory()
+    private function getBacklogItemRepresentationFactory(): BacklogItemRepresentationFactory
     {
         $color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
         return new BacklogItemRepresentationFactory(
             $color_builder,
             $this->user_manager,
-            new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
+            new ProjectBackgroundConfiguration(new ProjectBackgroundDao()),
+            SubmissionPermissionVerifier::instance(),
         );
     }
 }
