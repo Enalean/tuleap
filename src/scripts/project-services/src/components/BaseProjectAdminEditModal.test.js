@@ -24,7 +24,14 @@ import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 import { getGlobalTestOptions } from "../support/global-options-for-tests";
 import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols";
 
-function createFakeButton(service) {
+const service = {
+    is_project_scope: true,
+    label: "My custom service",
+    icon_name: "my-icon",
+    is_in_new_tab: false,
+};
+
+function createFakeButton() {
     return {
         dataset: {
             serviceJson: JSON.stringify(service),
@@ -65,7 +72,7 @@ describe(`BaseProjectAdminEdit`, () => {
     describe(`when the show() method is called`, () => {
         it(`and it's a custom service, it will instantiate the custom service component`, async () => {
             const wrapper = createWrapper();
-            const fake_button = createFakeButton({ is_project_scope: true });
+            const fake_button = createFakeButton();
             wrapper.vm.show(fake_button);
             await wrapper.vm.$nextTick();
 
@@ -75,7 +82,8 @@ describe(`BaseProjectAdminEdit`, () => {
 
         it(`and it's a system service, it will instantiate the read-only system service component`, async () => {
             const wrapper = createWrapper();
-            const fake_button = createFakeButton({ is_project_scope: false });
+            service.is_project_scope = false;
+            const fake_button = createFakeButton();
             wrapper.vm.show(fake_button);
             await wrapper.vm.$nextTick();
 

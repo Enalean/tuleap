@@ -39,16 +39,15 @@
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { ALLOWED_ICONS } from "../injection-symbols";
 
-export default {
-    name: "SidebarPreviewer",
-    props: ["label", "icon_name", "is_in_new_tab"],
-    setup() {
-        const allowed_icons = strictInject(ALLOWED_ICONS);
-        return { allowed_icons };
-    },
-};
+const allowed_icons = strictInject(ALLOWED_ICONS);
+
+defineProps<{
+    label: string;
+    icon_name: string;
+    is_in_new_tab: boolean;
+}>();
 </script>
