@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Widget;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
 
 final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateWidget, CloneWidget
 {
@@ -34,7 +35,10 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
         return $this->getDB()->row('SELECT 1 FROM plugin_crosstracker_widget WHERE id = ?', $widget_id) !== null;
     }
 
-    public function searchCrossTrackerWidgetDashboardById(int $content_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null
+    /**
+     * @return Option<ProjectCrossTrackerWidget>|Option<UserCrossTrackerWidget>
+     */
+    public function searchCrossTrackerWidgetDashboardById(int $content_id): Option
     {
         $sql = "SELECT dashboard_id, dashboard_type, user_id, project_dashboards.project_id
                   FROM plugin_crosstracker_widget
@@ -54,26 +58,30 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
         $row = $this->getDB()->row($sql, $content_id);
 
         if ($row === null) {
-            return null;
+            return Option::nothing(ProjectCrossTrackerWidget::class);
         }
 
         if ($row['dashboard_type'] === ProjectDashboardController::DASHBOARD_TYPE) {
-            return ProjectCrossTrackerWidget::build(
-                $row['dashboard_id'],
-                $row['dashboard_type'],
-                $row['project_id']
+            return Option::fromValue(
+                ProjectCrossTrackerWidget::build(
+                    $row['dashboard_id'],
+                    $row['dashboard_type'],
+                    $row['project_id']
+                )
             );
         }
 
         if ($row['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE) {
-            return UserCrossTrackerWidget::build(
-                $row['dashboard_id'],
-                $row['dashboard_type'],
-                $row['user_id']
+            return Option::fromValue(
+                UserCrossTrackerWidget::build(
+                    $row['dashboard_id'],
+                    $row['dashboard_type'],
+                    $row['user_id']
+                )
             );
         }
 
-        return null;
+        return Option::nothing(ProjectCrossTrackerWidget::class);
     }
 
     #[\Override]

@@ -28,6 +28,7 @@ use Tuleap\CrossTracker\Query\Advanced\AllowedFrom;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
@@ -66,9 +67,6 @@ final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVi
         };
     }
 
-    /**
-     * @param list<string> $names
-     */
     private function buildTrackerName(array $names, FromTrackerBuilderVisitorParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         $name_statement   = EasyStatement::open()->in('tracker.item_name IN (?*)', $names);
@@ -76,21 +74,33 @@ final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVi
         $where_parameters = $names;
 
         if ($parameters->is_tracker_condition_alone) {
-            $widget = $parameters->widget_id->match(
-                function (int $widget_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null {
-                    return $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
-                },
-                function (): never {
-                    throw new LogicException('Not expected to handle a query not associated with a project');
-                }
-            );
-            if (! $widget instanceof ProjectCrossTrackerWidget) {
-                throw new LogicException('Project id not found');
-            }
+            $project_id         = $this->getProjectIdFromWidget($parameters->widget_id);
             $where             .= ' AND project.group_id = ?';
-            $where_parameters[] = $widget->getProjectId();
+            $where_parameters[] = $project_id;
         }
 
         return new ParametrizedFromWhere('', $where, [], $where_parameters);
+    }
+
+    private function getProjectIdFromWidget(Option $widget_id_option): int
+    {
+        return $widget_id_option->match(
+            fn (int $widget_id) => $this->getProjectIdFromWidgetId($widget_id),
+            fn (): never => throw new LogicException('Not expected to handle a query not associated with a project')
+        );
+    }
+
+    private function getProjectIdFromWidgetId(int $widget_id): int
+    {
+        return $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)
+            ->match(
+                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget): int {
+                    if (! $widget instanceof ProjectCrossTrackerWidget) {
+                        throw new LogicException('Project id not found');
+                    }
+                    return $widget->getProjectId();
+                },
+                fn (): never => throw new LogicException('Project id not found')
+            );
     }
 }

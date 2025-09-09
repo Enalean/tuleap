@@ -25,6 +25,7 @@ use Override;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
+use Tuleap\Option\Option;
 
 final readonly class RetrieveCrossTrackerWidgetStub implements RetrieveCrossTrackerWidget
 {
@@ -37,9 +38,19 @@ final readonly class RetrieveCrossTrackerWidgetStub implements RetrieveCrossTrac
         return new self($widget);
     }
 
+    /**
+     * @return Option<ProjectCrossTrackerWidget>|Option<UserCrossTrackerWidget>
+     */
     #[Override]
-    public function retrieveWidgetById(int $widget_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null
+    public function retrieveWidgetById(int $widget_id): Option
     {
-        return $this->widget;
+        if (! $this->widget) {
+            return Option::nothing(ProjectCrossTrackerWidget::class);
+        }
+        if ($this->widget instanceof ProjectCrossTrackerWidget) {
+            return Option::fromValue($this->widget);
+        }
+
+        return Option::fromValue($this->widget);
     }
 }

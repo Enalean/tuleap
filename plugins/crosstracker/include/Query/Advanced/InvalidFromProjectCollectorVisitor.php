@@ -167,22 +167,22 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
     private function checkProjectAggregated(InvalidFromProjectCollectorParameters $parameters): void
     {
         $parameters->widget_id
-            ->andThen($this->getDashboardRowFromWidgetID(...))
-            ->orElse(
-                /** @return Option<ProjectCrossTrackerWidget> */
-                fn(): Option => $this->defineErrorForQueriesNotAssociatedWithADashboardUsingAggregatedFunction($parameters->collection)
-            )
-            ->apply(
-                fn(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) => $this->validateQueriesAssociatedWithAWidget($widget, $parameters)
+            ->match(
+                function (int $widget_id) use ($parameters): void {
+                    $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)
+                        ->match(
+                            function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($parameters): void {
+                                $this->validateQueriesAssociatedWithAWidget($widget, $parameters);
+                            },
+                            function () use ($parameters): void {
+                                $this->defineErrorForQueriesNotAssociatedWithADashboardUsingAggregatedFunction($parameters->collection);
+                            }
+                        );
+                },
+                function () use ($parameters): void {
+                    $this->defineErrorForQueriesNotAssociatedWithADashboardUsingAggregatedFunction($parameters->collection);
+                }
             );
-    }
-
-    /**
-     * @return Option<ProjectCrossTrackerWidget | UserCrossTrackerWidget>
-     */
-    private function getDashboardRowFromWidgetID(int $widget_id): Option
-    {
-        return Option::fromNullable($this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id));
     }
 
     /**

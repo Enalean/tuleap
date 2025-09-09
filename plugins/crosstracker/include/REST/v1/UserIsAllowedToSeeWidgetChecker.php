@@ -46,26 +46,21 @@ final readonly class UserIsAllowedToSeeWidgetChecker
      */
     public function checkUserIsAllowedToSeeWidget(PFUser $user, int $widget_id): void
     {
-        $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
-        if ($widget === null) {
-            return;
-        }
-
-        if ($widget instanceof UserCrossTrackerWidget && $widget->getUserId() !== (int) $user->getId()) {
-            throw new RestException(404);
-        }
-
-        if ($widget instanceof ProjectCrossTrackerWidget) {
-            $project = $this->project_manager->getProjectById($widget->getProjectId());
-            try {
-                ProjectAuthorization::userCanAccessProject($user, $project, $this->url_verification);
-            } catch (RestException $e) {
-                if ($e->getCode() === 403) {
-                    throw new RestException(404);
-                }
-                throw $e;
-            }
-        }
+        $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)
+            ->match(
+                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($user): void {
+                    $this->validateUserAccessToWidget(
+                        $user,
+                        $widget,
+                        fn (PFUser $user, \Project $project) => ProjectAuthorization::userCanAccessProject(
+                            $user,
+                            $project,
+                            $this->url_verification
+                        )
+                    );
+                },
+                fn () => null
+            );
     }
 
     /**
@@ -73,24 +68,43 @@ final readonly class UserIsAllowedToSeeWidgetChecker
      */
     public function checkUserIsAllowedToUpdateWidget(PFUser $user, int $widget_id): void
     {
-        $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
-        if ($widget === null) {
+        $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)
+            ->match(
+                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($user): void {
+                    $this->validateUserAccessToWidget(
+                        $user,
+                        $widget,
+                        fn (PFUser $user, \Project $project) => ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin(
+                            $user,
+                            $project,
+                            $this->url_verification
+                        )
+                    );
+                },
+                fn () => null
+            );
+    }
+
+    private function validateUserAccessToWidget(
+        PFUser $user,
+        ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget,
+        callable $authorization_check,
+    ): void {
+        if ($widget instanceof UserCrossTrackerWidget) {
+            if ($widget->getUserId() !== (int) $user->getId()) {
+                throw new RestException(404);
+            }
             return;
         }
-        if ($widget instanceof UserCrossTrackerWidget && $widget->getUserId() !== (int) $user->getId()) {
-            throw new RestException(404);
-        }
 
-        if ($widget instanceof ProjectCrossTrackerWidget) {
-            $project = $this->project_manager->getProjectById($widget->getProjectId());
-            try {
-                ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project, $this->url_verification);
-            } catch (RestException $e) {
-                if ($e->getCode() === 403) {
-                    throw new RestException(404);
-                }
-                throw $e;
+        $project = $this->project_manager->getProjectById($widget->getProjectId());
+        try {
+            $authorization_check($user, $project);
+        } catch (RestException $e) {
+            if ($e->getCode() === 403) {
+                throw new RestException(404);
             }
+            throw $e;
         }
     }
 }
