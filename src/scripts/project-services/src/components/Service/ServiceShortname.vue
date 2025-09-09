@@ -32,29 +32,32 @@
             size="15"
             maxlength="40"
             required
-            v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-bind:value="shortname"
+            v-on:input="onInputEmit"
         />
     </div>
 </template>
-<script>
-export default {
-    name: "ServiceShortname",
-    props: {
-        value: {
-            type: String,
-            required: true,
-        },
-        id: {
-            type: String,
-            required: true,
-        },
-    },
-    emits: ["input"],
-    computed: {
-        placeholder() {
-            return this.$gettext("my_service");
-        },
-    },
-};
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+
+defineProps<{
+    shortname: string;
+    id: string;
+}>();
+
+const emit = defineEmits<{
+    (e: "input", short_name: string): void;
+}>();
+
+const placeholder = $gettext("my_service");
+
+function onInputEmit(event: Event) {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    emit("input", event.target.value);
+}
 </script>
