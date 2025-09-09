@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Artifact;
 
+use Override;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
@@ -45,17 +46,18 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private AdditionalArtifactActionBuilder $builder;
-    private ExplicitBacklogDao|MockObject $explicit_backlog_dao;
-    private PlanningFactory|MockObject $planning_factory;
-    private PlanningPermissionsManager|MockObject $planning_permissions_manager;
-    private MockObject|ArtifactsInExplicitBacklogDao $artifacts_explicit_backlog_dao;
-    private PlannedArtifactDao|MockObject $planned_artifact_dao;
-    private PlanningTrackerBacklogChecker|MockObject $planning_tracker_backlog_checker;
-    private EventDispatcherInterface|MockObject $event_dispatcher;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private PlanningFactory&MockObject $planning_factory;
+    private PlanningPermissionsManager&MockObject $planning_permissions_manager;
+    private MockObject&ArtifactsInExplicitBacklogDao $artifacts_explicit_backlog_dao;
+    private PlannedArtifactDao&MockObject $planned_artifact_dao;
+    private PlanningTrackerBacklogChecker&MockObject $planning_tracker_backlog_checker;
+    private EventDispatcherInterface&MockObject $event_dispatcher;
     private Artifact $artifact;
     private PFUser $user;
     private Planning&MockObject $root_planning;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
