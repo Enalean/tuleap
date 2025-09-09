@@ -22,7 +22,7 @@
                          <label class="tlp-label" for="keyword">
                               {{# gettext }}Keyword{{/ gettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
                          </label>
-                         <input type="text" required id="keyword" name="keyword" size="25" maxlength="25" class="tlp-input">
+                         <input type="text" required id="keyword" name="keyword" size="25" maxlength="25" class="tlp-input" data-test="add-reference-keyword-input">
 
                      </div>
                      <div class="tlp-form-element">
@@ -45,7 +45,7 @@
                         <label class="tlp-label" for="link">
                              {{# gettext }}Link{{/ gettext }}<i class="fa-solid fa-asterisk" aria-hidden="true"></i>
                         </label>
-                        <input required type="text" name="link" size="70" maxlength="255" class="tlp-input">
+                        <input required type="text" name="link" size="70" maxlength="255" class="tlp-input" data-test="add-reference-link-input">
                         <p class="tlp-text-info">
                                <i class="fa-regular fa-life-ring" aria-hidden="true"></i>
                                {{# gettext }}
@@ -94,7 +94,7 @@
                     {{/ is_super_user_in_default_template }}
 
                     <div class="tlp-pane-section-submit">
-                        <button type="submit" class="tlp-button-primary" name="create">
+                        <button type="submit" class="tlp-button-primary" name="create" data-test="add-reference-create-button">
                              {{# gettext }}Create{{/ gettext }}
                         </button>
                     </div>

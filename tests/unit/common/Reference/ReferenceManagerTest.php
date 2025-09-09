@@ -272,14 +272,14 @@ final class ReferenceManagerTest extends TestCase
         $html = 'myref #123';
         $this->rm->insertReferences($html, 102);
         self::assertEquals(
-            '<a href="https://example.com/goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>',
+            '<a href="https://example.com/goto?key=myref&val=123&group_id=102" title="description" class="cross-reference" data-test="cross-reference-link">myref #123</a>',
             $html
         );
 
         $html = 'Text &#x27;myref #123&#x27; end text';
         $this->rm->insertReferences($html, 102);
         self::assertEquals(
-            'Text &#x27;<a href="https://example.com/goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>&#x27; end text',
+            'Text &#x27;<a href="https://example.com/goto?key=myref&val=123&group_id=102" title="description" class="cross-reference" data-test="cross-reference-link">myref #123</a>&#x27; end text',
             $html
         );
     }

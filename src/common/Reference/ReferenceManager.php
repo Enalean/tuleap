@@ -656,7 +656,7 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
         $context_word_with_space = $context_word !== '' ? $context_word . ' ' : '';
 
         return sprintf(
-            '%s<a href="%s" title="%s" class="cross-reference">%s</a>',
+            '%s<a href="%s" title="%s" class="cross-reference" data-test="cross-reference-link">%s</a>',
             $purifier->purify($context_word_with_space),
             $ref_instance->getFullGotoLink(),
             $purifier->purify($reference_description_translation->getTranslatedDescription()),
