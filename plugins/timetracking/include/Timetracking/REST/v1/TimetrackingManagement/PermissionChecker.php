@@ -26,6 +26,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Timetracking\Widget\Management\GetWidgetInformation;
 
 final readonly class PermissionChecker implements CheckPermission
 {

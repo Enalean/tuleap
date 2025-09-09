@@ -27,12 +27,25 @@ use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
+use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
+use Tuleap\Timetracking\Permissions\CacheUserCanSeeAllTimesInTrackerVerifier;
+use Tuleap\Timetracking\Permissions\PermissionsRetriever;
+use Tuleap\Timetracking\Widget\Management\ListOfTimeSpentInArtifactFilter;
 use Tuleap\Timetracking\Widget\Management\ManagementDao;
 use Tuleap\Timetracking\Widget\Management\ManagerCanSeeTimetrackingOfUserVerifierDao;
+use Tuleap\Timetracking\Widget\Management\TimeSpentInArtifactByUserGrouper;
+use Tuleap\Timetracking\Widget\Management\UserTimesForManagerProviderDao;
+use Tuleap\Timetracking\Widget\Management\UserTimesTimeframeRetriever;
+use Tuleap\Timetracking\Widget\Management\VerifierChain\ManagerCanSeeTimesInTrackerVerifier;
+use Tuleap\Timetracking\Widget\Management\VerifierChain\ManagerCanViewArtifactVerifier;
+use Tuleap\Timetracking\Widget\Management\VerifierChain\ManagerHasRestReadOnlyAdminPermissionVerifier;
+use Tuleap\Timetracking\Widget\Management\VerifierChain\ManagerIsSeeingTheirOwnTimeVerifier;
 use Tuleap\Timetracking\Widget\Management\ViewableUserRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
+use UGroupManager;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 
@@ -164,8 +177,55 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
      */
     public function getTimes(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
-        Header::sendPaginationHeaders($limit, $offset, 0, self::MAX_LIMIT);
-        return [];
+        $this->checkAccess();
+
+        $verifier_chain = new ManagerIsSeeingTheirOwnTimeVerifier();
+        $verifier_chain
+            ->chain(
+                new ManagerHasRestReadOnlyAdminPermissionVerifier(
+                    new \User_ForgeUserGroupPermissionsManager(new \User_ForgeUserGroupPermissionsDao())
+                )
+            )->chain(new ManagerCanViewArtifactVerifier())
+            ->chain(
+                new ManagerCanSeeTimesInTrackerVerifier(
+                    new CacheUserCanSeeAllTimesInTrackerVerifier(
+                        new PermissionsRetriever(
+                            new TimetrackingUgroupRetriever(
+                                new TimetrackingUgroupDao(),
+                                new UGroupManager(),
+                            ),
+                        ),
+                    ),
+                ),
+            );
+
+        $dao = new ManagementDao();
+
+        $handler = new TimesGETHandler(
+            new UserTimesForManagerProviderDao(\Tracker_ArtifactFactory::instance()),
+            new ListOfTimeSpentInArtifactFilter($verifier_chain),
+            new TimeSpentInArtifactByUserGrouper(),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            new UserTimesTimeframeRetriever(
+                $dao,
+                $dao,
+                new \DateTimeImmutable(),
+            ),
+            $dao,
+            \UserManager::instance(),
+        );
+
+        return $handler->handle($id, $limit, $offset, \UserManager::instance()->getCurrentUser())
+            ->match(
+                function (PaginatedListOfUserTimesRepresentation $collection) use ($limit, $offset) {
+                    Header::sendPaginationHeaders($limit, $offset, $collection->total_size, self::MAX_LIMIT);
+
+                    return $collection->times;
+                },
+                function (Fault $fault) {
+                    FaultMapper::mapToRestException($fault);
+                }
+            );
     }
 
     private function getLogger(): LoggerInterface

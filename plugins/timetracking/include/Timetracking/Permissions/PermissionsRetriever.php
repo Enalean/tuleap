@@ -26,7 +26,7 @@ use PFUser;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Tracker\Tracker;
 
-class PermissionsRetriever
+class PermissionsRetriever implements VerifyUserCanSeeAllTimesInTracker
 {
     /**
      * @var TimetrackingUgroupRetriever
@@ -53,6 +53,7 @@ class PermissionsRetriever
         return false;
     }
 
+    #[\Override]
     public function userCanSeeAllTimesInTracker(PFUser $user, Tracker $tracker): bool
     {
         if ($this->isUserAdministratorOfTracker($user, $tracker)) {

@@ -27,7 +27,7 @@ use TemplateRendererFactory;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\PredefinedTimePeriod;
+use Tuleap\Timetracking\Widget\Management\PredefinedTimePeriod;
 use Tuleap\Timetracking\Widget\Management\ManagementDao;
 use Tuleap\Timetracking\Widget\Management\TimetrackingManagementWidgetConfig;
 use Tuleap\User\Avatar\AvatarHashDao;

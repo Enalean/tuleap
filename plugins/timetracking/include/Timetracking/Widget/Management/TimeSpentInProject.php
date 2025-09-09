@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
-interface GetWidgetInformation
+use Project;
+
+/**
+ * @psalm-immutable
+ */
+final class TimeSpentInProject
 {
-    public function getWidgetInformationFromQuery(int $query_id): ?array;
+    public function __construct(public Project $project, public int $minutes)
+    {
+    }
 }

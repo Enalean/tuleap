@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Timetracking\Widget\Management\PredefinedTimePeriod;
 
 final readonly class FromPayloadPeriodBuilder
 {

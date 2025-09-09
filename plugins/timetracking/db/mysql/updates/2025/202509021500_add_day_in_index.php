@@ -20,12 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
-
-interface SearchQueryByWidgetId
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202509021500_add_day_in_index extends \Tuleap\ForgeUpgrade\Bucket
 {
-    /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
-     */
-    public function searchQueryById(int $id): ?array;
+    public function description(): string
+    {
+        return 'Add day in plugin_timetracking_times.time index';
+    }
+
+    public function up(): void
+    {
+        $this->api->dbh->query(
+            <<<EOS
+            ALTER TABLE plugin_timetracking_times
+                DROP INDEX time,
+                ADD INDEX time(user_id, artifact_id, day)
+            EOS,
+        );
+    }
 }

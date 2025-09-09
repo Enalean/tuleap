@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management\VerifierChain;
 
-interface SearchQueryByWidgetId
+use Tuleap\Timetracking\Widget\Management\TimeSpentInArtifact;
+
+final class ManagerCanViewArtifactVerifier extends ManagerIsAllowedToSeeTimesVerifierChain
 {
-    /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
-     */
-    public function searchQueryById(int $id): ?array;
+    #[\Override]
+    public function isManagerAllowedToSeeTimes(TimeSpentInArtifact $time, \PFUser $manager): bool
+    {
+        return $time->artifact->userCanView($manager)
+            || parent::isManagerAllowedToSeeTimes($time, $manager);
+    }
 }

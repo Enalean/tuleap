@@ -20,12 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
-interface SearchQueryByWidgetId
+enum PredefinedTimePeriod: string
 {
-    /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
-     */
-    public function searchQueryById(int $id): ?array;
+    case TODAY        = 'today';
+    case YESTERDAY    = 'yesterday';
+    case CURRENT_WEEK = 'current_week';
+    case LAST_7_DAYS  = 'last_7_days';
+    case LAST_WEEK    = 'last_week';
+    case LAST_MONTH   = 'last_month';
 }

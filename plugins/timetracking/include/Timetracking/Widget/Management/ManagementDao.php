@@ -25,8 +25,6 @@ namespace Tuleap\Timetracking\Widget\Management;
 use DateTimeImmutable;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetQueryUsers;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetWidgetInformation;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\PredefinedTimePeriod;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithDates;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithPredefinedTimePeriod;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SearchQueryByWidgetId;
@@ -140,9 +138,6 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
         return $this->getDB()->row($sql, $query_id);
     }
 
-    /**
-     * @return null|array{id: int, start_date: string|null, end_date: string|null, predefined_time_period: string|null}
-     */
     #[\Override]
     public function searchQueryById(int $id): ?array
     {

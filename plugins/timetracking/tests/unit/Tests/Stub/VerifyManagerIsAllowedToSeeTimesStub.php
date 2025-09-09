@@ -20,22 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Tests\Stub;
 
-use Tuleap\Project\REST\MinimalProjectRepresentation;
-use Tuleap\Timetracking\Widget\Management\TimeSpentInProject;
+use Closure;
+use PFUser;
+use Tuleap\Timetracking\Widget\Management\TimeSpentInArtifact;
+use Tuleap\Timetracking\Widget\Management\VerifyManagerIsAllowedToSeeTimes;
 
-/**
- * @psalm-immutable
- */
-final class TimeSpentInProjectRepresentation
+final class VerifyManagerIsAllowedToSeeTimesStub implements VerifyManagerIsAllowedToSeeTimes
 {
-    private function __construct(public MinimalProjectRepresentation $project, public int $minutes)
+    /**
+     * @param Closure(PFUser $user): bool $callback
+     */
+    private function __construct(private readonly Closure $callback)
     {
     }
 
-    public static function fromTimeSpentInProject(TimeSpentInProject $time): self
+    public static function withAllowedUser(PFUser $allowed): self
     {
-        return new self(new MinimalProjectRepresentation($time->project), $time->minutes);
+        return new self(static fn (PFUser $user) => $user === $allowed);
+    }
+
+    #[\Override]
+    public function isManagerAllowedToSeeTimes(TimeSpentInArtifact $time, \PFUser $manager): bool
+    {
+        return call_user_func($this->callback, $time->user);
     }
 }

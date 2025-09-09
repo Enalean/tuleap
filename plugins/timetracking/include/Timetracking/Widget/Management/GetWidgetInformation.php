@@ -20,12 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
-interface SearchQueryByWidgetId
+interface GetWidgetInformation
 {
-    /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
-     */
-    public function searchQueryById(int $id): ?array;
+    public function getWidgetInformationFromQuery(int $query_id): ?array;
 }

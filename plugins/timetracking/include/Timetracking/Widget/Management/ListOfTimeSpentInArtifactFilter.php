@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
-interface SearchQueryByWidgetId
+final readonly class ListOfTimeSpentInArtifactFilter
 {
+    public function __construct(private VerifyManagerIsAllowedToSeeTimes $verifier)
+    {
+    }
+
     /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
+     * @param list<TimeSpentInArtifact> $times
+     *
+     * @return list<TimeSpentInArtifact>
      */
-    public function searchQueryById(int $id): ?array;
+    public function filterForManager(array $times, \PFUser $manager): array
+    {
+        return array_map(
+            fn (TimeSpentInArtifact $time) => $this->verifier->isManagerAllowedToSeeTimes($time, $manager)
+                ? $time
+                : new TimeSpentInArtifact($time->user, $time->artifact, 0),
+            $times,
+        );
+    }
 }

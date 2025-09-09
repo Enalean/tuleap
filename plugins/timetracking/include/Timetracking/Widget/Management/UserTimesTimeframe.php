@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
-enum PredefinedTimePeriod: string
+/**
+ * @psalm-immutable
+ */
+final readonly class UserTimesTimeframe
 {
-    case TODAY        = 'today';
-    case YESTERDAY    = 'yesterday';
-    case CURRENT_WEEK = 'current_week';
-    case LAST_7_DAYS  = 'last_7_days';
-    case LAST_WEEK    = 'last_week';
-    case LAST_MONTH   = 'last_month';
+    public function __construct(public \DateTimeInterface $start, public \DateTimeInterface $end)
+    {
+    }
 }

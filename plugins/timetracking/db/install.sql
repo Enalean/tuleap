@@ -23,7 +23,7 @@ CREATE TABLE plugin_timetracking_times (
   minutes SMALLINT(6) UNSIGNED NOT NULL,
   step TEXT NOT NULL,
   day DATE NOT NULL,
-  INDEX time (user_id, artifact_id)
+  INDEX time (user_id, artifact_id, day)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_timetracking_overview_widget (
