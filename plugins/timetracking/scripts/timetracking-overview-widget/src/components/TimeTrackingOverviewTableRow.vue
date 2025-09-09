@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import { inject } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { REPORT_ID } from "../injection-symbols";
 import { useOverviewWidgetStore } from "../store/index";
 
 export default {
@@ -43,7 +44,7 @@ export default {
         time: Object,
     },
     setup: () => {
-        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
         return { overview_store };
     },
     computed: {

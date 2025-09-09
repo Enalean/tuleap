@@ -37,6 +37,7 @@
 
 <script>
 import { provide } from "vue";
+import { REPORT_ID } from "../injection-symbols";
 import TimeTrackingOverviewReadingMode from "./reading-mode/TimeTrackingOverviewReadingMode.vue";
 import TimeTrackingOverviewWritingMode from "./writing-mode/TimeTrackingOverviewWritingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
@@ -55,7 +56,7 @@ export default {
         areVoidTrackersHidden: Boolean,
     },
     setup: ({ reportId }) => {
-        provide("report_id", reportId);
+        provide(REPORT_ID, reportId);
         const overview_store = useOverviewWidgetStore(reportId)();
 
         return { overview_store };

@@ -43,7 +43,8 @@
 </template>
 
 <script>
-import { inject } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { REPORT_ID } from "../../injection-symbols";
 import TimeTrackingOverviewWritingDates from "./TimeTrackingOverviewWritingDates.vue";
 import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
@@ -57,7 +58,7 @@ export default {
         TimeTrackingOverviewTrackerList,
     },
     setup: () => {
-        const overview_store = useOverviewWidgetStore(inject("report_id"))();
+        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
         return { overview_store };
     },
     methods: {
