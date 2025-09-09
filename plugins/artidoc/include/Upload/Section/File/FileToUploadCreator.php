@@ -35,7 +35,7 @@ use Tuleap\Tus\Identifier\FileIdentifier;
 
 final readonly class FileToUploadCreator implements CreateFileToUpload
 {
-    private const EXPIRATION_DELAY_IN_HOURS = 4;
+    private const int EXPIRATION_DELAY_IN_HOURS = 4;
 
     public function __construct(
         private OngoingUploadDao $dao,

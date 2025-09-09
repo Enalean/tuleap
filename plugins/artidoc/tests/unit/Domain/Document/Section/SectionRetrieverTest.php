@@ -37,9 +37,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SectionRetrieverTest extends TestCase
 {
-    public const SECTION_ID  = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b5';
-    public const ITEM_ID     = 123;
-    public const ARTIFACT_ID = 1001;
+    private const string SECTION_ID = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b5';
+    private const int ITEM_ID       = 123;
+    private const int ARTIFACT_ID   = 1001;
     private SectionIdentifierFactory $identifier_factory;
 
     #[\Override]

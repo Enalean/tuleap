@@ -29,7 +29,7 @@ use Tuleap\Docman\Item\OtherDocument;
 
 class ArtidocDocument extends OtherDocument implements Artidoc
 {
-    public const TYPE = 'artidoc';
+    public const string TYPE = 'artidoc';
 
     public function __construct(array $row)
     {

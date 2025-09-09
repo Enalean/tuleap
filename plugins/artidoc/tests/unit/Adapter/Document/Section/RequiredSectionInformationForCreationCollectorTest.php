@@ -34,7 +34,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RequiredSectionInformationForCreationCollectorTest extends TestCase
 {
-    private const ARTIFACT_ID = 101;
+    private const int ARTIFACT_ID = 101;
     public function testItCollectsRequiredSectionInformationForCreation(): void
     {
         $required_artifact_information = RequiredArtifactInformationTestBuilder::fromArtifact(

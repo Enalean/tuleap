@@ -32,7 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocWithContextRetrieverTest extends TestCase
 {
-    private const ITEM_ID = 12;
+    private const int ITEM_ID = 12;
 
     public function testFaultWhenArtidocCannotBeRetrieved(): void
     {

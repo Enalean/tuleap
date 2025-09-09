@@ -51,7 +51,7 @@ use UserManager;
 
 final class ArtidocFilesResource extends AuthenticatedResource
 {
-    public const ROUTE = 'artidoc_files';
+    public const string ROUTE = 'artidoc_files';
 
     /**
      * @url OPTIONS

@@ -35,7 +35,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SectionChildrenBuilderTest extends TestCase
 {
-    private const ARTIDOC_ID = 123;
+    private const int ARTIDOC_ID = 123;
     private ArtidocWithContext $artidoc;
     private SearchAllSectionsStub $sections;
     private RetrievedSection $section_A;

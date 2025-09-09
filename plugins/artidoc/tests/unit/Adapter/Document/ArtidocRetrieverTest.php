@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocRetrieverTest extends TestCase
 {
-    private const ITEM_ID = 12;
+    private const int ITEM_ID = 12;
 
     public function testFaultWhenIdIsNotFound(): void
     {

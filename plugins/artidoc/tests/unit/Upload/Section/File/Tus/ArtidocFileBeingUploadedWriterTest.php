@@ -40,7 +40,7 @@ final class ArtidocFileBeingUploadedWriterTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const ARTIDOC_ID = 123;
+    private const int ARTIDOC_ID = 123;
 
     public function testWriteChunk(): void
     {
@@ -67,11 +67,17 @@ final class ArtidocFileBeingUploadedWriterTest extends TestCase
 
         $content      = 'Body content';
         $input_stream = fopen('php://memory', 'rb+');
+        if (! $input_stream) {
+            throw new \RuntimeException('Could not open memory stream');
+        }
         fwrite($input_stream, $content[0]);
         rewind($input_stream);
         $written_size = $writer->writeChunk($file_information, 0, $input_stream);
         fclose($input_stream);
         $input_stream = fopen('php://memory', 'rb+');
+        if (! $input_stream) {
+            throw new \RuntimeException('Could not open memory stream');
+        }
         fwrite($input_stream, substr($content, 1));
         rewind($input_stream);
         $written_size += $writer->writeChunk($file_information, 1, $input_stream);
@@ -110,6 +116,9 @@ final class ArtidocFileBeingUploadedWriterTest extends TestCase
 
         $content      = str_repeat('A', $file_information->getLength() * 2);
         $input_stream = fopen('php://memory', 'rb+');
+        if (! $input_stream) {
+            throw new \RuntimeException('Could not open memory stream');
+        }
         fwrite($input_stream, $content);
         rewind($input_stream);
         $written_size = $writer->writeChunk($file_information, 0, $input_stream);
@@ -141,6 +150,9 @@ final class ArtidocFileBeingUploadedWriterTest extends TestCase
 
         $content      = 'Body content';
         $input_stream = fopen('php://memory', 'rb+');
+        if (! $input_stream) {
+            throw new \RuntimeException('Could not open memory stream');
+        }
         fwrite($input_stream, $content);
         rewind($input_stream);
         try {

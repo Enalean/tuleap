@@ -28,7 +28,7 @@ use Tuleap\Tus\Identifier\FileIdentifier;
  */
 final readonly class FileToUpload
 {
-    public const ROUTE_PREFIX = '/uploads/artidoc/sections/file';
+    public const string ROUTE_PREFIX = '/uploads/artidoc/sections/file';
 
     public function __construct(public FileIdentifier $id, public string $filename)
     {

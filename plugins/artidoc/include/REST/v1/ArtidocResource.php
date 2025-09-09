@@ -136,8 +136,8 @@ use UserManager;
 
 final class ArtidocResource extends AuthenticatedResource
 {
-    public const ROUTE      = 'artidoc';
-    private const MAX_LIMIT = 50;
+    public const string ROUTE   = 'artidoc';
+    private const int MAX_LIMIT = 50;
 
     /**
      * @url OPTIONS {id}

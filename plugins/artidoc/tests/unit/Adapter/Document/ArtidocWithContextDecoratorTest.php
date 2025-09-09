@@ -33,8 +33,8 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocWithContextDecoratorTest extends TestCase
 {
-    private const PROJECT_ID = 101;
-    private const ITEM_ID    = 12;
+    private const int PROJECT_ID = 101;
+    private const int ITEM_ID    = 12;
 
     public function testFaultWhenItemIsInAnInvalidProject(): void
     {
