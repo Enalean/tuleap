@@ -127,20 +127,34 @@ describe("Project admin", function () {
         project_visibility: string,
         project_acces_log: string,
         service_site_admin: string,
+        project_reference: string,
         now: number;
 
-    before(() => {
+    before(function () {
         now = Date.now();
         public_project_name = "public-admin-" + now;
         private_project_name = "private-admin-" + now;
         project_visibility = `visibility-${now}`;
         project_acces_log = `access-${now}`;
         service_site_admin = `service-${now}`;
+        project_reference = `reference-${now}`;
         cy.projectAdministratorSession();
         cy.createNewPublicProject(project_acces_log, "agile_alm").as("access_project_id");
+        cy.createNewPublicProject(project_reference, "agile_alm").as("project_reference_id");
     });
 
     context("project basic administration", function () {
+        before(function () {
+            const TITLE_FIELD_NAME = "i_want_to";
+            const REFERENCED_ARTIFACT_TITLE = "The referenced artifact";
+            cy.getTrackerIdFromREST(this.project_reference_id, "story").then((tracker_id) => {
+                cy.createArtifact({
+                    tracker_id,
+                    title_field_name: TITLE_FIELD_NAME,
+                    artifact_title: REFERENCED_ARTIFACT_TITLE,
+                }).as("referenced_artifact_id");
+            });
+        });
         it("Emoji is displayed", function () {
             cy.projectAdministratorSession();
             cy.visitProjectAdministration("project-admin-test");
@@ -330,6 +344,37 @@ describe("Project admin", function () {
                 .then(() => {
                     cy.readFile(`${download_folder}/${project_acces_log}.zip`).should("exist");
                 });
+        });
+        describe("project reference", function () {
+            before(function () {
+                cy.projectAdministratorSession();
+                const SOURCE_ARTIFACT_TITLE_WITH_REFERENCE = `The source artifact sla #${this.referenced_artifact_id}`;
+                cy.getTrackerIdFromREST(this.project_reference_id, "task").then((tracker_id) => {
+                    cy.createArtifact({
+                        tracker_id,
+                        title_field_name: "title",
+                        artifact_title: SOURCE_ARTIFACT_TITLE_WITH_REFERENCE,
+                    }).as("source_artifact_id");
+                });
+            });
+            it("creates custom references", function () {
+                cy.log("Create the new reference");
+                cy.visit(
+                    `/project/admin/reference.php?view=creation&group_id=${this.project_reference_id}`,
+                );
+                const reference_keyword = "sla";
+                cy.get("[data-test=add-reference-keyword-input]").type(reference_keyword);
+                cy.get("[data-test=add-reference-link-input]").type("/plugins/tracker/?aid=$1");
+                cy.get("[data-test=add-reference-create-button]").click();
+
+                cy.getContains("[data-test=reference-pattern-row]", reference_keyword).should(
+                    "exist",
+                );
+
+                cy.visit(`/plugins/tracker/?aid=${this.source_artifact_id}`);
+                cy.get("[data-test=cross-reference-link]").click();
+                cy.get("[data-test=xref-in-title]").should("contain", this.referenced_artifact_id);
+            });
         });
     });
 });
