@@ -42,7 +42,7 @@ const emit = defineEmits<{
     (e: "input", is_in_new_tab: boolean): void;
 }>();
 
-function onEditNewTab($event: Event) {
+function onEditNewTab($event: Event): void {
     if (!($event.target instanceof HTMLInputElement)) {
         return;
     }

@@ -130,15 +130,15 @@ watch(has_used_iframe, (new_value: boolean) => {
     }
 });
 
-function onEditServiceLabel(new_label: string) {
+function onEditServiceLabel(new_label: string): void {
     service.value.label = new_label;
 }
 
-function onEditIcon(new_icon: string) {
+function onEditIcon(new_icon: string): void {
     service.value.icon_name = new_icon;
 }
 
-function onNewTabChange(is_in_new_tab: boolean) {
+function onNewTabChange(is_in_new_tab: boolean): void {
     service.value.is_in_new_tab = is_in_new_tab;
     if (service.value.is_in_iframe === true && is_in_new_tab) {
         service.value.is_in_iframe = false;
