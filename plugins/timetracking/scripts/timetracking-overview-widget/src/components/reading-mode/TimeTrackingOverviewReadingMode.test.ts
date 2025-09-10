@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "@jest/globals";
-import { createTestingPinia } from "@pinia/testing";
-import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverviewReadingMode from "./TimeTrackingOverviewReadingMode.vue";
-import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+import { describe, it, expect } from "@jest/globals";
+import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
+import TimeTrackingOverviewReadingMode from "./TimeTrackingOverviewReadingMode.vue";
 
 describe("Given a timetracking overview widget on reading mode", () => {
-    const getWrapper = (is_loading, is_report_saved) => {
+    const getWrapper = (is_loading: boolean, is_report_saved: boolean): VueWrapper => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 is_loading,
