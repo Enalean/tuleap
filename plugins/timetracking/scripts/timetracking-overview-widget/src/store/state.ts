@@ -31,7 +31,7 @@ export type ProjectTracker = OverviewReportTracker & {
     disabled: boolean;
 };
 
-type TimetrackingUser = {
+export type TimetrackingUser = {
     user_id: number;
     user_name: string;
 };
