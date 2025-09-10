@@ -70,7 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         help.addEventListener("click", () => {
-            document.getElementById("svn-repository-help").classList.toggle("hidden");
+            document
+                .getElementById("svn-repository-help")
+                .classList.toggle("svn-repository-help-hidden");
         });
     }
 });
