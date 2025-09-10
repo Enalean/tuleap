@@ -21,23 +21,24 @@ import { describe, beforeEach, it, expect } from "@jest/globals";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverview from "./TimeTrackingOverview.vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
+import TimeTrackingOverview from "./TimeTrackingOverview.vue";
 
 const reportId = 8;
-const noop = () => {
+const noop = (): void => {
     // Do nothing
 };
 
 describe("Given a timetracking overview widget", () => {
-    let reading_mode, success_message;
+    let reading_mode: boolean, success_message: null | string;
 
     beforeEach(() => {
         reading_mode = true;
         success_message = null;
     });
 
-    const getWrapper = () => {
+    const getWrapper = (): VueWrapper => {
         const useStore = defineStore("overview/8", {
             state: () => ({
                 reading_mode,
@@ -59,7 +60,7 @@ describe("Given a timetracking overview widget", () => {
 
         return shallowMount(TimeTrackingOverview, {
             global: getGlobalTestOptions(pinia),
-            props: { reportId },
+            props: { reportId, userId: 101, areVoidTrackersHidden: true },
         });
     };
 
