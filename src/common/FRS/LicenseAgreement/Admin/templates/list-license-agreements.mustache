@@ -18,7 +18,7 @@
                     <tr>
                         <td>{{ title }}</td>
                         <td>
-                            <input type="radio"  name="default_agreement" value="{{ id }}" {{# is_default }}checked{{/ is_default }}/>
+                            <input type="radio" data-test="default-agreement" name="default_agreement" value="{{ id }}" {{# is_default }}checked{{/ is_default }}/>
                         </td>
                         {{# can_edit }}
                             <td>
@@ -37,7 +37,7 @@
                 {{/ license_agreements }}
                 </tbody>
             </table>
-            <button type="submit" class="btn">{{# gettext }}Set default{{/ gettext }}</button>
+            <button type="submit" class="btn" data-test="save-agreements">{{# gettext }}Set default{{/ gettext }}</button>
         </form>
     </div>
 </div>

@@ -23,7 +23,7 @@
                             There are no files in this release.
                         </td>
                     </tr>
-                    <tr ng-repeat="file in $ctrl.release.files">
+                    <tr ng-repeat="file in $ctrl.release.files" data-test="release-files">
                         <td
                             file-download="file"
                             license-approval-mandatory="$ctrl.release.license_approval"

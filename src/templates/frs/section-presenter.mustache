@@ -10,7 +10,7 @@
                     <a href="{{ processors_url }}">{{ processors }}</a>
                 </li>
                 <li {{# license_agreements_active }}class="active"{{/ license_agreements_active }}>
-                    <a href="{{ license_agreements_url }}">{{# gettext }}License Agreements{{/ gettext }}</a>
+                    <a href="{{ license_agreements_url }}" data-test="license-agreements">{{# gettext }}License Agreements{{/ gettext }}</a>
                 </li>
             </ul>
         </div>

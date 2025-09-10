@@ -121,7 +121,7 @@ function add_new_file() {
 
     //TD tag constuction, add the select file boxe to this tag (used to choose the file)
     var cell = Builder.node("td", { id: "td_file_" + id });
-    var select = Builder.node("select", { name: "ftp_file_list" });
+    var select = Builder.node("select", { name: "ftp_file_list", "data-test": "file-selector" });
     selects[current_select_number] = select;
     build_select_file(current_select_number);
 
@@ -137,7 +137,12 @@ function add_new_file() {
     cell.appendChild(select);
 
     //Browse file field creation
-    var file = Builder.node("input", { type: "file", id: "file_" + id, name: "file[]" });
+    var file = Builder.node("input", {
+        type: "file",
+        id: "file_" + id,
+        name: "file[]",
+        "data-test": "file-input",
+    });
     Element.hide(file);
     cell.appendChild(file);
 
