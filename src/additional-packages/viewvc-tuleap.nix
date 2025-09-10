@@ -56,7 +56,7 @@ let
        --define "_rpmdir $(pwd)/RPMS" \
        --define "%_bindir /usr/bin" \
        --define "%_unitdir /usr/lib/systemd/system" \
-       --define "%python_sitelib /usr/lib/python3.9/site-packages" \
+       --define "%python_sitelib /usr/lib/python${pkgs.lib.versions.majorMinor python.version}/site-packages" \
        --define "%__python python" \
        --define "%_sysconfdir /etc" \
        -bb ${./viewvc-tuleap/viewvc-tuleap.spec}
