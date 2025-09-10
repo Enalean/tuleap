@@ -63,49 +63,43 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { REPORT_ID } from "../../injection-symbols";
+import { useOverviewWidgetStore } from "../../store";
 import TimeTrackingOverviewProjectOption from "./TimeTrackingOverviewProjectOption.vue";
 import TimeTrackingOverviewTrackersOptions from "./TimeTrackingOverviewTrackersOptions.vue";
-import { useOverviewWidgetStore } from "../../store/index";
 
-export default {
-    name: "TimeTrackingOverviewWritingTrackers",
-    components: { TimeTrackingOverviewProjectOption, TimeTrackingOverviewTrackersOptions },
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
-    },
-    data() {
-        return {
-            selected_tracker: null,
-        };
-    },
-    computed: {
-        is_project_select_disabled() {
-            return this.overview_store.projects.length === 0;
-        },
-        is_tracker_or_project_select_disabled() {
-            return (
-                (this.overview_store.trackers.length === 0 ||
-                    this.overview_store.projects.length === 0) &&
-                this.overview_store.is_loading_tracker
-            );
-        },
-        is_tracker_available() {
-            return (
-                this.overview_store.trackers.length > 0 && !this.overview_store.is_loading_tracker
-            );
-        },
-    },
-    methods: {
-        trackerSelected(value) {
-            this.selected_tracker = value;
-        },
-        addTracker() {
-            this.overview_store.addSelectedTrackers(Number.parseInt(this.selected_tracker, 10));
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+const selected_tracker = ref<string | null>(null);
+
+const is_project_select_disabled = computed(() => overview_store.projects.length === 0);
+
+const is_tracker_or_project_select_disabled = computed(() => {
+    return (
+        (overview_store.trackers.length === 0 || is_project_select_disabled.value) &&
+        overview_store.is_loading_trackers
+    );
+});
+
+const is_tracker_available = computed(
+    () => overview_store.trackers.length > 0 && !overview_store.is_loading_trackers,
+);
+
+function trackerSelected(value: string) {
+    selected_tracker.value = value;
+}
+
+function addTracker() {
+    if (!selected_tracker.value) {
+        return;
+    }
+
+    overview_store.addSelectedTrackers(Number.parseInt(selected_tracker.value, 10));
+}
 </script>

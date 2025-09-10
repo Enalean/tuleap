@@ -21,27 +21,34 @@ import { describe, beforeEach, it, expect, jest } from "@jest/globals";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverviewTrackersOptions from "./TimeTrackingOverviewTrackersOptions.vue";
+import type { VueWrapper } from "@vue/test-utils";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
+import type { ProjectTracker } from "../../store/state";
 import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
+import TimeTrackingOverviewTrackersOptions from "./TimeTrackingOverviewTrackersOptions.vue";
 
 describe("Given a timetracking overview widget on writing mode", () => {
-    let projects, trackers, is_loading_tracker, has_success_message, addSelectedTrackers;
+    let projects: ProjectReference[],
+        trackers: ProjectTracker[],
+        is_loading_trackers: boolean,
+        has_success_message: boolean,
+        addSelectedTrackers: jest.Mock;
 
     beforeEach(() => {
-        projects = ["leprojet"];
-        trackers = ["letracker"];
-        is_loading_tracker = false;
+        projects = [{ label: "leprojet" } as ProjectReference];
+        trackers = [{ label: "letracker" } as ProjectTracker];
+        is_loading_trackers = false;
         has_success_message = false;
         addSelectedTrackers = jest.fn();
     });
 
-    const getWrapper = () => {
+    const getWrapper = (): VueWrapper => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 projects,
                 trackers,
-                is_loading_tracker,
+                is_loading_trackers,
             }),
             getters: {
                 has_success_message: () => has_success_message,
@@ -90,7 +97,7 @@ describe("Given a timetracking overview widget on writing mode", () => {
 
     it("When projects are not available, then spinner icon is displayed", () => {
         projects = [];
-        is_loading_tracker = true;
+        is_loading_trackers = true;
 
         const wrapper = getWrapper();
 
