@@ -17,16 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "@jest/globals";
-import { createTestingPinia } from "@pinia/testing";
-import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
-import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import { defineStore } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+import { describe, it, expect } from "@jest/globals";
+import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { OverviewReportTracker } from "@tuleap/plugin-timetracking-rest-api-types";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
+import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
 
 describe("TimeTrackingOverviewTrackerList tests", () => {
     describe("Given a timetracking overview widget on reading mode", () => {
-        const getWrapper = (selected_trackers) => {
+        const getWrapper = (selected_trackers: OverviewReportTracker[]): VueWrapper => {
             const useStore = defineStore("overview/1", {
                 state: () => ({
                     selected_trackers,
@@ -41,8 +44,8 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
             });
         };
 
-        it("When no selected trackers, then 'no trackers selected' is displayed", async () => {
-            const wrapper = await getWrapper([]);
+        it("When no selected trackers, then 'no trackers selected' is displayed", () => {
+            const wrapper = getWrapper([]);
             expect(
                 wrapper
                     .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
@@ -51,30 +54,17 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
         });
 
         it("When trackers are selected, then empty field is not displayed", () => {
-            const selected_trackers = [
+            const selected_trackers: OverviewReportTracker[] = [
                 {
-                    artifacts: [
-                        {
-                            minutes: 20,
-                        },
-                        {
-                            minutes: 40,
-                        },
-                    ],
-                    id: "16",
+                    id: 16,
                     label: "tracker",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                 },
                 {
-                    artifacts: [
-                        {
-                            minutes: 20,
-                        },
-                    ],
-                    id: "18",
+                    id: 18,
                     label: "tracker 2",
-                    project: {},
+                    project: {} as ProjectReference,
                     uri: "",
                 },
             ];
