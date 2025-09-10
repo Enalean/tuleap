@@ -44,35 +44,39 @@
         </option>
     </select>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, ref, watch } from "vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { REPORT_ID } from "../../injection-symbols";
-import { useOverviewWidgetStore } from "../../store/index";
+import { useOverviewWidgetStore } from "../../store";
 
-export default {
-    name: "TimeTrackingOverviewTrackersOptions",
-    emits: ["input"],
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
+const { $gettext } = useGettext();
+
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+const select = ref<HTMLSelectElement>();
+
+const emit = defineEmits<{
+    (e: "input", tracker_id: string): void;
+}>();
+
+watch(
+    () => overview_store.is_added_tracker,
+    () => {
+        if (select.value) {
+            select.value.options.selectedIndex = 0;
+        }
     },
-    computed: {
-        is_tracker_select_disabled() {
-            return this.overview_store.trackers.length === 0;
-        },
-    },
-    watch: {
-        is_added_tracker: {
-            handler() {
-                this.$refs.select.options.selectedIndex = 0;
-            },
-            deep: true,
-        },
-    },
-    methods: {
-        setSelected($event) {
-            this.$emit("input", $event.target.value);
-        },
-    },
-};
+    { deep: true },
+);
+
+const is_tracker_select_disabled = computed(() => overview_store.trackers.length === 0);
+function setSelected(event: Event) {
+    if (!(event.target instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    emit("input", event.target.value);
+}
 </script>
