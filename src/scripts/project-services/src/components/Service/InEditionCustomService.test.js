@@ -38,6 +38,7 @@ describe(`InEditionCustomService`, () => {
                 is_in_new_tab: false,
                 rank: 11,
                 is_project_scope: true,
+                is_disabled_reason: "",
             },
         };
     });

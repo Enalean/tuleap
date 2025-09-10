@@ -33,8 +33,8 @@
         <service-is-used
             v-if="can_update_is_used"
             id="project-service-edit-modal-enabled"
-            v-bind:value="service.is_used"
-            v-bind:disabled-reason="service.is_disabled_reason"
+            v-bind:is_used="service.is_used"
+            v-bind:is_disabled_reason="service.is_disabled_reason"
         />
         <service-is-active
             id="project-service-edit-modal-active"

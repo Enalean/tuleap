@@ -42,6 +42,6 @@ export type Service = {
     is_in_new_tab: boolean;
     rank: number;
     is_project_scope: boolean;
-    is_disabled_reason: boolean;
+    is_disabled_reason: string;
     readonly is_link_customizable: boolean;
 };
