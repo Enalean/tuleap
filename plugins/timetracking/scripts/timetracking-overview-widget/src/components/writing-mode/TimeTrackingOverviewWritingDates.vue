@@ -59,31 +59,36 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { REPORT_ID } from "../../injection-symbols";
 import { datePicker } from "@tuleap/tlp-date-picker";
-import { useOverviewWidgetStore } from "../../store/index";
+import { REPORT_ID } from "../../injection-symbols";
+import { useOverviewWidgetStore } from "../../store";
 
-export default {
-    name: "TimeTrackingOverviewWritingDates",
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
-    },
-    mounted() {
-        const store = this.overview_store;
-        datePicker(this.$refs.start_date, {
+const { $gettext } = useGettext();
+
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+const start_date = ref<HTMLInputElement>();
+const end_date = ref<HTMLInputElement>();
+
+onMounted(() => {
+    if (start_date.value) {
+        datePicker(start_date.value, {
             onClose(long_date, short_date) {
-                store.setStartDate(short_date);
+                overview_store.setStartDate(short_date);
             },
         });
+    }
 
-        datePicker(this.$refs.end_date, {
+    if (end_date.value) {
+        datePicker(end_date.value, {
             onClose(long_date, short_date) {
-                store.setEndDate(short_date);
+                overview_store.setEndDate(short_date);
             },
         });
-    },
-};
+    }
+});
 </script>
