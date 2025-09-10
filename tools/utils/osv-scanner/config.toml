@@ -97,26 +97,10 @@ id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
 ignoreUntil = 2025-10-12
 
-# go stdlib
-[[IgnoredVulns]]
-id = "GO-2025-3749" # CVE-2025-22874
-reason = "No impact in our situation, we do not use ExtKeyUsageAny."
-ignoreUntil = 2025-09-10
-
-[[IgnoredVulns]]
-id = "GO-2025-3750" # CVE-2025-0913
-reason = "No impact in our situation, none of the affected code runs on Windows."
-ignoreUntil = 2025-09-10
-
-[[IgnoredVulns]]
-id = "GO-2025-3751" # CVE-2025-4673
-reason = "No impact in our situation, we never set Proxy-Authorization or Proxy-Authenticate headers."
-ignoreUntil = 2025-09-10
-
 [[IgnoredVulns]]
 id = "GO-2025-3849" # CVE-2025-47907
 reason = "No impact in our situation, we do not rely on database/sql."
-ignoreUntil = 2025-09-10
+ignoreUntil = 2025-10-10
 
 [[IgnoredVulns]]
 id = "GO-2025-3829" # CVE-2025-54410
