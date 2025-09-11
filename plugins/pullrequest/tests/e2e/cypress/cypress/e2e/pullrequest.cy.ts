@@ -119,6 +119,11 @@ describe("Pull request", function () {
             });
             cy.get("[data-test=save-reviewers-button]").click({ force: true });
             cy.get("[data-test=pull-request-reviewers-empty-state]").should("not.exist");
+
+            cy.log("can browse the commits of the pull request");
+            cy.get("[data-test=pullrequest-navigation-tabs] [data-test=tab-commits]").click();
+
+            cy.get("[data-test=pullrequest-commits-list-commit]").contains("4858682a8f");
         });
     });
 });

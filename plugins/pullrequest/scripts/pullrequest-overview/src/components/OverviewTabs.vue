@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <nav class="tlp-tabs">
+    <nav class="tlp-tabs" data-test="pullrequest-navigation-tabs">
         <router-link
             v-bind:to="{ name: VIEW_OVERVIEW_NAME }"
             class="tlp-tab tlp-tab-active"

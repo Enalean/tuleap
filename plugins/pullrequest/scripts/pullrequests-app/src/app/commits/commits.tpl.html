@@ -11,6 +11,7 @@
 <section class="tlp-pane-section-for-cards-under-tabs" ng-if="commits.shouldDisplayListOfCommits()">
     <a ng-repeat="commit in commits.list track by commit.id"
        class="tlp-card tlp-card-selectable pull-request-commits-list-commit"
+       data-test="pullrequest-commits-list-commit"
        ng-href="{{ ::commit.html_url }}"
     >
         <div class="pull-request-commits-list-commit-metadata">
