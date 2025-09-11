@@ -18,41 +18,46 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
+import type { Service } from "../../type";
 import InEditionCustomService from "./InEditionCustomService.vue";
-import { getGlobalTestOptions } from "../../support/global-options-for-tests.ts";
+import ServiceOpenInNewTab from "./ServiceOpenInNewTab.vue";
 
 describe(`InEditionCustomService`, () => {
-    let props;
+    let service_prop: Service;
 
     beforeEach(() => {
-        props = {
-            service_prop: {
-                id: 101,
-                icon_name: "",
-                label: "",
-                link: "",
-                description: "",
-                is_active: true,
-                is_used: true,
-                is_in_iframe: false,
-                is_in_new_tab: false,
-                rank: 11,
-                is_project_scope: true,
-                is_disabled_reason: "",
-            },
+        service_prop = {
+            id: 101,
+            icon_name: "",
+            label: "",
+            link: "",
+            description: "",
+            is_active: true,
+            is_used: true,
+            is_in_iframe: false,
+            is_in_new_tab: false,
+            rank: 11,
+            is_project_scope: true,
+            is_disabled_reason: "",
+            short_name: "",
+            is_link_customizable: false,
         };
     });
 
-    function createWrapper() {
+    function createWrapper(): VueWrapper {
         return shallowMount(InEditionCustomService, {
             global: { ...getGlobalTestOptions() },
-            props,
+            props: {
+                service_prop,
+            },
         });
     }
 
     describe(`When the service is already open in an iframe`, () => {
         it(`will show the switch input`, () => {
-            props.service_prop.is_in_iframe = true;
+            service_prop.is_in_iframe = true;
             const wrapper = createWrapper();
 
             const iframe_switch = wrapper.find("[data-test=iframe-switch]");
@@ -60,11 +65,11 @@ describe(`InEditionCustomService`, () => {
         });
 
         it(`when I switch off "Open in iframe", it will show a deprecation warning`, async () => {
-            props.service_prop.is_in_iframe = true;
+            service_prop.is_in_iframe = true;
             const wrapper = createWrapper();
 
-            wrapper.get("[data-test=iframe-switch]").setChecked(false);
-            const updated_service = { ...props.service_prop, is_in_iframe: false };
+            wrapper.get("[data-test=iframe-switch]").setValue(false);
+            const updated_service = { ...service_prop, is_in_iframe: false };
             const new_props = {
                 service_prop: updated_service,
                 allowed_icons: {},
@@ -77,10 +82,10 @@ describe(`InEditionCustomService`, () => {
 
         it(`when I also check "Is in new tab",
             it will disable "is in iframe" and show a warning`, async () => {
-            props.service_prop.is_in_iframe = true;
+            service_prop.is_in_iframe = true;
             const wrapper = createWrapper();
 
-            wrapper.vm.onNewTabChange(true);
+            wrapper.findComponent(ServiceOpenInNewTab).vm.$emit("input", true);
             await wrapper.vm.$nextTick();
 
             const new_tab_warning = wrapper.find("[data-test=new-tab-warning]");
@@ -89,16 +94,16 @@ describe(`InEditionCustomService`, () => {
 
         it(`When the warning is shown and I uncheck "Is in new tab",
             it will hide the warning`, async () => {
-            props.service_prop.is_in_iframe = true;
+            service_prop.is_in_iframe = true;
             const wrapper = createWrapper();
 
-            wrapper.vm.onNewTabChange(true);
+            wrapper.findComponent(ServiceOpenInNewTab).vm.$emit("input", true);
             await wrapper.vm.$nextTick();
 
             let new_tab_warning = wrapper.find("[data-test=new-tab-warning]");
             expect(new_tab_warning.exists()).toBe(true);
 
-            wrapper.vm.onNewTabChange(false);
+            wrapper.findComponent(ServiceOpenInNewTab).vm.$emit("input", false);
             await wrapper.vm.$nextTick();
             new_tab_warning = wrapper.find("[data-test=new-tab-warning]");
 
