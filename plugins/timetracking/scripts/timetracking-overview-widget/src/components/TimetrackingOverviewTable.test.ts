@@ -21,29 +21,32 @@ import { describe, beforeEach, it, expect } from "@jest/globals";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
 import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
+import type { TrackerWithTimes } from "@tuleap/plugin-timetracking-rest-api-types";
+import type { TimetrackingUser } from "../store/state";
 
 describe("Given a timetracking overview widget", () => {
-    let is_loading,
-        error_message,
-        are_void_trackers_hidden,
-        trackers_times,
-        users,
-        can_results_be_displayed,
-        is_sum_of_times_equals_zero;
+    let is_loading: boolean,
+        error_message: null | string,
+        are_void_trackers_hidden: boolean,
+        trackers_times: TrackerWithTimes[],
+        users: TimetrackingUser[],
+        can_results_be_displayed: boolean,
+        is_sum_of_times_equals_zero: boolean;
 
     beforeEach(() => {
         is_loading = false;
         error_message = null;
         are_void_trackers_hidden = false;
-        trackers_times = [{ tracker_id: 1 }];
-        users = [1, 2];
+        trackers_times = [{ id: 1 } as TrackerWithTimes];
+        users = [{ user_id: 1 } as TimetrackingUser, { user_id: 2 } as TimetrackingUser];
         can_results_be_displayed = true;
         is_sum_of_times_equals_zero = true;
     });
 
-    const getWrapper = () => {
+    const getWrapper = (): VueWrapper => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 is_loading,

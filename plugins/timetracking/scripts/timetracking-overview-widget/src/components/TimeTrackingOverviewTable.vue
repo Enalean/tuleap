@@ -94,49 +94,38 @@
         </table>
     </div>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { REPORT_ID } from "../injection-symbols";
+import { useOverviewWidgetStore } from "../store";
 import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
 import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
-import { useOverviewWidgetStore } from "../store/index";
 
-export default {
-    name: "TimeTrackingOverviewTable",
-    components: { TimeTrackingOverviewTableRow, TimeTrackingOverviewUserList },
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
-    },
-    computed: {
-        time_format_tooltip() {
-            return this.$gettext("The time is displayed in hours:minutes");
-        },
-        has_data_to_display() {
-            return (
-                this.has_trackers_times &&
-                !(
-                    this.overview_store.are_void_trackers_hidden &&
-                    this.overview_store.is_sum_of_times_equals_zero
-                )
-            );
-        },
-        has_users() {
-            return this.overview_store.users.length > 0;
-        },
-        has_trackers_times() {
-            return this.overview_store.trackers_times.length > 0;
-        },
-        display_button_text() {
-            return this.overview_store.are_void_trackers_hidden
-                ? this.$gettext("Show void trackers")
-                : this.$gettext("Hide void trackers");
-        },
-    },
-    methods: {
-        setAreVoidTrackersHidden() {
-            this.overview_store.setPreference();
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+const time_format_tooltip = $gettext("The time is displayed in hours:minutes");
+
+const has_trackers_times = computed(() => overview_store.trackers_times.length > 0);
+
+const has_data_to_display = computed(() => {
+    return (
+        has_trackers_times.value &&
+        !(overview_store.are_void_trackers_hidden && overview_store.is_sum_of_times_equals_zero)
+    );
+});
+const has_users = computed(() => overview_store.users.length > 0);
+
+const display_button_text = computed(() => {
+    return overview_store.are_void_trackers_hidden
+        ? $gettext("Show void trackers")
+        : $gettext("Hide void trackers");
+});
+
+function setAreVoidTrackersHidden() {
+    overview_store.setPreference();
+}
 </script>
