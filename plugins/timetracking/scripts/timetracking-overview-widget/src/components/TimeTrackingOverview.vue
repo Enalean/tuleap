@@ -35,47 +35,38 @@
     </div>
 </template>
 
-<script>
-import { provide } from "vue";
+<script setup lang="ts">
+import { provide, onMounted, onUnmounted } from "vue";
 import { REPORT_ID } from "../injection-symbols";
 import TimeTrackingOverviewReadingMode from "./reading-mode/TimeTrackingOverviewReadingMode.vue";
 import TimeTrackingOverviewWritingMode from "./writing-mode/TimeTrackingOverviewWritingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
-import { useOverviewWidgetStore } from "../store/index";
+import { useOverviewWidgetStore } from "../store";
 
-export default {
-    name: "TimeTrackingOverview",
-    components: {
-        TimeTrackingOverviewTable,
-        TimeTrackingOverviewReadingMode,
-        TimeTrackingOverviewWritingMode,
-    },
-    props: {
-        reportId: Number,
-        userId: Number,
-        areVoidTrackersHidden: Boolean,
-    },
-    setup: ({ reportId }) => {
-        provide(REPORT_ID, reportId);
-        const overview_store = useOverviewWidgetStore(reportId)();
+const props = defineProps<{
+    reportId: number;
+    userId: number;
+    areVoidTrackersHidden: boolean;
+}>();
 
-        return { overview_store };
-    },
-    mounted() {
-        this.overview_store.setReportId(this.reportId);
-        this.overview_store.initUserId(this.userId);
-        this.overview_store.setDisplayVoidTrackers(this.areVoidTrackersHidden);
-        this.overview_store.initWidgetWithReport();
-        this.overview_store.getProjects();
-        document.addEventListener("timeUpdated", this.reloadTimes);
-    },
-    destroyed() {
-        document.removeEventListener("timeUpdated", this.reloadTimes);
-    },
-    methods: {
-        reloadTimes() {
-            this.overview_store.reloadTimetrackingOverviewTimes();
-        },
-    },
-};
+const overview_store = useOverviewWidgetStore(props.reportId)();
+
+provide(REPORT_ID, props.reportId);
+
+onMounted(() => {
+    overview_store.setReportId(props.reportId);
+    overview_store.initUserId(props.userId);
+    overview_store.setDisplayVoidTrackers(props.areVoidTrackersHidden);
+    overview_store.initWidgetWithReport();
+    overview_store.getProjects();
+    document.addEventListener("timeUpdated", reloadTimes);
+});
+
+onUnmounted(() => {
+    document.removeEventListener("timeUpdated", reloadTimes);
+});
+
+function reloadTimes() {
+    overview_store.reloadTimetrackingOverviewTimes();
+}
 </script>
