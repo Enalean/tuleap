@@ -21,25 +21,28 @@ import { describe, beforeEach, it, expect } from "@jest/globals";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
+import type { VueWrapper } from "@vue/test-utils";
+import type { ProjectReference, ProjectResponse } from "@tuleap/core-rest-api-types";
 import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
+import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
 
 describe("Given a timetracking overview widget", () => {
-    let are_void_trackers_hidden, is_tracker_total_sum_equals_zero;
+    let are_void_trackers_hidden: boolean, is_tracker_total_sum_equals_zero: boolean;
 
     beforeEach(() => {
         are_void_trackers_hidden = false;
         is_tracker_total_sum_equals_zero = false;
     });
 
-    const getWrapper = () => {
+    const getWrapper = (): VueWrapper => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 are_void_trackers_hidden,
             }),
             getters: {
-                get_formatted_time: () => () => "10:30",
-                is_tracker_total_sum_equals_zero: () => () => is_tracker_total_sum_equals_zero,
+                get_formatted_time: () => (): string => "10:30",
+                is_tracker_total_sum_equals_zero: () => (): boolean =>
+                    is_tracker_total_sum_equals_zero,
             },
         });
         const pinia = createTestingPinia();
@@ -49,9 +52,9 @@ describe("Given a timetracking overview widget", () => {
             global: getGlobalTestOptions(pinia),
             props: {
                 time: {
-                    id: "16",
+                    id: 16,
                     label: "tracker",
-                    project: {},
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {

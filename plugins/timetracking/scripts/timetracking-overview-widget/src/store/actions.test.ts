@@ -19,7 +19,7 @@
 
 import { describe, beforeEach, afterEach, it, expect, jest } from "@jest/globals";
 import { setActivePinia, createPinia } from "pinia";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { ProjectReference, ProjectResponse } from "@tuleap/core-rest-api-types";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type {
@@ -67,14 +67,14 @@ describe("Store actions", () => {
                 {
                     id: 16,
                     label: "tracker",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [],
                 },
                 {
                     id: 18,
                     label: "tracker 2",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [],
                 },
@@ -106,8 +106,8 @@ describe("Store actions", () => {
     describe("GetProjects - success", () => {
         it("Given a success response, When projects are received, Then no message error is received", async (): Promise<void> => {
             const projects = [
-                { id: 765, label: "timetracking" } as ProjectReference,
-                { id: 239, label: "projectTest" } as ProjectReference,
+                { id: 765, label: "timetracking" } as ProjectReference & ProjectResponse,
+                { id: 239, label: "projectTest" } as ProjectReference & ProjectResponse,
             ];
 
             jest.spyOn(rest_querier, "getProjectsWithTimetracking").mockReturnValue(
