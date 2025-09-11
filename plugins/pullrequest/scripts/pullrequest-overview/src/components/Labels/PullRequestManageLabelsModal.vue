@@ -193,7 +193,7 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
                 ({ id }) => id !== LABEL_TO_CREATE_TMP_ID,
             );
         },
-        new_item_label_callback: (item_name) =>
+        new_item_label_callback: (item_name): string =>
             item_name !== ""
                 ? interpolate($gettext(`Create a new label "%{label}"`), { label: item_name })
                 : $gettext("Create a new label"),

@@ -123,7 +123,7 @@ export default {
                 };
                 this.$store.commit("dialog_interface/notify", notification);
                 this.$store.commit("dialog_interface/hideModal");
-            } catch (e) {
+            } catch (_e) {
                 this.is_saving_failed = true;
             } finally {
                 this.is_saving = false;

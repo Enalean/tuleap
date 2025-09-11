@@ -165,7 +165,11 @@ export class Dropdown {
     }
 
     toggle(): void {
-        this.is_shown ? this.hide() : this.show();
+        if (this.is_shown) {
+            this.hide();
+            return;
+        }
+        this.show();
     }
 
     async show(): Promise<void> {

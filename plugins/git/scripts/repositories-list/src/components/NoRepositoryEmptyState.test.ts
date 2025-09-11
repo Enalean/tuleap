@@ -38,9 +38,9 @@ describe("NoRepositoryEmptyState", () => {
                 is_first_load_done: true,
             } as State,
             getters: {
-                areExternalUsedServices: () => are_external_used_services,
-                isCurrentRepositoryListEmpty: () => true,
-                isInitialLoadingDoneWithoutError: () => true,
+                areExternalUsedServices: (): boolean => are_external_used_services,
+                isCurrentRepositoryListEmpty: (): boolean => true,
+                isInitialLoadingDoneWithoutError: (): boolean => true,
             },
         };
 

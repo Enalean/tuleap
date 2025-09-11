@@ -31,7 +31,7 @@ export interface ClipboardState {
     pasting_in_progress: Ref<boolean>;
 }
 
-export interface ClipboardGetters {}
+export type ClipboardGetters = Record<string, unknown>;
 
 export interface ClipboardActions {
     pasteItem(payload: PastePayload): Promise<void>;

@@ -22,7 +22,7 @@ import { createModal } from "@tuleap/tlp-modal";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import jQuery from "jquery";
 
-!(function ($) {
+(function ($) {
     function formatOptionIcon(option) {
         const icon = document.createElement("i");
         icon.classList.add("fa", "fa-" + option.id);

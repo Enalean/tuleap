@@ -150,7 +150,7 @@ describe("NewTuleapArtifactModalService", () => {
             let has_thrown = false;
             try {
                 await promise;
-            } catch (e) {
+            } catch (_e) {
                 has_thrown = true;
             }
             expect(has_thrown).toBe(true);

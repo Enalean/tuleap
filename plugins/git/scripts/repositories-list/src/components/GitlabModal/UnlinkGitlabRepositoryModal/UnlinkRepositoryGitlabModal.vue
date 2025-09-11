@@ -167,7 +167,7 @@ const handleError = async (rest_error: unknown): Promise<void> => {
         }
         const { error } = await rest_error.response.json();
         message_error_rest.value = error.code + " " + error.message;
-    } catch (error) {
+    } catch (_error) {
         message_error_rest.value = gettext_provider.$gettext("Oops, an error occurred!");
     } finally {
         is_loading.value = false;

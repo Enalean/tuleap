@@ -152,7 +152,6 @@ export function graphOnTrackerPie(id, graph) {
             })
             .attr("stroke", "#DDD")
             .attr("transform", ({ startAngle, endAngle }) => {
-                radius;
                 return "rotate(" + ((startAngle + endAngle) / 2) * (180 / Math.PI) + ")";
             });
 

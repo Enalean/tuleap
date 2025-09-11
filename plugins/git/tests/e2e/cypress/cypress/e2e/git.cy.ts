@@ -177,7 +177,7 @@ describe("Git", function () {
                     repository_path,
                     repository_name,
                 ).then((result) => {
-                    expect(result.includes("fatal")).to.be.true;
+                    expect(result).to.include("fatal");
                 });
             });
 
@@ -376,7 +376,7 @@ describe("Git", function () {
                     repository_path,
                     repository_name,
                 ).then((result) => {
-                    expect(result.includes("error")).to.be.true;
+                    expect(result).to.include("error");
                 });
             });
             it("User can choose permissions of his repository", function () {

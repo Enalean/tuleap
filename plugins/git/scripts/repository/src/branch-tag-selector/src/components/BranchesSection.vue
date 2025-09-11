@@ -116,7 +116,7 @@ async function loadBranches(): Promise<void> {
             },
         );
         branches.value.sort((branch_a, branch_b) => branch_a.name.localeCompare(branch_b.name));
-    } catch (e) {
+    } catch (_e) {
         has_error_while_loading_branches.value = true;
     } finally {
         is_loading_branches.value = false;

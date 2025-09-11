@@ -171,7 +171,7 @@ async function submit(): Promise<void> {
         error_message.value = $gettext("An error occurred while creating the campaign.");
         try {
             error_message_details.value = await getErrorMessageDetailsFromError(e);
-        } catch (error) {
+        } catch (_error) {
             error_message_details.value = "";
         }
         throw e;

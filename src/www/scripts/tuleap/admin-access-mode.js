@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
+(function ($) {
     $(function () {
         var form = $("#siteadmin-access-anonymous");
         if (form.length === 0) {

@@ -22,7 +22,7 @@ tuleap.trackers = tuleap.trackers || {};
 tuleap.trackers.report = tuleap.trackers.report || {};
 tuleap.trackers.report.table = tuleap.trackers.report.table || {};
 
-!(function ($) {
+(function ($) {
     function fixAggregatesHeight(container) {
         var container_selector = ".tracker_report_table_aggregates > td > table > " + container,
             tr_selector = container_selector + " > tr",

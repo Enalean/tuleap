@@ -208,7 +208,7 @@ export const getWikisReferencingSameWikiPage = async (
                 getParents(item.item_id).then((parents) => buildItemPath(item, parents)),
             ),
         );
-    } catch (exception) {
+    } catch (_exception) {
         return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
     }
 };

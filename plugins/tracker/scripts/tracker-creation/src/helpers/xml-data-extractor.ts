@@ -76,9 +76,11 @@ function readFile(file: File): Promise<string | ArrayBuffer | null> {
         file_reader.onload = file_reader.onerror = (evt: ProgressEvent): void => {
             file_reader.onload = file_reader.onerror = null;
 
-            evt.type === "load"
-                ? resolve(file_reader.result)
-                : reject(new Error("Failed to read the blob/file"));
+            if (evt.type === "load") {
+                resolve(file_reader.result);
+                return;
+            }
+            reject(new Error("Failed to read the blob/file"));
         };
     });
 }

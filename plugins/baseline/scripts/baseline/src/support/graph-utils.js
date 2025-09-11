@@ -23,7 +23,9 @@
 const filter = (nodes, branch_attribute, predicate, current_found_nodes = []) => {
     let found_nodes = current_found_nodes;
     nodes.forEach((value) => {
-        predicate(value) && found_nodes.push(value);
+        if (predicate(value)) {
+            found_nodes.push(value);
+        }
         found_nodes = filter(value[branch_attribute], branch_attribute, predicate, found_nodes);
     });
 

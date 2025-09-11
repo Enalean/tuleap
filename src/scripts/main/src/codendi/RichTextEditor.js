@@ -224,7 +224,7 @@ codendi.RTE = Class.create({
     destroy: function () {
         try {
             this.rte.destroy(false);
-        } catch (e) {
+        } catch (_e) {
             // ignore
         }
         this.rte = null;

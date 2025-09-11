@@ -20,7 +20,7 @@
 /* global codendi:readonly */
 var tuleap = tuleap || {};
 
-!(function ($) {
+(function ($) {
     tuleap.search = {
         init: function () {
             var type_of_search = $("input[name=type_of_search]").val();

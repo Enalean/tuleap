@@ -58,7 +58,7 @@ export async function handleModalError(
         } else {
             context.commit("setModalErrorMessage", error.code + " " + error.message);
         }
-    } catch (e) {
+    } catch (_e) {
         context.commit("setModalErrorMessage", "");
     }
 }

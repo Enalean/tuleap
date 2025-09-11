@@ -113,7 +113,7 @@ async function loadTags(): Promise<void> {
                 },
             },
         );
-    } catch (e) {
+    } catch (_e) {
         has_error_while_loading_tags.value = true;
     } finally {
         is_loading_tags.value = false;

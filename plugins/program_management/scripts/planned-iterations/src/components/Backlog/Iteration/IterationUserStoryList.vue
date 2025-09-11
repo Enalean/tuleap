@@ -69,7 +69,7 @@ onMounted(async () => {
     try {
         is_loading.value = true;
         user_stories.value = await fetchIterationContent(props.iteration);
-    } catch (e) {
+    } catch (_e) {
         has_error.value = true;
         error_message.value = $gettext("An error has occurred loading content");
     } finally {

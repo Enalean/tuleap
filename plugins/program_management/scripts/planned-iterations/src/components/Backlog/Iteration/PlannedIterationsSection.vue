@@ -88,7 +88,7 @@ onMounted(async () => {
     try {
         is_loading.value = true;
         iterations.value = await getIncrementIterations(program_increment.value.id);
-    } catch (e) {
+    } catch (_e) {
         has_error.value = true;
         error_message.value = buildErrorMessage();
     } finally {

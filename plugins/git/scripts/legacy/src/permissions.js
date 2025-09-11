@@ -61,6 +61,7 @@
             if (regexp) {
                 new_row += label_regexp_enabled;
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions -- I don't know what this does
             ("</td>");
             new_row += "<td>" + write_permission_tag + "</td>";
             new_row += "<td>" + rewind_permission_tag + "</td>";

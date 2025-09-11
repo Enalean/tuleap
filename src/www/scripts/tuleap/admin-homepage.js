@@ -19,7 +19,7 @@
 
 /* global CKEDITOR:readonly tuleap:readonly */
 
-!(function ($) {
+(function ($) {
     $(function () {
         var selector = $("#admin-headline-select-language");
 

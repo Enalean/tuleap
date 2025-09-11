@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             response = JSON.parse(req.responseText);
-        } catch (e) {
+        } catch (_e) {
             // ignore SyntaxError
         }
 

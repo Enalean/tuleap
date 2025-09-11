@@ -229,7 +229,7 @@ document.observe("dom:loaded", function () {
             function selectCardsToHide(all_cards, text_to_search) {
                 try {
                     var regexp = new RegExp(text_to_search, "i");
-                } catch (e) {
+                } catch (_e) {
                     // the user broke the regexp, hide nothing
                     return [];
                 }

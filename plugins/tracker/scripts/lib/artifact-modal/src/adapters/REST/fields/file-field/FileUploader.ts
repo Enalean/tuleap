@@ -29,7 +29,7 @@ export const FileUploader = (): FinishFileUpload => ({
             new Promise((resolve, reject) => {
                 const uploader = new Upload(file.file_handle, {
                     uploadUrl: file.upload_href,
-                    onSuccess: () => resolve({ file_id: file.file_id }),
+                    onSuccess: (): void => resolve({ file_id: file.file_id }),
                     onError: (error): void => reject(error),
                 });
                 uploader.start();

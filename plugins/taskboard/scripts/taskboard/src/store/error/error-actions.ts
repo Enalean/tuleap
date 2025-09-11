@@ -33,7 +33,7 @@ export async function handleGlobalError(
             message += ": " + error.i18n_error_message;
         }
         context.commit("setGlobalErrorMessage", message);
-    } catch (error) {
+    } catch (_error) {
         context.commit("setGlobalErrorMessage", "");
     }
 }
@@ -49,7 +49,7 @@ export async function handleModalError(
             message += ": " + error.i18n_error_message;
         }
         context.commit("setModalErrorMessage", message);
-    } catch (e) {
+    } catch (_e) {
         context.commit("setModalErrorMessage", "");
     }
 }

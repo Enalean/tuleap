@@ -36,7 +36,8 @@ module.exports = {
         // Possible Errors
         "no-template-curly-in-string": "error",
         // Best Practices
-        "no-unused-vars": "off",
+        "no-unused-vars": "off", // Replaced by @typescript-eslint/no-unused-vars
+        "@typescript-eslint/no-unused-vars": ["error", { caughtErrorsIgnorePattern: "^_" }],
         "array-callback-return": "warn",
         "consistent-return": "warn",
         curly: "error",
@@ -104,6 +105,9 @@ module.exports = {
         "vue/html-closing-bracket-newline": "off",
         "vue/html-indent": "off",
         "vue/max-attributes-per-line": "off",
+        // Temporarily disabled, turn back on when vue-eslint-plugin upgrade is done
+        "vue/valid-define-emits": "off",
+        "vue/valid-define-props": "off",
         // Typescript
         "no-restricted-syntax": [
             "error",
@@ -131,7 +135,6 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-non-null-assertion": "error",
-        "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-use-before-define": [
             "error",
             { functions: false, typedefs: false, classes: false },
@@ -233,6 +236,7 @@ module.exports = {
             },
             rules: {
                 "no-console": "off",
+                "@typescript-eslint/no-require-imports": "off", // Jest configuration files require CommonJS. Webpack configuration files can be migrated though.
             },
         },
         {

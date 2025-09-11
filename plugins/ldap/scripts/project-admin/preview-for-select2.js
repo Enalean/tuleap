@@ -62,7 +62,7 @@ export async function initLdapBindingPreview(options, callback) {
             ({ users_to_add, users_to_remove, nb_not_impacted } =
                 await callback(chosen_ldap_group));
             group_not_found = false;
-        } catch (ex) {
+        } catch (_ex) {
             users_to_add = users_to_remove = [];
             nb_not_impacted = 0;
             group_not_found = true;

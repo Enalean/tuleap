@@ -80,7 +80,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                         remove: [],
                     }),
                 });
-            } catch (e) {
+            } catch (_e) {
                 addFeedback(
                     "error",
                     gettext_provider.gettext(
@@ -113,7 +113,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                         remove: [{ id: Number.parseInt(artifact_id, 10) }],
                     }),
                 });
-            } catch (e) {
+            } catch (_e) {
                 addFeedback(
                     "error",
                     gettext_provider.gettext(

@@ -42,7 +42,7 @@ export function initPreviewTrackerLabels(
     let program_increment_label: TimeboxLabel;
     try {
         program_increment_label = TimeboxLabel.fromId(retriever, PROGRAM_INCREMENT_LABEL_ID);
-    } catch (e) {
+    } catch (_e) {
         // There is no program increment label element when Teams have not yet been configured
         return;
     }

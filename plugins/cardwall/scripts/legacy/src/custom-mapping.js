@@ -26,7 +26,7 @@
 /**
  * This script manage the admin/config of cardwall in tracker administration
  */
-!(function ($) {
+(function ($) {
     $(document).ready(function () {
         var selector = ".cardwall_admin_ontop_mappings input[name^=custom_mapping]";
         $(selector).each(registerClickHandlerOnCustomMappingCheckbox);

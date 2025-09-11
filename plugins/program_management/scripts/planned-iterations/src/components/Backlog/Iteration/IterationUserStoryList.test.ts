@@ -42,7 +42,7 @@ describe("IterationUserStoryList", () => {
                 getIterationContentFromStore: (): CachedContentGetter => () => [],
             },
             actions: {
-                fetchIterationContent: () => resultOfFetch,
+                fetchIterationContent: (): Promise<UserStory[]> => resultOfFetch,
             },
         };
         return shallowMount(IterationUserStoryList, {

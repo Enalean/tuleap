@@ -106,7 +106,7 @@ async function getMatrixElements(
         let test_exec = null;
         try {
             test_exec = await get_test_execution(artifact.id);
-        } catch (e) {
+        } catch (_e) {
             continue;
         }
 
@@ -167,7 +167,7 @@ async function getCampaignsFromRawElements(
 
     try {
         return await getArtifacts(campaign_ids);
-    } catch (e) {
+    } catch (_e) {
         return new Map();
     }
 }

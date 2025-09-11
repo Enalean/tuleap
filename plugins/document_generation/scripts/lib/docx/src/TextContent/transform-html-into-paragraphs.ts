@@ -363,7 +363,7 @@ async function getImageRun(
 
     try {
         return [await loadImage(source_image)];
-    } catch (e) {
+    } catch (_e) {
         const alt_image = element.getAttribute("alt") ?? "";
         if (alt_image !== "") {
             return state.text_run_builder(alt_image, state.style);

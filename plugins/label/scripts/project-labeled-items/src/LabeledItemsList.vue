@@ -110,7 +110,7 @@ async function loadLabeledItems(): Promise<void> {
         items.value = items.value.concat(labeled_items);
 
         are_there_items_user_cannot_see_ref.value = are_there_items_user_cannot_see;
-    } catch (e) {
+    } catch (_e) {
         error.value = true;
     } finally {
         loading.value = false;

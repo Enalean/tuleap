@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 /* eslint-env node */
-module.exports = {
+import phpeggy from "phpeggy";
+
+export default {
     cache: true,
-    plugins: [require("phpeggy")],
+    plugins: [phpeggy],
     phpeggy: {
         parserNamespace: "Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar",
         parserClassName: "Parser",
