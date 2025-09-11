@@ -34,30 +34,36 @@
     </select>
 </template>
 
-<script>
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import { REPORT_ID } from "../../injection-symbols";
-import { useOverviewWidgetStore } from "../../store/index";
+import { useOverviewWidgetStore } from "../../store";
 
-export default {
-    name: "TimeTrackingOverviewProjectOption",
-    props: {
-        projects: Array,
-    },
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
-    },
-    mounted() {
-        this.getTrackers();
-    },
-    methods: {
-        getTrackers() {
-            let opt = this.$refs.select_project.options;
-            if (opt[opt.selectedIndex] && opt[opt.selectedIndex].value !== "") {
-                this.overview_store.getTrackers(opt[opt.selectedIndex].value);
-            }
-        },
-    },
-};
+const { $gettext } = useGettext();
+defineProps<{
+    projects: ProjectReference[];
+}>();
+
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+const select_project = ref<HTMLSelectElement | null>(null);
+
+onMounted(() => {
+    getTrackers();
+});
+
+function getTrackers() {
+    const options = select_project.value?.options;
+
+    if (!options) {
+        return;
+    }
+
+    if (options[options.selectedIndex] && options[options.selectedIndex].value !== "") {
+        overview_store.getTrackers(Number(options[options.selectedIndex].value));
+    }
+}
 </script>
