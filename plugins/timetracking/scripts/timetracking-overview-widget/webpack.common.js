@@ -35,7 +35,7 @@ const rule_vue_loader = {
 export default [
     {
         entry: {
-            "timetracking-overview": "./src/index.js",
+            "timetracking-overview": "./src/main.ts",
             "style-bp-overview": "./themes/style.scss",
         },
         context: __dirname,

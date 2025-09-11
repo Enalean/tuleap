@@ -72,7 +72,8 @@ watch(
 );
 
 const is_tracker_select_disabled = computed(() => overview_store.trackers.length === 0);
-function setSelected(event: Event) {
+
+function setSelected(event: Event): void {
     if (!(event.target instanceof HTMLSelectElement)) {
         return;
     }

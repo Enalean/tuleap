@@ -55,7 +55,7 @@ onMounted(() => {
     getTrackers();
 });
 
-function getTrackers() {
+function getTrackers(): void {
     const options = select_project.value?.options;
 
     if (!options) {

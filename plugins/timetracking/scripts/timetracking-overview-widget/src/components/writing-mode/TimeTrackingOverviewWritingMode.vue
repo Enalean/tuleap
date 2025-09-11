@@ -55,11 +55,11 @@ const { $gettext } = useGettext();
 
 const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
 
-function loadTimes() {
+function loadTimes(): void {
     overview_store.loadTimesWithNewParameters();
 }
 
-function switchToReadingMode() {
+function switchToReadingMode(): void {
     overview_store.initWidgetWithReport();
     overview_store.toggleReadingMode();
 }

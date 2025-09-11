@@ -45,7 +45,7 @@ import { useOverviewWidgetStore } from "../store";
 
 const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
 
-function setSelected(event: Event) {
+function setSelected(event: Event): void {
     if (!(event.target instanceof HTMLSelectElement)) {
         return;
     }

@@ -91,11 +91,11 @@ const is_tracker_available = computed(
     () => overview_store.trackers.length > 0 && !overview_store.is_loading_trackers,
 );
 
-function trackerSelected(value: string) {
+function trackerSelected(value: string): void {
     selected_tracker.value = value;
 }
 
-function addTracker() {
+function addTracker(): void {
     if (!selected_tracker.value) {
         return;
     }

@@ -25,7 +25,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
 import TimeTrackingOverview from "./TimeTrackingOverview.vue";
 
-const reportId = 8;
+const report_id = 8;
 const noop = (): void => {
     // Do nothing
 };
@@ -60,7 +60,7 @@ describe("Given a timetracking overview widget", () => {
 
         return shallowMount(TimeTrackingOverview, {
             global: getGlobalTestOptions(pinia),
-            props: { reportId, userId: 101, areVoidTrackersHidden: true },
+            props: { report_id: report_id, user_id: 101, are_void_trackers_hidden: true },
         });
     };
 
