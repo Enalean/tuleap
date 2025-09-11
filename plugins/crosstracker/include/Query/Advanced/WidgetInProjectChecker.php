@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 
 final readonly class WidgetInProjectChecker
 {
@@ -33,8 +34,11 @@ final readonly class WidgetInProjectChecker
 
     public function isWidgetInProjectDashboard(int $widget_id): bool
     {
-        $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
+        $widget_option = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
 
-        return $widget instanceof ProjectCrossTrackerWidget;
+        return $widget_option->match(
+            fn(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) => $widget instanceof ProjectCrossTrackerWidget,
+            fn() => false
+        );
     }
 }

@@ -68,25 +68,28 @@ class CrossTrackerSearchWidget extends Widget
 
         $is_admin = $this->permission_checker->isUserWidgetAdmin($user, $this->content_id);
 
-        $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($this->content_id);
-        if ($widget === null) {
-            throw new LogicException(sprintf('Widget #%d could not be found.', $this->content_id));
-        }
-
-        return $renderer->renderToString(
-            'cross-tracker-search-widget',
-            [
-                'widget_json_data' => encode(new CrossTrackerSearchWidgetPresenter(
-                    $this->content_id,
-                    $is_admin,
-                    $user,
-                    $widget->getDashboardType(),
-                    $this->getTitleAttributeValue(),
-                    $this->getTitle(),
-                    $widget->getDashboardId()
-                )),
-            ]
-        );
+        return $this->cross_tracker_widget_retriever->retrieveWidgetById($this->content_id)
+            ->match(
+                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($renderer, $is_admin, $user): string {
+                    return $renderer->renderToString(
+                        'cross-tracker-search-widget',
+                        [
+                            'widget_json_data' => encode(new CrossTrackerSearchWidgetPresenter(
+                                $this->content_id,
+                                $is_admin,
+                                $user,
+                                $widget->getDashboardType(),
+                                $this->getTitleAttributeValue(),
+                                $this->getTitle(),
+                                $widget->getDashboardId()
+                            )),
+                        ]
+                    );
+                },
+                function (): never {
+                    throw new LogicException(sprintf('Widget #%d could not be found.', $this->content_id));
+                }
+            );
     }
 
     #[\Override]

@@ -33,11 +33,15 @@ final readonly class WidgetPermissionChecker
 
     public function isUserWidgetAdmin(PFUser $user, int $widget_id): bool
     {
-        $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
-        if (! $widget) {
-            return false;
-        }
+        return $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)
+            ->match(
+                fn (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) => $this->hasWidgetAdminRights($widget, $user),
+                fn (): bool => false
+            );
+    }
 
+    private function hasWidgetAdminRights(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, PFUser $user): bool
+    {
         if ($widget instanceof UserCrossTrackerWidget) {
             return $widget->getUserId() === (int) $user->getId();
         }

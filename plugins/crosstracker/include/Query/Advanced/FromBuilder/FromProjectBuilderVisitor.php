@@ -24,10 +24,12 @@ namespace Tuleap\CrossTracker\Query\Advanced\FromBuilder;
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
+use PFUser;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Query\Advanced\AllowedFrom;
 use Tuleap\CrossTracker\Query\Advanced\InvalidFromProjectCollectorVisitor;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
@@ -106,11 +108,19 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
     {
         return $parameters->widget_id->match(
             function (int $widget_id): int {
-                $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
-                if ($widget === null || $widget instanceof UserCrossTrackerWidget) {
-                    throw new LogicException('Project id not found');
-                }
-                return $widget->getProjectId();
+                return $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)
+                    ->match(
+                        function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget): int {
+                            if ($widget instanceof UserCrossTrackerWidget) {
+                                throw new LogicException('Project id not found');
+                            }
+                            assert($widget instanceof ProjectCrossTrackerWidget);
+                            return $widget->getProjectId();
+                        },
+                        function (): never {
+                            throw new LogicException('Project or user id not found');
+                        }
+                    );
             },
             function (): never {
                 throw new LogicException('Could not find the project ID of a query not associated with a widget');
@@ -126,23 +136,38 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
         return $parameters->widget_id->match(
             /** @return list<int> */
             function (int $widget_id) use ($parameters): array {
-                $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id);
-
-                if ($widget === null || $widget instanceof UserCrossTrackerWidget) {
-                    throw new LogicException('Project id not found');
-                }
-                $project         = $this->project_factory->getValidProjectById($widget->getProjectId());
-                $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
-                assert($linked_projects instanceof CollectLinkedProjects);
-                return array_values(array_map(
-                    static fn(LinkedProject $project) => $project->id,
-                    $linked_projects->getChildrenProjects()->getProjects(),
-                ));
+                return $this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id)
+                    ->match(
+                        fn (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) => $this->getProjectIdsFromValidWidget($widget, $parameters->user),
+                        fn (): never => throw new LogicException('Project id not found')
+                    );
             },
             function (): never {
                 throw new LogicException('Could not find the aggregated projects of a query not associated with a widget');
             }
         );
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function getProjectIdsFromValidWidget(
+        ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget,
+        PFUser $user,
+    ): array {
+        if ($widget instanceof UserCrossTrackerWidget) {
+            throw new LogicException('Project id not found');
+        }
+
+        $project = $this->project_factory->getValidProjectById($widget->getProjectId());
+
+        $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $user));
+        assert($linked_projects instanceof CollectLinkedProjects);
+
+        return array_values(array_map(
+            static fn(LinkedProject $project) => $project->id,
+            $linked_projects->getChildrenProjects()->getProjects(),
+        ));
     }
 
     private function buildFromProjectCategoryEqual(string $category): IProvideParametrizedFromAndWhereSQLFragments

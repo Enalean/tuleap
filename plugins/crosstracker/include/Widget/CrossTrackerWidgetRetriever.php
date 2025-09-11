@@ -21,6 +21,8 @@
 
 namespace Tuleap\CrossTracker\Widget;
 
+use Tuleap\Option\Option;
+
 /**
  * psalm-immutable
  */
@@ -32,8 +34,11 @@ final class CrossTrackerWidgetRetriever implements RetrieveCrossTrackerWidget
         $this->cache = [];
     }
 
+    /**
+     * @return Option<ProjectCrossTrackerWidget>|Option<UserCrossTrackerWidget>
+     */
     #[\Override]
-    public function retrieveWidgetById(int $widget_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null
+    public function retrieveWidgetById(int $widget_id): Option
     {
         if (isset($this->cache[$widget_id])) {
             return $this->cache[$widget_id];

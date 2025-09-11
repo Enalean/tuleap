@@ -21,7 +21,12 @@
 
 namespace Tuleap\CrossTracker\Widget;
 
+use Tuleap\Option\Option;
+
 interface RetrieveCrossTrackerWidget
 {
-    public function retrieveWidgetById(int $widget_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null;
+    /**
+     * @return Option<ProjectCrossTrackerWidget>|Option<UserCrossTrackerWidget>
+     */
+    public function retrieveWidgetById(int $widget_id): Option;
 }
