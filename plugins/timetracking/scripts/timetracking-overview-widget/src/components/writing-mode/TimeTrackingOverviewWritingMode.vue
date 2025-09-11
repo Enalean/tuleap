@@ -42,33 +42,25 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { REPORT_ID } from "../../injection-symbols";
+import { useOverviewWidgetStore } from "../../store";
 import TimeTrackingOverviewWritingDates from "./TimeTrackingOverviewWritingDates.vue";
 import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
-import { useOverviewWidgetStore } from "../../store/index";
 
-export default {
-    name: "TimeTrackingOverviewWritingMode",
-    components: {
-        TimeTrackingOverviewWritingTrackers,
-        TimeTrackingOverviewWritingDates,
-        TimeTrackingOverviewTrackerList,
-    },
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
-    },
-    methods: {
-        loadTimes() {
-            this.overview_store.loadTimesWithNewParameters();
-        },
-        async switchToReadingMode() {
-            await this.overview_store.initWidgetWithReport();
-            this.overview_store.toggleReadingMode();
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+function loadTimes() {
+    overview_store.loadTimesWithNewParameters();
+}
+
+function switchToReadingMode() {
+    overview_store.initWidgetWithReport();
+    overview_store.toggleReadingMode();
+}
 </script>
