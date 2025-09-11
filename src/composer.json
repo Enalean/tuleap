@@ -113,7 +113,7 @@
   },
   "require-dev": {
     "colinodell/psr-testlogger": "^1.2",
-    "deptrac/deptrac": "^2.0",
+    "deptrac/deptrac": "^4.2",
     "mikey179/vfsstream": "^1.6",
     "php-http/mock-client": "^1.2",
     "php-standard-library/psalm-plugin": "^2.2",
