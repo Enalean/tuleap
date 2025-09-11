@@ -21,8 +21,9 @@ import { describe, beforeEach, it, expect, jest } from "@jest/globals";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { shallowMount } from "@vue/test-utils";
-import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
+import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
 
 const user = {
     user_name: "user_1",
@@ -30,13 +31,13 @@ const user = {
 };
 
 describe("Given a timetracking overview widget", () => {
-    let setSelectedUserId;
+    let setSelectedUserId: jest.Mock;
 
     beforeEach(() => {
         setSelectedUserId = jest.fn();
     });
 
-    const getWrapper = () => {
+    const getWrapper = (): VueWrapper => {
         const useStore = defineStore("overview/1", {
             state: () => ({
                 users: [user],

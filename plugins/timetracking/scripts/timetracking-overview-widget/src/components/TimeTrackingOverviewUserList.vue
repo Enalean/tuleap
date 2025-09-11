@@ -23,7 +23,6 @@
             <select
                 class="timetracking-overview-users-selector-input tlp-select tlp-select-small"
                 id="tracker"
-                ref="select"
                 v-on:input="setSelected"
                 data-test="timetracking-overview-users-selector"
             >
@@ -39,21 +38,18 @@
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { REPORT_ID } from "../injection-symbols";
-import { useOverviewWidgetStore } from "../store/index";
+import { useOverviewWidgetStore } from "../store";
 
-export default {
-    name: "TimeTrackingOverviewUserList",
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
-    },
-    methods: {
-        setSelected() {
-            this.overview_store.setSelectedUserId(Number.parseInt(this.$refs.select.value, 10));
-        },
-    },
-};
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+function setSelected(event: Event) {
+    if (!(event.target instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    overview_store.setSelectedUserId(Number.parseInt(event.target.value, 10));
+}
 </script>
