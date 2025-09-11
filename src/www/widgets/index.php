@@ -39,19 +39,26 @@ $widget_factory = new WidgetFactory(
     EventManager::instance()
 );
 
-$dao    = new DashboardWidgetDao($widget_factory);
-$router = new Router(
+$dao                              = new DashboardWidgetDao($widget_factory);
+$disabled_project_widgets_checker = new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao());
+$router                           = new Router(
     new PreferencesController(
         $dao,
         $widget_factory,
-        new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
+        $disabled_project_widgets_checker
     ),
     new AddWidgetController(
         $dao,
         $widget_factory,
-        new WidgetCreator(new DashboardWidgetDao($widget_factory)),
-        new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao()),
-        new ProjectHistoryDao(),
+        new \Tuleap\Dashboard\Widget\Add\WidgetAdder(
+            $dao,
+            $widget_factory,
+            new WidgetCreator(new DashboardWidgetDao($widget_factory)),
+            $disabled_project_widgets_checker,
+            new ProjectHistoryDao(),
+            ProjectManager::instance(),
+        ),
+        $disabled_project_widgets_checker,
     ),
     $widget_factory
 );

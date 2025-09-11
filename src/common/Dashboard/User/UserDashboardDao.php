@@ -51,7 +51,7 @@ class UserDashboardDao extends DataAccessObject
 
     /**
      * @param $name
-     * @return bool
+     * @return int|false
      */
     public function save(PFUser $user, $name)
     {
@@ -62,18 +62,6 @@ class UserDashboardDao extends DataAccessObject
                 VALUES ($user_id, $name)";
 
         return $this->updateAndGetLastId($sql);
-    }
-
-    public function searchByUserIdAndName(PFUser $user, $name)
-    {
-        $user_id = $this->da->escapeInt($user->getId());
-        $name    = $this->da->quoteSmart($name);
-
-        $sql = "SELECT *
-                FROM user_dashboards
-                WHERE user_id=$user_id AND name=$name";
-
-        return $this->retrieve($sql);
     }
 
     public function delete($user_id, $dashboard_id)

@@ -43,6 +43,7 @@ use Tuleap\Token\REST\TokenRepresentation;
 use Tuleap\Token\REST\v1\TokenResource;
 use Tuleap\User\AccessKey\REST\AccessKeyResource;
 use Tuleap\User\REST\UserRepresentation;
+use Tuleap\User\REST\v1\UserDashboardsResource;
 use Tuleap\User\REST\v1\UserMembershipRepresentation;
 use Tuleap\User\REST\v1\UserMembershipResource;
 use Tuleap\User\REST\v1\UserResource;
@@ -58,6 +59,7 @@ class ResourcesInjector
         $restler->addAPIClass(TokenResource::class, TokenRepresentation::ROUTE);
         $restler->addAPIClass(UserGroupResource::class, UserGroupRepresentation::ROUTE);
         $restler->addAPIClass(UserResource::class, UserRepresentation::ROUTE);
+        $restler->addAPIClass(UserDashboardsResource::class, UserDashboardsResource::ROUTE);
         $restler->addAPIClass(UserMembershipResource::class, UserMembershipRepresentation::ROUTE);
         $restler->addAPIClass(ProjectFieldsResource::class, ProjectFieldRepresentation::ROUTE);
         $restler->addAPIClass(PhpWikiResource::class, PhpWikiPageRepresentation::ROUTE);

@@ -28,6 +28,8 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Project\ProjectDashboardVisitRetriever;
 use Tuleap\Dashboard\Project\RecentlyVisitedProjectDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Project\CachedProjectAccessChecker;
@@ -419,6 +421,80 @@ class UserResource extends AuthenticatedResource
             $user_groups[]             = $user_group_representation;
         }
         return $user_groups;
+    }
+
+    /**
+     * @url OPTIONS {id}/dashboards
+     *
+     * @param string $id Id of the user
+     *
+     * @access public
+     */
+    public function optionDashboards(string $id): void
+    {
+        Header::allowOptionsGetPost();
+    }
+
+    /**
+     * Get dashboards
+     *
+     * Get all dashboards of a user
+     *
+     * The user ID can be either:
+     * <ul>
+     *   <li>an integer value to get this specific user information</li>
+     *   <li>the "self" value to get our own user information</li>
+     * </ul>
+     *
+     * <p>Note: Only "self" is allowed</p>
+     *
+     * @url GET {id}/dashboards
+     *
+     * @access hybrid
+     *
+     * @param string $id Id of the user
+     * @param int $limit Number of dashboards displayed per page {@from query}{@min 1}{@max 50}
+     * @param int $offset Position of the first dashboard to display {@from query}{@min 0}
+     *
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 400
+     *
+     * @return array list of dashboards {@type DashboardRepresentation}
+     * @psalm-return DashboardRepresentation[]
+     */
+    public function getDashboards(string $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $this->checkAccess();
+
+        $id = $this->getUserIDFromIDOrSelf($id);
+
+        $current_user = $this->user_manager->getCurrentUser();
+
+        if ($id !== (int) $current_user->getId()) {
+            throw new RestException(403, 'You can only access to your own dashboards');
+        }
+
+        $handler = new GetDashboardHandler(
+            new UserDashboardRetriever(
+                new UserDashboardDao(
+                    new DashboardWidgetDao(
+                        new WidgetFactory(
+                            UserManager::instance(),
+                            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                            \EventManager::instance()
+                        )
+                    )
+                )
+            )
+        );
+
+        $collection = $handler->handle($current_user, $limit, $offset);
+
+        Header::sendPaginationHeaders($limit, $offset, $collection->total_size, self::MAX_LIMIT);
+
+        return $collection->dashoards;
     }
 
     /**

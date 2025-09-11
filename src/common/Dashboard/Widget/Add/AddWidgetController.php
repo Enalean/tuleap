@@ -22,27 +22,22 @@ namespace Tuleap\Dashboard\Widget\Add;
 
 use CSRFSynchronizerToken;
 use DataAccessException;
-use Exception;
 use Feedback;
 use HTTPRequest;
-use ProjectHistoryDao;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Widget\WidgetCreator;
-use Tuleap\Dashboard\Widget\WidgetProjectAdminActionsHistoryEntry;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Widget\WidgetFactory;
-use Widget;
 
 class AddWidgetController
 {
     public function __construct(
         private readonly DashboardWidgetDao $dao,
         private readonly WidgetFactory $factory,
-        private readonly WidgetCreator $creator,
+        private readonly WidgetAdder $adder,
         private readonly DisabledProjectWidgetsChecker $disabled_project_widgets_checker,
-        private readonly ProjectHistoryDao $history_dao,
     ) {
     }
 
@@ -68,70 +63,29 @@ class AddWidgetController
 
         $this->checkCSRF($dashboard_type);
 
-        try {
-            $this->checkThatDashboardBelongsToTheOwner($request, $dashboard_type, $dashboard_id);
-            $widget = $this->factory->getInstanceByWidgetName($name);
-
-            if ($this->disabled_project_widgets_checker->isWidgetDisabled($widget, $dashboard_type) === true) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    _('The widget is disabled in project dashboard.')
-                );
-                $this->redirectToDashboard($request, $dashboard_id, $dashboard_type);
-                exit();
-            }
-
-            if (! $widget->isUnique() || ! $this->isUniqueWidgetAlreadyAddedInDashboard($widget, $dashboard_id, $dashboard_type)) {
-                $this->creator->create(
-                    $this->getOwnerIdByDashboardType($request, $dashboard_type),
-                    $this->factory->getOwnerTypeByDashboardType($dashboard_type),
-                    $dashboard_id,
-                    $widget,
-                    $request
-                );
-
-                if ($dashboard_type === ProjectDashboardController::DASHBOARD_TYPE) {
-                    $this->history_dao->addHistory(
-                        $request->getProject(),
-                        $request->getCurrentUser(),
-                        new \DateTimeImmutable(),
-                        WidgetProjectAdminActionsHistoryEntry::AddWidget->value,
-                        $name,
-                        [],
+        $owner_id = $this->getOwnerIdByDashboardType($request, $dashboard_type);
+        $this->adder->add($request->getCurrentUser(), $owner_id, $dashboard_type, $dashboard_id, $name, $request)
+            ->match(
+                function () {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        _('The widget has been added successfully')
+                    );
+                },
+                function (Fault $fault) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        match ($fault::class) {
+                            WidgetDisabledInDashboardFault::class => _('The widget is disabled in project dashboard.'),
+                            AlreadyUsedWidgetFault::class => _('The widget is already used'),
+                            UnableToInstantiateWidgetFault::class,
+                            ErrorAddingWidgetFault::class => _('An error occurred while trying to add the widget to the dashboard'),
+                            default => (string) $fault
+                        }
                     );
                 }
-
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    _('The widget has been added successfully')
-                );
-            } else {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    _('The widget is already used')
-                );
-            }
-        } catch (Exception $exception) {
-            if ($exception->getMessage()) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    $exception->getMessage()
-                );
-            } else {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    _('An error occurred while trying to add the widget to the dashboard')
-                );
-            }
-        }
+            );
         $this->redirectToDashboard($request, $dashboard_id, $dashboard_type);
-    }
-
-    private function isUniqueWidgetAlreadyAddedInDashboard(Widget $widget, $dashboard_id, $dashboard_type)
-    {
-        $used_widgets = $this->getUsedWidgets($dashboard_id, $dashboard_type);
-
-        return $widget->isUnique() && in_array($widget->getId(), $used_widgets);
     }
 
     private function displayWidgetEntries(
@@ -237,18 +191,6 @@ class AddWidgetController
             $owner_id = $request->getProject()->getID();
         }
         return $owner_id;
-    }
-
-    /**
-     * @param $dashboard_type
-     * @return string
-     */
-    private function getOwnerTypeByDashboardType($dashboard_type)
-    {
-        $owner_type = $dashboard_type === UserDashboardController::DASHBOARD_TYPE ?
-            UserDashboardController::LEGACY_DASHBOARD_TYPE :
-            ProjectDashboardController::LEGACY_DASHBOARD_TYPE;
-        return $owner_type;
     }
 
     /**
