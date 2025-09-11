@@ -18,18 +18,19 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import ServiceIsUsed from "./ServiceIsUsed.vue";
 import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 
 describe(`ServiceIsUsed`, () => {
-    let service_is_used, service_activation_disabled_message;
+    let service_is_used: boolean, service_activation_disabled_message: string;
 
     beforeEach(() => {
         service_is_used = true;
         service_activation_disabled_message = "";
     });
 
-    const getWrapper = () => {
+    const getWrapper = (): VueWrapper => {
         const props = {
             id: "project-service-example",
             is_used: service_is_used,
