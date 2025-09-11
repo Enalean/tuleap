@@ -24,7 +24,7 @@
 import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
 import { setActivePinia, createPinia } from "pinia";
 import { Fault } from "@tuleap/fault";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { ProjectReference, ProjectResponse } from "@tuleap/core-rest-api-types";
 import type { TrackerWithTimes } from "@tuleap/plugin-timetracking-rest-api-types";
 import { useOverviewWidgetTestStore } from "../../tests/helpers/pinia-test-store";
 import type { OverviewWidgetStoreInstance } from "../../tests/helpers/pinia-test-store";
@@ -61,7 +61,7 @@ describe("Getters Timetracking Overview", (): void => {
                 {
                     id: 16,
                     label: "tracker",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {
@@ -74,7 +74,7 @@ describe("Getters Timetracking Overview", (): void => {
                 {
                     id: 18,
                     label: "tracker 2",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {
@@ -95,7 +95,7 @@ describe("Getters Timetracking Overview", (): void => {
                 {
                     id: 16,
                     label: "tracker",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {
@@ -108,7 +108,7 @@ describe("Getters Timetracking Overview", (): void => {
                 {
                     id: 18,
                     label: "tracker 2",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {
@@ -127,7 +127,7 @@ describe("Getters Timetracking Overview", (): void => {
             const tracker: TrackerWithTimes = {
                 id: 16,
                 label: "tracker",
-                project: {} as ProjectReference,
+                project: {} as ProjectReference & ProjectResponse,
                 uri: "",
                 time_per_user: [
                     {
@@ -145,7 +145,7 @@ describe("Getters Timetracking Overview", (): void => {
             const tracker: TrackerWithTimes = {
                 id: 16,
                 label: "tracker",
-                project: {} as ProjectReference,
+                project: {} as ProjectReference & ProjectResponse,
                 uri: "",
                 time_per_user: [
                     {
@@ -163,7 +163,7 @@ describe("Getters Timetracking Overview", (): void => {
             const tracker: TrackerWithTimes = {
                 id: 16,
                 label: "tracker",
-                project: {} as ProjectReference,
+                project: {} as ProjectReference & ProjectResponse,
                 uri: "",
                 time_per_user: [
                     {
@@ -182,7 +182,7 @@ describe("Getters Timetracking Overview", (): void => {
                 {
                     id: 16,
                     label: "tracker",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {
@@ -195,7 +195,7 @@ describe("Getters Timetracking Overview", (): void => {
                 {
                     id: 18,
                     label: "tracker 2",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {
@@ -215,7 +215,7 @@ describe("Getters Timetracking Overview", (): void => {
                 {
                     id: 16,
                     label: "tracker",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {
@@ -228,7 +228,7 @@ describe("Getters Timetracking Overview", (): void => {
                 {
                     id: 18,
                     label: "tracker 2",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {

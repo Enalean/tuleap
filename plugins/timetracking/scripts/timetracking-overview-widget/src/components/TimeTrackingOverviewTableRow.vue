@@ -33,33 +33,25 @@
     </tr>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { TrackerWithTimes } from "@tuleap/plugin-timetracking-rest-api-types";
 import { REPORT_ID } from "../injection-symbols";
-import { useOverviewWidgetStore } from "../store/index";
+import { useOverviewWidgetStore } from "../store";
 
-export default {
-    name: "TimeTrackingOverviewTableRow",
-    props: {
-        time: Object,
-    },
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
-    },
-    computed: {
-        html_url() {
-            return "/plugins/tracker/?tracker=" + this.time.id;
-        },
-        link_to_project_homepage() {
-            return "/projects/" + this.time.project.shortname;
-        },
-        display_void_trackers() {
-            return !(
-                this.overview_store.are_void_trackers_hidden &&
-                this.overview_store.is_tracker_total_sum_equals_zero(this.time.time_per_user)
-            );
-        },
-    },
-};
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+const props = defineProps<{
+    time: TrackerWithTimes;
+}>();
+
+const html_url = computed(() => "/plugins/tracker/?tracker=" + props.time.id);
+const link_to_project_homepage = computed(() => "/projects/" + props.time.project.shortname);
+const display_void_trackers = computed(() => {
+    return !(
+        overview_store.are_void_trackers_hidden &&
+        overview_store.is_tracker_total_sum_equals_zero(props.time.time_per_user)
+    );
+});
 </script>

@@ -24,7 +24,7 @@
 import { describe, beforeEach, afterEach, it, expect } from "@jest/globals";
 import { setActivePinia, createPinia } from "pinia";
 import { Fault } from "@tuleap/fault";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { ProjectReference, ProjectResponse } from "@tuleap/core-rest-api-types";
 import type {
     OverviewReportTracker,
     TrackerWithTimes,
@@ -68,7 +68,7 @@ describe("Store mutations", (): void => {
                 {
                     id: 16,
                     label: "tracker",
-                    project: {} as ProjectReference,
+                    project: {} as ProjectReference & ProjectResponse,
                     uri: "",
                     time_per_user: [
                         {

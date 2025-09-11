@@ -18,6 +18,7 @@
  */
 
 import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 
 export type OverviewReportTracker = Pick<TrackerResponseNoInstance, "id" | "label" | "project"> & {
     readonly uri: string;
@@ -38,4 +39,5 @@ export type UserTotalTrackerTimes = {
 
 export type TrackerWithTimes = OverviewReportTracker & {
     readonly time_per_user: UserTotalTrackerTimes[];
+    readonly project: ProjectResponse;
 };
