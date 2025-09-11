@@ -50,10 +50,10 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactContentUpdaterTest extends TestCase
 {
-    private const ARTIFACT_ID    = 123;
-    private const TITLE_ID       = 1001;
-    private const DESCRIPTION_ID = 1002;
-    private const FILES_ID       = 1002;
+    private const int ARTIFACT_ID    = 123;
+    private const int TITLE_ID       = 1001;
+    private const int DESCRIPTION_ID = 1002;
+    private const int FILES_ID       = 1002;
 
     private SectionIdentifier $section_identifier;
     private PFUser $user;

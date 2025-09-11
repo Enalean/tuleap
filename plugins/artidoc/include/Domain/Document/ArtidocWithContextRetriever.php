@@ -28,8 +28,8 @@ use Tuleap\NeverThrow\Ok;
 
 final class ArtidocWithContextRetriever implements RetrieveArtidocWithContext
 {
-    private const USER_CAN_READ  = 'user-can-read';
-    private const USER_CAN_WRITE = 'user-can-write';
+    private const string USER_CAN_READ  = 'user-can-read';
+    private const string USER_CAN_WRITE = 'user-can-write';
 
     public function __construct(
         private RetrieveArtidoc $artidoc_retriever,

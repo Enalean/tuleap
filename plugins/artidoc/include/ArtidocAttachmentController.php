@@ -47,7 +47,7 @@ use Tuleap\Tus\Identifier\InvalidFileIdentifierStringException;
 
 final class ArtidocAttachmentController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    public const ROUTE_PREFIX = '/artidoc/attachments';
+    public const string ROUTE_PREFIX = '/artidoc/attachments';
 
     public function __construct(
         private readonly RetrieveArtidocWithContext $retrieve_artidoc,

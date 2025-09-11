@@ -38,9 +38,9 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
 {
-    private const ITEM_ID_1 = 123;
-    private const ITEM_ID_2 = 124;
-    private const ITEM_ID_3 = 125;
+    private const int ITEM_ID_1 = 123;
+    private const int ITEM_ID_2 = 124;
+    private const int ITEM_ID_3 = 125;
 
     private SectionIdentifier $section_in_item_1_id;
     private SectionIdentifier $section_in_item_2_id;

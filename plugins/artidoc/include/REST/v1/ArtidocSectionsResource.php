@@ -165,7 +165,7 @@ use WrapperLogger;
 
 final class ArtidocSectionsResource extends AuthenticatedResource
 {
-    public const ROUTE = 'artidoc_sections';
+    public const string ROUTE = 'artidoc_sections';
 
     /**
      * @url OPTIONS {id}

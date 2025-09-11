@@ -1431,44 +1431,6 @@
       <code><![CDATA[$stat['uid']]]></code>
     </PossiblyInvalidArrayAccess>
   </file>
-  <file src="plugins/artidoc/include/Adapter/Document/ArtidocDocument.php">
-    <MissingClassConstType>
-      <code><![CDATA[TYPE = 'artidoc']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/artidoc/include/Document/ArtidocBreadcrumbsProvider.php">
-    <InvalidOperand>
-      <code><![CDATA[$parent->getId()]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="plugins/artidoc/include/Upload/Section/File/Tus/FileBeingUploadedInformationProvider.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[file_exists($path) ? filesize($path) : 0]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[int]]></code>
-    </InvalidFalsableReturnType>
-  </file>
-  <file src="plugins/artidoc/tests/unit/Upload/Section/File/Tus/ArtidocFileBeingUploadedWriterTest.php">
-    <PossiblyFalseArgument>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-      <code><![CDATA[$input_stream]]></code>
-    </PossiblyFalseArgument>
-  </file>
   <file src="plugins/baseline/include/Adapter/Administration/AdminPermissionsPresenterBuilder.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getUserGroupsPresenter($administrators_ugroup_id, $project)]]></code>

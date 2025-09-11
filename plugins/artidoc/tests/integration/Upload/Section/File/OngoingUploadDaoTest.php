@@ -34,7 +34,7 @@ use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OngoingUploadDaoTest extends TestIntegrationTestCase
 {
-    private const USER_ID = 101;
+    private const int USER_ID = 101;
 
     public function testSave(): void
     {

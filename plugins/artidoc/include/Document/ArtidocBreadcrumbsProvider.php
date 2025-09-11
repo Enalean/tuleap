@@ -37,7 +37,7 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 final readonly class ArtidocBreadcrumbsProvider
 {
-    private const MAX_NB_ITEMS = 5;
+    private const int MAX_NB_ITEMS = 5;
 
     public function __construct(private Docman_ItemFactory $item_factory)
     {
@@ -123,10 +123,15 @@ final readonly class ArtidocBreadcrumbsProvider
                     break;
                 }
 
+                $item_id = $parent->getId();
+                if ($item_id === null) {
+                    break;
+                }
+
                 $hierarchy[] = new BreadCrumb(
                     new BreadCrumbLink(
                         $parent->getTitle(),
-                        $service->getUrl() . 'folder/' . $parent->getId(),
+                        $service->getUrl() . 'folder/' . $item_id,
                     ),
                 );
 

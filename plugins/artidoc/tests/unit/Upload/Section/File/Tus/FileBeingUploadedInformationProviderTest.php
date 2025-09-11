@@ -39,7 +39,7 @@ use Tuleap\Tus\Identifier\UUIDFileIdentifierFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileBeingUploadedInformationProviderTest extends TestCase
 {
-    private const ARTIDOC_ID = 123;
+    private const int ARTIDOC_ID = 123;
 
     public function testFileInformationCanBeProvided(): void
     {

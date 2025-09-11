@@ -42,13 +42,12 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SectionCreatorTest extends TestCase
 {
-    public const DUMMY_SECTION_ID   = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b5';
-    public const ANOTHER_SECTION_ID = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b6';
-    public const NEW_SECTION_ID     = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b7';
+    private const string ANOTHER_SECTION_ID = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b6';
+    private const string NEW_SECTION_ID     = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b7';
 
-    private const PROJECT_ID = 101;
+    private const int PROJECT_ID = 101;
 
-    private const IMPORT_ARTIFACT_ID = 102;
+    private const int IMPORT_ARTIFACT_ID = 102;
 
     private SectionIdentifierFactory $identifier_factory;
 

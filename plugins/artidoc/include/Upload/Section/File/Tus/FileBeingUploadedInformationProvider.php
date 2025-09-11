@@ -97,6 +97,15 @@ final readonly class FileBeingUploadedInformationProvider implements TusFileInfo
 
         $path = $path_allocator->getPathForItemBeingUploaded($file_information);
 
-        return file_exists($path) ? filesize($path) : 0;
+        if (! file_exists($path)) {
+            return 0;
+        }
+
+        $filesize = filesize($path);
+        if ($filesize === false) {
+            return 0;
+        }
+
+        return $filesize;
     }
 }

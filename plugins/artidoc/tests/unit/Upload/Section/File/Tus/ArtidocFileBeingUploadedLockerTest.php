@@ -37,7 +37,7 @@ final class ArtidocFileBeingUploadedLockerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const ARTIDOC_ID = 123;
+    private const int ARTIDOC_ID = 123;
 
     private string $data_dir;
 

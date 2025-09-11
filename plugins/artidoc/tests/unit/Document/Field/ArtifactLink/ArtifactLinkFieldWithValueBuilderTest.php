@@ -65,9 +65,9 @@ use Tuleap\Tracker\Tracker;
 #[DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
 {
-    private const PROJECT_ID   = 640;
-    private const PROJECT_ICON = '🛰️';
-    private const PROJECT_NAME = 'Parabema retransit';
+    private const int PROJECT_ID      = 640;
+    private const string PROJECT_ICON = '🛰️';
+    private const string PROJECT_NAME = 'Parabema retransit';
 
     #[\Override]
     protected function tearDown(): void

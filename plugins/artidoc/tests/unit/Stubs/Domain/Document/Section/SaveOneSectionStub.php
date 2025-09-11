@@ -45,8 +45,8 @@ final class SaveOneSectionStub implements SaveOneSection
      */
     private array $saved_end = [];
 
-    private const EXCEPTION_ALREADY_EXISTING_ARTIFACT = 'already-existing-artifact';
-    private const EXCEPTION_NO_SIBLING_SECTION        = 'no-sibling-SECTION';
+    private const string EXCEPTION_ALREADY_EXISTING_ARTIFACT = 'already-existing-artifact';
+    private const string EXCEPTION_NO_SIBLING_SECTION        = 'no-sibling-SECTION';
 
     /**
      * @param-param self::EXCEPTION_*|SectionIdentifierFactory $identifier_factory
