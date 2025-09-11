@@ -25,7 +25,7 @@ use std::time::Instant;
 use wasmtime::*;
 use wasmtime_wasi::p2::pipe::{MemoryInputPipe, MemoryOutputPipe};
 use wasmtime_wasi::preview1::WasiP1Ctx;
-use wasmtime_wasi::p2::WasiCtxBuilder;
+use wasmtime_wasi::WasiCtxBuilder;
 use wasmtime_wasi::{DirPerms, FilePerms};
 use wire::{
     ExecConfig, InternalErrorJson, Limitations, MountPoint, Stats, SuccessResponseJson,
