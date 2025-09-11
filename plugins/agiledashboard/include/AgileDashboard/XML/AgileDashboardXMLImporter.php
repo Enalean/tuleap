@@ -11,20 +11,25 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\XML;
+
+use AgileDashboard_XMLImporterInvalidTrackerMappingsException;
+use PlanningParameters;
+use SimpleXMLElement;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
 use Tuleap\AgileDashboard\Planning\XML\XMLPlanning;
 
 /**
  * Transforms imported xml into php values
  */
-class AgileDashboard_XMLImporter
+class AgileDashboardXMLImporter
 {
     /**
      *
@@ -36,10 +41,9 @@ class AgileDashboard_XMLImporter
      *    )
      *   where the keys are XML tracker IDs and the values are existing tracker IDs
      *
-     * @return array
      * @throw AgileDashboard_XMLImporterInvalidTrackerMappingsException
      */
-    public function toArray(SimpleXMLElement $xml_object, array $tracker_mappings)
+    public function toArray(SimpleXMLElement $xml_object, array $tracker_mappings): array
     {
         $plannings_node_name             = XMLExporter::NODE_PLANNINGS;
         $plannings                       = [];
@@ -58,9 +62,9 @@ class AgileDashboard_XMLImporter
             );
 
             $planning_parameters = [
-                PlanningParameters::NAME                => (string) $attributes[PlanningParameters::NAME],
-                PlanningParameters::BACKLOG_TITLE       => (string) $attributes[PlanningParameters::BACKLOG_TITLE],
-                PlanningParameters::PLANNING_TITLE      => (string) $attributes[PlanningParameters::PLANNING_TITLE],
+                PlanningParameters::NAME => (string) $attributes[PlanningParameters::NAME],
+                PlanningParameters::BACKLOG_TITLE => (string) $attributes[PlanningParameters::BACKLOG_TITLE],
+                PlanningParameters::PLANNING_TITLE => (string) $attributes[PlanningParameters::PLANNING_TITLE],
                 PlanningParameters::PLANNING_TRACKER_ID => (string) $planning_tracker_id,
                 PlanningParameters::BACKLOG_TRACKER_IDS => $this->toArrayBacklogIds($planning, $tracker_mappings),
             ];
@@ -75,7 +79,7 @@ class AgileDashboard_XMLImporter
         return $plannings;
     }
 
-    private function toArrayBacklogIds(SimpleXMLElement $planning_node, array $tracker_mappings)
+    private function toArrayBacklogIds(SimpleXMLElement $planning_node, array $tracker_mappings): array
     {
         $backlog_tracker_ids = [];
         foreach ($planning_node->{XMLPlanning::NODE_BACKLOGS}->children() as $backlog) {
@@ -87,7 +91,7 @@ class AgileDashboard_XMLImporter
         return $backlog_tracker_ids;
     }
 
-    private function toArrayPermissions(SimpleXMLElement $planning_node)
+    private function toArrayPermissions(SimpleXMLElement $planning_node): array
     {
         $permissions = [];
 
@@ -111,12 +115,7 @@ class AgileDashboard_XMLImporter
         return $permissions;
     }
 
-    /**
-     *
-     * @param int $tracker_id
-     * @return int
-     */
-    private function getTrackerIdFromMappings($tracker_id, array $tracker_mappings)
+    private function getTrackerIdFromMappings($tracker_id, array $tracker_mappings): int
     {
         if (! isset($tracker_mappings[$tracker_id])) {
             throw new AgileDashboard_XMLImporterInvalidTrackerMappingsException('Missing data for key: ' . $tracker_id);
