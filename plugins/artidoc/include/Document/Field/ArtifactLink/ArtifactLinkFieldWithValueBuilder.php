@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Document\Field\ArtifactLink;
 
 use PFUser;
 use Tracker_Artifact_ChangesetValue_List;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
@@ -122,7 +123,12 @@ final readonly class ArtifactLinkFieldWithValueBuilder
         }
 
         $value = $artifact->getLastChangeset()?->getValue($title_field);
-        return $value?->getValue() ?? '';
+
+        if ($value === null) {
+            return '';
+        }
+        assert($value instanceof Tracker_Artifact_ChangesetValue_Text);
+        return $value->getContentAsText();
     }
 
     /**
