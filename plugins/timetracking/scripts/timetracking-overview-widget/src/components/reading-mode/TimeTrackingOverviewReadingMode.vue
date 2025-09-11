@@ -59,28 +59,23 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { REPORT_ID } from "../../injection-symbols";
+import { useOverviewWidgetStore } from "../../store";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
 import TimeTrackingOverviewReadingDates from "./TimeTrackingOverviewReadingDates.vue";
-import { useOverviewWidgetStore } from "../../store/index";
 
-export default {
-    name: "TimeTrackingOverviewReadingMode",
-    components: { TimeTrackingOverviewTrackerList, TimeTrackingOverviewReadingDates },
-    setup: () => {
-        const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
-        return { overview_store };
-    },
-    methods: {
-        saveReport() {
-            this.overview_store.saveReport(this.$gettext("Report has been successfully saved"));
-        },
-        discardReport() {
-            this.overview_store.initWidgetWithReport();
-            this.overview_store.setIsReportSave(true);
-        },
-    },
-};
+const { $gettext } = useGettext();
+const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
+
+function saveReport() {
+    overview_store.saveReport($gettext("Report has been successfully saved"));
+}
+
+function discardReport() {
+    overview_store.initWidgetWithReport();
+    overview_store.setIsReportSave(true);
+}
 </script>
