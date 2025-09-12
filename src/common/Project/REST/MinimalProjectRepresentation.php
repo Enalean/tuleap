@@ -52,6 +52,11 @@ class MinimalProjectRepresentation
     /**
      * @var string
      */
+    public $label_without_icon;
+
+    /**
+     * @var string
+     */
     public $shortname;
 
     /**
@@ -77,6 +82,8 @@ class MinimalProjectRepresentation
         $this->label  = $project_icon
             ? $project_icon . ' ' . $project->getPublicName()
             : $project->getPublicName();
+
+        $this->label_without_icon = $project->getPublicName();
 
         $this->shortname   = $project->getUnixName();
         $this->status      = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(

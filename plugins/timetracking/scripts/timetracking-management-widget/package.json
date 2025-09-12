@@ -14,10 +14,11 @@
     "@tuleap/plugin-timetracking-predefined-time-periods": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:^",
     "@tuleap/tlp-date-picker": "workspace:^",
+    "@tuleap/tlp-modal": "workspace:^",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "neverthrow": "6.0.0",
-    "vue": "^3.4.38",
+    "vue": "^3.5.21",
     "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {

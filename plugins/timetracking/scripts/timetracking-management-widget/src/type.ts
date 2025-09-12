@@ -18,7 +18,7 @@
  */
 
 import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
-import type { User, ProjectReference } from "@tuleap/core-rest-api-types";
+import type { User, ProjectResponse } from "@tuleap/core-rest-api-types";
 
 export type Query = {
     start_date: string;
@@ -28,7 +28,7 @@ export type Query = {
 };
 
 interface TimesSpentInProject {
-    readonly project: ProjectReference;
+    readonly project: ProjectResponse;
     readonly minutes: number;
 }
 

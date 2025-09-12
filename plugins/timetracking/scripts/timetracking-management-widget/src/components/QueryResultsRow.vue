@@ -29,22 +29,38 @@
                 </a>
             </div>
         </td>
-        <td class="tlp-table-cell-numeric" data-test="times">{{ hours }}:{{ minutes }}</td>
-        <td></td>
+        <td class="tlp-table-cell-numeric" data-test="times">{{ formatMinutes(minutes) }}</td>
+        <td class="tlp-table-cell-actions">
+            <button
+                type="button"
+                class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                ref="button"
+                v-on:click="open(user_times)"
+            >
+                <i class="tlp-button-icon fa-solid fa-list" aria-hidden="true"></i>
+                {{ $gettext("Details") }}
+            </button>
+        </td>
     </tr>
 </template>
 
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { computed } from "vue";
 import type { UserTimes } from "../type";
+import { formatMinutes } from "@tuleap/plugin-timetracking-time-formatters";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { OPEN_MODAL_DETAILS } from "../injection-symbols";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     user_times: UserTimes;
 }>();
 
-const times = computed(() => props.user_times.times.reduce((sum, time) => sum + time.minutes, 0));
-const hours = computed(() => Math.floor(times.value / 60));
-const minutes = computed(() => String(times.value % 60).padStart(2, "0"));
+const minutes = computed(() => props.user_times.times.reduce((sum, time) => sum + time.minutes, 0));
+
+const open = strictInject(OPEN_MODAL_DETAILS);
 </script>
 
 <style lang="scss" scoped>

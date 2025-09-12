@@ -20,13 +20,15 @@
 import { shallowMount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 import QueryResultsRow from "./QueryResultsRow.vue";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import { OPEN_MODAL_DETAILS } from "../injection-symbols";
 
 describe("QueryResultsRow", () => {
     it.each([
-        [[0], "0:00"],
-        [[1], "0:01"],
-        [[61], "1:01"],
+        [[0], "00:00"],
+        [[1], "00:01"],
+        [[61], "01:01"],
         [[4200, 86], "71:26"],
     ])(
         "when we have the following minutes %s then we should sum them and display %s",
@@ -37,10 +39,11 @@ describe("QueryResultsRow", () => {
                 display_name: "Alice Hernandez (alice.hernandez)",
                 avatar_url: "/avatar-ea78.png",
             };
-            const project: ProjectReference = {
+            const project: ProjectResponse = {
                 id: 1,
+                shortname: "acme-project",
                 label: "acme-project",
-                icon: "",
+                label_without_icon: "acme-project",
                 uri: "/project/1",
             };
 
@@ -52,6 +55,12 @@ describe("QueryResultsRow", () => {
                             project,
                             minutes,
                         })),
+                    },
+                },
+                global: {
+                    ...getGlobalTestOptions(),
+                    provide: {
+                        [OPEN_MODAL_DETAILS.valueOf()]: () => {},
                     },
                 },
             });

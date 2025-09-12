@@ -270,11 +270,13 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
         }
 
         > thead > tr > th:first-child,
+        > tfoot > tr > th:first-child,
         > tbody > tr > td:first-child {
             padding-left: var(--tlp-medium-spacing);
         }
 
         > thead > tr > th:last-child,
+        > tfoot > tr > th:last-child,
         > tbody > tr > td:last-child {
             padding-right: var(--tlp-medium-spacing);
         }
@@ -289,6 +291,7 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
             }
         }
 
+        > tfoot > tr:last-child,
         > tbody > tr:last-child {
             > td:first-child {
                 border-bottom-left-radius: var(--tlp-large-radius);

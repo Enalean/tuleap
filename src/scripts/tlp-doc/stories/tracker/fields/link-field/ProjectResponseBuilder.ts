@@ -40,6 +40,7 @@ export class ProjectResponseBuilder {
         return {
             id: this.#project_id,
             label: this.#label,
+            label_without_icon: "Sleepy Dog",
             shortname: "sleepy-dog",
             uri: `projects/${this.#project_id}`,
         };

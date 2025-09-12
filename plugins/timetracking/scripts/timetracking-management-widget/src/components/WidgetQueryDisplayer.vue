@@ -20,11 +20,11 @@
 <template>
     <div class="timetracking-management-query-displayer">
         <div class="timetracking-management-query-displayer-dates">
-            <div>
+            <div class="tlp-property">
                 <label class="tlp-label">{{ $gettext("From") }}</label>
                 <span data-test="start-date">{{ query.start_date }}</span>
             </div>
-            <div>
+            <div class="tlp-property">
                 <label class="tlp-label">{{ $gettext("To") }}</label>
                 <span data-test="end-date">{{ query.end_date }}</span>
             </div>
