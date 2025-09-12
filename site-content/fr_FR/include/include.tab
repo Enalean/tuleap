@@ -219,9 +219,6 @@ include_session	required_login	Connexion requise
 include_session	login	Pour voir cette page, vous devez être connecté.
 include_session	insufficient_access	Permissions d'accès insuffisantes
 include_session	no_access	Vous essayez d'accéder à une zone du site pour laquelle vous n'avez pas les permissions requises. Vous pouvez probablement résoudre ce problème en naviguant de façon adéquate sur le site.
-include_session	hash_err	ERREUR&nbsp;: deux personnes ont la même clé - faîtes un retour en arrière et cela ne devrait plus se produire
-include_session	expired_password	Votre mot de passe est expiré.
-include_session	password_will_expire	Votre mot de passe sera expiré dans $1 jour(s).
 #
 #-----------------------------------------------
 # Script: SF/www/include/squal_exit.php

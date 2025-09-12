@@ -33,6 +33,8 @@ use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPerm
 use Tuleap\User\ICreateAccount;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\LogUser;
+use Tuleap\User\Password\PasswordExpirationChecker;
+use Tuleap\User\Password\PasswordExpiredException;
 use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
@@ -604,7 +606,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     public function login(string $name, ConcealedString $pwd): PFUser
     {
         try {
-            $password_expiration_checker = new User_PasswordExpirationChecker();
+            $password_expiration_checker = new PasswordExpirationChecker();
             $password_handler            = PasswordHandlerFactory::getPasswordHandler();
             $login_manager               = new User_LoginManager(
                 EventManager::instance(),
@@ -638,7 +640,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             return $user;
         } catch (User_InvalidPasswordException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-        } catch (User_PasswordExpiredException $exception) {
+        } catch (PasswordExpiredException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $GLOBALS['Response']->redirect(DisplaySecurityController::URL);
         } catch (User_StatusSuspendedException $exception) {

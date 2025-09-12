@@ -24,6 +24,7 @@ use Luracast\Restler\InvalidAuthCredentials;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
+use Tuleap\User\Password\PasswordExpirationChecker;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
@@ -57,7 +58,7 @@ class BasicAuthentication implements iAuthenticate
             new \UserDao(),
             $this->user_manager,
             new \Tuleap\User\PasswordVerifier($password_handler),
-            new \User_PasswordExpirationChecker(),
+            new PasswordExpirationChecker(),
             $password_handler
         );
     }

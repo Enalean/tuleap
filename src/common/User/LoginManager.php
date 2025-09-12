@@ -21,6 +21,8 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Request\RequestTime;
 use Tuleap\User\BeforeStandardLogin;
+use Tuleap\User\Password\PasswordExpirationChecker;
+use Tuleap\User\Password\PasswordExpiredException;
 use Tuleap\User\PasswordVerifier;
 use Tuleap\User\RetrievePasswordlessOnlyState;
 use Tuleap\User\UserAuthenticationSucceeded;
@@ -36,8 +38,6 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      * @var PasswordVerifier
      */
     private $password_verifier;
-    /** @var User_PasswordExpirationChecker */
-    private $password_expiration_checker;
     /** @var PasswordHandler */
     private $password_handler;
 
@@ -47,14 +47,13 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         private readonly UserDao $user_dao,
         private readonly RetrievePasswordlessOnlyState $passwordless_only_state,
         PasswordVerifier $password_verifier,
-        User_PasswordExpirationChecker $password_expiration_checker,
+        private readonly PasswordExpirationChecker $password_expiration_checker,
         PasswordHandler $password_handler,
     ) {
-        $this->event_dispatcher            = $event_dispatcher;
-        $this->user_manager                = $user_manager;
-        $this->password_verifier           = $password_verifier;
-        $this->password_expiration_checker = $password_expiration_checker;
-        $this->password_handler            = $password_handler;
+        $this->event_dispatcher  = $event_dispatcher;
+        $this->user_manager      = $user_manager;
+        $this->password_verifier = $password_verifier;
+        $this->password_handler  = $password_handler;
     }
 
     /**
@@ -64,7 +63,7 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      * @throws User_StatusSuspendedException
      * @throws User_StatusInvalidException
      * @throws User_StatusPendingException
-     * @throws User_PasswordExpiredException
+     * @throws PasswordExpiredException
      */
     public function validateAndSetCurrentUser(PFUser $user)
     {

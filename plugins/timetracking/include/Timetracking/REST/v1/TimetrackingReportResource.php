@@ -43,6 +43,7 @@ use Tuleap\Timetracking\Time\TimetrackingReportFactory;
 use Tuleap\Tracker\Report\TrackerDuplicateException;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
+use Tuleap\User\Password\PasswordExpiredException;
 use UGroupManager;
 use UserHelper;
 use UserManager;
@@ -186,7 +187,7 @@ class TimetrackingReportResource extends AuthenticatedResource
      * @throws RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \Tuleap\REST\Exceptions\InvalidJsonException
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException

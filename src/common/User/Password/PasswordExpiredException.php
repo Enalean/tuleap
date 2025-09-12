@@ -17,18 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_PasswordExpiredException extends User_LoginException
-{
-    /** @var PFUser */
-    private $user;
+declare(strict_types=1);
 
-    public function __construct(PFUser $user)
+namespace Tuleap\User\Password;
+
+use PFUser;
+use User_LoginException;
+
+class PasswordExpiredException extends User_LoginException
+{
+    public function __construct(private readonly PFUser $user)
     {
-        $this->user = $user;
-        parent::__construct($GLOBALS['Language']->getText('include_session', 'expired_password'));
+        parent::__construct(_('Your password has expired.'));
     }
 
-    public function getUser()
+    public function getUser(): PFUser
     {
         return $this->user;
     }

@@ -646,11 +646,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     }
 
     /**
-     * @return string the last time the user has changed her password
+     * @return int the last time the user has changed her password
      */
-    public function getLastPwdUpdate()
+    public function getLastPwdUpdate(): int
     {
-        return $this->last_pwd_update;
+        return (int) $this->last_pwd_update;
     }
 
     public function getTimezone(): ?string

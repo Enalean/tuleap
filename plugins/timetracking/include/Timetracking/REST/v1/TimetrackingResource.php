@@ -45,6 +45,7 @@ use Tuleap\Timetracking\Time\TimeChecker;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimeUpdater;
+use Tuleap\User\Password\PasswordExpiredException;
 use UGroupManager;
 use UserManager;
 
@@ -123,7 +124,7 @@ class TimetrackingResource extends AuthenticatedResource
             throw new RestException(401);
         } catch (\Rest_Exception_InvalidTokenException $exception) {
             throw new RestException(401);
-        } catch (\User_PasswordExpiredException $exception) {
+        } catch (PasswordExpiredException $exception) {
             throw new RestException(401);
         } catch (InvalidArgumentException $exception) {
             throw new RestException(400, $exception->getMessage());

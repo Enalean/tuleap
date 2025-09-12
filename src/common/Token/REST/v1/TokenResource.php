@@ -25,12 +25,12 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Token\REST\TokenRepresentation;
 use Tuleap\REST\Header;
 use Exception;
+use Tuleap\User\Password\PasswordExpirationChecker;
 use Tuleap\User\PasswordVerifier;
 use User_LoginException;
 use UserManager;
 use EventManager;
 use User_LoginManager;
-use User_PasswordExpirationChecker;
 use PasswordHandlerFactory;
 
 /**
@@ -75,7 +75,7 @@ class TokenResource
                 new \UserDao(),
                 $this->user_manager,
                 new PasswordVerifier($password_handler),
-                new User_PasswordExpirationChecker(),
+                new PasswordExpirationChecker(),
                 $password_handler
             );
 

@@ -40,6 +40,7 @@ use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\SVNAccessKeyScope;
+use Tuleap\User\Password\PasswordExpirationChecker;
 use Tuleap\User\PasswordVerifier;
 
 final class SVNProjectAccessRouteDefinition
@@ -100,7 +101,7 @@ final class SVNProjectAccessRouteDefinition
                         new \UserDao(),
                         $user_manager,
                         new PasswordVerifier($password_handler),
-                        new \User_PasswordExpirationChecker(),
+                        new PasswordExpirationChecker(),
                         $password_handler
                     ),
                     $logger

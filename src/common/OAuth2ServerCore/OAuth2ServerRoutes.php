@@ -80,8 +80,8 @@ use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
+use Tuleap\User\Password\PasswordExpirationChecker;
 use User_LoginManager;
-use User_PasswordExpirationChecker;
 use UserManager;
 
 final class OAuth2ServerRoutes
@@ -130,7 +130,7 @@ final class OAuth2ServerRoutes
                     new \UserDao(),
                     $user_manager,
                     new \Tuleap\User\PasswordVerifier($password_handler),
-                    new User_PasswordExpirationChecker(),
+                    new PasswordExpirationChecker(),
                     $password_handler
                 )
             )

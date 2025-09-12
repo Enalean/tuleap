@@ -23,6 +23,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\AfterLocalStandardLogin;
 use Tuleap\User\BeforeStandardLogin;
+use Tuleap\User\Password\PasswordExpirationChecker;
 use Tuleap\User\UserAuthenticationSucceeded;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -43,10 +44,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\User\PasswordVerifier
      */
     private $password_verifier;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&User_PasswordExpirationChecker
-     */
-    private $password_expiration_checker;
+    private \PHPUnit\Framework\MockObject\MockObject&PasswordExpirationChecker $password_expiration_checker;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&PasswordHandler
      */
@@ -60,7 +58,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         $this->user_manager                = $this->createMock(\UserManager::class);
         $this->user_dao                    = $this->createMock(UserDao::class);
         $this->password_verifier           = $this->createMock(\Tuleap\User\PasswordVerifier::class);
-        $this->password_expiration_checker = $this->createMock(\User_PasswordExpirationChecker::class);
+        $this->password_expiration_checker = $this->createMock(PasswordExpirationChecker::class);
         $this->password_handler            = $this->createMock(\PasswordHandler::class);
         $this->login_manager               = new User_LoginManager(
             $this->event_manager,

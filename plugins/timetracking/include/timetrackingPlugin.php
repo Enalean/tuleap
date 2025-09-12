@@ -60,6 +60,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
+use Tuleap\User\Password\PasswordExpiredException;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once 'constants.php';
@@ -267,7 +268,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
 
     /**
      * @throws Rest_Exception_InvalidTokenException
-     * @throws User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws User_StatusInvalidException
      * @throws \Luracast\Restler\RestException
      */
