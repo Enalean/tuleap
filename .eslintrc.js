@@ -263,7 +263,6 @@ module.exports = {
                 "plugins/pullrequest/scripts/create-pullrequest-button/**/*.vue",
                 "plugins/testmanagement/scripts/step-definition-field/**/*.vue",
                 "plugins/tracker/scripts/workflow-transitions/**/*.vue",
-                "src/scripts/project-services/src/**/*.vue",
             ],
             rules: {
                 "@typescript-eslint/explicit-function-return-type": "off",

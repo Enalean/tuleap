@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
     modal.value?.destroy();
 });
 
-function show() {
+function show(): void {
     modal.value?.show();
 }
 

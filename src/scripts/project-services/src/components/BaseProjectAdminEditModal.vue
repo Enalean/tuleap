@@ -57,7 +57,7 @@ const modal = ref<typeof EditModal>();
 
 const form_url = computed(() => `/project/${encodeURIComponent(project_id)}/admin/services/edit`);
 
-function show(button: HTMLButtonElement) {
+function show(button: HTMLButtonElement): void {
     if (button.dataset.serviceJson === undefined) {
         return;
     }
@@ -67,7 +67,7 @@ function show(button: HTMLButtonElement) {
     modal.value?.show();
 }
 
-function resetModal() {
+function resetModal(): void {
     is_shown.value = false;
     service.value = resetService();
 }

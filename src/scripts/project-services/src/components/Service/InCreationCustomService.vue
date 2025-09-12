@@ -74,15 +74,15 @@ const props = defineProps<{
 
 const service = ref(props.service_prop);
 
-function onEditServiceLabel(new_label: string) {
+function onEditServiceLabel(new_label: string): void {
     service.value.label = new_label;
 }
 
-function onEditIcon(new_icon: string) {
+function onEditIcon(new_icon: string): void {
     service.value.icon_name = new_icon;
 }
 
-function onNewTabChange(new_tab: boolean) {
+function onNewTabChange(new_tab: boolean): void {
     service.value.is_in_new_tab = new_tab;
 }
 </script>

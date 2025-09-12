@@ -55,12 +55,12 @@ const preview_label = computed(() =>
 );
 const form_url = computed(() => `/project/${encodeURIComponent(project_id)}/admin/services/add`);
 
-function show() {
+function show(): void {
     is_shown.value = true;
     modal.value?.show();
 }
 
-function resetModal() {
+function resetModal(): void {
     is_shown.value = false;
     service.value = resetService();
 }

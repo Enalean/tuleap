@@ -53,7 +53,7 @@ const emit = defineEmits<{
 
 const placeholder = $gettext("my_service");
 
-function onInputEmit(event: Event) {
+function onInputEmit(event: Event): void {
     if (!(event.target instanceof HTMLInputElement)) {
         return;
     }
