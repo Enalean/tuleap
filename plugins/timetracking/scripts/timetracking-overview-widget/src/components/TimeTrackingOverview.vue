@@ -44,19 +44,19 @@ import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
 import { useOverviewWidgetStore } from "../store";
 
 const props = defineProps<{
-    reportId: number;
-    userId: number;
-    areVoidTrackersHidden: boolean;
+    report_id: number;
+    user_id: number;
+    are_void_trackers_hidden: boolean;
 }>();
 
-const overview_store = useOverviewWidgetStore(props.reportId)();
+const overview_store = useOverviewWidgetStore(props.report_id)();
 
-provide(REPORT_ID, props.reportId);
+provide(REPORT_ID, props.report_id);
 
 onMounted(() => {
-    overview_store.setReportId(props.reportId);
-    overview_store.initUserId(props.userId);
-    overview_store.setDisplayVoidTrackers(props.areVoidTrackersHidden);
+    overview_store.setReportId(props.report_id);
+    overview_store.initUserId(props.user_id);
+    overview_store.setDisplayVoidTrackers(props.are_void_trackers_hidden);
     overview_store.initWidgetWithReport();
     overview_store.getProjects();
     document.addEventListener("timeUpdated", reloadTimes);
@@ -66,7 +66,7 @@ onUnmounted(() => {
     document.removeEventListener("timeUpdated", reloadTimes);
 });
 
-function reloadTimes() {
+function reloadTimes(): void {
     overview_store.reloadTimetrackingOverviewTimes();
 }
 </script>

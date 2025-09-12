@@ -70,11 +70,11 @@ import TimeTrackingOverviewReadingDates from "./TimeTrackingOverviewReadingDates
 const { $gettext } = useGettext();
 const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
 
-function saveReport() {
+function saveReport(): void {
     overview_store.saveReport($gettext("Report has been successfully saved"));
 }
 
-function discardReport() {
+function discardReport(): void {
     overview_store.initWidgetWithReport();
     overview_store.setIsReportSave(true);
 }

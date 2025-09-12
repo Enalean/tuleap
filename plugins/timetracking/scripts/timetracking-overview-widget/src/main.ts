@@ -19,27 +19,37 @@
 
 import { createPinia } from "pinia";
 import { createApp } from "vue";
-import { useOverviewWidgetStore } from "./store/index.ts";
+import { useOverviewWidgetStore } from "./store";
 import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const widgets = document.querySelectorAll(".timetracking-overview-widget");
+    const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(
+        ".timetracking-overview-widget",
+    );
     if (widgets.length === 0) {
         return;
+    }
+
+    if (!document.body.dataset.userId) {
+        throw new Error("dataset userId not found");
     }
 
     const user_id = parseInt(document.body.dataset.userId, 10);
 
     for (const widget_element of widgets) {
+        if (!widget_element.dataset.reportId) {
+            throw new Error("dataset reportId not found");
+        }
+
         const report_id = Number.parseInt(widget_element.dataset.reportId, 10);
         const are_void_trackers_hidden = widget_element.dataset.displayPreference === "true";
 
         const app = createApp(TimeTrackingOverview, {
-            reportId: report_id,
-            userId: user_id,
-            areVoidTrackersHidden: are_void_trackers_hidden,
+            report_id: report_id,
+            user_id: user_id,
+            are_void_trackers_hidden: are_void_trackers_hidden,
         });
 
         const pinia = createPinia();

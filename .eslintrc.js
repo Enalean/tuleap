@@ -262,7 +262,6 @@ module.exports = {
                 "plugins/document/**/*.vue",
                 "plugins/pullrequest/scripts/create-pullrequest-button/**/*.vue",
                 "plugins/testmanagement/scripts/step-definition-field/**/*.vue",
-                "plugins/timetracking/scripts/timetracking-overview-widget/**/*.vue",
                 "plugins/tracker/scripts/workflow-transitions/**/*.vue",
                 "src/scripts/project-services/src/**/*.vue",
             ],

@@ -51,7 +51,7 @@ import { useOverviewWidgetStore } from "../../store";
 
 const overview_store = useOverviewWidgetStore(strictInject(REPORT_ID))();
 
-function removeTracker(tracker: OverviewReportTracker) {
+function removeTracker(tracker: OverviewReportTracker): void {
     overview_store.removeSelectedTracker(tracker);
 }
 </script>

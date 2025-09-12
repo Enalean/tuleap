@@ -125,7 +125,7 @@ const display_button_text = computed(() => {
         : $gettext("Hide void trackers");
 });
 
-function setAreVoidTrackersHidden() {
+function setAreVoidTrackersHidden(): void {
     overview_store.setPreference();
 }
 </script>
