@@ -32,8 +32,8 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
-                    "project-admin-services": path.resolve(__dirname, "src/index-project-admin.js"),
-                    "site-admin-services": path.resolve(__dirname, "src/index-site-admin.js"),
+                    "project-admin-services": path.resolve(__dirname, "src/main-project-admin.ts"),
+                    "site-admin-services": path.resolve(__dirname, "src/main-site-admin.ts"),
                 },
             },
         },
