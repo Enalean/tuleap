@@ -36,53 +36,17 @@ use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Milestone\PaneInfo;
 
-class EventRedirectAfterArtifactCreationOrUpdateHandler
+final readonly class EventRedirectAfterArtifactCreationOrUpdateHandler
 {
-    /**
-     * @var AgileDashboard_PaneRedirectionExtractor
-     */
-    private $pane_redirection_extractor;
-    /**
-     * @var Planning_ArtifactLinker
-     */
-    private $artifact_linker;
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var RedirectParameterInjector
-     */
-    private $injector;
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var Planning_MilestonePaneFactory
-     */
-    private $pane_factory;
-    /**
-     * @var HomeServiceRedirectionExtractor
-     */
-    private $home_service_redirection_extractor;
-
     public function __construct(
-        AgileDashboard_PaneRedirectionExtractor $pane_redirection_extractor,
-        HomeServiceRedirectionExtractor $home_service_redirection_extractor,
-        Planning_ArtifactLinker $artifact_linker,
-        PlanningFactory $planning_factory,
-        RedirectParameterInjector $injector,
-        Planning_MilestoneFactory $milestone_factory,
-        Planning_MilestonePaneFactory $pane_factory,
+        private AgileDashboard_PaneRedirectionExtractor $pane_redirection_extractor,
+        private HomeServiceRedirectionExtractor $home_service_redirection_extractor,
+        private Planning_ArtifactLinker $artifact_linker,
+        private PlanningFactory $planning_factory,
+        private RedirectParameterInjector $injector,
+        private Planning_MilestoneFactory $milestone_factory,
+        private Planning_MilestonePaneFactory $pane_factory,
     ) {
-        $this->pane_redirection_extractor         = $pane_redirection_extractor;
-        $this->home_service_redirection_extractor = $home_service_redirection_extractor;
-        $this->artifact_linker                    = $artifact_linker;
-        $this->planning_factory                   = $planning_factory;
-        $this->injector                           = $injector;
-        $this->milestone_factory                  = $milestone_factory;
-        $this->pane_factory                       = $pane_factory;
     }
 
     public function process(
