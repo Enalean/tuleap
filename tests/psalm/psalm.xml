@@ -129,8 +129,6 @@
             <file name="tests/unit/tuleap-cfg/Command/TestDBWrapper.php"/>
             <file name="tests/unit/www/include/ServiceCreateServiceTest.php"/>
             <file name="tests/unit/www/include/UtilsHTTPTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Artifact/HomeServiceRedirectionExtractorTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Artifact/RedirectParameterInjectorTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/BacklogItem/SubBacklogItemProviderTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/CreateBacklogControllerTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/ExplicitBacklog/ConfigurationUpdaterTest.php"/>

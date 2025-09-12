@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
+use Override;
 use TemplateRendererFactory;
 use Tuleap\Color\ColorName;
 use Tuleap\GlobalResponseMock;
@@ -37,18 +38,13 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;
 
-    /**
-     * @var mixed
-     */
-    private $response;
     private \PFUser $user;
     private \Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\MockObject $artifact_factory;
     private RedirectParameterInjector $injector;
 
+    #[Override]
     protected function setUp(): void
     {
-        $this->response = $GLOBALS['Response'];
-
         $this->user = UserTestBuilder::anActiveUser()->build();
 
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
@@ -60,7 +56,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->injector = new RedirectParameterInjector(
             new AgileDashboard_PaneRedirectionExtractor(),
             $this->artifact_factory,
-            $this->response,
+            $GLOBALS['Response'],
             $template_renderer_factory->getRenderer(__DIR__ . '/../../../../templates/')
         );
     }
@@ -120,7 +116,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->user, 101)
             ->willReturn($artifact);
 
-        $this->response
+        $GLOBALS['Response']
             ->expects($this->once())
             ->method('addFeedback')
             ->with(

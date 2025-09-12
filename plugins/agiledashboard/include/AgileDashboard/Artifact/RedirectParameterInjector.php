@@ -29,35 +29,14 @@ use TemplateRenderer;
 use Tracker_Artifact_Redirect;
 use Tuleap\AgileDashboard\BacklogItem\BacklogItemCreationUpdateInformationLinkPresenter;
 
-final class RedirectParameterInjector
+final readonly class RedirectParameterInjector
 {
-    /**
-     * @var AgileDashboard_PaneRedirectionExtractor
-     */
-    private $params_extractor;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var TemplateRenderer
-     */
-    private $template_renderer;
-    /**
-     * @var Response
-     */
-    private $response;
-
     public function __construct(
-        AgileDashboard_PaneRedirectionExtractor $params_extractor,
-        \Tracker_ArtifactFactory $artifact_factory,
-        Response $response,
-        TemplateRenderer $template_renderer,
+        private AgileDashboard_PaneRedirectionExtractor $params_extractor,
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private Response $response,
+        private TemplateRenderer $template_renderer,
     ) {
-        $this->params_extractor  = $params_extractor;
-        $this->artifact_factory  = $artifact_factory;
-        $this->response          = $response;
-        $this->template_renderer = $template_renderer;
     }
 
     public function injectAndInformUserAboutBacklogItemWillBeLinked(
