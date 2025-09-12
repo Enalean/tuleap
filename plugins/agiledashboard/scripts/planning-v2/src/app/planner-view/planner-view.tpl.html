@@ -58,6 +58,7 @@
                            ng-change="planning.switchViewMode(planning.detailed_view_key)"
                            ng-model="planning.current_view_class"
                            ng-value="planning.detailed_view_key"
+                           data-test="planning-header-detailed-toggler"
                     >
                     <label for="planning-header-detailed-toggler"
                            class="tlp-button-secondary tlp-button-outline tlp-button-small"
@@ -93,6 +94,7 @@
                            ng-change="planning.switchClosedMilestoneItemsViewMode(planning.hide_closed_view_key)"
                            ng-model="planning.current_closed_view_class"
                            ng-value="planning.hide_closed_view_key"
+                           data-test="planning-header-opened-toggler"
                     >
                     <label for="planning-header-opened-toggler"
                            class="tlp-button-secondary tlp-button-outline tlp-button-small"

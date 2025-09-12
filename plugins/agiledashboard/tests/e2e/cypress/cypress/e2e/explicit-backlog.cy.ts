@@ -85,6 +85,32 @@ describe(`Planning view Explicit Backlog`, function () {
             cy.get("[data-test=criteria-in-milestone]").select("Any");
             cy.get("[data-test=alphanum-report-criteria]").type("Crossbow Everyday");
             cy.get("[data-test=submit-report-search]").click();
+
+            cy.log(
+                "Project Member can hide the done story, in that test the story is: Forsaken Autumn",
+            );
+            cy.visitProjectService("explicit-backlog", "Backlog");
+
+            cy.contains("[data-test=milestone]", "Summer Swift").within(() => {
+                cy.get("[data-test=expand-collapse-milestone]").click();
+            });
+            cy.get("[data-test=milestone-backlog-items]")
+                .children()
+                .eq(3)
+                .should("be.visible", "Forsaken Autumn");
+            // the radio input is not visible
+            // eslint-disable-next-line cypress/no-force
+            cy.get("[data-test=planning-header-opened-toggler]").click({ force: true });
+            cy.get("[data-test=milestone-backlog-items]")
+                .children()
+                .eq(3)
+                .should("not.be.visible", "Forsaken Autumn");
+
+            cy.log("Project Member can see a card detail");
+            // the radio input is not visible
+            // eslint-disable-next-line cypress/no-force
+            cy.get("[data-test=planning-header-detailed-toggler]").click({ force: true });
+            cy.get("[data-test=cards-field-details]").should("be.visible");
         });
     });
 
