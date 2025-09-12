@@ -38,7 +38,7 @@ use Tuleap\REST\I18NRestException;
 
 class BaselineController
 {
-    public const DATE_TIME_FORMAT = DateTime::ATOM;
+    public const string DATE_TIME_FORMAT = DateTime::ATOM;
 
     /** @var CurrentUserProvider */
     private $current_user_provider;

@@ -54,8 +54,8 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 class baselinePlugin extends Plugin implements PluginWithService // @codingStandardsIgnoreLine
 {
-    public const NAME              = 'baseline';
-    public const SERVICE_SHORTNAME = 'plugin_baseline';
+    public const string NAME              = 'baseline';
+    public const string SERVICE_SHORTNAME = 'plugin_baseline';
 
     public function __construct($id)
     {

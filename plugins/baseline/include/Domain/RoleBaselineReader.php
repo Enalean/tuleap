@@ -26,7 +26,7 @@ use Override;
 
 final class RoleBaselineReader implements Role
 {
-    public const NAME = 'BASELINE_READER';
+    public const string NAME = 'BASELINE_READER';
 
     #[Override]
     public function getName(): string

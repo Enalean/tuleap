@@ -32,7 +32,7 @@ use Tuleap\REST\Header;
 
 class ProjectComparisonsResource extends AuthenticatedResource
 {
-    public const MAX_PAGINATION_LIMIT = 50;
+    public const int MAX_PAGINATION_LIMIT = 50;
 
     /** @var Container */
     private $container;
@@ -81,7 +81,7 @@ class ProjectComparisonsResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}/baselines_comparisons
      */
-    public function options(int $id)
+    public function options(int $id): void
     {
         Header::allowOptionsGet();
     }

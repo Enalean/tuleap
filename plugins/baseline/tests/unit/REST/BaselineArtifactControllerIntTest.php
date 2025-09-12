@@ -35,8 +35,8 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
 {
     use GlobalLanguageMock;
 
-    private const EPIC_ID    = 737;
-    private const EPIC_TITLE = 'Epic #737';
+    private const int EPIC_ID       = 737;
+    private const string EPIC_TITLE = 'Epic #737';
 
     /** @var BaselineArtifactController */
     private $controller;

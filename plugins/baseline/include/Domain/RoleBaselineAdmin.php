@@ -26,7 +26,7 @@ use Override;
 
 final class RoleBaselineAdmin implements Role
 {
-    public const NAME = 'BASELINE_ADMIN';
+    public const string NAME = 'BASELINE_ADMIN';
 
     #[Override]
     public function getName(): string
