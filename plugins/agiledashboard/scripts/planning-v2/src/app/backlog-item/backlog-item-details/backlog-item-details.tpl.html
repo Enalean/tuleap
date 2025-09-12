@@ -104,7 +104,7 @@
     filter-terms="{{ details.backlog_filter.terms }}"
 ></span>
 
-<card-fields item="details.backlog_item" filter-terms="details.backlog_filter.terms"></card-fields>
+<card-fields item="details.backlog_item" filter-terms="details.backlog_filter.terms" data-test="cards-field-details"></card-fields>
 
 <div ng-if="details.user_has_accessibility_mode" class="card-accessibility {{ details.backlog_item.background_color_name }}"></div>
 
