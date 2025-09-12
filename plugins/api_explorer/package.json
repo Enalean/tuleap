@@ -19,6 +19,7 @@
   },
   "pnpm": {
     "overrides": {
+      "axios": "^1.12.0",
       "prismjs": "^1.30.0",
       "cookie": "^0.7.2",
       "dompurify": "^3.2.4",
