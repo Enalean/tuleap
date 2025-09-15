@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

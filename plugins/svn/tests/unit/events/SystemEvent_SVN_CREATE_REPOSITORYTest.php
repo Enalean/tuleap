@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\Events;
 
 use Tuleap\SVN\Repository\SvnRepository;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
 use Tuleap\Test\Builders\ProjectTestBuilder;

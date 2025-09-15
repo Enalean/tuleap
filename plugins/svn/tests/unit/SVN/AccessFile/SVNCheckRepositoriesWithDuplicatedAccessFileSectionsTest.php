@@ -25,9 +25,9 @@ namespace Tuleap\SVN\AccessControl;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\SVN\Repository\RepositoryByProjectCollection;
 use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\SVNCore\Repository;
-use Tuleap\SVNCore\SVNAccessFileContent;
-use Tuleap\SVNCore\SVNAccessFileReader;
+use Tuleap\SVN\Repository;
+use Tuleap\SVN\SVNAccessFileContent;
+use Tuleap\SVN\SVNAccessFileReader;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 

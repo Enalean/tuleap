@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,9 +21,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
 
 use Tuleap\Project\UGroupRetriever;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
+use Tuleap\SVNCore\SVNUser;
+use Tuleap\SVNCore\SVNUserGroup;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -73,7 +76,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
             ProjectUGroupTestBuilder::aCustomUserGroup(230)->withName('Developers')->withUsers($csteven, $disciplus)->build()
         );
 
-        $noop_plugin = fn (SVNAccessFileDefaultBlockOverride $event) => 1;
+        $noop_plugin = fn (SVNAccessFileDefaultBlockOverride $event): int  => 1;
 
         return [
             'Nominal case' => [
@@ -175,7 +178,7 @@ final class SVNAccessFileDefaultBlockGeneratorTest extends TestCase
 
     public static function permissionsDataProvider(): iterable
     {
-        $noop_plugin    = fn (SVNAccessFileDefaultBlockOverride $event) => 1;
+        $noop_plugin    = fn (SVNAccessFileDefaultBlockOverride $event): int => 1;
         $public_project = ProjectTestBuilder::aProject()->withAccessPublic()->build();
         return [
             'Despite public project, plugin forbid access' => [

@@ -25,7 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Admin\MailNotificationManager;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -55,7 +55,7 @@ final class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         parent::setUp();
 
-        $this->repository           = $this->createMock(\Tuleap\SVNCore\Repository::class);
+        $this->repository           = $this->createMock(\Tuleap\SVN\Repository::class);
         $this->notification_manager = $this->createMock(\Tuleap\SVN\Admin\MailNotificationManager::class);
         $this->user_dao             = $this->createMock(\Tuleap\SVN\Notifications\UsersToNotifyDao::class);
 

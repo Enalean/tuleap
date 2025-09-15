@@ -33,7 +33,7 @@ use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation;
 use Tuleap\SVN\REST\v1\SettingsPOSTRepresentation;
 use Tuleap\SVN\REST\v1\SettingsPUTRepresentation;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\User\RetrieveUserById;
 
 class SettingsBuilder

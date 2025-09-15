@@ -29,9 +29,9 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\SVN\Repository\DefaultPermissionsStub;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
-use Tuleap\SVNCore\Repository;
-use Tuleap\SVNCore\SVNAccessFileDefaultBlock;
-use Tuleap\SVNCore\SVNAccessFileDefaultBlockGeneratorInterface;
+use Tuleap\SVN\Repository;
+use Tuleap\SVN\SVNAccessFileDefaultBlock;
+use Tuleap\SVN\SVNAccessFileDefaultBlockGeneratorInterface;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 

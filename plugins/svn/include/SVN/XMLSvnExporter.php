@@ -24,9 +24,7 @@ use Psr\Log\LoggerInterface;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Export\ArchiveInterface;
-use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVN\Admin\MailNotificationManager;
-use Tuleap\SVNCore\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 use XML_SimpleXMLCDATAFactory;
 

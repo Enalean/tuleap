@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,22 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVN\Repository;
+namespace Tuleap\SVN;
 
-use Tuleap\DB\DataAccessObject;
-use Tuleap\SVN\Repository;
-
-final class DefaultPermissionsDao extends DataAccessObject implements DefaultPermissions
+interface SVNAccessFileDefaultBlockGeneratorInterface
 {
-    #[\Override]
-    public function enableUseDefaultPermissions(Repository $repository): void
-    {
-        $this->getDB()->update('plugin_svn_repositories', ['has_default_permissions' => 1], ['id' => $repository->getId()]);
-    }
-
-    #[\Override]
-    public function disableUseDefaultPermissions(Repository $repository): void
-    {
-        $this->getDB()->update('plugin_svn_repositories', ['has_default_permissions' => 0], ['id' => $repository->getId()]);
-    }
+    public function getDefaultBlock(Repository $repository): SVNAccessFileDefaultBlock;
 }

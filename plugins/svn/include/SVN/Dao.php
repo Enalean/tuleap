@@ -24,7 +24,6 @@ use DataAccessObject;
 use SystemEvent;
 use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Repository\CoreRepository;
-use Tuleap\SVNCore\Repository;
 use Project;
 
 class Dao extends DataAccessObject

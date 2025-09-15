@@ -151,7 +151,7 @@ use Tuleap\SVNCore\Cache\ParameterRetriever;
 use Tuleap\SVNCore\Cache\ParameterSaver;
 use Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent;
 use Tuleap\SVNCore\GetAllRepositories;
-use Tuleap\SVNCore\SVNAccessFileReader;
+use Tuleap\SVN\SVNAccessFileReader;
 use Tuleap\SVNCore\SvnCoreAccess;
 use Tuleap\SystemEvent\RootPostEventsActionsEvent;
 
@@ -217,7 +217,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             new XML_SimpleXMLCDATAFactory(),
             $this->getMailNotificationManager(),
             self::getLogger(),
-            new SVNAccessFileReader(\Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance())
+            new SVNAccessFileReader(\Tuleap\SVN\SVNAccessFileDefaultBlockGenerator::instance())
         );
     }
 
@@ -275,7 +275,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             function (): SVNCheckRepositoriesWithDuplicatedAccessFileSections {
                 return new SVNCheckRepositoriesWithDuplicatedAccessFileSections(
                     $this->getRepositoryManager(),
-                    new SVNAccessFileReader(\Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance()),
+                    new SVNAccessFileReader(\Tuleap\SVN\SVNAccessFileDefaultBlockGenerator::instance()),
                     new DuplicateSectionDetector(),
                 );
             }
@@ -436,7 +436,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getAccessFileHistoryFactory(),
                 $this->getProjectHistoryDao(),
                 $this->getProjectHistoryFormatter(),
-                \Tuleap\SVNCore\SVNAccessFileDefaultBlockGenerator::instance(),
+                \Tuleap\SVN\SVNAccessFileDefaultBlockGenerator::instance(),
                 new \Tuleap\SVN\Repository\DefaultPermissionsDao(),
             );
         }

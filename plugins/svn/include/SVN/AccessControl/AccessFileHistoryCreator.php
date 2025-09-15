@@ -21,15 +21,15 @@
 namespace Tuleap\SVN\AccessControl;
 
 use Tuleap\SVN\Repository\DefaultPermissions;
-use Tuleap\SVNCore\SVNAccessFileContent;
-use Tuleap\SVNCore\SVNAccessFileWriteFault;
-use Tuleap\SVNCore\SVNAccessFileWriter;
-use Tuleap\SVNCore\SVNAccessFileSectionParser;
+use Tuleap\SVN\SVNAccessFileContent;
+use Tuleap\SVN\SVNAccessFileWriteFault;
+use Tuleap\SVN\SVNAccessFileWriter;
+use Tuleap\SVN\SVNAccessFileSectionParser;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
-use Tuleap\SVNCore\Repository;
-use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
-use Tuleap\SVNCore\SVNAccessFileContentAndFaults;
-use Tuleap\SVNCore\SVNAccessFileDefaultBlockGeneratorInterface;
+use Tuleap\SVN\Repository;
+use Tuleap\SVN\CollectionOfSVNAccessFileFaults;
+use Tuleap\SVN\SVNAccessFileContentAndFaults;
+use Tuleap\SVN\SVNAccessFileDefaultBlockGeneratorInterface;
 
 class AccessFileHistoryCreator
 {

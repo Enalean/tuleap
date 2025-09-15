@@ -26,7 +26,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Notifications\EmailsToBeNotifiedRetriever;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -64,7 +64,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_group_101            = new ProjectUGroup(['ugroup_id' => 101]);
         $this->user_group_project_member = new ProjectUGroup(['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS]);
 
-        $this->repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
+        $this->repository = $this->createMock(\Tuleap\SVN\Repository::class);
         $project          = ProjectTestBuilder::aProject()->withId(101)->build();
 
         $this->repository->method('getProject')->willReturn($project);

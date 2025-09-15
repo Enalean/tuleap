@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,14 +21,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
+
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
 
 /**
  * @psalm-immutable
  */
-final class SVNAccessFileDefaultBlock
+final class SVNAccessFileDefaultBlockForCache
 {
-    public function __construct(public readonly string $content)
+    public function __construct(public readonly string $groups, public readonly SVNAccessFileDefaultBlockOverride $default_block_override)
     {
     }
 }

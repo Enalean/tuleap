@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -73,7 +73,7 @@ final class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
+        $this->repository = $this->createMock(\Tuleap\SVN\Repository::class);
         $this->repository->method('getProject')->willReturn($project);
         $this->repository->method('getId')->willReturn(42);
     }

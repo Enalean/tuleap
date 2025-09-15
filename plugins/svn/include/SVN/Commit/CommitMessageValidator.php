@@ -28,7 +28,7 @@ use ForgeConfig;
 use ReferenceManager;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigRetriever;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class CommitMessageValidator
 {

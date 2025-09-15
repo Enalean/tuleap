@@ -22,7 +22,7 @@ namespace Tuleap\SVN\Admin;
 
 use PFUser;
 use ProjectUGroup;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class MailNotification
 {

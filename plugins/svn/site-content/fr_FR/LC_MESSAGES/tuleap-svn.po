@@ -61,6 +61,14 @@ msgstr "Cache d'authentification"
 msgid "Be careful"
 msgstr "Attention"
 
+#, php-format
+msgid ""
+"Be careful, \"%s\" does not match the case sensitivity. Its rule has been "
+"disabled."
+msgstr ""
+"Attention, \"%s\" ne respecte pas la sensibilité à la casse. Sa règle a été "
+"désactivée."
+
 msgid ""
 "Below is a typical command you would use to checkout the source code of this "
 "project."
@@ -226,6 +234,10 @@ msgstr "Chemin des tags non modifiables"
 
 msgid "Initial layout creation"
 msgstr "Création de la structure initiale"
+
+#, php-format
+msgid "Invalid line \"%s\""
+msgstr "Ligne invalide \"%s\""
 
 msgid ""
 "It is recommended to always define permissions on a user group. Applying "
@@ -608,6 +620,10 @@ msgstr[1] "Les utilisateurs '%s' n’ont pas pu être ajouté."
 
 msgid "User doesn't have permission to create a repository"
 msgstr "L'utilisateur n'a pas les droits pour créer un nouveau dépôt"
+
+#, php-format
+msgid "User group \"%s\" is empty or does not exist"
+msgstr "Le groupe \"%s\ est vide ou n'existe pas"
 
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, mail"

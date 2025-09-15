@@ -26,7 +26,7 @@ use SystemEventManager;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Events\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\SVN\Repository\Exception\CannotDeleteRepositoryException;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class RepositoryDeleter
 {

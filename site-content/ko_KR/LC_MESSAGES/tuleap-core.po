@@ -679,14 +679,6 @@ msgstr "나쁨"
 msgid "Banner"
 msgstr "배너"
 
-#, php-format
-msgid ""
-"Be careful, \"%s\" does not match the case sensitivity. Its rule has been "
-"disabled."
-msgstr ""
-"\"%s\"는 대소문자 구분이 일치하지 않으므로 주의하십시오. 해당 규칙이 비활성"
-"화 되었습니다."
-
 msgid "Before you start, you need to know a few things:"
 msgstr "시작하기 전에 몇 가지 사항을 알아야 합니다."
 
@@ -1655,10 +1647,6 @@ msgstr "잘못된 확인 해시"
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr "그룹 이름 %s이(가) 잘못되었습니다. 영숫자만 사용하십시오."
-
-#, php-format
-msgid "Invalid line \"%s\""
-msgstr "줄 “%s”이(가) 잘못되었습니다."
 
 msgid "Invalid project was passed in."
 msgstr "잘못된 프로젝트가 전달되었습니다."
@@ -3990,10 +3978,6 @@ msgstr "사용자 이메일 주소"
 
 msgid "User group"
 msgstr "사용자 그룹"
-
-#, php-format
-msgid "User group \"%s\" is empty or does not exist"
-msgstr "사용자 그룹 “%s”이(가) 비어 있거나 존재하지 않습니다."
 
 msgid "User group already exists in this project. Please choose another name."
 msgstr "이 프로젝트에 사용자 그룹이 이미 있습니다. 다른 이름을 선택해주세요."

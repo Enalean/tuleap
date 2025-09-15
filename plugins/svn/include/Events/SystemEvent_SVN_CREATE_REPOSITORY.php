@@ -27,7 +27,7 @@ use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
 {

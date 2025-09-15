@@ -41,7 +41,6 @@ use Tuleap\SVN\Admin\MailNotificationPresenter;
 use Tuleap\SVN\Admin\RepositoryDeletePresenter;
 use Tuleap\SVN\Explorer\ExplorerPresenter;
 use Tuleap\SVN\Explorer\RepositoryDisplayPresenter;
-use Tuleap\SVNCore\Repository;
 
 class ServiceSvn extends Service
 {

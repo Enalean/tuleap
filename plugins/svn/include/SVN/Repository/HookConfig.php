@@ -19,7 +19,7 @@
 namespace Tuleap\SVN\Repository;
 
 use Exception;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class HookConfig
 {

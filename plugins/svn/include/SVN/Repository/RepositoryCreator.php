@@ -37,7 +37,7 @@ use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
 use Tuleap\SVN\Repository\Settings\Settings;
 use Tuleap\SVN\SvnPermissionManager;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class RepositoryCreator
 {

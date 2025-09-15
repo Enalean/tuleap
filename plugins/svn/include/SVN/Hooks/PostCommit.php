@@ -38,7 +38,7 @@ use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Commit\CommitInfoEnhancer;
 use Tuleap\SVN\Logs\LastAccessUpdater;
 use Tuleap\SVN\Notifications\EmailsToBeNotifiedRetriever;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 use UserManager;
 

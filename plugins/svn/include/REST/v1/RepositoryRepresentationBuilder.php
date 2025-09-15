@@ -25,7 +25,7 @@ use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\HookConfigRetriever;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\SVN\SvnPermissionManager;
 
 class RepositoryRepresentationBuilder

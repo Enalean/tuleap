@@ -49,6 +49,12 @@ msgstr ""
 msgid "Be careful"
 msgstr ""
 
+#, php-format
+msgid ""
+"Be careful, \"%s\" does not match the case sensitivity. Its rule has been "
+"disabled."
+msgstr ""
+
 msgid ""
 "Below is a typical command you would use to checkout the source code of this "
 "project."
@@ -199,6 +205,10 @@ msgstr ""
 
 msgid "Initial layout creation"
 msgstr "Criação do layout inicial"
+
+#, php-format
+msgid "Invalid line \"%s\""
+msgstr ""
 
 msgid ""
 "It is recommended to always define permissions on a user group. Applying "
@@ -543,6 +553,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "User doesn't have permission to create a repository"
+msgstr ""
+
+#, php-format
+msgid "User group \"%s\" is empty or does not exist"
 msgstr ""
 
 msgid "User, group, email"

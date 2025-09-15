@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Repository;
 
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 final class SvnCoreAccess
 {

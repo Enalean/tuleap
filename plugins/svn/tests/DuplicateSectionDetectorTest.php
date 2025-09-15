@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\AccessControl;
 
-use Tuleap\SVNCore\SVNAccessFileContent;
+use Tuleap\SVN\SVNAccessFileContent;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

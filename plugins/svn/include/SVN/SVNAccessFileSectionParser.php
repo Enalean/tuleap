@@ -3,6 +3,8 @@
  * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2011. All rights reserved
  *
+ * This file is a part of Tuleap.
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,9 +17,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
 
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Option\Option;
@@ -33,17 +36,17 @@ class SVNAccessFileSectionParser
     /**
      * Value in $groups when the group is (re)defined by user
      */
-    private const UGROUP_REDEFINED = 0;
+    private const int UGROUP_REDEFINED = 0;
 
     /**
      * Value in $groups when the group is defined only in default [groups] section
      */
-    private const UGROUP_DEFAULT = 1;
+    private const int UGROUP_DEFAULT = 1;
 
     /**
      * Pattern used to find a line defining permission on group
      */
-    private const GROUPNAME_PATTERN = '([a-zA-Z0-9_-]+)';
+    private const string GROUPNAME_PATTERN = '([a-zA-Z0-9_-]+)';
 
     /**
      * New name of the renamed group
@@ -75,15 +78,15 @@ class SVNAccessFileSectionParser
                     }
 
                     if (strtolower($group) === strtolower($match)) {
-                        return Option::fromValue(Fault::fromMessage(sprintf(_('Be careful, "%s" does not match the case sensitivity. Its rule has been disabled.'), $group)));
+                        return Option::fromValue(Fault::fromMessage(sprintf(dgettext('tuleap-svn', 'Be careful, "%s" does not match the case sensitivity. Its rule has been disabled.'), $group)));
                     }
                 }
 
-                return Option::fromValue(Fault::fromMessage(sprintf(_('User group "%s" is empty or does not exist'), $match)));
+                return Option::fromValue(Fault::fromMessage(sprintf(dgettext('tuleap-svn', 'User group "%s" is empty or does not exist'), $match)));
             }
         }
 
-        return Option::fromValue(Fault::fromMessage(sprintf(_('Invalid line "%s"'), $line)));
+        return Option::fromValue(Fault::fromMessage(sprintf(dgettext('tuleap-svn', 'Invalid line "%s"'), $line)));
     }
 
     /**
@@ -93,7 +96,7 @@ class SVNAccessFileSectionParser
     private function validateUGroupLine(array $groups, string $line, CollectionOfSVNAccessFileFaults $faults): string
     {
         $trimmedLine = ltrim($line);
-        if (! empty($this->ugroupNewName) && $this->ugroupOldName !== null && preg_match($this->getGroupMatcher($this->ugroupOldName), $trimmedLine)) {
+        if ($this->ugroupNewName !== null && $this->ugroupNewName !== '' && $this->ugroupOldName !== null && preg_match($this->getGroupMatcher($this->ugroupOldName), $trimmedLine)) {
             return $this->renameGroup($groups, $line);
         } else {
             return $this->commentInvalidLine($groups, $line, $faults);

@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\ViewVC;
 
 use PFUser;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class AccessHistorySaver
 {

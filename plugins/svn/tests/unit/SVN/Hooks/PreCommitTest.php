@@ -38,7 +38,7 @@ use Tuleap\SVN\Commit\EmptyCommitMessageException;
 use Tuleap\SVN\Commit\ImmutableTagCommitValidator;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Repository\HookConfig;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -72,7 +72,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_id            = 1;
         $this->system_path     = $project_id . '/' . $this->repository_name;
 
-        $this->repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
+        $this->repository = $this->createMock(\Tuleap\SVN\Repository::class);
         $this->repository->method('getId')->willReturn(1);
         $this->repository->method('getName')->willReturn($this->repository_name);
         $this->repository_manager->method('getRepositoryFromSystemPath')

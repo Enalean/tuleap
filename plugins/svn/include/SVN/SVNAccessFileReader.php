@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,16 +19,16 @@
  *
  */
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
 
 /**
  * Read the content of a .SVNAccessFile
  */
 class SVNAccessFileReader
 {
-    public const FILENAME     = '.SVNAccessFile';
-    public const BEGIN_MARKER = '# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE';
-    public const END_MARKER   = '# END CODENDI DEFAULT SETTINGS';
+    public const string FILENAME     = '.SVNAccessFile';
+    public const string BEGIN_MARKER = '# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE';
+    public const string END_MARKER   = '# END CODENDI DEFAULT SETTINGS';
 
     public function __construct(private readonly SVNAccessFileDefaultBlockGeneratorInterface $default_block_generator)
     {
@@ -49,7 +49,11 @@ class SVNAccessFileReader
         $content = '';
 
         $in_default_block = false;
-        foreach (file($this->getPath($repository)) as $line) {
+        $file_content     = file($this->getPath($repository));
+        if ($file_content === false) {
+            $file_content = [];
+        }
+        foreach ($file_content as $line) {
             if ($this->isDefaultBlockStarting($line)) {
                 $in_default_block = true;
                 continue;
