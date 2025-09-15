@@ -20,13 +20,9 @@
 import type { ListOfSearchResultColumnDefinition, RootState, SearchCriteria } from "../../type";
 import type { Module } from "vuex";
 import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
-import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export interface ConfigurationState {
-    readonly project_url: string;
-    readonly date_time_format: string;
-    readonly privacy: ProjectPrivacy;
     readonly project_flags: ProjectFlag[];
     readonly is_changelog_proposed_after_dnd: boolean;
     readonly is_deletion_allowed: boolean;

@@ -21,7 +21,7 @@
     <div class="breadcrumb-container document-breadcrumb">
         <breadcrumb-privacy
             v-bind:project_flags="project_flags"
-            v-bind:privacy="privacy"
+            v-bind:privacy="project_privacy"
             v-bind:project_public_name="project_public_name"
         />
         <nav class="breadcrumb">
@@ -106,7 +106,13 @@ import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID, PROJECT_PUBLIC_NAME, USER_IS_ADMIN } from "../../configuration-keys";
+import {
+    PROJECT_ID,
+    PROJECT_PRIVACY,
+    PROJECT_PUBLIC_NAME,
+    PROJECT_URL,
+    USER_IS_ADMIN,
+} from "../../configuration-keys";
 
 const {
     current_folder_ascendant_hierarchy,
@@ -130,9 +136,11 @@ const {
 const project_id = strictInject(PROJECT_ID);
 const project_public_name = strictInject(PROJECT_PUBLIC_NAME);
 const user_is_admin = strictInject(USER_IS_ADMIN);
-const { project_url, privacy, project_flags, project_icon } = useNamespacedState<
-    Pick<ConfigurationState, "project_url" | "privacy" | "project_flags" | "project_icon">
->("configuration", ["project_url", "privacy", "project_flags", "project_icon"]);
+const project_url = strictInject(PROJECT_URL);
+const project_privacy = strictInject(PROJECT_PRIVACY);
+const { project_flags, project_icon } = useNamespacedState<
+    Pick<ConfigurationState, "project_flags" | "project_icon">
+>("configuration", ["project_flags", "project_icon"]);
 
 const max_nb_to_display = ref(5);
 

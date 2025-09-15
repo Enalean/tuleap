@@ -21,17 +21,6 @@ import type { RootState } from "../type";
 
 export const state: RootState = {
     configuration: {
-        project_url: "",
-        date_time_format: "",
-        privacy: {
-            are_restricted_users_allowed: false,
-            project_is_private: false,
-            project_is_public_incl_restricted: false,
-            project_is_public: false,
-            project_is_private_incl_restricted: false,
-            explanation_text: "",
-            privacy_title: "",
-        },
         project_flags: [],
         is_changelog_proposed_after_dnd: false,
         is_deletion_allowed: false,

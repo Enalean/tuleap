@@ -36,17 +36,21 @@ import type { ConfigurationState } from "../../store/configuration";
 import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter";
 import { computed } from "vue";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { DATE_TIME_FORMAT } from "../../configuration-keys";
 
 const props = withDefaults(defineProps<{ date: string; relative_placement?: "top" | "right" }>(), {
     relative_placement: "top",
 });
 
-const { date_time_format, relative_dates_display, user_locale } = useNamespacedState<
-    Pick<ConfigurationState, "date_time_format" | "relative_dates_display" | "user_locale">
->("configuration", ["date_time_format", "relative_dates_display", "user_locale"]);
+const date_time_format = strictInject(DATE_TIME_FORMAT);
+
+const { relative_dates_display, user_locale } = useNamespacedState<
+    Pick<ConfigurationState, "relative_dates_display" | "user_locale">
+>("configuration", ["relative_dates_display", "user_locale"]);
 
 const formatted_full_date = computed((): string => {
-    return formatDateUsingPreferredUserFormat(props.date, date_time_format.value);
+    return formatDateUsingPreferredUserFormat(props.date, date_time_format);
 });
 
 const relative_date_preference = computed((): string => {

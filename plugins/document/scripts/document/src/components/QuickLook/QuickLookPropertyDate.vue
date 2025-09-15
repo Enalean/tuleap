@@ -64,17 +64,19 @@ import { computed } from "vue";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Property } from "../../type";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { DATE_TIME_FORMAT } from "../../configuration-keys";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{ property: Property }>();
 
-const { date_time_format, relative_dates_display, user_locale } =
-    useNamespacedState<ConfigurationState>("configuration", [
-        "date_time_format",
-        "relative_dates_display",
-        "user_locale",
-    ]);
+const date_time_format = strictInject(DATE_TIME_FORMAT);
+
+const { relative_dates_display, user_locale } = useNamespacedState<ConfigurationState>(
+    "configuration",
+    ["relative_dates_display", "user_locale"],
+);
 
 const is_date_valid = computed((): boolean => {
     if (!isValueString(props.property.value)) {
@@ -100,7 +102,7 @@ const getFormattedDate = computed((): string => {
     if (!isValueString(props.property.value)) {
         return "";
     }
-    return formatDateUsingPreferredUserFormat(props.property.value, date_time_format.value);
+    return formatDateUsingPreferredUserFormat(props.property.value, date_time_format);
 });
 
 const relative_date_preference = computed((): string => {
