@@ -46,7 +46,7 @@ use Tuleap\Request\NotFoundException;
 
 class ServiceController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
-    public const PROJECT_NAME_VARIABLE_NAME = 'project_name';
+    public const string PROJECT_NAME_VARIABLE_NAME = 'project_name';
 
     public function __construct(
         private \ProjectManager $project_manager,
@@ -57,7 +57,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
     ) {
     }
 
-    private function includeJavascriptFiles(BaseLayout $layout)
+    private function includeJavascriptFiles(BaseLayout $layout): void
     {
         $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('baseline.js'));
     }

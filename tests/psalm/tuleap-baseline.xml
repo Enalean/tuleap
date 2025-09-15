@@ -1496,11 +1496,6 @@
       <code><![CDATA[empty($assignments_by_roles[RoleBaselineReader::NAME])]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/baseline/include/REST/BaselineArtifactController.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_ARTIFACTS_COUNT = 100]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/baseline/include/REST/BaselineArtifactRepresentation.php">
     <PossiblyNullArgument>
       <code><![CDATA[JsonCast::toArrayOfInts($artifact->getLinkedArtifactIds())]]></code>
@@ -1521,9 +1516,6 @@
     <InvalidReturnType>
       <code><![CDATA[BaselineRepresentation]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[DATE_TIME_FORMAT = DateTime::ATOM]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$exception]]></code>
       <code><![CDATA[$id]]></code>
@@ -1593,35 +1585,7 @@
       <code><![CDATA[$message]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/baseline/include/REST/ProjectBaselinesResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_PAGINATION_LIMIT = 50]]></code>
-    </MissingClassConstType>
-    <MissingReturnType>
-      <code><![CDATA[options]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/baseline/include/REST/ProjectComparisonsResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_PAGINATION_LIMIT = 50]]></code>
-    </MissingClassConstType>
-    <MissingReturnType>
-      <code><![CDATA[options]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/baseline/include/ServiceController.php">
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_NAME_VARIABLE_NAME = 'project_name']]></code>
-    </MissingClassConstType>
-    <MissingReturnType>
-      <code><![CDATA[includeJavascriptFiles]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/baseline/include/baselinePlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME              = 'baseline']]></code>
-      <code><![CDATA[SERVICE_SHORTNAME = 'plugin_baseline']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$params]]></code>
@@ -1629,18 +1593,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$label]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/baseline/tests/unit/Domain/RoleAssignmentsHistorySaverTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEVELOPER_UGROUP_ID = 104]]></code>
-      <code><![CDATA[PROJECT_ID          = 102]]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/baseline/tests/unit/REST/BaselineArtifactControllerIntTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[EPIC_ID    = 737]]></code>
-      <code><![CDATA[EPIC_TITLE = 'Epic #737']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/baseline/tests/unit/bootstrap.php">
     <PossiblyFalseIterator>

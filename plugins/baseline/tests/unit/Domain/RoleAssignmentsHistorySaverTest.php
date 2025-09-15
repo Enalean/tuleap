@@ -33,8 +33,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class RoleAssignmentsHistorySaverTest extends TestCase
 {
-    private const PROJECT_ID          = 102;
-    private const DEVELOPER_UGROUP_ID = 104;
+    private const int PROJECT_ID          = 102;
+    private const int DEVELOPER_UGROUP_ID = 104;
 
     private ProjectProxy $project_proxy;
 

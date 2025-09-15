@@ -38,7 +38,7 @@ use Tuleap\REST\QueryParameterParser;
 
 class BaselineArtifactController
 {
-    public const MAX_ARTIFACTS_COUNT = 100;
+    public const int MAX_ARTIFACTS_COUNT = 100;
 
     /** @var BaselineRepository */
     private $baseline_repository;
