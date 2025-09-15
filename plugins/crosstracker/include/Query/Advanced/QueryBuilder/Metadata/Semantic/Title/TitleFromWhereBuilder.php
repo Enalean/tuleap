@@ -27,7 +27,6 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use PFUser;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
-use Tuleap\CrossTracker\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -37,10 +36,11 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Tracker;
 
 /**
- * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, ParametrizedWhere>
+ * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, ParametrizedFromWhere>
  */
 final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
 {
@@ -70,7 +70,7 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
         SimpleValueWrapper $wrapper,
         array $trackers,
         PFUser $user,
-    ): ParametrizedWhere {
+    ): ParametrizedFromWhere {
         $value = $wrapper->getValue();
 
         $field_ids = [];
@@ -96,8 +96,10 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
         AND $field_ids_statement
         EOSQL;
 
-        return new ParametrizedWhere(
+        return new ParametrizedFromWhere(
+            $this->getSQLFromPart(),
             $where,
+            [],
             [...$where_parameters, ...$field_ids],
         );
     }
@@ -109,7 +111,7 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
         SimpleValueWrapper $wrapper,
         array $trackers,
         PFUser $user,
-    ): ParametrizedWhere {
+    ): ParametrizedFromWhere {
         $value = $wrapper->getValue();
 
         $field_ids = [];
@@ -122,16 +124,36 @@ final readonly class TitleFromWhereBuilder implements ValueWrapperVisitor
         $field_ids_statement = EasyStatement::open()->in('tracker_semantic_title.field_id IN (?*)', $field_ids);
 
         if ($value === '') {
-            return new ParametrizedWhere(
+            return new ParametrizedFromWhere(
+                $this->getSQLFromPart(),
                 "tracker_changeset_value_title.value IS NOT NULL AND tracker_changeset_value_title.value <> '' AND $field_ids_statement",
+                [],
                 $field_ids,
             );
         } else {
-            return new ParametrizedWhere(
+            return new ParametrizedFromWhere(
+                $this->getSQLFromPart(),
                 "(tracker_changeset_value_title.value IS NULL OR tracker_changeset_value_title.value NOT LIKE ?) AND $field_ids_statement",
+                [],
                 [$this->quoteLikeValueSurround($value), ...$field_ids],
             );
         }
+    }
+
+    private function getSQLFromPart(): string
+    {
+        return <<<SQL
+        LEFT JOIN (
+            tracker_changeset_value AS changeset_value_title
+            INNER JOIN tracker_semantic_title
+                ON (tracker_semantic_title.field_id = changeset_value_title.field_id)
+            INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_title
+                ON (tracker_changeset_value_title.changeset_value_id = changeset_value_title.id)
+        ) ON (
+            tracker_semantic_title.tracker_id = artifact.tracker_id
+            AND changeset_value_title.changeset_id = artifact.last_changeset_id
+        )
+        SQL;
     }
 
     private function quoteLikeValueSurround(float|int|string $value): string

@@ -95,16 +95,6 @@ final class CrossTrackerTQLQueryDao extends DataAccessObject
         FROM tracker_artifact as artifact
         INNER JOIN tracker ON (artifact.tracker_id = tracker.id)
         INNER JOIN tracker_changeset AS changeset ON (artifact.last_changeset_id = changeset.id)
-        LEFT JOIN (
-            tracker_changeset_value AS changeset_value_title
-            INNER JOIN tracker_semantic_title
-                ON (tracker_semantic_title.field_id = changeset_value_title.field_id)
-            INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_title
-                ON (tracker_changeset_value_title.changeset_value_id = changeset_value_title.id)
-        ) ON (
-            tracker_semantic_title.tracker_id = artifact.tracker_id
-            AND changeset_value_title.changeset_id = artifact.last_changeset_id
-        )
         $from
         WHERE $tracker_ids_statement AND $where
         ORDER BY $order
