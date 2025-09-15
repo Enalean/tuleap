@@ -14,7 +14,7 @@ module.exports = {
     extends: [
         "eslint:recommended",
         "plugin:you-dont-need-lodash-underscore/all",
-        "plugin:vue/vue3-recommended",
+        "plugin:vue/recommended",
         "plugin:import/typescript",
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
@@ -29,7 +29,6 @@ module.exports = {
     env: {
         es6: true,
         browser: true,
-        "vue/setup-compiler-macros": true,
     },
     reportUnusedDisableDirectives: true,
     rules: {
@@ -105,9 +104,6 @@ module.exports = {
         "vue/html-closing-bracket-newline": "off",
         "vue/html-indent": "off",
         "vue/max-attributes-per-line": "off",
-        // Temporarily disabled, turn back on when vue-eslint-plugin upgrade is done
-        "vue/valid-define-emits": "off",
-        "vue/valid-define-props": "off",
         // Typescript
         "no-restricted-syntax": [
             "error",
