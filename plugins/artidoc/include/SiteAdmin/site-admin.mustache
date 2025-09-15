@@ -1,0 +1,35 @@
+<h1>{{# dgettext }} tuleap-artidoc | Artidoc settings {{/ dgettext }}</h1>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa-solid fa-flask tlp-pane-title-icon" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-artidoc | Experimental display of versions {{/ dgettext }}
+            </h1>
+        </div>
+        <form method="post" action="" class="tlp-pane-section">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/csrf_token}}
+            <p>
+                {{# dgettext }} tuleap-artidoc | Allow users to display versions of Artidoc documents. {{/ dgettext }}
+            </p>
+            <div class="tlp-switch-with-label-on-right">
+                <div class="tlp-switch">
+                    <input type="checkbox"
+                        id="can_user_display_versions"
+                        name="can_user_display_versions"
+                        value="1"
+                        class="tlp-switch-checkbox"
+                        {{# can_user_display_versions }}checked{{/ can_user_display_versions }}
+                        onchange="this.form.submit()"
+                    >
+                    <label for="can_user_display_versions" class="tlp-switch-button"></label>
+                </div>
+                <label class="tlp-label" for="can_user_display_versions">
+                    {{# dgettext }} tuleap-artidoc | Activate experimental display of versions {{/ dgettext }}
+                </label>
+            </div>
+        </form>
+    </div>
+</section>

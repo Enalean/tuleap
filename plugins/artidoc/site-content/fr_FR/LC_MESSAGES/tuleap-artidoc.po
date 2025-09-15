@@ -10,13 +10,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "Activate experimental display of versions"
+msgstr "Activer l'affichage expérimental des versions"
 
 msgid "Administration"
 msgstr "Administration"
 
+msgid "Allow users to display versions of Artidoc documents."
+msgstr ""
+"Autoriser les utilisateurs à afficher les versions des documents Artidoc."
+
 msgid "Artidoc"
 msgstr "Artidoc"
+
+msgid "Artidoc settings"
+msgstr "Configuration d'Artidoc"
+
+msgid "Artidoc settings have been saved"
+msgstr "La configuration d'Artidoc a été sauvegardée"
 
 msgid "Artifact link field must use 'block' display type."
 msgstr "Le champ liens d'artifact doit utiliser l'affichage 'block'."
@@ -26,6 +39,9 @@ msgstr "Artifacts sous forme de Documents"
 
 msgid "Documents"
 msgstr "Documents"
+
+msgid "Experimental display of versions"
+msgstr "Affichage expérimental des versions"
 
 msgid "Given tracker cannot be found or you don't have access to it."
 msgstr "Le tracker fourni n'existe pas ou vous n'y avez pas accès."

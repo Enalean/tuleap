@@ -165,3 +165,13 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 *
 .tlp-switch-mini > .tlp-switch-checkbox:checked + .tlp-switch-button:not(.loading)::after {
     left: 16px;
 }
+
+.tlp-switch-with-label-on-right {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    align-items: center;
+
+    > .tlp-label {
+        margin: 0;
+    }
+}

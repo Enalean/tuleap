@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "pkg:@tuleap/tlp-styles/components/buttons";
+declare(strict_types=1);
 
-.switch-wrapper {
-    display: flex;
-    gap: var(--tlp-small-spacing);
-    align-items: center;
-}
+namespace Tuleap\Artidoc\SiteAdmin;
 
-.switch-label {
-    margin: 0;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
+
+#[ConfigKeyCategory('Artidoc')]
+final readonly class ArtidocAdminSettings
+{
+    #[FeatureFlagConfigKey('Allow users to display artidoc versions.0 to disallow, 1 to allow. By default they are disallowed.')]
+    #[ConfigKeyInt(0)]
+    public const string FEATURE_FLAG_VERSIONS = 'can_user_display_versions';
+
+    private function __construct()
+    {
+    }
 }
