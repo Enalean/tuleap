@@ -25,7 +25,7 @@ use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-    public const SEND_TIME_INTERVAL = '00:00:59';
+    public const string SEND_TIME_INTERVAL = '00:00:59';
 
     /**
      * @psalm-return null|array{id:int, bot_id:int, project_id:int, send_time:string}
