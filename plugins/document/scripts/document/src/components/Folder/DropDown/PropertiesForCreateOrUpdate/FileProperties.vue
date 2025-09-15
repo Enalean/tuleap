@@ -45,10 +45,10 @@ import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import emitter from "../../../../helpers/emitter";
 import type { FileProperties } from "../../../../type";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { MAX_SIZE_UPLOAD } from "../../../../configuration-keys";
 
 const { $gettext } = useGettext();
 
@@ -59,10 +59,7 @@ defineProps<{
 const error_message = ref<string>("");
 const input = ref<HTMLInputElement>();
 
-const { max_size_upload } = useNamespacedState<Pick<ConfigurationState, "max_size_upload">>(
-    "configuration",
-    ["max_size_upload"],
-);
+const max_size_upload = strictInject(MAX_SIZE_UPLOAD);
 
 function onFileChange(event: Event): void {
     if (!(event.target instanceof HTMLInputElement)) {
@@ -80,10 +77,10 @@ function onFileChange(event: Event): void {
     emitter.emit("update-title-property", file.name);
 
     error_message.value = "";
-    if (file.size > max_size_upload.value) {
+    if (file.size > max_size_upload) {
         error_message.value = sprintf(
             $gettext("You are not allowed to upload files bigger than %s."),
-            prettyKibibytes(max_size_upload.value),
+            prettyKibibytes(max_size_upload),
         );
     }
 

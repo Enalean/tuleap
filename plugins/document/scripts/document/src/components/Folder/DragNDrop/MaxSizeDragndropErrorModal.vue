@@ -27,10 +27,10 @@
 import ErrorModal from "./ErrorModal.vue";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { useGettext } from "vue3-gettext";
 import { computed } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { MAX_SIZE_UPLOAD } from "../../../configuration-keys";
 
 const { $gettext } = useGettext();
 
@@ -38,14 +38,12 @@ const emit = defineEmits<{
     (e: "error-modal-hidden"): void;
 }>();
 
-const { max_size_upload } = useNamespacedState<Pick<ConfigurationState, "max_size_upload">>(
-    "configuration",
-    ["max_size_upload"],
-);
+const max_size_upload = strictInject(MAX_SIZE_UPLOAD);
+
 const error_message = computed(() =>
     sprintf(
         $gettext("You are not allowed to upload files bigger than %s."),
-        prettyKibibytes(max_size_upload.value),
+        prettyKibibytes(max_size_upload),
     ),
 );
 

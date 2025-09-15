@@ -21,9 +21,6 @@ import type { RootState } from "../type";
 
 export const state: RootState = {
     configuration: {
-        max_size_upload: 0,
-        warning_threshold: 0,
-        max_archive_size: 0,
         project_url: "",
         date_time_format: "",
         privacy: {

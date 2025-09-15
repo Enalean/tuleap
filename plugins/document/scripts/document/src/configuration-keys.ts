@@ -33,3 +33,6 @@ export const IS_OBSOLESCENCE_DATE_PROPERTY_USED: StrictInjectionKey<boolean> = S
 );
 export const MAX_FILES_DRAGNDROP: StrictInjectionKey<number> = Symbol("max-files-dragndrop");
 export const USER_CAN_DRAGNDROP: StrictInjectionKey<boolean> = Symbol("user-can-dragndrop");
+export const MAX_SIZE_UPLOAD: StrictInjectionKey<number> = Symbol("max-size-upload");
+export const WARNING_THRESHOLD: StrictInjectionKey<number> = Symbol("warning-threshold");
+export const MAX_ARCHIVE_SIZE: StrictInjectionKey<number> = Symbol("max-archive-size");

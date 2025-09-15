@@ -26,7 +26,13 @@ import DragNDropHandler from "./DragNDropHandler.vue";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { buildFakeItem } from "../../../helpers/item-builder";
-import { MAX_FILES_DRAGNDROP, USER_CAN_DRAGNDROP, USER_ID } from "../../../configuration-keys";
+import {
+    MAX_FILES_DRAGNDROP,
+    MAX_SIZE_UPLOAD,
+    USER_CAN_DRAGNDROP,
+    USER_ID,
+} from "../../../configuration-keys";
+import type { ConfigurationState } from "../../../store/configuration";
 
 vi.mock("../../../helpers/emitter");
 
@@ -61,7 +67,7 @@ describe("DragNDropHandler", () => {
         max_size_upload = 1000000000,
         folder_content = [],
         user_can_dragndrop = true,
-    ): VueWrapper<DragNDropHandler> {
+    ): VueWrapper<InstanceType<typeof DragNDropHandler>> {
         const wrapper = shallowMount(DragNDropHandler, {
             global: {
                 ...getGlobalTestOptions({
@@ -70,8 +76,7 @@ describe("DragNDropHandler", () => {
                             state: {
                                 is_changelog_proposed_after_dnd,
                                 is_filename_pattern_enforced,
-                                max_size_upload,
-                            },
+                            } as unknown as ConfigurationState,
                             namespaced: true,
                         },
                     },
@@ -88,6 +93,7 @@ describe("DragNDropHandler", () => {
                     [USER_ID.valueOf()]: CURRENT_USER_ID,
                     [MAX_FILES_DRAGNDROP.valueOf()]: 2,
                     [USER_CAN_DRAGNDROP.valueOf()]: user_can_dragndrop,
+                    [MAX_SIZE_UPLOAD.valueOf()]: max_size_upload,
                 },
             },
         });

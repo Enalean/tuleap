@@ -25,6 +25,7 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { MAX_ARCHIVE_SIZE } from "../../../../configuration-keys";
 
 describe("ModalSizeThresholdExceeded", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof ModalSizeThresholdExceeded>> {
@@ -33,14 +34,10 @@ describe("ModalSizeThresholdExceeded", () => {
                 size: 1050000,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: { max_archive_size: 1 },
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [MAX_ARCHIVE_SIZE.valueOf()]: 1,
+                },
             },
         });
     }

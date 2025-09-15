@@ -25,7 +25,7 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../../store/configuration";
+import { WARNING_THRESHOLD } from "../../../../configuration-keys";
 
 describe("ModalArchiveSizeWarningModal", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof ModalArchiveSizeWarningModal>> {
@@ -36,16 +36,10 @@ describe("ModalArchiveSizeWarningModal", () => {
                 shouldWarnOsxUser: false,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                warning_threshold: 1,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [WARNING_THRESHOLD.valueOf()]: 1,
+                },
             },
         });
     }

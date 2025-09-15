@@ -41,19 +41,17 @@ import { redirectToUrl } from "../../../../helpers/location-helper";
 import emitter from "../../../../helpers/emitter";
 import type { Folder } from "../../../../type";
 import { isPlatformOSX } from "../../../../helpers/platform-detector";
-import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
+import { useNamespacedActions } from "vuex-composition-helpers";
 import { computed, ref } from "vue";
 import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_NAME } from "../../../../configuration-keys";
+import { MAX_ARCHIVE_SIZE, PROJECT_NAME, WARNING_THRESHOLD } from "../../../../configuration-keys";
 
 const props = defineProps<{ item: Folder }>();
 
 const project_name = strictInject(PROJECT_NAME);
-const { max_archive_size, warning_threshold } = useNamespacedState<
-    Pick<ConfigurationState, "max_archive_size" | "warning_threshold">
->("configuration", ["max_archive_size", "warning_threshold"]);
+const warning_threshold = strictInject(WARNING_THRESHOLD);
+const max_archive_size = strictInject(MAX_ARCHIVE_SIZE);
 
 const { getFolderProperties } = useNamespacedActions<PropertiesActions>("properties", [
     "getFolderProperties",
@@ -87,7 +85,7 @@ async function checkFolderSize(): Promise<void> {
     }
 
     // max_archive_size is in MB, total_size in Bytes. Let's convert it to Bytes first.
-    const max_archive_size_in_Bytes = max_archive_size.value * Math.pow(10, 6);
+    const max_archive_size_in_Bytes = max_archive_size * Math.pow(10, 6);
     const { total_size, nb_files } = folder_properties;
 
     if (total_size > max_archive_size_in_Bytes) {
@@ -99,7 +97,7 @@ async function checkFolderSize(): Promise<void> {
     }
 
     // warning_threshold is in MB, total_size in Bytes. Let's convert it to Bytes first.
-    const warning_threshold_in_Bytes = warning_threshold.value * Math.pow(10, 6);
+    const warning_threshold_in_Bytes = warning_threshold * Math.pow(10, 6);
     const should_warn_osx_user = shouldWarnOSXUser(total_size, nb_files);
 
     if (total_size > warning_threshold_in_Bytes) {

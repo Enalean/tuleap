@@ -47,7 +47,12 @@ import { useNamespacedState, useState, useStore } from "vuex-composition-helpers
 import type { ConfigurationState } from "../../../store/configuration";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { MAX_FILES_DRAGNDROP, USER_CAN_DRAGNDROP, USER_ID } from "../../../configuration-keys";
+import {
+    MAX_FILES_DRAGNDROP,
+    MAX_SIZE_UPLOAD,
+    USER_CAN_DRAGNDROP,
+    USER_ID,
+} from "../../../configuration-keys";
 
 const MAX_FILES_ERROR = "max_files";
 const CREATION_ERROR = "creation_error";
@@ -73,21 +78,14 @@ const fake_item_list = ref<Array<FakeItem>>([]);
 const user_id = strictInject(USER_ID);
 const max_files_dragndrop = strictInject(MAX_FILES_DRAGNDROP);
 const user_can_dragndrop = strictInject(USER_CAN_DRAGNDROP);
+const max_size_upload = strictInject(MAX_SIZE_UPLOAD);
 
 const { current_folder, folder_content } = useState<
     Pick<RootState, "current_folder" | "folder_content">
 >(["current_folder", "folder_content"]);
-const { max_size_upload, is_changelog_proposed_after_dnd, is_filename_pattern_enforced } =
-    useNamespacedState<
-        Pick<
-            ConfigurationState,
-            "max_size_upload" | "is_changelog_proposed_after_dnd" | "is_filename_pattern_enforced"
-        >
-    >("configuration", [
-        "max_size_upload",
-        "is_changelog_proposed_after_dnd",
-        "is_filename_pattern_enforced",
-    ]);
+const { is_changelog_proposed_after_dnd, is_filename_pattern_enforced } = useNamespacedState<
+    Pick<ConfigurationState, "is_changelog_proposed_after_dnd" | "is_filename_pattern_enforced">
+>("configuration", ["is_changelog_proposed_after_dnd", "is_filename_pattern_enforced"]);
 
 const user_can_dragndrop_in_current_folder = computed(
     () => user_can_dragndrop && current_folder.value && current_folder.value.user_can_write,
@@ -229,7 +227,7 @@ async function ondrop(event: DragEvent): Promise<void> {
             return;
         }
 
-        if (file.size > max_size_upload.value) {
+        if (file.size > max_size_upload) {
             error_modal_shown.value = MAX_SIZE_ERROR;
             return;
         }
@@ -368,7 +366,7 @@ async function uploadNewFileVersion(event: DragEvent, dropzone_item: ItemFile): 
         return;
     }
 
-    if (file.size > max_size_upload.value) {
+    if (file.size > max_size_upload) {
         error_modal_shown.value = MAX_SIZE_ERROR;
         return;
     }
