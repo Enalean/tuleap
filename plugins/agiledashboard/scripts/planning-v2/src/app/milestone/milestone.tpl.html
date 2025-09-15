@@ -25,6 +25,7 @@
                 ng-click="planning.showEditSubmilestoneModal($event, milestoneController.milestone)"
                 class="tlp-button-primary tlp-button-outline tlp-button-mini"
                 title="{{::'Edit' | translate }}"
+                data-test="edit-milestone"
             >
                 <i class="fas fa-pencil-alt tlp-button-icon"></i><span translate>Edit</span>
             </a>
@@ -48,6 +49,7 @@
                     ng-click="$event.stopPropagation(); planning.showAddItemToSubMilestoneModal(accepted_type, milestoneController.milestone)"
                     class="tlp-dropdown-menu-item"
                     role="menuitem"
+                    data-test="add-item-to-submilestone"
                 ><i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i> <span translate>Add {{ accepted_type.label }}</span></a>
             </div>
         </div>
@@ -55,6 +57,7 @@
         <div class="milestone-header-spacer"></div>
 
         <span class="milestone-header-dates"
+              data-test="milestone-header-dates"
             ng-if="milestoneController.milestone.start_date || milestoneController.milestone.end_date"
         >
             {{ milestoneController.milestone.start_date | amDateFormat:'ll' }}
@@ -63,6 +66,7 @@
         </span>
         <span class="tlp-badge-primary tlp-badge-outline milestone-header-status"
             ng-class="{'tlp-badge-secondary': milestoneController.milestone.semantic_status === 'closed' }"
+            data-test="milestone-header-status"
         >{{ milestoneController.milestone.status_value }}</span>
     </div>
 
@@ -70,10 +74,12 @@
         <span class="tlp-badge-secondary tlp-badge-outline milestone-info-badge"
             translate
             ng-if="milestoneController.milestone.capacity"
+            data-test="milestone-info-capacity"
         >Capacity: {{ milestoneController.milestone.capacity }}</span>
         <span class="tlp-badge-secondary tlp-badge-outline milestone-info-badge"
             translate
             ng-if="! milestoneController.milestone.capacity"
+            data-test="milestone-info-capacity-none"
         >Capacity: N/A</span>
 
         <span class="milestone-info-badge tlp-badge-outline"
@@ -87,6 +93,7 @@
         <span class="tlp-badge-secondary tlp-badge-outline milestone-info-badge"
             ng-if="! milestoneController.milestone.initialEffort"
             translate
+            data-test="milestone-info-initial-effort-none"
         >Initial effort: N/A</span>
 
         <div class="milestone-spacer"></div>
@@ -119,6 +126,7 @@
 
     <section class="tlp-pane-section milestone-content"
         ng-show="! milestoneController.milestone.collapsed"
+        data-test="milestone-content"
     >
         <div class="milestone-backlog-items submilestone"
             data-accept="{{ milestoneController.milestone.content_accepted_types.toString() }}"
@@ -149,6 +157,7 @@
             width="29"
             height="34"
             viewBox="0 0 29 34"
+            data-test="empty-milestone"
         >
             <path fill-rule="evenodd" d="M79.6970065,47.5722807 C79.7378804,47.506913 79.7792161,47.434896 79.8222222,47.3555556 C80.1253148,47.4425223 80.3921669,47.3555556 80.5777778,47.3555556 L82.6933333,47.3555556 L82.6933333,46.6223684 C82.6933333,45.6633176 82.6602781,44.8045885 82.5941667,44.0461554 C82.5280552,43.2877224 82.4096073,42.5341937 82.2388194,41.7855469 C82.0680316,41.0369 81.8338904,40.3861253 81.5363889,39.8332031 C81.2388874,39.280281 80.8559977,38.7640649 80.3877083,38.2845395 C79.919419,37.805014 79.3629893,37.4135706 78.7184028,37.1101974 C78.0738162,36.8068241 77.3107914,36.5695115 76.4293056,36.3982525 C75.5478197,36.2269934 74.5506537,36.1413651 73.4377778,36.1413651 C72.8317562,36.1413651 72.1541241,36.1658303 71.4048611,36.2147615 C71.3387497,36.2147615 71.2092834,36.2269941 71.0164583,36.2514597 C70.8236333,36.2759253 70.6776394,36.2881579 70.5784722,36.2881579 C70.4131936,36.2881579 70.2754635,36.246567 70.1652778,36.163384 C70.055092,36.0802011 70,35.9652145 70,35.8184211 C70,35.6618413 70.0936565,35.5248361 70.2809722,35.4074013 C70.3801394,35.3388977 70.5013419,35.2752881 70.6445833,35.2165707 C70.7878248,35.1578533 70.9531009,35.0917972 71.1404167,35.0184005 C71.3277324,34.9450037 71.4599533,34.8936268 71.5370833,34.8642681 C74.6773768,33.6214165 77.1620279,33 78.9911111,33 C81.1838073,33 83.0183722,33.2593313 84.4948611,33.7780016 C88.9353463,35.3633714 91.1555556,39.6447842 91.1555556,46.6223684 L91.1555556,47.3555556 L93.4222222,47.3555556 C93.6078331,47.3555556 93.8746852,47.4425223 94.1777778,47.3555556 C94.2207839,47.434896 94.2621196,47.506913 94.3029935,47.5722807 L95.3866667,47.5722807 C95.6731496,47.5722807 95.9210638,47.6652485 96.1304167,47.851187 C96.3397696,48.0371254 96.4444444,48.2573123 96.4444444,48.5117544 C96.4444444,48.7661964 96.3397696,48.9863834 96.1304167,49.1723218 L87.6681944,56.6881113 C87.4588415,56.8740497 87.2109274,56.9670175 86.9244444,56.9670175 C86.6379615,56.9670175 86.3900473,56.8740497 86.1806944,56.6881113 L77.7184722,49.1723218 C77.5091193,48.9863834 77.4044444,48.7661964 77.4044444,48.5117544 C77.4044444,48.2573123 77.5091193,48.0371254 77.7184722,47.851187 C77.9278251,47.6652485 78.1757393,47.5722807 78.4622222,47.5722807 L79.6970065,47.5722807 Z M77.8353517,51.4972272 L79.9937016,53.7268572 L78.3111111,57.9333333 C78.3770513,57.8503368 78.3643706,57.8904037 78.3111111,57.9333333 C78.3339365,58.0106064 78.3212558,58.0506733 78.3111111,57.9333333 L82.8444444,57.9333333 L84.3555556,60.9555556 L89.6444444,60.9555556 L91.1555556,57.9333333 L95.6888889,57.9333333 C95.6787442,58.0406564 95.6660635,58.0005895 95.6888889,57.9333333 C95.6356294,57.9004206 95.6229487,57.8603537 95.6888889,57.9333333 L94.0042557,53.7217502 L96.1636157,51.4943877 L97.9555556,56.4222222 C98.5840387,57.3568318 98.7111111,57.9860616 98.7111111,58.6888889 L98.7111111,65.0092818 C98.7111111,66.1087251 97.8215332,67 96.7141456,67 L77.2858544,67 C76.1829608,67 75.2888889,66.1105655 75.2888889,65.0092818 L75.2888889,58.6888889 C75.2888889,57.9860616 75.4159613,57.3568318 76.0444444,56.4222222 L77.8353517,51.4972272 Z" transform="translate(-70 -33)"/>
         </svg>

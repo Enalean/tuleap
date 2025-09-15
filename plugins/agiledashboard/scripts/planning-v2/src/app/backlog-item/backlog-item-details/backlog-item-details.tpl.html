@@ -86,6 +86,7 @@
                 ng-class="'tlp-badge-' + details.getCardColorName()"
                 title="{{::'Initial effort' | translate }}"
                 ng-bind-html="(details.backlog_item.initial_effort | tuleapHighlight:details.backlog_filter.terms)"
+                data-test="badge-initial-effort"
             ></span>
 
             <span ng-if="! details.backlog_item.initial_effort"
