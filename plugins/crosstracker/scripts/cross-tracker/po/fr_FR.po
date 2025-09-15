@@ -100,8 +100,8 @@ msgstr ""
 "Exemple: SELECT @pretty_title FROM @project.name = 'mon-projet' WHERE @title "
 "= 'valeur'"
 
-msgid "Export XSLX"
-msgstr "Export XSLX"
+msgid "Export XLSX"
+msgstr "Export XLSX"
 
 msgid "First"
 msgstr "Premier"
