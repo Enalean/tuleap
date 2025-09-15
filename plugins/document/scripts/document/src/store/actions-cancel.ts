@@ -31,7 +31,7 @@ export const cancelFileUpload = async (
             item.uploader.abort();
         }
         await cancelUpload(item);
-    } catch (e) {
+    } catch (_e) {
         // do nothing
     } finally {
         context.commit("removeItemFromFolderContent", item);
@@ -48,7 +48,7 @@ export const cancelVersionUpload = async (
             item.uploader.abort();
         }
         await cancelUpload(item);
-    } catch (e) {
+    } catch (_e) {
         // do nothing
     } finally {
         context.commit("removeVersionUploadProgress", item);
@@ -71,7 +71,7 @@ export const cancelFolderUpload = (
                 cancelFileUpload(context, child);
             }
         });
-    } catch (e) {
+    } catch (_e) {
         // do nothing
     } finally {
         context.commit("resetFolderIsUploading", folder);

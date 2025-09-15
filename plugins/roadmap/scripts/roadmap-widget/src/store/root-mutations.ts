@@ -29,7 +29,7 @@ export async function setApplicationInErrorStateDueToRestError(
     if (rest_error.response.status === 400) {
         try {
             state.error_message = await getMessageFromRestError(rest_error);
-        } catch (error) {
+        } catch (_error) {
             // no custom message if we are unable to parse the error response
             throw rest_error;
         }

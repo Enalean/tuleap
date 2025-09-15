@@ -235,7 +235,7 @@ export const useStore = defineStore("root", {
             try {
                 const { error } = await rest_error.response.json();
                 this.setErrorMessage(error.code + " " + error.message);
-            } catch (error) {
+            } catch (_error) {
                 this.setErrorMessage("");
             }
         },

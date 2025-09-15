@@ -107,7 +107,7 @@ export function buildLazyboxSingle(args: LazyboxProps): Lazybox & HTMLElement {
         is_multiple: false,
         placeholder: args.placeholder,
         search_input_placeholder: args.search_input_placeholder,
-        new_item_label_callback: (item_name) =>
+        new_item_label_callback: (item_name): string =>
             item_name !== "" ? `→ Create a new item "${item_name}"…` : "→ Create a new item…",
         new_item_clicked_callback: (item_name): void => {
             lazybox.replaceSelection([

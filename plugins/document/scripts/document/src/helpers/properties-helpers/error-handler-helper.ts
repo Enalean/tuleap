@@ -39,7 +39,7 @@ export async function handleErrorForHistoryVersion(exception: unknown): Promise<
     try {
         const json = await exception.response.json();
         return getErrorMessage(json);
-    } catch (error) {
+    } catch (_error) {
         return "Internal server error";
     }
 }

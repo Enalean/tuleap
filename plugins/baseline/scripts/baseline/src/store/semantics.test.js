@@ -55,62 +55,41 @@ describe("Semantics store:", () => {
             });
 
             describe("when not currently loading", () => {
-                let resolveGetTracker;
-                let rejectGetTracker;
-                let action_promise;
+                const tracker = { id: 9 };
 
-                beforeEach(() => {
-                    getTracker.mockReturnValue(
-                        new Promise((resolve, reject) => {
-                            resolveGetTracker = resolve;
-                            rejectGetTracker = reject;
-                        }),
-                    );
-
+                function loadByTrackerId() {
                     state.is_field_by_tracker_id_loading[1] = false;
-                    action_promise = store.actions.loadByTrackerId(context, 1);
-                });
+                    return store.actions.loadByTrackerId(context, 1);
+                }
 
-                it("start loading", () => {
+                it("start loading and loads semantics", async () => {
+                    getTracker.mockResolvedValue(tracker);
+
+                    await loadByTrackerId();
+
                     expect(context.commit).toHaveBeenCalledWith("startLoading", 1);
-                });
-
-                it("loads semantics", () => {
                     expect(getTracker).toHaveBeenCalled();
                 });
 
                 describe("when getTracker() is resolved", () => {
-                    const tracker = { id: 9 };
-                    beforeEach(() => {
-                        resolveGetTracker(tracker);
-                        return action_promise;
-                    });
-
-                    it("updates fields with returned tracker", () => {
+                    it("updates fields with returned tracker and stops loading", async () => {
+                        getTracker.mockResolvedValue(tracker);
+                        await loadByTrackerId();
                         expect(context.commit).toHaveBeenCalledWith("update", tracker);
-                    });
-                    it("stop loading", () => {
                         expect(context.commit).toHaveBeenCalledWith("stopLoading", 1);
                     });
                 });
 
                 describe("when getTracker() is failed", () => {
-                    beforeEach(async () => {
-                        rejectGetTracker();
-                        try {
-                            await action_promise;
-                        } catch (e) {
-                            // Expected
-                        }
-                    });
+                    it("does not update fields and stops loading", async () => {
+                        getTracker.mockRejectedValue(Error("Aaaah"));
 
-                    it("does not update fields", () => {
+                        await expect(() => loadByTrackerId()).rejects.toThrow();
+
                         expect(context.commit).not.toHaveBeenCalledWith(
                             "update",
                             expect.anything(),
                         );
-                    });
-                    it("stop loading", () => {
                         expect(context.commit).toHaveBeenCalledWith("stopLoading", 1);
                     });
                 });

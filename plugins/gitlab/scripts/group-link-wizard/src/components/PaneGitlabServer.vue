@@ -170,7 +170,7 @@ function onClickFetchGitLabGroups(event: Event): void {
     let server_url = null;
     try {
         server_url = new URL(gitlab_server_url.value);
-    } catch (error) {
+    } catch (_error) {
         form.value.reportValidity();
         return;
     }

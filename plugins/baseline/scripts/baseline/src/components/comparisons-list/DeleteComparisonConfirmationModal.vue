@@ -61,7 +61,7 @@ export default {
         async confirm() {
             try {
                 await deleteComparison(this.comparison.id);
-            } catch (e) {
+            } catch (_e) {
                 // Error handling is missing
                 return;
             }

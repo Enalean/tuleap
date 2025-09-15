@@ -19,7 +19,7 @@
 
 import jQuery from "jquery";
 
-!(function ($) {
+(function ($) {
     var svn_checkbox, form;
 
     function changeSVNFormVisibility() {

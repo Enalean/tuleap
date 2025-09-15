@@ -19,7 +19,7 @@
 
 /* global codendi:readonly */
 
-!(function ($) {
+(function ($) {
     function forceWidthToCurrentWidth($element) {
         $element.width($element.width());
     }

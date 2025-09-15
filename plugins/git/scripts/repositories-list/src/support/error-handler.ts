@@ -30,7 +30,7 @@ export async function getErrorCode(e: unknown): Promise<number> {
     try {
         const { error } = await e.response.json();
         error_code = Number.parseInt(error.code, 10);
-    } catch (e) {
+    } catch (_e) {
         return ERROR_TYPE_UNKNOWN_ERROR;
     }
 

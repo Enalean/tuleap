@@ -45,8 +45,8 @@ describe("GitRepository", () => {
         const store_options = {
             state: {} as State,
             getters: {
-                isGitlabUsed: () => false,
-                isFolderDisplayMode: () => is_folder_display_mode,
+                isGitlabUsed: (): boolean => false,
+                isFolderDisplayMode: (): boolean => is_folder_display_mode,
             },
         };
 

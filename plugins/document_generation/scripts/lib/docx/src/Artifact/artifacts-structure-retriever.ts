@@ -267,7 +267,7 @@ async function getStepExecutionsFieldValue(
                 steps_values: test_execution_status,
             },
         };
-    } catch (e) {
+    } catch (_e) {
         return {
             field_id: field.field_id,
             type: "ttmstepexec",

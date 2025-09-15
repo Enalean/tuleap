@@ -51,7 +51,7 @@ function init(): void {
             } else {
                 displayEmptyState(widget_content, json);
             }
-        } catch (error) {
+        } catch (_error) {
             displayError(widget_content);
         }
     });

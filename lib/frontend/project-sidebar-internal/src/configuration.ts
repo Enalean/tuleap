@@ -130,7 +130,7 @@ export function unserializeConfiguration(
 
     try {
         return JSON.parse(serialized_config);
-    } catch (e) {
+    } catch (_e) {
         return undefined;
     }
 }

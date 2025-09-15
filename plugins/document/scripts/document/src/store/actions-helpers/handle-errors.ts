@@ -43,7 +43,7 @@ export async function handleErrors(
     try {
         const json = await exception.response.json();
         store.commit("error/setFolderLoadingError", getErrorMessage(json));
-    } catch (error) {
+    } catch (_error) {
         store.commit("error/setFolderLoadingError", message);
     }
 }
@@ -69,7 +69,7 @@ export async function handleErrorsForDocument(
     try {
         const json = await exception.response.json();
         store.commit("error/setItemLoadingError", getErrorMessage(json));
-    } catch (error) {
+    } catch (_error) {
         store.commit("error/setItemLoadingError", message);
     }
 }
@@ -94,7 +94,7 @@ export async function handleErrorsForDeletionModal(
             store.commit("removeItemFromFolderContent", item);
             store.commit("updateCurrentlyPreviewedItem", null);
         }
-    } catch (error) {
+    } catch (_error) {
         store.commit("error/setModalError", message);
     }
 }

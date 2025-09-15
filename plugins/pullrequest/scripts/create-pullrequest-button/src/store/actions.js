@@ -44,7 +44,7 @@ export async function init(
         } else {
             context.commit("setDestinationBranches", branches);
         }
-    } catch (e) {
+    } catch (_e) {
         context.commit("setHasErrorWhileLoadingBranchesToTrue");
     }
 

@@ -34,7 +34,7 @@ export async function initGettext(
                 domain,
                 await load_translations_callback(locale),
             );
-        } catch (exception) {
+        } catch (_exception) {
             // will be en_US if translations cannot be loaded
         }
     }

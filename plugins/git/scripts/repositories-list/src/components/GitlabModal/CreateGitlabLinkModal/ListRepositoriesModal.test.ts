@@ -45,7 +45,8 @@ describe("ListRepositoriesModal", () => {
     ): VueWrapper<InstanceType<typeof ListRepositoriesModal>> {
         const store_options = {
             getters: {
-                getGitlabRepositoriesIntegrated: () => getter_getGitlabRepositoriesIntegrated,
+                getGitlabRepositoriesIntegrated: (): GitLabRepository[] =>
+                    getter_getGitlabRepositoriesIntegrated,
             },
             mutations: {
                 resetRepositories: resetRepositoriesSpy,

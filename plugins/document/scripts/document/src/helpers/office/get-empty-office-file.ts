@@ -42,7 +42,7 @@ export async function getEmptyOfficeFileFromMimeType(
         response = await fetch(
             (await import(`./empty_document_templates/${locale}/new.${extension}`)).default,
         );
-    } catch (e) {
+    } catch (_e) {
         response = await fetch(
             (await import(`./empty_document_templates/en-US/new.${extension}`)).default,
         );

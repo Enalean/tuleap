@@ -123,7 +123,9 @@ function debounce<F extends (...args: any[]) => any>(
     return (...args: Parameters<F>): ReturnType<F> => {
         let result: any;
 
-        timeout && clearTimeout(timeout);
+        if (timeout) {
+            clearTimeout(timeout);
+        }
         timeout = setTimeout(function () {
             result = func(...args);
         }, wait);

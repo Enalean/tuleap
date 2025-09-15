@@ -113,7 +113,7 @@ export default {
             this.is_loading_failed = false;
             try {
                 await this.$store.dispatch("current_baseline/load", this.baseline_id);
-            } catch (e) {
+            } catch (_e) {
                 this.is_loading_failed = true;
             } finally {
                 this.is_loading = false;

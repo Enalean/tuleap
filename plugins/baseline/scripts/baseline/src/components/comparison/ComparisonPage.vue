@@ -115,7 +115,7 @@ export default {
 
             try {
                 await this.$store.dispatch("comparison/load", this.comparison);
-            } catch (e) {
+            } catch (_e) {
                 this.is_loading_failed = true;
             } finally {
                 this.is_loading = false;

@@ -15,7 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
+(function ($) {
     document.observe("dom:loaded", function () {
         if ($("#tracker_report_updater_saveas-modal") && $("#tracker_report_form")) {
             $("#tracker_report_updater_saveas-modal").on("hide", function () {

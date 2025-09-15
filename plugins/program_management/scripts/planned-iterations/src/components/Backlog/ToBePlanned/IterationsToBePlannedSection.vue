@@ -72,7 +72,7 @@ onMounted(async () => {
     try {
         is_loading.value = true;
         user_stories.value = await retrieveUnplannedElements(program_increment.value.id);
-    } catch (e) {
+    } catch (_e) {
         has_error.value = true;
         error_message.value = $gettext("An error occurred loading unplanned elements");
     } finally {

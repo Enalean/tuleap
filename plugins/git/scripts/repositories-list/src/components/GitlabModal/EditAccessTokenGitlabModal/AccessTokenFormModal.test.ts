@@ -188,7 +188,7 @@ describe("AccessTokenFormModal", () => {
 
         try {
             await jest.runOnlyPendingTimersAsync();
-        } catch (e) {
+        } catch (_e) {
             // Ignore, error handler re-throws REST errors
         }
 

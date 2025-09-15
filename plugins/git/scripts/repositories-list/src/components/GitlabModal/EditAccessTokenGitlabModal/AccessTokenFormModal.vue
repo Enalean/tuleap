@@ -186,7 +186,7 @@ const addGitlabToken = async (event: Event): Promise<void> => {
         emit("on-get-new-token-gitlab", {
             token: gitlab_new_token.value,
         });
-    } catch (e) {
+    } catch (_e) {
         error_message.value = gettext_provider.$gettext(
             "Submitted token is invalid to access to this repository on this GitLab server.",
         );

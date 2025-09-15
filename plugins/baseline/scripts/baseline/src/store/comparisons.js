@@ -50,7 +50,7 @@ export default {
                 await baselines_loading;
 
                 commit("updateComparisons", comparisons);
-            } catch (e) {
+            } catch (_e) {
                 commit("failLoading");
             } finally {
                 commit("stopLoading");

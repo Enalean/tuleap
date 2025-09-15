@@ -41,7 +41,7 @@ export async function handleError(
         }
 
         return json.error.code + " " + json.error.message;
-    } catch (error) {
+    } catch (_error) {
         return gettext_provider.$gettext("Oops, an error occurred!");
     }
 }

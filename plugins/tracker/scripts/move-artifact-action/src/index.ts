@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const { init } = await import(/* webpackChunkName: "move-modal" */ "./modal");
 
             await init(vue_mount_point);
-        } catch (e) {
+        } catch (_e) {
             addFeedback("error", "Error while loading the Move Artifact modal.");
         } finally {
             move_dropdown_icon.classList.remove("fa-spin", "fa-spinner");

@@ -32,7 +32,7 @@ export async function handleGlobalModalError(
     try {
         const { error } = await rest_error.response.json();
         context.commit("setGlobalModalErrorMessage", error.code + " " + error.message);
-    } catch (e) {
+    } catch (_e) {
         context.commit("setGlobalModalErrorMessage", "");
     }
 }
@@ -48,7 +48,7 @@ export async function handleErrorsForModal(
     try {
         const json = await exception.response.json();
         context.commit("setModalError", getErrorMessage(json));
-    } catch (error) {
+    } catch (_error) {
         context.commit("setModalError", message);
     }
 }
@@ -63,7 +63,7 @@ export async function handleErrorsForLock(
         }
         const json = await exception.response.json();
         context.commit("setLockError", getErrorMessage(json));
-    } catch (error) {
+    } catch (_error) {
         context.commit("setLockError", message);
     }
 }

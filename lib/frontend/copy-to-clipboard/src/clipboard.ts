@@ -37,6 +37,10 @@ export function writeTextToClipboard(str: string): Promise<void> {
         document.execCommand("copy");
         document.removeEventListener("copy", listener);
 
-        success ? resolve() : reject();
+        if (success) {
+            resolve();
+            return;
+        }
+        reject();
     });
 }

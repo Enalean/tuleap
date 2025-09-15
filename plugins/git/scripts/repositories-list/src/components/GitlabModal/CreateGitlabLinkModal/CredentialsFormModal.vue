@@ -200,7 +200,7 @@ const fetchRepositories = async (event: Event): Promise<void> => {
             token: gitlab_token.value,
             server_url: gitlab_server.value,
         });
-    } catch (e) {
+    } catch (_e) {
         handleError();
     } finally {
         is_loading.value = false;

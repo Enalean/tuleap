@@ -34,7 +34,7 @@ export async function loadTracker(context, tracker_id) {
         context.commit("startCurrentTrackerLoading", tracker_id);
         const tracker = await getTracker(tracker_id);
         context.commit("saveCurrentTracker", tracker);
-    } catch (e) {
+    } catch (_e) {
         context.commit("failCurrentTrackerLoading");
     } finally {
         context.commit("stopCurrentTrackerLoading");

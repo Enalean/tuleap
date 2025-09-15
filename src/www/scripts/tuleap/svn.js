@@ -18,7 +18,7 @@
  */
 
 /* global codendi:readonly */
-!(function ($) {
+(function ($) {
     function initAccessControlsVersionDisplayer() {
         var version_selector = $("#old_access_file_container select");
         var version_displayer = $("#old_access_file_container textarea");

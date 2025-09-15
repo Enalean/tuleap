@@ -57,7 +57,7 @@ export default {
         async confirm() {
             try {
                 await deleteBaseline(this.baseline.id);
-            } catch (e) {
+            } catch (_e) {
                 // Error management is missing
                 return;
             }

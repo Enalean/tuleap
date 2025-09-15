@@ -178,7 +178,7 @@ export default {
 
             try {
                 this.available_milestones = await getOpenMilestones(this.project_id);
-            } catch (e) {
+            } catch (_e) {
                 this.is_loading_failed = true;
             } finally {
                 this.is_loading = false;
@@ -202,7 +202,7 @@ export default {
                 this.$store.commit("dialog_interface/notify", notification);
                 this.$store.dispatch("baselines/load", { project_id: this.project_id });
                 this.$store.commit("dialog_interface/hideModal");
-            } catch (e) {
+            } catch (_e) {
                 this.is_creating_failed = true;
             } finally {
                 this.is_creating = false;

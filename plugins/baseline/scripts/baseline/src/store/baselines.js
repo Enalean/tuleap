@@ -48,7 +48,7 @@ export default {
                 await users_loading;
                 await artifacts_loading;
                 commit("updateBaselines", baselines);
-            } catch (e) {
+            } catch (_e) {
                 commit("failBaselinesLoading");
             } finally {
                 commit("stopBaselinesLoading");

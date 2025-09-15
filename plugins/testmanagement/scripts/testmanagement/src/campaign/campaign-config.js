@@ -56,7 +56,7 @@ function shouldCampaignsListBreadcrumbBeSkipped() {
     try {
         const current_milestone = JSON.parse(init_data.dataset.currentMilestone);
         return "id" in current_milestone;
-    } catch (e) {
+    } catch (_e) {
         return false;
     }
 }

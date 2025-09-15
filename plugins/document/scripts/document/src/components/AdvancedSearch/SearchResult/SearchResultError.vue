@@ -81,7 +81,7 @@ async function getErrorMessageFromError(error: FetchWrapperError): Promise<strin
         }
 
         return "";
-    } catch (e) {
+    } catch (_e) {
         return "";
     }
 }
