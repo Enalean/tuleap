@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
+use Override;
 use PFUser;
 use Planning;
 use Planning_ArtifactLinker;
@@ -48,10 +49,10 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
 {
     use GlobalResponseMock;
 
-    private const PROJECT_ID   = 101;
-    private const ARTIFACT_ID  = 1001;
-    private const PLANNING_ID  = 1;
-    private const MILESTONE_ID = 666;
+    private const int PROJECT_ID   = 101;
+    private const int ARTIFACT_ID  = 1001;
+    private const int PLANNING_ID  = 1;
+    private const int MILESTONE_ID = 666;
 
     private AgileDashboard_PaneRedirectionExtractor $params_extractor;
     private RedirectParameterInjector $injector;
@@ -66,6 +67,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
     private Planning_MilestonePaneFactory&\PHPUnit\Framework\MockObject\MockObject $pane_factory;
     private Artifact $artifact;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->params_extractor                   = new AgileDashboard_PaneRedirectionExtractor();
@@ -105,6 +107,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
             ->build();
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         ProjectManager::clearInstance();
