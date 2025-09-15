@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
 use Tracker_FormElement;
-use Tracker_FormElement_Container_Column;
+use Tuleap\Tracker\FormElement\Container\Column\ColumnContainer;
 
 final class ColumnContainerBuilder
 {
@@ -53,9 +53,9 @@ final class ColumnContainerBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Container_Column
+    public function build(): ColumnContainer
     {
-        $column = new Tracker_FormElement_Container_Column(
+        $column = new ColumnContainer(
             $this->id,
             51,
             15,
