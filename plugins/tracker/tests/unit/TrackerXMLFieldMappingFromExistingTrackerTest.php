@@ -25,9 +25,9 @@ namespace Tuleap\Tracker;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Container\Column\ColumnContainer;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
@@ -51,10 +51,10 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_5;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_6;
     private SelectboxField $select_box;
-    private Tracker_FormElement_Container_Column $column_1;
-    private Tracker_FormElement_Container_Column $column_2;
-    private Tracker_FormElement_Container_Column $column_3;
-    private Tracker_FormElement_Container_Column $column_4;
+    private ColumnContainer $column_1;
+    private ColumnContainer $column_2;
+    private ColumnContainer $column_3;
+    private ColumnContainer $column_4;
     private TextField $text_value_1;
     private TextField $text_value_2;
     private TextField $text_value_3;
@@ -185,7 +185,7 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         self::assertEquals([], $this->xml_mapping->getXmlFieldsMapping($this->xml_input, $this->fields));
     }
 
-    private function buildAColumn(string $name): Tracker_FormElement_Container_Column
+    private function buildAColumn(string $name): ColumnContainer
     {
         $column         = ColumnContainerBuilder::aColumn(15)->withName($name)->build();
         $this->fields[] = $column;

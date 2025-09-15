@@ -171,7 +171,6 @@
       <code><![CDATA[get]]></code>
       <code><![CDATA[getArtifact]]></code>
       <code><![CDATA[getBacklogItem]]></code>
-      <code><![CDATA[getBacklogItemRepresentationFactory]]></code>
       <code><![CDATA[getChildren]]></code>
       <code><![CDATA[getChildrenArtifactIds]]></code>
       <code><![CDATA[getCurrentUser]]></code>
@@ -314,7 +313,6 @@
       <code><![CDATA[filterOutAddedElements]]></code>
       <code><![CDATA[getBacklog]]></code>
       <code><![CDATA[getBacklogItemAsArtifact]]></code>
-      <code><![CDATA[getBacklogItemRepresentationFactory]]></code>
       <code><![CDATA[getCardwall]]></code>
       <code><![CDATA[getContent]]></code>
       <code><![CDATA[getCurrentUser]]></code>
@@ -33794,6 +33792,39 @@
       <code><![CDATA[NAME = 'createTrackerFromXMLEvent']]></code>
     </MissingClassConstType>
   </file>
+  <file src="plugins/tracker/include/FormElement/Container/Column/ColumnContainer.php">
+    <MissingParamType>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$htmlparams]]></code>
+      <code><![CDATA[$ignore_perms]]></code>
+      <code><![CDATA[$ignore_perms]]></code>
+      <code><![CDATA[$method]]></code>
+      <code><![CDATA[$params]]></code>
+      <code><![CDATA[$recipient]]></code>
+      <code><![CDATA[$recipient]]></code>
+      <code><![CDATA[$tracker]]></code>
+      <code><![CDATA[$tracker]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[fetchAdminInGroup]]></code>
+      <code><![CDATA[fetchArtifactCopyModeInGroup]]></code>
+      <code><![CDATA[fetchArtifactInGroup]]></code>
+      <code><![CDATA[fetchArtifactPrefix]]></code>
+      <code><![CDATA[fetchArtifactReadOnlyInGroup]]></code>
+      <code><![CDATA[fetchArtifactSuffix]]></code>
+      <code><![CDATA[fetchColumnPrefix]]></code>
+      <code><![CDATA[fetchColumnSuffix]]></code>
+      <code><![CDATA[fetchMailArtifactInGroup]]></code>
+      <code><![CDATA[fetchMailArtifactPrefix]]></code>
+      <code><![CDATA[fetchMailArtifactSuffix]]></code>
+      <code><![CDATA[fetchSubmitInGroup]]></code>
+      <code><![CDATA[fetchSubmitMasschangeInGroup]]></code>
+      <code><![CDATA[fetchWithColumnGroup]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/FormElement/Container/Fieldset/FieldsetContainer.php">
     <MissingParamType>
       <code><![CDATA[$extra_class]]></code>
@@ -35685,7 +35716,6 @@
   </file>
   <file src="plugins/tracker/include/REST/v1/TrackerPermissionsChecker.php">
     <MissingReturnType>
-      <code><![CDATA[checkRead]]></code>
       <code><![CDATA[checkUpdateWorkflow]]></code>
     </MissingReturnType>
   </file>
@@ -42315,39 +42345,6 @@
       <code><![CDATA[getDefaultValue]]></code>
       <code><![CDATA[getRESTContent]]></code>
       <code><![CDATA[hasBeenDisplayed]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column.php">
-    <MissingParamType>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$htmlparams]]></code>
-      <code><![CDATA[$ignore_perms]]></code>
-      <code><![CDATA[$ignore_perms]]></code>
-      <code><![CDATA[$method]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$recipient]]></code>
-      <code><![CDATA[$recipient]]></code>
-      <code><![CDATA[$tracker]]></code>
-      <code><![CDATA[$tracker]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[fetchAdminInGroup]]></code>
-      <code><![CDATA[fetchArtifactCopyModeInGroup]]></code>
-      <code><![CDATA[fetchArtifactInGroup]]></code>
-      <code><![CDATA[fetchArtifactPrefix]]></code>
-      <code><![CDATA[fetchArtifactReadOnlyInGroup]]></code>
-      <code><![CDATA[fetchArtifactSuffix]]></code>
-      <code><![CDATA[fetchColumnPrefix]]></code>
-      <code><![CDATA[fetchColumnSuffix]]></code>
-      <code><![CDATA[fetchMailArtifactInGroup]]></code>
-      <code><![CDATA[fetchMailArtifactPrefix]]></code>
-      <code><![CDATA[fetchMailArtifactSuffix]]></code>
-      <code><![CDATA[fetchSubmitInGroup]]></code>
-      <code><![CDATA[fetchSubmitMasschangeInGroup]]></code>
-      <code><![CDATA[fetchWithColumnGroup]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column_Group.php">
@@ -53507,12 +53504,9 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[parent::__construct()]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[rollBack]]></code>
       <code><![CDATA[startTransaction]]></code>
@@ -53520,16 +53514,9 @@
       <code><![CDATA[update]]></code>
       <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->updateAndGetLastId($sql)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[bool]]></code>
-    </InvalidReturnType>
     <MissingParamType>
       <code><![CDATA[$dashboard_id]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$user_id]]></code>
@@ -53539,7 +53526,6 @@
       <code><![CDATA[delete]]></code>
       <code><![CDATA[edit]]></code>
       <code><![CDATA[searchAllUserDashboards]]></code>
-      <code><![CDATA[searchByUserIdAndName]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/Dashboard/User/UserDashboardDeletor.php">
@@ -53611,9 +53597,6 @@
       <code><![CDATA[$dashboard_id]]></code>
       <code><![CDATA[$dashboard_id]]></code>
       <code><![CDATA[$dashboard_id]]></code>
-      <code><![CDATA[$dashboard_id]]></code>
-      <code><![CDATA[$dashboard_type]]></code>
-      <code><![CDATA[$dashboard_type]]></code>
       <code><![CDATA[$dashboard_type]]></code>
       <code><![CDATA[$dashboard_type]]></code>
       <code><![CDATA[$dashboard_type]]></code>
@@ -53635,19 +53618,11 @@
       <code><![CDATA[display]]></code>
       <code><![CDATA[displayWidgetEntries]]></code>
       <code><![CDATA[getWidgetsGroupedByCategories]]></code>
-      <code><![CDATA[isUniqueWidgetAlreadyAddedInDashboard]]></code>
       <code><![CDATA[redirectToDashboard]]></code>
       <code><![CDATA[sortAlphabetically]]></code>
       <code><![CDATA[sortCategoriesAlphabetically]]></code>
       <code><![CDATA[sortWidgetsAlphabetically]]></code>
     </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$widget]]></code>
-      <code><![CDATA[$widget]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[isUnique]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="src/common/Dashboard/Widget/Add/WidgetPresenter.php">
     <MissingParamType>
@@ -54154,9 +54129,6 @@
       <code><![CDATA[$owner_id]]></code>
       <code><![CDATA[$owner_type]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[create]]></code>
-    </MissingReturnType>
   </file>
   <file src="src/common/Dashboard/Widget/WidgetDashboardController.php">
     <MissingClassConstType>
@@ -67669,24 +67641,9 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/User/Password/PasswordExpirationChecker.php">
-    <MissingClassConstType>
-      <code><![CDATA[DAYS_FOR_EXPIRATION_WARN = 10]]></code>
-    </MissingClassConstType>
-    <MissingReturnType>
-      <code><![CDATA[checkPasswordLifetime]]></code>
-      <code><![CDATA[getPasswordExpirationDate]]></code>
-      <code><![CDATA[getPasswordLifetimeInSeconds]]></code>
-      <code><![CDATA[userPasswordHasExpired]]></code>
-      <code><![CDATA[warnUserAboutPasswordExpiration]]></code>
-    </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="src/common/User/Password/PasswordExpiredException.php">
-    <MissingReturnType>
-      <code><![CDATA[getUser]]></code>
-    </MissingReturnType>
   </file>
   <file src="src/common/User/Password/PasswordValidatorPresenter.php">
     <MissingParamType>
@@ -68859,7 +68816,6 @@
       <code><![CDATA[$widget_id]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$content_id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$owner_id]]></code>
     </MissingPropertyType>

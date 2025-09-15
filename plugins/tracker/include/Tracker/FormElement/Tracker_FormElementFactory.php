@@ -21,6 +21,7 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
+use Tuleap\Tracker\FormElement\Container\Column\ColumnContainer;
 use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
@@ -143,7 +144,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     ];
     protected $group_classnames       = [
         self::CONTAINER_FIELDSET_TYPE => FieldsetContainer::class,
-        self::CONTAINER_COLUMN_TYPE   => Tracker_FormElement_Container_Column::class,
+        self::CONTAINER_COLUMN_TYPE   => ColumnContainer::class,
     ];
     protected $staticfield_classnames = [
         'linebreak'      => Tracker_FormElement_StaticField_LineBreak::class,

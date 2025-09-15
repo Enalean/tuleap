@@ -21,11 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Container\Column;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker_FormElement_Container_Column;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -34,7 +33,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Container_ColumnTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ColumnContainerTest extends TestCase
 {
     public function testIsNotDeletableWithFields(): void
     {
@@ -57,7 +56,7 @@ final class Tracker_FormElement_Container_ColumnTest extends TestCase // phpcs:i
         $field_02 = $this->createMock(FloatField::class);
         $field_03 = $this->createMock(TextField::class);
 
-        $container_column = $this->createPartialMock(Tracker_FormElement_Container_Column::class, ['getAllFormElements']);
+        $container_column = $this->createPartialMock(ColumnContainer::class, ['getAllFormElements']);
         $container_column->method('getAllFormElements')->willReturn([$field_01, $field_02, $field_03]);
 
         $data    = '<?xml version="1.0" encoding="UTF-8"?>

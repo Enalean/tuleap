@@ -19,11 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Container\Column;
+
+use Codendi_HTMLPurifier;
+use Tracker_FormElement_Container;
+use Tracker_FormElement_Container_Column_Group;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
-class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class ColumnContainer extends Tracker_FormElement_Container
 {
     /**
      * Fetch the element for the update artifact form
@@ -176,7 +182,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
             $next = [];
             $tf   = Tracker_FormElementFactory::instance();
             $cur  = $this;
-            while ($cur instanceof \Tracker_FormElement_Container_Column) {
+            while ($cur instanceof ColumnContainer) {
                 $next[] = $cur;
                 $cur    = $tf->getNextSibling($cur);
             }

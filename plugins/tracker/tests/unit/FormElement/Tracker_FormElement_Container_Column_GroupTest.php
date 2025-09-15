@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Container_Column_Group;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Container\Column\ColumnContainer;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -37,16 +37,16 @@ final class Tracker_FormElement_Container_Column_GroupTest extends TestCase // p
         $artifact         = ArtifactTestBuilder::anArtifact(65412)->build();
         $submitted_values = [];
 
-        $column_01 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_01 = $this->createMock(ColumnContainer::class);
         $column_01->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C1');
 
-        $column_02 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_02 = $this->createMock(ColumnContainer::class);
         $column_02->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C2');
 
-        $column_03 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_03 = $this->createMock(ColumnContainer::class);
         $column_03->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C3');
 
-        $column_04 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_04 = $this->createMock(ColumnContainer::class);
         $column_04->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C4');
 
         $empty = [];
@@ -82,16 +82,16 @@ final class Tracker_FormElement_Container_Column_GroupTest extends TestCase // p
         $artifact         = ArtifactTestBuilder::anArtifact(65412)->build();
         $submitted_values = [];
 
-        $column_01 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_01 = $this->createMock(ColumnContainer::class);
         $column_01->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('');
 
-        $column_02 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_02 = $this->createMock(ColumnContainer::class);
         $column_02->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C2');
 
-        $column_03 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_03 = $this->createMock(ColumnContainer::class);
         $column_03->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('');
 
-        $column_04 = $this->createMock(Tracker_FormElement_Container_Column::class);
+        $column_04 = $this->createMock(ColumnContainer::class);
         $column_04->method('fetchArtifactInGroup')->with($artifact, $submitted_values)->willReturn('C4');
 
         $one_c1 = [$column_01];
