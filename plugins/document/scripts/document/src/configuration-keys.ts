@@ -28,3 +28,8 @@ export const USER_CAN_CREATE_WIKI: StrictInjectionKey<boolean> = Symbol("user-ca
 export const EMBEDDED_ARE_ALLOWED: StrictInjectionKey<boolean> = Symbol("embedded-are-allowed");
 export const IS_STATUS_PROPERTY_USED: StrictInjectionKey<boolean> =
     Symbol("is-status-property-used");
+export const IS_OBSOLESCENCE_DATE_PROPERTY_USED: StrictInjectionKey<boolean> = Symbol(
+    "is-obsolescence-date-property-used",
+);
+export const MAX_FILES_DRAGNDROP: StrictInjectionKey<number> = Symbol("max-files-dragndrop");
+export const USER_CAN_DRAGNDROP: StrictInjectionKey<boolean> = Symbol("user-can-dragndrop");

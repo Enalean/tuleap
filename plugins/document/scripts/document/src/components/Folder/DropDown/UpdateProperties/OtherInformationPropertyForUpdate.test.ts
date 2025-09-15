@@ -24,9 +24,8 @@ import OtherInformationPropertiesForUpdate from "./OtherInformationPropertiesFor
 import { TYPE_FILE } from "../../../../constants";
 import type { Item, ItemFile, ListValue, Property } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
-import { PROJECT_ID } from "../../../../configuration-keys";
+import { IS_OBSOLESCENCE_DATE_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
 
 vi.mock("../../../../helpers/emitter");
 
@@ -49,12 +48,6 @@ describe("OtherInformationPropertiesForUpdate", () => {
             global: {
                 ...getGlobalTestOptions({
                     modules: {
-                        configuration: {
-                            state: {
-                                is_obsolescence_date_property_used,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
                         properties: {
                             state: {
                                 has_loaded_properties,
@@ -68,6 +61,8 @@ describe("OtherInformationPropertiesForUpdate", () => {
                 }),
                 provide: {
                     [PROJECT_ID.valueOf()]: 101,
+                    [IS_OBSOLESCENCE_DATE_PROPERTY_USED.valueOf()]:
+                        is_obsolescence_date_property_used,
                 },
             },
         });

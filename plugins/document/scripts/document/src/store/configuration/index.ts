@@ -21,12 +21,9 @@ import type { ListOfSearchResultColumnDefinition, RootState, SearchCriteria } fr
 import type { Module } from "vuex";
 import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
-import * as getters from "./getters";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export interface ConfigurationState {
-    readonly is_obsolescence_date_property_used: boolean;
-    readonly max_files_dragndrop: number;
     readonly max_size_upload: number;
     readonly warning_threshold: number;
     readonly max_archive_size: number;
@@ -54,6 +51,5 @@ export function createConfigurationModule(
     return {
         namespaced: true,
         state: initial_configuration_state,
-        getters,
     };
 }

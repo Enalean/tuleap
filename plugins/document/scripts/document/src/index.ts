@@ -42,12 +42,15 @@ import type { SearchCriterion, SearchListOption } from "./type";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 import {
     EMBEDDED_ARE_ALLOWED,
+    IS_OBSOLESCENCE_DATE_PROPERTY_USED,
     IS_STATUS_PROPERTY_USED,
+    MAX_FILES_DRAGNDROP,
     PROJECT_ID,
     PROJECT_NAME,
     PROJECT_PUBLIC_NAME,
     ROOT_ID,
     USER_CAN_CREATE_WIKI,
+    USER_CAN_DRAGNDROP,
     USER_ID,
     USER_IS_ADMIN,
 } from "./configuration-keys";
@@ -163,10 +166,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const configuration_state: ConfigurationState = {
-        is_obsolescence_date_property_used,
         project_url,
         date_time_format,
-        max_files_dragndrop,
         max_size_upload,
         warning_threshold,
         max_archive_size,
@@ -213,7 +214,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(USER_IS_ADMIN, user_is_admin)
         .provide(USER_CAN_CREATE_WIKI, user_can_create_wiki)
         .provide(EMBEDDED_ARE_ALLOWED, embedded_are_allowed)
-        .provide(IS_STATUS_PROPERTY_USED, is_status_property_used);
+        .provide(IS_STATUS_PROPERTY_USED, is_status_property_used)
+        .provide(IS_OBSOLESCENCE_DATE_PROPERTY_USED, is_obsolescence_date_property_used)
+        .provide(MAX_FILES_DRAGNDROP, max_files_dragndrop)
+        .provide(USER_CAN_DRAGNDROP, max_files_dragndrop > 0);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

@@ -27,9 +27,9 @@
 <script setup lang="ts">
 import ErrorModal from "./ErrorModal.vue";
 import { useGettext } from "vue3-gettext";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
+import { MAX_FILES_DRAGNDROP } from "../../../configuration-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { interpolate, $ngettext } = useGettext();
 
@@ -37,19 +37,16 @@ const emit = defineEmits<{
     (e: "error-modal-hidden"): void;
 }>();
 
-const { max_files_dragndrop } = useNamespacedState<Pick<ConfigurationState, "max_files_dragndrop">>(
-    "configuration",
-    ["max_files_dragndrop"],
-);
+const max_files_dragndrop = strictInject(MAX_FILES_DRAGNDROP);
 
 const error_message = computed(() => {
     const translated = $ngettext(
         "You are not allowed to drag 'n drop more than %{ nb } file at once.",
         "You are not allowed to drag 'n drop more than %{ nb } files at once.",
-        max_files_dragndrop.value,
+        max_files_dragndrop,
     );
 
-    return interpolate(translated, { nb: max_files_dragndrop.value });
+    return interpolate(translated, { nb: max_files_dragndrop });
 });
 
 function bubbleErrorModalHidden() {
