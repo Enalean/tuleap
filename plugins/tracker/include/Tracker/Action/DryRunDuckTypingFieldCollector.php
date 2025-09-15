@@ -77,12 +77,6 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
                 continue;
             }
 
-            if ($destination_field->isUpdateable() && ! $destination_field->userCanUpdate($user)) {
-                $logger->debug(sprintf('User #%d (%s) can not update field #%d (%s) of project #%d', $user->getId(), $user->getUserName(), $destination_field->getId(), $destination_field->getName(), $destination_tracker->getGroupId()));
-                $this->addFieldToNotMigrateableList($source_field);
-                continue;
-            }
-
             if (
                 $this->verify_is_external_field->isAnExternalField($source_field) &&
                 $this->verify_is_external_field->isAnExternalField($destination_field)

@@ -54,8 +54,8 @@ use Tuleap\Tracker\Test\Stub\VerifyUserGroupValuesCanBeFullyMovedStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DryRunDuckTypingFieldCollectorTest extends TestCase
 {
-    private const DESTINATION_TRACKER_ID = 105;
-    private const SOURCE_TRACKER_ID      = 609;
+    private const int DESTINATION_TRACKER_ID = 105;
+    private const int SOURCE_TRACKER_ID      = 609;
 
     private \Tuleap\Tracker\Tracker $source_tracker;
     private \Tuleap\Tracker\Tracker $destination_tracker;
@@ -184,30 +184,31 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         self::assertEmpty($collection->partially_migrated_fields);
     }
 
-    public function testFieldWillNotBeMigratedWhenUserCanNotUpdateField(): void
+    public function testFieldWillBeMigratedEvenWhenUserCanNotUpdateField(): void
     {
-        $source_open_list = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\OpenListField::class);
-        $source_open_list->method('getId')->willReturn(12);
-        $source_open_list->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
-        $source_open_list->method('getLabel')->willReturn('string_field');
-        $source_open_list->method('getName')->willReturn('string_field');
-        $source_open_list->method('userCanUpdate')->willReturn(false);
-        $this->all_fields = [
-            $source_open_list,
-            StringFieldBuilder::aStringField(102)
-                ->inTracker($this->destination_tracker)
-                ->withName('release_number')
-                ->withLabel('Release number')
-                ->build(),
+        $source_field      = StringFieldBuilder::aStringField(12)
+            ->inTracker($this->source_tracker)
+            ->withName('string_field')
+            ->withLabel('string_field')
+            ->build();
+        $destination_field = StringFieldBuilder::aStringField(102)
+            ->inTracker($this->destination_tracker)
+            ->withName('string_field')
+            ->withLabel('string_field')
+            ->withUpdatePermission($this->user, false)
+            ->build();
+        $this->all_fields  = [
+            $source_field,
+            $destination_field,
         ];
 
         $this->verify_easily_migrated = VerifyFieldCanBeEasilyMigratedStub::withEasilyMovableFields();
 
         $collection = $this->collect();
 
-        self::assertContains($source_open_list, $collection->not_migrateable_field_list);
-        self::assertEmpty($collection->migrateable_field_list);
-        self::assertEmpty($collection->mapping_fields);
+        self::assertEmpty($collection->not_migrateable_field_list);
+        self::assertSame([$source_field], $collection->migrateable_field_list);
+        self::assertEquals([FieldMapping::fromFields($source_field, $destination_field)], $collection->mapping_fields);
         self::assertEmpty($collection->partially_migrated_fields);
     }
 
