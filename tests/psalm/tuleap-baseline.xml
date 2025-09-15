@@ -1629,14 +1629,6 @@
       <code><![CDATA[$row === null || $row === false]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/botmattermost/include/BotMattermost/BotMattermostDeleted.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'botmattermost_bot_deleted']]></code>
-    </MissingClassConstType>
-    <MissingReturnType>
-      <code><![CDATA[getBot]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/botmattermost/include/BotMattermost/Controller/AdminController.php">
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -1673,15 +1665,7 @@
       <code><![CDATA[checkUserIsSiteAdmin]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/botmattermost/include/BotMattermostLogger.php">
-    <MissingClassConstType>
-      <code><![CDATA[LOGGER_NAME = 'botMattermost_syslog']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/botmattermost/include/SenderServices/Attachment.php">
-    <MissingClassConstType>
-      <code><![CDATA[COLOR_BLUE = '#36a64f']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$pre_text]]></code>
       <code><![CDATA[$text]]></code>
@@ -1741,22 +1725,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/botmattermost/include/SenderServices/Sender.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_CHANNEL = '']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$channel]]></code>
       <code><![CDATA[$channel]]></code>
       <code><![CDATA[$post_string]]></code>
       <code><![CDATA[$url]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[generateAndSendNotification]]></code>
-      <code><![CDATA[pushNotification]]></code>
-      <code><![CDATA[pushNotificationByChannel]]></code>
-      <code><![CDATA[pushNotificationWithoutChannel]]></code>
-      <code><![CDATA[send]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/botmattermost/include/botmattermostPlugin.php">
     <DeprecatedMethod>

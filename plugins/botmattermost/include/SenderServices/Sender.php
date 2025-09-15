@@ -27,23 +27,16 @@ use Tuleap\BotMattermost\SenderServicesException\Exception\HasNoMessageContentEx
 
 class Sender
 {
-    public const DEFAULT_CHANNEL = '';
-
-    private $encoder_message;
-    private $client;
-    private $logger;
+    public const string DEFAULT_CHANNEL = '';
 
     public function __construct(
-        EncoderMessage $encoder_message,
-        ClientBotMattermost $client,
-        LoggerInterface $logger,
+        private readonly EncoderMessage $encoder_message,
+        private readonly ClientBotMattermost $client,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->encoder_message = $encoder_message;
-        $this->client          = $client;
-        $this->logger          = $logger;
     }
 
-    public function pushNotification(Bot $bot, Message $message, array $channels)
+    public function pushNotification(Bot $bot, Message $message, array $channels): void
     {
         $this->logger->debug('bot: #' . $bot->getId() . ' ' . $bot->getName());
         $this->logger->debug('channels: ' . implode(', ', $channels));
@@ -57,19 +50,19 @@ class Sender
         }
     }
 
-    private function pushNotificationByChannel(Bot $bot, Message $message, $channel)
+    private function pushNotificationByChannel(Bot $bot, Message $message, $channel): void
     {
         $this->logger->debug('channel: ' . $channel);
         $this->generateAndSendNotification($bot, $message, $channel);
     }
 
-    private function pushNotificationWithoutChannel(Bot $bot, Message $message)
+    private function pushNotificationWithoutChannel(Bot $bot, Message $message): void
     {
         $this->logger->debug('No channel specified, default channel will be used');
         $this->generateAndSendNotification($bot, $message, self::DEFAULT_CHANNEL);
     }
 
-    private function generateAndSendNotification(Bot $bot, Message $message, $channel)
+    private function generateAndSendNotification(Bot $bot, Message $message, $channel): void
     {
         try {
             $json_message = $this->encoder_message->generateJsonMessage($bot, $message, $channel);
@@ -79,7 +72,7 @@ class Sender
         }
     }
 
-    private function send($post_string, $url)
+    private function send($post_string, $url): void
     {
         $this->logger->debug('post string: ' . $post_string);
         $this->logger->debug('url: ' . $url);

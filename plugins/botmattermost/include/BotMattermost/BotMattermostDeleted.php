@@ -25,16 +25,13 @@ use Tuleap\Event\Dispatchable;
 
 class BotMattermostDeleted implements Dispatchable
 {
-    public const NAME = 'botmattermost_bot_deleted';
+    public const string NAME = 'botmattermost_bot_deleted';
 
-    private $bot;
-
-    public function __construct(Bot $bot)
+    public function __construct(private readonly Bot $bot)
     {
-        $this->bot = $bot;
     }
 
-    public function getBot()
+    public function getBot(): Bot
     {
         return $this->bot;
     }

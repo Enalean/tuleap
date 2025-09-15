@@ -22,7 +22,7 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 class Attachment
 {
-    public const COLOR_BLUE = '#36a64f';
+    public const string COLOR_BLUE = '#36a64f';
 
     private $pre_text;
     private $title;
