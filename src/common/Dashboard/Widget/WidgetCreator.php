@@ -35,11 +35,13 @@ class WidgetCreator
         $this->dao = $dao;
     }
 
-    public function create($owner_id, $owner_type, $dashboard_id, Widget $widget, Codendi_Request $request)
+    public function create($owner_id, $owner_type, $dashboard_id, Widget $widget, Codendi_Request $request): int
     {
         $content_id = (int) $widget->create($request);
 
         $this->dao->create($owner_id, $owner_type, $dashboard_id, $widget->getId(), $content_id);
+
+        return $content_id;
     }
 
     /**

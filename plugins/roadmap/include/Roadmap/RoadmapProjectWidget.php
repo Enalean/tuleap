@@ -81,7 +81,7 @@ final class RoadmapProjectWidget extends \Widget
         return $this->renderer->renderToString(
             'widget-roadmap',
             $this->presenter_builder->getPresenter(
-                (int) $this->content_id,
+                $this->content_id,
                 $this->lvl1_iteration_tracker_id,
                 $this->lvl2_iteration_tracker_id,
                 $this->default_timescale,
@@ -250,7 +250,7 @@ final class RoadmapProjectWidget extends \Widget
             $this->lvl2_iteration_tracker_id = $row['lvl2_iteration_tracker_id'];
             $this->title                     = $row['title'];
             $this->tracker_ids               = $this->dao->searchSelectedTrackers((int) $id);
-            $this->content_id                = $id;
+            $this->content_id                = (int) $id;
         }
     }
 
@@ -422,7 +422,7 @@ final class RoadmapProjectWidget extends \Widget
             }
         }
 
-        $report_id = $this->filter_report_dao->getReportIdToFilterArtifacts((int) $this->content_id);
+        $report_id = $this->filter_report_dao->getReportIdToFilterArtifacts($this->content_id);
         if ($report_id) {
             $this->addPreferenceXmlNodeValue($preference, 'filter_report_id', \Tracker_Report::XML_ID_PREFIX . $report_id);
         }

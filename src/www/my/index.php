@@ -61,16 +61,17 @@ $widget_factory = new WidgetFactory(
 
 $csrf_token                 = new CSRFSynchronizerToken('/my/');
 $dashboard_widget_dao       = new DashboardWidgetDao($widget_factory);
-$user_dashboard_dao         = new UserDashboardDao($dashboard_widget_dao);
+$user_dashboard_dao         = new \Tuleap\Dashboard\User\DashboardDao();
+$legacy_user_dashboard_dao  = new UserDashboardDao($dashboard_widget_dao);
 $dashboard_widget_retriever = new DashboardWidgetRetriever($dashboard_widget_dao);
 $core_assets                = new \Tuleap\Layout\IncludeCoreAssets();
 $router                     = new UserDashboardRouter(
     new UserDashboardController(
         $csrf_token,
-        new UserDashboardRetriever($user_dashboard_dao),
-        new UserDashboardSaver($user_dashboard_dao),
-        new UserDashboardDeletor($user_dashboard_dao),
-        new UserDashboardUpdator($user_dashboard_dao),
+        new UserDashboardRetriever($legacy_user_dashboard_dao),
+        new UserDashboardSaver($user_dashboard_dao, $legacy_user_dashboard_dao),
+        new UserDashboardDeletor($legacy_user_dashboard_dao),
+        new UserDashboardUpdator($user_dashboard_dao, $legacy_user_dashboard_dao),
         $dashboard_widget_retriever,
         new DashboardWidgetPresenterBuilder(
             $widget_factory,

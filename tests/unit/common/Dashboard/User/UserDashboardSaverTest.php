@@ -20,8 +20,8 @@
 
 namespace Tuleap\Dashboard\User;
 
-use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Stubs\Dashboard\User\SearchByUserIdAndNameStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,23 +36,16 @@ final class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao  = $this->createMock(\Tuleap\Dashboard\User\UserDashboardDao::class);
         $this->user = new \PFUser(['user_id' => 1, 'language_id' => 'en_US']);
 
-        $this->dao->method('searchByUserIdAndName')->willReturnCallback(
-            function (\PFUser $user_param, string $name_param): \Tuleap\FakeDataAccessResult {
-                if ($user_param === $this->user && $name_param === 'new_dashboard') {
-                    return \TestHelper::emptyDar();
-                } elseif ($user_param === $this->user && $name_param === 'existing_dashboard') {
-                    return \TestHelper::arrayToDar([
-                        'id'      => 1,
-                        'user_id' => 1,
-                        'name'    => 'existing_dashboard',
-                    ]);
-                }
-
-                throw new LogicException('must no be here.');
-            }
+        $this->user_saver = new UserDashboardSaver(
+            SearchByUserIdAndNameStub::withDashboards(
+                [
+                    'id'      => 1,
+                    'user_id' => 1,
+                    'name'    => 'existing_dashboard',
+                ]
+            ),
+            $this->dao
         );
-
-        $this->user_saver = new UserDashboardSaver($this->dao);
     }
 
     public function testItSavesDashboard(): void

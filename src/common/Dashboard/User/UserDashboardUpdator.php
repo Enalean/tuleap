@@ -24,16 +24,10 @@ use PFUser;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 
-class UserDashboardUpdator
+readonly class UserDashboardUpdator
 {
-    /**
-     * @var UserDashboardDao
-     */
-    private $dao;
-
-    public function __construct(UserDashboardDao $dao)
+    public function __construct(private SearchByUserIdAndName $searcher, private UserDashboardDao $dao)
     {
-        $this->dao = $dao;
     }
 
     public function update(PFUser $user, $id, $name)
@@ -42,7 +36,7 @@ class UserDashboardUpdator
             throw new NameDashboardDoesNotExistException();
         }
 
-        if ($this->dao->searchByUserIdAndName($user, $name)->count() > 0) {
+        if ($this->searcher->searchByUserIdAndName($user, $name) !== null) {
             throw new NameDashboardAlreadyExistsException();
         }
 

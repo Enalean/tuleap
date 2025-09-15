@@ -85,7 +85,7 @@ class TimetrackingManagementWidget extends Widget
     public function getContent(): string
     {
         $widget_config = TimetrackingManagementWidgetConfig::fromId(
-            (int) $this->content_id,
+            $this->content_id,
             $this->dao,
             $this->dao,
             UserManager::instance(),
@@ -145,6 +145,6 @@ class TimetrackingManagementWidget extends Widget
     #[\Override]
     public function loadContent($id): void
     {
-        $this->content_id = $id;
+        $this->content_id = (int) $id;
     }
 }
