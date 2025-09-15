@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\SVN;
 
 use Backend;
-use BackendSVN;
 use ColinODell\PsrTestLogger\TestLogger;
 use org\bovigo\vfs\vfsStream;
 use PFUser;

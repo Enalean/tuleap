@@ -40,7 +40,7 @@ class XMLImporter
         SimpleXMLElement $xml,
         $extraction_path,
         RepositoryCreator $repository_creator,
-        \BackendSVN $backend_svn,
+        \Tuleap\SVN\BackendSVN $backend_svn,
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
         \UserManager $user_manager,

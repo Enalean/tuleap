@@ -38,6 +38,7 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\BackendSVN;
 use Tuleap\SVN\Dao as SvnDao;
 use Tuleap\SVN\Hooks\PostCommit;
 use Tuleap\SVN\Repository\Destructor;

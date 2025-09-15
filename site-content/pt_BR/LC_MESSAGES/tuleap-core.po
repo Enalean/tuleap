@@ -963,18 +963,6 @@ msgstr "Copiar a chave de acesso"
 msgid "Copyright (c) %1$s, %2$s Team, 2001-%3$d. All Rights Reserved"
 msgstr "Todos os Direitos Reservados (c) %1$s, %2$s Equipe, 2001-%3$d"
 
-msgid "Could not commit repository initial layout"
-msgstr "Não foi possível comitar o layout inicial do repositório"
-
-msgid "Could not create/initialize SVN repository"
-msgstr "Não foi possível criar/inicializar o repositório SVN"
-
-msgid "Could not the access file of the SVN repository"
-msgstr "Não foi possível obter o arquivo de acesso do repositório SVN"
-
-msgid "Could not update hooks of the SVN repository"
-msgstr "Não foi possível atualizar os hooks do repositório SVN"
-
 msgid "Create"
 msgstr "Criar"
 
@@ -1681,9 +1669,6 @@ msgstr "O serviço inativo não pode ser ativado."
 
 msgid "Inherited?"
 msgstr "Herdado?"
-
-msgid "Initial layout creation"
-msgstr "Criação do layout inicial"
 
 msgid "Internal error: Could not update password"
 msgstr "Erro interno: Não foi possível atualizar a senha"
@@ -3409,10 +3394,6 @@ msgstr "O painel '%s' não existe."
 
 msgid "The default Administration project cannot be deleted."
 msgstr ""
-
-#, php-format
-msgid "The directory %s is not valid"
-msgstr "O diretório %s não é válido"
 
 msgid "The display preference has been forced for each user successfully."
 msgstr "A preferência de exibição foi imposta para cada usuário com sucesso."

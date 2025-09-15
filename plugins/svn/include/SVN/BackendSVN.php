@@ -19,6 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\SVN;
+
+use Backend;
+use BackendSVNFileForSimlinkAlreadyExistsException;
+use Event;
+use EventManager;
+use Exception;
+use ForgeConfig;
+use PFUser;
+use Project;
+use ProjectManager;
+use SVN_Apache;
+use SVN_Apache_SvnrootConf;
+use SVN_DAO;
 use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVNCore\GetAllRepositories;
 use Tuleap\SVNCore\Repository;
@@ -28,11 +42,9 @@ use Tuleap\SVNCore\SVNAccessFileSectionParser;
 use Tuleap\SVNCore\SVNAccessFileWriter;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
-use Tuleap\SVNCore\Cache\ParameterDao;
-use Tuleap\SVNCore\Cache\ParameterRetriever;
 use Tuleap\URI\URIModifier;
 
-class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class BackendSVN extends Backend
 {
     public const PRE_COMMIT_HOOK          = 'pre-commit';
     public const POST_COMMIT_HOOK         = 'post-commit';
@@ -42,8 +54,8 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
     protected $SVNApacheConfNeedUpdate;
 
     /**
-      * Protected for testing purpose
-      */
+     * Protected for testing purpose
+     */
     protected function getSvnDao()
     {
         return new SVN_DAO();
@@ -67,7 +79,7 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function createRepositorySVN(Repository $repository, $hook_commit_path, PFUser $user, array $initial_layout): void
     {
         if (! $this->createRepository($repository->getProject()->getID(), $repository->getSystemPath())) {
-            throw new SVNRepositoryCreationException(_('Could not create/initialize SVN repository'));
+            throw new SVNRepositoryCreationException(dgettext('tuleap-svn', 'Could not create/initialize SVN repository'));
         }
 
         $exception = null;
@@ -93,16 +105,16 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 true,
                 $hook_commit_path,
                 'svn_post_commit.php',
-                realpath(__DIR__ . '/../../utils/php-launcher.sh'),
+                __DIR__ . '/../../../../src/utils/php-launcher.sh',
                 'svn_pre_commit.php'
             )
         ) {
-            throw new SVNRepositoryCreationException(_('Could not update hooks of the SVN repository'));
+            throw new SVNRepositoryCreationException(dgettext('tuleap-svn', 'Could not update hooks of the SVN repository'));
         }
 
         if (! $this->updateSVNAccessForRepository($repository, null, null)) {
             $this->log("Can't update SVN access file", Backend::LOG_ERROR);
-            throw new SVNRepositoryCreationException(_('Could not the access file of the SVN repository'));
+            throw new SVNRepositoryCreationException(dgettext('tuleap-svn', 'Could not the access file of the SVN repository'));
         }
 
         $this->forceUpdateApacheConf();
@@ -154,7 +166,7 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 URIModifier::removeEmptySegments($system_path . DIRECTORY_SEPARATOR . $requested_path)
             );
             if (strpos($path_to_create, $system_path) !== 0) {
-                throw new SVNRepositoryLayoutInitializationException(sprintf(_('The directory %s is not valid'), $requested_path));
+                throw new SVNRepositoryLayoutInitializationException(sprintf(dgettext('tuleap-svn', 'The directory %s is not valid'), $requested_path));
             }
 
             $path_to_create_encoded = URIModifier::normalizePercentEncoding($path_to_create);
@@ -168,10 +180,10 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 $user_name = $this->getUsernameUsableInSVN($project_id, $user);
 
                 $result = $this->system('svn mkdir --username=' . escapeshellarg($user_name) .
-                    ' --message ' . escapeshellarg(_('Initial layout creation')) . ' --parents ' . implode(' ', $filtered_layout));
+                    ' --message ' . escapeshellarg(dgettext('tuleap-svn', 'Initial layout creation')) . ' --parents ' . implode(' ', $filtered_layout));
 
                 if ($result === false) {
-                    throw new SVNRepositoryLayoutInitializationException(_('Could not commit repository initial layout'));
+                    throw new SVNRepositoryLayoutInitializationException(dgettext('tuleap-svn', 'Could not commit repository initial layout'));
                 }
             }
         );
@@ -185,9 +197,9 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $intro_information = false;
         EventManager::instance()->processEvent(Event::SVN_INTRO, [
             'svn_intro_in_plugin' => false,
-            'svn_intro_info'      => &$intro_information,
-            'group_id'            => $project_id,
-            'user_id'             => $user->getId(),
+            'svn_intro_info' => &$intro_information,
+            'group_id' => $project_id,
+            'user_id' => $user->getId(),
         ]);
         $user_name = $user->getUserName();
         if ($intro_information !== false) {
@@ -271,9 +283,13 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
             }
         }
         if ($update_hook) {
+            $php_launcher = realpath(__DIR__ . '/../../../../src/utils/php-launcher.sh');
+            if ($php_launcher === false || ! is_file($php_launcher)) {
+                throw new \Exception('Cannot find php launcher');
+            }
             $command  = 'REPOS="$1"' . "\n";
             $command .= 'TXN="$2"' . "\n";
-            $command .= realpath(__DIR__ . '/../../utils/php-launcher.sh') . ' ' . $hook_commit_path . '/' . $pre_commit_file . ' "$REPOS" "$TXN" || exit 1';
+            $command .= $php_launcher . ' ' . $hook_commit_path . '/' . $pre_commit_file . ' "$REPOS" "$TXN" || exit 1';
             $this->addBlock($filename, $command);
         }
         $this->chown($filename, $this->getHTTPUser());
@@ -384,7 +400,7 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
     /**
      * Make the svn repository of the project private or public
      *
-     * @param Project $project    The project to work on
+     * @param Project $project The project to work on
      * @param bool $is_private true if the repository is private
      *
      * @return bool true if success
@@ -432,7 +448,7 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if (count($hook_error) > 1) {
             $exception_message = 'Files ' . implode(', ', $hook_error) . ' already exist';
         } else {
-             $exception_message = 'File ' . implode($hook_error) . ' already exists';
+            $exception_message = 'File ' . implode($hook_error) . ' already exists';
         }
 
         return $exception_message;
@@ -480,18 +496,8 @@ class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.M
         return $project_svnroot . '/hooks/' . $hook_name;
     }
 
-    /**
-     * @return \Tuleap\SVNCore\Cache\Parameters
-     */
-    protected function getSVNCacheParameters()
+    public function systemCheck(): void
     {
-        $parameter_manager = new ParameterRetriever(new ParameterDao());
-        return $parameter_manager->getParameters();
-    }
-
-    public function systemCheck(Project $project): void
-    {
-        // If no codendi_svnroot.conf file, force recreate.
         if (! is_file(ForgeConfig::get('svn_root_file'))) {
             $this->setSVNApacheConfNeedUpdate();
         }

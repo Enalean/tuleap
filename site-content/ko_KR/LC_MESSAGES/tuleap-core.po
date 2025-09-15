@@ -938,18 +938,6 @@ msgstr "액세스 키 복사"
 msgid "Copyright (c) %1$s, %2$s Team, 2001-%3$d. All Rights Reserved"
 msgstr "Copyright (c) %1$s, %2$s 팀, 2001-%3$d. All Rights Reserved"
 
-msgid "Could not commit repository initial layout"
-msgstr "리포지토리 초기 레이아웃을 커밋할 수 없습니다."
-
-msgid "Could not create/initialize SVN repository"
-msgstr "SVN 리포지토리를 생성/초기화 할 수 없습니다."
-
-msgid "Could not the access file of the SVN repository"
-msgstr "SVN 리포지토리의 파일을 액세스할 수 없습니다."
-
-msgid "Could not update hooks of the SVN repository"
-msgstr "SVN 리포지토리의 후크를 업데이트할 수 없습니다."
-
 msgid "Create"
 msgstr "생성하기"
 
@@ -1645,9 +1633,6 @@ msgstr "비활성화된 서비스를 사용하도록 설정할 수 없습니다.
 
 msgid "Inherited?"
 msgstr "상속?"
-
-msgid "Initial layout creation"
-msgstr "초기 레이아웃 생성"
 
 msgid "Internal error: Could not update password"
 msgstr "내부 오류: 암호를 업데이트할 수 없습니다."
@@ -3345,10 +3330,6 @@ msgstr "대시보드 “%s”은(는) 존재하지 않습니다."
 
 msgid "The default Administration project cannot be deleted."
 msgstr "기본 관리 프로젝트는 삭제할 수 없습니다."
-
-#, php-format
-msgid "The directory %s is not valid"
-msgstr "디렉터리 %s은(는) 유효하지 않습니다."
 
 msgid "The display preference has been forced for each user successfully."
 msgstr "디스플레이 기본 설정이 모든 사용자에게 성공적으로 강제 적용되었습니다."

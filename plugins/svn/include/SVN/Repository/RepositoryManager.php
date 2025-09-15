@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Repository;
 
-use BackendSVN;
+use Tuleap\SVN\BackendSVN;
 use EventManager;
 use Exception;
 use ForgeConfig;

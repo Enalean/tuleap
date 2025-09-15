@@ -21,7 +21,7 @@
 
 namespace Tuleap\SVN\Repository;
 
-use BackendSVN;
+use Tuleap\SVN\BackendSVN;
 use EventManager;
 use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;

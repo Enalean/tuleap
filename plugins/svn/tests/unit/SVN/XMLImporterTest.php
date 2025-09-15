@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN;
 
-use BackendSVN;
 use org\bovigo\vfs\vfsStream;
 use Project;
 use Psr\Log\LoggerInterface;
@@ -97,7 +96,7 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rule_name                   = $this->createMock(RuleName::class);
         $this->access_file_history_creator = $this->createMock(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
         $this->repository_manager          = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
-        $this->backend_svn                 = $this->createMock(\BackendSVN::class);
+        $this->backend_svn                 = $this->createMock(\Tuleap\SVN\BackendSVN::class);
         $this->notification_emails_builder = new NotificationsEmailsBuilder();
         $this->repository_creator          = $this->createMock(RepositoryCreator::class);
         $this->mail_notification_manager   = $this->createMock(MailNotificationManager::class);

@@ -87,6 +87,7 @@ use Tuleap\SVN\Admin\MailHeaderManager;
 use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Admin\RestoreController;
+use Tuleap\SVN\BackendSVN;
 use Tuleap\SVN\Commit\FileSizeValidator;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Dao;
@@ -395,7 +396,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->repository_manager = new RepositoryManager(
                 new Dao(),
                 ProjectManager::instance(),
-                new SvnAdmin(new System_Command(), self::getLogger(), \BackendSVN::instance()),
+                new SvnAdmin(new System_Command(), self::getLogger(), \Tuleap\SVN\BackendSVN::instance()),
                 self::getLogger(),
                 new System_Command(),
                 new Destructor(
@@ -403,7 +404,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     self::getLogger()
                 ),
                 EventManager::instance(),
-                \BackendSVN::instance(),
+                \Tuleap\SVN\BackendSVN::instance(),
                 $this->getAccessFileHistoryFactory()
             );
         }
@@ -738,7 +739,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     private function getBackendSVN(): BackendSVN
     {
-        return \BackendSVN::instance();
+        return \Tuleap\SVN\BackendSVN::instance();
     }
 
     #[ListeningToEventClass]
@@ -1270,10 +1271,13 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     #[ListeningToEventName(Event::PROCCESS_SYSTEM_CHECK)]
     public function processSystemCheck(array $params): void
     {
+        $backend_svn = $this->getBackendSVN();
+        $backend_svn->systemCheck();
+
         (new \Tuleap\SVN\Hooks\RestoreMissingHooks(
             new MissingHooksPathsFromFileSystemRetriever(self::getLogger(), $this->getRepositoryManager()),
             $params['logger'],
-            $this->getBackendSVN(),
+            $backend_svn,
         ))->restoreAllMissingHooks();
     }
 
@@ -1306,7 +1310,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     public function rootPostEventsActionsEvent(RootPostEventsActionsEvent $event): void
     {
         // Update SVN root definition for Apache once everything else is processed
-        if (\BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
+        if (\Tuleap\SVN\BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
             ApacheConfGenerator::build()->generate();
         }
     }

@@ -43,7 +43,7 @@ class XMLRepositoryImporter
 {
     public const SERVICE_NAME = 'svn';
     /**
-     * @var \BackendSVN
+     * @var \Tuleap\SVN\BackendSVN
      */
     private $backend_svn;
 
@@ -91,7 +91,7 @@ class XMLRepositoryImporter
         SimpleXMLElement $xml_repo,
         $extraction_path,
         RepositoryCreator $repository_creator,
-        \BackendSVN $backend_svn,
+        \Tuleap\SVN\BackendSVN $backend_svn,
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
         \UserManager $user_manager,

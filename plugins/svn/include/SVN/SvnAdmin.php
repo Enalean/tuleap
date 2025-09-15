@@ -29,7 +29,6 @@ use Tuleap\SVNCore\Repository;
 use Psr\Log\LoggerInterface;
 use ForgeConfig;
 use System_Command_CommandException;
-use BackendSVN;
 
 class SvnAdmin
 {

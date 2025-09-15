@@ -34,7 +34,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
     public const NAME = 'SystemEvent_SVN_CREATE_REPOSITORY';
 
     /**
-     * @var \BackendSVN
+     * @var \Tuleap\SVN\BackendSVN
      */
     private $backend_svn;
 
@@ -55,7 +55,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
-        \BackendSVN $backend_svn,
+        \Tuleap\SVN\BackendSVN $backend_svn,
     ) {
         $this->access_file_history_creator = $access_file_history_creator;
         $this->repository_manager          = $repository_manager;

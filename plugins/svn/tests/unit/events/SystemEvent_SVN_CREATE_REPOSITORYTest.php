@@ -39,7 +39,7 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
      */
     private $access_file_history_creator;
     /**
-     * @var \BackendSVN&\PHPUnit\Framework\MockObject\MockObject
+     * @var \Tuleap\SVN\BackendSVN&\PHPUnit\Framework\MockObject\MockObject
      */
     private $backend_svn;
     /**
@@ -51,7 +51,7 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
     protected function setUp(): void
     {
         $this->user_manager                = $this->createMock(\UserManager::class);
-        $this->backend_svn                 = $this->createMock(\BackendSVN::class);
+        $this->backend_svn                 = $this->createMock(\Tuleap\SVN\BackendSVN::class);
         $this->access_file_history_creator = $this->createMock(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
         $this->repository_manager          = $this->createMock(\Tuleap\SVN\Repository\RepositoryManager::class);
     }
