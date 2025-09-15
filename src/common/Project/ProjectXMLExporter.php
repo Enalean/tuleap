@@ -20,22 +20,33 @@
  * phpcs:disable PSR1.Classes.ClassDeclaration
  */
 
+namespace Tuleap\Project;
+
+use BackendLogger;
+use EventManager;
+use PFUser;
+use Project;
+use ProjectUGroup;
 use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
-use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\ExportOptions;
+use UGroupManager;
+use UserXMLExporter;
+use XML_RNGValidator;
+use XML_SimpleXMLCDATAFactory;
 
 final readonly class ProjectXMLExporter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const UGROUPS_MODE_SYNCHRONIZED = 'synchronized';
+    public const string UGROUPS_MODE_SYNCHRONIZED = 'synchronized';
 
-    public const LOG_IDENTIFIER = 'project_xml_export_syslog';
+    public const string LOG_IDENTIFIER = 'project_xml_export_syslog';
 
     public function __construct(
         private EventManager $event_manager,
@@ -71,7 +82,8 @@ final readonly class ProjectXMLExporter // phpcs:ignore PSR1.Classes.ClassDeclar
 
         $banner = $this->banner_retriever->getBannerForProject($project);
         if ($banner !== null) {
-            $project_node->addChild('banner', $banner->getMessage());
+            $cdata_factory = new XML_SimpleXMLCDATAFactory();
+            $cdata_factory->insert($project_node, 'banner', $banner->getMessage());
         }
 
         $services_node = $project_node->addChild('services');

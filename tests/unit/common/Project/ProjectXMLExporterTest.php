@@ -30,7 +30,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectUGroup;
-use ProjectXMLExporter;
 use Psr\Log\NullLogger;
 use Service;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;

@@ -28,7 +28,6 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectUGroup;
-use ProjectXMLExporter;
 use Psr\Log\NullLogger;
 use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Project\Banner\BannerRetriever;
