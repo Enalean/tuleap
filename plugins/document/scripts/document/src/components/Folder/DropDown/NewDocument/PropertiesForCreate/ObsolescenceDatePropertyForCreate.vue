@@ -68,13 +68,13 @@
 
 <script setup lang="ts">
 import DateFlatPicker from "../../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../../store/configuration";
 import { getObsolescenceDateValueInput } from "../../../../../helpers/properties-helpers/obsolescence-date-value";
 import emitter from "../../../../../helpers/emitter";
 import moment from "moment/moment";
 import { useGettext } from "vue3-gettext";
 import { computed, ref } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { IS_OBSOLESCENCE_DATE_PROPERTY_USED } from "../../../../../configuration-keys";
 
 const props = defineProps<{ value: string }>();
 
@@ -86,9 +86,7 @@ let selected_value = ref("permanent");
 let error_message = ref("");
 let uses_helper_validity = ref(false);
 
-const { is_obsolescence_date_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_obsolescence_date_property_used">
->("configuration", ["is_obsolescence_date_property_used"]);
+const is_obsolescence_date_property_used = strictInject(IS_OBSOLESCENCE_DATE_PROPERTY_USED);
 
 const has_error_message = computed((): boolean => {
     return error_message.value.length > 0;

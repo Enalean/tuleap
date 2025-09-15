@@ -21,8 +21,6 @@ import type { RootState } from "../type";
 
 export const state: RootState = {
     configuration: {
-        is_obsolescence_date_property_used: false,
-        max_files_dragndrop: 0,
         max_size_upload: 0,
         warning_threshold: 0,
         max_archive_size: 0,

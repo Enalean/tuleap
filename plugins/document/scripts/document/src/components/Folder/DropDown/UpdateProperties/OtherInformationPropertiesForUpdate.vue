@@ -49,12 +49,11 @@ import ObsolescenceDatePropertyForUpdate from "./ObsolescenceDatePropertyForUpda
 import CustomProperty from "../PropertiesForCreateOrUpdate/CustomProperties/CustomProperty.vue";
 import type { Item, Property } from "../../../../type";
 import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
 import { computed, onMounted } from "vue";
 import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../../../../configuration-keys";
+import { IS_OBSOLESCENCE_DATE_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
 
 const props = defineProps<{
     currentlyUpdatedItem: Item;
@@ -63,17 +62,14 @@ const props = defineProps<{
 }>();
 
 const project_id = strictInject(PROJECT_ID);
-
-const { is_obsolescence_date_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_obsolescence_date_property_used">
->("configuration", ["is_obsolescence_date_property_used"]);
+const is_obsolescence_date_property_used = strictInject(IS_OBSOLESCENCE_DATE_PROPERTY_USED);
 
 const { has_loaded_properties } = useNamespacedState<
     Pick<PropertiesState, "has_loaded_properties">
 >("properties", ["has_loaded_properties"]);
 
 const should_display_other_information = computed((): boolean => {
-    return is_obsolescence_date_property_used.value || props.propertyToUpdate.length > 0;
+    return is_obsolescence_date_property_used || props.propertyToUpdate.length > 0;
 });
 
 const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("properties", [

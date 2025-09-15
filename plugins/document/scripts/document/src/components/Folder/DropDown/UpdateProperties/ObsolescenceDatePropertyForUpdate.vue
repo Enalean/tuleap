@@ -71,9 +71,9 @@ import {
 } from "../../../../helpers/properties-helpers/obsolescence-date-value";
 import DateFlatPicker from "../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
 import emitter from "../../../../helpers/emitter";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { onMounted, onBeforeMount, ref } from "vue";
+import { IS_OBSOLESCENCE_DATE_PROPERTY_USED } from "../../../../configuration-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const props = defineProps<{
     value: string;
@@ -84,9 +84,7 @@ let selected_value = ref("");
 let error_message = ref("");
 let uses_helper_validity = ref(false);
 
-const { is_obsolescence_date_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_obsolescence_date_property_used">
->("configuration", ["is_obsolescence_date_property_used"]);
+const is_obsolescence_date_property_used = strictInject(IS_OBSOLESCENCE_DATE_PROPERTY_USED);
 
 onBeforeMount((): void => {
     date_value.value = formatObsolescenceDateValue(date_value.value);
