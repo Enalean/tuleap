@@ -67,7 +67,7 @@ final class SelectOptionsBuilder
 
             if ($element instanceof \Tuleap\Tracker\FormElement\Field\TrackerField && $element->canBeDisplayedInTooltip()) {
                 $options[] = new SelectOption($element->getLabel(), (string) $element->getId());
-            } elseif ($element instanceof \Tracker_FormElement_Container) {
+            } elseif ($element instanceof \Tuleap\Tracker\FormElement\Container\TrackerFormElementContainer) {
                 [$container_options, $container_optgroups] = $this->extractOptionsAndOptgroups(
                     $element->getFormElements(),
                     $user,
