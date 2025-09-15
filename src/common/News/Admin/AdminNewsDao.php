@@ -20,7 +20,6 @@
 namespace Tuleap\News\Admin;
 
 use DataAccessObject;
-use Tuleap\News\NewsItem;
 
 class AdminNewsDao extends DataAccessObject
 {
@@ -72,18 +71,5 @@ class AdminNewsDao extends DataAccessObject
                 summary=$title, details=$content WHERE id=$id";
 
         return $this->update($sql);
-    }
-
-    public function searchAllPublishedNewsFromProject($project_id)
-    {
-        $news_deleted_value = $this->da->escapeInt(NewsItem::NEWS_DELETED);
-        $group_id           = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT *
-             FROM news_bytes
-             WHERE group_id = $group_id
-               AND is_approved != $news_deleted_value";
-
-        return $this->retrieve($sql);
     }
 }

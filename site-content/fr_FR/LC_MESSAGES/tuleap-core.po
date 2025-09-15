@@ -2177,9 +2177,6 @@ msgstr "Annonces"
 msgid "News approval"
 msgstr "Approbation des annonces"
 
-msgid "News {{ user_group_name }} can see"
-msgstr "Annonces que {{ user_group_name }} peuvent voir"
-
 msgid "Next Messages"
 msgstr "Messages suivants"
 
@@ -3167,9 +3164,6 @@ msgstr "Invitation envoyée"
 
 msgid "Service is not allowed in project."
 msgstr "Le service n'est pas autorisé dans le projet."
-
-msgid "Service news is disabled for this project."
-msgstr "Le service annonces est désactivé pour ce projet."
 
 msgid "Service not found in database"
 msgstr "Le service n'existe pas dans la base de données"

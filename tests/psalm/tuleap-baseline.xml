@@ -57613,53 +57613,6 @@
       <code><![CDATA[getWaitingPublicationNews]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsJSONPermissionsRetriever.php">
-    <MissingParamType>
-      <code><![CDATA[$selected_ugroup_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[retrieve]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsPermissionPerGroupPaneBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$selected_ugroup_id]]></code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsPermissionsManager.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getRow]]></code>
-    </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[NEWS_READ = 'NEWS_READ']]></code>
-    </MissingClassConstType>
-    <MissingParamType>
-      <code><![CDATA[$project_news]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getAccessibleProjectNews]]></code>
-      <code><![CDATA[isProjectNewsPublic]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsPermissionsRepresentationBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$new]]></code>
-      <code><![CDATA[$selected_ugroup_id]]></code>
-      <code><![CDATA[$selected_ugroup_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[getNewAdminQuickLink]]></code>
-      <code><![CDATA[isUGroupAuthorizedToSeePrivateNews]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsVisibilityRepresentation.php">
-    <MissingParamType>
-      <code><![CDATA[$admin_quicklink]]></code>
-      <code><![CDATA[$is_public]]></code>
-      <code><![CDATA[$news_name]]></code>
-    </MissingParamType>
-  </file>
   <file src="src/common/News/ChooseNewsItemController.php">
     <MissingReturnType>
       <code><![CDATA[checkAccess]]></code>
@@ -57723,11 +57676,6 @@
     <MissingReturnType>
       <code><![CDATA[updatePromotedItems]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/News/PermissionsPerGroup.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$request->getProject()->getID()]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/common/Notification/Notification.php">
     <MissingParamType>
@@ -58562,8 +58510,6 @@
     <MissingReturnType>
       <code><![CDATA[addDynamicUgroups]]></code>
       <code><![CDATA[addForgeUGroups]]></code>
-      <code><![CDATA[addForum]]></code>
-      <code><![CDATA[addNews]]></code>
       <code><![CDATA[addNobody]]></code>
       <code><![CDATA[addStaticUgroups]]></code>
       <code><![CDATA[addWiki]]></code>

@@ -89,8 +89,6 @@ class PermissionPerGroupBuilder
         ];
 
         $this->addWiki($project, $ugroups);
-        $this->addForum($project, $ugroups);
-        $this->addNews($project, $ugroups);
         $this->addNobody($ugroups);
     }
 
@@ -114,21 +112,6 @@ class PermissionPerGroupBuilder
     {
         if ($project->usesWiki()) {
             $this->appendToUGroups($ugroups, $project, ProjectUGroup::WIKI_ADMIN);
-        }
-    }
-
-    private function addForum(Project $project, array &$ugroups)
-    {
-        if ($project->usesForum()) {
-            $this->appendToUGroups($ugroups, $project, ProjectUGroup::FORUM_ADMIN);
-        }
-    }
-
-    private function addNews(Project $project, array &$ugroups)
-    {
-        if ($project->usesNews()) {
-            $this->appendToUGroups($ugroups, $project, ProjectUGroup::NEWS_WRITER);
-            $this->appendToUGroups($ugroups, $project, ProjectUGroup::NEWS_ADMIN);
         }
     }
 

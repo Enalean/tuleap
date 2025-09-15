@@ -24,7 +24,6 @@ use EventManager;
 use Project;
 use Service;
 use Tuleap\FRS\PermissionsPerGroup\PaneCollector;
-use Tuleap\News\Admin\PermissionsPerGroup\NewsPermissionPerGroupPaneBuilder;
 use Tuleap\PHPWiki\PermissionsPerGroup\PHPWikiPermissionPerGroupPaneBuilder;
 
 class PanesPermissionPerGroupBuilder
@@ -43,21 +42,14 @@ class PanesPermissionPerGroupBuilder
      */
     private $pane_collector;
 
-    /**
-     * @var NewsPermissionPerGroupPaneBuilder
-     */
-    private $news_pane_builder;
-
     public function __construct(
         EventManager $event_manager,
         PaneCollector $pane_collector,
         PHPWikiPermissionPerGroupPaneBuilder $phpwiki_pane_builder,
-        NewsPermissionPerGroupPaneBuilder $news_pane_builder,
     ) {
         $this->event_manager        = $event_manager;
         $this->phpwiki_pane_builder = $phpwiki_pane_builder;
         $this->pane_collector       = $pane_collector;
-        $this->news_pane_builder    = $news_pane_builder;
     }
 
     /**
@@ -98,15 +90,6 @@ class PanesPermissionPerGroupBuilder
             if ($wiki_service !== null) {
                 $rank_in_project         = $wiki_service->getRank();
                 $panes[$rank_in_project] = $phpwiki_pane;
-            }
-        }
-
-        $news_pane = $this->news_pane_builder->getPaneContent($project, $selected_ugroup);
-        if ($news_pane) {
-            $news_service = $project->getService(Service::NEWS);
-            if ($news_service !== null) {
-                $rank_in_project         = $news_service->getRank();
-                $panes[$rank_in_project] = $news_pane;
             }
         }
     }
