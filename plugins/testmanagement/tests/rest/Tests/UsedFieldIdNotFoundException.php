@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\REST\Tests;
 
 class UsedFieldIdNotFoundException extends \Exception
 {

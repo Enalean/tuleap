@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\TestManagement\Tests\Rest;
+namespace Tuleap\TestManagement\REST\Tests;
 
 class Cache
 {

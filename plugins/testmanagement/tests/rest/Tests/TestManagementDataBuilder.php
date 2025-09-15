@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\REST\Tests;
 
 use Tuleap\REST\RESTTestDataBuilder;
 

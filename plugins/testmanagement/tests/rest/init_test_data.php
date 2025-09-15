@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\TestManagement\TestManagementDataBuilder;
+declare(strict_types=1);
+
+use Tuleap\TestManagement\REST\Tests\TestManagementDataBuilder;
 
 require_once __DIR__ . '/../../../../src/www/include/pre.php';
 require_once __DIR__ . '/../../../../tests/rest/vendor/autoload.php';
-require_once dirname(__FILE__) . '/TestManagementDataBuilder.php';
+require_once __DIR__ . '/../../include/testmanagementPlugin.php';
 
 $data_builder = new TestManagementDataBuilder();
 $data_builder->setUp();
