@@ -36,6 +36,7 @@ use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectIsInactiveException;
+use Tuleap\Project\ProjectXMLExporter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\ArchiveInterface;
@@ -125,7 +126,7 @@ final class ProjectXmlExportController extends DispatchablePSR15Compatible imple
             \EventManager::instance(),
         );
         $widget_dao     = new DashboardWidgetDao($widget_factory);
-        $xml_exporter   = new \ProjectXMLExporter(
+        $xml_exporter   = new ProjectXMLExporter(
             \EventManager::instance(),
             new \UGroupManager(),
             $rng_validator,
@@ -138,10 +139,10 @@ final class ProjectXmlExportController extends DispatchablePSR15Compatible imple
                 ),
                 new \Tuleap\Dashboard\Widget\DashboardWidgetRetriever($widget_dao),
                 $widget_factory,
-                \ProjectXMLExporter::getLogger()
+                ProjectXMLExporter::getLogger()
             ),
             new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao()),
-            \ProjectXMLExporter::getLogger(),
+            ProjectXMLExporter::getLogger(),
             new BannerRetriever(new BannerDao()),
         );
 

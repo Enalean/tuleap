@@ -28,6 +28,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\ProjectIsInactiveException;
+use Tuleap\Project\ProjectXMLExporter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export;
