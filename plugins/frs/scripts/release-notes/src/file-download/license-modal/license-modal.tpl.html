@@ -1,6 +1,6 @@
 <div class="tlp-modal" role="dialog" aria-labelledby="license-modal-label">
     <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="license-modal-label" translate>Download agreement</h1>
+        <h1 class="tlp-modal-title" id="license-modal-label" data-test="modal-agreement-title" translate>Download agreement</h1>
         <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
             <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
         </button>
@@ -26,6 +26,7 @@
             I decline
         </button>
         <button
+            data-test="accept-download-agreements"
             type="button"
             class="tlp-button-primary tlp-modal-action"
             ng-click="$ctrl.accept()"

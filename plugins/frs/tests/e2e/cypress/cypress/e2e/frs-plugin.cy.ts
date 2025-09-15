@@ -26,6 +26,13 @@ describe("FRS plugin", () => {
     it("user can link a frs release to an agiledashboard release", (): void => {
         cy.projectMemberSession();
         cy.getProjectId("frs-plugin").then((frs_project_id) => {
+            cy.log("Add licence agreement");
+            cy.visit(`file/admin/?group_id=${frs_project_id}&action=edit-permissions`);
+            cy.get("[data-test=license-agreements]").click();
+            cy.get("[data-test=default-agreement]").check("0");
+            cy.get("[data-test=save-agreements]").click();
+
+            cy.visit(`/file/showfiles.php?group_id=${frs_project_id}`);
             cy.visitProjectService("frs-plugin", "Backlog");
             cy.get("[data-test=expand-collapse-milestone]")
                 .should("have.attr", "data-artifact-id")
@@ -44,6 +51,11 @@ describe("FRS plugin", () => {
                     cy.get("[data-test=release-name]").type("My release name" + now);
                     cy.get("[data-test=release-artifact-id]").type(this.release_id);
                     cy.get("[data-test=release-note]").type("My awesome RN" + now);
+                    const file_input_value = "-2";
+                    cy.get("[data-test=file-selector]").select(file_input_value);
+                    cy.get("[data-test=file-input]").selectFile(
+                        "cypress/fixtures/release-file.txt",
+                    );
                     cy.get("[data-test=create-release-button]").click({
                         timeout: 60000,
                     });
@@ -55,6 +67,19 @@ describe("FRS plugin", () => {
                     cy.get(`[data-test=toggle-package]`).first().click();
                     cy.get(`[data-test=release-note-access]`).first().click();
                     cy.get("[data-test=release-note]").contains("My awesome RN" + now);
+                    cy.get("[data-test=release-files]").contains("release-file.txt");
+                    cy.get("[data-test=release-files]").contains(
+                        "ce310e66a8b9e6bde074fb9ac2e17e04",
+                    );
+
+                    cy.get("[data-test=download-file]").click();
+                    cy.get("[data-test=modal-agreement-title]").contains("Download agreement");
+                    cy.get("[data-test=accept-download-agreements]")
+                        .click()
+                        .then(() => {
+                            const download_folder = Cypress.config("downloadsFolder");
+                            cy.readFile(download_folder + "/release-file.txt").should("exist");
+                        });
 
                     cy.get(`[data-test=linked-artifacts]`).click();
 
