@@ -55,7 +55,7 @@ final class UserDetailsAccessPresenter
 
         $this->last_pwd_update_label     = $GLOBALS['Language']->getText('admin_usergroup', 'last_pwd_update');
         $this->last_password_update_date = $this->getOptionalDatePresenter(
-            (int) $displayed_user->getLastPwdUpdate(),
+            $displayed_user->getLastPwdUpdate(),
             $relative_date_builder,
             $current_user
         );

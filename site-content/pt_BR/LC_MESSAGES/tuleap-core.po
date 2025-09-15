@@ -4891,6 +4891,15 @@ msgstr ""
 "Seu link de convite não é válido. Talvez você o tenha utilizado, nesse caso "
 "você pode logar direto no sistema."
 
+msgid "Your password has expired."
+msgstr ""
+
+#, php-format
+msgid "Your password will expire in %d day."
+msgid_plural "Your password will expire in %d days."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Your place was saved"
 msgstr "O seu lugar foi gravado"
 

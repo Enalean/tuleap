@@ -222,6 +222,7 @@ use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
+use Tuleap\User\Password\PasswordExpirationChecker;
 use Tuleap\User\PasswordVerifier;
 use Tuleap\WebAssembly\FFIWASMCaller;
 use Tuleap\WebAssembly\WasmtimeCacheConfigurationBuilder;
@@ -2478,7 +2479,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 new UserDao(),
                 \UserManager::instance(),
                 new PasswordVerifier($password_handler),
-                new \User_PasswordExpirationChecker(),
+                new PasswordExpirationChecker(),
                 $password_handler
             ),
             new ReplicationHTTPUserAuthenticator(

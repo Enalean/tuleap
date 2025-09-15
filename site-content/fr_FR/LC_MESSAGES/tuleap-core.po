@@ -4999,6 +4999,15 @@ msgstr ""
 "Votre lien d'invitation n'est pas valide. Peut-être que vous l'avez déjà "
 "utilisé, dans ce cas vous pouvez directement vous connecter."
 
+msgid "Your password has expired."
+msgstr "Votre mot de passe est expiré."
+
+#, php-format
+msgid "Your password will expire in %d day."
+msgid_plural "Your password will expire in %d days."
+msgstr[0] "Votre mot de passe sera expiré dans %d jour."
+msgstr[1] "Votre mot de passe sera expiré dans %d jours."
+
 msgid "Your place was saved"
 msgstr "Position dans le forum sauvegardée"
 

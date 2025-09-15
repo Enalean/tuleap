@@ -31,6 +31,7 @@ use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\User\Password\PasswordExpiredException;
 
 class ComparisonsResource extends AuthenticatedResource
 {
@@ -88,7 +89,7 @@ class ComparisonsResource extends AuthenticatedResource
      * @throws \Rest_Exception_InvalidTokenException
      * @throws I18NRestException 401
      * @throws NotFoundRestException 404
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException
@@ -115,7 +116,7 @@ class ComparisonsResource extends AuthenticatedResource
      * @throws \Rest_Exception_InvalidTokenException
      * @throws NotFoundRestException 404
      * @throws ForbiddenRestException 403
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException

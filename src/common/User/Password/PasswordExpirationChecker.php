@@ -17,60 +17,73 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\User\Password;
+
+use Feedback;
+use ForgeConfig;
+use PFUser;
 use Tuleap\Date\DateHelper;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class User_PasswordExpirationChecker
+class PasswordExpirationChecker
 {
-    public const DAYS_FOR_EXPIRATION_WARN = 10;
+    public const int DAYS_FOR_EXPIRATION_WARN = 10;
 
     /**
      *
-     * @throws User_PasswordExpiredException
+     * @throws PasswordExpiredException
      */
-    public function checkPasswordLifetime(PFUser $user)
+    public function checkPasswordLifetime(PFUser $user): void
     {
         if ($this->userPasswordHasExpired($user)) {
-            throw new User_PasswordExpiredException($user);
+            throw new PasswordExpiredException($user);
         }
     }
 
-    public function warnUserAboutPasswordExpiration(PFUser $user)
+    public function warnUserAboutPasswordExpiration(PFUser $user): void
     {
-        if ($this->getPasswordLifetimeInSeconds()) {
+        $password_lifetime_in_seconds = $this->getPasswordLifetimeInSeconds();
+        if ($password_lifetime_in_seconds !== false && $password_lifetime_in_seconds > 0) {
             $expiration_date = $this->getPasswordExpirationDate();
-            $warning_date    = $expiration_date + DateHelper::SECONDS_IN_A_DAY * self::DAYS_FOR_EXPIRATION_WARN;
+            if ($expiration_date === false || $expiration_date <= 0) {
+                return;
+            }
+            $warning_date = $expiration_date + DateHelper::SECONDS_IN_A_DAY * self::DAYS_FOR_EXPIRATION_WARN;
             if ($user->getLastPwdUpdate() < $warning_date) {
-                $expiration_delay = ceil(($user->getLastPwdUpdate() - $expiration_date) / ( DateHelper::SECONDS_IN_A_DAY ));
+                $expiration_delay = (int) ceil(($user->getLastPwdUpdate() - $expiration_date) / ( DateHelper::SECONDS_IN_A_DAY ));
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
-                    $GLOBALS['Language']->getText('include_session', 'password_will_expire', $expiration_delay)
+                    sprintf(
+                        ngettext('Your password will expire in %d day.', 'Your password will expire in %d days.', $expiration_delay),
+                        $expiration_delay
+                    )
                 );
             }
         }
     }
 
-    private function userPasswordHasExpired(PFUser $user)
+    private function userPasswordHasExpired(PFUser $user): bool
     {
         $expiration_date = $this->getPasswordExpirationDate();
-        if ($expiration_date && $user->getLastPwdUpdate() < $expiration_date) {
+        if ($expiration_date !== false && $expiration_date > 0 && $user->getLastPwdUpdate() < $expiration_date) {
             return true;
         }
         return false;
     }
 
-    private function getPasswordExpirationDate()
+    private function getPasswordExpirationDate(): int|false
     {
         $password_lifetime = $this->getPasswordLifetimeInSeconds();
-        if ($password_lifetime) {
+        if ($password_lifetime !== false && $password_lifetime > 0) {
             return $_SERVER['REQUEST_TIME'] - $password_lifetime;
         }
         return false;
     }
 
-    private function getPasswordLifetimeInSeconds()
+    private function getPasswordLifetimeInSeconds(): int|false
     {
-        $password_lifetime_in_days = ForgeConfig::get('sys_password_lifetime');
+        $password_lifetime_in_days = ForgeConfig::getInt('sys_password_lifetime');
         if ($password_lifetime_in_days) {
             return DateHelper::SECONDS_IN_A_DAY * $password_lifetime_in_days;
         }

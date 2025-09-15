@@ -42,11 +42,12 @@ use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeExtractorRESTEndpoint;
+use Tuleap\User\Password\PasswordExpirationChecker;
+use Tuleap\User\Password\PasswordExpiredException;
 use Tuleap\User\PasswordVerifier;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use User_LoginManager;
-use User_PasswordExpirationChecker;
 use EventManager;
 use Tuleap\REST\Exceptions\NoAuthenticationHeadersException;
 use Rest_TokenDao;
@@ -138,7 +139,7 @@ class UserManager
                 new \UserDao(),
                 $user_manager,
                 new PasswordVerifier($password_handler),
-                new User_PasswordExpirationChecker(),
+                new PasswordExpirationChecker(),
                 $password_handler
             ),
             new AccessKeyHeaderExtractor(new PrefixedSplitTokenSerializer(new PrefixAccessKey()), $_SERVER),
@@ -185,7 +186,7 @@ class UserManager
      * @throws \User_StatusSuspendedException
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      */
     public function getCurrentUser(?ApiMethodInfo $api_method_info): \PFUser
     {
@@ -211,13 +212,13 @@ class UserManager
 
     /**
      * We need it to browse the API as we are logged in through the Web UI
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      */
     private function getUserFromCookie()
     {
         $current_user = $this->user_manager->getCurrentUser();
         if (! $current_user->isAnonymous()) {
-            $password_expiration_checker = new User_PasswordExpirationChecker();
+            $password_expiration_checker = new PasswordExpirationChecker();
             $password_expiration_checker->checkPasswordLifetime($current_user);
         }
         return $current_user;

@@ -88,6 +88,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
+use Tuleap\User\Password\PasswordExpiredException;
 use UserManager;
 use WorkflowFactory;
 
@@ -172,7 +173,7 @@ class TransitionsResource extends AuthenticatedResource
      * @throws I18NRestException 403
      * @throws I18NRestException 404
      * @throws \Rest_Exception_InvalidTokenException
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException
@@ -271,7 +272,7 @@ class TransitionsResource extends AuthenticatedResource
      * @throws I18NRestException 404 I18NRestException
      * @throws \Luracast\Restler\RestException
      * @throws \Rest_Exception_InvalidTokenException
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException

@@ -4749,6 +4749,14 @@ msgid ""
 msgstr ""
 "초대 링크가 유효하지 않습니다. 이미 사용하셨을 경우, 로그인할 수 있습니다."
 
+msgid "Your password has expired."
+msgstr ""
+
+#, php-format
+msgid "Your password will expire in %d day."
+msgid_plural "Your password will expire in %d days."
+msgstr[0] ""
+
 msgid "Your place was saved"
 msgstr "장소가 저장되었습니다."
 

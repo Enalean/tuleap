@@ -66,6 +66,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\User\Password\PasswordExpiredException;
 use UGroupManager;
 use UserManager;
 
@@ -166,7 +167,7 @@ class ProjectResource
      *
      * @throws RestException
      * @throws \Rest_Exception_InvalidTokenException
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusInvalidException
      */
     public function getProjects($limit, $offset, array $query)
@@ -188,7 +189,7 @@ class ProjectResource
      * @throws RestException
      * @throws RestException 400
      * @throws \Rest_Exception_InvalidTokenException
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusInvalidException
      */
     public function getTrackers($query, $representation, Project $project, $limit, $offset)

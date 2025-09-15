@@ -225,9 +225,6 @@ include_session	required_login	Required Login
 include_session	login	In order to view this page, you must be logged in.
 include_session	insufficient_access	Insufficient Access
 include_session	no_access	You have attempted to reach a part of the site for which you do not have access. This can probably be fixed by properly navigating through the site.
-include_session	hash_err	ERROR - two people had the same hash - backarrow and re-login. It should never happen again
-include_session	expired_password	Your password has expired.
-include_session	password_will_expire	Your password will expire in $1 day(s).
 #
 #-----------------------------------------------
 # Script: SF/www/include/squal_exit.php

@@ -35,6 +35,7 @@ use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Domain\TransientBaseline;
 use Tuleap\REST\I18NRestException;
+use Tuleap\User\Password\PasswordExpiredException;
 
 class BaselineController
 {
@@ -64,7 +65,7 @@ class BaselineController
      * @throws ForbiddenRestException 403
      * @throws \Luracast\Restler\RestException
      * @throws \Rest_Exception_InvalidTokenException
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException

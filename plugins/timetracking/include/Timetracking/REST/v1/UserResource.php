@@ -36,6 +36,7 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use Tuleap\User\Password\PasswordExpiredException;
 use UGroupManager;
 use UserManager;
 
@@ -61,7 +62,7 @@ class UserResource extends AuthenticatedResource
      * @throws RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \Tuleap\REST\Exceptions\InvalidJsonException
-     * @throws \User_PasswordExpiredException
+     * @throws PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
      * @throws \User_StatusPendingException

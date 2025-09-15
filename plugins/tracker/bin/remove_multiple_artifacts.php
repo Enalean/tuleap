@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionContext;
+use Tuleap\User\Password\PasswordExpirationChecker;
 use Tuleap\User\PasswordVerifier;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
@@ -63,7 +64,7 @@ $login_manager = new User_LoginManager(
     new UserDao(),
     UserManager::instance(),
     new PasswordVerifier($password_handler),
-    new User_PasswordExpirationChecker(),
+    new PasswordExpirationChecker(),
     PasswordHandlerFactory::getPasswordHandler()
 );
 

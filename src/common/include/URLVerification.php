@@ -40,6 +40,8 @@ use Tuleap\Project\RestrictedUserCanAccessUrlOrProjectVerifier;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\UpdatePasswordController;
+use Tuleap\User\Password\PasswordExpirationChecker;
+use Tuleap\User\Password\PasswordExpiredException;
 
 /**
  * Check the URL validity (protocol, host name, query) regarding server constraints
@@ -321,7 +323,7 @@ class URLVerification implements CheckUserCanAccessProject, CheckUserCanAccessPr
             $url          = $this->getUrl();
             try {
                 if (! $current_user->user->isAnonymous()) {
-                    $password_expiration_checker = new User_PasswordExpirationChecker();
+                    $password_expiration_checker = new PasswordExpirationChecker();
                     $password_expiration_checker->checkPasswordLifetime($current_user->user);
                 }
 
@@ -369,7 +371,7 @@ class URLVerification implements CheckUserCanAccessProject, CheckUserCanAccessPr
                 );
             } catch (ProjectAccessSuspendedException $exception) {
                 $this->displaySuspendedProjectError($current_user, $project);
-            } catch (User_PasswordExpiredException $exception) {
+            } catch (PasswordExpiredException $exception) {
                 if ($server['REQUEST_URI'] === DisplaySecurityController::URL || $server['REQUEST_URI'] === UpdatePasswordController::URL) {
                     return;
                 }

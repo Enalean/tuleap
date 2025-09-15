@@ -19,30 +19,33 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\User\Password;
+
+use ForgeConfig;
+use PFUser;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class User_PasswordExpirationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class PasswordExpirationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;
-    use \Tuleap\GlobalLanguageMock;
 
-    private $password_expiration_checker;
+    private PasswordExpirationChecker $password_expiration_checker;
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
-        $this->password_expiration_checker = new User_PasswordExpirationChecker();
-        $GLOBALS['Language']->method('getText')->willReturn('');
+        $this->password_expiration_checker = new PasswordExpirationChecker();
     }
 
     public function testItRaisesAnExceptionWhenPasswordExpired(): void
     {
         ForgeConfig::set('sys_password_lifetime', 10);
-        $this->expectException(\User_PasswordExpiredException::class);
+        $this->expectException(PasswordExpiredException::class);
         $this->password_expiration_checker->checkPasswordLifetime(
             new PFUser([
-                'password'        => 'password',
-                'status'          => PFUser::STATUS_ACTIVE,
+                'password' => 'password',
+                'status' => PFUser::STATUS_ACTIVE,
                 'last_pwd_update' => strtotime('15 days ago'),
             ])
         );
