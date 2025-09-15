@@ -28,7 +28,7 @@ class BotMattermostLogger implements LoggerInterface
 {
     use LogForwarderTrait;
 
-    private const LOGGER_NAME = 'botMattermost_syslog';
+    private const string LOGGER_NAME = 'botMattermost_syslog';
 
     public function __construct()
     {
