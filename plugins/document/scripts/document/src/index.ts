@@ -44,7 +44,9 @@ import {
     EMBEDDED_ARE_ALLOWED,
     IS_OBSOLESCENCE_DATE_PROPERTY_USED,
     IS_STATUS_PROPERTY_USED,
+    MAX_ARCHIVE_SIZE,
     MAX_FILES_DRAGNDROP,
+    MAX_SIZE_UPLOAD,
     PROJECT_ID,
     PROJECT_NAME,
     PROJECT_PUBLIC_NAME,
@@ -53,6 +55,7 @@ import {
     USER_CAN_DRAGNDROP,
     USER_ID,
     USER_IS_ADMIN,
+    WARNING_THRESHOLD,
 } from "./configuration-keys";
 
 interface MustacheCriterion {
@@ -168,9 +171,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const configuration_state: ConfigurationState = {
         project_url,
         date_time_format,
-        max_size_upload,
-        warning_threshold,
-        max_archive_size,
         is_deletion_allowed,
         is_changelog_proposed_after_dnd,
         privacy,
@@ -217,7 +217,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(IS_STATUS_PROPERTY_USED, is_status_property_used)
         .provide(IS_OBSOLESCENCE_DATE_PROPERTY_USED, is_obsolescence_date_property_used)
         .provide(MAX_FILES_DRAGNDROP, max_files_dragndrop)
-        .provide(USER_CAN_DRAGNDROP, max_files_dragndrop > 0);
+        .provide(USER_CAN_DRAGNDROP, max_files_dragndrop > 0)
+        .provide(MAX_SIZE_UPLOAD, max_size_upload)
+        .provide(WARNING_THRESHOLD, warning_threshold)
+        .provide(MAX_ARCHIVE_SIZE, max_archive_size);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

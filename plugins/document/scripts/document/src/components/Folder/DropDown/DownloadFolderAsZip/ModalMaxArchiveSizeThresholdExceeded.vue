@@ -73,19 +73,16 @@
 <script setup lang="ts">
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useNamespacedState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { MAX_ARCHIVE_SIZE } from "../../../../configuration-keys";
 
 const { interpolate, $gettext } = useGettext();
 
 const props = defineProps<{ size: number }>();
 
-const { max_archive_size } = useNamespacedState<Pick<ConfigurationState, "max_archive_size">>(
-    "configuration",
-    ["max_archive_size"],
-);
+const max_archive_size = strictInject(MAX_ARCHIVE_SIZE);
 
 const modal = ref<Modal | null>(null);
 
@@ -117,7 +114,7 @@ const archive_size_message = computed((): string => {
 const max_size_allowed_message = computed((): string => {
     const translated = $gettext("Maximum archive size allowed: %{ max_archive_size } MB");
 
-    return interpolate(translated, { max_archive_size: max_archive_size.value });
+    return interpolate(translated, { max_archive_size });
 });
 
 const emit = defineEmits<{

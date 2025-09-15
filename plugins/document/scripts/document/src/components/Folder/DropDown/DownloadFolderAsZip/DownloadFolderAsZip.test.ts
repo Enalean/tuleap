@@ -23,12 +23,11 @@ import { shallowMount } from "@vue/test-utils";
 import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
 import * as location_helper from "../../../../helpers/location-helper";
 import * as platform_detector from "../../../../helpers/platform-detector";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { PropertiesState } from "../../../../store/properties/module";
 import type { Folder } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
-import { PROJECT_NAME } from "../../../../configuration-keys";
+import { MAX_ARCHIVE_SIZE, PROJECT_NAME, WARNING_THRESHOLD } from "../../../../configuration-keys";
 
 describe("DownloadFolderAsZip", () => {
     let load_properties: vi.Mock, item: Folder;
@@ -46,13 +45,6 @@ describe("DownloadFolderAsZip", () => {
             global: {
                 ...getGlobalTestOptions({
                     modules: {
-                        configuration: {
-                            state: {
-                                max_archive_size,
-                                warning_threshold: 0.5,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
                         properties: {
                             state: {
                                 has_loaded_properties: true,
@@ -66,6 +58,8 @@ describe("DownloadFolderAsZip", () => {
                 }),
                 provide: {
                     [PROJECT_NAME.valueOf()]: "tuleap-documentation",
+                    [WARNING_THRESHOLD.valueOf()]: 0.5,
+                    [MAX_ARCHIVE_SIZE.valueOf()]: max_archive_size,
                 },
             },
         });

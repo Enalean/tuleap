@@ -24,9 +24,6 @@ import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export interface ConfigurationState {
-    readonly max_size_upload: number;
-    readonly warning_threshold: number;
-    readonly max_archive_size: number;
     readonly project_url: string;
     readonly date_time_format: string;
     readonly privacy: ProjectPrivacy;

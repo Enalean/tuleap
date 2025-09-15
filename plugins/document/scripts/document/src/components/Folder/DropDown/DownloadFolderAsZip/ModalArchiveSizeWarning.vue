@@ -105,17 +105,14 @@
 <script setup lang="ts">
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useNamespacedState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { WARNING_THRESHOLD } from "../../../../configuration-keys";
 
 const props = defineProps<{ size: number; folderHref: string; shouldWarnOsxUser: boolean }>();
 
-const { warning_threshold } = useNamespacedState<Pick<ConfigurationState, "warning_threshold">>(
-    "configuration",
-    ["warning_threshold"],
-);
+const warning_threshold = strictInject(WARNING_THRESHOLD);
 
 const size_in_MB = computed((): string => {
     const size_in_mb = props.size / Math.pow(10, 6);
@@ -136,7 +133,7 @@ const warning_threshold_message = computed((): string => {
         "The archive you want to download has a size greater than %{ warning_threshold } MB.",
     );
 
-    return interpolate(translated, { warning_threshold: warning_threshold.value });
+    return interpolate(translated, { warning_threshold });
 });
 
 const archive_size_message = computed((): string => {
