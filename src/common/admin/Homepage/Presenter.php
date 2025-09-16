@@ -53,22 +53,18 @@ class Admin_Homepage_Presenter
     /** @var bool */
     public $display_statistics_on_home_page;
     /** @var bool */
-    public $display_news_on_home_page;
-    /** @var bool */
     public $warn_local_inc;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
         $display_statistics_on_home_page,
-        $display_news_on_home_page,
         array $headlines,
     ) {
         $this->title                           = $title;
         $this->headlines                       = $headlines;
         $this->csrf_token                      = $csrf;
         $this->display_statistics_on_home_page = $display_statistics_on_home_page;
-        $this->display_news_on_home_page       = $display_news_on_home_page;
 
         $this->path_logo       = Admin_Homepage_LogoFinder::getCurrentUrl();
         $this->use_custom_logo = Admin_Homepage_LogoFinder::isCustomLogoUsed();

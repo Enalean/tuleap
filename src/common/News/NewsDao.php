@@ -55,11 +55,6 @@ class NewsDao extends \Tuleap\DB\DataAccessObject
         return $this->getDB()->safeQuery($sql, array_merge($promoted_ids_condition->values(), [$project_id]));
     }
 
-    public function getNewsForSiteHomePage()
-    {
-        return $this->getSiteNewsLimit(3);
-    }
-
     public function getNewsForSitePublicRSSFeed()
     {
         return $this->getSiteNewsLimit(10);

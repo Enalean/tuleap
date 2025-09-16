@@ -86,26 +86,6 @@
                 </label>
             </section>
 
-            <section class="tlp-pane-section">
-                <h2 class="tlp-pane-subtitle">{{# gettext }}Site news{{/ gettext }}</h2>
-                <div class="tlp-alert-danger">
-                    {{# gettext }}Forums and News services are deprecated. They will be completely removed in March 2025.{{/ gettext }}
-                </div>
-                {{# warn_local_inc }}
-                    <div class="tlp-alert-warning">
-                        {{# gettext }}You still have <code>$sys_display_homepage_news</code> variable defined in local.inc. It's now stored in DB, you should remove it from the file to avoid confusion.{{/ gettext }}
-                    </div>
-                {{/ warn_local_inc }}
-                <label class="tlp-label tlp-checkbox">
-                    <input
-                        type="checkbox"
-                        name="use_news_homepage"
-                        {{# display_news_on_home_page }} checked {{/display_news_on_home_page}}
-                    >
-                    {{# gettext }}Display site news on home page.{{/ gettext}}
-                </label>
-            </section>
-
             <section class="tlp-pane-section tlp-pane-section-submit">
                 <button type="submit" class="tlp-button-primary">
                     <i class="fa fa-save tlp-button-icon"></i> {{ save }}

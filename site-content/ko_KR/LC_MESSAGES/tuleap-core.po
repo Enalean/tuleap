@@ -1165,9 +1165,6 @@ msgstr "화면 밀도"
 msgid "Display platform statistics on home page."
 msgstr "홈페이지에 플랫폼 통계를 표시합니다."
 
-msgid "Display site news on home page."
-msgstr "홈페이지에 사이트 뉴스를 표시합니다."
-
 msgid "Displays the 30 last updated or created items in the project."
 msgstr ""
 "프로젝트에서 마지막으로 업데이트되거나 작성된 30개의 항목을 표시합니다."
@@ -3109,9 +3106,6 @@ msgstr "사이트 콘텐츠 맞춤설정"
 msgid "Site homepage"
 msgstr "사이트 홈페이지"
 
-msgid "Site news"
-msgstr "사이트 뉴스"
-
 #, php-format
 msgid "Skip invalid key %1$s"
 msgstr "잘못된 키 %1$s 건너뛰기"
@@ -4634,14 +4628,6 @@ msgstr "png 이미지를 보내야 합니다."
 
 msgid "You should send an image with height smaller than 100px"
 msgstr "높이가 100px보다 작은 이미지를 보내야 합니다."
-
-msgid ""
-"You still have <code>$sys_display_homepage_news</code> variable defined in "
-"local.inc. It's now stored in DB, you should remove it from the file to "
-"avoid confusion."
-msgstr ""
-"local.inc에 정의된 변수 <code>$sys_display_homepage_news</code>가 여전히 존재"
-"합니다. 이제 DB에 저장되었으므로 혼동을 피하기 위해 파일에서 제거해야 합니다."
 
 msgid "You will not receive any more emails from this forum."
 msgstr "이 포럼에서 더 이상 이메일을 받지 않습니다."
