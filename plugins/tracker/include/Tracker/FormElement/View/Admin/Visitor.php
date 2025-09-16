@@ -18,6 +18,7 @@
  */
 
 use Tuleap\JSONHeader;
+use Tuleap\Tracker\FormElement\Container\TrackerFormElementContainer;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldAdmin;
@@ -85,7 +86,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     {
         $this->element = $element;
 
-        if ($element instanceof Tracker_FormElement_Container) {
+        if ($element instanceof TrackerFormElementContainer) {
             $this->visitContainer($element);
         } elseif ($element instanceof Tracker_FormElement_StaticField_LineBreak) {
             $this->visitLineBreak($element);
@@ -262,7 +263,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Radiobutton($element, $this->allUsedElements);
     }
 
-    private function visitContainer(Tracker_FormElement_Container $element)
+    private function visitContainer(TrackerFormElementContainer $element)
     {
         $this->adminElement = new Tracker_FormElement_View_Admin_Container($element, $this->allUsedElements);
     }

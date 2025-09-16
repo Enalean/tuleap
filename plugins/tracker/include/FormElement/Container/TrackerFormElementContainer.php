@@ -19,9 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Container;
+
+use Codendi_HTMLPurifier;
+use PFUser;
+use SimpleXMLElement;
+use Tracker_FormElement;
+use Tracker_FormElement_Visitor;
+use Tracker_FormElementFactory;
+use Tuleap;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+use User;
+use UserXMLExporter;
 
 /**
  * Base class for composite formElements.
@@ -29,7 +40,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
  * A composite is a component which contain other component.
  * See DesignPattern Composite for more details.
  */
-abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class TrackerFormElementContainer extends Tracker_FormElement
 {
     /**
      * The formElements of this container
@@ -131,16 +142,15 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
 
     /**
      * Internal method used to build optgroups
-
-     * @see fetchAddCriteria
-     * @see fetchAddColumn
-     *
      * @param string $method the method to call recursively on formElements
      * @param string $id_prefix the prefix for the html element id
      * @param array $used Current used formElements as column.
      * @param string $prefix Prefix to add before label in optgroups
      *
      * @return string
+     * @see fetchAddColumn
+     *
+     * @see fetchAddCriteria
      */
     protected function fetchOptgroup($method, $id_prefix, $used, $prefix)
     {
@@ -334,6 +344,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
     }
 
     protected $has_been_displayed = false;
+
     public function hasBeenDisplayed()
     {
         return $this->has_been_displayed;
@@ -343,7 +354,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
      * Continue the initialisation from an xml (FormElementFactory is not smart enough to do all stuff.
      * Polymorphism rulez!!!
      *
-     * @param SimpleXMLElement $xml         containing the structure of the imported Tracker_FormElement
+     * @param SimpleXMLElement $xml containing the structure of the imported Tracker_FormElement
      * @param array            &$xmlMapping where the newly created formElements indexed by their XML IDs are stored (and values)
      *
      * @return void

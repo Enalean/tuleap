@@ -30,13 +30,13 @@ use HTTPRequest;
 use Override;
 use PFUser;
 use Toggler;
-use Tracker_FormElement_Container;
 use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
 use TransitionFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\FormElement\Container\TrackerFormElementContainer;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -47,7 +47,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
 
-class FieldsetContainer extends Tracker_FormElement_Container
+class FieldsetContainer extends TrackerFormElementContainer
 {
     /**
      * Process the request

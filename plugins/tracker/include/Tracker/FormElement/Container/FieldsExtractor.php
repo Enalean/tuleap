@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Container;
 
 use Tracker_FormElement;
-use Tracker_FormElement_Container;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class FieldsExtractor
@@ -34,7 +33,7 @@ class FieldsExtractor
      *
      * @return TrackerField[]
      */
-    public function extractFieldsInsideContainer(Tracker_FormElement_Container $container): array
+    public function extractFieldsInsideContainer(TrackerFormElementContainer $container): array
     {
         $fields = [];
         foreach ($container->getFormElements() as $form_element) {
@@ -48,7 +47,7 @@ class FieldsExtractor
     {
         if (is_a($form_element, TrackerField::class)) {
             $fields[] = $form_element;
-        } elseif (is_a($form_element, Tracker_FormElement_Container::class)) {
+        } elseif (is_a($form_element, TrackerFormElementContainer::class)) {
             foreach ($form_element->getFormElements() as $sub_form_element) {
                 $this->parseFormElement($sub_form_element, $fields);
             }

@@ -22,14 +22,14 @@
 namespace Tuleap\Tracker\FormElement\Container\Column;
 
 use Codendi_HTMLPurifier;
-use Tracker_FormElement_Container;
 use Tracker_FormElement_Container_Column_Group;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
+use Tuleap\Tracker\FormElement\Container\TrackerFormElementContainer;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
-class ColumnContainer extends Tracker_FormElement_Container
+class ColumnContainer extends TrackerFormElementContainer
 {
     /**
      * Fetch the element for the update artifact form

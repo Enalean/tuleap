@@ -30689,9 +30689,6 @@
       <code><![CDATA[$file_array]]></code>
       <code><![CDATA[readlink($path)]]></code>
     </PossiblyFalseArgument>
-    <PossiblyFalseOperand>
-      <code><![CDATA[realpath(__DIR__ . '/../../utils/php-launcher.sh')]]></code>
-    </PossiblyFalseOperand>
   </file>
   <file src="plugins/svn/include/SVN/Commit/CommitInfo.php">
     <MissingParamType>
@@ -33907,6 +33904,50 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $this->getID()]]></code>
     </RedundantCastGivenDocblockType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Container/TrackerFormElementContainer.php">
+    <MissingParamType>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$ignore_perms]]></code>
+      <code><![CDATA[$method]]></code>
+      <code><![CDATA[$method]]></code>
+      <code><![CDATA[$method]]></code>
+      <code><![CDATA[$method]]></code>
+      <code><![CDATA[$params]]></code>
+      <code><![CDATA[$params]]></code>
+      <code><![CDATA[$recipient]]></code>
+      <code><![CDATA[$xmlMapping]]></code>
+      <code><![CDATA[$xmlMapping]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$formElements]]></code>
+      <code><![CDATA[$has_been_displayed]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[accept]]></code>
+      <code><![CDATA[exportPermissionsToXML]]></code>
+      <code><![CDATA[fetchArtifactContent]]></code>
+      <code><![CDATA[fetchArtifactForOverlay]]></code>
+      <code><![CDATA[fetchArtifactPrefix]]></code>
+      <code><![CDATA[fetchArtifactReadOnlyContent]]></code>
+      <code><![CDATA[fetchArtifactSuffix]]></code>
+      <code><![CDATA[fetchMailArtifactContent]]></code>
+      <code><![CDATA[fetchMailArtifactPrefix]]></code>
+      <code><![CDATA[fetchMailArtifactSuffix]]></code>
+      <code><![CDATA[fetchMailRecursiveArtifact]]></code>
+      <code><![CDATA[fetchRecursiveArtifact]]></code>
+      <code><![CDATA[fetchRecursiveArtifactForSubmit]]></code>
+      <code><![CDATA[fetchSubmitForOverlay]]></code>
+      <code><![CDATA[getContainerContent]]></code>
+      <code><![CDATA[getDefaultRESTValue]]></code>
+      <code><![CDATA[getDefaultValue]]></code>
+      <code><![CDATA[getRESTContent]]></code>
+      <code><![CDATA[hasBeenDisplayed]]></code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/AlphaNumericField.php">
     <MissingParamType>
@@ -42365,50 +42406,6 @@
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->formElements_by_formElementcomponent]]></code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container.php">
-    <MissingParamType>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$ignore_perms]]></code>
-      <code><![CDATA[$method]]></code>
-      <code><![CDATA[$method]]></code>
-      <code><![CDATA[$method]]></code>
-      <code><![CDATA[$method]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$recipient]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$formElements]]></code>
-      <code><![CDATA[$has_been_displayed]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-      <code><![CDATA[exportPermissionsToXML]]></code>
-      <code><![CDATA[fetchArtifactContent]]></code>
-      <code><![CDATA[fetchArtifactForOverlay]]></code>
-      <code><![CDATA[fetchArtifactPrefix]]></code>
-      <code><![CDATA[fetchArtifactReadOnlyContent]]></code>
-      <code><![CDATA[fetchArtifactSuffix]]></code>
-      <code><![CDATA[fetchMailArtifactContent]]></code>
-      <code><![CDATA[fetchMailArtifactPrefix]]></code>
-      <code><![CDATA[fetchMailArtifactSuffix]]></code>
-      <code><![CDATA[fetchMailRecursiveArtifact]]></code>
-      <code><![CDATA[fetchRecursiveArtifact]]></code>
-      <code><![CDATA[fetchRecursiveArtifactForSubmit]]></code>
-      <code><![CDATA[fetchSubmitForOverlay]]></code>
-      <code><![CDATA[getContainerContent]]></code>
-      <code><![CDATA[getDefaultRESTValue]]></code>
-      <code><![CDATA[getDefaultValue]]></code>
-      <code><![CDATA[getRESTContent]]></code>
-      <code><![CDATA[hasBeenDisplayed]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column_Group.php">
     <MissingParamType>
@@ -57483,11 +57480,8 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
@@ -57501,7 +57495,6 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$old_date]]></code>
       <code><![CDATA[$old_date]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$title]]></code>
     </MissingParamType>
@@ -57510,7 +57503,6 @@
       <code><![CDATA[getPublishedNews]]></code>
       <code><![CDATA[getRejectedNews]]></code>
       <code><![CDATA[getWaitingPublicationNews]]></code>
-      <code><![CDATA[searchAllPublishedNewsFromProject]]></code>
       <code><![CDATA[updateNews]]></code>
     </MissingReturnType>
   </file>
@@ -74403,7 +74395,6 @@
       <code><![CDATA[TYPE_MEMBERSHIP_DELETE               = 'MEMBERSHIP_DELETE']]></code>
       <code><![CDATA[TYPE_MEMBERSHIP_MODIFY               = 'MEMBERSHIP_MODIFY']]></code>
       <code><![CDATA[TYPE_MOVE_FRS_FILE                   = 'MOVE_FRS_FILE']]></code>
-      <code><![CDATA[TYPE_PROJECT_ACTIVE                  = 'PROJECT_ACTIVE']]></code>
       <code><![CDATA[TYPE_PROJECT_DELETE                  = 'PROJECT_DELETE']]></code>
       <code><![CDATA[TYPE_PROJECT_IS_PRIVATE              = 'PROJECT_IS_PRIVATE']]></code>
       <code><![CDATA[TYPE_PROJECT_RENAME                  = 'PROJECT_RENAME']]></code>
