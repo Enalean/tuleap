@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard\BacklogItem;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use Override;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
@@ -49,6 +50,7 @@ final class SubBacklogItemProviderTest extends TestCase
     private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
     private MockObject&ArtifactsInExplicitBacklogDao $artifact_in_explicit_backlog_dao;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
