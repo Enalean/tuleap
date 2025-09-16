@@ -88,6 +88,11 @@ reason = "No exploitation path in the Tuleap context for this prototype pollutio
 id = "GHSA-v6h2-p8h4-qcjw" # CVE-2025-5889
 reason = "Fixed in v2.0.2 but advisory range does not take it into account."
 
+# Restler
+[[IgnoredVulns]]
+id = "GHSA-rvmg-xc29-rvxf" # CVE-2017-15363
+reason = "Code is not accessible in Tuleap context."
+
 ### TO BE FIXED
 
 # wasmtime
