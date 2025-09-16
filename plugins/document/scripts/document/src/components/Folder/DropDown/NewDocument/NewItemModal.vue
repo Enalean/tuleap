@@ -130,12 +130,11 @@ import { buildFakeItem } from "../../../../helpers/item-builder";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
 import type { FakeItem, Item, RootState } from "../../../../type";
-import type { ConfigurationState } from "../../../../store/configuration";
 import type { ErrorState } from "../../../../store/error/module";
 import type { PermissionsState } from "../../../../store/permissions/permissions-default-state";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT_ID, USER_LOCALE } from "../../../../configuration-keys";
 
 const { $gettext } = useGettext();
 const $store = useStore();
@@ -154,10 +153,7 @@ let modal: Modal | null = null;
 const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
 const project_id = strictInject(PROJECT_ID);
 const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
-const { user_locale } = useNamespacedState<Pick<ConfigurationState, "user_locale">>(
-    "configuration",
-    ["user_locale"],
-);
+const user_locale = strictInject(USER_LOCALE);
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",
 ]);
@@ -244,7 +240,7 @@ async function show(event: CreateItemEvent): Promise<void> {
     alternative_badge_class.value = "";
     if ("from_alternative" in event && event.from_alternative) {
         const office_file = await getEmptyOfficeFileFromMimeType(
-            user_locale.value,
+            user_locale,
             event.from_alternative.mime_type,
         );
         item.value.file_properties.file = office_file.file;

@@ -22,12 +22,15 @@ import type { VueWrapper } from "@vue/test-utils";
 import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
 import type { Empty, ItemFile, NewItemAlternativeArray } from "../../../../type";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../../../constants";
 import emitter, { default as real_emitter } from "../../../../helpers/emitter";
 import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import { EMBEDDED_ARE_ALLOWED, USER_CAN_CREATE_WIKI } from "../../../../configuration-keys";
+import {
+    EMBEDDED_ARE_ALLOWED,
+    USER_CAN_CREATE_WIKI,
+    USER_LOCALE,
+} from "../../../../configuration-keys";
 
 vi.useFakeTimers();
 
@@ -63,14 +66,6 @@ describe("NewVersionEmptyMenuOptions", function () {
             },
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                user_locale: "en_US",
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
                     actions: {
                         createNewVersionFromEmpty: create_version_from_empty,
                     },
@@ -79,6 +74,7 @@ describe("NewVersionEmptyMenuOptions", function () {
                     create_new_item_alternatives,
                     [USER_CAN_CREATE_WIKI.valueOf()]: user_can_create_wiki,
                     [EMBEDDED_ARE_ALLOWED.valueOf()]: embedded_are_allowed,
+                    [USER_LOCALE.valueOf()]: "en_US",
                 },
             },
         });

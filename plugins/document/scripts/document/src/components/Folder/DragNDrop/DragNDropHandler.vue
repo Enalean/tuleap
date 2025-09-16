@@ -48,6 +48,7 @@ import type { ConfigurationState } from "../../../store/configuration";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
+    IS_CHANGELOG_PROPOSED_AFTER_DND,
     MAX_FILES_DRAGNDROP,
     MAX_SIZE_UPLOAD,
     USER_CAN_DRAGNDROP,
@@ -79,13 +80,14 @@ const user_id = strictInject(USER_ID);
 const max_files_dragndrop = strictInject(MAX_FILES_DRAGNDROP);
 const user_can_dragndrop = strictInject(USER_CAN_DRAGNDROP);
 const max_size_upload = strictInject(MAX_SIZE_UPLOAD);
+const is_changelog_proposed_after_dnd = strictInject(IS_CHANGELOG_PROPOSED_AFTER_DND);
 
 const { current_folder, folder_content } = useState<
     Pick<RootState, "current_folder" | "folder_content">
 >(["current_folder", "folder_content"]);
-const { is_changelog_proposed_after_dnd, is_filename_pattern_enforced } = useNamespacedState<
-    Pick<ConfigurationState, "is_changelog_proposed_after_dnd" | "is_filename_pattern_enforced">
->("configuration", ["is_changelog_proposed_after_dnd", "is_filename_pattern_enforced"]);
+const { is_filename_pattern_enforced } = useNamespacedState<
+    Pick<ConfigurationState, "is_filename_pattern_enforced">
+>("configuration", ["is_filename_pattern_enforced"]);
 
 const user_can_dragndrop_in_current_folder = computed(
     () => user_can_dragndrop && current_folder.value && current_folder.value.user_can_write,

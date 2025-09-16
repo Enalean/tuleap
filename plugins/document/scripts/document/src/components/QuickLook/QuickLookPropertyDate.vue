@@ -59,24 +59,19 @@ import {
 } from "../../helpers/date-formatter";
 import { PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME } from "../../constants";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
-import { useNamespacedState } from "vuex-composition-helpers";
 import { computed } from "vue";
-import type { ConfigurationState } from "../../store/configuration";
 import type { Property } from "../../type";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { DATE_TIME_FORMAT } from "../../configuration-keys";
+import { DATE_TIME_FORMAT, RELATIVE_DATES_DISPLAY, USER_LOCALE } from "../../configuration-keys";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{ property: Property }>();
 
 const date_time_format = strictInject(DATE_TIME_FORMAT);
-
-const { relative_dates_display, user_locale } = useNamespacedState<ConfigurationState>(
-    "configuration",
-    ["relative_dates_display", "user_locale"],
-);
+const user_locale = strictInject(USER_LOCALE);
+const relative_dates_display = strictInject(RELATIVE_DATES_DISPLAY);
 
 const is_date_valid = computed((): boolean => {
     if (!isValueString(props.property.value)) {
@@ -106,11 +101,11 @@ const getFormattedDate = computed((): string => {
 });
 
 const relative_date_preference = computed((): string => {
-    return relativeDatePreference(relative_dates_display.value);
+    return relativeDatePreference(relative_dates_display);
 });
 
 const relative_date_placement = computed((): string => {
-    return relativeDatePlacement(relative_dates_display.value, "right");
+    return relativeDatePlacement(relative_dates_display, "right");
 });
 
 function isPropertyObsolescenceDate(): boolean {

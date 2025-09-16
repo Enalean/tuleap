@@ -25,8 +25,7 @@ import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
 import * as date_formatter from "../../helpers/date-formatter";
 import type { Property } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { DATE_TIME_FORMAT } from "../../configuration-keys";
-import type { ConfigurationState } from "../../store/configuration";
+import { DATE_TIME_FORMAT, RELATIVE_DATES_DISPLAY, USER_LOCALE } from "../../configuration-keys";
 
 describe("QuickLookPropertyDate", () => {
     function getWrapper(
@@ -35,22 +34,14 @@ describe("QuickLookPropertyDate", () => {
         return shallowMount(QuickLookPropertyDate, {
             props: { property },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                relative_dates_display: "relative_first-absolute_shown",
-                                user_locale: "en_US",
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: {
                     "tlp-relative-date": true,
                 },
                 provide: {
                     [DATE_TIME_FORMAT.valueOf()]: "d/m/Y H:i",
+                    [USER_LOCALE.valueOf()]: "en_US",
+                    [RELATIVE_DATES_DISPLAY.valueOf()]: "relative_first-absolute_shown",
                 },
             },
         });

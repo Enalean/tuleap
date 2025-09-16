@@ -19,10 +19,9 @@
 
 import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import type { ConfigurationState } from "../../store/configuration";
 import DocumentRelativeDate from "./DocumentRelativeDate.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { DATE_TIME_FORMAT } from "../../configuration-keys";
+import { DATE_TIME_FORMAT, RELATIVE_DATES_DISPLAY, USER_LOCALE } from "../../configuration-keys";
 
 describe("DocumentRelativeDate", () => {
     it("should display a tlp-relative-date element", () => {
@@ -31,22 +30,14 @@ describe("DocumentRelativeDate", () => {
                 date: "2021-10-06",
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                relative_dates_display: "relative_first-absolute_shown",
-                                user_locale: "en_US",
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: {
                     "tlp-relative-date": true,
                 },
                 provide: {
                     [DATE_TIME_FORMAT.valueOf()]: "Y-m-d H:i",
+                    [USER_LOCALE.valueOf()]: "en_US",
+                    [RELATIVE_DATES_DISPLAY.valueOf()]: "relative_first-absolute_shown",
                 },
             },
         });
@@ -61,22 +52,14 @@ describe("DocumentRelativeDate", () => {
                 relative_placement: "right",
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                relative_dates_display: "relative_first-absolute_shown",
-                                user_locale: "en_US",
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: {
                     "tlp-relative-date": true,
                 },
                 provide: {
                     [DATE_TIME_FORMAT.valueOf()]: "Y-m-d H:i",
+                    [USER_LOCALE.valueOf()]: "en_US",
+                    [RELATIVE_DATES_DISPLAY.valueOf()]: "relative_first-absolute_shown",
                 },
             },
         });

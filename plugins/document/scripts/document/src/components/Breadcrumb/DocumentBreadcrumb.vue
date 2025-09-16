@@ -107,6 +107,7 @@ import type { ConfigurationState } from "../../store/configuration";
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
+    PROJECT_FLAGS,
     PROJECT_ID,
     PROJECT_PRIVACY,
     PROJECT_PUBLIC_NAME,
@@ -138,9 +139,11 @@ const project_public_name = strictInject(PROJECT_PUBLIC_NAME);
 const user_is_admin = strictInject(USER_IS_ADMIN);
 const project_url = strictInject(PROJECT_URL);
 const project_privacy = strictInject(PROJECT_PRIVACY);
-const { project_flags, project_icon } = useNamespacedState<
-    Pick<ConfigurationState, "project_flags" | "project_icon">
->("configuration", ["project_flags", "project_icon"]);
+const project_flags = strictInject(PROJECT_FLAGS);
+const { project_icon } = useNamespacedState<Pick<ConfigurationState, "project_icon">>(
+    "configuration",
+    ["project_icon"],
+);
 
 const max_nb_to_display = ref(5);
 

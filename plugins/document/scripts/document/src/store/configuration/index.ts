@@ -19,15 +19,8 @@
 
 import type { ListOfSearchResultColumnDefinition, RootState, SearchCriteria } from "../../type";
 import type { Module } from "vuex";
-import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
-import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export interface ConfigurationState {
-    readonly project_flags: ProjectFlag[];
-    readonly is_changelog_proposed_after_dnd: boolean;
-    readonly is_deletion_allowed: boolean;
-    readonly user_locale: string;
-    readonly relative_dates_display: RelativeDatesDisplayPreference;
     readonly project_icon: string;
     readonly criteria: SearchCriteria;
     readonly columns: ListOfSearchResultColumnDefinition;
