@@ -38,7 +38,7 @@ class WorkflowRestBuilder
         foreach ($workflow->getTransitions() as $transition) {
             $condition_permission = $this->getConditionPermissions($transition);
 
-            if ($this->checkTransitionIsValid($transition) && $condition_permission->isUserAllowedToSeeTransition($user, $workflow->getTracker())) {
+            if ($this->checkTransitionIsValid($transition) && ($condition_permission->isUserAllowedToSeeTransition($user, $workflow->getTracker()) || $workflow->getTracker()->userIsAdmin($user))) {
                 $transitions[] = $this->getWorkflowTransitionRepresentation($transition);
             }
         }

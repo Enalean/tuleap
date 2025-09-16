@@ -118,7 +118,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
 
     public function isUserAllowedToSeeTransition(PFUser $user, Tracker $tracker)
     {
-        if (($user instanceof Tracker_Workflow_WorkflowUser) || ($tracker->userIsAdmin($user))) {
+        if ($user instanceof Tracker_Workflow_WorkflowUser) {
             return true;
         }
 

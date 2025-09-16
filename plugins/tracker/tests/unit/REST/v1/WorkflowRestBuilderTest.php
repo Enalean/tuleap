@@ -55,7 +55,7 @@ final class WorkflowRestBuilderTest extends TestCase
         $this->global_rules_manager = $this->createMock(Tracker_RulesManager::class);
         $this->global_rules_manager->method('getAllDateRulesByTrackerId')->willReturn([]);
         $this->global_rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn([]);
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(1)->withUserIsAdmin(false)->build();
     }
 
     public function testItReturnNullWhenUserCanNotReadField(): void
