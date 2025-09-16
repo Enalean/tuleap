@@ -29,7 +29,6 @@
         v-bind:is_last="rows.length === index + 1"
         v-bind:parent_element="parent_element"
         v-bind:parent_caret="parent_caret"
-        v-bind:direction="direction"
         v-bind:reverse_links_count="reverse_links_count"
         v-bind:ancestors="ancestors"
     />
@@ -37,7 +36,7 @@
 
 <script setup lang="ts">
 import ArtifactRow from "./ArtifactRow.vue";
-import type { ArtifactLinkDirection, ArtifactsTable } from "../../domain/ArtifactsTable";
+import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 
 defineProps<{
     rows: ArtifactsTable["rows"];
@@ -46,7 +45,6 @@ defineProps<{
     level: number;
     parent_element?: HTMLElement;
     parent_caret?: HTMLElement;
-    direction?: ArtifactLinkDirection;
     reverse_links_count?: number;
     ancestors: number[];
 }>();

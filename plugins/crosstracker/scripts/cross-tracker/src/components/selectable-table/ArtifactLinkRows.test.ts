@@ -24,7 +24,7 @@ import { Option } from "@tuleap/option";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
 import type { ArtifactRow as ArtifactRowType, ArtifactsTable } from "../../domain/ArtifactsTable";
-import { FORWARD_DIRECTION, NUMERIC_CELL, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
+import { NUMERIC_CELL, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
 import { type ColumnName, PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import ArtifactLinkRowSkeleton from "./skeleton/ArtifactLinkRowSkeleton.vue";
@@ -85,7 +85,6 @@ describe("ArtifactLinkRows", () => {
                 expected_number_of_links: number_of_forward_link,
                 parent_element: {} as HTMLElement,
                 parent_caret: {} as HTMLElement,
-                direction: FORWARD_DIRECTION,
                 reverse_links_count: 2,
                 ancestors: [123, 234],
             },

@@ -112,7 +112,6 @@ describe("ArtifactRow", () => {
                 is_last: false,
                 parent_element: undefined,
                 parent_caret: undefined,
-                direction: undefined,
                 reverse_links_count: undefined,
                 ancestors,
             },

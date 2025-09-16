@@ -40,6 +40,7 @@ import { formatData } from "./data-formater";
 import { NumberCell, TextCell, EmptyCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
 import { ColumnNameGetter } from "../../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../vue-gettext-provider-for-test";
+import { NO_DIRECTION } from "../../../domain/ArtifactsTable";
 
 describe("data-formater", () => {
     const artifact_column = ARTIFACT_COLUMN_NAME;
@@ -190,6 +191,7 @@ describe("data-formater", () => {
                         }),
                     ],
                 ),
+                NO_DIRECTION,
             ),
         ];
         const result = formatData(table, ColumnNameGetter(createVueGettextProviderPassThrough()));

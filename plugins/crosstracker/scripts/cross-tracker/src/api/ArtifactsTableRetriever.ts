@@ -27,6 +27,7 @@ import type {
 } from "../domain/RetrieveArtifactsTable";
 import type { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import type { ArtifactsTable } from "../domain/ArtifactsTable";
+import { NO_DIRECTION } from "../domain/ArtifactsTable";
 
 export const ArtifactsTableRetriever = (
     widget_id: number,
@@ -52,7 +53,10 @@ export const ArtifactsTableRetriever = (
                 return decodeJSON<SelectableQueryContentRepresentation>(response).map(
                     (query_content) => {
                         return {
-                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
+                            table: table_builder.mapQueryContentToArtifactsTable(
+                                query_content,
+                                NO_DIRECTION,
+                            ),
                             total,
                         };
                     },
@@ -70,7 +74,7 @@ export const ArtifactsTableRetriever = (
                 },
             ).map((query_content) => {
                 return query_content.map((table) =>
-                    table_builder.mapQueryContentToArtifactsTable(table),
+                    table_builder.mapQueryContentToArtifactsTable(table, NO_DIRECTION),
                 );
             });
         },
