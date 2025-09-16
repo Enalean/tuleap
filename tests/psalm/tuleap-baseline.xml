@@ -3861,11 +3861,6 @@
       <code><![CDATA[$this->report_session]]></code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/create_test_env/include/CreateTestEnv/ActivitiesAnalytics/DisplayUserActivities.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 10]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/create_test_env/include/CreateTestEnv/ActivitiesAnalytics/WeeklyActionsRowPresenter.php">
     <MissingPropertyType>
       <code><![CDATA[$between_11_and_50]]></code>
@@ -4056,9 +4051,6 @@
     </UndefinedPropertyAssignment>
   </file>
   <file src="plugins/create_test_env/include/create_test_envPlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'create_test_env']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
