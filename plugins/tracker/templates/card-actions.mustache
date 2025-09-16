@@ -1,7 +1,7 @@
 {{#getCardPresenter}}
 <div class="card-actions">
     <div class="dropdown" id="card-{{getId}}-actions-menu">
-        <a href="{{getUrl}}" data-target="#card-{{getId}}-actions-menu" class="dropdown-toggle" data-toggle="dropdown">{{getXRef}} <span class="caret"></span></a>
+        <a href="{{getUrl}}&{{planning_redirect_parameter}}" data-target="#card-{{getId}}-actions-menu" class="dropdown-toggle" data-toggle="dropdown">{{getXRef}} <span class="caret"></span></a>
         <ul class="dropdown-menu">
             <li>
                 <a href="{{getEditUrl}}&{{planning_redirect_parameter}}" class="edit-card" data-artifact-id="{{getArtifactId}}">{{getEditLabel}}</a>
