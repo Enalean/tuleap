@@ -39,6 +39,16 @@
         >
             {{ $gettext("Fields selection") }}
         </button>
+        <button
+            class="tlp-tab"
+            type="button"
+            v-if="can_user_display_versions"
+            v-bind:class="{ 'tlp-tab-active': current_tab === EXPERIMENTAL_FEATURES_TAB }"
+            v-on:click="switchToTab(EXPERIMENTAL_FEATURES_TAB)"
+            data-test="experimental-features-tab"
+        >
+            {{ $gettext("Experimental features") }}
+        </button>
     </nav>
 </template>
 
@@ -52,10 +62,13 @@ import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-co
 import {
     READONLY_FIELDS_SELECTION_TAB,
     TRACKER_SELECTION_TAB,
+    EXPERIMENTAL_FEATURES_TAB,
 } from "@/components/configuration/configuration-modal";
+import { CAN_USER_DISPLAY_VERSIONS } from "@/can-user-display-versions-injection-key";
 
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const selected_tracker = strictInject(SELECTED_TRACKER);
+const can_user_display_versions = strictInject(CAN_USER_DISPLAY_VERSIONS);
 
 const { $gettext } = useGettext();
 
@@ -98,6 +111,10 @@ const switchToTab = (tab: ConfigurationTab): void => {
 </script>
 
 <style scoped lang="scss">
+.tlp-tabs {
+    margin: 0;
+}
+
 .tlp-tooltip::before {
     text-transform: none;
 }

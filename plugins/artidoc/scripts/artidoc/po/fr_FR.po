@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "Actions in Artidoc document"
 msgstr "Actions dans le document Artidoc"
@@ -65,6 +65,12 @@ msgstr "Êtes vous sûr de vouloir supprimer cette section de texte libre ?"
 
 msgid "Artidoc allows composition of a document based on artifacts."
 msgstr "Artidoc permet la composition d'un document basé sur des artifacts."
+
+msgid ""
+"As soon as you reload the page, the feature will no longer be displayed."
+msgstr ""
+"À partir du moment où vous rechargerez la page, la fonctionnalité ne sera "
+"plus affichée."
 
 msgid "Available templates"
 msgstr "Modèles disponibles"
@@ -133,6 +139,9 @@ msgstr "Détails de l'erreur"
 msgid "Expected results"
 msgstr "Résultats attendus"
 
+msgid "Experimental features"
+msgstr "Fonctionnalités expérimentales"
+
 msgid "Export document in PDF"
 msgstr "Exporter le document en PDF"
 
@@ -141,6 +150,9 @@ msgstr "Erreur d'export"
 
 msgid "Failed"
 msgstr "Échoué"
+
+msgid "Fake display of versions"
+msgstr "Affichage simulé des versions"
 
 msgid "Field"
 msgstr "Champ"
@@ -341,8 +353,19 @@ msgstr ""
 msgid "There isn't any suitable trackers in this project"
 msgstr "Il n'y a pas de tracker utilisable dans ce projet"
 
+msgid "This activation is personal and not persistent."
+msgstr "Cette activation est personnelle et n'est pas sauvegardée."
+
 msgid "This document is empty"
 msgstr "Ce document est vide"
+
+msgid ""
+"This option is here to gather feedback about versions display, feel free to "
+"get back to Tuleap development team if you have something to share."
+msgstr ""
+"Cette option existe pour récolter vos retours à propos de l'affichage des "
+"versions, veuillez contacter l'équipe de développement de Tuleap si vous "
+"avez des remarques à partager."
 
 msgid ""
 "This section cannot be on a level below an Artifact section, please either "
@@ -354,6 +377,9 @@ msgstr ""
 
 msgid "This section has been edited by someone else."
 msgstr "Cette section a été mise à jour par quelqu'un d'autre."
+
+msgid "This will display a fake list of versions next to Artidoc."
+msgstr "Ceci affichera une liste simulée de versions à côté d'Artidoc."
 
 msgid "Title..."
 msgstr "Titre..."
@@ -386,6 +412,9 @@ msgstr "Impossible de réorganiser les sections"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
+
+msgid "Versions"
+msgstr "Versions"
 
 msgid ""
 "You can now select your fields or go back to the document and create new "

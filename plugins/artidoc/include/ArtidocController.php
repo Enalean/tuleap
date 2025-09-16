@@ -34,6 +34,7 @@ use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\SiteAdmin\ArtidocAdminSettings;
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Docman\ServiceDocman;
@@ -147,6 +148,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     $allowed_max_size,
                     $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent($user))->getTemplates(),
                     $date_preference !== false ? $date_preference : DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue(),
+                    \ForgeConfig::getFeatureFlag(ArtidocAdminSettings::FEATURE_FLAG_VERSIONS) === '1',
                 )
             );
         $service->displayFooter();

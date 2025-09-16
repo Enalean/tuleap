@@ -21,6 +21,7 @@
 <template>
     <div
         class="tlp-modal artidoc-config-modal-with-fields"
+        v-bind:class="{ 'tlp-modal-medium-sized': can_user_display_versions }"
         aria-labelledby="artidoc-configuration-modal-title"
         ref="modal_element"
         data-test="configuration-modal"
@@ -38,6 +39,7 @@
                 is_modal_shown
             "
         />
+        <configure-experimental-features v-if="current_tab === EXPERIMENTAL_FEATURES_TAB" />
     </div>
 </template>
 
@@ -53,13 +55,17 @@ import ConfigureTracker from "@/components/configuration/ConfigureTracker.vue";
 import ConfigureReadonlyFields from "@/components/configuration/ConfigureReadonlyFields.vue";
 import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import {
+    EXPERIMENTAL_FEATURES_TAB,
     CLOSE_CONFIGURATION_MODAL,
     READONLY_FIELDS_SELECTION_TAB,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
 import ConfigurationModalTabs from "@/components/configuration/ConfigurationModalTabs.vue";
+import ConfigureExperimentalFeatures from "@/components/configuration/ConfigureExperimentalFeatures.vue";
+import { CAN_USER_DISPLAY_VERSIONS } from "@/can-user-display-versions-injection-key";
 
 const selected_tracker = strictInject(SELECTED_TRACKER);
+const can_user_display_versions = strictInject(CAN_USER_DISPLAY_VERSIONS);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 const current_tab = ref<ConfigurationTab>(TRACKER_SELECTION_TAB);

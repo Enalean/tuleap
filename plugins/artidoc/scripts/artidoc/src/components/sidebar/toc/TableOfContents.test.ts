@@ -89,10 +89,6 @@ describe("TableOfContents", () => {
             );
             expect(wrapper.find("a").exists()).toBe(false);
         });
-
-        it("should display the table of content title", () => {
-            expect(getWrapper().find("h1").text()).toBe("Table of contents");
-        });
     });
 
     describe("when the sections are loaded", () => {
@@ -231,10 +227,6 @@ describe("TableOfContents", () => {
             expect(links[0].attributes().href).toBe(`#section-${artifact_section_1.value.id}`);
             expect(links[1].attributes().href).toBe(`#section-${artifact_section_2.value.id}`);
             expect(links[2].attributes().href).toBe(`#section-${freetext_section.value.id}`);
-        });
-
-        it("should display the table of content title", () => {
-            expect(getWrapper().find("h1").text()).toBe("Table of contents");
         });
 
         it("should display the number according to display_level", () => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject/src/strict-inject";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { Ref } from "vue";
 
-export const TRACKER_SELECTION_TAB = "tracker-selection-tab";
-export const READONLY_FIELDS_SELECTION_TAB = "readonly-fields-selection-tab";
-export const EXPERIMENTAL_FEATURES_TAB = "experimental-features-tab";
-
-export type ConfigurationTab =
-    | typeof TRACKER_SELECTION_TAB
-    | typeof READONLY_FIELDS_SELECTION_TAB
-    | typeof EXPERIMENTAL_FEATURES_TAB;
-
-export const CLOSE_CONFIGURATION_MODAL: StrictInjectionKey<(is_success: boolean) => void> = Symbol(
-    "close-configuration-modal",
+export const CAN_USER_DISPLAY_VERSIONS: StrictInjectionKey<boolean> = Symbol(
+    "can_user_display_versions",
 );
+
+export const ARE_VERSIONS_DISPLAYED: StrictInjectionKey<Ref<boolean>> =
+    Symbol("are_versions_displayed");

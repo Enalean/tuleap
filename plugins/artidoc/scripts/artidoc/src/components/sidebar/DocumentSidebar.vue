@@ -20,7 +20,10 @@
 
 <template>
     <aside class="aside" v-bind:class="is_expanded ? 'is-aside-expanded' : 'is-aside-collapsed'">
-        <div class="tlp-framed sidebar-contents">
+        <div
+            class="tlp-framed sidebar-contents"
+            v-bind:class="{ 'sidebar-contents-with-tabs': are_versions_displayed }"
+        >
             <button
                 class="tlp-button-mini tlp-button-primary tlp-button-outline sidebar-button"
                 v-on:click="toggle"
@@ -29,6 +32,7 @@
                 <i v-bind:class="icon" role="img"></i>
             </button>
             <div class="sidebar-contents-container">
+                <document-sidebar-header />
                 <table-of-contents />
             </div>
         </div>
@@ -39,6 +43,11 @@
 import TableOfContents from "./toc/TableOfContents.vue";
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import DocumentSidebarHeader from "@/components/sidebar/DocumentSidebarHeader.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { ARE_VERSIONS_DISPLAYED } from "@/can-user-display-versions-injection-key";
+
+const are_versions_displayed = strictInject(ARE_VERSIONS_DISPLAYED);
 
 const { $gettext } = useGettext();
 
@@ -114,6 +123,10 @@ $button-width: var(--artidoc-sidebar-button-width);
     position: sticky;
     top: calc(var(--artidoc-sticky-top-position) + var(--artidoc-sidebar-title-vertical-margin));
     padding: 0;
+}
+
+.sidebar-contents-with-tabs {
+    top: var(--artidoc-sticky-top-position);
 }
 
 .is-aside-collapsed > .sidebar-contents {

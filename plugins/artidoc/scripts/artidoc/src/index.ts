@@ -82,6 +82,10 @@ import {
     AVAILABLE_FIELDS,
     buildAvailableFieldsCollection,
 } from "@/configuration/AvailableFieldsCollection";
+import {
+    ARE_VERSIONS_DISPLAYED,
+    CAN_USER_DISPLAY_VERSIONS,
+} from "@/can-user-display-versions-injection-key";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -102,6 +106,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const can_user_edit_document = Boolean(
         getAttributeOrThrow(vue_mount_point, "data-can-user-edit-document"),
+    );
+    const can_user_display_versions = Boolean(
+        getAttributeOrThrow(vue_mount_point, "data-can-user-display-versions"),
     );
     const saved_tracker = Option.fromNullable<Tracker>(
         JSON.parse(getAttributeOrThrow(vue_mount_point, "data-selected-tracker")),
@@ -142,6 +149,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(FILE_UPLOADS_COLLECTION, file_uploads_collection)
         .provide(NOTIFICATION_COLLECTION, buildNotificationsCollection())
         .provide(CAN_USER_EDIT_DOCUMENT, can_user_edit_document)
+        .provide(CAN_USER_DISPLAY_VERSIONS, can_user_display_versions)
+        .provide(ARE_VERSIONS_DISPLAYED, ref(false))
         .provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBusStore())
         .provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus())
         .provide(REMOVE_FREETEXT_SECTION_MODAL, useRemoveFreetextSectionModal())
