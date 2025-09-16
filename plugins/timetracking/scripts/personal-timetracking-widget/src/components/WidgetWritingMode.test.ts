@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
-import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
-import type { Option } from "@tuleap/option";
+import { Option } from "@tuleap/option";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { PredefinedTimePeriodsVueStub } from "../../tests/stubs/PredefinedTimePeriodsVueStub";
 
@@ -37,8 +36,6 @@ vi.mock("@tuleap/tlp-date-picker", () => ({
     },
 }));
 
-let selected_time_period: Option<PredefinedTimePeriod>;
-
 describe("Given a personal timetracking widget in writing mode", () => {
     function getWritingModeInstance(): VueWrapper {
         return shallowMount(WidgetWritingMode, {
@@ -46,7 +43,7 @@ describe("Given a personal timetracking widget in writing mode", () => {
                 ...getGlobalTestOptions({
                     initial_state: {
                         root: {
-                            selected_time_period: selected_time_period,
+                            selected_time_period: Option.nothing(),
                         },
                     },
                 }),

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { UpdateFunction } from "hybrids";
+import type { HybridElement, UpdateFunction } from "hybrids";
 import { define, dispatch, html } from "hybrids";
 import { Option } from "@tuleap/option";
 import { selectOrThrow } from "@tuleap/dom";
@@ -323,54 +323,64 @@ export const renderArtifactCreatorElement = (
             </div>
         </form>`;
 
-export const ArtifactCreatorElement = define.compile<InternalArtifactCreator>({
-    tag: TAG,
-    controller: {
-        value: (host, controller) => controller,
-        observe: (host, controller) => {
-            const displayer = FaultDisplayer();
-            controller.registerFaultListener((fault) => {
-                host.error_message = Option.fromValue(displayer.formatForDisplay(fault));
-            });
+export const ArtifactCreatorElement: HybridElement<ArtifactCreatorElement> =
+    define.compile<InternalArtifactCreator>({
+        tag: TAG,
+        controller: {
+            value: (host, controller) => controller,
+            observe: (host, controller) => {
+                const displayer = FaultDisplayer();
+                controller.registerFaultListener((fault) => {
+                    host.error_message = Option.fromValue(displayer.formatForDisplay(fault));
+                });
 
-            host.selected_project = controller.getSelectedProject();
-            host.is_loading = true;
+                host.selected_project = controller.getSelectedProject();
+                host.is_loading = true;
 
-            const event = WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason());
-            Promise.all([
-                controller.getProjects(event),
-                controller.selectProjectAndGetItsTrackers(host.selected_project, event),
-            ]).then(([projects, trackers]) => {
-                host.controller.enableSubmit();
-                host.projects = projects;
-                host.trackers = trackers;
-                host.selected_tracker = controller.getSelectedTracker();
-                host.is_loading = false;
-            });
+                const event = WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason());
+                Promise.all([
+                    controller.getProjects(event),
+                    controller.selectProjectAndGetItsTrackers(host.selected_project, event),
+                ]).then(([projects, trackers]) => {
+                    host.controller.enableSubmit();
+                    host.projects = projects;
+                    host.trackers = trackers;
+                    host.selected_tracker = controller.getSelectedTracker();
+                    host.is_loading = false;
+                });
+            },
+            connect: initListPickers,
         },
-        connect: initListPickers,
-    },
-    current_artifact_reference: (host, current_artifact_reference) => current_artifact_reference,
-    available_types: (host, available_types) => available_types,
-    current_link_type: (host, current_link_type) => current_link_type,
-    is_loading: false,
-    error_message: {
-        value: (host, error_message) => error_message ?? Option.nothing(),
-        observe: onErrorMessageChange,
-    },
-    show_error_details: false,
-    projects: (host, new_value) => new_value ?? [],
-    trackers: (host, new_value) => new_value ?? [],
-    selected_project: (host, selected_project) => selected_project,
-    selected_tracker: (host, new_value) => new_value ?? Option.nothing(),
-    artifact_title: "",
-    project_selectbox: (host: InternalArtifactCreator) =>
-        selectOrThrow(host.render(), "#artifact-modal-link-creator-projects", HTMLSelectElement),
-    has_tracker_selection_error: false,
-    tracker_selectbox: (host: InternalArtifactCreator) =>
-        selectOrThrow(host.render(), "#artifact-modal-link-creator-trackers", HTMLSelectElement),
-    render: renderArtifactCreatorElement,
-});
+        current_artifact_reference: (host, current_artifact_reference) =>
+            current_artifact_reference,
+        available_types: (host, available_types) => available_types,
+        current_link_type: (host, current_link_type) => current_link_type,
+        is_loading: false,
+        error_message: {
+            value: (host, error_message) => error_message ?? Option.nothing(),
+            observe: onErrorMessageChange,
+        },
+        show_error_details: false,
+        projects: (host, new_value) => new_value ?? [],
+        trackers: (host, new_value) => new_value ?? [],
+        selected_project: (host, selected_project) => selected_project,
+        selected_tracker: (host, new_value) => new_value ?? Option.nothing(),
+        artifact_title: "",
+        project_selectbox: (host: InternalArtifactCreator) =>
+            selectOrThrow(
+                host.render(),
+                "#artifact-modal-link-creator-projects",
+                HTMLSelectElement,
+            ),
+        has_tracker_selection_error: false,
+        tracker_selectbox: (host: InternalArtifactCreator) =>
+            selectOrThrow(
+                host.render(),
+                "#artifact-modal-link-creator-trackers",
+                HTMLSelectElement,
+            ),
+        render: renderArtifactCreatorElement,
+    });
 
 if (!window.customElements.get(TAG)) {
     window.customElements.define(TAG, ArtifactCreatorElement);

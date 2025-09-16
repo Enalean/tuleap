@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         widget_id: query.id,
     })
         .use(
+            /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
             await initVueGettext(createGettext, (locale: string) => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             }),
