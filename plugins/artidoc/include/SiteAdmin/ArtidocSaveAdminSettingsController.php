@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,7 +50,7 @@ final class ArtidocSaveAdminSettingsController extends DispatchablePSR15Compatib
         $this->csrf_token->check();
 
         $body                      = $request->getParsedBody();
-        $can_user_display_versions = (bool) ($body['can_user_display_versions'] ?? '');
+        $can_user_display_versions = '1' === ($body['can_user_display_versions'] ?? '0');
 
         $this->config_set->set(
             \ForgeConfig::FEATURE_FLAG_PREFIX . ArtidocAdminSettings::FEATURE_FLAG_VERSIONS,

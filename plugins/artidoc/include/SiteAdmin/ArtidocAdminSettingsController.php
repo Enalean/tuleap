@@ -31,9 +31,9 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\ProvideCurrentUser;
 
-final class ArtidocAdminSettingsController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final readonly class ArtidocAdminSettingsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const ADMIN_SETTINGS_URL = '/artidoc/admin';
+    public const string ADMIN_SETTINGS_URL = '/artidoc/admin';
 
     public function __construct(
         private AdminPageRenderer $admin_page_renderer,

@@ -25,11 +25,11 @@ namespace Tuleap\Artidoc\SiteAdmin;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
-use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -46,14 +46,12 @@ final class ArtidocAdminSettingsControllerTest extends TestCase
             ProvideCurrentUserStub::buildWithUser($user),
             new ArtidocAdminSettingsPresenter(
                 false,
-                CSRFSynchronizerTokenPresenter::fromToken(
-                    new \CSRFSynchronizerToken('/admin', '', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub())
-                ),
+                CSRFSynchronizerTokenPresenter::fromToken(CSRFSynchronizerTokenStub::buildSelf()),
             ),
         );
 
         $this->expectException(ForbiddenException::class);
-        $controller->process($this->createStub(\HTTPRequest::class), LayoutBuilder::build(), []);
+        $controller->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), []);
     }
 
     public function testItDisplayPresenter(): void
@@ -67,14 +65,12 @@ final class ArtidocAdminSettingsControllerTest extends TestCase
             ProvideCurrentUserStub::buildWithUser($user),
             new ArtidocAdminSettingsPresenter(
                 false,
-                CSRFSynchronizerTokenPresenter::fromToken(
-                    new \CSRFSynchronizerToken('/admin', '', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub())
-                ),
+                CSRFSynchronizerTokenPresenter::fromToken(CSRFSynchronizerTokenStub::buildSelf()),
             ),
         );
 
         $admin_page_renderer->expects($this->once())->method('renderAPresenter');
 
-        $controller->process($this->createStub(\HTTPRequest::class), LayoutBuilder::build(), []);
+        $controller->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), []);
     }
 }
