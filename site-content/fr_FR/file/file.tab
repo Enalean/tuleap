@@ -133,9 +133,6 @@ file_admin_editreleases	im_sure	Je suis sûr.
 file_admin_editreleases	mail_file_rel_notice	Notification par e-mail de la nouvelle version : 
 file_admin_editreleases	send_notice	Envoyer la notification
 file_admin_editreleases	users_monitor	$1 utilisateur(s) surveillent ce paquet. Envoyez-leur une notification de cette nouvelle version.
-file_admin_editreleases	create_auto_news	Créer automatiquement une annonce
-file_admin_editreleases	rel_news	Vous pouvez créer automatiquement une annonce pour informer les utilisateurs de cette nouvelle version.
-file_admin_editreleases	create_news	Créer l'annonce
 file_admin_editreleases	define_new_release	Créer une nouvelle version d'un paquet
 file_admin_editreleases	contain_multiple_files	Une version d'un paquet peut contenir plusieurs fichiers. Les versions peuvent être nommées par de numéros (3.22.1, 3.23-beta1…) ou des noms.
 file_admin_editreleases	your_release	Les versions du paquet : $1
@@ -151,16 +148,12 @@ file_admin_editreleases	create_this_release	Créer cette version
 file_admin_editreleases	rel_del	Version détruite
 file_admin_editreleases	of_this_package	dans ce paquet
 file_admin_editreleases	subject	Sujet
-file_admin_editreleases	file_news_subject	Nouvelle version : $1
 file_admin_editreleases	details	Détails
-file_admin_editreleases	file_news_details	Une nouvelle version $1 est maintenant disponible à $2
-file_admin_editreleases	submit_news	Soumettre une annonce
 file_admin_editreleases	relname	<nom-de-version>
 file_admin_editreleases	fieldset_properties	Propriétés
 file_admin_editreleases	fieldset_uploaded_files	Fichiers téléchargés
 file_admin_editreleases	fieldset_notes	Notes
 file_admin_editreleases	fieldset_permissions	Permissions
-file_admin_editreleases	fieldset_news	Annonce
 file_admin_editreleases	fieldset_notification	Notification
 file_admin_editreleases	browse	parcourir...
 file_admin_editreleases	local_file	fichier local

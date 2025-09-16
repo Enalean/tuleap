@@ -24,39 +24,6 @@
     ugroups_name:readonly
 */
 
-function replace(expr, a, b) {
-    var i = 0;
-    while (i != -1) {
-        i = expr.indexOf(a, i);
-        if (i >= 0) {
-            expr = expr.substring(0, i) + b + expr.substring(i + a.length);
-            i += b.length;
-        }
-    }
-    return expr;
-}
-
-//eslint-disable-next-line @typescript-eslint/no-unused-vars
-function update_news() {
-    var rel_name = $("release_name");
-    var subject = $("release_news_subject");
-    var details = $("release_news_details");
-
-    if (subject === null || details === null) {
-        return;
-    }
-
-    var a = this.relname;
-    var b = rel_name.value;
-    var expr1 = subject.value;
-    var expr2 = details.value;
-
-    var new_subject = replace(expr1, a, b);
-    var new_details = replace(expr2, a, b);
-    subject.value = new_subject;
-    details.value = new_details;
-}
-
 //variables
 var nb_rows = 1;
 var nb_files = 0;
@@ -442,27 +409,6 @@ Event.observe(window, "load", function () {
                 '<a id="cl_upload_link" href="#upload_change_log" onclick="show_upload_change_log(); return false;">' +
                 upload_text +
                 "</a>",
-        });
-    }
-    //News
-    if ($("submit_news") !== null) {
-        Element.hide("tr_subject");
-        Element.hide("tr_details");
-        Element.hide("tr_public");
-        Element.hide("tr_private");
-
-        Event.observe($("submit_news"), "click", function () {
-            if ($("submit_news").checked) {
-                Element.show("tr_subject");
-                Element.show("tr_details");
-                Element.show("tr_public");
-                Element.show("tr_private");
-            } else {
-                Element.hide("tr_subject");
-                Element.hide("tr_details");
-                Element.hide("tr_public");
-                Element.hide("tr_private");
-            }
         });
     }
 
