@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\REST;
 
 use Tuleap\REST\RESTTestDataBuilder;
+use Tuleap\TestManagement\REST\Tests\TestManagementRESTTestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]

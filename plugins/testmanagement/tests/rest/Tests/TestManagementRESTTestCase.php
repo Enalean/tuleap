@@ -18,11 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\REST\Tests;
 
 use Psr\Http\Message\ResponseInterface;
 use Tuleap\REST\RestBase;
-use Tuleap\TestManagement\Tests\Rest\Cache;
 
 #[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]
 abstract class TestManagementRESTTestCase extends RestBase

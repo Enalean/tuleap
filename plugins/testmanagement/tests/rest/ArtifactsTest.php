@@ -21,8 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\REST;
 
+use Tuleap\TestManagement\REST\Tests\TestManagementDataBuilder;
+use Tuleap\TestManagement\REST\Tests\TestManagementRESTTestCase;
+use Tuleap\TestManagement\REST\Tests\UsedFieldIdNotFoundException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsTest extends TestManagementRESTTestCase
