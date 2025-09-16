@@ -156,6 +156,10 @@ function linksAreNotAllLoaded(): boolean {
     );
 }
 
+function filterAlreadySeenArtifact(rows: ReadonlyArray<ArtifactRow>): ArtifactRow[] {
+    return rows.filter((row) => row.id !== props.ancestors.slice(-1)[0]);
+}
+
 function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): void {
     current_element_ref.value = current_element;
     current_caret_ref.value = current_caret;
@@ -175,9 +179,7 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 total_number_of_forward_links.value = artifacts.total;
-                forward_links.value = artifacts.table.rows.filter(
-                    (row) => row.id !== props.ancestors.slice(-1)[0],
-                );
+                forward_links.value = filterAlreadySeenArtifact(artifacts.table.rows);
             },
             (fault: Fault) => {
                 error_message.value = String(fault);
@@ -192,9 +194,7 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 total_number_of_reverse_links.value = artifacts.total;
-                reverse_links.value = artifacts.table.rows.filter(
-                    (row) => row.id !== props.ancestors.slice(-1)[0],
-                );
+                reverse_links.value = filterAlreadySeenArtifact(artifacts.table.rows);
             },
             (fault: Fault) => {
                 error_message.value = String(fault);
@@ -220,9 +220,7 @@ function loadAllArtifactLinks(): void {
                             rows.push(...artifact.rows);
                         }
                     }
-                    forward_links.value = rows.filter(
-                        (row) => row.id !== props.ancestors.slice(-1)[0],
-                    );
+                    forward_links.value = filterAlreadySeenArtifact(rows);
                 },
                 (fault: Fault) => {
                     error_message.value = String(fault);
@@ -247,9 +245,7 @@ function loadAllArtifactLinks(): void {
                             rows.push(...artifact.rows);
                         }
                     }
-                    reverse_links.value = rows.filter(
-                        (row) => row.id !== props.ancestors.slice(-1)[0],
-                    );
+                    reverse_links.value = filterAlreadySeenArtifact(rows);
                 },
                 (fault: Fault) => {
                     error_message.value = String(fault);
