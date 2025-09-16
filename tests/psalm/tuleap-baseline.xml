@@ -35004,6 +35004,15 @@
       <code><![CDATA[$criteria->is_advanced]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
+  <file src="plugins/tracker/include/FormElement/StaticField/Separator/SeparatorStaticField.php">
+    <MissingParamType>
+      <code><![CDATA[$tracker]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[fetchAdmin]]></code>
+      <code><![CDATA[fetchReadOnly]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/PermissionsPerGroup/PermissionPerGroupPanePresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -43066,15 +43075,6 @@
       <code><![CDATA[fetchReadOnly]]></code>
       <code><![CDATA[getDefaultValue]]></code>
       <code><![CDATA[getRichText]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_Separator.php">
-    <MissingParamType>
-      <code><![CDATA[$tracker]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[fetchAdmin]]></code>
-      <code><![CDATA[fetchReadOnly]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Visitor.php">

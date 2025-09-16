@@ -26,7 +26,6 @@ use ForgeConfig;
 use HTTPRequest;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement;
-use Tracker_FormElement_StaticField_Separator;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\ForgeConfigSandbox;
@@ -39,6 +38,7 @@ use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
+use Tuleap\Tracker\FormElement\StaticField\Separator\SeparatorStaticField;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -86,9 +86,9 @@ final class TrackerFormElementTest extends TestCase
         self::assertEquals(0, $element->getOriginalFieldId());
     }
 
-    protected function givenAFormElementWithIdAndOriginalField(?int $id, ?Tracker_FormElement $original_field): Tracker_FormElement_StaticField_Separator
+    protected function givenAFormElementWithIdAndOriginalField(?int $id, ?Tracker_FormElement $original_field): SeparatorStaticField
     {
-        return new Tracker_FormElement_StaticField_Separator(
+        return new SeparatorStaticField(
             $id,
             null,
             null,
