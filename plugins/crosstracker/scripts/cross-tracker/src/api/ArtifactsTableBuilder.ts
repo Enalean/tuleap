@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { v4 as uuidv4 } from "uuid";
 import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
 import { Fault } from "@tuleap/fault";
@@ -314,6 +315,7 @@ export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
                     );
 
                     const row: ArtifactRow = {
+                        uuid: uuidv4(),
                         id: artifact_id,
                         expected_number_of_forward_links: number_of_forward_link,
                         expected_number_of_reverse_links: number_of_reverse_link,

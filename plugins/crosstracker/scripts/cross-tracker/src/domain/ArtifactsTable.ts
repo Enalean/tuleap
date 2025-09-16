@@ -121,6 +121,7 @@ export type Cell =
     | LinkTypeCell;
 
 export type ArtifactRow = {
+    readonly uuid: string;
     readonly id: number;
     readonly uri: string;
     readonly cells: Map<ColumnName, Cell>;
