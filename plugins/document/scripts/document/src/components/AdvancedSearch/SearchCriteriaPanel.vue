@@ -81,8 +81,6 @@
 import type { AdvancedSearchParams } from "../../type";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../store/configuration";
 import type { Ref } from "vue";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { UpdateCriteriaDateEvent, UpdateCriteriaEvent } from "../../helpers/emitter";
@@ -93,15 +91,12 @@ import CriterionDate from "./Criteria/CriterionDate.vue";
 import CriterionList from "./Criteria/CriterionList.vue";
 import CriterionNumber from "./Criteria/CriterionNumber.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { ROOT_ID } from "../../configuration-keys";
+import { ROOT_ID, SEARCH_CRITERIA } from "../../configuration-keys";
 
 const props = defineProps<{ query: AdvancedSearchParams; folder_id: number }>();
 
 const root_id = strictInject(ROOT_ID);
-
-const { criteria } = useNamespacedState<Pick<ConfigurationState, "criteria">>("configuration", [
-    "criteria",
-]);
+const criteria = strictInject(SEARCH_CRITERIA);
 
 const new_query: Ref<AdvancedSearchParams | null> = ref(null);
 

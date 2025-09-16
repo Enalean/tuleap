@@ -21,9 +21,6 @@ import type { RootState } from "../type";
 
 export const state: RootState = {
     configuration: {
-        project_icon: "",
-        criteria: [],
-        columns: [],
         forbid_writers_to_update: false,
         forbid_writers_to_delete: false,
         filename_pattern: "",

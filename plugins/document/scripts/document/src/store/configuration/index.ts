@@ -17,13 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ListOfSearchResultColumnDefinition, RootState, SearchCriteria } from "../../type";
+import type { RootState } from "../../type";
 import type { Module } from "vuex";
 
 export interface ConfigurationState {
-    readonly project_icon: string;
-    readonly criteria: SearchCriteria;
-    readonly columns: ListOfSearchResultColumnDefinition;
     readonly forbid_writers_to_update: boolean;
     readonly forbid_writers_to_delete: boolean;
     readonly filename_pattern: string;

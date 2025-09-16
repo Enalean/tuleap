@@ -102,12 +102,12 @@ import type { Item, State } from "../../type";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
 import { BreadcrumbPrivacy } from "@tuleap/vue3-breadcrumb-privacy";
-import { useNamespacedState, useState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../store/configuration";
+import { useState } from "vuex-composition-helpers";
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     PROJECT_FLAGS,
+    PROJECT_ICON,
     PROJECT_ID,
     PROJECT_PRIVACY,
     PROJECT_PUBLIC_NAME,
@@ -140,10 +140,7 @@ const user_is_admin = strictInject(USER_IS_ADMIN);
 const project_url = strictInject(PROJECT_URL);
 const project_privacy = strictInject(PROJECT_PRIVACY);
 const project_flags = strictInject(PROJECT_FLAGS);
-const { project_icon } = useNamespacedState<Pick<ConfigurationState, "project_icon">>(
-    "configuration",
-    ["project_icon"],
-);
+const project_icon = strictInject(PROJECT_ICON);
 
 const max_nb_to_display = ref(5);
 
