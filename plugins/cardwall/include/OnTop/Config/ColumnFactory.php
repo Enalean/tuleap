@@ -31,7 +31,7 @@ use Tuleap\Tracker\Tracker;
 
 class ColumnFactory
 {
-    public const DEFAULT_HEADER_COLOR = 'rgb(248,248,248)';
+    public const string DEFAULT_HEADER_COLOR = 'rgb(248,248,248)';
 
     public function __construct(private \Cardwall_OnTop_ColumnDao $dao)
     {

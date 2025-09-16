@@ -40,8 +40,8 @@ use Tuleap\Tracker\Tracker;
 
 class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME                  = 'plugin_cardwall_card_fields';
-    public const BACKGROUND_COLOR_NAME = 'plugin_cardwell_card_fields_background_color';
+    public const string NAME                  = 'plugin_cardwall_card_fields';
+    public const string BACKGROUND_COLOR_NAME = 'plugin_cardwell_card_fields_background_color';
     /**
      * @var TrackerField|null
      */

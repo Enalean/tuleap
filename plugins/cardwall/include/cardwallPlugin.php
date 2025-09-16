@@ -86,7 +86,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         return $this->config_factory;
     }
 
-    public const RENDERER_TYPE = 'plugin_cardwall';
+    public const string RENDERER_TYPE = 'plugin_cardwall';
 
 
     #[\Override]

@@ -24,7 +24,7 @@ use Tuleap\Tracker\Milestone\PaneInfo;
 
 class CardwallPaneInfo extends PaneInfo
 {
-    public const IDENTIFIER = 'cardwall';
+    public const string IDENTIFIER = 'cardwall';
 
     public function __construct(private int $project_id, private int $planning_id, private int $artifact_id)
     {

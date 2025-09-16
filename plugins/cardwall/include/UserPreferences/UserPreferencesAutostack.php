@@ -22,10 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Cardwall_UserPreferences_UserPreferencesAutostack
+abstract class Cardwall_UserPreferences_UserPreferencesAutostack //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const DONT_STACK = 'no_stack';
-    public const STACK      = 'auto_stack';
+    public const string DONT_STACK = 'no_stack';
+    public const string STACK      = 'auto_stack';
 
     /**
      * @var PFUser

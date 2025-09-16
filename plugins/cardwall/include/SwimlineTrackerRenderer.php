@@ -21,9 +21,9 @@
 /**
  * A swimline for the tracker's cardwall renderer
  */
-class Cardwall_SwimlineTrackerRenderer extends Cardwall_Swimline
+class Cardwall_SwimlineTrackerRenderer extends Cardwall_Swimline // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER = 'FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER';
+    public const string FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER = 'FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER';
 
     /**
      * @var int
