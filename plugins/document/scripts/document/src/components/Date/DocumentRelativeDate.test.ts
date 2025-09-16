@@ -22,6 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import type { ConfigurationState } from "../../store/configuration";
 import DocumentRelativeDate from "./DocumentRelativeDate.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { DATE_TIME_FORMAT } from "../../configuration-keys";
 
 describe("DocumentRelativeDate", () => {
     it("should display a tlp-relative-date element", () => {
@@ -34,7 +35,6 @@ describe("DocumentRelativeDate", () => {
                     modules: {
                         configuration: {
                             state: {
-                                date_time_format: "Y-m-d H:i",
                                 relative_dates_display: "relative_first-absolute_shown",
                                 user_locale: "en_US",
                             } as unknown as ConfigurationState,
@@ -44,6 +44,9 @@ describe("DocumentRelativeDate", () => {
                 }),
                 stubs: {
                     "tlp-relative-date": true,
+                },
+                provide: {
+                    [DATE_TIME_FORMAT.valueOf()]: "Y-m-d H:i",
                 },
             },
         });
@@ -62,7 +65,6 @@ describe("DocumentRelativeDate", () => {
                     modules: {
                         configuration: {
                             state: {
-                                date_time_format: "Y-m-d H:i",
                                 relative_dates_display: "relative_first-absolute_shown",
                                 user_locale: "en_US",
                             } as unknown as ConfigurationState,
@@ -72,6 +74,9 @@ describe("DocumentRelativeDate", () => {
                 }),
                 stubs: {
                     "tlp-relative-date": true,
+                },
+                provide: {
+                    [DATE_TIME_FORMAT.valueOf()]: "Y-m-d H:i",
                 },
             },
         });

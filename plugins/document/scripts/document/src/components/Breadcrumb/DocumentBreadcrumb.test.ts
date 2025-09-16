@@ -24,7 +24,14 @@ import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import type { Embedded, Folder, Item, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../store/configuration";
-import { PROJECT_ID, PROJECT_PUBLIC_NAME, USER_IS_ADMIN } from "../../configuration-keys";
+import {
+    PROJECT_ID,
+    PROJECT_PRIVACY,
+    PROJECT_PUBLIC_NAME,
+    PROJECT_URL,
+    USER_IS_ADMIN,
+} from "../../configuration-keys";
+import { ProjectPrivacyBuilder } from "../../../tests/builders/ProjectPrivacyBuilder";
 
 describe("DocumentBreadcrumb", () => {
     function createWrapper(
@@ -41,8 +48,6 @@ describe("DocumentBreadcrumb", () => {
                         configuration: {
                             state: {
                                 project_icon,
-                                project_url: " /project",
-                                privacy: "private",
                                 project_flags: [],
                             } as unknown as ConfigurationState,
                             namespaced: true,
@@ -62,6 +67,8 @@ describe("DocumentBreadcrumb", () => {
                     [PROJECT_ID.valueOf()]: 101,
                     [PROJECT_PUBLIC_NAME.valueOf()]: "My project",
                     [USER_IS_ADMIN.valueOf()]: user_is_admin,
+                    [PROJECT_URL.valueOf()]: " /project",
+                    [PROJECT_PRIVACY.valueOf()]: ProjectPrivacyBuilder.private(),
                 },
             },
         });

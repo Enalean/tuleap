@@ -41,6 +41,7 @@ import type { ConfigurationState } from "./store/configuration";
 import type { SearchCriterion, SearchListOption } from "./type";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 import {
+    DATE_TIME_FORMAT,
     EMBEDDED_ARE_ALLOWED,
     IS_OBSOLESCENCE_DATE_PROPERTY_USED,
     IS_STATUS_PROPERTY_USED,
@@ -49,7 +50,9 @@ import {
     MAX_SIZE_UPLOAD,
     PROJECT_ID,
     PROJECT_NAME,
+    PROJECT_PRIVACY,
     PROJECT_PUBLIC_NAME,
+    PROJECT_URL,
     ROOT_ID,
     USER_CAN_CREATE_WIKI,
     USER_CAN_DRAGNDROP,
@@ -130,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         vue_mount_point,
         "data-relative-dates-display",
     );
-    const privacy = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-privacy"));
+    const project_privacy = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-privacy"));
     const project_flags = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-project-flags"));
     const project_icon = getAttributeOrThrow(vue_mount_point, "data-project-icon");
     const filename_pattern = getAttributeOrThrow(vue_mount_point, "data-filename-pattern");
@@ -169,11 +172,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const configuration_state: ConfigurationState = {
-        project_url,
-        date_time_format,
         is_deletion_allowed,
         is_changelog_proposed_after_dnd,
-        privacy,
         project_flags,
         relative_dates_display,
         project_icon,
@@ -220,7 +220,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(USER_CAN_DRAGNDROP, max_files_dragndrop > 0)
         .provide(MAX_SIZE_UPLOAD, max_size_upload)
         .provide(WARNING_THRESHOLD, warning_threshold)
-        .provide(MAX_ARCHIVE_SIZE, max_archive_size);
+        .provide(MAX_ARCHIVE_SIZE, max_archive_size)
+        .provide(PROJECT_URL, project_url)
+        .provide(DATE_TIME_FORMAT, date_time_format)
+        .provide(PROJECT_PRIVACY, project_privacy);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

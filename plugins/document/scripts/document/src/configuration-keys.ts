@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 export const USER_ID: StrictInjectionKey<number> = Symbol("user-id");
 export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project-id");
@@ -36,3 +37,6 @@ export const USER_CAN_DRAGNDROP: StrictInjectionKey<boolean> = Symbol("user-can-
 export const MAX_SIZE_UPLOAD: StrictInjectionKey<number> = Symbol("max-size-upload");
 export const WARNING_THRESHOLD: StrictInjectionKey<number> = Symbol("warning-threshold");
 export const MAX_ARCHIVE_SIZE: StrictInjectionKey<number> = Symbol("max-archive-size");
+export const PROJECT_URL: StrictInjectionKey<string> = Symbol("project-url");
+export const DATE_TIME_FORMAT: StrictInjectionKey<string> = Symbol("date-time-format");
+export const PROJECT_PRIVACY: StrictInjectionKey<ProjectPrivacy> = Symbol("project-privacy");
