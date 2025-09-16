@@ -1,5 +1,7 @@
-/**
- * Copyright (c) Enalean SAS - 2016 - Present. All rights reserved
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 import { select2 } from "tlp";
 import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", () => {
     const sub_events_panels = document.querySelectorAll(
-            ".siteadmin-project-history-filter-form-subevents",
-        ),
-        events = document.getElementById("siteadmin-project-history-events"),
-        by_filter = document.getElementById("siteadmin-project-history-by");
+        ".siteadmin-project-history-filter-form-subevents",
+    );
+    const events = document.getElementById("siteadmin-project-history-events");
+    const by_filter = document.getElementById("siteadmin-project-history-by");
+    const locale = getLocaleWithDefault(document);
 
     if (events) {
         displayCurrentSubEventsPanel();
@@ -55,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const datepickers = document.querySelectorAll(".tlp-input-date");
     for (const element of datepickers) {
         if (element instanceof HTMLInputElement) {
-            datePicker(element);
+            createDatePicker(element, locale);
         }
     }
 

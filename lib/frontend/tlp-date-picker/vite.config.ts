@@ -25,7 +25,7 @@ export default vite.defineLibConfig({
     plugins: [
         // Remove IE hack in distributed flatpickr CSS
         Replace({
-            include: ["scss/main.scss"],
+            include: ["styles/main.scss"],
             values: { "7ch\\0": "6ch" },
             preventAssignment: true,
         }),
@@ -34,10 +34,7 @@ export default vite.defineLibConfig({
     build: {
         lib: {
             name: "TlpDatePicker",
-            entry: {
-                en_US: path.resolve(__dirname, "src/main.ts"),
-                fr_FR: path.resolve(__dirname, "src/main.fr_FR.ts"),
-            },
+            entry: path.resolve(__dirname, "src/main.ts"),
         },
     },
 });

@@ -18,8 +18,6 @@
  */
 
 export * from "@tuleap/tlp-modal";
-export * from "@tuleap/tlp-date-picker";
-
 export { default as locale } from "./default_locale";
 
 import jQuery from "jquery";

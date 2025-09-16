@@ -35,6 +35,7 @@ const rule_vue_loader = {
 const config = {
     entry: {
         "platform-admin-banner": "./src/main.ts",
+        "platform-admin-banner-styles": "./styles/main.scss",
     },
     context: __dirname,
     output: webpack_configurator.configureOutput(
@@ -51,13 +52,18 @@ const config = {
         },
     },
     module: {
-        rules: [...webpack_configurator.configureTypescriptRules(), rule_vue_loader],
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(),
+            rule_vue_loader,
+            webpack_configurator.rule_scss_loader,
+        ],
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
         POGettextPlugin.webpack(),
         new VueLoaderPlugin(),
+        ...webpack_configurator.getCSSExtractionPlugins(),
     ],
 };
 

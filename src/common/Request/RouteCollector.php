@@ -114,6 +114,7 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeCoreAssets;
@@ -950,13 +951,15 @@ class RouteCollector
 
     public static function getGetPlatformBannerAdministration(): DispatchableWithRequest
     {
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../scripts/platform-admin-banner/frontend-assets',
+            '/assets/core/platform-admin-banner'
+        );
         return new PlatformBannerAdministrationController(
             new AdminPageRenderer(),
             new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'ckeditor.js'),
-            new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../scripts/platform-admin-banner/frontend-assets', '/assets/core/platform-admin-banner'),
-                'platform-admin-banner.js'
-            ),
+            new JavascriptAsset($assets, 'platform-admin-banner.js'),
+            new CssAssetWithoutVariantDeclinaisons($assets, 'platform-admin-banner-styles'),
             new \Tuleap\Platform\Banner\BannerRetriever(new \Tuleap\Platform\Banner\BannerDao())
         );
     }

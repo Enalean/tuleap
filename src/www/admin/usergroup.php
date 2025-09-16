@@ -30,6 +30,8 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\InviteBuddy\Admin\InvitedByPresenterBuilder;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
@@ -56,12 +58,13 @@ $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 $site_administrator = $request->getCurrentUser();
 
-$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
-$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-user-details.js'));
+$include_assets = new IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($include_assets, 'site-admin-user-details.js'));
+$GLOBALS['HTML']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($include_assets, 'site-admin-user-details-styles'));
 
 $GLOBALS['HTML']->addJavascriptAsset(
     new JavascriptAsset(
-        new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/account/frontend-assets', '/assets/core/account'),
+        new IncludeAssets(__DIR__ . '/../../scripts/account/frontend-assets', '/assets/core/account'),
         'check-pw.js'
     )
 );

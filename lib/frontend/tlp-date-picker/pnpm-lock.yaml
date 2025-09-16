@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../locale
   flatpickr:
     specifier: ^4.6.9
     version: 4.6.9

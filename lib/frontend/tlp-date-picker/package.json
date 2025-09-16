@@ -10,15 +10,12 @@
     ".": {
       "types": "./dist/main.d.ts",
       "sass": "./dist/tlp-date-picker.css",
-      "import": "./dist/en_US.js",
-      "require": "./dist/en_US.cjs"
-    },
-    "./fr_FR": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/fr_FR.js"
+      "import": "./dist/tlp-date-picker.js",
+      "require": "./dist/tlp-date-picker.umd.cjs"
     }
   },
   "dependencies": {
+    "@tuleap/locale": "workspace:^",
     "flatpickr": "^4.6.9"
   },
   "devDependencies": {
