@@ -25,37 +25,16 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class Client
+readonly class Client
 {
-    private const SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
-
-    /**
-     * @var string
-     */
-    private $secret_key;
-    /**
-     * @var ClientInterface
-     */
-    private $http_client;
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $request_factory;
-    /**
-     * @var StreamFactoryInterface
-     */
-    private $stream_factory;
+    private const string SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
 
     public function __construct(
-        string $secret_key,
-        ClientInterface $http_client,
-        RequestFactoryInterface $request_factory,
-        StreamFactoryInterface $stream_factory,
+        private string $secret_key,
+        private ClientInterface $http_client,
+        private RequestFactoryInterface $request_factory,
+        private StreamFactoryInterface $stream_factory,
     ) {
-        $this->secret_key      = $secret_key;
-        $this->http_client     = $http_client;
-        $this->request_factory = $request_factory;
-        $this->stream_factory  = $stream_factory;
     }
 
     public function verify(string $challenge, string $user_ip): bool

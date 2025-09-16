@@ -2374,11 +2374,6 @@
       <code><![CDATA[$site_key_label]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/captcha/include/Captcha/Client.php">
-    <MissingClassConstType>
-      <code><![CDATA[SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/captcha/include/Captcha/Configuration.php">
     <MissingParamType>
       <code><![CDATA[$secret_key]]></code>
