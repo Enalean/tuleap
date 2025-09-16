@@ -29,11 +29,7 @@ use Event;
 use ProjectManager;
 use SVN_LogDao;
 use TemplateRendererFactory;
-use Tuleap\Date\RelativeDatesAssetsRetriever;
-use Tuleap\Layout\HomePage\NewsCollection;
-use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
-use Tuleap\News\NewsDao;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Theme\BurningParrot\HomePagePresenter;
@@ -85,9 +81,6 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $login_url = '';
         $event_manager->processEvent(\Event::GET_LOGIN_URL, ['return_to' => '', 'login_url' => &$login_url]);
 
-        $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
-        $news_collection         = $news_collection_builder->build();
-
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons(
             new IncludeCoreAssets(),
             'homepage-style'
@@ -101,13 +94,11 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $this->displayStandardHomepage(
             $registration_guard->isRegistrationPossible(),
             $login_url,
-            $news_collection
         );
         $layout->footer([]);
-        $this->includeRelativeDatesAssetsIfNeeded($news_collection, $layout);
     }
 
-    private function displayStandardHomepage(bool $display_new_account_button, string $login_url, NewsCollection $news_collection): void
+    private function displayStandardHomepage(bool $display_new_account_button, string $login_url): void
     {
         $current_user = UserManager::instance()->getCurrentUser();
 
@@ -143,16 +134,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
             $display_new_account_button,
             $login_url,
             $statistics_collection,
-            $news_collection
         );
         $renderer->renderToPage('homepage', $presenter);
-    }
-
-    private function includeRelativeDatesAssetsIfNeeded(NewsCollection $news_collection, BaseLayout $layout): void
-    {
-        if (! $news_collection->hasNews()) {
-            return;
-        }
-        $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
     }
 }

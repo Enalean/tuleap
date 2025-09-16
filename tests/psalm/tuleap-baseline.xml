@@ -56501,38 +56501,10 @@
       <code><![CDATA[rendersErrorWithException]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Layout/HomePage/HomePageNews.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getAvatarUrl]]></code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code><![CDATA[details]]></code>
-    </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $date->getTimestamp()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="src/common/Layout/HomePage/LastMonthStatisticsCollectorSVN.php">
     <MissingReturnType>
       <code><![CDATA[setSvnCommits]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/Layout/HomePage/NewsCollection.php">
-    <MissingPropertyType>
-      <code><![CDATA[$has_news]]></code>
-      <code><![CDATA[$news]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Layout/HomePage/NewsCollectionBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[CONFIG_DISPLAY_NEWS = 'display_homepage_news']]></code>
-    </MissingClassConstType>
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->user_manager->getUserById($news['submitted_by'])]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="src/common/Layout/HomePage/StatisticsCollection.php">
     <MissingParamType>
@@ -57608,7 +57580,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[fetchAll]]></code>
-      <code><![CDATA[getNewsForSiteHomePage]]></code>
       <code><![CDATA[getNewsForSitePublicRSSFeed]]></code>
       <code><![CDATA[getSiteNewsLimit]]></code>
       <code><![CDATA[updatePromotedItems]]></code>
@@ -69393,7 +69364,6 @@
       <code><![CDATA[$csrf]]></code>
     </InvalidPropertyAssignmentValue>
     <MissingParamType>
-      <code><![CDATA[$display_news_on_home_page]]></code>
       <code><![CDATA[$display_statistics_on_home_page]]></code>
       <code><![CDATA[$title]]></code>
     </MissingParamType>

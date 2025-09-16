@@ -40,7 +40,6 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationPurger;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
 use Tuleap\Mail\Transport\MailTransportBuilder;
@@ -70,7 +69,6 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         ForgeAccess::class,
         ProjectVisibilityConfigManager::class,
         Prometheus::class,
-        NewsCollectionBuilder::class,
         StatisticsCollectionBuilder::class,
         DefaultProjectVisibilityRetriever::class,
         ServiceControl::class,

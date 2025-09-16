@@ -23,7 +23,6 @@ namespace Tuleap\Theme\BurningParrot;
 use Admin_Homepage_LogoFinder;
 use Codendi_HTMLPurifier;
 use PFUser;
-use Tuleap\Layout\HomePage\NewsCollection;
 use Tuleap\Layout\HomePage\StatisticsCollection;
 use User_LoginPresenter;
 
@@ -52,9 +51,6 @@ class HomePagePresenter
     public $has_statistics;
     public $statistics;
 
-    public $has_news;
-    public $news;
-
     public function __construct(
         string $headline,
         PFUser $user,
@@ -62,7 +58,6 @@ class HomePagePresenter
         $display_new_account_button,
         $login_url,
         StatisticsCollection $statistics_collection,
-        NewsCollection $news_collection,
     ) {
         $this->is_custom_logo_used        = Admin_Homepage_LogoFinder::isCustomLogoUsed();
         $this->path_custom_logo           = Admin_Homepage_LogoFinder::getCurrentUrl();
@@ -88,7 +83,5 @@ class HomePagePresenter
         $this->my_personal_page     = $GLOBALS['Language']->getText('homepage', 'my_personal_page');
         $this->has_statistics       = $statistics_collection->hasStatistics();
         $this->statistics           = $statistics_collection->getStatistics();
-        $this->has_news             = $news_collection->hasNews();
-        $this->news                 = $news_collection->getNews();
     }
 }
