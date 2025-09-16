@@ -936,7 +936,6 @@
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Field_List_CriteriaTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Field_List_OpenValueTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Line_BreakTest.php"/>
-            <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_SeparatorTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_SharedFormElementFactoryTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/TransitionListValidatorTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/View/Admin/AdminVisitorTest.php"/>

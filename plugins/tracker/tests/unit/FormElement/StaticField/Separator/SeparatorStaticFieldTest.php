@@ -19,15 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\FormElement;
+declare(strict_types=1);
 
-use Tracker_FormElement_StaticField_Separator;
+namespace Tuleap\Tracker\FormElement\StaticField\Separator;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_FormElement_SeparatorTest extends \Tuleap\Test\PHPUnit\TestCase
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class SeparatorStaticFieldTest extends TestCase
 {
-    public function testFetchDescription()
+    public function testFetchDescription(): void
     {
         $expected_message = '';
         $id               = 2;
@@ -43,10 +45,10 @@ class Tracker_FormElement_SeparatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rank             = 25;
         $original_field   = null;
 
-        $separator = new Tracker_FormElement_StaticField_Separator($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field);
+        $separator = new SeparatorStaticField($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field);
 
-        $this->assertEquals('Separator Label', $separator->getLabel());
-        $this->assertEquals('', $separator->getDescription());
-        $this->assertEquals($expected_message, $separator->getCannotRemoveMessage());
+        self::assertEquals('Separator Label', $separator->getLabel());
+        self::assertEquals('', $separator->getDescription());
+        self::assertEquals($expected_message, $separator->getCannotRemoveMessage());
     }
 }
