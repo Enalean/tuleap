@@ -63,7 +63,7 @@ const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
-    let is_xslx_export_allowed: boolean;
+    let is_xlsx_export_allowed: boolean;
     let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
     let stub_arrow_redrawer_triggerer: ArrowRedrawTriggerer;
@@ -73,7 +73,7 @@ describe(`SelectableTable`, () => {
     };
 
     beforeEach(() => {
-        is_xslx_export_allowed = true;
+        is_xlsx_export_allowed = true;
 
         stub_arrow_redrawer_triggerer = {
             listenToSelectableTableResize: vi.fn(),
@@ -107,7 +107,7 @@ describe(`SelectableTable`, () => {
                     ),
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
                     [WIDGET_ID.valueOf()]: 15,
-                    [IS_EXPORT_ALLOWED.valueOf()]: ref(is_xslx_export_allowed),
+                    [IS_EXPORT_ALLOWED.valueOf()]: ref(is_xlsx_export_allowed),
                     [GET_COLUMN_NAME.valueOf()]: ColumnNameGetter(
                         createVueGettextProviderPassThrough(),
                     ),

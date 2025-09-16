@@ -92,7 +92,7 @@ msgid ""
 "= 'value'"
 msgstr ""
 
-msgid "Export XSLX"
+msgid "Export XLSX"
 msgstr ""
 
 msgid "First"

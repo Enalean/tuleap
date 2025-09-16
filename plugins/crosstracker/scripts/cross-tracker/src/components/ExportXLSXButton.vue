@@ -22,7 +22,7 @@
         type="button"
         class="tlp-button-primary tlp-button-mini tlp-button-outline"
         v-bind:disabled="is_loading"
-        v-on:click="exportXSLX()"
+        v-on:click="exportXLSX()"
         data-test="export-xlsx-button"
     >
         <i
@@ -31,7 +31,7 @@
             v-bind:class="{ 'fa-spin fa-circle-notch': is_loading, 'fa-download': !is_loading }"
             data-test="export-xlsx-button-icon"
         ></i>
-        {{ $gettext("Export XSLX") }}
+        {{ $gettext("Export XLSX") }}
     </button>
 </template>
 <script setup lang="ts">
@@ -54,7 +54,7 @@ const props = defineProps<{
 const is_loading = ref(false);
 const { $gettext } = useGettext();
 
-async function exportXSLX(): Promise<void> {
+async function exportXLSX(): Promise<void> {
     if (props.current_query.tql_query === "") {
         return;
     }
