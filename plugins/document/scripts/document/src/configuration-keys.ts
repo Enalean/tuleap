@@ -18,6 +18,8 @@
  */
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
+import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export const USER_ID: StrictInjectionKey<number> = Symbol("user-id");
 export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project-id");
@@ -40,3 +42,12 @@ export const MAX_ARCHIVE_SIZE: StrictInjectionKey<number> = Symbol("max-archive-
 export const PROJECT_URL: StrictInjectionKey<string> = Symbol("project-url");
 export const DATE_TIME_FORMAT: StrictInjectionKey<string> = Symbol("date-time-format");
 export const PROJECT_PRIVACY: StrictInjectionKey<ProjectPrivacy> = Symbol("project-privacy");
+export const PROJECT_FLAGS: StrictInjectionKey<ReadonlyArray<ProjectFlag>> =
+    Symbol("project-flags");
+export const IS_CHANGELOG_PROPOSED_AFTER_DND: StrictInjectionKey<boolean> = Symbol(
+    "is-changelog-proposed-after-dnd",
+);
+export const IS_DELETION_ALLOWED: StrictInjectionKey<boolean> = Symbol("is-deletion-allowed");
+export const USER_LOCALE: StrictInjectionKey<string> = Symbol("user-locale");
+export const RELATIVE_DATES_DISPLAY: StrictInjectionKey<RelativeDatesDisplayPreference> =
+    Symbol("relative-dates-display");

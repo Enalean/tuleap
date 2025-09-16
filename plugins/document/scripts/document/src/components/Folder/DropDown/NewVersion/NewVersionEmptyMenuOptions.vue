@@ -106,8 +106,7 @@ import {
 } from "../../../../constants";
 import type { ItemHasJustBeenUpdatedEvent } from "../../../../helpers/emitter";
 import emitter from "../../../../helpers/emitter";
-import { useActions, useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
+import { useActions } from "vuex-composition-helpers";
 import { inject } from "vue";
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import { getEmptyOfficeFileFromMimeType } from "../../../../helpers/office/get-empty-office-file";
@@ -117,17 +116,18 @@ import type {
 } from "../../../../store/actions-update";
 import { isFile } from "../../../../helpers/type-check-helper";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { EMBEDDED_ARE_ALLOWED, USER_CAN_CREATE_WIKI } from "../../../../configuration-keys";
+import {
+    EMBEDDED_ARE_ALLOWED,
+    USER_CAN_CREATE_WIKI,
+    USER_LOCALE,
+} from "../../../../configuration-keys";
 
 const { createNewVersionFromEmpty } = useActions<
     Pick<RootActionsUpdate, "createNewVersionFromEmpty">
 >(["createNewVersionFromEmpty"]);
 const user_can_create_wiki = strictInject(USER_CAN_CREATE_WIKI);
 const embedded_are_allowed = strictInject(EMBEDDED_ARE_ALLOWED);
-const { user_locale } = useNamespacedState<Pick<ConfigurationState, "user_locale">>(
-    "configuration",
-    ["user_locale"],
-);
+const user_locale = strictInject(USER_LOCALE);
 
 const create_new_item_alternatives = inject<NewItemAlternativeArray>(
     "create_new_item_alternatives",
@@ -145,10 +145,7 @@ function showNewVersionModal(type: ItemType): void {
 }
 
 async function convertEmptyDocument(alternative: NewItemAlternative): Promise<void> {
-    const office_file = await getEmptyOfficeFileFromMimeType(
-        user_locale.value,
-        alternative.mime_type,
-    );
+    const office_file = await getEmptyOfficeFileFromMimeType(user_locale, alternative.mime_type);
     const file = new File([office_file.file], props.item.title + "." + office_file.extension, {
         type: alternative.mime_type,
     });

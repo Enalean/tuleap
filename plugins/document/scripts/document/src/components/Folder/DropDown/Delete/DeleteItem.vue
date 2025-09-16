@@ -35,15 +35,12 @@
 <script setup lang="ts">
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
-import type { ConfigurationState } from "../../../../store/configuration";
-import { useNamespacedState } from "vuex-composition-helpers";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { IS_DELETION_ALLOWED } from "../../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
-const { is_deletion_allowed } = useNamespacedState<Pick<ConfigurationState, "is_deletion_allowed">>(
-    "configuration",
-    ["is_deletion_allowed"],
-);
+const is_deletion_allowed = strictInject(IS_DELETION_ALLOWED);
 
 function processDeletion(): void {
     emitter.emit("deleteItem", { item: props.item });

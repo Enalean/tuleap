@@ -25,7 +25,7 @@ import { shallowMount } from "@vue/test-utils";
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../../store/configuration";
+import { IS_DELETION_ALLOWED } from "../../../../configuration-keys";
 
 vi.mock("../../../../helpers/emitter");
 
@@ -37,14 +37,10 @@ describe("DeleteItem", () => {
         return shallowMount(DeleteItem, {
             props: { item: { id: 1, user_can_write } as Item },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: { is_deletion_allowed } as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [IS_DELETION_ALLOWED.valueOf()]: is_deletion_allowed,
+                },
             },
         });
     }

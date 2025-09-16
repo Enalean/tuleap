@@ -25,6 +25,7 @@ import type { Embedded, Folder, Item, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../store/configuration";
 import {
+    PROJECT_FLAGS,
     PROJECT_ID,
     PROJECT_PRIVACY,
     PROJECT_PUBLIC_NAME,
@@ -48,7 +49,6 @@ describe("DocumentBreadcrumb", () => {
                         configuration: {
                             state: {
                                 project_icon,
-                                project_flags: [],
                             } as unknown as ConfigurationState,
                             namespaced: true,
                         },
@@ -69,6 +69,7 @@ describe("DocumentBreadcrumb", () => {
                     [USER_IS_ADMIN.valueOf()]: user_is_admin,
                     [PROJECT_URL.valueOf()]: " /project",
                     [PROJECT_PRIVACY.valueOf()]: ProjectPrivacyBuilder.private(),
+                    [PROJECT_FLAGS.valueOf()]: [],
                 },
             },
         });

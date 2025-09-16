@@ -113,19 +113,14 @@ import {
     isOtherType,
 } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../../../configuration-keys";
+import { IS_DELETION_ALLOWED, PROJECT_ID } from "../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
 const project_id = strictInject(PROJECT_ID);
-const { is_deletion_allowed } = useNamespacedState<Pick<ConfigurationState, "is_deletion_allowed">>(
-    "configuration",
-    ["is_deletion_allowed"],
-);
+const is_deletion_allowed = strictInject(IS_DELETION_ALLOWED);
 
 const NOTIFS_PANE_NAME = "notifications";
 const APPROVAL_TABLES_PANE_NAME = "approval";

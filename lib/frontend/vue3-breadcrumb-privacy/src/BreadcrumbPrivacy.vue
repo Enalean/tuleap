@@ -107,7 +107,7 @@ import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
 import { computed, onMounted, ref } from "vue";
 
 const props = defineProps<{
-    project_flags: Array<ProjectFlag>;
+    project_flags: ReadonlyArray<ProjectFlag>;
     privacy: ProjectPrivacy;
     project_public_name: string;
 }>();

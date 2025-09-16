@@ -27,6 +27,7 @@ import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { buildFakeItem } from "../../../helpers/item-builder";
 import {
+    IS_CHANGELOG_PROPOSED_AFTER_DND,
     MAX_FILES_DRAGNDROP,
     MAX_SIZE_UPLOAD,
     USER_CAN_DRAGNDROP,
@@ -74,7 +75,6 @@ describe("DragNDropHandler", () => {
                     modules: {
                         configuration: {
                             state: {
-                                is_changelog_proposed_after_dnd,
                                 is_filename_pattern_enforced,
                             } as unknown as ConfigurationState,
                             namespaced: true,
@@ -94,6 +94,7 @@ describe("DragNDropHandler", () => {
                     [MAX_FILES_DRAGNDROP.valueOf()]: 2,
                     [USER_CAN_DRAGNDROP.valueOf()]: user_can_dragndrop,
                     [MAX_SIZE_UPLOAD.valueOf()]: max_size_upload,
+                    [IS_CHANGELOG_PROPOSED_AFTER_DND.valueOf()]: is_changelog_proposed_after_dnd,
                 },
             },
         });

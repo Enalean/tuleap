@@ -92,20 +92,15 @@ import { canUpdateProperties } from "../../../helpers/can-update-properties-help
 import { canDelete } from "../../../helpers/can-delete-helper";
 import DeleteItem from "./Delete/DeleteItem.vue";
 import DownloadFile from "./DownloadFile.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { IS_DELETION_ALLOWED } from "../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
-const { forbid_writers_to_update, forbid_writers_to_delete, is_deletion_allowed } =
-    useNamespacedState<
-        Pick<
-            ConfigurationState,
-            "forbid_writers_to_update" | "forbid_writers_to_delete" | "is_deletion_allowed"
-        >
-    >("configuration", [
-        "forbid_writers_to_update",
-        "forbid_writers_to_delete",
-        "is_deletion_allowed",
-    ]);
+const is_deletion_allowed = strictInject(IS_DELETION_ALLOWED);
+const { forbid_writers_to_update, forbid_writers_to_delete } = useNamespacedState<
+    Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
+>("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
 
 const is_item_a_wiki_with_approval_table = computed((): boolean => {
     return isWiki(props.item) && props.item.approval_table !== null;
@@ -139,8 +134,7 @@ const should_display_update_properties = computed((): boolean =>
 );
 
 const should_display_delete = computed(
-    (): boolean =>
-        is_deletion_allowed.value && canDelete(forbid_writers_to_delete.value, props.item),
+    (): boolean => is_deletion_allowed && canDelete(forbid_writers_to_delete.value, props.item),
 );
 
 const should_display_lock_unlock = computed(

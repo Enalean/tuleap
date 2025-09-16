@@ -43,21 +43,26 @@ import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date"
 import {
     DATE_TIME_FORMAT,
     EMBEDDED_ARE_ALLOWED,
+    IS_CHANGELOG_PROPOSED_AFTER_DND,
+    IS_DELETION_ALLOWED,
     IS_OBSOLESCENCE_DATE_PROPERTY_USED,
     IS_STATUS_PROPERTY_USED,
     MAX_ARCHIVE_SIZE,
     MAX_FILES_DRAGNDROP,
     MAX_SIZE_UPLOAD,
+    PROJECT_FLAGS,
     PROJECT_ID,
     PROJECT_NAME,
     PROJECT_PRIVACY,
     PROJECT_PUBLIC_NAME,
     PROJECT_URL,
+    RELATIVE_DATES_DISPLAY,
     ROOT_ID,
     USER_CAN_CREATE_WIKI,
     USER_CAN_DRAGNDROP,
     USER_ID,
     USER_IS_ADMIN,
+    USER_LOCALE,
     WARNING_THRESHOLD,
 } from "./configuration-keys";
 
@@ -172,12 +177,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const configuration_state: ConfigurationState = {
-        is_deletion_allowed,
-        is_changelog_proposed_after_dnd,
-        project_flags,
-        relative_dates_display,
         project_icon,
-        user_locale,
         criteria,
         columns,
         forbid_writers_to_update,
@@ -223,7 +223,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(MAX_ARCHIVE_SIZE, max_archive_size)
         .provide(PROJECT_URL, project_url)
         .provide(DATE_TIME_FORMAT, date_time_format)
-        .provide(PROJECT_PRIVACY, project_privacy);
+        .provide(PROJECT_PRIVACY, project_privacy)
+        .provide(PROJECT_FLAGS, project_flags)
+        .provide(IS_CHANGELOG_PROPOSED_AFTER_DND, is_changelog_proposed_after_dnd)
+        .provide(IS_DELETION_ALLOWED, is_deletion_allowed)
+        .provide(USER_LOCALE, user_locale)
+        .provide(RELATIVE_DATES_DISPLAY, relative_dates_display);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

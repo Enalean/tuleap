@@ -22,7 +22,6 @@ import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import DropDownMenu from "./DropDownMenu.vue";
 import type { Item } from "../../../type";
-import type { ConfigurationState } from "../../../store/configuration";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -32,28 +31,20 @@ import {
     TYPE_WIKI,
 } from "../../../constants";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { PROJECT_ID } from "../../../configuration-keys";
+import { IS_DELETION_ALLOWED, PROJECT_ID } from "../../../configuration-keys";
 
 describe("DropDownMenu", () => {
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof DropDownMenu>> {
         return shallowMount(DropDownMenu, {
             props: { item },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                is_deletion_allowed: true,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: {
                     RouterLink: RouterLinkStub,
                 },
                 provide: {
                     [PROJECT_ID.valueOf()]: 101,
+                    [IS_DELETION_ALLOWED.valueOf()]: true,
                 },
             },
         });
