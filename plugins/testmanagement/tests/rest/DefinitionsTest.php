@@ -18,9 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\TestManagement\REST;
 
+use Psl\Json;
 use Tuleap\REST\RESTTestDataBuilder;
+use Tuleap\TestManagement\REST\Tests\API\TestManagementAPIHelper;
 use Tuleap\TestManagement\REST\Tests\TestManagementDataBuilder;
 use Tuleap\TestManagement\REST\Tests\TestManagementRESTTestCase;
 
@@ -28,45 +32,63 @@ use Tuleap\TestManagement\REST\Tests\TestManagementRESTTestCase;
 #[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]
 final class DefinitionsTest extends TestManagementRESTTestCase
 {
+    private TestManagementAPIHelper $testmanagement_api;
+
+    #[\Override]
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->testmanagement_api = new TestManagementAPIHelper(
+            $this->rest_request,
+            $this->request_factory,
+        );
+    }
+
     public function testGetDefinition(): void
     {
         $first_definition = $this->getFirstDefinition(TestManagementDataBuilder::USER_TESTER_NAME);
 
-        $definition_request = $this->request_factory->createRequest('GET', 'testmanagement_definitions/' . $first_definition['id']);
-        $definition         = json_decode($this->getResponse($definition_request)->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $definition = $this->testmanagement_api->getTestDefinition(
+            $first_definition['id'],
+            TestManagementDataBuilder::USER_TESTER_NAME
+        );
 
-        $this->assertEquals($definition, $first_definition);
-        $this->assertEquals([], $definition['all_requirements']);
+        self::assertEquals($first_definition, $definition->json);
+        self::assertSame([], $definition->getAllRequirements());
     }
 
     public function testGetDefinitionWithRESTReadOnlyUser(): void
     {
         $first_definition = $this->getFirstDefinition(RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
-        $definition_request = $this->request_factory->createRequest('GET', 'testmanagement_definitions/' . $first_definition['id']);
-        $definition         = json_decode($this->getResponse(
-            $definition_request,
+        $definition = $this->testmanagement_api->getTestDefinition(
+            $first_definition['id'],
             RESTTestDataBuilder::TEST_BOT_USER_NAME
-        )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        );
 
-        $this->assertEquals($definition, $first_definition);
+        self::assertEquals($first_definition, $definition->json);
     }
 
-    private function getFirstDefinition(string $user_name)
+    private function getFirstDefinition(string $user_name): array
     {
-        $campaign  = $this->valid_73_campaign;
-        $execution = $this->getFirstExecution($campaign['id'], $user_name);
+        $campaign = $this->valid_73_campaign;
+        if ($campaign === null) {
+            throw new \RuntimeException('Could not find Test Management campaign Tuleap 7.3');
+        }
+        $execution = $this->getFirstExecution((int) $campaign['id'], $user_name);
 
         return $execution['definition'];
     }
 
-    private function getFirstExecution($campaign_id, string $user_name)
+    private function getFirstExecution(int $campaign_id, string $user_name): array
     {
-        $executions_request = $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign_id . '/testmanagement_executions');
-        $executions         = json_decode($this->getResponse(
-            $executions_request,
-            $user_name
-        )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $executions_request = $this->request_factory->createRequest(
+            'GET',
+            'testmanagement_campaigns/' . $campaign_id . '/testmanagement_executions'
+        );
+        $executions         = Json\decode(
+            $this->getResponse($executions_request, $user_name)->getBody()->getContents(),
+        );
 
         return $executions[0];
     }
