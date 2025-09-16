@@ -26,18 +26,18 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 
 final readonly class CrossTrackerInstrumentation
 {
-    private const DURATION_NAME    = 'crosstracker_tql_query_duration';
-    private const DURATION_HELP    = 'Duration of CrossTracker TQL query in microseconds';
-    private const DURATION_BUCKETS = [0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
+    private const string DURATION_NAME   = 'crosstracker_tql_query_duration';
+    private const string DURATION_HELP   = 'Duration of CrossTracker TQL query in microseconds';
+    private const array DURATION_BUCKETS = [0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
 
-    private const TRACKER_COUNT_NAME = 'crosstracker_tql_tracker_count';
-    private const TRACKER_COUNT_HELP = 'Number of tracker used by CrossTracker TQL query';
+    private const string TRACKER_COUNT_NAME = 'crosstracker_tql_tracker_count';
+    private const string TRACKER_COUNT_HELP = 'Number of tracker used by CrossTracker TQL query';
 
-    private const SELECT_COUNT_NAME = 'crosstracker_tql_select_count';
-    private const SELECT_COUNT_HELP = 'Number of columns selected by CrossTracker TQL query';
+    private const string SELECT_COUNT_NAME = 'crosstracker_tql_select_count';
+    private const string SELECT_COUNT_HELP = 'Number of columns selected by CrossTracker TQL query';
 
-    private const ORDER_BY_COUNT_NAME = 'crosstracker_tql_order_by_used_total';
-    private const ORDER_BY_COUNT_HELP = 'Is order by used in CrossTracker TQL query';
+    private const string ORDER_BY_COUNT_NAME = 'crosstracker_tql_order_by_used_total';
+    private const string ORDER_BY_COUNT_HELP = 'Is order by used in CrossTracker TQL query';
 
     public function __construct(private Prometheus $prometheus)
     {

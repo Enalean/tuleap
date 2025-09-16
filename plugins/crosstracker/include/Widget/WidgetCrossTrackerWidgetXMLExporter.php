@@ -28,11 +28,11 @@ use Tuleap\Option\Option;
 
 final readonly class WidgetCrossTrackerWidgetXMLExporter
 {
-    public const PREFERENCE_QUERY             = 'query';
-    public const PREFERENCE_QUERY_IS_DEFAULT  = 'is-default';
-    public const PREFERENCE_QUERY_TITLE       = 'title';
-    public const PREFERENCE_QUERY_DESCRIPTION = 'description';
-    public const PREFERENCE_QUERY_TQL         = 'tql';
+    public const string PREFERENCE_QUERY             = 'query';
+    public const string PREFERENCE_QUERY_IS_DEFAULT  = 'is-default';
+    public const string PREFERENCE_QUERY_TITLE       = 'title';
+    public const string PREFERENCE_QUERY_DESCRIPTION = 'description';
+    public const string PREFERENCE_QUERY_TQL         = 'tql';
 
     public function __construct(
         private CrossTrackerQueryFactory $query_cross_tracker_query_factory,

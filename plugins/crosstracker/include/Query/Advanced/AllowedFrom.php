@@ -24,15 +24,15 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 
 final class AllowedFrom
 {
-    public const PROJECT          = '@project';
-    public const PROJECT_NAME     = '@project.name';
-    public const PROJECT_CATEGORY = '@project.category';
+    public const string PROJECT          = '@project';
+    public const string PROJECT_NAME     = '@project.name';
+    public const string PROJECT_CATEGORY = '@project.category';
 
-    public const TRACKER_NAME = '@tracker.name';
+    public const string TRACKER_NAME = '@tracker.name';
 
-    public const ALLOWED_PROJECT = [self::PROJECT, self::PROJECT_NAME, self::PROJECT_CATEGORY];
-    public const ALLOWED_TRACKER = [self::TRACKER_NAME];
+    public const array ALLOWED_PROJECT = [self::PROJECT, self::PROJECT_NAME, self::PROJECT_CATEGORY];
+    public const array ALLOWED_TRACKER = [self::TRACKER_NAME];
 
-    public const PROJECT_SELF       = 'self';
-    public const PROJECT_AGGREGATED = 'aggregated';
+    public const string PROJECT_SELF       = 'self';
+    public const string PROJECT_AGGREGATED = 'aggregated';
 }

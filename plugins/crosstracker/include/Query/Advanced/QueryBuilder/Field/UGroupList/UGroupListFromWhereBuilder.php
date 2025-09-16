@@ -46,7 +46,7 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
  */
 final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
 {
-    private const OPENLIST_FROM = <<<EOSQL
+    private const string OPENLIST_FROM = <<<EOSQL
         LEFT JOIN tracker_field_list_bind_ugroups_value AS tflbuv1 ON (
             tflbuv1.id = tcvol.bindvalue_id
         )
@@ -54,7 +54,7 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
             tflbuv1.ugroup_id = ugroup1.ugroup_id
         )
         EOSQL;
-    private const LIST_FROM     = <<<EOSQL
+    private const string LIST_FROM     = <<<EOSQL
         LEFT JOIN tracker_field_list_bind_ugroups_value AS tflbuv2 ON (
             tflbuv2.id = tcvl.bindvalue_id
         )

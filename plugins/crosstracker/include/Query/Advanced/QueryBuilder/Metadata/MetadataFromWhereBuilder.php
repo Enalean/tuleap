@@ -41,11 +41,11 @@ use Tuleap\Tracker\Tracker;
 
 final readonly class MetadataFromWhereBuilder
 {
-    private const SUBMITTED_ON_ALIAS     = 'artifact.submitted_on';
-    private const LAST_UPDATE_DATE_ALIAS = 'changeset.submitted_on';
-    private const SUBMITTED_BY_ALIAS     = 'artifact.submitted_by';
-    private const LAST_UPDATE_BY_ALIAS   = 'changeset.submitted_by';
-    private const ARTIFACT_ID_ALIAS      = 'artifact.id';
+    private const string SUBMITTED_ON_ALIAS     = 'artifact.submitted_on';
+    private const string LAST_UPDATE_DATE_ALIAS = 'changeset.submitted_on';
+    private const string SUBMITTED_BY_ALIAS     = 'artifact.submitted_by';
+    private const string LAST_UPDATE_BY_ALIAS   = 'changeset.submitted_by';
+    private const string ARTIFACT_ID_ALIAS      = 'artifact.id';
 
     public function __construct(
         private TitleFromWhereBuilder $title_builder,

@@ -47,8 +47,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AssignedToCheckerTest extends TestCase
 {
-    private const CURRENT_USER_NAME = 'dfang';
-    private const VALID_USER_NAME   = 'mgong';
+    private const string CURRENT_USER_NAME = 'dfang';
+    private const string VALID_USER_NAME   = 'mgong';
     private Metadata $metadata;
     private ProvideAndRetrieveUserStub $user_retriever;
 

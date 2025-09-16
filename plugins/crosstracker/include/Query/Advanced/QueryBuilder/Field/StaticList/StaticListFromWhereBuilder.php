@@ -45,7 +45,7 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
  */
 final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
 {
-    private const OPENLIST_FROM = <<<EOSQL
+    private const string OPENLIST_FROM = <<<EOSQL
         LEFT JOIN tracker_field_list_bind_static_value AS tflbsv1 ON (
             tflbsv1.id = tcvol.bindvalue_id
         )
@@ -53,7 +53,7 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
             tfov.id = tcvol.openvalue_id
         )
         EOSQL;
-    private const LIST_FROM     = <<<EOSQL
+    private const string LIST_FROM     = <<<EOSQL
         LEFT JOIN tracker_field_list_bind_static_value AS tflbsv2 ON (
             tflbsv2.id = tcvl.bindvalue_id
         )

@@ -36,7 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ListValuesCollectionTest extends TestCase
 {
-    private const CURRENT_USER_NAME = 'utian';
+    private const string CURRENT_USER_NAME = 'utian';
     private \PFUser $user;
 
     #[\Override]

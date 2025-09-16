@@ -38,7 +38,7 @@ use function Psl\Json\encode;
 
 class CrossTrackerSearchWidget extends Widget
 {
-    public const NAME = 'crosstrackersearch';
+    public const string NAME = 'crosstrackersearch';
 
     public function __construct(
         private readonly WidgetInheritanceHandler $inheritance_handler,

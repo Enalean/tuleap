@@ -47,8 +47,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactSubmitterCheckerTest extends TestCase
 {
-    private const CURRENT_USER_NAME = 'mmishra';
-    private const VALID_USER_NAME   = 'rnawaz';
+    private const string CURRENT_USER_NAME = 'mmishra';
+    private const string VALID_USER_NAME   = 'rnawaz';
     private Metadata $metadata;
     private ProvideAndRetrieveUserStub $user_retriever;
 

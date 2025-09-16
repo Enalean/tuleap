@@ -30,8 +30,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WidgetInheritanceHandlerTest extends TestCase
 {
-    private const TEMPLATE_WIDGET_ID = 90;
-    private const CLONED_WIDGET_ID   = 95;
+    private const int TEMPLATE_WIDGET_ID = 90;
+    private const int CLONED_WIDGET_ID   = 95;
     private SearchCrossTrackerWidget $widget_dao;
     private CloneWidgetStub $widget_cloner;
     private TestLogger $logger;

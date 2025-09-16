@@ -45,11 +45,11 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DuckTypedFieldOrderByTest extends TestCase
 {
-    private const FIELD_NAME        = 'initial_effort';
-    private const FIRST_TRACKER_ID  = 14;
-    private const SECOND_TRACKER_ID = 74;
-    private const INT_FIELD_ID      = 459;
-    private const FLOAT_FIELD_ID    = 643;
+    private const string FIELD_NAME     = 'initial_effort';
+    private const int FIRST_TRACKER_ID  = 14;
+    private const int SECOND_TRACKER_ID = 74;
+    private const int INT_FIELD_ID      = 459;
+    private const int FLOAT_FIELD_ID    = 643;
     private Tracker $first_tracker;
     private Tracker $second_tracker;
     /** @var list<TrackerField> */

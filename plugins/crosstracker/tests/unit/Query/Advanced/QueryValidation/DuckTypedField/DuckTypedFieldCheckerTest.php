@@ -80,7 +80,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
 
-    private const FIELD_NAME = 'toto';
+    private const string FIELD_NAME = 'toto';
     private Tracker $first_tracker;
     private Tracker $second_tracker;
     private PFUser $user;
