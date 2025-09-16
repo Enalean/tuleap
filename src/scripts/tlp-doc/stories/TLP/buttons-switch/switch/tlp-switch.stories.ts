@@ -20,7 +20,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
-import "./switch.scss";
 
 type SwitchProps = {
     label_placement: "none" | "top" | "right";
@@ -67,12 +66,12 @@ function getTemplate(args: SwitchProps): TemplateResult {
     if (args.label_placement === "right") {
         //prettier-ignore
         return html`
-<div class="switch-wrapper">
+<div class="tlp-switch-with-label-on-right">
     <div class=${getSizeClasses(args)}>
         <input type="checkbox" id="toggle" class="tlp-switch-checkbox" ?disabled=${args.disabled} ?checked=${isChecked(args)}>
         <label for="toggle" class=${getButtonClasses(args)}></label>
     </div>
-    <label class="tlp-label switch-label" for="toggle">${args.form_label}</label>
+    <label class="tlp-label" for="toggle">${args.form_label}</label>
 </div>
         `;
     }
