@@ -222,15 +222,6 @@ final readonly class ConfigurationVariablesLocalIncDist
     #[ConfigKeyInt(60)]
     public const PENDING_ACCOUNT_LIFETIME = 'sys_pending_account_lifetime';
 
-    #[ConfigKey('Default password duration')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyHelp(<<<EOT
-    User will be asked to change its password after sys_password_lifetime' days
-    0 = no duration
-    EOT)]
-    #[ConfigKeyInt(0)]
-    public const PASSWORD_LIFETIME = 'password_lifetime';
-
     #[ConfigKey('Suspend user account after a given period of inactivity (in days)')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyHelp('0 = no inactivity checking')]

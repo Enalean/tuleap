@@ -54,6 +54,7 @@ use Tuleap\Request\RequestInstrumentation;
 use Tuleap\ServerHostname;
 use Tuleap\System\ServiceControl;
 use Tuleap\SystemEvent\Massmail;
+use Tuleap\User\Password\PasswordExpirationChecker;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
 use User_UserStatusManager;
@@ -62,7 +63,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
 {
     public const NAME = 'getConfigKeys';
 
-    public const CORE_CLASSES_WITH_CONFIG_KEYS = [
+    public const array CORE_CLASSES_WITH_CONFIG_KEYS = [
         ConfigurationVariables::class,
         ConfigurationVariablesLocalIncDist::class,
         ProjectManager::class,
@@ -101,6 +102,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         CookieManager::class,
         DeprecatedForum::class,
         ClientFactory::class,
+        PasswordExpirationChecker::class,
     ];
 
     /**
