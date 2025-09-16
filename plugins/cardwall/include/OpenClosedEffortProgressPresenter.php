@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgressPresenter
+class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgressPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const COUNT_STYLE = 'cards';
+    public const string COUNT_STYLE = 'cards';
 
     private $nb_total;
     private $nb_open;
@@ -34,7 +34,7 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
     }
 
     #[\Override]
-    public function initial_effort_completion()
+    public function initial_effort_completion() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->cannotBeDivided($this->nb_total)) {
             return 100;
@@ -48,37 +48,37 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
     }
 
     #[\Override]
-    public function milestone_capacity()
+    public function milestone_capacity() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return '';
     }
 
     #[\Override]
-    public function milestone_has_initial_effort()
+    public function milestone_has_initial_effort() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return true;
     }
 
     #[\Override]
-    public function milestone_initial_effort()
+    public function milestone_initial_effort() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->nb_total;
     }
 
     #[\Override]
-    public function milestone_initial_effort_value()
+    public function milestone_initial_effort_value() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-cardwall', 'Some cards might be hidden');
     }
 
     #[\Override]
-    public function milestone_points_to_go()
+    public function milestone_points_to_go() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-cardwall', 'cards open');
     }
 
     #[\Override]
-    public function milestone_remaining_effort()
+    public function milestone_remaining_effort() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->nb_open . '/' . $this->nb_total;
     }
@@ -98,13 +98,13 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
     }
 
     #[\Override]
-    public function milestone_count_style()
+    public function milestone_count_style() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return self::COUNT_STYLE;
     }
 
     #[\Override]
-    public function count_style_helper()
+    public function count_style_helper() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-cardwall', 'At least one backlog element has no initial effort. Fallback on open/closed count.');
     }

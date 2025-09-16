@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_CardDisplayPreferences
+class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_CardDisplayPreferences //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_';
+    public const string ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_';
 
-    public const DISPLAY_USERNAMES = 0;
-    public const DISPLAY_AVATARS   = 1;
+    public const int DISPLAY_USERNAMES = 0;
+    public const int DISPLAY_AVATARS   = 1;
 
     /** @var bool */
     private $should_display_avatars;

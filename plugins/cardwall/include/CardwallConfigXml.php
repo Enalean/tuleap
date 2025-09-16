@@ -18,24 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CardwallConfigXml
+class CardwallConfigXml //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const NODE_CARDWALL = 'cardwall';
-    public const NODE_TRACKERS = 'trackers';
-    public const NODE_TRACKER  = 'tracker';
-    public const NODE_COLUMNS  = 'columns';
-    public const NODE_COLUMN   = 'column';
-    public const NODE_MAPPINGS = 'mappings';
-    public const NODE_MAPPING  = 'mapping';
-    public const NODE_VALUES   = 'values';
-    public const NODE_VALUE    = 'value';
+    public const string NODE_CARDWALL = 'cardwall';
+    public const string NODE_TRACKERS = 'trackers';
+    public const string NODE_TRACKER  = 'tracker';
+    public const string NODE_COLUMNS  = 'columns';
+    public const string NODE_COLUMN   = 'column';
+    public const string NODE_MAPPINGS = 'mappings';
+    public const string NODE_MAPPING  = 'mapping';
+    public const string NODE_VALUES   = 'values';
+    public const string NODE_VALUE    = 'value';
 
-    public const ATTRIBUTE_COLUMN_LABEL          = 'label';
-    public const ATTRIBUTE_COLUMN_ID             = 'id';
-    public const ATTRIBUTE_COLUMN_BG_RED         = 'bg_red';
-    public const ATTRIBUTE_COLUMN_BG_GREEN       = 'bg_green';
-    public const ATTRIBUTE_COLUMN_BG_BLUE        = 'bg_blue';
-    public const ATTRIBUTE_COLUMN_TLP_COLOR_NAME = 'tlp_color_name';
+    public const string ATTRIBUTE_COLUMN_LABEL          = 'label';
+    public const string ATTRIBUTE_COLUMN_ID             = 'id';
+    public const string ATTRIBUTE_COLUMN_BG_RED         = 'bg_red';
+    public const string ATTRIBUTE_COLUMN_BG_GREEN       = 'bg_green';
+    public const string ATTRIBUTE_COLUMN_BG_BLUE        = 'bg_blue';
+    public const string ATTRIBUTE_COLUMN_TLP_COLOR_NAME = 'tlp_color_name';
 
-    public const ATTRIBUTE_TRACKER_ID = 'id';
+    public const string ATTRIBUTE_TRACKER_ID = 'id';
 }

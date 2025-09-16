@@ -32,8 +32,8 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardInCellPresenterTest extends TestCase
 {
-    private const CARD_FIELD_ID = 9999;
-    private const CARD_ID       = 56789;
+    private const int CARD_FIELD_ID = 9999;
+    private const int CARD_ID       = 56789;
 
     private Artifact $artifact;
     private Cardwall_CardInCellPresenter $presenter;

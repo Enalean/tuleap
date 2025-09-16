@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class CardwallIsAllowedEvent implements Dispatchable
 {
-    public const NAME = 'cardwallIsAllowedEvent';
+    public const string NAME = 'cardwallIsAllowedEvent';
 
     /**
      * @var Project

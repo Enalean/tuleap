@@ -2521,11 +2521,6 @@
       <code><![CDATA[build]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/cardwall/include/Cardwall/Agiledashboard/PaneInfo.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'cardwall']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/cardwall/include/Cardwall/AllowedFieldRetriever.php">
     <MissingReturnType>
       <code><![CDATA[retrieveAllowedFieldType]]></code>
@@ -2538,32 +2533,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/Cardwall/CardwallIsAllowedEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'cardwallIsAllowedEvent']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$is_allowed]]></code>
     </MissingPropertyType>
-  </file>
-  <file src="plugins/cardwall/include/CardwallConfigXml.php">
-    <MissingClassConstType>
-      <code><![CDATA[ATTRIBUTE_COLUMN_BG_BLUE        = 'bg_blue']]></code>
-      <code><![CDATA[ATTRIBUTE_COLUMN_BG_GREEN       = 'bg_green']]></code>
-      <code><![CDATA[ATTRIBUTE_COLUMN_BG_RED         = 'bg_red']]></code>
-      <code><![CDATA[ATTRIBUTE_COLUMN_ID             = 'id']]></code>
-      <code><![CDATA[ATTRIBUTE_COLUMN_LABEL          = 'label']]></code>
-      <code><![CDATA[ATTRIBUTE_COLUMN_TLP_COLOR_NAME = 'tlp_color_name']]></code>
-      <code><![CDATA[ATTRIBUTE_TRACKER_ID = 'id']]></code>
-      <code><![CDATA[NODE_CARDWALL = 'cardwall']]></code>
-      <code><![CDATA[NODE_COLUMN   = 'column']]></code>
-      <code><![CDATA[NODE_COLUMNS  = 'columns']]></code>
-      <code><![CDATA[NODE_MAPPING  = 'mapping']]></code>
-      <code><![CDATA[NODE_MAPPINGS = 'mappings']]></code>
-      <code><![CDATA[NODE_TRACKER  = 'tracker']]></code>
-      <code><![CDATA[NODE_TRACKERS = 'trackers']]></code>
-      <code><![CDATA[NODE_VALUE    = 'value']]></code>
-      <code><![CDATA[NODE_VALUES   = 'values']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/cardwall/include/CardwallConfigXmlExport.php">
     <PossiblyFalseArgument>
@@ -2995,9 +2967,6 @@
     <DeprecatedMethod>
       <code><![CDATA[getRow]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_HEADER_COLOR = 'rgb(248,248,248)']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/cardwall/include/OnTop/Config/Command/DeleteMappingFields.php">
     <MissingParamType>
@@ -3294,9 +3263,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/OpenClosedEffortProgressPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[COUNT_STYLE = 'cards']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$nb_closed]]></code>
       <code><![CDATA[$nb_open]]></code>
@@ -3466,9 +3432,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/cardwall/include/RemainingEffortProgressPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[COUNT_STYLE = 'effort']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$capacity]]></code>
       <code><![CDATA[$initial_effort]]></code>
@@ -3592,10 +3555,6 @@
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->background_color_field]]></code>
     </LessSpecificReturnStatement>
-    <MissingClassConstType>
-      <code><![CDATA[BACKGROUND_COLOR_NAME = 'plugin_cardwell_card_fields_background_color']]></code>
-      <code><![CDATA[NAME                  = 'plugin_cardwall_card_fields']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
@@ -3733,9 +3692,6 @@
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[self::FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER]]></code>
     </InvalidPropertyAssignmentValue>
-    <MissingClassConstType>
-      <code><![CDATA[FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER = 'FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/cardwall/include/UserPreferences/Autostack/AutostackDashboard.php">
     <MissingReturnType>
@@ -3748,10 +3704,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/UserPreferences/UserPreferencesAutostack.php">
-    <MissingClassConstType>
-      <code><![CDATA[DONT_STACK = 'no_stack']]></code>
-      <code><![CDATA[STACK      = 'auto_stack']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[columnHasPreference]]></code>
       <code><![CDATA[forceColumnAutoStacked]]></code>
@@ -3777,11 +3729,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/UserPreferences/UserPreferencesDisplayUser.php">
-    <MissingClassConstType>
-      <code><![CDATA[ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_']]></code>
-      <code><![CDATA[DISPLAY_AVATARS   = 1]]></code>
-      <code><![CDATA[DISPLAY_USERNAMES = 0]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$should_display_avatars]]></code>
     </MissingParamType>
@@ -3850,9 +3797,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[RENDERER_TYPE = 'plugin_cardwall']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$cardwall]]></code>
       <code><![CDATA[$group_id]]></code>
