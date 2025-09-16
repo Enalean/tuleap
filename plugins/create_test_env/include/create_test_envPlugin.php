@@ -38,7 +38,7 @@ use Tuleap\User\UserConnectionUpdateEvent;
 // @codingStandardsIgnoreLine
 class create_test_envPlugin extends Plugin
 {
-    public const NAME = 'create_test_env';
+    public const string NAME = 'create_test_env';
 
     public function __construct($id)
     {

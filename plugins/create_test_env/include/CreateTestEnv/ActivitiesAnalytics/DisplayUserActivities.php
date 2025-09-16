@@ -27,22 +27,22 @@ use User_ForgeUserGroupPermission;
 
 class DisplayUserActivities extends User_ForgeUserGroupPermission
 {
-    public const ID = 10;
+    public const int ID = 10;
 
     #[\Override]
-    public function getId()
+    public function getId(): int
     {
         return self::ID;
     }
 
     #[\Override]
-    public function getName()
+    public function getName(): string
     {
         return dgettext('tuleap-create_test_env', 'Access create test environment activities');
     }
 
     #[\Override]
-    public function getDescription()
+    public function getDescription(): string
     {
         return dgettext('tuleap-create_test_env', 'Access create test environment activities');
     }
