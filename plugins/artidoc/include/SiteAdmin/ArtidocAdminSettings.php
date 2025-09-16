@@ -29,7 +29,7 @@ use Tuleap\Config\FeatureFlagConfigKey;
 #[ConfigKeyCategory('Artidoc')]
 final readonly class ArtidocAdminSettings
 {
-    #[FeatureFlagConfigKey('Allow users to display artidoc versions.0 to disallow, 1 to allow. By default they are disallowed.')]
+    #[FeatureFlagConfigKey('Allow users to display artidoc versions. 0 to disallow, 1 to allow. By default they are disallowed.')]
     #[ConfigKeyInt(0)]
     public const string FEATURE_FLAG_VERSIONS = 'can_user_display_versions';
 

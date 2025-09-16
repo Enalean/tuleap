@@ -42,7 +42,7 @@ final class ArtidocSaveAdminSettingsControllerTest extends TestCase
     #[TestWith(['', '0'])]
     #[TestWith(['0', '0'])]
     #[TestWith(['1', '1'])]
-    #[TestWith(['whatever', '1'])]
+    #[TestWith(['whatever', '0'])]
     public function testSaveSettings(string $submitted, string $expected): void
     {
         $config_updater = ConfigUpdaterStub::build();
@@ -66,7 +66,7 @@ final class ArtidocSaveAdminSettingsControllerTest extends TestCase
             );
 
         $response = $controller->handle($request);
-        self::assertEquals(302, $response->getStatusCode());
+        self::assertSame(302, $response->getStatusCode());
         self::assertSame(
             $expected,
             $config_updater->getUpdatedConfig(\ForgeConfig::FEATURE_FLAG_PREFIX . ArtidocAdminSettings::FEATURE_FLAG_VERSIONS),
