@@ -18,6 +18,7 @@
  */
 
 import type { ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
+import { v4 as uuidv4 } from "uuid";
 
 export class ArtifactRowBuilder {
     #id: number = 698;
@@ -43,6 +44,7 @@ export class ArtifactRowBuilder {
         expected_number_of_reverse_links: number,
     ): ArtifactRow {
         return {
+            uuid: uuidv4(),
             id: this.#id,
             expected_number_of_forward_links,
             expected_number_of_reverse_links,
@@ -53,6 +55,7 @@ export class ArtifactRowBuilder {
 
     public build(): ArtifactRow {
         return {
+            uuid: uuidv4(),
             id: this.#id,
             ...this.#row,
         };
