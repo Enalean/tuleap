@@ -67,9 +67,8 @@ class Widget_MyAdmin extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration
         return $html_my_admin;
     }
 
-    private function getHTMLForSuperAdmin()
+    private function getHTMLForSuperAdmin(): string
     {
-        require_once __DIR__ . '/../../www/forum/forum_utils.php';
         require_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
 
         $html_my_admin = '';
@@ -87,21 +86,6 @@ class Widget_MyAdmin extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration
         db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
         $row             = db_fetch_array();
         $validated_users = $row['count'];
-
-        $sql          = 'SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3';
-        $result       = db_query($sql);
-        $pending_news = 0;
-        $rows         = db_numrows($result);
-        for ($i = 0; $i < $rows; $i++) {
-            //if the news is private, not display it in the list of news to be approved
-            $forum_id = db_result($result, $i, 'forum_id');
-            $res      = news_read_permissions($forum_id);
-            // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
-            // with ST DB state
-            if ((db_numrows($res) < 1) || (db_result($res, 0, 'ugroup_id') == $GLOBALS['UGROUP_ANONYMOUS'])) {
-                $pending_news++;
-            }
-        }
 
         $i              = 0;
         $html_my_admin .= $this->getAdminRow(
@@ -121,13 +105,6 @@ class Widget_MyAdmin extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
 
         $html_my_admin .= $this->getHTMLForNonSuperAdmin($i);
-
-        $html_my_admin .= $this->getAdminRow(
-            $i++,
-            '<a href="/admin/news/">' . _('Site news approval') . '</a>',
-            $pending_news,
-            $this->getColor($pending_news)
-        );
 
         $pendings = [];
         $em       = EventManager::instance();

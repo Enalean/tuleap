@@ -59,29 +59,6 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
             $html .= $GLOBALS['Language']->getText('include_project_home', 'proj_home') . '</a></p>';
         }
 
-        // ################## forums
-
-        $service_forum = $project->getService(Service::FORUM);
-        if ($service_forum !== null) {
-            $html .= '<p><a href="' . $purifier->purify($service_forum->getUrl()) . '">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($service_forum->getIcon()) . '"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'public_forums') . '</A>';
-
-            $res_count = db_query('SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE '
-                . 'forum_group_list.group_id=' . db_ei($group_id) . ' AND forum.group_forum_id=forum_group_list.group_forum_id '
-                . 'AND forum_group_list.is_public=1');
-            $row_count = db_fetch_array($res_count);
-            $pos       = strpos($project->getForumPage(), '/forum/');
-            if ($pos === 0) {
-                $html     .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'msg', $row_count['count']) . ' ';
-                $res_count = db_query('SELECT count(*) AS count FROM forum_group_list WHERE group_id=' . db_ei($group_id) . ' '
-                . 'AND is_public=1');
-                $row_count = db_fetch_array($res_count);
-                $html     .= $GLOBALS['Language']->getText('include_project_home', 'forums', $row_count['count']) . " )\n";
-            }
-            $html .= '</p>';
-        }
-
         // ######################### Wiki (only for Active)
 
         $wiki_service = $project->getService(Service::WIKI);

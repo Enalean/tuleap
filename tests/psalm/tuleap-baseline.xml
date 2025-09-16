@@ -68863,15 +68863,10 @@
       <code><![CDATA[db_fetch_array()]]></code>
       <code><![CDATA[db_fetch_array()]]></code>
       <code><![CDATA[db_fetch_array()]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_query("SELECT count(*) AS count FROM `groups` WHERE status='P'")]]></code>
       <code><![CDATA[db_query("SELECT count(*) AS count FROM user WHERE status='P' OR status='V' OR status='W'")]]></code>
       <code><![CDATA[db_query("SELECT count(*) AS count FROM user WHERE status='P'")]]></code>
       <code><![CDATA[db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'")]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($res, 0, 'ugroup_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'forum_id')]]></code>
     </DeprecatedFunction>
     <MissingParamType>
       <code><![CDATA[$bgcolor]]></code>
@@ -68889,7 +68884,6 @@
     <MissingReturnType>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getHTMLForNonSuperAdmin]]></code>
-      <code><![CDATA[getHTMLForSuperAdmin]]></code>
       <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
   </file>
@@ -68953,34 +68947,6 @@
       <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Widget/Widget_MyMonitoredForums.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code><![CDATA[db_ei_implode($projects)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result2)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql2)]]></code>
-      <code><![CDATA[db_result($result, $j, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, $j, 'group_name')]]></code>
-      <code><![CDATA[db_result($result2, $i, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result2, $i, 'group_forum_id')]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$dashboard_id]]></code>
-      <code><![CDATA[$owner_id]]></code>
-      <code><![CDATA[$owner_type]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getAjaxUrl]]></code>
-      <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getDescription]]></code>
-      <code><![CDATA[getTitle]]></code>
-      <code><![CDATA[isAjax]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Widget/Widget_MyMonitoredFp.php">
     <DeprecatedFunction>
       <code><![CDATA[db_ei($frsrf->STATUS_DELETED)]]></code>
@@ -69037,25 +69003,11 @@
       <code><![CDATA[isAvailable]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Widget/Widget_ProjectLatestNews.php">
-    <MissingPropertyType>
-      <code><![CDATA[$content]]></code>
-    </MissingPropertyType>
-  </file>
   <file src="src/common/Widget/Widget_ProjectPublicAreas.php">
     <DeprecatedFunction>
       <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($request->get('group_id'))]]></code>
-      <code><![CDATA[db_fetch_array($res_count)]]></code>
-      <code><![CDATA[db_fetch_array($res_count)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('SELECT count(*) AS count FROM forum_group_list WHERE group_id=' . db_ei($group_id) . ' '
-                . 'AND is_public=1')]]></code>
-      <code><![CDATA[db_query('SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE '
-                . 'forum_group_list.group_id=' . db_ei($group_id) . ' AND forum.group_forum_id=forum_group_list.group_forum_id '
-                . 'AND forum_group_list.is_public=1')]]></code>
       <code><![CDATA[db_result($result, 0, 0)]]></code>
     </DeprecatedFunction>
     <InvalidArgument>
