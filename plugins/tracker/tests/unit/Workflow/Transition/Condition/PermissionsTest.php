@@ -86,16 +86,17 @@ final class PermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseIfUserCannotSeeTransition(): void
     {
         $this->user->method('isMemberOfUGroup')->willReturn(false);
-            $this->tracker->method('userIsAdmin')->with($this->user)->willReturn(false);
+        $this->tracker->method('userIsAdmin')->with($this->user)->willReturn(false);
 
         $this->assertFalse($this->condition->isUserAllowedToSeeTransition($this->user, $this->tracker));
     }
 
-    public function testItReturnsTrueIfUserCanAdministrateTracker(): void
+    public function testItChecksPermissionsEvenIfUserIsAdmin(): void
     {
-        $this->tracker->expects($this->once())->method('userIsAdmin')->with($this->user)->willReturn(true);
+        $this->user->method('isMemberOfUGroup')->willReturn(false);
+        $this->tracker->method('userIsAdmin')->with($this->user)->willReturn(true);
 
-        $this->assertTrue($this->condition->isUserAllowedToSeeTransition($this->user, $this->tracker));
+        $this->assertFalse($this->condition->isUserAllowedToSeeTransition($this->user, $this->tracker));
     }
 
     public function testItReturnsTrueIfWorkFlowTrackerUserCanAdministrateTracker(): void
