@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use Override;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
@@ -52,6 +53,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
     private Artifact $artifact;
     private PFUser $user;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

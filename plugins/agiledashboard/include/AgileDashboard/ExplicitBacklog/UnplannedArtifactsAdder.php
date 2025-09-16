@@ -25,31 +25,13 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class UnplannedArtifactsAdder
+readonly class UnplannedArtifactsAdder
 {
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var PlannedArtifactDao
-     */
-    private $planned_artifact_dao;
-
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
     public function __construct(
-        ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlannedArtifactDao $planned_artifact_dao,
+        private ExplicitBacklogDao $explicit_backlog_dao,
+        private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private PlannedArtifactDao $planned_artifact_dao,
     ) {
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->planned_artifact_dao              = $planned_artifact_dao;
-        $this->explicit_backlog_dao              = $explicit_backlog_dao;
     }
 
     /**

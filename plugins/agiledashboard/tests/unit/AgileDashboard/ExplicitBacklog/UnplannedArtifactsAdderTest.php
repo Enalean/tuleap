@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -39,6 +40,7 @@ class UnplannedArtifactsAdderTest extends TestCase
     private PlannedArtifactDao&MockObject $planned_artifact_dao;
     private Artifact $artifact;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

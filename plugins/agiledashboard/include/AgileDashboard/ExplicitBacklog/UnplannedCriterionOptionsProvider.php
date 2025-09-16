@@ -24,18 +24,12 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use Project;
 
-class UnplannedCriterionOptionsProvider
+readonly class UnplannedCriterionOptionsProvider
 {
     public const int UNPLANNED_IDENTIFIER = -1;
 
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    public function __construct(ExplicitBacklogDao $explicit_backlog_dao)
+    public function __construct(private ExplicitBacklogDao $explicit_backlog_dao)
     {
-        $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
     public function formatUnplannedAsSelectboxOption(Project $project, int|string $selected_option_id): string

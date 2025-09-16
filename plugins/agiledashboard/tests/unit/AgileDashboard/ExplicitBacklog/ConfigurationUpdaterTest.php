@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use Codendi_Request;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_MilestoneFactory;
@@ -53,6 +54,7 @@ class ConfigurationUpdaterTest extends TestCase
     private AddToTopBacklogPostActionDao&MockObject $add_to_top_backlog_post_action_dao;
     private EventDispatcherInterface $event_dispatcher;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,6 +70,7 @@ class ConfigurationUpdaterTest extends TestCase
         $this->event_dispatcher                   = new class implements EventDispatcherInterface {
             public bool $is_planning_administration_delegated = false;
 
+            #[Override]
             public function dispatch(object $event): object
             {
                 if ($event instanceof PlanningAdministrationDelegation && $this->is_planning_administration_delegated) {
@@ -197,6 +200,7 @@ class ConfigurationUpdaterTest extends TestCase
     public function testItAlwaysActivatesExplicitBacklogManagementWhenPlanningAdministrationIsDelegatedToAnotherPlugin(): void
     {
         $this->request->method('get')->with('use-explicit-top-backlog')->willReturn('0');
+        /** @psalm-suppress NoInterfaceProperties */
         $this->event_dispatcher->is_planning_administration_delegated = true;
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeExplicitBacklogOfProject');

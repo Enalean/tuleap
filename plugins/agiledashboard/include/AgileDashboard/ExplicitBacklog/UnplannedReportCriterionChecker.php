@@ -25,14 +25,10 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 use AgileDashboard_Milestone_MilestoneReportCriterionProvider;
 use Tracker_Report_AdditionalCriterion;
 
-class UnplannedReportCriterionChecker
+readonly class UnplannedReportCriterionChecker
 {
-    /** @var array */
-    private $additional_criteria;
-
-    public function __construct(array $additional_criteria)
+    public function __construct(private array $additional_criteria)
     {
-        $this->additional_criteria = $additional_criteria;
     }
 
     public function isUnplannedValueSelected(): bool

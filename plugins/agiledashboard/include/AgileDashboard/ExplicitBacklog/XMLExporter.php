@@ -26,24 +26,12 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 use Project;
 use SimpleXMLElement;
 
-class XMLExporter
+readonly class XMLExporter
 {
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
     public function __construct(
-        ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private ExplicitBacklogDao $explicit_backlog_dao,
+        private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
     ) {
-        $this->explicit_backlog_dao              = $explicit_backlog_dao;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
     }
 
     public function exportExplicitBacklogConfiguration(Project $project, SimpleXMLElement $agiledashboard_node): void

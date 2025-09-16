@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog\CopiedArtifact;
 
+use Override;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_XML_Importer_ArtifactImportedMapping;
@@ -38,17 +39,18 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 #[DisableReturnValueGenerationForTestDoubles]
 final class AddCopiedArtifactsToTopBacklogTest extends TestCase
 {
-    private const SOURCE_ARTIFACT_ID = 9930;
-    private const COPIED_ARTIFACT_ID = 9945;
+    private const int SOURCE_ARTIFACT_ID = 9930;
+    private const int COPIED_ARTIFACT_ID = 9945;
 
-    private const SOURCE_CHILD_ARTIFACT_ID = 9931;
-    private const COPIED_CHILD_ARTIFACT_ID = 9946;
+    private const int SOURCE_CHILD_ARTIFACT_ID = 9931;
+    private const int COPIED_CHILD_ARTIFACT_ID = 9946;
 
     private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
     private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
     private PlannedArtifactDao&MockObject $planned_artifact_dao;
     private PlanningDao&MockObject $planning_dao;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->explicit_backlog_dao              = $this->createMock(ExplicitBacklogDao::class);

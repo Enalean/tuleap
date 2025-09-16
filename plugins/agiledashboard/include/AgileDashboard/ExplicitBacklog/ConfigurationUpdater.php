@@ -34,72 +34,19 @@ use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBTransactionExecutor;
 
-class ConfigurationUpdater
+readonly class ConfigurationUpdater
 {
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var MilestoneReportCriterionDao
-     */
-    private $milestone_report_criterion_dao;
-
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $db_transaction_executor;
-
-    /**
-     * @var BacklogItemDao
-     */
-    private $backlog_item_dao;
-
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var UnplannedArtifactsAdder
-     */
-    private $unplanned_artifacts_adder;
-
-    /**
-     * @var AddToTopBacklogPostActionDao
-     */
-    private $add_to_top_backlog_post_action_dao;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
     public function __construct(
-        ExplicitBacklogDao $explicit_backlog_dao,
-        MilestoneReportCriterionDao $milestone_report_criterion_dao,
-        BacklogItemDao $backlog_item_dao,
-        Planning_MilestoneFactory $milestone_factory,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        UnplannedArtifactsAdder $unplanned_artifacts_adder,
-        AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
-        DBTransactionExecutor $db_transaction_executor,
-        EventDispatcherInterface $event_dispatcher,
+        private ExplicitBacklogDao $explicit_backlog_dao,
+        private MilestoneReportCriterionDao $milestone_report_criterion_dao,
+        private BacklogItemDao $backlog_item_dao,
+        private Planning_MilestoneFactory $milestone_factory,
+        private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private UnplannedArtifactsAdder $unplanned_artifacts_adder,
+        private AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
+        private DBTransactionExecutor $db_transaction_executor,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
-        $this->explicit_backlog_dao               = $explicit_backlog_dao;
-        $this->milestone_report_criterion_dao     = $milestone_report_criterion_dao;
-        $this->db_transaction_executor            = $db_transaction_executor;
-        $this->backlog_item_dao                   = $backlog_item_dao;
-        $this->milestone_factory                  = $milestone_factory;
-        $this->artifacts_in_explicit_backlog_dao  = $artifacts_in_explicit_backlog_dao;
-        $this->unplanned_artifacts_adder          = $unplanned_artifacts_adder;
-        $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
-        $this->event_dispatcher                   = $event_dispatcher;
     }
 
     public function updateScrumConfiguration(Codendi_Request $request): void
