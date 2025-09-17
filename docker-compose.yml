@@ -93,7 +93,7 @@ services:
           - gitlab.local
 
   onlyoffice:
-    image: onlyoffice/documentserver:8.1.0@sha256:423328ee377374c48a30c2aa416e4afedf621faff068f97966cb9b87a28550bd
+    image: onlyoffice/documentserver:9.0.4.1@sha256:93642f434071856d084cf57945626df7b9d5a11576a2b5fe38230b2be98dca9a
     environment:
       - JWT_ENABLED=true
       - JWT_SECRET=TULEAP_DO_NOT_USE_THIS_IN_PRODUCTION
