@@ -43,7 +43,7 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private const USER_ID = 102;
+    private const int USER_ID = 102;
 
     private PFUser $user;
     private ProjectByIDFactoryStub $project_manager;

@@ -41,11 +41,11 @@ use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DuckTypedFieldWhereTest extends TestCase
 {
-    private const FIELD_NAME        = 'initial_effort';
-    private const FIRST_TRACKER_ID  = 14;
-    private const SECOND_TRACKER_ID = 74;
-    private const INT_FIELD_ID      = 459;
-    private const FLOAT_FIELD_ID    = 643;
+    private const string FIELD_NAME     = 'initial_effort';
+    private const int FIRST_TRACKER_ID  = 14;
+    private const int SECOND_TRACKER_ID = 74;
+    private const int INT_FIELD_ID      = 459;
+    private const int FLOAT_FIELD_ID    = 643;
     private \Tuleap\Tracker\Tracker $first_tracker;
     private \Tuleap\Tracker\Tracker $second_tracker;
     /** @var list<\Tuleap\Tracker\FormElement\Field\TrackerField> */

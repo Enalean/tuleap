@@ -69,8 +69,8 @@ use function Psl\Type\string;
 
 final class CrossTrackerQueryResource extends AuthenticatedResource
 {
-    public const  ROUTE     = 'crosstracker_query';
-    public const  MAX_LIMIT = 50;
+    public const  string ROUTE  = 'crosstracker_query';
+    public const  int MAX_LIMIT = 50;
 
     private readonly ProvideCurrentUser $current_user_provider;
     private readonly CrossTrackerArtifactQueryFactoryBuilder $factory_builder;

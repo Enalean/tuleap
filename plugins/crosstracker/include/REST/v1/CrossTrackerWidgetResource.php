@@ -58,8 +58,8 @@ use UserManager;
 
 final class CrossTrackerWidgetResource extends AuthenticatedResource
 {
-    public const  ROUTE     = 'crosstracker_widget';
-    public const  MAX_LIMIT = 50;
+    public const  string ROUTE  = 'crosstracker_widget';
+    public const  int MAX_LIMIT = 50;
 
     private readonly ProvideCurrentUser $current_user_provider;
     private readonly CrossTrackerArtifactQueryFactoryBuilder $factory_builder;

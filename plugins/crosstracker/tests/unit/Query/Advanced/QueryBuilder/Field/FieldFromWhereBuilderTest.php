@@ -53,7 +53,7 @@ final class FieldFromWhereBuilderTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
 
-    private const FIELD_NAME = 'my_field';
+    private const string FIELD_NAME = 'my_field';
     private \PFUser $user;
     private \Tuleap\Tracker\Tracker $first_tracker;
     private \Tuleap\Tracker\Tracker $second_tracker;

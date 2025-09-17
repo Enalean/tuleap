@@ -89,9 +89,9 @@ final class FieldResultBuilderTest extends TestCase
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
-    private const FIELD_NAME      = 'my_field';
-    private const FIRST_FIELD_ID  = 134;
-    private const SECOND_FIELD_ID = 334;
+    private const string FIELD_NAME   = 'my_field';
+    private const int FIRST_FIELD_ID  = 134;
+    private const int SECOND_FIELD_ID = 334;
     private string $field_hash;
     private PFUser $user;
     private Tracker $first_tracker;

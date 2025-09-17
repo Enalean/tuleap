@@ -55,9 +55,9 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldSelectFromBuilderTest extends TestCase
 {
-    private const FIELD_NAME      = 'my_field';
-    private const FIRST_FIELD_ID  = 134;
-    private const SECOND_FIELD_ID = 334;
+    private const string FIELD_NAME   = 'my_field';
+    private const int FIRST_FIELD_ID  = 134;
+    private const int SECOND_FIELD_ID = 334;
     private PFUser $user;
     private Tracker $first_tracker;
     private Tracker $second_tracker;

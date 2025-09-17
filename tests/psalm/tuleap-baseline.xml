@@ -4145,9 +4145,6 @@
     </DeprecatedMethod>
   </file>
   <file src="plugins/crosstracker/include/Widget/CrossTrackerSearchWidget.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'crosstrackersearch']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>

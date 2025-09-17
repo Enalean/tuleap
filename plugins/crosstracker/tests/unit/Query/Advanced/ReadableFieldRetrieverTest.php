@@ -34,13 +34,13 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReadableFieldRetrieverTest extends TestCase
 {
-    public const FIELD_NAME = 'La Voiture Noire';
+    public const string FIELD_NAME = 'La Voiture Noire';
 
-    public const FIELD_1_ID = 628;
+    public const int FIELD_1_ID = 628;
 
-    public const FIELD_2_ID = 630;
+    public const int FIELD_2_ID = 630;
 
-    public const FIELD_3_ID = 250;
+    public const int FIELD_3_ID = 250;
 
 
     public function testItRetrievesOnlyTheFieldsUserCanRead(): void

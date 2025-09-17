@@ -108,8 +108,8 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
 
-    private const FIELD_NAME        = 'a_field';
-    private const CURRENT_USER_NAME = 'alice';
+    private const string FIELD_NAME        = 'a_field';
+    private const string CURRENT_USER_NAME = 'alice';
     private InvalidSearchablesCollection $invalid_searchable_collection;
     private Comparison $comparison;
     private ?Logical $parsed_query;

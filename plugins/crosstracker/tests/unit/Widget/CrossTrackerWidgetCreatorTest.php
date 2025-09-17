@@ -40,7 +40,7 @@ final class CrossTrackerWidgetCreatorTest extends TestCase
     private CrossTrackerWidgetCreator $cross_tracker_widget_creator;
     private InsertNewQueryStub $insert_query_dao;
 
-    private const WIDGET_ID = 15;
+    private const int WIDGET_ID = 15;
 
     #[\Override]
     protected function setUp(): void
