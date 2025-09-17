@@ -52,6 +52,7 @@ import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import { Option } from "@tuleap/option";
 import * as configuration_saver from "@/configuration/TrackerConfigurationSaver";
 import { SaveTrackerConfigurationStub } from "@/configuration/stubs/SaveTrackerConfigurationStub";
+import { CAN_USER_DISPLAY_VERSIONS } from "@/can-user-display-versions-injection-key";
 
 describe("ConfigurationModal", () => {
     const epic_tracker = TrackerStub.build(12, "Epic");
@@ -78,6 +79,7 @@ describe("ConfigurationModal", () => {
                         selected_tracker,
                         selected_fields,
                     ),
+                    [CAN_USER_DISPLAY_VERSIONS.valueOf()]: true,
                 },
             },
         });

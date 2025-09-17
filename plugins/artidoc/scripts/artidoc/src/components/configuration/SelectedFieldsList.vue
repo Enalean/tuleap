@@ -229,6 +229,7 @@ const getSwitchDisplayTypeCheckboxTitle = (field: ConfigurationField): string =>
 
 .field-display-type > .tlp-label {
     margin: 0;
+    white-space: nowrap;
 }
 
 .field-label {
