@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../src/scripts/tlp
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../lib/frontend/tlp-date-picker
 
 devDependencies:
   '@tuleap/build-system-configurator':

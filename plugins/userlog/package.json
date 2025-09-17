@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/tlp": "workspace:*"
+    "@tuleap/tlp-date-picker": "workspace:^"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

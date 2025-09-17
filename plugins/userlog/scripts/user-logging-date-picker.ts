@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -14,11 +14,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "tlp";
+import { datePicker } from "@tuleap/tlp-date-picker";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_logging_date_picker_element = document.getElementById("user-logging-date-picker");
