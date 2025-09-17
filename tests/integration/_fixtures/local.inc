@@ -137,11 +137,6 @@ $sys_session_lifetime = 15811200;
 // Default value is 60 days
 $sys_pending_account_lifetime = 60;
 
-// Default password duration. User will be asked to change its password
-// after 'sys_password_lifetime' days.
-// 0 = no duration
-$sys_password_lifetime = 0;
-
 // Suspend user account after a given period of inactivity (in days)
 // 0 = no inactivity checking
 $sys_suspend_inactive_accounts_delay = 0;

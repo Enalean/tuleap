@@ -856,11 +856,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         return ForgeConfig::get('sys_session_lifetime');
     }
 
-    protected function _getPasswordLifetime() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        return ForgeConfig::get('sys_password_lifetime');
-    }
-
     /**
      * Update db entry of 'user' table with values in object
      */

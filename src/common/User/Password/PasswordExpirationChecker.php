@@ -24,11 +24,19 @@ namespace Tuleap\User\Password;
 use Feedback;
 use ForgeConfig;
 use PFUser;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyHelp;
+use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Date\DateHelper;
 
-class PasswordExpirationChecker
+readonly class PasswordExpirationChecker
 {
-    public const int DAYS_FOR_EXPIRATION_WARN = 10;
+    #[ConfigKey('Default password duration')]
+    #[ConfigKeyHelp('User will be asked to change its password after sys_password_lifetime days; 0 = no duration')]
+    #[ConfigKeyInt(0)]
+    public const string PASSWORD_LIFETIME = 'sys_password_lifetime';
+
+    private const int DAYS_FOR_EXPIRATION_WARN = 10;
 
     /**
      *
@@ -44,7 +52,7 @@ class PasswordExpirationChecker
     public function warnUserAboutPasswordExpiration(PFUser $user): void
     {
         $password_lifetime_in_seconds = $this->getPasswordLifetimeInSeconds();
-        if ($password_lifetime_in_seconds !== false && $password_lifetime_in_seconds > 0) {
+        if ($password_lifetime_in_seconds > 0) {
             $expiration_date = $this->getPasswordExpirationDate();
             if ($expiration_date === false || $expiration_date <= 0) {
                 return;
@@ -75,18 +83,21 @@ class PasswordExpirationChecker
     private function getPasswordExpirationDate(): int|false
     {
         $password_lifetime = $this->getPasswordLifetimeInSeconds();
-        if ($password_lifetime !== false && $password_lifetime > 0) {
+        if ($password_lifetime > 0) {
             return $_SERVER['REQUEST_TIME'] - $password_lifetime;
         }
         return false;
     }
 
-    private function getPasswordLifetimeInSeconds(): int|false
+    /**
+     * @return int<0,max>
+     */
+    private function getPasswordLifetimeInSeconds(): int
     {
-        $password_lifetime_in_days = ForgeConfig::getInt('sys_password_lifetime');
-        if ($password_lifetime_in_days) {
+        $password_lifetime_in_days = ForgeConfig::getInt(self::PASSWORD_LIFETIME);
+        if ($password_lifetime_in_days > 0) {
             return DateHelper::SECONDS_IN_A_DAY * $password_lifetime_in_days;
         }
-        return false;
+        return 0;
     }
 }
