@@ -73,7 +73,7 @@ use UserManager;
 
 final class DocmanFilesResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 50;
+    private const int MAX_LIMIT = 50;
 
     private \EventManager $event_manager;
     private UserManager $user_manager;

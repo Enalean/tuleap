@@ -26,7 +26,7 @@ use Tuleap\Docman\FilenamePattern\FilenamePattern;
 
 class FilenamePatternWarningsCollector implements \Tuleap\Event\Dispatchable
 {
-    public const NAME = 'filenamePatternWarningsCollector';
+    public const string NAME = 'filenamePatternWarningsCollector';
 
     /**
      * @var string[]

@@ -24,7 +24,7 @@ namespace Tuleap\Docman\DocmanSettingsSiteAdmin;
 
 final class FileUploadTabPresenter extends DocmanSettingsTabPresenter
 {
-    public const URL = \DocmanPlugin::ADMIN_BASE_URL . '/files-upload-limits';
+    public const string URL = \DocmanPlugin::ADMIN_BASE_URL . '/files-upload-limits';
 
     public function __construct()
     {

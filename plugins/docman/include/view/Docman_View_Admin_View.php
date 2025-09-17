@@ -20,9 +20,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
+class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const IDENTIFIER = 'admin_view';
+    public const string IDENTIFIER = 'admin_view';
 
     #[\Override]
     protected function getIdentifier(): string

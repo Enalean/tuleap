@@ -35,11 +35,11 @@ use Tuleap\Docman\ResponseFeedbackWrapper;
  */
 class PermissionItemUpdater
 {
-    public const PERMISSION_DEFINITION_READ   = 1;
-    public const PERMISSION_DEFINITION_WRITE  = 2;
-    public const PERMISSION_DEFINITION_MANAGE = 3;
-    public const PERMISSION_DEFINITION_NONE   = 100;
-    private const PERMISSIONS_DEFINITIONS     = [
+    public const int PERMISSION_DEFINITION_READ   = 1;
+    public const int PERMISSION_DEFINITION_WRITE  = 2;
+    public const int PERMISSION_DEFINITION_MANAGE = 3;
+    public const int PERMISSION_DEFINITION_NONE   = 100;
+    private const array PERMISSIONS_DEFINITIONS   = [
         self::PERMISSION_DEFINITION_READ   => [
             'order' => 1,
             'type'  => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ,

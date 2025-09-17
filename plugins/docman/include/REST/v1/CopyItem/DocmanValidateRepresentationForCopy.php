@@ -24,7 +24,7 @@ namespace Tuleap\Docman\REST\v1\CopyItem;
 
 final class DocmanValidateRepresentationForCopy
 {
-    private const COPY_PROPERTY_NAME = 'copy';
+    private const string COPY_PROPERTY_NAME = 'copy';
 
     public function isValidAsACopyRepresentation(CanContainACopyRepresentation $representation): bool
     {

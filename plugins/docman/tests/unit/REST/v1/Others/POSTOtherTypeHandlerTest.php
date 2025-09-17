@@ -42,11 +42,11 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class POSTOtherTypeHandlerTest extends TestCase
 {
-    private const FOLDER_ID = 101;
+    private const int FOLDER_ID = 101;
 
-    private const ITEM_TO_COPY_ID = 102;
-    private const PASTED_ITEM_ID  = 103;
-    private const CREATED_ITEM_ID = 104;
+    private const int ITEM_TO_COPY_ID = 102;
+    private const int PASTED_ITEM_ID  = 103;
+    private const int CREATED_ITEM_ID = 104;
 
     private DocmanItemsEventAdder&MockObject $event_adder;
     private Docman_ItemFactory&MockObject $item_factory;

@@ -35,9 +35,9 @@ use Tuleap\Docman\Test\rest\Helper\DocmanWikiDataBuild;
 
 class DocmanDataBuilder
 {
-    public const PROJECT_NAME = 'DocmanProject';
+    public const string PROJECT_NAME = 'DocmanProject';
 
-    public const DOCMAN_REGULAR_USER_NAME = 'docman_regular_user';
+    public const string DOCMAN_REGULAR_USER_NAME = 'docman_regular_user';
 
     public function __construct(private DocmanProjectBuilder $project_builder)
     {

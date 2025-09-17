@@ -37,8 +37,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Docman_NotificationsManager_MoveTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    private const DETAILS_URL       = 'https://www.example.com/plugins/document/monocarbonic/preview/10';
-    private const NOTIFICATIONS_URL = 'https://www.example.com/plugins/docman/?group_id=101&action=details&section=notifications&id=1';
+    private const string DETAILS_URL       = 'https://www.example.com/plugins/document/monocarbonic/preview/10';
+    private const string NOTIFICATIONS_URL = 'https://www.example.com/plugins/docman/?group_id=101&action=details&section=notifications&id=1';
 
     private Docman_Path $path;
     private Docman_Folder $old_parent;

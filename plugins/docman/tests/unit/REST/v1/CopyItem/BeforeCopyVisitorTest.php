@@ -41,7 +41,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BeforeCopyVisitorTest extends TestCase
 {
-    private const VISITOR_PROCESSABLE_CLASSES = [
+    private const array VISITOR_PROCESSABLE_CLASSES = [
         Docman_Folder::class,
         Docman_Wiki::class,
         Docman_Link::class,

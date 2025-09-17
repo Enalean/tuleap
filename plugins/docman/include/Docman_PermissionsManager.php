@@ -35,14 +35,14 @@ class Docman_PermissionsManager // phpcs:ignoreFile
 {
     #[ConfigKey('Restrict delete of Documents to site administrators')]
     #[ConfigKeyLegacyBool(false)]
-    public const PLUGIN_OPTION_DELETE = 'docman_only_siteadmin_can_delete';
+    public const string PLUGIN_OPTION_DELETE = 'docman_only_siteadmin_can_delete';
 
-    public const PLUGIN_DOCMAN_ADMIN = 'PLUGIN_DOCMAN_ADMIN';
+    public const string PLUGIN_DOCMAN_ADMIN = 'PLUGIN_DOCMAN_ADMIN';
 
-    public const ITEM_PERMISSION_TYPE_READ   = 'PLUGIN_DOCMAN_READ';
-    public const ITEM_PERMISSION_TYPE_WRITE  = 'PLUGIN_DOCMAN_WRITE';
-    public const ITEM_PERMISSION_TYPE_MANAGE = 'PLUGIN_DOCMAN_MANAGE';
-    public const ITEM_PERMISSION_TYPES       = [
+    public const string ITEM_PERMISSION_TYPE_READ   = 'PLUGIN_DOCMAN_READ';
+    public const string ITEM_PERMISSION_TYPE_WRITE  = 'PLUGIN_DOCMAN_WRITE';
+    public const string ITEM_PERMISSION_TYPE_MANAGE = 'PLUGIN_DOCMAN_MANAGE';
+    public const array ITEM_PERMISSION_TYPES       = [
         self::ITEM_PERMISSION_TYPE_READ,
         self::ITEM_PERMISSION_TYPE_WRITE,
         self::ITEM_PERMISSION_TYPE_MANAGE,

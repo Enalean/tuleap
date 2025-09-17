@@ -23,9 +23,9 @@
  *
  */
 
-class Docman_View_Admin_MetadataImport extends \Tuleap\Docman\View\Admin\AdminView
+class Docman_View_Admin_MetadataImport extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const IDENTIFIER = 'admin_import_metadata_check';
+    public const string IDENTIFIER = 'admin_import_metadata_check';
     public $srcGo;
     public $dstGo;
 

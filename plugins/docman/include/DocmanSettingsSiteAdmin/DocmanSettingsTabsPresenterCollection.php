@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class DocmanSettingsTabsPresenterCollection implements Dispatchable
 {
-    public const NAME = 'docmanSettingsTabsPresenterCollection';
+    public const string NAME = 'docmanSettingsTabsPresenterCollection';
 
     /**
      * @var DocmanSettingsTabPresenter[]

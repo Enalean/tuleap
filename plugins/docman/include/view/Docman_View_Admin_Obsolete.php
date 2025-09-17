@@ -24,9 +24,9 @@
 
 use Tuleap\Document\Tree\DocumentItemPreviewUrlBuilder;
 
-class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
+class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const IDENTIFIER = 'admin_obsolete';
+    public const string IDENTIFIER = 'admin_obsolete';
 
     #[\Override]
     protected function getIdentifier(): string

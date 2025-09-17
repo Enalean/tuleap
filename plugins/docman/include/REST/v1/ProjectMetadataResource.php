@@ -39,8 +39,8 @@ use UserManager;
 
 class ProjectMetadataResource extends AuthenticatedResource
 {
-    public const RESOURCE_TYPE = 'docman_metadata';
-    private const MAX_LIMIT    = 50;
+    public const string RESOURCE_TYPE = 'docman_metadata';
+    private const int MAX_LIMIT       = 50;
 
     /**
      * @var Docman_ItemDao

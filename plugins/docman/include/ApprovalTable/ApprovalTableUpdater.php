@@ -25,9 +25,9 @@ namespace Tuleap\Docman\ApprovalTable;
 
 class ApprovalTableUpdater
 {
-    public const APPROVAL_TABLE_UPDATE_COPY  = 'copy';
-    public const APPROVAL_TABLE_UPDATE_RESET = 'reset';
-    public const APPROVAL_TABLE_UPDATE_EMPTY = 'empty';
+    public const string APPROVAL_TABLE_UPDATE_COPY  = 'copy';
+    public const string APPROVAL_TABLE_UPDATE_RESET = 'reset';
+    public const string APPROVAL_TABLE_UPDATE_EMPTY = 'empty';
 
     /**
      * @var ApprovalTableRetriever

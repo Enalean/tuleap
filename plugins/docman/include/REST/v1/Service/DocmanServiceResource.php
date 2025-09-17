@@ -42,7 +42,7 @@ use UserHelper;
 
 final class DocmanServiceResource extends AuthenticatedResource
 {
-    public const RESOURCE_TYPE = 'docman_service';
+    public const string RESOURCE_TYPE = 'docman_service';
 
     /**
      * Get document manager service

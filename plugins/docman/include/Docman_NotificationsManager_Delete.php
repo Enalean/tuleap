@@ -19,10 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
+class Docman_NotificationsManager_Delete extends Docman_NotificationsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
-    public const MESSAGE_REMOVED      = 'removed'; // X has been removed
+    public const string MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
+    public const string MESSAGE_REMOVED      = 'removed'; // X has been removed
 
     #[\Override]
     public function somethingHappen($event, $params)
@@ -120,7 +120,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
     }
 
     #[\Override]
-    public function _getMessageForUser($user, $message_type, $params)
+    public function _getMessageForUser($user, $message_type, $params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $msg = '';
         switch ($message_type) {
@@ -172,7 +172,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         return $link;
     }
 
-    public function _storeEvents($id, $message_type, $params)
+    public function _storeEvents($id, $message_type, $params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $dpm   = $this->_getPermissionsManager();
         $users = $this->notified_people_retriever->getNotifiedUsers($this->project, $id);

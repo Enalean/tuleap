@@ -62,7 +62,7 @@ use UserHelper;
 
 final class SearchResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     /**
      * Search items

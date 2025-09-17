@@ -27,7 +27,7 @@ use Tuleap\REST\RestBase;
 
 class DocmanWithMetadataActivatedBase extends RestBase
 {
-    public const PROJECT_NAME = 'docmanprojectmetadata';
+    public const string PROJECT_NAME = 'docmanprojectmetadata';
     protected $project_id;
 
     public function setUp(): void

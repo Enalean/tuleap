@@ -31,9 +31,9 @@ use Tuleap\REST\RESTTestDataBuilder;
 
 class DocmanForbidWritersDataBuilder
 {
-    public const PROJECT_NAME     = 'docman-forbid-writers';
-    public const WRITER_USERNAME  = 'docman_writer_user';
-    public const MANAGER_USERNAME = 'docman_manager_user';
+    public const string PROJECT_NAME     = 'docman-forbid-writers';
+    public const string WRITER_USERNAME  = 'docman_writer_user';
+    public const string MANAGER_USERNAME = 'docman_manager_user';
 
     public function __construct(
         private DocmanProjectBuilder $project_builder,

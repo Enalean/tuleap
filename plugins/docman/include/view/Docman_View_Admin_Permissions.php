@@ -22,9 +22,9 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
+class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const IDENTIFIER = 'admin_permissions';
+    public const string IDENTIFIER = 'admin_permissions';
 
     #[\Override]
     protected function getIdentifier(): string
