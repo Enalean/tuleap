@@ -19,8 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_StaticField
+namespace Tuleap\Tracker\FormElement\StaticField\LineBreak;
+
+use Codendi_HTMLPurifier;
+use Tracker_FormElement_StaticField;
+
+class LineBreakStaticField extends Tracker_FormElement_StaticField
 {
     #[\Override]
     protected function fetchReadOnly()

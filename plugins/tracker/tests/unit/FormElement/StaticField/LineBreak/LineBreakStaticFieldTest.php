@@ -21,21 +21,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\StaticField\LineBreak;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_StaticField_LineBreak;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Line_BreakTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class LineBreakStaticFieldTest extends TestCase
 {
     use GlobalLanguageMock;
 
     public function testFetchDescription(): void
     {
-        $line_break = new Tracker_FormElement_StaticField_LineBreak(
+        $line_break = new LineBreakStaticField(
             2,
             254,
             0,

@@ -241,9 +241,9 @@ final class SelectOptionsBuilderTest extends TestCase
         return $fieldset;
     }
 
-    private function aLineBreak(int $id): \Tracker_FormElement_StaticField_LineBreak
+    private function aLineBreak(int $id): \Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField
     {
-        $br = $this->createMock(\Tracker_FormElement_StaticField_LineBreak::class);
+        $br = $this->createMock(\Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField::class);
         $br->method('userCanRead')->willReturn(true);
         $br->method('getLabel')->willReturn('br');
         $br->method('getId')->willReturn($id);

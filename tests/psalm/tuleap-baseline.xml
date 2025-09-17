@@ -2599,17 +2599,12 @@
     </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$field_mapping]]></code>
-      <code><![CDATA[$form]]></code>
-      <code><![CDATA[$form]]></code>
       <code><![CDATA[$from_renderer]]></code>
-      <code><![CDATA[$matching_ids]]></code>
-      <code><![CDATA[$report_can_be_modified]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[afterSaveObject]]></code>
       <code><![CDATA[delete]]></code>
       <code><![CDATA[exportToXml]]></code>
-      <code><![CDATA[fetchCards]]></code>
       <code><![CDATA[getDao]]></code>
       <code><![CDATA[getFormElementFactory]]></code>
       <code><![CDATA[getJavascriptDependencies]]></code>
@@ -20719,7 +20714,6 @@
       <code><![CDATA[$readonly]]></code>
       <code><![CDATA[$renderer_id]]></code>
       <code><![CDATA[$report]]></code>
-      <code><![CDATA[$report_can_be_modified]]></code>
       <code><![CDATA[$request]]></code>
       <code><![CDATA[$store_in_session]]></code>
     </MissingParamType>
@@ -34728,6 +34722,15 @@
       <code><![CDATA[$criteria->is_advanced]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
+  <file src="plugins/tracker/include/FormElement/StaticField/LineBreak/LineBreakStaticField.php">
+    <MissingParamType>
+      <code><![CDATA[$tracker]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[fetchAdmin]]></code>
+      <code><![CDATA[fetchReadOnly]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/FormElement/StaticField/Separator/SeparatorStaticField.php">
     <MissingParamType>
       <code><![CDATA[$tracker]]></code>
@@ -37091,8 +37094,6 @@
     <MissingParamType>
       <code><![CDATA[$attachment_name]]></code>
       <code><![CDATA[$attachment_name]]></code>
-      <code><![CDATA[$content]]></code>
-      <code><![CDATA[$content]]></code>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -37107,7 +37108,6 @@
       <code><![CDATA[$temporary_name]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[checkThatChunkSizeIsNotOverTheQuota]]></code>
       <code><![CDATA[getFileByTemporaryName]]></code>
       <code><![CDATA[getInstanceFromRow]]></code>
       <code><![CDATA[getMaximumChunkSize]]></code>
@@ -37119,7 +37119,6 @@
       <code><![CDATA[removeTemporaryFileFomFileSystem]]></code>
       <code><![CDATA[removeTemporaryFileInDB]]></code>
       <code><![CDATA[removeTemporaryFileInDBByTemporaryName]]></code>
-      <code><![CDATA[validateChunkSize]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[$file_path]]></code>
@@ -37138,12 +37137,6 @@
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $offset]]></code>
-    </RedundantCastGivenDocblockType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$bytes_written]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/ArtifactChangesetSaver.php">
     <RedundantCastGivenDocblockType>
@@ -42778,15 +42771,6 @@
       <code><![CDATA[getDefaultValue]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_LineBreak.php">
-    <MissingParamType>
-      <code><![CDATA[$tracker]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[fetchAdmin]]></code>
-      <code><![CDATA[fetchReadOnly]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_RichText.php">
     <MissingParamType>
       <code><![CDATA[$tracker]]></code>
@@ -46305,7 +46289,6 @@
       <code><![CDATA[$matching_ids]]></code>
       <code><![CDATA[$matching_ids]]></code>
       <code><![CDATA[$matching_ids]]></code>
-      <code><![CDATA[$matching_ids]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$only_one_column]]></code>
@@ -46323,8 +46306,6 @@
       <code><![CDATA[$report_can_be_modified]]></code>
       <code><![CDATA[$report_can_be_modified]]></code>
       <code><![CDATA[$report_can_be_modified]]></code>
-      <code><![CDATA[$report_can_be_modified]]></code>
-      <code><![CDATA[$request]]></code>
       <code><![CDATA[$store_in_session]]></code>
       <code><![CDATA[$store_in_session]]></code>
       <code><![CDATA[$store_in_session]]></code>
@@ -67742,7 +67723,6 @@
       <code><![CDATA[$words]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_getPasswordLifetime]]></code>
       <code><![CDATA[_getUserInstanceFromRow]]></code>
       <code><![CDATA[addSSHKeys]]></code>
       <code><![CDATA[clearInstance]]></code>
@@ -68928,7 +68908,6 @@
     <MissingParamType>
       <code><![CDATA[$all_projects_count]]></code>
       <code><![CDATA[$all_users_count]]></code>
-      <code><![CDATA[$pending_news_count]]></code>
       <code><![CDATA[$pending_projects_count]]></code>
       <code><![CDATA[$pending_users_count]]></code>
       <code><![CDATA[$plugins]]></code>
@@ -68949,7 +68928,6 @@
       <code><![CDATA[$plugins]]></code>
       <code><![CDATA[$plugins_manage_all]]></code>
       <code><![CDATA[$plugins_section_title]]></code>
-      <code><![CDATA[$ppending_news_count]]></code>
       <code><![CDATA[$projects_nav_all_projects]]></code>
       <code><![CDATA[$projects_nav_configuration]]></code>
       <code><![CDATA[$projects_nav_deleted_projects]]></code>
@@ -68964,13 +68942,11 @@
       <code><![CDATA[$users_search_placeholder]]></code>
       <code><![CDATA[$users_section_title]]></code>
       <code><![CDATA[$utils_nav_mass_mail]]></code>
-      <code><![CDATA[$utils_nav_news]]></code>
       <code><![CDATA[$utils_nav_system_events]]></code>
       <code><![CDATA[$utils_section_title]]></code>
       <code><![CDATA[$validated_users_count]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[isTherePendingNews]]></code>
       <code><![CDATA[isTherePendingProjects]]></code>
       <code><![CDATA[isTherePendingUsers]]></code>
       <code><![CDATA[isThereValidatedUsers]]></code>
@@ -68978,19 +68954,14 @@
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->configuration_nav_predefined_references]]></code>
       <code><![CDATA[$this->configuration_nav_tracker_restore]]></code>
-      <code><![CDATA[$this->pending_news_count]]></code>
       <code><![CDATA[$this->users_nav_validated_users]]></code>
     </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->pending_news_count]]></code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/admin/AdminSidebarPresenterBuilder.php">
     <MissingReturnType>
       <code><![CDATA[allProjectsCount]]></code>
       <code><![CDATA[allUsersCount]]></code>
       <code><![CDATA[build]]></code>
-      <code><![CDATA[pendingNewsCount]]></code>
       <code><![CDATA[pendingProjectsCount]]></code>
       <code><![CDATA[pendingUsersCount]]></code>
       <code><![CDATA[usersNeedApproval]]></code>
