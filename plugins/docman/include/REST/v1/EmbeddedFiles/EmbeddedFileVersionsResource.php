@@ -33,7 +33,7 @@ use Tuleap\REST\Header;
 
 final class EmbeddedFileVersionsResource extends AuthenticatedResource
 {
-    public const NAME = 'docman_embedded_file_versions';
+    public const string NAME = 'docman_embedded_file_versions';
 
     /**
      * @url OPTIONS {id}

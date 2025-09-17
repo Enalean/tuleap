@@ -34,17 +34,17 @@ use Tuleap\Docman\Metadata\CustomMetadataException;
  * * HardCoded metadata: stored as columns of docman tables.
  * * Real metadata: stored as entry of docman_field table.
  */
-class Docman_MetadataFactory
+class Docman_MetadataFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const HARDCODED_METADATA_TITLE_LABEL        = 'title';
-    public const HARDCODED_METADATA_DESCRIPTION_LABEL  = 'description';
-    public const HARDCODED_METADATA_OWNER_LABEL        = 'owner';
-    public const HARDCODED_METADATA_CREATE_DATE_LABEL  = 'create_date';
-    public const HARDCODED_METADATA_UPDATE_DATE_LABEL  = 'update_date';
-    public const HARDCODED_METADATA_STATUS_LABEL       = 'status';
-    public const HARDCODED_METADATA_OBSOLESCENCE_LABEL = 'obsolescence_date';
-    public const HARDCODED_METADATA_ID_LABEL           = 'id';
-    public const HARDCODED_METADATA_LABELS             = [
+    public const string HARDCODED_METADATA_TITLE_LABEL        = 'title';
+    public const string HARDCODED_METADATA_DESCRIPTION_LABEL  = 'description';
+    public const string HARDCODED_METADATA_OWNER_LABEL        = 'owner';
+    public const string HARDCODED_METADATA_CREATE_DATE_LABEL  = 'create_date';
+    public const string HARDCODED_METADATA_UPDATE_DATE_LABEL  = 'update_date';
+    public const string HARDCODED_METADATA_STATUS_LABEL       = 'status';
+    public const string HARDCODED_METADATA_OBSOLESCENCE_LABEL = 'obsolescence_date';
+    public const string HARDCODED_METADATA_ID_LABEL           = 'id';
+    public const array HARDCODED_METADATA_LABELS              = [
         self::HARDCODED_METADATA_TITLE_LABEL,
         self::HARDCODED_METADATA_DESCRIPTION_LABEL,
         self::HARDCODED_METADATA_OWNER_LABEL,
@@ -95,7 +95,7 @@ class Docman_MetadataFactory
      * Factory method. Create a Docman_Metadata object based on the type of the
      * medatadata. Object is created from a row from the DB.
      */
-    public function _createFromRow($row)
+    public function _createFromRow($row) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         switch ($row['data_type']) {
             case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
@@ -375,7 +375,7 @@ class Docman_MetadataFactory
     /**
      * @access: private
      */
-    public function _getMetadataValueFromRow($md, $row)
+    public function _getMetadataValueFromRow($md, $row) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $value = null;
         switch ($md->getType()) {
@@ -650,7 +650,7 @@ class Docman_MetadataFactory
      * @param Docman_Metadata $md              Metadata to clone
      * @param Array           $metadataMapping Map between src and dst metadata id
      */
-    public function _cloneOneMetadata($dstGroupId, $md, &$metadataMapping)
+    public function _cloneOneMetadata($dstGroupId, $md, &$metadataMapping) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
 
@@ -679,7 +679,7 @@ class Docman_MetadataFactory
      * @param int $dstGroupId Project where the metadata will be created
      * @param Array   $metadataMapping Map between src and dst metadata id
      */
-    public function _cloneRealMetadata($dstGroupId, &$metadataMapping)
+    public function _cloneRealMetadata($dstGroupId, &$metadataMapping) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         foreach ($this->getRealMetadataList(false) as $md) {
             $this->_cloneOneMetadata($dstGroupId, $md, $metadataMapping);
@@ -747,7 +747,7 @@ class Docman_MetadataFactory
         }
     }
 
-    public function _findRealMetadataByName($name, &$mda)
+    public function _findRealMetadataByName($name, &$mda) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $dao = $this->getDao();
 
@@ -811,7 +811,7 @@ class Docman_MetadataFactory
         $this->_exportMetadata($dstGroupId);
     }
 
-    public function _exportMetadata($dstGroupId)
+    public function _exportMetadata($dstGroupId) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // Get the properties mapping between the 2 projects
         $mdMap = [];
@@ -838,13 +838,13 @@ class Docman_MetadataFactory
     }
 
     // Accessors for mock
-    public function &_getMetadataFactory($groupId)
+    public function &_getMetadataFactory($groupId) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $mdf = new Docman_MetadataFactory($groupId);
         return $mdf;
     }
 
-    public function &_getListOfValuesElementFactory($mdId)
+    public function &_getListOfValuesElementFactory($mdId) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $mdLoveF = new Docman_MetadataListOfValuesElementFactory($mdId);
         return $mdLoveF;

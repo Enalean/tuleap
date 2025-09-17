@@ -19,11 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_NotificationsManager_Move extends Docman_NotificationsManager
+class Docman_NotificationsManager_Move extends Docman_NotificationsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const MESSAGE_MOVED      = 'moved';      // X has been moved from to
-    public const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
-    public const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
+    public const string MESSAGE_MOVED      = 'moved';      // X has been moved from to
+    public const string MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
+    public const string MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
 
     #[\Override]
     public function somethingHappen($event, $params)
@@ -43,7 +43,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
 
     public $do_not_send_notifications_to;
 
-    public function _buildMessagesForUsers(&$users, $type, $params)
+    public function _buildMessagesForUsers(&$users, $type, $params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($users) {
             $um = $this->_getUserManager();
@@ -63,7 +63,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
     }
 
     #[\Override]
-    public function _buildMessage($params, $user, $type)
+    public function _buildMessage($params, $user, $type) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $params['old_parent'] = $this->_item_factory->getItemFromDb($params['item']->getParentId());
         $this->_addMessage(
@@ -79,7 +79,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
     }
 
     #[\Override]
-    public function _getMessageForUser($user, $message_type, $params)
+    public function _getMessageForUser($user, $message_type, $params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $msg = '';
         switch ($message_type) {

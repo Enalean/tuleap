@@ -24,9 +24,9 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Admin\AdminView
+class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Admin\AdminView //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const IDENTIFIER = 'admin_display_love';
+    public const string IDENTIFIER = 'admin_display_love';
 
     #[\Override]
     protected function getIdentifier(): string

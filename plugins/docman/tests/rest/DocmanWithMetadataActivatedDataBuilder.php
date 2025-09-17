@@ -28,7 +28,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanProjectBuilder;
 
 class DocmanWithMetadataActivatedDataBuilder
 {
-    public const PROJECT_NAME = 'DocmanProjectMetadata';
+    public const string PROJECT_NAME = 'DocmanProjectMetadata';
     /**
      * @var \Docman_MetadataFactory
      */

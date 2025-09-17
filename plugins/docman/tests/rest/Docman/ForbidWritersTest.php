@@ -29,7 +29,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ForbidWritersTest extends \Tuleap\REST\RestBase
 {
-    private const MANAGERS_UGROUP_NAME = 'Managers';
+    private const string MANAGERS_UGROUP_NAME = 'Managers';
 
     private int $project_id;
     private int $writer_user_id;

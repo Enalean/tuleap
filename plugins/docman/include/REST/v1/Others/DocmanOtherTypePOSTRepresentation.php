@@ -32,7 +32,7 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresent
  */
 final class DocmanOtherTypePOSTRepresentation implements CanContainACopyRepresentation
 {
-    private const REQUIRED_NON_COPY_PROPERTIES = ['title', 'type'];
+    private const array REQUIRED_NON_COPY_PROPERTIES = ['title', 'type'];
 
     /**
      * @var string Item title {@from body} {@required false} Mandatory if copy is not set

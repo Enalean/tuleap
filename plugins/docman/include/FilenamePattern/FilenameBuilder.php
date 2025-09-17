@@ -28,10 +28,10 @@ use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 final class FilenameBuilder
 {
-    public const  TITLE_VARIABLE        = '${TITLE}';
-    public const  ITEM_ID_VARIABLE      = '${ID}';
-    private const STATUS_VARIABLE       = '${STATUS}';
-    private const VERSION_NAME_VARIABLE = '${VERSION_NAME}';
+    public const  string TITLE_VARIABLE        = '${TITLE}';
+    public const  string ITEM_ID_VARIABLE      = '${ID}';
+    private const string STATUS_VARIABLE       = '${STATUS}';
+    private const string VERSION_NAME_VARIABLE = '${VERSION_NAME}';
 
     public function __construct(
         private RetrieveFilenamePattern $filename_pattern_retriever,

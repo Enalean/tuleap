@@ -4311,13 +4311,6 @@
       <code><![CDATA[setStatus]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/ApprovalTable/ApprovalTableUpdater.php">
-    <MissingClassConstType>
-      <code><![CDATA[APPROVAL_TABLE_UPDATE_COPY  = 'copy']]></code>
-      <code><![CDATA[APPROVAL_TABLE_UPDATE_EMPTY = 'empty']]></code>
-      <code><![CDATA[APPROVAL_TABLE_UPDATE_RESET = 'reset']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/docman/include/ApprovalTable/FactoriesFactory.php">
     <MissingParamType>
       <code><![CDATA[$item]]></code>
@@ -5043,11 +5036,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $b]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/docman/include/DocmanSettingsSiteAdmin/DocmanSettingsTabsPresenterCollection.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'docmanSettingsTabsPresenterCollection']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/docman/include/Docman_Actions.php">
     <ArgumentTypeCoercion>
@@ -6093,9 +6081,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_Item.php">
-    <MissingClassConstType>
-      <code><![CDATA[TYPE_OTHER = 7]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$data]]></code>
       <code><![CDATA[$date]]></code>
@@ -7159,25 +7144,6 @@
     </PossiblyFalseReference>
   </file>
   <file src="plugins/docman/include/Docman_MetadataFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[HARDCODED_METADATA_CREATE_DATE_LABEL  = 'create_date']]></code>
-      <code><![CDATA[HARDCODED_METADATA_DESCRIPTION_LABEL  = 'description']]></code>
-      <code><![CDATA[HARDCODED_METADATA_ID_LABEL           = 'id']]></code>
-      <code><![CDATA[HARDCODED_METADATA_LABELS             = [
-        self::HARDCODED_METADATA_TITLE_LABEL,
-        self::HARDCODED_METADATA_DESCRIPTION_LABEL,
-        self::HARDCODED_METADATA_OWNER_LABEL,
-        self::HARDCODED_METADATA_CREATE_DATE_LABEL,
-        self::HARDCODED_METADATA_UPDATE_DATE_LABEL,
-        self::HARDCODED_METADATA_STATUS_LABEL,
-        self::HARDCODED_METADATA_OBSOLESCENCE_LABEL,
-    ]]]></code>
-      <code><![CDATA[HARDCODED_METADATA_OBSOLESCENCE_LABEL = 'obsolescence_date']]></code>
-      <code><![CDATA[HARDCODED_METADATA_OWNER_LABEL        = 'owner']]></code>
-      <code><![CDATA[HARDCODED_METADATA_STATUS_LABEL       = 'status']]></code>
-      <code><![CDATA[HARDCODED_METADATA_TITLE_LABEL        = 'title']]></code>
-      <code><![CDATA[HARDCODED_METADATA_UPDATE_DATE_LABEL  = 'update_date']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$dstGroupId]]></code>
       <code><![CDATA[$dstGroupId]]></code>
@@ -7746,11 +7712,6 @@
     <InvalidOperand>
       <code><![CDATA[$this->mail_builder->buildAndSendEmail($this->project, $notification, new MailEnhancer())]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[MESSAGE_MODIFIED        = 'modified']]></code>
-      <code><![CDATA[MESSAGE_NEWVERSION      = 'new_version']]></code>
-      <code><![CDATA[MESSAGE_WIKI_NEWVERSION = 'new_wiki_version']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$event]]></code>
       <code><![CDATA[$event]]></code>
@@ -7842,9 +7803,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/docman/include/Docman_NotificationsManager_Add.php">
-    <MissingClassConstType>
-      <code><![CDATA[MESSAGE_ADDED = 'added']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$event]]></code>
       <code><![CDATA[$message_type]]></code>
@@ -7864,10 +7822,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_NotificationsManager_Delete.php">
-    <MissingClassConstType>
-      <code><![CDATA[MESSAGE_REMOVED      = 'removed']]></code>
-      <code><![CDATA[MESSAGE_REMOVED_FROM = 'removed_from']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$event]]></code>
       <code><![CDATA[$event]]></code>
@@ -7904,11 +7858,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/docman/include/Docman_NotificationsManager_Move.php">
-    <MissingClassConstType>
-      <code><![CDATA[MESSAGE_MOVED      = 'moved']]></code>
-      <code><![CDATA[MESSAGE_MOVED_FROM = 'moved_from']]></code>
-      <code><![CDATA[MESSAGE_MOVED_TO   = 'moved_to']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$event]]></code>
       <code><![CDATA[$message_type]]></code>
@@ -7936,10 +7885,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_NotificationsManager_Subscribers.php">
-    <MissingClassConstType>
-      <code><![CDATA[MESSAGE_ADDED   = 'added']]></code>
-      <code><![CDATA[MESSAGE_REMOVED = 'removed']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$type]]></code>
@@ -7976,18 +7921,6 @@
     <InvalidReturnType>
       <code><![CDATA[void]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[ITEM_PERMISSION_TYPES       = [
-        self::ITEM_PERMISSION_TYPE_READ,
-        self::ITEM_PERMISSION_TYPE_WRITE,
-        self::ITEM_PERMISSION_TYPE_MANAGE,
-    ]]]></code>
-      <code><![CDATA[ITEM_PERMISSION_TYPE_MANAGE = 'PLUGIN_DOCMAN_MANAGE']]></code>
-      <code><![CDATA[ITEM_PERMISSION_TYPE_READ   = 'PLUGIN_DOCMAN_READ']]></code>
-      <code><![CDATA[ITEM_PERMISSION_TYPE_WRITE  = 'PLUGIN_DOCMAN_WRITE']]></code>
-      <code><![CDATA[PLUGIN_DOCMAN_ADMIN = 'PLUGIN_DOCMAN_ADMIN']]></code>
-      <code><![CDATA[PLUGIN_OPTION_DELETE = 'docman_only_siteadmin_can_delete']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$canManage]]></code>
       <code><![CDATA[$canRead]]></code>
@@ -8522,9 +8455,6 @@
       <code><![CDATA[quoteLikeValueSurround]]></code>
       <code><![CDATA[quoteSmart]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[BOOLEAN_SEARCH_TYPE = 'IN BOOLEAN MODE']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$qv]]></code>
     </MissingParamType>
@@ -9249,11 +9179,6 @@
       <code><![CDATA[$folder_path]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/docman/include/Item/OpenItemHref.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME     = 'openItemHref']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/docman/include/Item/PaginatedDocmanItemCollection.php">
     <MissingReturnType>
       <code><![CDATA[getTotalSize]]></code>
@@ -9622,30 +9547,6 @@
     <InvalidArgument>
       <code><![CDATA[$history]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[PERMISSIONS_DEFINITIONS     = [
-        self::PERMISSION_DEFINITION_READ   => [
-            'order' => 1,
-            'type'  => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ,
-        ],
-        self::PERMISSION_DEFINITION_WRITE  => [
-            'order' => 2,
-            'type'  => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE,
-        ],
-        self::PERMISSION_DEFINITION_MANAGE => [
-            'order' => 3,
-            'type'  => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE,
-        ],
-        self::PERMISSION_DEFINITION_NONE => [
-            'order' => 0,
-            'type'  => null,
-        ],
-    ]]]></code>
-      <code><![CDATA[PERMISSION_DEFINITION_MANAGE = 3]]></code>
-      <code><![CDATA[PERMISSION_DEFINITION_NONE   = 100]]></code>
-      <code><![CDATA[PERMISSION_DEFINITION_READ   = 1]]></code>
-      <code><![CDATA[PERMISSION_DEFINITION_WRITE  = 2]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[setPermission]]></code>
     </MissingReturnType>
@@ -9681,17 +9582,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/docman/include/REST/ResourcesInjector.php">
-    <MissingClassConstType>
-      <code><![CDATA[EMBEDDED_NAME       = 'docman_embedded_files']]></code>
-      <code><![CDATA[EMPTY_DOCUMENT_NAME = 'docman_empty_documents']]></code>
-      <code><![CDATA[FILES_NAME          = 'docman_files']]></code>
-      <code><![CDATA[FOLDER_NAME         = 'docman_folders']]></code>
-      <code><![CDATA[LINK_NAME           = 'docman_links']]></code>
-      <code><![CDATA[NAME                = 'docman_items']]></code>
-      <code><![CDATA[OTHER_TYPE_NAME     = 'docman_other_type_documents']]></code>
-      <code><![CDATA[SEARCH_NAME         = 'docman_search']]></code>
-      <code><![CDATA[WIKI_NAME           = 'docman_wikis']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[populate]]></code>
     </MissingReturnType>
@@ -9714,9 +9604,6 @@
     <InvalidDocblock>
       <code><![CDATA[public function getVersions(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
@@ -9805,9 +9692,6 @@
     <InvalidDocblock>
       <code><![CDATA[public function getVersions(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
@@ -9831,11 +9715,6 @@
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="plugins/docman/include/REST/v1/EmbeddedFiles/DocmanEmbeddedPOSTRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[REQUIRED_NON_COPY_PROPERTIES = ['title', 'embedded_properties']]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/docman/include/REST/v1/EmbeddedFiles/EmbeddedFilePropertiesFullRepresentation.php">
     <MissingParamType>
       <code><![CDATA[$content]]></code>
@@ -9858,16 +9737,6 @@
       <code><![CDATA[$item->getId()]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/docman/include/REST/v1/Empties/DocmanEmptyPOSTRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[REQUIRED_NON_COPY_PROPERTIES = ['title']]]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/docman/include/REST/v1/Files/DocmanPOSTFilesRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[REQUIRED_NON_COPY_PROPERTIES = ['title', 'file_properties']]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/docman/include/REST/v1/Files/EmptyFileToUploadFinisher.php">
     <MissingReturnType>
       <code><![CDATA[createEmptyFile]]></code>
@@ -9882,11 +9751,6 @@
     <MissingTemplateParam>
       <code><![CDATA[ItemVisitor]]></code>
     </MissingTemplateParam>
-  </file>
-  <file src="plugins/docman/include/REST/v1/Folders/DocmanFolderPOSTRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[REQUIRED_NON_COPY_PROPERTIES = ['title']]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/docman/include/REST/v1/Folders/DocmanItemCreatorBuilder.php">
     <PossiblyInvalidArgument>
@@ -9907,15 +9771,6 @@
     </InvalidDocblock>
   </file>
   <file src="plugins/docman/include/REST/v1/ItemRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[OBSOLESCENCE_DATE_NONE = null]]></code>
-      <code><![CDATA[TYPE_EMBEDDED = 'embedded']]></code>
-      <code><![CDATA[TYPE_EMPTY    = 'empty']]></code>
-      <code><![CDATA[TYPE_FILE     = 'file']]></code>
-      <code><![CDATA[TYPE_FOLDER   = 'folder']]></code>
-      <code><![CDATA[TYPE_LINK     = 'link']]></code>
-      <code><![CDATA[TYPE_WIKI     = 'wiki']]></code>
-    </MissingClassConstType>
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$embedded_file_properties]]></code>
     </PossiblyNullPropertyAssignmentValue>
@@ -9949,11 +9804,6 @@
     <MissingTemplateParam>
       <code><![CDATA[ItemVisitor]]></code>
     </MissingTemplateParam>
-  </file>
-  <file src="plugins/docman/include/REST/v1/Links/DocmanLinkPOSTRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[REQUIRED_NON_COPY_PROPERTIES = ['title', 'link_properties']]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/docman/include/REST/v1/Links/DocmanLinkVersionCreator.php">
     <RedundantCastGivenDocblockType>
@@ -9989,26 +9839,6 @@
       <code><![CDATA[empty($metadata_representations)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/docman/include/REST/v1/Metadata/ItemStatusMapper.php">
-    <MissingClassConstType>
-      <code><![CDATA[ITEM_STATUS_APPROVED = 'approved']]></code>
-      <code><![CDATA[ITEM_STATUS_ARRAY_MAP = [
-        self::ITEM_STATUS_NONE     => PLUGIN_DOCMAN_ITEM_STATUS_NONE,
-        self::ITEM_STATUS_DRAFT    => PLUGIN_DOCMAN_ITEM_STATUS_DRAFT,
-        self::ITEM_STATUS_APPROVED => PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
-        self::ITEM_STATUS_REJECTED => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
-    ]]]></code>
-      <code><![CDATA[ITEM_STATUS_DRAFT    = 'draft']]></code>
-      <code><![CDATA[ITEM_STATUS_NONE = 'none']]></code>
-      <code><![CDATA[ITEM_STATUS_REJECTED = 'rejected']]></code>
-      <code><![CDATA[LEGACY_ITEM_STATUS_ARRAY_MAP = [
-        PLUGIN_DOCMAN_ITEM_STATUS_NONE => self::ITEM_STATUS_NONE,
-        PLUGIN_DOCMAN_ITEM_STATUS_DRAFT => self::ITEM_STATUS_DRAFT,
-        PLUGIN_DOCMAN_ITEM_STATUS_APPROVED => self::ITEM_STATUS_APPROVED,
-        PLUGIN_DOCMAN_ITEM_STATUS_REJECTED => self::ITEM_STATUS_REJECTED,
-    ]]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/docman/include/REST/v1/Metadata/MetadataToUpdate.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
@@ -10024,22 +9854,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/docman/include/REST/v1/Metadata/PUTRecursiveStatusRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[RECURSION_ALL_ITEMS = 'all_items']]></code>
-      <code><![CDATA[RECURSION_FOLDER    = 'folders']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/docman/include/REST/v1/Metadata/ProjectConfiguredMetadataRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[METADATA_TYPE_LABEL = [
-        PLUGIN_DOCMAN_METADATA_TYPE_TEXT   => 'text',
-        PLUGIN_DOCMAN_METADATA_TYPE_STRING => 'string',
-        PLUGIN_DOCMAN_METADATA_TYPE_DATE   => 'date',
-        PLUGIN_DOCMAN_METADATA_TYPE_LIST   => 'list',
-    ]]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/docman/include/REST/v1/MoveItem/BeforeMoveVisitor.php">
     <PossiblyNullArgument>
@@ -10100,10 +9914,6 @@
     <InvalidDocblock>
       <code><![CDATA[public function getDocmanMetadata($id, $limit = 10, $offset = 0): array]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT    = 50]]></code>
-      <code><![CDATA[RESOURCE_TYPE = 'docman_metadata']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$offset]]></code>
@@ -10148,11 +9958,6 @@
       <code><![CDATA[$item->getId()]]></code>
       <code><![CDATA[$item->getId()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/docman/include/REST/v1/Wiki/DocmanWikiPOSTRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[REQUIRED_NON_COPY_PROPERTIES = ['title', 'wiki_properties']]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/docman/include/REST/v1/Wiki/DocmanWikiVersionCreator.php">
     <RedundantCastGivenDocblockType>
@@ -10243,9 +10048,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/docman/include/Upload/Document/DocumentToUploadCreator.php">
-    <MissingClassConstType>
-      <code><![CDATA[EXPIRATION_DELAY_IN_HOURS = 12]]></code>
-    </MissingClassConstType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$formatted_metadata]]></code>
     </RiskyTruthyFalsyComparison>
@@ -10290,11 +10092,6 @@
       <code><![CDATA[$item->getId()]]></code>
       <code><![CDATA[$item->getId()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/docman/include/Upload/Version/VersionToUploadCreator.php">
-    <MissingClassConstType>
-      <code><![CDATA[EXPIRATION_DELAY_IN_HOURS = 12]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/docman/include/Upload/Version/VersionUploadCleaner.php">
     <MissingReturnType>
@@ -10345,13 +10142,6 @@
       <code><![CDATA[$node->properties->title]]></code>
       <code><![CDATA[$node->properties->title]]></code>
     </ImplicitToStringCast>
-    <MissingClassConstType>
-      <code><![CDATA[TYPE_EMBEDDEDFILE = 'embeddedfile']]></code>
-      <code><![CDATA[TYPE_EMPTY        = 'empty']]></code>
-      <code><![CDATA[TYPE_FILE         = 'file']]></code>
-      <code><![CDATA[TYPE_FOLDER       = 'folder']]></code>
-      <code><![CDATA[TYPE_LINK         = 'link']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getPostImporter]]></code>
     </MissingReturnType>
@@ -10379,17 +10169,6 @@
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[rowCount]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[ADMIN_BASE_URL = '/admin/document']]></code>
-      <code><![CDATA[CONFIG_EMBEDDED_ARE_ALLOWED = 'docman_embedded_are_allowed']]></code>
-      <code><![CDATA[CONFIG_ROOT_DIRECTORY = 'docman_root']]></code>
-      <code><![CDATA[ITEM_MAPPING_KEY       = 'plugin_docman_item_mapping']]></code>
-      <code><![CDATA[PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING = 'plugin_docman_max_file_size']]></code>
-      <code><![CDATA[PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING = 'plugin_docman_max_number_of_files']]></code>
-      <code><![CDATA[SERVICE_SHORTNAME      = 'docman']]></code>
-      <code><![CDATA[SYSTEM_NATURE_NAME     = 'document']]></code>
-      <code><![CDATA[TRUNCATED_SERVICE_NAME = 'Documents']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$controller]]></code>
       <code><![CDATA[$groupId]]></code>
@@ -10483,11 +10262,6 @@
       <code><![CDATA[array{is_active: bool, tabs: array{array{description: string, title: string, url: string}}}]]></code>
     </InvalidReturnType>
   </file>
-  <file src="plugins/docman/include/view/Admin/FilenamePatternWarningsCollector.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'filenamePatternWarningsCollector']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/docman/include/view/Docman_MetadataHtmlEmbeddedFile.php">
     <MissingParamType>
       <code><![CDATA[$content]]></code>
@@ -10526,19 +10300,11 @@
       <code><![CDATA[$pagename]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_Admin_FilenamePattern.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_filename_pattern']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_LockInfos.php">
     <DeprecatedMethod>
       <code><![CDATA[$lockInfos]]></code>
       <code><![CDATA[$lockInfos]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_lock_infos']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$params]]></code>
     </MissingParamType>
@@ -10549,25 +10315,7 @@
       <code><![CDATA[getTable]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_Admin_Metadata.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_metadata']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Admin_MetadataDetails.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_md_details']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Admin_MetadataDetailsUpdateLove.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_display_love']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_MetadataImport.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_import_metadata_check']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$sthToImport]]></code>
     </MissingParamType>
@@ -10580,25 +10328,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_Obsolete.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_obsolete']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$params]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[getTable]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Admin_Permissions.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_permissions']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Admin_View.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'admin_view']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_AjaxReferenceTooltip.php">
     <MissingParamType>

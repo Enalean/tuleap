@@ -25,10 +25,10 @@ namespace Tuleap\Docman\Search;
 
 final class SearchSortPropertyMapper
 {
-    public const SORT_DESC = 'desc';
-    public const SORT_ASC  = 'asc';
+    public const string SORT_DESC = 'desc';
+    public const string SORT_ASC  = 'asc';
 
-    private const LEGACY_SORT_ARRAY_MAP = [
+    private const array LEGACY_SORT_ARRAY_MAP = [
         self::SORT_DESC => PLUGIN_DOCMAN_SORT_DESC,
         self::SORT_ASC => PLUGIN_DOCMAN_SORT_ASC,
     ];

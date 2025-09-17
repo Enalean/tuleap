@@ -47,10 +47,10 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchReportBuilderTest extends TestCase
 {
-    private const CUSTOM_TEXT_PROPERTY   = 'field_1';
-    private const CUSTOM_STRING_PROPERTY = 'field_2';
-    private const CUSTOM_DATE_PROPERTY   = 'field_3';
-    private const CUSTOM_LIST_PROPERTY   = 'field_4';
+    private const string CUSTOM_TEXT_PROPERTY   = 'field_1';
+    private const string CUSTOM_STRING_PROPERTY = 'field_2';
+    private const string CUSTOM_DATE_PROPERTY   = 'field_3';
+    private const string CUSTOM_LIST_PROPERTY   = 'field_4';
 
     private SearchReportBuilder $search_report_builder;
     private Docman_MetadataFactory|\PHPUnit\Framework\MockObject\MockObject $metadata_factory;

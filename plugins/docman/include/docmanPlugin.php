@@ -191,26 +191,26 @@ require_once __DIR__ . '/../../document/vendor/autoload.php';
 #[\Tuleap\Config\ConfigKeyCategory('Document')]
 class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const TRUNCATED_SERVICE_NAME = 'Documents';
-    public const SYSTEM_NATURE_NAME     = 'document';
-    public const SERVICE_SHORTNAME      = 'docman';
-    public const ITEM_MAPPING_KEY       = 'plugin_docman_item_mapping';
+    public const string TRUNCATED_SERVICE_NAME = 'Documents';
+    public const string SYSTEM_NATURE_NAME     = 'document';
+    public const string SERVICE_SHORTNAME      = 'docman';
+    public const string ITEM_MAPPING_KEY       = 'plugin_docman_item_mapping';
 
-    public const ADMIN_BASE_URL = '/admin/document';
+    public const string ADMIN_BASE_URL = '/admin/document';
 
     #[ConfigKey('Max size for individual files in Document and Docman plugins (in bytes)')]
-    public const PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING = 'plugin_docman_max_file_size';
+    public const string PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING = 'plugin_docman_max_file_size';
 
     #[ConfigKey("Max number of files that can be uploaded with a drag'n drop in interface")]
-    public const PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING = 'plugin_docman_max_number_of_files';
+    public const string PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING = 'plugin_docman_max_number_of_files';
 
     #[ConfigKey('Where Document files are stored')]
     #[ConfigKeyString('/var/lib/tuleap/docman')]
-    public const CONFIG_ROOT_DIRECTORY = 'docman_root';
+    public const string CONFIG_ROOT_DIRECTORY = 'docman_root';
 
     #[ConfigKey('Are embedded files allowed ?')]
     #[ConfigKeyLegacyBool(true)]
-    public const CONFIG_EMBEDDED_ARE_ALLOWED = 'docman_embedded_are_allowed';
+    public const string CONFIG_EMBEDDED_ARE_ALLOWED = 'docman_embedded_are_allowed';
 
     /**
      * Store docman root items indexed by groupId

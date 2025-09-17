@@ -39,7 +39,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 {
-    private const TEST_PROJECT_ID = 101;
+    private const int TEST_PROJECT_ID = 101;
 
     private BinaryFileResponseBuilder $binary_file_response_factory;
     private Docman_VersionFactory&MockObject $version_factory;

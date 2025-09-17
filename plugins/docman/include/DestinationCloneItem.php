@@ -33,7 +33,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class DestinationCloneItem
 {
-    private const CLONE_ROOT_PARENT_ID = 0;
+    private const int CLONE_ROOT_PARENT_ID = 0;
 
     /**
      * @var int

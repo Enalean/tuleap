@@ -44,15 +44,15 @@ use Tuleap\Project\REST\ProjectResourceReference;
 
 class ResourcesInjector
 {
-    public const NAME                = 'docman_items';
-    public const FILES_NAME          = 'docman_files';
-    public const FOLDER_NAME         = 'docman_folders';
-    public const EMBEDDED_NAME       = 'docman_embedded_files';
-    public const WIKI_NAME           = 'docman_wikis';
-    public const LINK_NAME           = 'docman_links';
-    public const EMPTY_DOCUMENT_NAME = 'docman_empty_documents';
-    public const OTHER_TYPE_NAME     = 'docman_other_type_documents';
-    public const SEARCH_NAME         = 'docman_search';
+    public const string NAME                = 'docman_items';
+    public const string FILES_NAME          = 'docman_files';
+    public const string FOLDER_NAME         = 'docman_folders';
+    public const string EMBEDDED_NAME       = 'docman_embedded_files';
+    public const string WIKI_NAME           = 'docman_wikis';
+    public const string LINK_NAME           = 'docman_links';
+    public const string EMPTY_DOCUMENT_NAME = 'docman_empty_documents';
+    public const string OTHER_TYPE_NAME     = 'docman_other_type_documents';
+    public const string SEARCH_NAME         = 'docman_search';
 
     public function populate(Restler $restler)
     {

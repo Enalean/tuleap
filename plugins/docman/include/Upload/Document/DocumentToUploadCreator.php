@@ -33,7 +33,7 @@ use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 
 class DocumentToUploadCreator
 {
-    public const EXPIRATION_DELAY_IN_HOURS = 12;
+    public const int EXPIRATION_DELAY_IN_HOURS = 12;
 
     public function __construct(
         private DocumentOngoingUploadDAO $dao,

@@ -33,7 +33,7 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VersionRepresentationCollectionBuilderTest extends TestCase
 {
-    private const PROJECT_ID = 10;
+    private const int PROJECT_ID = 10;
 
     private VersionDao|\PHPUnit\Framework\MockObject\MockObject $docman_version_dao;
     private VersionRepresentationCollectionBuilder $builder;

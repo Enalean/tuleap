@@ -28,21 +28,21 @@ namespace Tuleap\Docman\Log;
  */
 final class LogEntry
 {
-    public const EVENT_ADD                = PLUGIN_DOCMAN_EVENT_ADD;
-    public const EVENT_EDIT               = PLUGIN_DOCMAN_EVENT_EDIT;
-    public const EVENT_MOVE               = PLUGIN_DOCMAN_EVENT_MOVE;
-    public const EVENT_DEL                = PLUGIN_DOCMAN_EVENT_DEL;
-    public const EVENT_DEL_VERSION        = PLUGIN_DOCMAN_EVENT_DEL_VERSION;
-    public const EVENT_ACCESS             = PLUGIN_DOCMAN_EVENT_ACCESS;
-    public const EVENT_NEW_VERSION        = PLUGIN_DOCMAN_EVENT_NEW_VERSION;
-    public const EVENT_METADATA_UPDATE    = PLUGIN_DOCMAN_EVENT_METADATA_UPDATE;
-    public const EVENT_WIKIPAGE_UPDATE    = PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE;
-    public const EVENT_SET_VERSION_AUTHOR = PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR;
-    public const EVENT_SET_VERSION_DATE   = PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE;
-    public const EVENT_RESTORE            = PLUGIN_DOCMAN_EVENT_RESTORE;
-    public const EVENT_RESTORE_VERSION    = PLUGIN_DOCMAN_EVENT_RESTORE_VERSION;
-    public const EVENT_LOCK_ADD           = PLUGIN_DOCMAN_EVENT_LOCK_ADD;
-    public const EVENT_LOCK_DEL           = PLUGIN_DOCMAN_EVENT_LOCK_DEL;
+    public const int EVENT_ADD                = PLUGIN_DOCMAN_EVENT_ADD;
+    public const int EVENT_EDIT               = PLUGIN_DOCMAN_EVENT_EDIT;
+    public const int EVENT_MOVE               = PLUGIN_DOCMAN_EVENT_MOVE;
+    public const int EVENT_DEL                = PLUGIN_DOCMAN_EVENT_DEL;
+    public const int EVENT_DEL_VERSION        = PLUGIN_DOCMAN_EVENT_DEL_VERSION;
+    public const int EVENT_ACCESS             = PLUGIN_DOCMAN_EVENT_ACCESS;
+    public const int EVENT_NEW_VERSION        = PLUGIN_DOCMAN_EVENT_NEW_VERSION;
+    public const int EVENT_METADATA_UPDATE    = PLUGIN_DOCMAN_EVENT_METADATA_UPDATE;
+    public const int EVENT_WIKIPAGE_UPDATE    = PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE;
+    public const int EVENT_SET_VERSION_AUTHOR = PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR;
+    public const int EVENT_SET_VERSION_DATE   = PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE;
+    public const int EVENT_RESTORE            = PLUGIN_DOCMAN_EVENT_RESTORE;
+    public const int EVENT_RESTORE_VERSION    = PLUGIN_DOCMAN_EVENT_RESTORE_VERSION;
+    public const int EVENT_LOCK_ADD           = PLUGIN_DOCMAN_EVENT_LOCK_ADD;
+    public const int EVENT_LOCK_DEL           = PLUGIN_DOCMAN_EVENT_LOCK_DEL;
 
     /**
      * @psalm-param self::EVENT_* $type

@@ -32,7 +32,7 @@ use Tuleap\REST\RESTTestDataBuilder;
 
 class DocmanProjectBuilder extends RESTTestDataBuilder
 {
-    private const DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
+    private const string DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
 
     /**
      * @var int

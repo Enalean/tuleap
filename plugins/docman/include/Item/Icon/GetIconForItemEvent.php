@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class GetIconForItemEvent implements Dispatchable
 {
-    private const DEFAULT = 'binary';
+    private const string DEFAULT = 'binary';
 
     private string $icon = self::DEFAULT;
 

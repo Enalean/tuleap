@@ -30,11 +30,11 @@ use User\XML\Import\UserNotFoundException;
 
 class NodeImporter
 {
-    public const TYPE_FILE         = 'file';
-    public const TYPE_EMBEDDEDFILE = 'embeddedfile';
-    public const TYPE_LINK         = 'link';
-    public const TYPE_EMPTY        = 'empty';
-    public const TYPE_FOLDER       = 'folder';
+    public const string TYPE_FILE         = 'file';
+    public const string TYPE_EMBEDDEDFILE = 'embeddedfile';
+    public const string TYPE_LINK         = 'link';
+    public const string TYPE_EMPTY        = 'empty';
+    public const string TYPE_FOLDER       = 'folder';
 
     /**
      * @var LoggerInterface

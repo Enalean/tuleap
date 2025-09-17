@@ -30,20 +30,20 @@ class ItemStatusMapper
      * @var \Docman_SettingsBo
      */
     private $docman_settings_bo;
-    public const ITEM_STATUS_NONE = 'none';
+    public const string ITEM_STATUS_NONE = 'none';
 
-    public const ITEM_STATUS_DRAFT    = 'draft';
-    public const ITEM_STATUS_APPROVED = 'approved';
-    public const ITEM_STATUS_REJECTED = 'rejected';
+    public const string ITEM_STATUS_DRAFT    = 'draft';
+    public const string ITEM_STATUS_APPROVED = 'approved';
+    public const string ITEM_STATUS_REJECTED = 'rejected';
 
-    private const ITEM_STATUS_ARRAY_MAP = [
+    private const array ITEM_STATUS_ARRAY_MAP = [
         self::ITEM_STATUS_NONE     => PLUGIN_DOCMAN_ITEM_STATUS_NONE,
         self::ITEM_STATUS_DRAFT    => PLUGIN_DOCMAN_ITEM_STATUS_DRAFT,
         self::ITEM_STATUS_APPROVED => PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
         self::ITEM_STATUS_REJECTED => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
     ];
 
-    private const LEGACY_ITEM_STATUS_ARRAY_MAP = [
+    private const array LEGACY_ITEM_STATUS_ARRAY_MAP = [
         PLUGIN_DOCMAN_ITEM_STATUS_NONE => self::ITEM_STATUS_NONE,
         PLUGIN_DOCMAN_ITEM_STATUS_DRAFT => self::ITEM_STATUS_DRAFT,
         PLUGIN_DOCMAN_ITEM_STATUS_APPROVED => self::ITEM_STATUS_APPROVED,

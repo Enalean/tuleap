@@ -29,15 +29,15 @@ use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Notification\Notification;
 
-class Docman_NotificationsManager
+class Docman_NotificationsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const MESSAGE_MODIFIED        = 'modified';
-    public const MESSAGE_NEWVERSION      = 'new_version';
-    public const MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
+    public const string MESSAGE_MODIFIED        = 'modified';
+    public const string MESSAGE_NEWVERSION      = 'new_version';
+    public const string MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
 
-    public $_listeners;
-    public $_feedback;
-    public $_item_factory;
+    public $_listeners; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_feedback; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_item_factory; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /** @var array */
     private $notifications;
 
@@ -46,7 +46,7 @@ class Docman_NotificationsManager
      */
     public $project;
 
-    public $_group_name;
+    public $_group_name; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * @var MailBuilder
@@ -115,22 +115,22 @@ class Docman_NotificationsManager
         $this->url_provider              = $url_provider;
     }
 
-    public function _getItemFactory()
+    public function _getItemFactory() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_ItemFactory();
     }
 
-    public function _getUserManager()
+    public function _getUserManager() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance();
     }
 
-    public function _getPermissionsManager()
+    public function _getPermissionsManager() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return Docman_PermissionsManager::instance($this->project->getID());
     }
 
-    public function _getDocmanPath()
+    public function _getDocmanPath() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_Path();
     }
@@ -158,7 +158,7 @@ class Docman_NotificationsManager
         }
     }
 
-    public function _getListeningUsersItemId($params)
+    public function _getListeningUsersItemId($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $params['item']->getId();
     }
@@ -174,7 +174,7 @@ class Docman_NotificationsManager
         }
     }
 
-    /* protected */ public function _getType()
+    /* protected */ public function _getType() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return PLUGIN_DOCMAN_NOTIFICATION;
     }
@@ -203,7 +203,7 @@ class Docman_NotificationsManager
         return $this->ugroups_retriever->getListeningUGroups($item, $ugroups, PLUGIN_DOCMAN_NOTIFICATION);
     }
 
-    public function _buildMessage($event, $params, $user)
+    public function _buildMessage($event, $params, $user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $type = '';
         switch ($event) {
@@ -232,7 +232,7 @@ class Docman_NotificationsManager
         );
     }
 
-    protected function _addMessage(PFUser $to, $subject, $msg, $link)
+    protected function _addMessage(PFUser $to, $subject, $msg, $link) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! isset($this->notifications[$msg])) {
             $subject = '[' . $this->_group_name . ' - Documents] ' . $subject;
@@ -279,7 +279,7 @@ class Docman_NotificationsManager
      *
      * @return Docman_Item
      */
-    public function _getMonitoredItemForUser($user, $item)
+    public function _getMonitoredItemForUser($user, $item) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $listeners = $this->getListeningUsers($item);
         foreach ($listeners as $userId => $item) {
@@ -290,7 +290,7 @@ class Docman_NotificationsManager
         return $item;
     }
 
-    public function _getMessageForUser($user, $message_type, $params)
+    public function _getMessageForUser($user, $message_type, $params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $msg = '';
         switch ($message_type) {

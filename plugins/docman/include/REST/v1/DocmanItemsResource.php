@@ -56,7 +56,7 @@ use UserManager;
 
 final class DocmanItemsResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     private Docman_ItemDao $item_dao;
     private DocmanItemsRequestBuilder $request_builder;

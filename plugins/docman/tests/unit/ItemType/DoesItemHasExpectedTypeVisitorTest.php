@@ -34,7 +34,7 @@ use Docman_Wiki;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DoesItemHasExpectedTypeVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const VISITOR_PROCESSABLE_CLASSES = [
+    private const array VISITOR_PROCESSABLE_CLASSES = [
         Docman_Folder::class,
         Docman_Wiki::class,
         Docman_Link::class,

@@ -26,7 +26,7 @@ use Tuleap\REST\JsonCast;
 
 class ProjectConfiguredMetadataRepresentation
 {
-    private const METADATA_TYPE_LABEL = [
+    private const array METADATA_TYPE_LABEL = [
         PLUGIN_DOCMAN_METADATA_TYPE_TEXT   => 'text',
         PLUGIN_DOCMAN_METADATA_TYPE_STRING => 'string',
         PLUGIN_DOCMAN_METADATA_TYPE_DATE   => 'date',

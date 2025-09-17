@@ -19,18 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_NotificationsManager_Add extends Docman_NotificationsManager
+class Docman_NotificationsManager_Add extends Docman_NotificationsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const MESSAGE_ADDED = 'added'; // X has been added
+    public const string MESSAGE_ADDED = 'added'; // X has been added
 
     #[\Override]
-    public function _getListeningUsersItemId($params)
+    public function _getListeningUsersItemId($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $params['parent']->getId();
     }
 
     #[\Override]
-    public function _buildMessage($event, $params, $user)
+    public function _buildMessage($event, $params, $user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         switch ($event) {
             case 'plugin_docman_event_add':
@@ -52,7 +52,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
     }
 
     #[\Override]
-    public function _getMessageForUser($user, $message_type, $params)
+    public function _getMessageForUser($user, $message_type, $params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $msg = '';
         switch ($message_type) {
