@@ -141,9 +141,6 @@ file_admin_editreleases	im_sure	I'm Sure
 file_admin_editreleases	mail_file_rel_notice	Email File Release Notice: 
 file_admin_editreleases	send_notice	Send Notice
 file_admin_editreleases	users_monitor	$1 user(s) are monitoring your package. You should send a notice of your file release.
-file_admin_editreleases	create_auto_news	Create Automatic News
-file_admin_editreleases	rel_news	You can automatically create a piece of news to inform people about the new release.
-file_admin_editreleases	create_news	Create News
 file_admin_editreleases	define_new_release	Define a New Release of a Package
 file_admin_editreleases	contain_multiple_files	A release of a package can contain multiple files. Release names can be either version numbers (3.22.1, 3.23-beta1…) or names.
 file_admin_editreleases	your_release	Releases of package : $1
@@ -159,16 +156,12 @@ file_admin_editreleases	create_this_release	Create This Release
 file_admin_editreleases	rel_del	Release Deleted
 file_admin_editreleases	of_this_package	Of This Package
 file_admin_editreleases	subject	Subject
-file_admin_editreleases	file_news_subject	New Release : $1
 file_admin_editreleases	details	Details
-file_admin_editreleases	file_news_details	A new release $1 is now available at $2
-file_admin_editreleases	submit_news	Submit News
 file_admin_editreleases	relname	<release-name>
 file_admin_editreleases	fieldset_properties	Properties
 file_admin_editreleases	fieldset_uploaded_files	Uploaded Files
 file_admin_editreleases	fieldset_notes	Notes
 file_admin_editreleases	fieldset_permissions	Permissions
-file_admin_editreleases	fieldset_news	News
 file_admin_editreleases	fieldset_notification	Notification
 file_admin_editreleases	browse	browse...
 file_admin_editreleases	local_file	local file

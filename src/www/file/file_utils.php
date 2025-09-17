@@ -380,22 +380,21 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     foreach ($type_name as $key => $name) {
         $type_name[$key] = $hp->purify($name, CODENDI_PURIFIER_JS_QUOTE);
     }
-    $url_news = '/file/showfiles.php?group_id=' . $group_id;
-    $script   = "var processor_id = ['" . implode("', '", $processor_id) . "'];";
-    $script  .= "var processor_name = ['" . implode("', '", $processor_name) . "'];";
-    $script  .= "var type_id = ['" . implode("', '", $type_id) . "'];";
-    $script  .= "var type_name = ['" . implode("', '", $type_name) . "'];";
-    $script  .= 'var group_id = ' . $hp->purify($group_id, CODENDI_PURIFIER_JS_QUOTE) . ';';
-    $script  .= "var relname = '" . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'relname'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var choose = '" . $hp->purify($GLOBALS['Language']->getText('file_file_utils', 'must_choose_one'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var browse = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'browse'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var local_file = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'local_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var scp_ftp_files = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'scp_ftp_files'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var upload_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var add_file_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var add_change_log_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var view_change_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'view_change'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var release_mode = '" . $hp->purify($is_update ? 'edition' : 'creation', CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  = "var processor_id = ['" . implode("', '", $processor_id) . "'];";
+    $script .= "var processor_name = ['" . implode("', '", $processor_name) . "'];";
+    $script .= "var type_id = ['" . implode("', '", $type_id) . "'];";
+    $script .= "var type_name = ['" . implode("', '", $type_name) . "'];";
+    $script .= 'var group_id = ' . $hp->purify($group_id, CODENDI_PURIFIER_JS_QUOTE) . ';';
+    $script .= "var relname = '" . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'relname'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var choose = '" . $hp->purify($GLOBALS['Language']->getText('file_file_utils', 'must_choose_one'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var browse = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'browse'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var local_file = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'local_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var scp_ftp_files = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'scp_ftp_files'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var upload_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var add_file_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var add_change_log_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var view_change_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'view_change'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script .= "var release_mode = '" . $hp->purify($is_update ? 'edition' : 'creation', CODENDI_PURIFIER_JS_QUOTE) . "';";
 
     if ($is_update) {
         $pm  = PermissionsManager::instance();
@@ -421,8 +420,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         $script .= "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'default_permissions'), CODENDI_PURIFIER_JS_QUOTE) . " ';";
     }
     $GLOBALS['Response']->includeFooterJavascriptSnippet($script);
-    //set variables for news template
-    $relname = $GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'relname');
+
     if (! $is_update) {
         echo '<p>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'contain_multiple_files')) . '</p>';
     }
@@ -470,7 +468,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                             TYPE="TEXT"
                             id="release_name"
                             name="release[name]"
-                            onBlur="update_news()"
                             data-test="release-name"
                             value="<?php echo $hp->purify($release->getName()); ?>"
                     >
@@ -712,53 +709,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TR>
             <?php
 
-            $is_user_allowed_to_send_news = user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1');
-            if ($project->usesService(Service::NEWS) && $is_user_allowed_to_send_news) {
-                echo '
-            <TR><TD><FIELDSET><LEGEND>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_news')) . '</LEGEND>
-                <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
-                    <TR>
-                        <TD VALIGN="TOP">
-                            <B> ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'submit_news')) . ' :</B>
-                        </TD>
-                        <TD>
-                            <INPUT ID="submit_news" TYPE="CHECKBOX" NAME="release_submit_news" VALUE="1">
-
-                        </TD>
-                    </TR>
-                    <TR id="tr_subject">
-                        <TD VALIGN="TOP" ALIGN="RIGHT">
-                            <B> ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'subject')) . ' :</B>
-                        </TD>
-                        <TD>
-                            <INPUT TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE=" ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'file_news_subject', $relname)) . '" SIZE="40" MAXLENGTH="60">
-                        </TD>
-                    </TR>
-                    <TR id="tr_details">
-                        <TD VALIGN="TOP" ALIGN="RIGHT">
-                            <B> ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'details')) . ' :</B>
-                        </TD>
-                        <TD>
-                            <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'file_news_details', [$relname, $url_news])) . ' </TEXTAREA>
-                        </TD>
-                    </TR>
-                    <TR id="tr_public">
-                        <TD ROWSPAN=2 VALIGN="TOP" ALIGN="RIGHT">
-                            <B> ' . $GLOBALS['Language']->getText('news_submit', 'news_privacy') . ' :</B>
-                        </TD>
-                        <TD>
-                            <INPUT TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED>' . $GLOBALS['Language']->getText('news_submit', 'public_news') . '
-                        </TD>
-                    </TR >
-                    <TR id="tr_private">
-                        <TD>
-                            <INPUT TYPE="RADIO" ID="privatenews" NAME="private_news" VALUE="1">' . $GLOBALS['Language']->getText('news_submit', 'private_news') . '
-                        </TD>
-                    </TR></DIV>
-                </TABLE></FIELDSET>
-            </TD></TR>';
-            }
-
             $fmmf  = new FileModuleMonitorFactory();
             $count = count($fmmf->getFilesModuleMonitorFromDb($release->getPackageId()));
             if ($count > 0) {
@@ -903,30 +853,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $ftp_reference_md5 = $request->get('ftp_reference_md5');
     } else {
         $ftp_reference_md5 = [];
-    }
-
-    if ($request->valid(new Valid_String('release_news_subject'))) {
-        $release_news_subject = $request->get('release_news_subject');
-    } else {
-        $release_news_subject = '';
-    }
-
-    if ($request->valid(new Valid_Text('release_news_details'))) {
-        $release_news_details = $request->get('release_news_details');
-    } else {
-        $release_news_details = '';
-    }
-
-    if ($request->valid(new Valid_WhiteList('private_news', [0, 1]))) {
-        $private_news = $request->get('private_news');
-    } else {
-        $private_news = 0;
-    }
-
-    if ($project->usesService(Service::NEWS) && $request->valid(new Valid_WhiteList('release_submit_news', [0, 1]))) {
-        $release_submit_news = (int) $request->get('release_submit_news');
-    } else {
-        $release_submit_news = 0;
     }
 
     if ($request->valid(new Valid_WhiteList('notification', [0, 1]))) {
@@ -1111,12 +1037,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             if (! $return_code) {
                 $error[] = $GLOBALS['Language']->getText('file_admin_editpackages', 'perm_update_err');
                 $error[] = $feedbacks;
-            }
-
-            //submit news if requested
-            if ($release_id && user_ismember($group_id, 'A') && $release_submit_news) {
-                require_once __DIR__ . '/../news/news_utils.php';
-                news_submit($group_id, $release_news_subject, $release_news_details, $private_news, false);
             }
 
             // Send notification
