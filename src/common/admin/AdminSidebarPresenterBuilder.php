@@ -22,8 +22,6 @@ namespace Tuleap\Admin;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
-use Tuleap\News\Admin\AdminNewsDao;
-use Tuleap\News\Admin\NewsRetriever;
 use User_UserStatusManager;
 use UserManager;
 use PFUser;
@@ -33,19 +31,9 @@ use EventManager;
 
 class AdminSidebarPresenterBuilder
 {
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
-    /** @var NewsRetriever */
-    private $news_manager;
+    private UserManager $user_manager;
+    private ProjectManager $project_manager;
+    private EventDispatcherInterface $event_dispatcher;
     private InviteBuddyConfiguration $invitation_config;
 
     public function __construct()
@@ -53,7 +41,6 @@ class AdminSidebarPresenterBuilder
         $this->user_manager      = UserManager::instance();
         $this->project_manager   = ProjectManager::instance();
         $this->event_dispatcher  = EventManager::instance();
-        $this->news_manager      = new NewsRetriever(new AdminNewsDao());
         $this->invitation_config = new InviteBuddyConfiguration($this->event_dispatcher);
     }
 
@@ -66,7 +53,6 @@ class AdminSidebarPresenterBuilder
             $this->validatedUsersCount(),
             $this->allProjectsCount(),
             $this->pendingProjectsCount(),
-            $this->pendingNewsCount(),
             $this->getPlugins(),
             $this->areInvitationsEnabled(),
         );
@@ -116,11 +102,6 @@ class AdminSidebarPresenterBuilder
     private function pendingProjectsCount()
     {
         return $this->project_manager->countProjectsByStatus(Project::STATUS_PENDING);
-    }
-
-    private function pendingNewsCount()
-    {
-        return $this->news_manager->countPendingNews();
     }
 
     private function areInvitationsEnabled(): bool

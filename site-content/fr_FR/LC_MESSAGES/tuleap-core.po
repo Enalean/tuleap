@@ -2153,9 +2153,6 @@ msgstr "Nouvel utilisateur"
 msgid "News"
 msgstr "Annonces"
 
-msgid "News approval"
-msgstr "Approbation des annonces"
-
 msgid "Next Messages"
 msgstr "Messages suivants"
 
