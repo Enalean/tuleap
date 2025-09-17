@@ -248,7 +248,6 @@ final readonly class CrossTrackerArtifactQueryFactory
      * @throws MissingFromException
      * @throws OrderByIsInvalidException
      * @throws SearchablesAreInvalidException
-     * @throws SearchablesDoNotExistException
      * @throws SelectLimitExceededException
      * @throws SelectablesAreInvalidException
      * @throws SelectablesDoNotExistException
@@ -284,7 +283,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         }
         $this->instrumentation->updateTrackerCount(count($trackers));
 
-        $this->validateExpertQuery($query, $current_user, $trackers);
+        $this->validateArtifactLinks($query, $current_user, $trackers);
         if ($query->parsed_query->getOrderBy() !== null) {
             $this->instrumentation->updateOrderByUsage();
         }
@@ -359,6 +358,31 @@ final readonly class CrossTrackerArtifactQueryFactory
     ): void {
         $expert_query = $query->getQuery();
         $this->expert_query_validator->validateExpertQuery(
+            $expert_query,
+            new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
+            new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
+            new InvalidOrderByBuilder($this->field_checker, $this->metadata_checker, $trackers, $current_user),
+        );
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @throws LimitSizeIsExceededException
+     * @throws OrderByIsInvalidException
+     * @throws SearchablesAreInvalidException
+     * @throws SelectLimitExceededException
+     * @throws SelectablesAreInvalidException
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesMustBeUniqueException
+     * @throws SyntaxError
+     */
+    private function validateArtifactLinks(
+        CrossTrackerQuery $query,
+        PFUser $current_user,
+        array $trackers,
+    ): void {
+        $expert_query = $query->getQuery();
+        $this->expert_query_validator->validateLinks(
             $expert_query,
             new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
