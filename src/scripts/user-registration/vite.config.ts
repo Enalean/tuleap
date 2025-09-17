@@ -18,26 +18,15 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
-import { viteExternalsPlugin } from "vite-plugin-externals";
+import * as path from "node:path";
 
 export default vite.defineAppConfig(
+    { plugin_name: "core", sub_app_name: "user-registration" },
     {
-        plugin_name: "core",
-        sub_app_name: "user-registration",
-    },
-    {
-        plugins: [viteExternalsPlugin({ tlp: "tlp" })],
         build: {
             rollupOptions: {
                 input: {
                     register: path.resolve(__dirname, "src/index.ts"),
-                },
-                external: ["tlp"],
-                output: {
-                    globals: {
-                        tlp: "tlp",
-                    },
                 },
             },
         },
