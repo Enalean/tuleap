@@ -60,6 +60,7 @@ use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
+use Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField;
 use Tuleap\Tracker\FormElement\StaticField\Separator\SeparatorStaticField;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\Tracker;
@@ -148,7 +149,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::CONTAINER_COLUMN_TYPE   => ColumnContainer::class,
     ];
     protected $staticfield_classnames = [
-        'linebreak'      => Tracker_FormElement_StaticField_LineBreak::class,
+        'linebreak'      => LineBreakStaticField::class,
         'separator'      => SeparatorStaticField::class,
         'staticrichtext' => Tracker_FormElement_StaticField_RichText::class,
     ];
