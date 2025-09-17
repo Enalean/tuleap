@@ -18,17 +18,8 @@
  */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-const BabelPresetEnv = require("@babel/preset-env").default;
+import babel_jest from "babel-jest";
+import babel_config from "./babel.config";
 
-module.exports = {
-    presets: [
-        [
-            BabelPresetEnv,
-            {
-                targets: {
-                    node: "current",
-                },
-            },
-        ],
-    ],
-};
+const transformer: unknown = babel_jest.createTransformer(babel_config);
+export default transformer;
