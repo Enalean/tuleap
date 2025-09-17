@@ -33,7 +33,6 @@
         v-bind:tql_query="tql_query"
         v-bind:parent_element="parent_element"
         v-bind:parent_caret="parent_caret"
-        v-bind:direction="direction"
         v-bind:reverse_links_count="reverse_links_count"
         v-bind:ancestors="ancestors"
     />
@@ -42,11 +41,7 @@
 <script setup lang="ts">
 import ArtifactRows from "./ArtifactRows.vue";
 import ArtifactLinkRowSkeleton from "./skeleton/ArtifactLinkRowSkeleton.vue";
-import type {
-    ArtifactLinkDirection,
-    ArtifactRow,
-    ArtifactsTable,
-} from "../../domain/ArtifactsTable";
+import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 
 defineProps<{
     is_loading: boolean;
@@ -58,7 +53,6 @@ defineProps<{
     expected_number_of_links: number;
     parent_element: HTMLElement;
     parent_caret: HTMLElement;
-    direction: ArtifactLinkDirection;
     reverse_links_count: number;
     ancestors: number[];
 }>();

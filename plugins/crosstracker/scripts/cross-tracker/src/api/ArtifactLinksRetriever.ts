@@ -23,6 +23,7 @@ import { decodeJSON, getResponse, uri, getAllJSON } from "@tuleap/fetch-result";
 import type { ArtifactsTableWithTotal } from "../domain/RetrieveArtifactsTable";
 import type { RetrieveArtifactLinks } from "../domain/RetrieveArtifactLinks";
 import type { ArtifactsTable } from "../domain/ArtifactsTable";
+import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../domain/ArtifactsTable";
 import type { SelectableQueryContentRepresentation } from "./cross-tracker-rest-api-types";
 import type { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 
@@ -48,7 +49,10 @@ export const ArtifactLinksRetriever = (
                 return decodeJSON<SelectableQueryContentRepresentation>(response).map(
                     (query_content) => {
                         return {
-                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
+                            table: table_builder.mapQueryContentToArtifactsTable(
+                                query_content,
+                                FORWARD_DIRECTION,
+                            ),
                             total,
                         };
                     },
@@ -72,7 +76,10 @@ export const ArtifactLinksRetriever = (
                 return decodeJSON<SelectableQueryContentRepresentation>(response).map(
                     (query_content) => {
                         return {
-                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
+                            table: table_builder.mapQueryContentToArtifactsTable(
+                                query_content,
+                                REVERSE_DIRECTION,
+                            ),
                             total,
                         };
                     },
@@ -96,7 +103,7 @@ export const ArtifactLinksRetriever = (
                 },
             ).map((query_content) => {
                 return query_content.map((table) =>
-                    table_builder.mapQueryContentToArtifactsTable(table),
+                    table_builder.mapQueryContentToArtifactsTable(table, FORWARD_DIRECTION),
                 );
             });
         },
@@ -117,7 +124,7 @@ export const ArtifactLinksRetriever = (
                 },
             ).map((query_content) => {
                 return query_content.map((table) =>
-                    table_builder.mapQueryContentToArtifactsTable(table),
+                    table_builder.mapQueryContentToArtifactsTable(table, REVERSE_DIRECTION),
                 );
             });
         },

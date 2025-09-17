@@ -32,7 +32,7 @@
             v-bind:is_last="is_last"
             v-bind:parent_element="parent_element"
             v-bind:parent_caret="parent_caret"
-            v-bind:direction="direction"
+            v-bind:direction="row.direction"
             v-bind:reverse_links_count="reverse_links_count"
         />
     </div>
@@ -49,7 +49,6 @@
             v-bind:tql_query="tql_query"
             v-bind:parent_element="current_element_ref"
             v-bind:parent_caret="current_caret_ref"
-            v-bind:direction="artifact_link.direction"
             v-bind:reverse_links_count="reverse.artifact_links.length"
             v-bind:ancestors="[...ancestors, row.id]"
         />
@@ -61,14 +60,9 @@
 import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
-import type {
-    ArtifactLinkDirection,
-    ArtifactRow,
-    ArtifactsTable,
-} from "../../domain/ArtifactsTable";
+import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../api/ArtifactLinksRetriever";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
-import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import LoadAllButton from "../feedback/LoadAllButton.vue";
 import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
@@ -80,7 +74,6 @@ interface ArtifactLinksFetchStatus {
     is_loading: boolean;
     artifact_links: ReadonlyArray<ArtifactRow>;
     expected_number_of_links: number;
-    direction: ArtifactLinkDirection;
 }
 
 const props = defineProps<{
@@ -91,7 +84,6 @@ const props = defineProps<{
     is_last: boolean;
     parent_element: HTMLElement | undefined;
     parent_caret: HTMLElement | undefined;
-    direction: ArtifactLinkDirection | undefined;
     reverse_links_count: number | undefined;
     ancestors: number[];
 }>();
@@ -117,7 +109,6 @@ const forward = computed((): ArtifactLinksFetchStatus => {
         is_loading: are_forward_links_loading.value,
         artifact_links: forward_links.value,
         expected_number_of_links: props.row.expected_number_of_forward_links,
-        direction: FORWARD_DIRECTION,
     };
 });
 
@@ -126,7 +117,6 @@ const reverse = computed((): ArtifactLinksFetchStatus => {
         is_loading: are_reverse_links_loading.value,
         artifact_links: reverse_links.value,
         expected_number_of_links: props.row.expected_number_of_reverse_links,
-        direction: REVERSE_DIRECTION,
     };
 });
 

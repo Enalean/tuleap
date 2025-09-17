@@ -37,6 +37,7 @@ import {
     DATE_CELL,
     FORWARD_DIRECTION,
     LINK_TYPE_CELL,
+    NO_DIRECTION,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
@@ -98,6 +99,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns).toHaveLength(3);
@@ -157,6 +159,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(date_column)).toBe(true);
@@ -202,6 +205,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [numeric_column]: { value: null } }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(numeric_column)).toBe(true);
@@ -238,6 +242,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [text_column]: { value: "" } }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(text_column)).toBe(true);
@@ -280,6 +285,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [user_column]: second_user }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(user_column)).toBe(true);
@@ -323,6 +329,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(list_column)).toBe(true);
@@ -391,6 +398,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [list_column]: { value: [] } }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(list_column)).toBe(true);
@@ -449,6 +457,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(list_column)).toBe(true);
@@ -489,6 +498,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [project_column]: second_project }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(project_column)).toBe(true);
@@ -522,6 +532,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [tracker_column]: second_tracker }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(tracker_column)).toBe(true);
@@ -565,6 +576,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [title_column]: second_title }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(title_column)).toBe(true);
@@ -614,6 +626,7 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
+                NO_DIRECTION,
             );
 
             expect(table.columns.has(link_type_column)).toBe(true);
@@ -640,6 +653,7 @@ describe(`ArtifactsTableBuilder`, () => {
                     [{ type: "unsupported", name: "wacken" }],
                     [ArtifactRepresentationStub.build({ wacken: { value: "frightfulness" } })],
                 ),
+                NO_DIRECTION,
             );
             expect(table.columns).toHaveLength(1);
             expect(table.columns.has(ARTIFACT_COLUMN_NAME)).toBe(true);
@@ -672,26 +686,33 @@ describe(`ArtifactsTableBuilder`, () => {
                             [{ type: selected_type, name: "makeress" }],
                             [ArtifactRepresentationStub.build({ makeress: representation })],
                         ),
+                        NO_DIRECTION,
                     ),
                 ).toThrow();
             },
         );
 
         it(`allows an empty query so that we can show an empty state screen`, () => {
-            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable({
-                selected: [],
-                artifacts: [],
-            });
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                {
+                    selected: [],
+                    artifacts: [],
+                },
+                NO_DIRECTION,
+            );
             expect(table.columns).toHaveLength(0);
             expect(table.rows).toHaveLength(0);
         });
 
         it(`when the artifact value does not match the @artifact representation, it will throw an error`, () => {
             expect(() =>
-                ArtifactsTableBuilder().mapQueryContentToArtifactsTable({
-                    selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }],
-                    artifacts: [{ [ARTIFACT_COLUMN_NAME]: { uri_is_missing: true } }],
-                }),
+                ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                    {
+                        selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }],
+                        artifacts: [{ [ARTIFACT_COLUMN_NAME]: { uri_is_missing: true } }],
+                    },
+                    NO_DIRECTION,
+                ),
             ).toThrow();
         });
     });

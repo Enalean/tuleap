@@ -18,6 +18,7 @@
  */
 
 import type { ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
+import { NO_DIRECTION } from "../../src/domain/ArtifactsTable";
 import { v4 as uuidv4 } from "uuid";
 
 export class ArtifactRowBuilder {
@@ -50,6 +51,7 @@ export class ArtifactRowBuilder {
             expected_number_of_reverse_links,
             uri: "/plugins/tracker/?aid=698",
             cells: new Map(),
+            direction: NO_DIRECTION,
         };
     }
 
@@ -58,6 +60,7 @@ export class ArtifactRowBuilder {
             uuid: uuidv4(),
             id: this.#id,
             ...this.#row,
+            direction: NO_DIRECTION,
         };
     }
 }

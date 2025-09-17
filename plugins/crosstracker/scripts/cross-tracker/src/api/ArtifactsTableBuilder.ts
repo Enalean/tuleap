@@ -22,20 +22,6 @@ import type { Result } from "neverthrow";
 import { err, ok } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
-import {
-    LINK_TYPE_SELECTABLE_TYPE,
-    ARTIFACT_SELECTABLE_TYPE,
-    DATE_SELECTABLE_TYPE,
-    NUMERIC_SELECTABLE_TYPE,
-    PRETTY_TITLE_SELECTABLE_TYPE,
-    PROJECT_SELECTABLE_TYPE,
-    STATIC_LIST_SELECTABLE_TYPE,
-    TEXT_SELECTABLE_TYPE,
-    TRACKER_SELECTABLE_TYPE,
-    USER_GROUP_LIST_SELECTABLE_TYPE,
-    USER_LIST_SELECTABLE_TYPE,
-    USER_SELECTABLE_TYPE,
-} from "./cross-tracker-rest-api-types";
 import type {
     ArtifactRepresentation,
     ArtifactSelectable,
@@ -55,10 +41,30 @@ import type {
     UserListSelectableRepresentation,
     UserSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
-import type { ArtifactRow, ArtifactsTable, Cell, UserCellValue } from "../domain/ArtifactsTable";
 import {
-    LINK_TYPE_CELL,
+    ARTIFACT_SELECTABLE_TYPE,
+    DATE_SELECTABLE_TYPE,
+    LINK_TYPE_SELECTABLE_TYPE,
+    NUMERIC_SELECTABLE_TYPE,
+    PRETTY_TITLE_SELECTABLE_TYPE,
+    PROJECT_SELECTABLE_TYPE,
+    STATIC_LIST_SELECTABLE_TYPE,
+    TEXT_SELECTABLE_TYPE,
+    TRACKER_SELECTABLE_TYPE,
+    USER_GROUP_LIST_SELECTABLE_TYPE,
+    USER_LIST_SELECTABLE_TYPE,
+    USER_SELECTABLE_TYPE,
+} from "./cross-tracker-rest-api-types";
+import type {
+    ArtifactLinkDirection,
+    ArtifactRow,
+    ArtifactsTable,
+    Cell,
+    UserCellValue,
+} from "../domain/ArtifactsTable";
+import {
     DATE_CELL,
+    LINK_TYPE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
@@ -73,6 +79,7 @@ import {
 export type ArtifactsTableBuilder = {
     mapQueryContentToArtifactsTable(
         query_content: SelectableQueryContentRepresentation,
+        direction: ArtifactLinkDirection,
     ): ArtifactsTable;
 };
 
@@ -295,7 +302,10 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
 
 export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
     return {
-        mapQueryContentToArtifactsTable(query_content): ArtifactsTable {
+        mapQueryContentToArtifactsTable(
+            query_content,
+            direction: ArtifactLinkDirection,
+        ): ArtifactsTable {
             const initial_table: ArtifactsTable = {
                 columns: new Set(),
                 rows: [],
@@ -321,6 +331,7 @@ export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
                         expected_number_of_reverse_links: number_of_reverse_link,
                         uri: artifact_uri,
                         cells: new Map<string, Cell>(),
+                        direction,
                     };
                     for (const selectable of query_content.selected) {
                         // Filter out unsupported selectable

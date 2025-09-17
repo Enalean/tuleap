@@ -34,6 +34,7 @@ export const PRETTY_TITLE_CELL = "pretty_title";
 export const LINK_TYPE_CELL = "link_type";
 export const FORWARD_DIRECTION = "forward";
 export const REVERSE_DIRECTION = "reverse";
+export const NO_DIRECTION = "no-direction";
 
 type DateCell = {
     readonly type: typeof DATE_CELL;
@@ -127,6 +128,7 @@ export type ArtifactRow = {
     readonly cells: Map<ColumnName, Cell>;
     readonly expected_number_of_forward_links: number;
     readonly expected_number_of_reverse_links: number;
+    readonly direction: ArtifactLinkDirection;
 };
 
 export type ArtifactsTable = {
@@ -134,4 +136,7 @@ export type ArtifactsTable = {
     readonly rows: ReadonlyArray<ArtifactRow>;
 };
 
-export type ArtifactLinkDirection = typeof FORWARD_DIRECTION | typeof REVERSE_DIRECTION;
+export type ArtifactLinkDirection =
+    | typeof FORWARD_DIRECTION
+    | typeof REVERSE_DIRECTION
+    | typeof NO_DIRECTION;
