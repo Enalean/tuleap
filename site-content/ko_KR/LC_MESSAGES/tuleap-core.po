@@ -2068,9 +2068,6 @@ msgstr "신규 사용자"
 msgid "News"
 msgstr "뉴스"
 
-msgid "News approval"
-msgstr "뉴스 승인"
-
 msgid "Next Messages"
 msgstr "다음 메시지"
 

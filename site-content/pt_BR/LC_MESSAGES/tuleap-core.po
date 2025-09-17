@@ -2115,9 +2115,6 @@ msgstr "Novo usuário"
 msgid "News"
 msgstr "Notícias"
 
-msgid "News approval"
-msgstr "Aprovação de notícias"
-
 msgid "Next Messages"
 msgstr "Mensagens seguintes"
 

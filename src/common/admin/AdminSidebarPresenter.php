@@ -28,7 +28,6 @@ class AdminSidebarPresenter
     public $validated_users_count;
     public $all_projects_count;
     public $pending_projects_count;
-    public $ppending_news_count;
     public $are_trove_categories_enabled;
     public $plugins;
 
@@ -53,7 +52,6 @@ class AdminSidebarPresenter
 
     public $utils_section_title;
     public $utils_nav_system_events;
-    public $utils_nav_news;
     public $utils_nav_mass_mail;
     public $links_nav_doc;
 
@@ -71,7 +69,6 @@ class AdminSidebarPresenter
         $validated_users_count,
         $all_projects_count,
         $pending_projects_count,
-        $pending_news_count,
         $plugins,
         public bool $has_invitations,
     ) {
@@ -81,7 +78,6 @@ class AdminSidebarPresenter
         $this->validated_users_count  = $validated_users_count;
         $this->all_projects_count     = $all_projects_count;
         $this->pending_projects_count = $pending_projects_count;
-        $this->pending_news_count     = $pending_news_count;
         $this->plugins                = $plugins;
 
         $this->users_section_title             = _('Users');
@@ -108,7 +104,6 @@ class AdminSidebarPresenter
 
         $this->utils_section_title     = _('Global utils');
         $this->utils_nav_system_events = _('System events');
-        $this->utils_nav_news          = _('News approval');
         $this->utils_nav_mass_mail     = _('Mass emailing');
 
         $this->links_nav_doc = _('Doc');
@@ -130,10 +125,5 @@ class AdminSidebarPresenter
     public function isTherePendingProjects()
     {
         return $this->pending_projects_count > 0;
-    }
-
-    public function isTherePendingNews()
-    {
-        return $this->pending_news_count > 0;
     }
 }
