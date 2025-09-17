@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Psl\Encoding\Exception\ExceptionInterface;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Tracker\Artifact\Attachment\InvalidBase64ContentChunkException;
 use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
 use Tuleap\Tracker\Artifact\Attachment\PaginatedTemporaryFiles;
 use Tuleap\User\RetrieveUserById;
@@ -35,11 +37,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
     private $dao;
 
     /**
-     * @var System_Command
-     */
-    private $system;
-
-    /**
      * @var int
      */
     private $retention_delay_in_days;
@@ -53,12 +50,10 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
     public function __construct(
         RetrieveUserById $user_manager,
         Tracker_Artifact_Attachment_TemporaryFileManagerDao $dao,
-        System_Command $system,
         $retention_delay,
         DBTransactionExecutor $transaction_executor,
     ) {
         $this->dao                     = $dao;
-        $this->system                  = $system;
         $this->retention_delay_in_days = $retention_delay;
         $this->user_manager            = $user_manager;
         $this->transaction_executor    = $transaction_executor;
@@ -92,6 +87,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
      *
      * @psalm-taint-escape shell
      * @psalm-taint-escape text
+     * @psalm-return non-empty-string
      */
     public function getPath(PFUser $user, $attachment_name): string
     {
@@ -99,7 +95,9 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
         if (strpos($attachment_name, DIRECTORY_SEPARATOR) !== false) {
             throw new \RuntimeException('$attachment_name is not expected to contain a directory separator, got ' . $attachment_name);
         }
-        return ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix($user) . $attachment_name;
+        $path = ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix($user) . $attachment_name;
+        assert($path !== '');
+        return $path;
     }
 
     /**
@@ -122,9 +120,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
      */
     public function save(PFUser $user, $name, $description, $mimetype)
     {
-        $chunk_size = 0;
-        $this->checkThatChunkSizeIsNotOverTheQuota($user, $chunk_size);
-
+        $this->checkThatChunkSizeIsNotOverTheQuota($user, '');
         $tempname = $this->getUniqueFileName($user);
 
         $temporary_file = $this->transaction_executor->execute(function () use ($user, $name, $description, $mimetype, $tempname) {
@@ -174,18 +170,16 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
     /**
      * Append some content (base64 encoded) to the file
      *
-     * @param String $content
-     * @param int $offset
-     *
-     * @return bool
      * @throws Tracker_Artifact_Attachment_InvalidPathException
      * @throws Tracker_Artifact_Attachment_InvalidOffsetException
+     * @throws Tracker_Artifact_Attachment_ChunkTooBigException
+     * @throws Tuleap\Tracker\Artifact\Attachment\QuotaExceededException
      */
-    public function appendChunk($content, Tracker_Artifact_Attachment_TemporaryFile $file, $offset)
+    public function appendChunk(string $content, Tracker_Artifact_Attachment_TemporaryFile $file, int $offset): bool
     {
         $current_offset = $file->getCurrentChunkOffset();
 
-        if ($current_offset + 1 !== (int) $offset) {
+        if ($current_offset + 1 !== $offset) {
             throw new Tracker_Artifact_Attachment_InvalidOffsetException();
         }
 
@@ -194,14 +188,21 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
             throw new Tracker_Artifact_Attachment_InvalidPathException('Invalid temporary file path');
         }
 
-        $this->checkThatChunkSizeIsNotOverTheQuota($user, $content);
-        $path          = $this->getPath($user, $file->getTemporaryName());
-        $bytes_written = file_put_contents($path, base64_decode($content), FILE_APPEND);
+        try {
+            $decoded_content = \Psl\Encoding\Base64\decode($content);
+        } catch (ExceptionInterface $ex) {
+            throw new InvalidBase64ContentChunkException($ex->getMessage(), $ex->getCode(), $ex);
+        }
 
-        $size = (int) implode('', $this->system->exec('stat -c %s ' . escapeshellarg($path)));
+        $this->validateChunkSize($user, $decoded_content);
+
+        $path = $this->getPath($user, $file->getTemporaryName());
+        \Psl\File\write($path, $decoded_content, \Psl\File\WriteMode::Append);
+
+        $size = \Psl\Filesystem\file_size($path);
         $file->setSize($size);
 
-        return $bytes_written && $this->dao->updateFileInfo($file->getId(), $offset, $_SERVER['REQUEST_TIME'], $size);
+        return $this->dao->updateFileInfo($file->getId(), $offset, $_SERVER['REQUEST_TIME'], $size);
     }
 
     public function getPaginatedUserTemporaryFiles(PFUser $user, $offset, $limit): PaginatedTemporaryFiles
@@ -213,14 +214,11 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
         return new PaginatedTemporaryFiles($files, $this->dao->foundRows());
     }
 
-    /**
-     * @return int
-     */
-    public function getDiskUsage(PFUser $user)
+    public function getDiskUsage(PFUser $user): int
     {
         $size = 0;
         foreach (glob($this->getPath($user, '*')) as $file) {
-            $size += (int) implode('', $this->system->exec('stat -c %s ' . escapeshellarg($file)));
+            $size += \Psl\Filesystem\file_size($file);
         }
 
         return $size;
@@ -229,9 +227,9 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
     /**
      * @throws Tuleap\Tracker\Artifact\Attachment\QuotaExceededException
      */
-    private function checkThatChunkSizeIsNotOverTheQuota(PFUser $user, $content)
+    private function checkThatChunkSizeIsNotOverTheQuota(PFUser $user, string $decoded_content): void
     {
-        $chunk_size = strlen(base64_decode($content));
+        $chunk_size = strlen($decoded_content);
         if ($this->getDiskUsage($user) + $chunk_size > $this->getQuota()) {
             throw new QuotaExceededException();
         }
@@ -244,16 +242,17 @@ class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Clas
 
     /**
      * @throws Tracker_Artifact_Attachment_ChunkTooBigException
+     * @throws Tuleap\Tracker\Artifact\Attachment\QuotaExceededException
      */
-    public function validateChunkSize(PFUser $user, $content)
+    private function validateChunkSize(PFUser $user, string $decoded_content): void
     {
-        $chunk_size = strlen(base64_decode($content));
+        $chunk_size = strlen($decoded_content);
 
         if ($chunk_size > $this->getMaximumChunkSize()) {
             throw new Tracker_Artifact_Attachment_ChunkTooBigException();
         }
 
-        $this->checkThatChunkSizeIsNotOverTheQuota($user, $content);
+        $this->checkThatChunkSizeIsNotOverTheQuota($user, $decoded_content);
     }
 
     /**

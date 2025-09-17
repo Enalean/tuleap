@@ -29,7 +29,6 @@ use ForgeConfig;
 use Override;
 use PFUser;
 use Rule_File;
-use System_Command;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
 use Tracker_Artifact_Changeset;
@@ -1052,7 +1051,6 @@ class FilesField extends TrackerField
         return new Tracker_Artifact_Attachment_TemporaryFileManager(
             $this->getUserManager(),
             new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
-            new System_Command(),
             ForgeConfig::get('sys_file_deletion_delay'),
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection())
         );
