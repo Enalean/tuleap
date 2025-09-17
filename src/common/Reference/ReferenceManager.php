@@ -78,7 +78,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
     public const REFERENCE_NATURE_RELEASE      = 'release';
     public const REFERENCE_NATURE_FORUM        = 'forum';
     public const REFERENCE_NATURE_FORUMMESSAGE = 'forum_message';
-    public const REFERENCE_NATURE_NEWS         = 'news';
     public const REFERENCE_NATURE_WIKIPAGE     = 'wiki_page';
     public const REFERENCE_NATURE_OTHER        = 'other';
 
@@ -176,16 +175,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
                 'msg',
                 'fas ' . Service::ICONS[Service::FORUM],
                 $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key'),
-                true
-            )
-        );
-
-        $natures_collection->addNature(
-            self::REFERENCE_NATURE_NEWS,
-            new Nature(
-                'news',
-                'fas ' . Service::ICONS[Service::NEWS],
-                $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key'),
                 true
             )
         );
@@ -1051,15 +1040,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
 
                 if ($message_group_id_row) {
                     $ref_gid = $message_group_id_row['group_id'];
-                }
-
-                break;
-            case self::REFERENCE_NATURE_NEWS:
-                $news_dao          = new NewsBytesDao();
-                $news_group_id_row = $news_dao->searchByForumId($value)->getRow();
-
-                if ($news_group_id_row) {
-                    $ref_gid = $news_group_id_row['group_id'];
                 }
 
                 break;

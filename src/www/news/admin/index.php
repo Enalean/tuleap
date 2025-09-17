@@ -92,11 +92,6 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
                         news_insert_permissions($forum_id, $group_id);
                     }
                 }
-
-                // extract cross references
-                $reference_manager = ReferenceManager::instance();
-                $reference_manager->extractCrossRef($request->get('summary'), $forum_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
-                $reference_manager->extractCrossRef($request->get('details'), $forum_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
             }
         }
     }

@@ -82,19 +82,4 @@ class NewsDao extends \Tuleap\DB\DataAccessObject
 
         return $this->getDB()->safeQuery($sql, array_merge($where_statement->values(), [$limit]));
     }
-
-    /**
-     * @psalm-return array{id:int, group_id:int, submitted_by:int, is_approved:int, date:int, forum_id:int, summary: string, details: string}|null
-     */
-    public function searchActiveNewsByForumId(int $forum_id): ?array
-    {
-        $sql = '
-            SELECT news_bytes.*
-            FROM forum_group_list, news_bytes
-            WHERE forum_group_list.group_forum_id = ?
-                AND forum_group_list.group_forum_id = news_bytes.forum_id
-                AND news_bytes.is_approved < ?
-        ';
-        return $this->getDB()->row($sql, $forum_id, NewsItem::NEWS_DELETED);
-    }
 }

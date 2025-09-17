@@ -105,13 +105,6 @@ function forum_header(HeaderConfiguration $params)
 				' . $hp->purify(db_result($result, 0, 'details', $group_id), CODENDI_PURIFIER_BASIC);
 
                 echo '<P>';
-
-                $crossref_fact = new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
-                $crossref_fact->fetchDatas();
-                if ($crossref_fact->getNbReferences() > 0) {
-                    echo '<b> ' . $Language->getText('cross_ref_fact_include', 'references') . '</b>';
-                    $crossref_fact->DisplayCrossRefs();
-                }
             }
             echo '</TD><TD VALIGN="TOP" WIDTH="35%">';
             echo $HTML->box1_top(_('Project Latest News'), 0);
