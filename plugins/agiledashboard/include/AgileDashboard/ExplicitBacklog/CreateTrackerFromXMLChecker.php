@@ -28,16 +28,10 @@ use TrackerFromXmlException;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklog;
 use Tuleap\XML\PHPCast;
 
-class CreateTrackerFromXMLChecker
+readonly class CreateTrackerFromXMLChecker
 {
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    public function __construct(ExplicitBacklogDao $explicit_backlog_dao)
+    public function __construct(private ExplicitBacklogDao $explicit_backlog_dao)
     {
-        $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
     /**

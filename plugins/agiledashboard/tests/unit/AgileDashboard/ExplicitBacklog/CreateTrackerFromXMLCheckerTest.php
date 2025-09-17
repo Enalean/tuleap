@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use Override;
 use Project;
 use SimpleXMLElement;
 use TrackerFromXmlException;
@@ -32,8 +33,9 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CreateTrackerFromXMLChecker $checker;
     private Project $project;
-    private ExplicitBacklogDao|\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
+    private ExplicitBacklogDao&\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,7 +49,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotThrowAnExceptionIfNoAddToTopBacklogTagProvided(): void
     {
-        $xml = $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <tracker />
         ');
 
@@ -59,7 +61,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItDoesNotThrowAnExceptionIfAddToTopBacklogTagProvidedAndProjectUsesExplicitTopBacklog()
+    public function testItDoesNotThrowAnExceptionIfAddToTopBacklogTagProvidedAndProjectUsesExplicitTopBacklog(): void
     {
         $xml = $this->buildFullTrackerXML();
 
@@ -75,7 +77,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItThrowsAnExceptionIfAddToTopBacklogTagProvidedAndProjectDoesNotUseExplicitTopBacklog()
+    public function testItThrowsAnExceptionIfAddToTopBacklogTagProvidedAndProjectDoesNotUseExplicitTopBacklog(): void
     {
         $xml = $this->buildFullTrackerXML();
 
@@ -93,7 +95,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItDoesNotThrowAnExceptionIfNoAddToTopBacklogTagProvidedInProjectImport()
+    public function testItDoesNotThrowAnExceptionIfNoAddToTopBacklogTagProvidedInProjectImport(): void
     {
         $xml = $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project />
@@ -104,7 +106,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkTrackersCanBeCreatedInProjectImportContext($xml);
     }
 
-    public function testItDoesNotThrowAnExceptionIfAddToTopBacklogTagProvidedAndImportedProjectWillUseExplicitTopBacklog()
+    public function testItDoesNotThrowAnExceptionIfAddToTopBacklogTagProvidedAndImportedProjectWillUseExplicitTopBacklog(): void
     {
         $xml = $this->buildFullProjectXML();
 
@@ -113,7 +115,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkTrackersCanBeCreatedInProjectImportContext($xml);
     }
 
-    public function testItThrowsAnExceptionIfAddToTopBacklogTagProvidedAndProjectWillNotUseExplicitTopBacklog()
+    public function testItThrowsAnExceptionIfAddToTopBacklogTagProvidedAndProjectWillNotUseExplicitTopBacklog(): void
     {
         $xml = $this->buildFullProjectXMLWithoutExplicit();
 

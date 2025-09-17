@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use Override;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -31,9 +32,10 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private XMLExporter $exporter;
     private Project $project;
-    private ExplicitBacklogDao|\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
-    private ArtifactsInExplicitBacklogDao|\PHPUnit\Framework\MockObject\MockObject $artifacts_in_explicit_backlog_dao;
+    private ExplicitBacklogDao&\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
+    private ArtifactsInExplicitBacklogDao&\PHPUnit\Framework\MockObject\MockObject $artifacts_in_explicit_backlog_dao;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -135,10 +137,17 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $top_backlog_node = $xml->top_backlog;
         $this->assertNotNull($top_backlog_node);
+        $this->assertCount(3, $top_backlog_node->artifact);
 
-        $this->assertEquals('148', $top_backlog_node->artifact[0]['artifact_id']);
-        $this->assertEquals('158', $top_backlog_node->artifact[1]['artifact_id']);
-        $this->assertEquals('152', $top_backlog_node->artifact[2]['artifact_id']);
+        $artifact0 = $top_backlog_node->artifact[0];
+        $artifact1 = $top_backlog_node->artifact[1];
+        $artifact2 = $top_backlog_node->artifact[2];
+        if (! isset($artifact0) || ! isset($artifact1) || ! isset($artifact2)) {
+            throw new \Exception('One of the artifact is not found');
+        }
+        $this->assertEquals('148', $artifact0['artifact_id']);
+        $this->assertEquals('158', $artifact1['artifact_id']);
+        $this->assertEquals('152', $artifact2['artifact_id']);
     }
 
     private function assertExplicitBacklogIsNotUsed(): void

@@ -33,31 +33,13 @@ use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBackl
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\XML\PHPCast;
 
-class XMLImporter
+readonly class XMLImporter
 {
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var TopBacklogElementsToAddChecker
-     */
-    private $top_backlog_elements_to_add_checker;
-
-    /**
-     * @var UnplannedArtifactsAdder
-     */
-    private $unplanned_artifacts_adder;
-
     public function __construct(
-        ExplicitBacklogDao $explicit_backlog_dao,
-        TopBacklogElementsToAddChecker $top_backlog_elements_to_add_checker,
-        UnplannedArtifactsAdder $unplanned_artifacts_adder,
+        private ExplicitBacklogDao $explicit_backlog_dao,
+        private TopBacklogElementsToAddChecker $top_backlog_elements_to_add_checker,
+        private UnplannedArtifactsAdder $unplanned_artifacts_adder,
     ) {
-        $this->explicit_backlog_dao                = $explicit_backlog_dao;
-        $this->top_backlog_elements_to_add_checker = $top_backlog_elements_to_add_checker;
-        $this->unplanned_artifacts_adder           = $unplanned_artifacts_adder;
     }
 
     public function importConfiguration(SimpleXMLElement $xml, Project $project): void

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use Override;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
@@ -46,6 +47,7 @@ final class XMLImporterTest extends TestCase
     private PFUser $user;
     private TestLogger $logger;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -269,18 +271,23 @@ final class XMLImporterTest extends TestCase
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')
             ->with(101)
             ->willReturn(true);
-        $matcher = self::exactly(2);
 
-        $this->unplanned_artifacts_adder->expects($matcher)->method('addArtifactToTopBacklogFromIds')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(225, $parameters[0]);
-                self::assertSame(101, $parameters[1]);
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(226, $parameters[0]);
-                self::assertSame(101, $parameters[1]);
-            }
-        });
+        $expected_calls = [
+            [225, 101],
+            [226, 101],
+        ];
+
+        $this->unplanned_artifacts_adder->expects($this->exactly(2))
+            ->method('addArtifactToTopBacklogFromIds')
+            ->willReturnCallback(
+                function (int $artifact_id, int $project_id) use (&$expected_calls): void {
+                    $expected = array_shift($expected_calls);
+                    self::assertNotNull($expected);
+
+                    self::assertSame($expected[0], $artifact_id);
+                    self::assertSame($expected[1], $project_id);
+                }
+            );
 
         $this->top_backlog_elements_to_add_checker->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 

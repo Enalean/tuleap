@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use Override;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactFactory;
@@ -29,6 +30,7 @@ use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -44,6 +46,7 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
     private Tracker $tracker;
     private PFUser $user;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -119,18 +122,30 @@ final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
 
     private function mockArtifactFactory(): void
     {
-        $matcher = $this->exactly(2);
-        $this->artifact_factory->expects($matcher)->method('getArtifactByIdUserCanView')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame($this->user, $parameters[0]);
-                self::assertSame(142, $parameters[1]);
-                return ArtifactTestBuilder::anArtifact(142)->build();
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame($this->user, $parameters[0]);
-                self::assertSame(148, $parameters[1]);
-                return null;
-            }
-        });
+        $expected_calls = [
+            [
+                'user' => $this->user,
+                'artifact_id' => 142,
+                'return' => ArtifactTestBuilder::anArtifact(142)->build(),
+            ],
+            [
+                'user' => $this->user,
+                'artifact_id' => 148,
+                'return' => null,
+            ],
+        ];
+
+        $this->artifact_factory->expects($this->exactly(2))
+            ->method('getArtifactByIdUserCanView')
+            ->willReturnCallback(
+                function (PFUser $user, int $artifact_id) use (&$expected_calls): ?Artifact {
+                    $expected = array_shift($expected_calls);
+                    self::assertNotNull($expected);
+
+                    self::assertSame($expected['user'], $user);
+                    self::assertSame($expected['artifact_id'], $artifact_id);
+                    return $expected['return'];
+                }
+            );
     }
 }

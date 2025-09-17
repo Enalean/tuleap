@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use Override;
 use Project;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -29,9 +30,10 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private UnplannedCriterionOptionsProvider $provider;
-    private ExplicitBacklogDao|\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
+    private ExplicitBacklogDao&\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
     private Project $project;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

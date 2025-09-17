@@ -27,36 +27,14 @@ use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\Tracker\Tracker;
 
-class UnplannedReportCriterionMatchingIdsRetriever
+readonly class UnplannedReportCriterionMatchingIdsRetriever
 {
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var PlannedArtifactDao
-     */
-    private $planned_artifact_dao;
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
     public function __construct(
-        ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlannedArtifactDao $planned_artifact_dao,
-        Tracker_ArtifactFactory $artifact_factory,
+        private ExplicitBacklogDao $explicit_backlog_dao,
+        private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private PlannedArtifactDao $planned_artifact_dao,
+        private Tracker_ArtifactFactory $artifact_factory,
     ) {
-        $this->explicit_backlog_dao              = $explicit_backlog_dao;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->planned_artifact_dao              = $planned_artifact_dao;
-        $this->artifact_factory                  = $artifact_factory;
     }
 
     /**
