@@ -69,7 +69,6 @@ use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Config\FeatureFlagController;
 use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
 use Tuleap\CookieManager;
-use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
 use Tuleap\CSRF\CSRFSessionKeyCookieStorage;
@@ -128,7 +127,6 @@ use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\CommonMarkInterpreterController;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
-use Tuleap\News\NewsDao;
 use Tuleap\OAuth2ServerCore\OAuth2ServerRoutes;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
 use Tuleap\Password\Administration\PasswordPolicyUpdateController;
@@ -821,11 +819,6 @@ class RouteCollector
     public static function getRssLatestProjects()
     {
         return new LatestProjectController(new LatestProjectDao(), \ProjectManager::instance(), Codendi_HTMLPurifier::instance());
-    }
-
-    public static function getRssLatestNews()
-    {
-        return new LatestNewsController(new NewsDao(), Codendi_HTMLPurifier::instance());
     }
 
     public static function getProjectAdminMembersController(): DispatchableWithRequest
@@ -1691,7 +1684,6 @@ class RouteCollector
         });
 
         $r->get('/export/rss_sfprojects.php', [self::class, 'getRssLatestProjects']);
-        $r->get('/export/rss_sfnews.php', [self::class, 'getRssLatestNews']);
 
         $r->post('/csp-violation', [self::class, 'getCSPViolationReportToController']);
 

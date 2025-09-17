@@ -175,14 +175,6 @@ msgstr ""
 msgid "%s new projects"
 msgstr "Annonces %s"
 
-#, php-format
-msgid "%s news"
-msgstr "Annonces site %s"
-
-#, php-format
-msgid "%s project news highlights"
-msgstr "Annonces phares des projets %s"
-
 msgid "(day/month/year)"
 msgstr "(jour/mois/année)"
 

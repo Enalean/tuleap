@@ -66947,69 +66947,6 @@
       <code><![CDATA[posix_getpwuid(posix_geteuid())['name']]]></code>
     </PossiblyInvalidArrayAccess>
   </file>
-  <file src="src/common/News/ChooseNewsItemController.php">
-    <MissingReturnType>
-      <code><![CDATA[checkAccess]]></code>
-      <code><![CDATA[display]]></code>
-      <code><![CDATA[displayBody]]></code>
-      <code><![CDATA[displayFooter]]></code>
-      <code><![CDATA[getProjectFromRequest]]></code>
-      <code><![CDATA[process]]></code>
-      <code><![CDATA[updatePromotedItems]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/ChooseNewsPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$news_items]]></code>
-      <code><![CDATA[$project_id]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$news_items]]></code>
-      <code><![CDATA[$project_id]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[info_text]]></code>
-      <code><![CDATA[news_items_exist]]></code>
-      <code><![CDATA[news_page_header]]></code>
-      <code><![CDATA[news_row_label]]></code>
-      <code><![CDATA[no_news_items]]></code>
-      <code><![CDATA[promoted_row_label]]></code>
-      <code><![CDATA[update_news_list]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/NewsDao.php">
-    <MissingParamType>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[fetchAll]]></code>
-      <code><![CDATA[getNewsForSitePublicRSSFeed]]></code>
-      <code><![CDATA[getSiteNewsLimit]]></code>
-      <code><![CDATA[updatePromotedItems]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/News/NewsItem.php">
-    <MissingClassConstType>
-      <code><![CDATA[NEWS_DELETED = 4]]></code>
-    </MissingClassConstType>
-    <MissingReturnType>
-      <code><![CDATA[getId]]></code>
-      <code><![CDATA[getSummary]]></code>
-      <code><![CDATA[isDisplayed]]></code>
-    </MissingReturnType>
-    <RedundantCast>
-      <code><![CDATA[(bool) ($this->data['is_approved'] < self::NEWS_DELETED)]]></code>
-    </RedundantCast>
-  </file>
-  <file src="src/common/News/NewsItemDataMapper.php">
-    <MissingParamType>
-      <code><![CDATA[$promoted_ids]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[updatePromotedItems]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Notification/Notification.php">
     <MissingParamType>
       <code><![CDATA[$body_html]]></code>
@@ -75081,7 +75018,6 @@
       <code><![CDATA[getProjectCreationTemplates]]></code>
       <code><![CDATA[getProjectCreationVisibility]]></code>
       <code><![CDATA[getProjectCreationWebhooks]]></code>
-      <code><![CDATA[getRssLatestNews]]></code>
       <code><![CDATA[getRssLatestProjects]]></code>
       <code><![CDATA[getSlash]]></code>
       <code><![CDATA[getUsersName]]></code>
@@ -92320,122 +92256,6 @@
     <UndefinedGlobalVariable>
       <code><![CDATA[$HTML]]></code>
     </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/news/admin/index.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_ei($status)]]></code>
-      <code><![CDATA[db_es($request->get('details'))]]></code>
-      <code><![CDATA[db_es($request->get('summary'))]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($res2)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($qry1)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($res, 0, 'ugroup_id')]]></code>
-      <code><![CDATA[db_result($res1, 0, 'forum_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'summary')]]></code>
-      <code><![CDATA[db_result($result, 0, 'details')]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'submitted_by')]]></code>
-      <code><![CDATA[db_result($result, 0, 'summary')]]></code>
-    </DeprecatedFunction>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$is_private]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$UGROUP_ANONYMOUS]]></code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/news/index.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($result, $j, 'forum_id')]]></code>
-      <code><![CDATA[db_result($result, $j, 'forum_id')]]></code>
-      <code><![CDATA[db_result($result, $j, 'forum_id')]]></code>
-      <code><![CDATA[db_result($result, $j, 'summary')]]></code>
-      <code><![CDATA[db_result($result, $j, 'summary')]]></code>
-    </DeprecatedFunction>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="src/www/news/news_utils.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_ei($promote_news)]]></code>
-      <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code><![CDATA[db_es($details)]]></code>
-      <code><![CDATA[db_es($summary)]]></code>
-      <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_insertid($result)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($result, 0, 'summary')]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$details]]></code>
-      <code><![CDATA[$details]]></code>
-      <code><![CDATA[$details]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$is_private]]></code>
-      <code><![CDATA[$news_bytes_id]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$private_news]]></code>
-      <code><![CDATA[$project]]></code>
-      <code><![CDATA[$promote_news]]></code>
-      <code><![CDATA[$send_news_to]]></code>
-      <code><![CDATA[$summary]]></code>
-      <code><![CDATA[$summary]]></code>
-      <code><![CDATA[$summary]]></code>
-      <code><![CDATA[$ugroups]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[get_news_name_from_forum_id]]></code>
-      <code><![CDATA[news_check_permission]]></code>
-      <code><![CDATA[news_fetch_ugroups]]></code>
-      <code><![CDATA[news_footer]]></code>
-      <code><![CDATA[news_header]]></code>
-      <code><![CDATA[news_insert_permissions]]></code>
-      <code><![CDATA[news_notify_promotion_request]]></code>
-      <code><![CDATA[news_read_permissions]]></code>
-      <code><![CDATA[news_send_to_ugroups]]></code>
-      <code><![CDATA[news_submit]]></code>
-      <code><![CDATA[news_update_permissions]]></code>
-    </MissingReturnType>
   </file>
   <file src="src/www/project/admin/history.php">
     <InvalidArgument>
