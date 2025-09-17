@@ -29,7 +29,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentatio
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveSystemTypePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\v1\TrackerFieldRepresentations\LinkTypeRepresentation;
 
 final readonly class LinkTypeResultBuilder
@@ -72,7 +72,7 @@ final readonly class LinkTypeResultBuilder
 
         $system_type_presenter = $this->type_presenter_factory->getSystemTypeFromShortname($shortname);
 
-        $label = ($link_direction === TypePresenter::FORWARD_LABEL) ? $system_type_presenter?->forward_label : $system_type_presenter?->reverse_label;
+        $label = ($link_direction === LinkDirection::FORWARD->value) ? $system_type_presenter?->forward_label : $system_type_presenter?->reverse_label;
         return $this->buildRepresentationWithLabel($shortname, $link_direction, $label, $uri);
     }
 

@@ -52,7 +52,7 @@ use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
@@ -197,7 +197,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             $limit,
             $offset,
             Option::fromValue($source_artifact_id),
-            Option::fromValue(TypePresenter::FORWARD_LABEL),
+            Option::fromValue(LinkDirection::FORWARD->value),
         );
     }
 
@@ -237,7 +237,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             $limit,
             $offset,
             Option::fromValue($target_artifact_id),
-            Option::fromValue(TypePresenter::REVERSE_LABEL),
+            Option::fromValue(LinkDirection::REVERSE->value),
         );
     }
 

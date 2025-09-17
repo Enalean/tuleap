@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { FORWARD_DIRECTION, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import type { ReadonlyFieldLinkedArtifact } from "@/sections/readonly-fields/ReadonlyFields";
 
 export const LinkedArtifactStub = {
@@ -41,6 +42,10 @@ function build(): ReadonlyFieldLinkedArtifact {
             label: "On going",
             is_open: true,
             color: "",
+        },
+        link_type: {
+            shortname: UNTYPED_LINK,
+            direction: FORWARD_DIRECTION,
         },
     };
 }

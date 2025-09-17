@@ -39,6 +39,8 @@ use Tuleap\REST\RestBase;
 use Tuleap\REST\Tests\API\ProjectsAPIHelper;
 use Tuleap\TestManagement\REST\Tests\API\TestManagementAPIHelper;
 use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\Tests\TrackerRESTHelper;
 use Tuleap\Tracker\REST\Tests\TrackerRESTHelperFactory;
 
@@ -233,7 +235,7 @@ final class ArtidocFieldsTest extends RestBase
                 [
                     'field_id'  => $artifact_links_field_id,
                     'all_links' => [
-                        ['id' => $artifact_to_link_id, 'direction' => 'forward', 'type' => ''],
+                        ['id' => $artifact_to_link_id, 'direction' => 'forward', 'type' => ArtifactLinkField::NO_TYPE],
                     ],
                 ],
             ]
@@ -397,6 +399,10 @@ final class ArtidocFieldsTest extends RestBase
                         'title'             => self::LINKED_ARTIFACT_TITLE,
                         'html_uri'          => '/plugins/tracker/?aid=' . $artifact_to_link_id,
                         'status'            => null,
+                        'link_type' => [
+                            'shortname' => ArtifactLinkField::NO_TYPE,
+                            'direction' => LinkDirection::FORWARD->value,
+                        ],
                     ],
                 ],
             ],

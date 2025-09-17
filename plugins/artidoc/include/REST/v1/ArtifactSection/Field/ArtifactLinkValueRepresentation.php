@@ -38,10 +38,12 @@ final readonly class ArtifactLinkValueRepresentation
     public string $title;
     public string $html_uri;
     public ?ArtifactLinkStatusValueRepresentation $status;
+    public ArtifactLinkTypeRepresentation $link_type;
 
     public function __construct(ArtifactLinkValue $link_value)
     {
-        $this->link_label        = $link_value->link_label;
+        $this->link_label        = $link_value->link_type->link_label;
+        $this->link_type         = new ArtifactLinkTypeRepresentation($link_value->link_type);
         $this->tracker_shortname = $link_value->tracker_shortname;
         $this->tracker_color     = $link_value->tracker_color->value;
         $this->project           = new ArtifactLinkProjectReference($link_value->project);

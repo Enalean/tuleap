@@ -29,7 +29,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\AlphaNumericField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
@@ -210,7 +210,7 @@ class ArtifactRepresentationBuilder
         $offset,
         $limit,
     ) {
-        if ($direction === TypePresenter::REVERSE_LABEL) {
+        if ($direction === LinkDirection::REVERSE->value) {
             $linked_artifacts_ids = $this->nature_dao->getReverseLinkedArtifactIds(
                 $artifact_id->getId(),
                 $nature,

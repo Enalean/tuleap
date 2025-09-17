@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
@@ -36,6 +37,7 @@ use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortname;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
@@ -77,7 +79,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder
             $linked_artifact = $forward_link->getArtifact();
             $linked_tracker  = $linked_artifact->getTracker();
             $links[]         = new ArtifactLinkValue(
-                $this->renameLinkTypes($type_presenter)->forward_label,
+                $this->getForwardLinkPresenter($type_presenter),
                 $linked_tracker->getItemName(),
                 $linked_tracker->getColor(),
                 $this->getLinkProject($linked_tracker->getProject()),
@@ -97,7 +99,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder
             $linked_artifact = $reverse_link->getArtifact();
             $linked_tracker  = $linked_artifact->getTracker();
             $links[]         = new ArtifactLinkValue(
-                $this->renameLinkTypes($type_presenter)->reverse_label,
+                $this->getReverseLinkPresenter($type_presenter),
                 $linked_tracker->getItemName(),
                 $linked_tracker->getColor(),
                 $this->getLinkProject($linked_tracker->getProject()),
@@ -164,21 +166,54 @@ final readonly class ArtifactLinkFieldWithValueBuilder
         );
     }
 
-    private function renameLinkTypes(TypePresenter $presenter): TypePresenter
+    private function getForwardLinkPresenter(TypePresenter $presenter): ArtifactLinkType
     {
         if ($presenter instanceof TypeIsChildPresenter) {
-            $presenter->forward_label = dgettext('tuleap-artidoc', 'is Parent of');
-            $presenter->reverse_label = dgettext('tuleap-artidoc', 'is Child of');
-            return $presenter;
+            return new ArtifactLinkType(
+                dgettext('tuleap-artidoc', 'is Parent of'),
+                $presenter->shortname,
+                LinkDirection::FORWARD->value,
+            );
         }
 
         if ($presenter->shortname === '') {
-            $presenter->forward_label = dgettext('tuleap-artidoc', 'is Linked to');
-            $presenter->reverse_label = dgettext('tuleap-artidoc', 'is Linked to');
-            return $presenter;
+            return new ArtifactLinkType(
+                dgettext('tuleap-artidoc', 'is Linked to'),
+                $presenter->shortname,
+                LinkDirection::FORWARD->value,
+            );
         }
 
-        return $presenter;
+        return new ArtifactLinkType(
+            $presenter->forward_label,
+            $presenter->shortname,
+            LinkDirection::FORWARD->value,
+        );
+    }
+
+    private function getReverseLinkPresenter(TypePresenter $presenter): ArtifactLinkType
+    {
+        if ($presenter instanceof TypeIsChildPresenter) {
+            return new ArtifactLinkType(
+                dgettext('tuleap-artidoc', 'is Child of'),
+                $presenter->shortname,
+                LinkDirection::REVERSE->value,
+            );
+        }
+
+        if ($presenter->shortname === '') {
+            return new ArtifactLinkType(
+                dgettext('tuleap-artidoc', 'is Linked to'),
+                $presenter->shortname,
+                LinkDirection::REVERSE->value,
+            );
+        }
+
+        return new ArtifactLinkType(
+            $presenter->reverse_label,
+            $presenter->shortname,
+            LinkDirection::REVERSE->value,
+        );
     }
 
     private function getLinkProject(\Project $linked_project): ArtifactLinkProject

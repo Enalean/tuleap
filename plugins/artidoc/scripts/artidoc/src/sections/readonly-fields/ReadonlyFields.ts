@@ -20,7 +20,7 @@ import type {
     ConfigurationFieldDisplayType,
     DISPLAY_TYPE_BLOCK,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
-import type { ColorName } from "@tuleap/plugin-tracker-constants";
+import type { ColorName, LinkDirection } from "@tuleap/plugin-tracker-constants";
 
 export const TEXT_FIELD = "text";
 export const USER_GROUP_LIST_FIELD = "user_groups_list";
@@ -88,6 +88,11 @@ export type ReadonlyFieldLinks = Readonly<{
     value: ReadonlyFieldLinkedArtifact[];
 }>;
 
+export type LinkType = {
+    readonly shortname: string;
+    readonly direction: LinkDirection;
+};
+
 export type ReadonlyFieldLinkedArtifact = Readonly<{
     link_label: string;
     tracker_shortname: string;
@@ -97,6 +102,7 @@ export type ReadonlyFieldLinkedArtifact = Readonly<{
     title: string;
     html_uri: string;
     status: LinkedArtifactStatus | null;
+    link_type: LinkType;
 }>;
 
 export type LinkedArtifactStatus = Readonly<{

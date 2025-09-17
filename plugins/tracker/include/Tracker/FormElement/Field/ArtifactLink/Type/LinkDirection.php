@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Tuleap\Color\ColorName;
-use Tuleap\Option\Option;
-
-/**
- * @psalm-immutable
- */
-final readonly class ArtifactLinkValue
+enum LinkDirection: string
 {
-    /**
-     * @param Option<ArtifactLinkStatusValue> $status
-     */
-    public function __construct(
-        public ArtifactLinkType $link_type,
-        public string $tracker_shortname,
-        public ColorName $tracker_color,
-        public ArtifactLinkProject $project,
-        public int $artifact_id,
-        public string $title,
-        public string $html_uri,
-        public Option $status,
-    ) {
-    }
+    case FORWARD = 'forward';
+    case REVERSE = 'reverse';
 }
