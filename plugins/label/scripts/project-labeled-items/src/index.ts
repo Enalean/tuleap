@@ -26,6 +26,7 @@ import { createGettext } from "vue3-gettext";
 import { getAttributeOrThrow } from "@tuleap/dom";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
     const gettext = await initVueGettext(createGettext, (locale) => {
         return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
     });
@@ -39,6 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             labels_id: getAttributeOrThrow(widget, "data-labels-id"),
             project_id: getAttributeOrThrow(widget, "data-project-id"),
         })
+            /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
             .use(gettext)
             .use(VueDOMPurifyHTML, {
                 namedConfigurations: {

@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         const gettext_plugin = await initVueGettext(
+            /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
             createGettext,
             (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
         );
@@ -105,6 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             visible_natures,
         })
             .use(VueDOMPurifyHTML)
+            /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
             .use(gettext_plugin)
             .use(createInitializedStore(initial_root_state, default_timescale))
             .provide(DASHBOARD_ID, dashboard_id)

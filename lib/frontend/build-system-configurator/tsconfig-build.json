@@ -5,7 +5,8 @@
         "outDir": "dist",
         "sourceMap": false,
         "esModuleInterop": true,
-        "allowJs": true
+        "allowJs": true,
+        "declaration": false
     },
     "include": ["src/main.ts", "src/webpack/webpack.d.ts", "src/jest/*.js"]
 }

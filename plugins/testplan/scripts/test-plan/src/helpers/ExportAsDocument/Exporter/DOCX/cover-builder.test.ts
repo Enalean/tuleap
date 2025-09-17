@@ -80,9 +80,8 @@ describe("cover-builder", () => {
             const tree = cover_page[0].prepForXml(context);
 
             const exported_file = context.file.Media.Array[0];
-            expect(Buffer.from(exported_file.stream).toString("base64")).toStrictEqual(
-                one_px_image_as_base64,
-            );
+            const stream = exported_file.stream as Uint8Array;
+            expect(Buffer.from(stream).toString("base64")).toStrictEqual(one_px_image_as_base64);
             expect(JSON.stringify(tree)).toContain(exported_file.fileName);
         });
 

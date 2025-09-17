@@ -34,10 +34,10 @@ describe("DropDownContentRenderer", () => {
         dropdown_list: Element,
         gettext_provider: GettextProvider,
         items_map_manager: ItemsMapManager,
-        doc: Document,
-        locale: string;
+        doc: Document;
 
     function getDropdownContentRenderer(): DropdownContentRenderer {
+        const locale = undefined;
         return new DropdownContentRenderer(
             select,
             dropdown_list,

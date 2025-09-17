@@ -57,7 +57,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         app.use(pinia);
         app.use(
+            /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
             await initVueGettext(
+                /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
                 createGettext,
                 (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
             ),
