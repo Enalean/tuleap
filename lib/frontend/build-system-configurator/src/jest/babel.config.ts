@@ -17,5 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//@ts-expect-error We do not have to care about the type of @babel/preset-env, the consumer (jest) is JS only.
 // eslint-disable-next-line import/no-extraneous-dependencies
-module.exports = require("babel-jest").default.createTransformer(require("./babel.config.js"));
+import BabelPresetEnv from "@babel/preset-env";
+
+export default {
+    presets: [
+        [
+            BabelPresetEnv,
+            {
+                targets: {
+                    node: "current",
+                },
+            },
+        ],
+    ],
+};
