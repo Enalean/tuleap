@@ -19,26 +19,19 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\TestManagement\REST\Tests;
 
-class Cache
+final class Cache
 {
-    private static $instance;
+    private static ?self $instance = null;
 
-    /**
-     * @var null|array
-     */
-    private $valid_campaign = null;
-    /**
-     * @var null|array
-     */
-    private $closed_campaign = null;
-    /**
-     * @var null|array
-     */
-    private $valid_with_attachments_campaign = null;
+    private ?array $valid_campaign                  = null;
+    private ?array $closed_campaign                 = null;
+    private ?array $valid_with_attachments_campaign = null;
 
-    public static function instance()
+    public static function instance(): self
     {
         if (! isset(self::$instance)) {
             self::$instance = new self();
@@ -56,9 +49,6 @@ class Cache
         return $this->closed_campaign;
     }
 
-    /**
-     * @param null $valid_campaign
-     */
     public function setValidCampaign(array $valid_campaign): void
     {
         $this->valid_campaign = $valid_campaign;

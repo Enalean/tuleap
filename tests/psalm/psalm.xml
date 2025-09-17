@@ -1383,14 +1383,8 @@
             <file name="plugins/taskboard/tests/rest/init_test_data.php"/>
             <file name="plugins/testmanagement/tests/rest/ArtifactsTest.php"/>
             <file name="plugins/testmanagement/tests/rest/CampaignsTest.php"/>
-            <file name="plugins/testmanagement/tests/rest/DefinitionsTest.php"/>
             <file name="plugins/testmanagement/tests/rest/ExecutionsTest.php"/>
             <file name="plugins/testmanagement/tests/rest/ProjectTest.php"/>
-            <file name="plugins/testmanagement/tests/rest/Tests/Cache.php"/>
-            <file name="plugins/testmanagement/tests/rest/Tests/TestManagementDataBuilder.php"/>
-            <file name="plugins/testmanagement/tests/rest/Tests/TestManagementRESTTestCase.php"/>
-            <file name="plugins/testmanagement/tests/rest/Tests/UsedFieldIdNotFoundException.php"/>
-            <file name="plugins/testmanagement/tests/rest/init_test_data.php"/>
             <file name="plugins/testplan/tests/rest/init_test_data.php"/>
             <file name="plugins/testplan/tests/rest/v1/BacklogItemTest.php"/>
             <file name="plugins/timetracking/tests/rest/Timetracking/TimetrackingReportTest.php"/>
