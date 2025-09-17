@@ -24,7 +24,7 @@ namespace Tuleap\Document\Tree;
 
 class ShouldDisplaySourceColumnForFileVersions implements \Tuleap\Event\Dispatchable
 {
-    public const NAME = 'shouldDisplaySourceColumnForFileVersions';
+    public const string NAME = 'shouldDisplaySourceColumnForFileVersions';
 
     private bool $should_display_source_column = false;
 

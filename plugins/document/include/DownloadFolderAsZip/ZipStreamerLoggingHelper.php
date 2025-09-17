@@ -26,7 +26,7 @@ use BackendLogger;
 
 class ZipStreamerLoggingHelper
 {
-    private const LOGGER_NAME = 'document-zip-folder';
+    private const string LOGGER_NAME = 'document-zip-folder';
 
     /**
      * @var \WrapperLogger

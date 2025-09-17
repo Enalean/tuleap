@@ -35,7 +35,7 @@ use Tuleap\Request\NotFoundException;
 
 final class SearchView extends AdminView implements DispatchableWithBurningParrot, DispatchableWithProject, DispatchableWithRequest
 {
-    public const IDENTIFIER = 'admin-search';
+    public const string IDENTIFIER = 'admin-search';
 
     public function __construct(
         private IExtractProjectFromVariables $project_extractor,

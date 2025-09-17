@@ -24,10 +24,10 @@ namespace Tuleap\Document\Config;
 
 class FileDownloadLimits
 {
-    public const MAX_ARCHIVE_SIZE_NAME           = 'plugin_document_max_archive_size';
-    public const WARNING_THRESHOLD_NAME          = 'plugin_document_warning_threshold';
-    public const MAX_ARCHIVE_SIZE_DEFAULT_IN_MB  = 2000;
-    public const WARNING_THRESHOLD_DEFAULT_IN_MB = 50;
+    public const string MAX_ARCHIVE_SIZE_NAME        = 'plugin_document_max_archive_size';
+    public const string WARNING_THRESHOLD_NAME       = 'plugin_document_warning_threshold';
+    public const int MAX_ARCHIVE_SIZE_DEFAULT_IN_MB  = 2000;
+    public const int WARNING_THRESHOLD_DEFAULT_IN_MB = 50;
 
     /**
      * @var int

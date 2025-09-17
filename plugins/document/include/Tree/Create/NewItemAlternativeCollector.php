@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class NewItemAlternativeCollector implements Dispatchable
 {
-    public const NAME = 'newItemAlternativeCollector';
+    public const string NAME = 'newItemAlternativeCollector';
 
     /**
      * @var NewItemAlternativeSection[]

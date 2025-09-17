@@ -33,7 +33,7 @@ use Tuleap\User\History\HistoryEntryCollection;
 
 final readonly class VisitedDocumentRetriever
 {
-    public const TYPE = 'document';
+    public const string TYPE = 'document';
 
     public function __construct(
         private RecentlyVisitedDocumentDao $dao,

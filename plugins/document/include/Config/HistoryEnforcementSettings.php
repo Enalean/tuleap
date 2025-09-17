@@ -24,7 +24,7 @@ namespace Tuleap\Document\Config;
 
 class HistoryEnforcementSettings
 {
-    public const IS_CHANGELOG_PROPOSED_AFTER_DND = 'is_changelog_proposed_after_dnd';
+    public const string IS_CHANGELOG_PROPOSED_AFTER_DND = 'is_changelog_proposed_after_dnd';
 
     /**
      * @var bool
