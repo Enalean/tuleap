@@ -32,10 +32,10 @@ import type {
     RootState,
 } from "../../../type";
 import SearchResultPagination from "./SearchResultPagination.vue";
-import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import * as router from "../../../helpers/use-router";
 import type { Router } from "vue-router";
+import { SEARCH_COLUMNS } from "../../../configuration-keys";
 
 describe("SearchResultTable", () => {
     let mock_push: vi.Mock;
@@ -56,17 +56,11 @@ describe("SearchResultTable", () => {
                 query: null,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                columns: [],
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: ["router-link", "router-view"],
+                provide: {
+                    [SEARCH_COLUMNS.valueOf()]: [],
+                },
             },
         });
 
@@ -89,17 +83,11 @@ describe("SearchResultTable", () => {
                 query: null,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                columns: [],
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: ["router-link", "router-view"],
+                provide: {
+                    [SEARCH_COLUMNS.valueOf()]: [],
+                },
             },
         });
 
@@ -122,17 +110,11 @@ describe("SearchResultTable", () => {
                 query: null,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                columns: [],
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: ["router-link", "router-view"],
+                provide: {
+                    [SEARCH_COLUMNS.valueOf()]: [],
+                },
             },
         });
 
@@ -170,23 +152,18 @@ describe("SearchResultTable", () => {
             global: {
                 stubs: ["router-link", "router-view"],
                 ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                columns: [
-                                    {
-                                        name: "title",
-                                        label: "Label",
-                                    } as SearchResultColumnDefinition,
-                                ],
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
                     state: {
                         current_folder: { id: 10 } as Folder,
                     } as State,
                 }),
+                provide: {
+                    [SEARCH_COLUMNS.valueOf()]: [
+                        {
+                            name: "title",
+                            label: "Label",
+                        } as SearchResultColumnDefinition,
+                    ],
+                },
             },
         });
 
@@ -232,23 +209,18 @@ describe("SearchResultTable", () => {
             global: {
                 stubs: ["router-link", "router-view"],
                 ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                columns: [
-                                    {
-                                        name: "title",
-                                        label: "Label",
-                                    } as SearchResultColumnDefinition,
-                                ],
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
                     state: {
                         current_folder: { id: 10 } as Folder,
                     } as State,
                 }),
+                provide: {
+                    [SEARCH_COLUMNS.valueOf()]: [
+                        {
+                            name: "title",
+                            label: "Label",
+                        } as SearchResultColumnDefinition,
+                    ],
+                },
             },
         });
 
@@ -311,33 +283,28 @@ describe("SearchResultTable", () => {
                 global: {
                     stubs: ["router-link", "router-view"],
                     ...getGlobalTestOptions({
-                        modules: {
-                            configuration: {
-                                state: {
-                                    columns: [
-                                        {
-                                            name: "title",
-                                            label: "Label",
-                                        } as SearchResultColumnDefinition,
-                                        {
-                                            name: "field_18",
-                                            label: "Custom Vroom Multi List Metadata",
-                                            is_multiple_value_allowed: true,
-                                        } as SearchResultColumnDefinition,
-                                        {
-                                            name: "location",
-                                            label: "Location",
-                                            is_multiple_value_allowed: false,
-                                        } as SearchResultColumnDefinition,
-                                    ],
-                                } as unknown as ConfigurationState,
-                                namespaced: true,
-                            },
-                        },
                         state: {
                             current_folder: { id: 42 } as Folder,
                         } as RootState,
                     }),
+                    provide: {
+                        [SEARCH_COLUMNS.valueOf()]: [
+                            {
+                                name: "title",
+                                label: "Label",
+                            } as SearchResultColumnDefinition,
+                            {
+                                name: "field_18",
+                                label: "Custom Vroom Multi List Metadata",
+                                is_multiple_value_allowed: true,
+                            } as SearchResultColumnDefinition,
+                            {
+                                name: "location",
+                                label: "Location",
+                                is_multiple_value_allowed: false,
+                            } as SearchResultColumnDefinition,
+                        ],
+                    },
                 },
             });
 

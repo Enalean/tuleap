@@ -23,9 +23,9 @@ import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import type { Embedded, Folder, Item, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../store/configuration";
 import {
     PROJECT_FLAGS,
+    PROJECT_ICON,
     PROJECT_ID,
     PROJECT_PRIVACY,
     PROJECT_PUBLIC_NAME,
@@ -45,14 +45,6 @@ describe("DocumentBreadcrumb", () => {
         return shallowMount(DocumentBreadcrumb, {
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                project_icon,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
                     state: {
                         current_folder_ascendant_hierarchy,
                         is_loading_ascendant_hierarchy,
@@ -70,6 +62,7 @@ describe("DocumentBreadcrumb", () => {
                     [PROJECT_URL.valueOf()]: " /project",
                     [PROJECT_PRIVACY.valueOf()]: ProjectPrivacyBuilder.private(),
                     [PROJECT_FLAGS.valueOf()]: [],
+                    [PROJECT_ICON.valueOf()]: project_icon,
                 },
             },
         });

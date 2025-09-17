@@ -84,11 +84,12 @@ import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
 import SearchResultPagination from "./SearchResultPagination.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useState, useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
+import { useState } from "vuex-composition-helpers";
 import { useRouter } from "../../../helpers/use-router";
 import { useGettext } from "vue3-gettext";
 import { getRouterQueryFromSearchParams } from "../../../helpers/get-router-query-from-search-params";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SEARCH_COLUMNS } from "../../../configuration-keys";
 
 const { interpolate, $gettext } = useGettext();
 
@@ -102,14 +103,12 @@ const props = defineProps<{
 
 const limit = ref(SEARCH_LIMIT);
 
-const { columns } = useNamespacedState<Pick<ConfigurationState, "columns">>("configuration", [
-    "columns",
-]);
+const columns = strictInject(SEARCH_COLUMNS);
 
 const nb_columns = computed((): number => {
-    let nb_extra_columns = columns.value.some((column) => column.name === "title") ? 1 : 0;
+    let nb_extra_columns = columns.some((column) => column.name === "title") ? 1 : 0;
 
-    return columns.value.length + nb_extra_columns;
+    return columns.length + nb_extra_columns;
 });
 
 const items = computed((): ReadonlyArray<ItemSearchResult> => {

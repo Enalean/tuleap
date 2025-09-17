@@ -21,12 +21,11 @@ import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
-import type { ConfigurationState } from "../../store/configuration";
 import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import emitter from "../../helpers/emitter";
-import { ROOT_ID } from "../../configuration-keys";
+import { ROOT_ID, SEARCH_CRITERIA } from "../../configuration-keys";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
@@ -42,24 +41,6 @@ describe("SearchCriteriaPanel", () => {
             document.body.appendChild(parent_node);
         }
 
-        const state = {
-            criteria: [
-                { name: "id", type: "number", title: "Id" },
-                { name: "type", type: "list", title: "Type" },
-                { name: "filename", type: "text", title: "Filename" },
-                { name: "title", type: "text", title: "Title" },
-                { name: "description", type: "text", title: "Description" },
-                { name: "owner", type: "owner", title: "Owner" },
-                { name: "create_date", type: "date", title: "Create date" },
-                { name: "update_date", type: "date", title: "Update date" },
-                {
-                    name: "obsolescence_date",
-                    type: "date",
-                    title: "Obsolescence date",
-                },
-                { name: "status", type: "list", title: "Status" },
-            ],
-        } as unknown as ConfigurationState;
         const wrapper = shallowMount(SearchCriteriaPanel, {
             attachTo: parent_node,
             props: {
@@ -67,16 +48,25 @@ describe("SearchCriteriaPanel", () => {
                 folder_id: 101,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            namespaced: true,
-                            state,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 provide: {
                     [ROOT_ID.valueOf()]: 101,
+                    [SEARCH_CRITERIA.valueOf()]: [
+                        { name: "id", type: "number", title: "Id" },
+                        { name: "type", type: "list", title: "Type" },
+                        { name: "filename", type: "text", title: "Filename" },
+                        { name: "title", type: "text", title: "Title" },
+                        { name: "description", type: "text", title: "Description" },
+                        { name: "owner", type: "owner", title: "Owner" },
+                        { name: "create_date", type: "date", title: "Create date" },
+                        { name: "update_date", type: "date", title: "Update date" },
+                        {
+                            name: "obsolescence_date",
+                            type: "date",
+                            title: "Obsolescence date",
+                        },
+                        { name: "status", type: "list", title: "Status" },
+                    ],
                 },
             },
         });
@@ -156,18 +146,10 @@ describe("SearchCriteriaPanel", () => {
                 folder_id: 101,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                criteria: [],
-                            },
-                            namespaced: true,
-                        } as unknown as ConfigurationState,
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 provide: {
                     [ROOT_ID.valueOf()]: 101,
+                    [SEARCH_CRITERIA.valueOf()]: [],
                 },
             },
         });

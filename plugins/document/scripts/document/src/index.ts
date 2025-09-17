@@ -51,6 +51,7 @@ import {
     MAX_FILES_DRAGNDROP,
     MAX_SIZE_UPLOAD,
     PROJECT_FLAGS,
+    PROJECT_ICON,
     PROJECT_ID,
     PROJECT_NAME,
     PROJECT_PRIVACY,
@@ -58,6 +59,8 @@ import {
     PROJECT_URL,
     RELATIVE_DATES_DISPLAY,
     ROOT_ID,
+    SEARCH_COLUMNS,
+    SEARCH_CRITERIA,
     USER_CAN_CREATE_WIKI,
     USER_CAN_DRAGNDROP,
     USER_ID,
@@ -157,10 +160,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         type: criterion.type === "string" ? "text" : criterion.type,
     });
 
-    const criteria = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-criteria")).map(
+    const search_criteria = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-criteria")).map(
         consider_string_criteria_as_text,
     );
-    const columns = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-columns"));
+    const search_columns = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-columns"));
     const create_new_item_alternatives = JSON.parse(
         getAttributeOrThrow(vue_mount_point, "data-create-new-item-alternatives"),
     );
@@ -177,9 +180,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const configuration_state: ConfigurationState = {
-        project_icon,
-        criteria,
-        columns,
         forbid_writers_to_update,
         forbid_writers_to_delete,
         filename_pattern,
@@ -198,7 +198,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(pinia);
 
     app.use(gettext);
-    app.use(createInitializedRouter(store, project_name, gettext.$gettext));
+    app.use(
+        createInitializedRouter(store, project_name, gettext.$gettext, root_id, search_criteria),
+    );
 
     app.provide(
         SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
@@ -228,7 +230,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(IS_CHANGELOG_PROPOSED_AFTER_DND, is_changelog_proposed_after_dnd)
         .provide(IS_DELETION_ALLOWED, is_deletion_allowed)
         .provide(USER_LOCALE, user_locale)
-        .provide(RELATIVE_DATES_DISPLAY, relative_dates_display);
+        .provide(RELATIVE_DATES_DISPLAY, relative_dates_display)
+        .provide(PROJECT_ICON, project_icon)
+        .provide(SEARCH_CRITERIA, search_criteria)
+        .provide(SEARCH_COLUMNS, search_columns);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

@@ -28,7 +28,7 @@ import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
 import type { Store } from "vuex";
-import type { RootState, GettextProvider } from "../type";
+import type { RootState, GettextProvider, SearchCriteria } from "../type";
 
 export const routes: RouteRecordRaw[] = [
     {
@@ -91,17 +91,14 @@ export function createInitializedRouter(
     store: Store<RootState>,
     project_name: string,
     $gettext: GettextProvider["$gettext"],
+    root_id: number,
+    search_criteria: SearchCriteria,
 ): Router {
     routes.push({
         path: "/search/:folder_id?",
         name: "search",
         component: SearchContainer,
-        props: (route) =>
-            getSearchPropsFromRoute(
-                route,
-                store.state.configuration.root_id,
-                store.state.configuration.criteria,
-            ),
+        props: (route) => getSearchPropsFromRoute(route, root_id, search_criteria),
     });
 
     const router = createRouter({
