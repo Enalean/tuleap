@@ -34,7 +34,7 @@ use Tuleap\Request\ForbiddenException;
 
 class FilesDownloadLimitsAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = \DocmanPlugin::ADMIN_BASE_URL . '/files-download-limits';
+    public const string URL = \DocmanPlugin::ADMIN_BASE_URL . '/files-download-limits';
 
     public function __construct(
         private AdminPageRenderer $admin_page_renderer,

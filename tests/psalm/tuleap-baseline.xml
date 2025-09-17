@@ -11449,38 +11449,15 @@
         ]]]></code>
     </InvalidArrayOffset>
   </file>
-  <file src="plugins/document/include/Config/Admin/FilesDownloadLimitsAdminController.php">
-    <MissingClassConstType>
-      <code><![CDATA[URL = \DocmanPlugin::ADMIN_BASE_URL . '/files-download-limits']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/document/include/Config/Admin/FilesDownloadLimitsAdminSaveController.php">
     <InvalidReturnType>
       <code><![CDATA[process]]></code>
     </InvalidReturnType>
   </file>
-  <file src="plugins/document/include/Config/Admin/HistoryEnforcementAdminController.php">
-    <MissingClassConstType>
-      <code><![CDATA[URL = \DocmanPlugin::ADMIN_BASE_URL . '/history-enforcement']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/document/include/Config/Admin/HistoryEnforcementAdminSaveController.php">
     <InvalidReturnType>
       <code><![CDATA[process]]></code>
     </InvalidReturnType>
-  </file>
-  <file src="plugins/document/include/Config/FileDownloadLimits.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_ARCHIVE_SIZE_DEFAULT_IN_MB  = 2000]]></code>
-      <code><![CDATA[MAX_ARCHIVE_SIZE_NAME           = 'plugin_document_max_archive_size']]></code>
-      <code><![CDATA[WARNING_THRESHOLD_DEFAULT_IN_MB = 50]]></code>
-      <code><![CDATA[WARNING_THRESHOLD_NAME          = 'plugin_document_warning_threshold']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/document/include/Config/HistoryEnforcementSettings.php">
-    <MissingClassConstType>
-      <code><![CDATA[IS_CHANGELOG_PROPOSED_AFTER_DND = 'is_changelog_proposed_after_dnd']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/document/include/Config/Project/SearchColumnsDao.php">
     <ArgumentTypeCoercion>
@@ -11504,11 +11481,6 @@
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="plugins/document/include/DownloadFolderAsZip/FolderSizeIsAllowedChecker.php">
-    <MissingClassConstType>
-      <code><![CDATA[ONE_MEGABYTE_IN_BYTES = 1000000]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/document/include/DownloadFolderAsZip/ZipStreamFolderFilesVisitor.php">
     <MissingTemplateParam>
       <code><![CDATA[ItemVisitor]]></code>
@@ -11520,20 +11492,12 @@
     </PossiblyNullArgument>
   </file>
   <file src="plugins/document/include/DownloadFolderAsZip/ZipStreamerLoggingHelper.php">
-    <MissingClassConstType>
-      <code><![CDATA[LOGGER_NAME = 'document-zip-folder']]></code>
-    </MissingClassConstType>
     <PossiblyNullArgument>
       <code><![CDATA[$folder->getId()]]></code>
       <code><![CDATA[$item->getId()]]></code>
       <code><![CDATA[$item->getId()]]></code>
       <code><![CDATA[$item->getId()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/document/include/Tree/Create/NewItemAlternativeCollector.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'newItemAlternativeCollector']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/document/include/Tree/DocumentTreeController.php">
     <MissingReturnType>
@@ -11555,11 +11519,6 @@
     <InvalidClass>
       <code><![CDATA[\docmanPlugin]]></code>
     </InvalidClass>
-  </file>
-  <file src="plugins/document/include/Tree/ShouldDisplaySourceColumnForFileVersions.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'shouldDisplaySourceColumnForFileVersions']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/document/tests/unit/Config/Admin/FilesDownloadLimitsAdminSaveControllerTest.php">
     <InternalMethod>

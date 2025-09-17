@@ -35,7 +35,7 @@ final class SwitchToOldUi
     EOF
     )]
     #[ConfigKeyHidden]
-    public const FEATURE_FLAG = 'allow_temporary_access_to_old_ui_that_will_be_removed_soon';
+    public const string FEATURE_FLAG = 'allow_temporary_access_to_old_ui_that_will_be_removed_soon';
 
     public static function isAllowed(\PFUser $user, \Project $project): bool
     {

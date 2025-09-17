@@ -33,7 +33,7 @@ class FolderSizeIsAllowedChecker
      */
     private $folder_size_visitor;
 
-    private const ONE_MEGABYTE_IN_BYTES = 1000000;
+    private const int ONE_MEGABYTE_IN_BYTES = 1000000;
 
     public function __construct(ComputeFolderSizeVisitor $folder_size_visitor)
     {

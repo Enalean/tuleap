@@ -26,7 +26,7 @@ use ZipStream\ZipStream;
 
 final class ErrorsListingBuilder
 {
-    private const ERROR_FILE_NAME = 'TULEAP_ERRORS.txt';
+    private const string ERROR_FILE_NAME = 'TULEAP_ERRORS.txt';
 
     /** @var string[] */
     private $bad_file_paths = [];
