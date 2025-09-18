@@ -34701,6 +34701,15 @@
       <code><![CDATA[fetchReadOnly]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/FormElement/StaticField/TrackerStaticField.php">
+    <MissingReturnType>
+      <code><![CDATA[accept]]></code>
+      <code><![CDATA[fetchReadOnly]]></code>
+      <code><![CDATA[fetchSubmitForOverlay]]></code>
+      <code><![CDATA[getDefaultRESTValue]]></code>
+      <code><![CDATA[getDefaultValue]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/PermissionsPerGroup/PermissionPerGroupPanePresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -42722,15 +42731,6 @@
       <code><![CDATA[$this->scope]]></code>
       <code><![CDATA[$this->use_it]]></code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField.php">
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-      <code><![CDATA[fetchReadOnly]]></code>
-      <code><![CDATA[fetchSubmitForOverlay]]></code>
-      <code><![CDATA[getDefaultRESTValue]]></code>
-      <code><![CDATA[getDefaultValue]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Visitor.php">
     <MissingParamType>
@@ -65087,7 +65087,6 @@
       <code><![CDATA[REFERENCE_NATURE_FILE         = 'file']]></code>
       <code><![CDATA[REFERENCE_NATURE_FORUM        = 'forum']]></code>
       <code><![CDATA[REFERENCE_NATURE_FORUMMESSAGE = 'forum_message']]></code>
-      <code><![CDATA[REFERENCE_NATURE_NEWS         = 'news']]></code>
       <code><![CDATA[REFERENCE_NATURE_OTHER        = 'other']]></code>
       <code><![CDATA[REFERENCE_NATURE_RELEASE      = 'release']]></code>
       <code><![CDATA[REFERENCE_NATURE_SVNREVISION  = 'svn_revision']]></code>
@@ -82778,10 +82777,6 @@
       <code><![CDATA[db_result($result, 0, 'summary')]]></code>
       <code><![CDATA[db_result($result, 0, 'summary')]]></code>
     </DeprecatedFunction>
-    <InvalidArgument>
-      <code><![CDATA[$new_id]]></code>
-      <code><![CDATA[$new_id]]></code>
-    </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$allow_submit]]></code>
       <code><![CDATA[$data]]></code>

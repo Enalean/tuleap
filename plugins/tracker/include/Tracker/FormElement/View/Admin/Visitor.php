@@ -47,6 +47,7 @@ use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField;
 use Tuleap\Tracker\FormElement\StaticField\Separator\SeparatorStaticField;
+use Tuleap\Tracker\FormElement\StaticField\TrackerStaticField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
@@ -94,7 +95,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
             $this->visitLineBreak($element);
         } elseif ($element instanceof SeparatorStaticField) {
             $this->visitSeparator($element);
-        } elseif ($element instanceof Tracker_FormElement_StaticField) {
+        } elseif ($element instanceof TrackerStaticField) {
             $this->visitStaticField($element);
         } elseif ($element instanceof Tracker_FormElement_Shared) {
             $this->visitShared($element);
@@ -270,7 +271,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Container($element, $this->allUsedElements);
     }
 
-    private function visitStaticField(Tracker_FormElement_StaticField $element)
+    private function visitStaticField(TrackerStaticField $element)
     {
         $this->adminElement = new Tracker_FormElement_View_Admin_StaticField($element, $this->allUsedElements);
     }

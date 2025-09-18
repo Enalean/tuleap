@@ -78,7 +78,7 @@ class PermissionsForGroupsBuilder
         if ($form_element instanceof \Tuleap\Tracker\FormElement\Container\TrackerFormElementContainer) {
             return [];
         }
-        if ($form_element instanceof \Tracker_FormElement_StaticField) {
+        if ($form_element instanceof \Tuleap\Tracker\FormElement\StaticField\TrackerStaticField) {
             return [];
         }
         return $this->permissions_functions_wrapper->getFieldUGroupsPermissions($form_element);
