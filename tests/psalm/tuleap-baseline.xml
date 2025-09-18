@@ -34690,6 +34690,20 @@
       <code><![CDATA[fetchReadOnly]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/FormElement/StaticField/RichText/RichTextStaticField.php">
+    <MissingParamType>
+      <code><![CDATA[$tracker]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$static_rich_text]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[fetchAdmin]]></code>
+      <code><![CDATA[fetchReadOnly]]></code>
+      <code><![CDATA[getDefaultValue]]></code>
+      <code><![CDATA[getRichText]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/FormElement/StaticField/Separator/SeparatorStaticField.php">
     <MissingParamType>
       <code><![CDATA[$tracker]]></code>
@@ -42728,20 +42742,6 @@
       <code><![CDATA[fetchSubmitForOverlay]]></code>
       <code><![CDATA[getDefaultRESTValue]]></code>
       <code><![CDATA[getDefaultValue]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_RichText.php">
-    <MissingParamType>
-      <code><![CDATA[$tracker]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$static_rich_text]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[fetchAdmin]]></code>
-      <code><![CDATA[fetchReadOnly]]></code>
-      <code><![CDATA[getDefaultValue]]></code>
-      <code><![CDATA[getRichText]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Visitor.php">
