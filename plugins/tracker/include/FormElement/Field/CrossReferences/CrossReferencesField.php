@@ -45,15 +45,12 @@ use Tuleap\Forum\ForumDao;
 use Tuleap\Forum\ForumRetriever;
 use Tuleap\Forum\MessageRetriever;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\News\NewsDao;
-use Tuleap\News\NewsRetriever;
 use Tuleap\Option\Option;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
 use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
 use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
-use Tuleap\Reference\ByNature\News\CrossReferenceNewsOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\ByNature\Wiki\WikiPageFromReferenceValueRetriever;
 use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
@@ -399,11 +396,6 @@ final class CrossReferencesField extends TrackerField implements Tracker_FormEle
                             new ForumDao(),
                         )
                     ),
-                    new CrossReferenceNewsOrganizer(
-                        new NewsRetriever(
-                            new NewsDao(),
-                        )
-                    )
                 ),
             )
         );

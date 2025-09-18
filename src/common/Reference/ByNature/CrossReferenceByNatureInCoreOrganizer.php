@@ -24,7 +24,6 @@ namespace Tuleap\Reference\ByNature;
 
 use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
 use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
-use Tuleap\Reference\ByNature\News\CrossReferenceNewsOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 
@@ -43,21 +42,15 @@ class CrossReferenceByNatureInCoreOrganizer
      * @var CrossReferenceForumOrganizer
      */
     private $forum_organizer;
-    /**
-     * @var CrossReferenceNewsOrganizer
-     */
-    private $news_organizer;
 
     public function __construct(
         CrossReferenceWikiOrganizer $wiki_organizer,
         CrossReferenceFRSOrganizer $frs_organizer,
         CrossReferenceForumOrganizer $forum_organizer,
-        CrossReferenceNewsOrganizer $news_organizer,
     ) {
         $this->wiki_organizer  = $wiki_organizer;
         $this->frs_organizer   = $frs_organizer;
         $this->forum_organizer = $forum_organizer;
-        $this->news_organizer  = $news_organizer;
     }
 
     public function organizeCoreReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -78,9 +71,6 @@ class CrossReferenceByNatureInCoreOrganizer
                     break;
                 case \ReferenceManager::REFERENCE_NATURE_FORUM:
                     $this->forum_organizer->organizeForumReference($cross_reference_presenter, $by_nature_organizer);
-                    break;
-                case \ReferenceManager::REFERENCE_NATURE_NEWS:
-                    $this->news_organizer->organizeNewsReference($cross_reference_presenter, $by_nature_organizer);
                     break;
                 default:
                     // ignore "unknown" references
