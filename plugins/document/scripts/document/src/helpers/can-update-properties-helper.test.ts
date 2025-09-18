@@ -18,60 +18,23 @@
  */
 
 import { describe, expect, it } from "vitest";
-import type { ConfigurationState } from "../store/configuration";
 import type { Item } from "../type";
 import { canUpdateProperties } from "./can-update-properties-helper";
 
 describe("canUpdateProperties", () => {
-    it.each<
-        [
-            Pick<ConfigurationState, "forbid_writers_to_update">,
-            Pick<Item, "user_can_write" | "can_user_manage">,
-            boolean,
-        ]
-    >([
-        [
-            { forbid_writers_to_update: false },
-            { user_can_write: false, can_user_manage: false },
-            false,
-        ],
-        [
-            { forbid_writers_to_update: false },
-            { user_can_write: false, can_user_manage: true },
-            false,
-        ],
-        [
-            { forbid_writers_to_update: false },
-            { user_can_write: true, can_user_manage: false },
-            true,
-        ],
-        [
-            { forbid_writers_to_update: false },
-            { user_can_write: true, can_user_manage: true },
-            true,
-        ],
-        [
-            { forbid_writers_to_update: true },
-            { user_can_write: false, can_user_manage: false },
-            false,
-        ],
-        [
-            { forbid_writers_to_update: true },
-            { user_can_write: false, can_user_manage: true },
-            true,
-        ],
-        [
-            { forbid_writers_to_update: true },
-            { user_can_write: true, can_user_manage: false },
-            false,
-        ],
-        [{ forbid_writers_to_update: true }, { user_can_write: true, can_user_manage: true }, true],
+    it.each<[boolean, Pick<Item, "user_can_write" | "can_user_manage">, boolean]>([
+        [false, { user_can_write: false, can_user_manage: false }, false],
+        [false, { user_can_write: false, can_user_manage: true }, false],
+        [false, { user_can_write: true, can_user_manage: false }, true],
+        [false, { user_can_write: true, can_user_manage: true }, true],
+        [true, { user_can_write: false, can_user_manage: false }, false],
+        [true, { user_can_write: false, can_user_manage: true }, true],
+        [true, { user_can_write: true, can_user_manage: false }, false],
+        [true, { user_can_write: true, can_user_manage: true }, true],
     ])(
         "Given configuration is %s and item is %s then expected result is %s",
-        (configuration, item, expected) => {
-            expect(canUpdateProperties(configuration.forbid_writers_to_update, item as Item)).toBe(
-                expected,
-            );
+        (forbid_writers_to_update, item, expected) => {
+            expect(canUpdateProperties(forbid_writers_to_update, item as Item)).toBe(expected);
         },
     );
 });

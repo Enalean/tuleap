@@ -43,6 +43,8 @@ import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date"
 import {
     DATE_TIME_FORMAT,
     EMBEDDED_ARE_ALLOWED,
+    FORBID_WRITERS_TO_DELETE,
+    FORBID_WRITERS_TO_UPDATE,
     IS_CHANGELOG_PROPOSED_AFTER_DND,
     IS_DELETION_ALLOWED,
     IS_OBSOLESCENCE_DATE_PROPERTY_USED,
@@ -180,8 +182,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const configuration_state: ConfigurationState = {
-        forbid_writers_to_update,
-        forbid_writers_to_delete,
         filename_pattern,
         is_filename_pattern_enforced,
         can_user_switch_to_old_ui,
@@ -233,7 +233,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(RELATIVE_DATES_DISPLAY, relative_dates_display)
         .provide(PROJECT_ICON, project_icon)
         .provide(SEARCH_CRITERIA, search_criteria)
-        .provide(SEARCH_COLUMNS, search_columns);
+        .provide(SEARCH_COLUMNS, search_columns)
+        .provide(FORBID_WRITERS_TO_UPDATE, forbid_writers_to_update)
+        .provide(FORBID_WRITERS_TO_DELETE, forbid_writers_to_delete);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

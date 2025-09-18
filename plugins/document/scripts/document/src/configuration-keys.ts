@@ -56,3 +56,9 @@ export const PROJECT_ICON: StrictInjectionKey<string> = Symbol("project-icon");
 export const SEARCH_CRITERIA: StrictInjectionKey<SearchCriteria> = Symbol("search-criteria");
 export const SEARCH_COLUMNS: StrictInjectionKey<ListOfSearchResultColumnDefinition> =
     Symbol("search-column");
+export const FORBID_WRITERS_TO_UPDATE: StrictInjectionKey<boolean> = Symbol(
+    "forbid-writers-to-update",
+);
+export const FORBID_WRITERS_TO_DELETE: StrictInjectionKey<boolean> = Symbol(
+    "forbid-writers-to-delete",
+);

@@ -86,21 +86,22 @@ import UpdatePermissions from "./UpdatePermissions.vue";
 import { isEmpty, isFile, isFolder, isOtherType, isWiki } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { computed } from "vue";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
 import DeleteItem from "./Delete/DeleteItem.vue";
 import DownloadFile from "./DownloadFile.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { IS_DELETION_ALLOWED } from "../../../configuration-keys";
+import {
+    FORBID_WRITERS_TO_DELETE,
+    FORBID_WRITERS_TO_UPDATE,
+    IS_DELETION_ALLOWED,
+} from "../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
 const is_deletion_allowed = strictInject(IS_DELETION_ALLOWED);
-const { forbid_writers_to_update, forbid_writers_to_delete } = useNamespacedState<
-    Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
->("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
+const forbid_writers_to_update = strictInject(FORBID_WRITERS_TO_UPDATE);
+const forbid_writers_to_delete = strictInject(FORBID_WRITERS_TO_DELETE);
 
 const is_item_a_wiki_with_approval_table = computed((): boolean => {
     return isWiki(props.item) && props.item.approval_table !== null;
@@ -130,11 +131,11 @@ const should_display_new_version_button = computed(
 );
 
 const should_display_update_properties = computed((): boolean =>
-    canUpdateProperties(forbid_writers_to_update.value, props.item),
+    canUpdateProperties(forbid_writers_to_update, props.item),
 );
 
 const should_display_delete = computed(
-    (): boolean => is_deletion_allowed && canDelete(forbid_writers_to_delete.value, props.item),
+    (): boolean => is_deletion_allowed && canDelete(forbid_writers_to_delete, props.item),
 );
 
 const should_display_lock_unlock = computed(

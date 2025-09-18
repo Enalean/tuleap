@@ -101,20 +101,19 @@ import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 import { isEmpty, isFile, isFolder, isOtherType } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
 import DownloadFile from "./DownloadFile.vue";
 import NewItemSubmenu from "./NewDocument/NewItemSubmenu.vue";
 import NewVersionEmptySubmenu from "./NewVersion/NewVersionEmptySubmenu.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { FORBID_WRITERS_TO_DELETE, FORBID_WRITERS_TO_UPDATE } from "../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
-const { forbid_writers_to_update, forbid_writers_to_delete } = useNamespacedState<
-    Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
->("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
+const forbid_writers_to_update = strictInject(FORBID_WRITERS_TO_UPDATE);
+const forbid_writers_to_delete = strictInject(FORBID_WRITERS_TO_DELETE);
 
 const is_item_a_folder = computed((): boolean => {
     return isFolder(props.item);
@@ -133,11 +132,11 @@ const is_item_an_empty = computed((): boolean => {
 });
 
 const should_display_update_properties = computed((): boolean => {
-    return canUpdateProperties(forbid_writers_to_update.value, props.item);
+    return canUpdateProperties(forbid_writers_to_update, props.item);
 });
 
 const should_display_delete_item = computed((): boolean => {
-    return canDelete(forbid_writers_to_delete.value, props.item);
+    return canDelete(forbid_writers_to_delete, props.item);
 });
 
 const should_display_lock_unlock = computed(

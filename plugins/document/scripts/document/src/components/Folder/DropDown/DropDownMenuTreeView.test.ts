@@ -23,6 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import DropDownMenuTreeView from "./DropDownMenuTreeView.vue";
 import type { Folder, Item, ItemFile, OtherTypeItem } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { FORBID_WRITERS_TO_DELETE, FORBID_WRITERS_TO_UPDATE } from "../../../configuration-keys";
 
 describe("DropDownMenuTreeView", () => {
     function createWrapper(
@@ -33,17 +34,11 @@ describe("DropDownMenuTreeView", () => {
         return shallowMount(DropDownMenuTreeView, {
             props: { item },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            namespaced: true,
-                            state: {
-                                forbid_writers_to_update,
-                                forbid_writers_to_delete,
-                            },
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [FORBID_WRITERS_TO_UPDATE.valueOf()]: forbid_writers_to_update,
+                    [FORBID_WRITERS_TO_DELETE.valueOf()]: forbid_writers_to_delete,
+                },
             },
         });
     }
