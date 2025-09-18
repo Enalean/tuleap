@@ -18,11 +18,14 @@
  */
 
 import type {
+    ArtifactLinkNewChangesetLink,
+    ArtifactResponseNoInstance,
     ListNewChangesetValue,
     StaticBoundListField,
     StructureFields,
     TrackerResponseNoInstance,
 } from "@tuleap/plugin-tracker-rest-api-types";
+import type { NewLink } from "./commands-type-definitions";
 
 type Tracker = Pick<TrackerResponseNoInstance, "id" | "item_name" | "fields">;
 
@@ -180,3 +183,51 @@ Cypress.Commands.add(
                 .then((response) => response.body.id);
         }),
 );
+
+type ArtifactResponse = Pick<ArtifactResponseNoInstance, "tracker" | "values">;
+
+Cypress.Commands.add("addLinkToArtifact", (artifact_id, new_link: NewLink): void => {
+    cy.getFromTuleapAPI<ArtifactResponse>(`/api/artifacts/${artifact_id}`).then((response) => {
+        const link_field = response.body.values.find((field) => field.type === "art_link");
+        if (!link_field) {
+            const tracker_label = response.body.tracker.label;
+            throw Error(
+                `Tracker "${tracker_label}" of artifact #${artifact_id} does not have an artifact links field`,
+            );
+        }
+
+        const existing_forward_links = link_field.links.map((link) => {
+            return {
+                id: link.id,
+                type: link.type,
+                direction: "forward",
+            };
+        });
+        const existing_reverse_links = link_field.reverse_links.map((link) => {
+            return {
+                id: link.id,
+                type: link.type,
+                direction: "reverse",
+            };
+        });
+
+        const new_link_formatted: ArtifactLinkNewChangesetLink = {
+            id: new_link.linked_artifact_id,
+            type: new_link.type,
+            direction: new_link.direction,
+        };
+
+        return cy.putFromTuleapApi(`/api/artifacts/${artifact_id}`, {
+            values: [
+                {
+                    field_id: link_field.field_id,
+                    all_links: [
+                        ...existing_forward_links,
+                        ...existing_reverse_links,
+                        new_link_formatted,
+                    ],
+                },
+            ],
+        });
+    });
+});

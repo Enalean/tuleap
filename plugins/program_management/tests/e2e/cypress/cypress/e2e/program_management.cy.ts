@@ -40,7 +40,7 @@ describe("Program management", () => {
         createProjects(program_project_name, team_project_name, other_team_project_name);
         configureProgram(program_project_name, team_project_name);
         createAndPlanFeature(program_project_name, team_project_name);
-        createIteration();
+        createIteration(program_project_name);
         checkThatProgramAndTeamsAreCorrect(program_project_name, team_project_name);
         updateProgramIncrementAndIteration(program_project_name);
         checkThatMirrorsAreSynchronized(team_project_name);
@@ -108,7 +108,7 @@ function configureProgram(program_project_name: string, team_project_name: strin
 function createAndLinkUserStory(
     program_project_name: string,
     team_project_name: string,
-    feature_id: string,
+    feature_id: number,
 ): void {
     cy.log("Create a user story");
     cy.visitProjectService(team_project_name, "Trackers");
@@ -120,23 +120,25 @@ function createAndLinkUserStory(
     cy.get("[data-test=artifact-submit-and-stay]").click();
 
     cy.get("[data-test=current-artifact-id]").then(($input) => {
-        const user_story_id = String($input.val());
+        const user_story_id = Number.parseInt(String($input.val()), 10);
         planFeatureIntoProgramIncrement(program_project_name, feature_id, user_story_id);
     });
 }
 
 function planFeatureIntoProgramIncrement(
     program_project_name: string,
-    feature_id: string,
-    user_story_id: string,
+    feature_id: number,
+    user_story_id: number,
 ): void {
     cy.log("Link User story to feature");
-    cy.visit("https://tuleap/plugins/tracker/?&aid=" + feature_id);
-
-    cy.addLinkToArtifact("is Parent of", user_story_id);
-    cy.get("[data-test=artifact-submit-and-stay]").click();
+    cy.addLinkToArtifact(feature_id, {
+        linked_artifact_id: user_story_id,
+        type: "_is_child",
+        direction: "forward",
+    });
 
     cy.log("Add feature to top backlog");
+    cy.visit("https://tuleap/plugins/tracker/?&aid=" + feature_id);
     cy.get("[data-test=tracker-artifact-actions]").click();
     cy.get("[data-test=add-to-top-backlog]").click();
 
@@ -144,8 +146,15 @@ function planFeatureIntoProgramIncrement(
     cy.visitProjectService(program_project_name, "Program");
     cy.get("[data-test=program-increment-toggle]").click();
     cy.get("[data-test=program-increment-info-edit-link]").click();
-    cy.addLinkToArtifact("is Linked to", feature_id);
-    cy.get("[data-test=artifact-submit]").click();
+
+    cy.get("[data-test=current-artifact-id]").then(($input) => {
+        const program_increment_id = Number.parseInt(String($input.val()), 10);
+        cy.addLinkToArtifact(program_increment_id, {
+            linked_artifact_id: feature_id,
+            type: "",
+            direction: "forward",
+        });
+    });
 }
 
 function createAndPlanFeature(program_project_name: string, team_project_name: string): void {
@@ -165,13 +174,14 @@ function createAndPlanFeature(program_project_name: string, team_project_name: s
     cy.get("[data-test=artifact-submit-and-stay]").click();
 
     cy.get("[data-test=current-artifact-id]").then(($input) => {
-        const feature_id = String($input.val());
+        const feature_id = Number.parseInt(String($input.val()), 10);
         createAndLinkUserStory(program_project_name, team_project_name, feature_id);
     });
 }
 
-function createIteration(): void {
+function createIteration(program_project_name: string): void {
     cy.log("Create an iteration");
+    cy.visitProjectService(program_project_name, "Program");
     cy.get("[data-test=program-increment-toggle]").click();
     cy.get("[data-test=program-increment-plan-iterations-link]").click();
     cy.log("Check that iteration have an unplanned user story");
@@ -190,11 +200,15 @@ function planUserStory(team_project_name: string, program_project_name: string):
     cy.get("[data-test=backlog-item-details-link]")
         .invoke("data", "artifact-id")
         .then((user_story_id) => {
-            cy.get("[data-test=expand-collapse-milestone]")
+            return cy
+                .get("[data-test=expand-collapse-milestone]")
                 .invoke("data", "artifact-id")
                 .then((sprint_id) => {
-                    cy.visit("https://tuleap/plugins/tracker/?&aid=" + sprint_id);
-                    cy.addLinkToArtifact("is Parent of", String(user_story_id));
+                    cy.addLinkToArtifact(Number.parseInt(String(sprint_id), 10), {
+                        linked_artifact_id: Number.parseInt(String(user_story_id), 10),
+                        type: "",
+                        direction: "forward",
+                    });
                 });
         });
 

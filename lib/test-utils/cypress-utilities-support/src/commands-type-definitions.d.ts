@@ -26,6 +26,12 @@ export type ConditionPredicate = (
     max_attempts: number,
 ) => PromiseLike<boolean>;
 
+export interface NewLink {
+    readonly linked_artifact_id: number;
+    readonly direction: "forward" | "reverse";
+    readonly type: string;
+}
+
 declare global {
     // Be consistent with Cypress declaration
 
@@ -113,11 +119,11 @@ declare global {
 
             createArtifactWithFields(payload: ArtifactWithFieldCreationPayload): Chainable<number>;
 
+            addLinkToArtifact(artifact_id: number, new_link: NewLink): void;
+
             createFRSPackage(project_id: number, package_name: string): void;
 
             getContains(selector: string, label: string): Chainable<JQuery<HTMLElement>>;
-
-            addLinkToArtifact(link_type: string, artifact_id: string): void;
 
             searchItemInLazyboxDropdown(
                 query: string,
