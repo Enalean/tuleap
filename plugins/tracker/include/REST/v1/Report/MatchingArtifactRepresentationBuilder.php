@@ -37,15 +37,19 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\ProvideAnonymousUser;
+use Tuleap\User\RetrieveUserById;
 
 class MatchingArtifactRepresentationBuilder
 {
     public function __construct(
-        private ReportArtifactFactory $report_artifact_factory,
-        private TableRendererForReportRetriever $table_renderer_retriever,
-        private UsedFieldsRetriever $used_fields_retriever,
-        private StatusColorForChangesetProvider $status_value_for_changeset_provider,
+        private readonly ReportArtifactFactory $report_artifact_factory,
+        private readonly TableRendererForReportRetriever $table_renderer_retriever,
+        private readonly UsedFieldsRetriever $used_fields_retriever,
+        private readonly StatusColorForChangesetProvider $status_value_for_changeset_provider,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
+        private readonly RetrieveUserById $retrieve_user_by_id,
+        private readonly ProvideAnonymousUser $provide_anonymous_user,
     ) {
     }
 
@@ -99,6 +103,8 @@ class MatchingArtifactRepresentationBuilder
                     $this->status_value_for_changeset_provider->provideColor($last_changeset, $matching_artifact->getTracker(), $current_user)
                 ),
                 $this->provide_user_avatar_url,
+                $this->retrieve_user_by_id,
+                $this->provide_anonymous_user,
             );
         }
 

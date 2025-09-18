@@ -187,12 +187,13 @@ final class ReleaseRepresentation
         }
 
         $form_element_factory     = Tracker_FormElementFactory::instance();
+        $user_manager             = \UserManager::instance();
         $tracker_artifact_builder = new ArtifactRepresentationBuilder(
             $form_element_factory,
             Tracker_ArtifactFactory::instance(),
             new TypeDao(),
             new ChangesetRepresentationBuilder(
-                \UserManager::instance(),
+                $user_manager,
                 $form_element_factory,
                 new CommentRepresentationBuilder(
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
@@ -201,6 +202,8 @@ final class ReleaseRepresentation
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            $user_manager,
+            $user_manager,
         );
 
         $tracker_factory = Tracker_ArtifactFactory::instance();

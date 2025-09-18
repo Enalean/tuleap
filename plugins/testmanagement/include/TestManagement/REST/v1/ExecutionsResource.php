@@ -227,7 +227,7 @@ class ExecutionsResource
                     Tracker_ArtifactFactory::instance(),
                     new TypeDao(),
                     new ChangesetRepresentationBuilder(
-                        UserManager::instance(),
+                        $this->user_manager,
                         $this->formelement_factory,
                         new CommentRepresentationBuilder(
                             CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
@@ -236,10 +236,14 @@ class ExecutionsResource
                         $provide_user_avatar_url,
                     ),
                     $provide_user_avatar_url,
+                    $this->user_manager,
+                    $this->user_manager,
                 ),
                 \Tuleap\Tracker\Artifact\PriorityManager::build(),
                 $provide_user_avatar_url,
                 CachedSemanticStatusRetriever::instance(),
+                $this->user_manager,
+                $this->user_manager,
             ),
             $provide_user_avatar_url,
         );
@@ -251,7 +255,7 @@ class ExecutionsResource
             BackendLogger::getDefaultLogger(),
         );
         $permissions_serializer          = new Tracker_Permission_PermissionsSerializer(
-            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+            new Tracker_Permission_PermissionRetrieveAssignee($this->user_manager)
         );
         $artifact_message_sender         = new RealTimeArtifactMessageSender(
             $node_js_client,

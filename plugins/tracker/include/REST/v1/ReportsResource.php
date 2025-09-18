@@ -199,8 +199,9 @@ class ReportsResource extends AuthenticatedResource
         $this->checkAccess();
         Header::allowOptionsGet();
 
-        $user   = UserManager::instance()->getCurrentUser();
-        $report = $this->getReportById($user, $id, $with_unsaved_changes);
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getCurrentUser();
+        $report       = $this->getReportById($user, $id, $with_unsaved_changes);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,
@@ -214,6 +215,8 @@ class ReportsResource extends AuthenticatedResource
                 new UsedFieldsRetriever(),
                 new StatusColorForChangesetProvider(new StatusValueForChangesetProvider()),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                $user_manager,
+                $user_manager,
             );
 
             $artifact_collection = $builder->buildMatchingArtifactRepresentationCollection(
@@ -270,12 +273,13 @@ class ReportsResource extends AuthenticatedResource
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values): array
     {
         $form_element_factory      = Tracker_FormElementFactory::instance();
+        $user_manager              = UserManager::instance();
         $builder                   = new ArtifactRepresentationBuilder(
             $form_element_factory,
             Tracker_ArtifactFactory::instance(),
             new TypeDao(),
             new ChangesetRepresentationBuilder(
-                UserManager::instance(),
+                $user_manager,
                 $form_element_factory,
                 new CommentRepresentationBuilder(
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
@@ -284,6 +288,8 @@ class ReportsResource extends AuthenticatedResource
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            $user_manager,
+            $user_manager,
         );
         $semantic_status_retriever = CachedSemanticStatusRetriever::instance();
 

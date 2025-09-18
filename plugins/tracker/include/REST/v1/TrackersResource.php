@@ -436,6 +436,8 @@ class TrackersResource extends AuthenticatedResource
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            $this->user_manager,
+            $this->user_manager,
         );
         $semantic_status_retriever = CachedSemanticStatusRetriever::instance();
 

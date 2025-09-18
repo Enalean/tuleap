@@ -36,6 +36,8 @@ use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\ProvideAnonymousUser;
+use Tuleap\User\RetrieveUserById;
 
 class DefinitionRepresentationBuilder
 {
@@ -72,6 +74,8 @@ class DefinitionRepresentationBuilder
         private readonly \Tuleap\Tracker\Artifact\PriorityManager $artifact_priority_manager,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
         private readonly RetrieveSemanticStatus $semantic_status_retriever,
+        private readonly RetrieveUserById $retrieve_user_by_id,
+        private readonly ProvideAnonymousUser $provide_anonymous_user,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->conformance_validator        = $conformance_validator;
@@ -140,6 +144,8 @@ class DefinitionRepresentationBuilder
                 MinimalTrackerRepresentation::build($requirement->getTracker()),
                 StatusValueRepresentation::buildFromArtifact($definition_artifact, $user, $this->semantic_status_retriever),
                 $this->provide_user_avatar_url,
+                $this->retrieve_user_by_id,
+                $this->provide_anonymous_user,
             ),
             $this->requirement_retriever->getAllRequirementsForDefinition($definition_artifact, $user)
         );

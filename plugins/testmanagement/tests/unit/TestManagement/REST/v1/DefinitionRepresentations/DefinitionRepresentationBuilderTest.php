@@ -31,6 +31,8 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\REST\v1\RequirementRetriever;
@@ -52,6 +54,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     private MockObject&ArtifactRepresentationBuilder $artifact_representation_builder;
     private RetrieveSemanticStatusStub $semantic_status_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_form_element_factory    = $this->createMock(\Tracker_FormElementFactory::class);
@@ -74,6 +77,8 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $priority_manager,
             ProvideUserAvatarUrlStub::build(),
             $this->semantic_status_retriever,
+            RetrieveUserByIdStub::withNoUser(),
+            new AnonymousUserTestProvider(),
         );
     }
 
