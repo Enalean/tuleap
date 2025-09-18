@@ -2649,6 +2649,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(TrackersPermissionsRetriever::class);
         $event->addConfigClass(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Query::class);
         $event->addConfigClass(ArtifactViewCollectionBuilder::class);
+        $event->addConfigClass(Tracker_FormElement_DateFormatter::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

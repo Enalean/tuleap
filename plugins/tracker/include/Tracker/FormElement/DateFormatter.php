@@ -19,19 +19,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\User\ProvideCurrentUser;
 
 class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const DATE_FORMAT = 'Y-m-d';
+    #[\Tuleap\Config\ConfigKey('Display date field with submitter timezone in artifact view')]
+    #[\Tuleap\Config\ConfigKeyInt(0)]
+    public const string DISPLAY_DATE_WITH_SUBMITTER_TIMEZONE = 'display_date_with_submitter_timezone';
 
-    /** @var DateField */
-    protected $field;
+    public const string DATE_FORMAT = 'Y-m-d';
 
-    public function __construct(DateField $field)
-    {
-        $this->field = $field;
+    public function __construct(
+        protected DateField $field,
+        private readonly ProvideCurrentUser $current_user_provider,
+    ) {
     }
 
     public function getFormat()
@@ -54,7 +58,8 @@ class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclar
         } else {
             if ($value != null) {
                 $timestamp       = $value->getTimestamp();
-                $formatted_value = $timestamp ? $this->formatDate($timestamp) : '';
+                $timezone        = $value->getChangeset()->getSubmitter()->getTimezone();
+                $formatted_value = $timestamp ? $this->formatDate($timestamp, $timezone) : '';
             }
         }
 
@@ -70,7 +75,8 @@ class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclar
         }
 
         $value_timestamp = $value->getTimestamp();
-        $formatted_value = $value_timestamp ? $this->formatDateForDisplay($value_timestamp) : '';
+        $timezone        = $value->getChangeset()->getSubmitter()->getTimezone();
+        $formatted_value = $value_timestamp ? $this->formatDateForDisplay($value_timestamp, $timezone) : '';
 
         return $formatted_value;
     }
@@ -115,14 +121,40 @@ class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclar
     /**
      * Format a timestamp into Y-m-d format
      */
-    public function formatDate($timestamp)
+    public function formatDate($timestamp, ?string $timezone): string
     {
-        return format_date(self::DATE_FORMAT, (float) $timestamp, '');
+        if (ForgeConfig::getInt(self::DISPLAY_DATE_WITH_SUBMITTER_TIMEZONE) === 0) {
+            return format_date(self::DATE_FORMAT, (float) $timestamp, '');
+        }
+
+        if ($timestamp === '') {
+            return '';
+        }
+        $date = new DateTime("@$timestamp");
+        if ($timezone !== null && $timezone !== '') {
+            $date = $date->setTimezone(new DateTimeZone($timezone));
+        } else {
+            $date = $date->setTimezone(new DateTimeZone(TimezoneRetriever::getUserTimezone($this->current_user_provider->getCurrentUser())));
+        }
+        return $date->format(self::DATE_FORMAT);
     }
 
-    public function formatDateForDisplay($timestamp)
+    public function formatDateForDisplay($timestamp, ?string $timezone): string
     {
-        return format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, '');
+        if (ForgeConfig::getInt(self::DISPLAY_DATE_WITH_SUBMITTER_TIMEZONE) === 0) {
+            return format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, '');
+        }
+
+        if ($timestamp === '') {
+            return '';
+        }
+        $date = new DateTime("@$timestamp");
+        if ($timezone !== null && $timezone !== '') {
+            $date = $date->setTimezone(new DateTimeZone($timezone));
+        } else {
+            $date = $date->setTimezone(new DateTimeZone(TimezoneRetriever::getUserTimezone($this->current_user_provider->getCurrentUser())));
+        }
+        return $date->format($GLOBALS['Language']->getText('system', 'datefmt_short'));
     }
 
     protected function getDatePicker($value, array $errors): string
