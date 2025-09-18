@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\View\Admin;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_StaticField_RichText;
 use Tracker_FormElement_View_Admin_Container;
 use Tracker_FormElement_View_Admin_Field;
 use Tracker_FormElement_View_Admin_Field_ArtifactId;
@@ -51,6 +50,7 @@ use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField;
+use Tuleap\Tracker\FormElement\StaticField\RichText\RichTextStaticField;
 use Tuleap\Tracker\FormElement\StaticField\Separator\SeparatorStaticField;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -83,7 +83,7 @@ final class AdminVisitorTest extends TestCase
     public function testVisitARichTextShouldFallbackStaticField(): void
     {
         $visitor     = new Tracker_FormElement_View_Admin_Visitor([]);
-        $formElement = new Tracker_FormElement_StaticField_RichText(null, null, null, null, null, null, null, null, null, null, null, null);
+        $formElement = new RichTextStaticField(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         self::assertInstanceOf(Tracker_FormElement_View_Admin_StaticField::class, $visitor->getAdmin());
     }

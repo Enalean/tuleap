@@ -19,10 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\StaticField\RichText;
+
+use Codendi_HTMLPurifier;
+use Tracker_FormElement_StaticField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\RichTextFieldSpecificPropertiesDAO;
 
-class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class RichTextStaticField extends Tracker_FormElement_StaticField
 {
     public array $default_properties = [
         'static_value' => [
