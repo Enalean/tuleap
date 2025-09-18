@@ -22,7 +22,7 @@ namespace Tuleap\DynamicCredentials\Credential;
 
 class CredentialIdentifierExtractor
 {
-    public const EXPECTED_PREFIX = 'forge__dynamic_credential-';
+    public const string EXPECTED_PREFIX = 'forge__dynamic_credential-';
 
     /**
      * @return string

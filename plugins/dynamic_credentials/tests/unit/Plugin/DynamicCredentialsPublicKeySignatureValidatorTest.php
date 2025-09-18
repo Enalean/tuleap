@@ -28,7 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DynamicCredentialsPublicKeySignatureValidatorTest extends TestCase
 {
-    private const VALID_PUBLIC_KEY = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
+    private const string VALID_PUBLIC_KEY = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
     private \Tuleap\Config\ValueValidator $validator;
 
     #[\Override]

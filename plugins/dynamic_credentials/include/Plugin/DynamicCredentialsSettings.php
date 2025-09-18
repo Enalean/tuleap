@@ -32,15 +32,15 @@ use Tuleap\Option\Option;
 #[ConfigKeyCategory('Dynamic Credentials')]
 final class DynamicCredentialsSettings
 {
-    private const DEFAULT_REAL_NAME = 'Dynamic user';
+    private const string DEFAULT_REAL_NAME = 'Dynamic user';
 
     #[ConfigKey('Real name to use for the dynamic user')]
     #[ConfigKeyString(self::DEFAULT_REAL_NAME)]
-    public const USER_REALNAME = 'dynamic_credentials_user_real_name';
+    public const string USER_REALNAME = 'dynamic_credentials_user_real_name';
 
     #[ConfigKey('Public key used to verify dynamic credentials requests')]
     #[ConfigKeyString]
-    public const SIGNATURE_PUBLIC_KEY = 'dynamic_credentials_signature_public_key';
+    public const string SIGNATURE_PUBLIC_KEY = 'dynamic_credentials_signature_public_key';
 
     /**
      * @return Option<SignaturePublicKey>

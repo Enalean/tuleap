@@ -39,7 +39,7 @@ use Tuleap\User\BeforeStandardLogin;
 
 class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys // @codingStandardsIgnoreLine
 {
-    public const NAME = 'dynamic_credentials';
+    public const string NAME = 'dynamic_credentials';
 
     public function __construct($id)
     {

@@ -30,7 +30,7 @@ final class DynamicCredentialsSettingsTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const PUBLIC_KEY = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
+    private const string PUBLIC_KEY = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
 
     private DynamicCredentialsSettings $settings;
 

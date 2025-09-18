@@ -25,9 +25,9 @@ require_once 'bootstrap.php';
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DynamicCredentialsTest extends \Tuleap\REST\RestBase
 {
-    public const USERNAME         = 'forge__dynamic_credential-user1';
-    public const USERNAME_EXPIRED = self::USERNAME . '-expired';
-    public const PASSWORD         = 'password';
+    public const string USERNAME         = 'forge__dynamic_credential-user1';
+    public const string USERNAME_EXPIRED = self::USERNAME . '-expired';
+    public const string PASSWORD         = 'password';
 
     public function testPOSTNewAccountAndLogin()
     {
