@@ -65090,7 +65090,6 @@
       <code><![CDATA[REFERENCE_NATURE_FILE         = 'file']]></code>
       <code><![CDATA[REFERENCE_NATURE_FORUM        = 'forum']]></code>
       <code><![CDATA[REFERENCE_NATURE_FORUMMESSAGE = 'forum_message']]></code>
-      <code><![CDATA[REFERENCE_NATURE_NEWS         = 'news']]></code>
       <code><![CDATA[REFERENCE_NATURE_OTHER        = 'other']]></code>
       <code><![CDATA[REFERENCE_NATURE_RELEASE      = 'release']]></code>
       <code><![CDATA[REFERENCE_NATURE_SVNREVISION  = 'svn_revision']]></code>
@@ -81713,19 +81712,11 @@
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($gr_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
       <code><![CDATA[db_ei($id)]]></code>
       <code><![CDATA[db_ei($is_followup_to)]]></code>
       <code><![CDATA[db_ei($is_followup_to)]]></code>
@@ -81737,8 +81728,6 @@
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
-      <code><![CDATA[db_ei($msg_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
@@ -81765,8 +81754,6 @@
       <code><![CDATA[db_error()]]></code>
       <code><![CDATA[db_error()]]></code>
       <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_error()]]></code>
       <code><![CDATA[db_es(htmlspecialchars($body))]]></code>
       <code><![CDATA[db_es(htmlspecialchars($body))]]></code>
       <code><![CDATA[db_es(htmlspecialchars($description))]]></code>
@@ -81780,15 +81767,9 @@
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($res1)]]></code>
       <code><![CDATA[db_numrows($res2)]]></code>
       <code><![CDATA[db_numrows($res3)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
@@ -81804,13 +81785,7 @@
       <code><![CDATA[db_query($qry)]]></code>
       <code><![CDATA[db_query($qry1)]]></code>
       <code><![CDATA[db_query($qry1)]]></code>
-      <code><![CDATA[db_query($qry1)]]></code>
       <code><![CDATA[db_query($qry2)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -81843,7 +81818,6 @@
       <code><![CDATA[db_result($res, 0, 'thread_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'thread_id')]]></code>
       <code><![CDATA[db_result($res1, 0, 'group_id')]]></code>
-      <code><![CDATA[db_result($res1, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($res2, 0, 'has_followups')]]></code>
       <code><![CDATA[db_result($result, $i, 'body')]]></code>
       <code><![CDATA[db_result($result, $i, 'body')]]></code>
@@ -81866,26 +81840,10 @@
       <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
       <code><![CDATA[db_result($result, ($rows - 1), 'msg_id')]]></code>
       <code><![CDATA[db_result($result, ($rows - 1), 'subject')]]></code>
-      <code><![CDATA[db_result($result, 0, 'body')]]></code>
-      <code><![CDATA[db_result($result, 0, 'date')]]></code>
-      <code><![CDATA[db_result($result, 0, 'details', $group_id)]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'is_public')]]></code>
-      <code><![CDATA[db_result($result, 0, 'realname')]]></code>
       <code><![CDATA[db_result($result, 0, 'save_date')]]></code>
-      <code><![CDATA[db_result($result, 0, 'subject')]]></code>
-      <code><![CDATA[db_result($result, 0, 'submitted_by')]]></code>
-      <code><![CDATA[db_result($result, 0, 'summary')]]></code>
-      <code><![CDATA[db_result($result, 0, 'unix_group_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'user_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'user_name')]]></code>
     </DeprecatedFunction>
     <InvalidReturnStatement>
       <code><![CDATA[-1]]></code>
@@ -81908,13 +81866,10 @@
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_name]]></code>
       <code><![CDATA[$forum_status]]></code>
       <code><![CDATA[$group_forum_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$is_followup_to]]></code>
       <code><![CDATA[$is_followup_to]]></code>
@@ -81924,12 +81879,10 @@
       <code><![CDATA[$msg_id]]></code>
       <code><![CDATA[$msg_id]]></code>
       <code><![CDATA[$msg_id]]></code>
-      <code><![CDATA[$msg_id]]></code>
       <code><![CDATA[$mthread]]></code>
       <code><![CDATA[$need_feedback]]></code>
       <code><![CDATA[$subject]]></code>
       <code><![CDATA[$subject]]></code>
-      <code><![CDATA[$thread_id]]></code>
       <code><![CDATA[$thread_id]]></code>
       <code><![CDATA[$thread_id]]></code>
       <code><![CDATA[$thread_id]]></code>
@@ -81951,7 +81904,6 @@
       <code><![CDATA[forum_delete_monitor]]></code>
       <code><![CDATA[forum_footer]]></code>
       <code><![CDATA[forum_header]]></code>
-      <code><![CDATA[forum_is_monitored]]></code>
       <code><![CDATA[forum_is_public_value_allowed]]></code>
       <code><![CDATA[forum_thread_add_monitor]]></code>
       <code><![CDATA[forum_thread_delete_monitor]]></code>
@@ -81962,10 +81914,8 @@
       <code><![CDATA[forum_utils_get_styles]]></code>
       <code><![CDATA[forum_utils_news_access]]></code>
       <code><![CDATA[get_forum_group_id]]></code>
-      <code><![CDATA[get_forum_name]]></code>
       <code><![CDATA[get_forum_saved_date]]></code>
       <code><![CDATA[get_next_thread_id]]></code>
-      <code><![CDATA[handle_monitoring]]></code>
       <code><![CDATA[post_message]]></code>
       <code><![CDATA[recursive_delete]]></code>
       <code><![CDATA[show_post_form]]></code>
@@ -81978,9 +81928,6 @@
       <code><![CDATA[$poster]]></code>
       <code><![CDATA[$poster]]></code>
     </PossiblyNullArgument>
-    <TooManyArguments>
-      <code><![CDATA[db_result($result, 0, 'details', $group_id)]]></code>
-    </TooManyArguments>
     <UndefinedDocblockClass>
       <code><![CDATA[forum_id]]></code>
     </UndefinedDocblockClass>
@@ -82758,36 +82705,21 @@
     <DeprecatedFunction>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_ei($limit + $tail_headlines)]]></code>
       <code><![CDATA[db_ei($promote_news)]]></code>
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
       <code><![CDATA[db_es($details)]]></code>
       <code><![CDATA[db_es($summary)]]></code>
       <code><![CDATA[db_fetch_array($res)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($result, 0, 'summary')]]></code>
       <code><![CDATA[db_result($result, 0, 'summary')]]></code>
     </DeprecatedFunction>
-    <InvalidArgument>
-      <code><![CDATA[$new_id]]></code>
-      <code><![CDATA[$new_id]]></code>
-    </InvalidArgument>
     <MissingParamType>
-      <code><![CDATA[$allow_submit]]></code>
-      <code><![CDATA[$data]]></code>
       <code><![CDATA[$details]]></code>
       <code><![CDATA[$details]]></code>
       <code><![CDATA[$details]]></code>
@@ -82801,34 +82733,22 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$hide_nb_comments]]></code>
-      <code><![CDATA[$hide_nb_comments]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$is_private]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
       <code><![CDATA[$news_bytes_id]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$private_news]]></code>
       <code><![CDATA[$project]]></code>
       <code><![CDATA[$promote_news]]></code>
       <code><![CDATA[$send_news_to]]></code>
-      <code><![CDATA[$show_projectname]]></code>
-      <code><![CDATA[$show_projectname]]></code>
       <code><![CDATA[$summary]]></code>
       <code><![CDATA[$summary]]></code>
       <code><![CDATA[$summary]]></code>
-      <code><![CDATA[$tail_headlines]]></code>
       <code><![CDATA[$ugroups]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[get_news_name]]></code>
       <code><![CDATA[get_news_name_from_forum_id]]></code>
       <code><![CDATA[news_check_permission]]></code>
-      <code><![CDATA[news_fetch_a_news_summary_block]]></code>
       <code><![CDATA[news_fetch_ugroups]]></code>
       <code><![CDATA[news_footer]]></code>
       <code><![CDATA[news_header]]></code>
@@ -82836,7 +82756,6 @@
       <code><![CDATA[news_notify_promotion_request]]></code>
       <code><![CDATA[news_read_permissions]]></code>
       <code><![CDATA[news_send_to_ugroups]]></code>
-      <code><![CDATA[news_show_latest]]></code>
       <code><![CDATA[news_submit]]></code>
       <code><![CDATA[news_update_permissions]]></code>
     </MissingReturnType>

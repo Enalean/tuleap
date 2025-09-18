@@ -37,81 +37,16 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\Layout\HeaderConfiguration;
 
-require_once __DIR__ . '/../news/news_utils.php';
-
 function forum_header(HeaderConfiguration $params)
 {
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('forums');
-    $hp = Codendi_HTMLPurifier::instance();
-    $uh = new UserHelper();
 
     $project = ProjectManager::instance()->getProjectById((int) $group_id);
 
-    /*
-
-        bastardization for news
-
-        Show icon bar unless it's a news forum
-
-    */
     if ($group_id == ForgeConfig::get('sys_news_group')) {
-     //this is a news item, not a regular forum
-        if ($forum_id) {
-         /*
-          Show this news item at the top of the page
-         */
-            $sql    = 'SELECT * FROM news_bytes WHERE forum_id=' . db_ei($forum_id);
-            $result = db_query($sql);
-
-         //backwards shim for all "generic news" that used to be submitted
-         //as of may, "generic news" is not permitted - only project-specific news
-            if (db_result($result, 0, 'group_id') != ForgeConfig::get('sys_news_group')) {
-                $in_project = $params->in_project;
-                if ($in_project) {
-                    $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($params->title)
-                        ->inProject($in_project->project, Service::NEWS)
-                        ->withPrinterVersion($params->printer_version)
-                        ->build();
-                }
-
-                $group_id = db_result($result, 0, 'group_id');
-                $GLOBALS['HTML']->addBreadcrumbs([
-                    [
-                        'title' => $Language->getText('news_index', 'news'),
-                        'url' => '/news/?group_id=' . urlencode($group_id),
-                    ],
-                ]);
-                site_project_header($project, $params);
-            } else {
-                $HTML->header($params);
-                echo '
-					<H2>' . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' <A HREF="/news/">' . _('News') . '</A></H2><P>';
-            }
-
-            echo '<TABLE><TR><TD VALIGN="TOP">';
-            if (! $result || db_numrows($result) < 1) {
-                echo '
-					<h3>' . _('Error - this news item was not found') . '</h3>';
-            } else {
-                echo '
-				<B>' . _('Posted By') . ':</B> ' .
-                $hp->purify($uh->getDisplayNameFromUserId(db_result($result, 0, 'submitted_by')), CODENDI_PURIFIER_CONVERT_HTML) .
-                '<BR>
-				<B>' . _('Date') . ':</B> ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date')) . '<BR>
-				<B>' . _('Summary') . ':</B><A HREF="' . $hp->purify('/forum/forum.php?forum_id=' . urlencode(db_result($result, 0, 'forum_id'))) . '">' . $hp->purify(db_result($result, 0, 'summary')) . '</A>
-				<P>
-				' . $hp->purify(db_result($result, 0, 'details', $group_id), CODENDI_PURIFIER_BASIC);
-
-                echo '<P>';
-            }
-            echo '</TD><TD VALIGN="TOP" WIDTH="35%">';
-            echo $HTML->box1_top(_('Project Latest News'), 0);
-            echo news_show_latest(db_result($result, 0, 'group_id'), 5, false);
-            echo $HTML->box1_bottom();
-            echo '</TD></TR></TABLE>';
-        }
+        return;
     } else {
         //this is just a regular forum, not a news item
         if (! $project->isError()) {
@@ -176,19 +111,7 @@ function forum_header(HeaderConfiguration $params)
 
 function forum_footer()
 {
-    global $group_id,$HTML;
-    /*
-        if general news, show general site footer
-
-        Otherwise, show project footer
-    */
-
-    //backwards compatibility for "general news" which is no longer permitted to be submitted
-    if ($group_id == ForgeConfig::get('sys_news_group')) {
-        $HTML->footer([]);
-    } else {
-        site_project_footer([]);
-    }
+    site_project_footer([]);
 }
 
 function user_monitor_forum($forum_id, $user_id)
@@ -203,18 +126,6 @@ function user_monitor_forum($forum_id, $user_id)
     );
     $result = db_query($sql);
     return ($result && db_numrows($result) >= 1);
-}
-
-function forum_is_monitored($forum_id)
-{
-    $sql = sprintf(
-        'SELECT NULL' .
-                    ' FROM forum_monitored_forums' .
-                    ' WHERE forum_id = %d',
-        db_ei($forum_id)
-    );
-    $res = db_query($sql);
-    return ($res && db_numrows($res) >= 1);
 }
 
 function forum_add_monitor($forum_id, $user_id)
@@ -286,21 +197,6 @@ function forum_create_forum($group_id, $forum_name, $is_public = 1, $create_defa
              "'" . db_es(sprintf(_('Welcome to %1$s'), $group_name) . ' ' . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')");
         }
         return $forum_id;
-    }
-}
-
-function get_forum_name($id)
-{
-    global $Language;
-    /*
-        Takes an ID and returns the corresponding forum name
-    */
-    $sql    = 'SELECT forum_name FROM forum_group_list WHERE group_forum_id=' . db_ei($id);
-    $result = db_query($sql);
-    if (! $result || db_numrows($result) < 1) {
-        return _('Not Found');
-    } else {
-        return db_result($result, 0, 'forum_name');
     }
 }
 
@@ -581,7 +477,6 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
         } else {
             forum_thread_delete_monitor_by_user($group_forum_id, $msg_id, $user_id);
         }
-        handle_monitoring($group_forum_id, $thread_id, $msg_id);
     } else {
         echo '
 			<H3>' . _('You could post if you were logged in') . '</H3>';
@@ -660,98 +555,6 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
         echo '<CENTER>';
         echo "\n\n<H3>" . sprintf(_('<A HREF="%1$s"><u>Log in first</u></A><span class="highlight"> to post messages</span>'), '/account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI'] ?? '')) . '</H3>';
         echo '</CENTER>';
-    }
-}
-
-function handle_monitoring($forum_id, $thread_id, $msg_id)
-{
-    global $feedback,$sys_lf,$Language;
-    /*
-        Checks to see if anyone is monitoring this forum
-        If someone is, it sends them the message in email format
-    */
-
-    $res = news_read_permissions($forum_id);
-    if ((db_numrows($res) < 1)) {
-        //check if there are users monitoring specific threads
-        $sql = sprintf(
-            '(SELECT user.email FROM forum_monitored_forums,user'
-            . ' WHERE forum_monitored_forums.user_id=user.user_id'
-            . ' AND forum_monitored_forums.forum_id=%d'
-            . ' AND ( user.status="A" OR user.status="R" ))'
-            . ' UNION (SELECT user.email FROM forum_monitored_threads,user'
-            . ' WHERE forum_monitored_threads.user_id=user.user_id'
-            . ' AND forum_monitored_threads.forum_id=%d'
-            . ' AND forum_monitored_threads.thread_id=%d'
-            . ' AND ( user.status="A" OR user.status="R" ))',
-            db_ei($forum_id),
-            db_ei($forum_id),
-            db_ei($thread_id)
-        );
-    } else {
-        //we are dealing with private news, only project members are allowed to monitor
-        $qry1  = 'SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($forum_id);
-        $res1  = db_query($qry1);
-        $gr_id = db_result($res1, 0, 'group_id');
-        $sql   = 'SELECT user.email from forum_monitored_forums,user_group,user' .
-         ' WHERE forum_monitored_forums.forum_id=' . db_ei($forum_id) . ' AND user_group.group_id=' . db_ei($gr_id) .
-         ' AND forum_monitored_forums.user_id=user_group.user_id AND user_group.user_id=user.user_id';
-    }
-
-    $result = db_query($sql);
-    $rows   = db_numrows($result);
-
-    if ($result && $rows > 0) {
-        $to_list = result_column_to_array($result);
-
-        $sql = 'SELECT groups.unix_group_name,user.user_name,user.realname,forum_group_list.forum_name,' .
-        'forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ' .
-        'FROM forum,user,forum_group_list,groups ' .
-        'WHERE user.user_id=forum.posted_by ' .
-        'AND forum_group_list.group_forum_id=forum.group_forum_id ' .
-        'AND groups.group_id=forum_group_list.group_id ' .
-        'AND forum.msg_id=' . db_ei($msg_id);
-
-        $result = db_query($sql);
-
-        if ($result && db_numrows($result) > 0) {
-            $mail = new Codendi_Mail();
-            $mail->setFrom(ForgeConfig::get('sys_noreply'));
-            $mail->setSubject('[' . db_result($result, 0, 'unix_group_name') . ' - ' . util_unconvert_htmlspecialchars(db_result($result, 0, 'forum_name')) . ' - ' . db_result($result, 0, 'user_name') . '] ' . util_unconvert_htmlspecialchars(db_result($result, 0, 'subject')));
-            foreach ($to_list as $to) {
-                $mail->setBcc($to);
-            }
-            $server_url = \Tuleap\ServerHostname::HTTPSUrl();
-            $url1       = $server_url . '/forum/monitor.php?forum_id=' . $forum_id;
-            $url2       = $server_url . '/forum/monitor_thread.php?forum_id=' . $forum_id;
-            $body       = _('Read and respond to this message at') . ': ' .
-             "\n" . $server_url . '/forum/message.php?msg_id=' . $msg_id .
-             "\n" . $Language->getText('global', 'by') . ' ' . db_result($result, 0, 'user_name') . ' (' . db_result($result, 0, 'realname') . ')' .
-             "\n\n" . util_unconvert_htmlspecialchars(db_result($result, 0, 'body')) .
-             "\n\n______________________________________________________________________" .
-             "\n" . sprintf(_('You are receiving this email because you elected to monitor this forum or this thread.
-To stop monitoring this forum, login and visit:
- %1$s .
-To change thread monitoring settings, visit:
- %2$s.'), $url1, $url2);
-                $mail->setBodyText($body);
-
-            if ($mail->send()) {
-                $feedback .= ' - ' . _('Email sent');
-            } else {//ERROR
-                $feedback .= ' - ' . $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')]);
-            }
-
-            if (forum_is_monitored($forum_id) || forum_thread_is_monitored($thread_id)) {
-                $feedback .= ' - ' . _('people monitoring');
-            }
-        } else {
-            $feedback .= ' ' . _('Email not sent') . ' ';
-            echo db_error();
-        }
-    } else {
-        $feedback .= ' ' . _('Email not sent') . ' - ' . _('No one monitoring') . ' ';
-        echo db_error();
     }
 }
 
