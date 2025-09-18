@@ -28,7 +28,7 @@ use Tuleap\REST\RestBase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FileTest extends RestBase
 {
-    public const PROJECT_NAME = 'frs-test';
+    public const string PROJECT_NAME = 'frs-test';
 
     public function testOPTIONSFile(): void
     {

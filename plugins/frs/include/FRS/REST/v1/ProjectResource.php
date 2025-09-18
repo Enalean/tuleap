@@ -36,7 +36,7 @@ use UserManager;
 
 class ProjectResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 50;
+    private const int MAX_LIMIT = 50;
 
     /**
      * @var FRSPackageFactory

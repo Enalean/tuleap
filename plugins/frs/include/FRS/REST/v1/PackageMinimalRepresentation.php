@@ -28,7 +28,7 @@ use Tuleap\REST\JsonCast;
  */
 class PackageMinimalRepresentation
 {
-    public const ROUTE = 'frs_packages';
+    public const string ROUTE = 'frs_packages';
 
     /**
      * @var int ID of the package

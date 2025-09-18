@@ -51,11 +51,11 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
  */
 final class ReleaseRepresentation
 {
-    public const ROUTE = 'frs_release';
+    public const string ROUTE = 'frs_release';
 
-    public const STATUS_ACTIVE  = 'active';
-    public const STATUS_DELETED = 'deleted';
-    public const STATUS_HIDDEN  = 'hidden';
+    public const string STATUS_ACTIVE  = 'active';
+    public const string STATUS_DELETED = 'deleted';
+    public const string STATUS_HIDDEN  = 'hidden';
 
     public static $STATUS = [
         FRSRelease::STATUS_ACTIVE  => self::STATUS_ACTIVE,

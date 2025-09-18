@@ -28,7 +28,7 @@ namespace Tuleap\FRS\REST\v1;
  */
 class ServiceRepresentation
 {
-    public const ROUTE = 'frs_service';
+    public const string ROUTE = 'frs_service';
 
     /**
      * @var ServicePermissionsForGroupsRepresentation {@required false} {@type \Tuleap\FRS\REST\v1\ServicePermissionsForGroupsRepresentation}
