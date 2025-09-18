@@ -15,19 +15,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Tracker;
+
+use PlanningFactory;
+use Tracker_Hierarchy;
+use TrackerFactory;
 use Tuleap\Tracker\Tracker;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AgileDashboard_HierarchyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HierarchyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private AgileDashboard_HierarchyChecker $hierarchy_checker;
+    private HierarchyChecker $hierarchy_checker;
     private Tracker|\PHPUnit\Framework\MockObject\MockObject $tracker;
     private PlanningFactory|\PHPUnit\Framework\MockObject\Stub $planning_factory;
     private Tracker_Hierarchy|\PHPUnit\Framework\MockObject\Stub $hierarchy;
@@ -48,7 +49,7 @@ class AgileDashboard_HierarchyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->hierarchy        = $this->createStub(\Tracker_Hierarchy::class);
         $this->tracker_factory  = $this->createStub(\TrackerFactory::class);
 
-        $this->hierarchy_checker = new AgileDashboard_HierarchyChecker(
+        $this->hierarchy_checker = new HierarchyChecker(
             $this->planning_factory,
             $this->tracker_factory
         );

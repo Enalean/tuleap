@@ -15,17 +15,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Tracker;
+
+use PlanningFactory;
+use Project;
+use Tracker_Hierarchy;
+use TrackerFactory;
 use Tuleap\Tracker\Tracker;
 
-class AgileDashboard_HierarchyChecker
+readonly class HierarchyChecker
 {
     public function __construct(
-        private readonly PlanningFactory $planning_factory,
-        private readonly TrackerFactory $tracker_factory,
+        private PlanningFactory $planning_factory,
+        private TrackerFactory $tracker_factory,
     ) {
     }
 
@@ -63,8 +68,8 @@ class AgileDashboard_HierarchyChecker
         $agiledashboard_tracker_ids = array_unique(
             array_merge($planning_tracker_ids, $backlog_tracker_ids)
         );
-        $hierachy_factory           = $this->tracker_factory->getHierarchyFactory();
-        $trackers_hierarchy         = $hierachy_factory->getHierarchy($agiledashboard_tracker_ids);
+        $hierarchy_factory          = $this->tracker_factory->getHierarchyFactory();
+        $trackers_hierarchy         = $hierarchy_factory->getHierarchy($agiledashboard_tracker_ids);
         $hierarchy_tracker_ids      = $trackers_hierarchy->flatten();
 
         return array_unique(array_merge($agiledashboard_tracker_ids, $hierarchy_tracker_ids));
