@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Enalean\LicenseManager;
 final class QuotaLicenseCalculator
 {
-    private const PERCENTAGE_QUOTA_EXCEEDING_SOON = 0.2;
+    private const float PERCENTAGE_QUOTA_EXCEEDING_SOON = 0.2;
 
     private function __construct()
     {
