@@ -2,7 +2,7 @@
 #  *
 #  * Include scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -53,19 +53,10 @@ news_admin_index	promoted_row_label	Displayed
 news_admin_index	update_news_list	Display select items in widget
 news_admin_index	info_text	Only the first ten news items will be displayed
 news_admin_index	no_news_items	Please add news items to choose which ones will be displayed in the widget
-news_admin_index	waiting_publication_tab_name	News waiting for publication
-news_admin_index	rejected_news_tab_name	Rejected news
-news_admin_index	published_news_tab_name	Published news
 news_admin_index	waiting_publication_pane_name	News waiting for publication on homepage
 news_admin_index	rejected_news_pane_name	News rejected for homepage last week
 news_admin_index	published_news_pane_name	News published on homepage last week
-news_admin_index	requested_name	Requested?
-news_admin_index	requested_tooltip	Requested to be published on homepage
-news_admin_index	table_title_name	Title
-news_admin_index	table_content_name	Content
-news_admin_index	table_details_name	Details
 news_admin_index	table_review_name	Review
-news_admin_index	no_news	There is no news
 news_admin_index	waiting_publication_no_news	There is no news waiting for approbation
 news_admin_index	published_news_no_news	No news has been approved last week
 news_admin_index	rejected_news_no_news	No news has been rejected last week
@@ -86,7 +77,7 @@ news_admin_index	news_already_rejected	This news is already rejected
 #-----------------------------------------------
 # Script: SF/www/news/index.php
 #
-news_index	news	 News	
+news_index	news	 News
 news_index	news_for	News for $1
 news_index	choose_news	Choose a News item and you can browse, search, and post messages.
 news_index	no_news_found	No News Found
