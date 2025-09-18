@@ -27,20 +27,18 @@
 <script setup lang="ts">
 import type { DefaultFileItem } from "../../../type";
 import { computed } from "vue";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../helpers/add-original-filename-extension";
 import PreviewFilenameProperty from "./PreviewFilenameProperty.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { FILENAME_PATTERN } from "../../../configuration-keys";
 
 const props = defineProps<{ item: DefaultFileItem }>();
 
-const { filename_pattern } = useNamespacedState<ConfigurationState>("configuration", [
-    "filename_pattern",
-]);
+const filename_pattern = strictInject(FILENAME_PATTERN);
 
 const preview = computed((): string => {
     return addOriginalFilenameExtension(
-        filename_pattern.value
+        filename_pattern
             // eslint-disable-next-line no-template-curly-in-string
             .replace("${TITLE}", props.item.title)
             // eslint-disable-next-line no-template-curly-in-string

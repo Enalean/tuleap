@@ -28,12 +28,12 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { buildFakeItem } from "../../../helpers/item-builder";
 import {
     IS_CHANGELOG_PROPOSED_AFTER_DND,
+    IS_FILENAME_PATTERN_ENFORCED,
     MAX_FILES_DRAGNDROP,
     MAX_SIZE_UPLOAD,
     USER_CAN_DRAGNDROP,
     USER_ID,
 } from "../../../configuration-keys";
-import type { ConfigurationState } from "../../../store/configuration";
 
 vi.mock("../../../helpers/emitter");
 
@@ -72,14 +72,6 @@ describe("DragNDropHandler", () => {
         const wrapper = shallowMount(DragNDropHandler, {
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                is_filename_pattern_enforced,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
                     state: {
                         folder_content,
                         current_folder,
@@ -95,6 +87,7 @@ describe("DragNDropHandler", () => {
                     [USER_CAN_DRAGNDROP.valueOf()]: user_can_dragndrop,
                     [MAX_SIZE_UPLOAD.valueOf()]: max_size_upload,
                     [IS_CHANGELOG_PROPOSED_AFTER_DND.valueOf()]: is_changelog_proposed_after_dnd,
+                    [IS_FILENAME_PATTERN_ENFORCED.valueOf()]: is_filename_pattern_enforced,
                 },
             },
         });

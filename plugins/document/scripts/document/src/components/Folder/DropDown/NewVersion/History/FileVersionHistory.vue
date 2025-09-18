@@ -78,15 +78,13 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import FileVersionHistoryContent from "./FileVersionHistoryContent.vue";
 import { getVersionHistory } from "../../../../../helpers/version-history-retriever";
 import { handleErrorForHistoryVersion } from "../../../../../helpers/properties-helpers/error-handler-helper";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../../store/configuration";
 import FileVersionHistorySkeleton from "./FileVersionHistorySkeleton.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { IS_FILENAME_PATTERN_ENFORCED } from "../../../../../configuration-keys";
 
 const props = defineProps<{ item: ItemFile }>();
 
-const { is_filename_pattern_enforced } = useNamespacedState<ConfigurationState>("configuration", [
-    "is_filename_pattern_enforced",
-]);
+const is_filename_pattern_enforced = strictInject(IS_FILENAME_PATTERN_ENFORCED);
 
 let versions = ref<ReadonlyArray<FileHistory>>([]);
 let has_error = ref(false);
@@ -94,7 +92,7 @@ let error_message = ref("");
 let is_loading = ref(false);
 
 onMounted(async (): Promise<void> => {
-    if (is_filename_pattern_enforced.value) {
+    if (is_filename_pattern_enforced) {
         is_loading.value = true;
         try {
             versions.value = await getVersionHistory(props.item);

@@ -27,7 +27,6 @@ import type { Dropdown } from "@tuleap/tlp-dropdown";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import { EVENT_TLP_DROPDOWN_SHOWN } from "@tuleap/tlp-dropdown";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../../store/configuration";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -78,14 +77,6 @@ describe("SearchItemDropdown", () => {
             },
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                project_id: "101",
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
                     actions: {
                         loadDocument,
                     },

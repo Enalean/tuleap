@@ -21,7 +21,6 @@ import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import CriterionList from "./CriterionList.vue";
-import type { ConfigurationState } from "../../../store/configuration";
 import type { SearchCriterionList } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import emitter from "../../../helpers/emitter";
@@ -50,16 +49,7 @@ describe("CriterionList", () => {
                 value: "folder",
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                user_can_create_wiki: true,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
             },
         });
 
@@ -73,16 +63,7 @@ describe("CriterionList", () => {
                 value: "wiki",
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                user_can_create_wiki: true,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
             },
         });
 

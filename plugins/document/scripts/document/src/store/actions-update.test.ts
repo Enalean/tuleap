@@ -31,7 +31,6 @@ import {
 import * as upload_file from "./actions-helpers/upload-file";
 import type { ActionContext } from "vuex";
 import type { Embedded, Empty, Folder, ItemFile, Link, RootState, Wiki } from "../type";
-import type { ConfigurationState } from "./configuration";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../constants";
 import type { Upload } from "tus-js-client";
 import emitter from "../helpers/emitter";
@@ -51,12 +50,10 @@ describe("actions-update", () => {
     let getItem: MockInstance;
 
     beforeEach(() => {
-        const project_id = "101";
         context = {
             commit: vi.fn(),
             dispatch: vi.fn(),
             state: {
-                configuration: { project_id } as unknown as ConfigurationState,
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;

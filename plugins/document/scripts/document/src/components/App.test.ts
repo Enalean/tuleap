@@ -28,9 +28,10 @@ import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
 import LoadingError from "./Folder/Error/LoadingError.vue";
 import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-test";
+import { CAN_USER_SWITCH_TO_OLD_UI } from "../configuration-keys";
 
 describe("App", () => {
-    let factory: () => VueWrapper<App>;
+    let factory: () => VueWrapper<InstanceType<typeof App>>;
     const set_root_title = vi.fn();
     let has_folder_permission_error: boolean,
         has_folder_loading_error: boolean,
@@ -52,7 +53,7 @@ describe("App", () => {
         has_document_lock_error = false;
         can_user_switch_to_old_ui = false;
 
-        factory = (): VueWrapper<App> => {
+        factory = (): VueWrapper<InstanceType<typeof App>> => {
             return shallowMount(App, {
                 props: default_prop,
                 global: {
@@ -68,14 +69,6 @@ describe("App", () => {
                                 },
                                 namespaced: true,
                             },
-                            configuration: {
-                                state: {
-                                    user_id: 1,
-                                    project_id: 101,
-                                    can_user_switch_to_old_ui,
-                                },
-                                namespaced: true,
-                            },
                         },
                         getters: {
                             is_uploading: () => false,
@@ -86,6 +79,9 @@ describe("App", () => {
                     }),
                     stubs: {
                         RouterView: RouterViewStub,
+                    },
+                    provide: {
+                        [CAN_USER_SWITCH_TO_OLD_UI.valueOf()]: can_user_switch_to_old_ui,
                     },
                 },
             });

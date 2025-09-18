@@ -34,9 +34,9 @@
 import { useGettext } from "vue3-gettext";
 import type { DefaultFileItem } from "../../../type";
 import { ref } from "vue";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { isFile } from "../../../helpers/type-check-helper";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { IS_FILENAME_PATTERN_ENFORCED } from "../../../configuration-keys";
 
 const { $gettext } = useGettext();
 
@@ -44,9 +44,7 @@ const filename_preview_label = ref($gettext("Filename preview"));
 
 const props = defineProps<{ item: DefaultFileItem }>();
 
-const { is_filename_pattern_enforced } = useNamespacedState<ConfigurationState>("configuration", [
-    "is_filename_pattern_enforced",
-]);
+const is_filename_pattern_enforced = strictInject(IS_FILENAME_PATTERN_ENFORCED);
 
 const tooltip_text = ref(
     $gettext("Filename will follow a pattern enforced by the document manager configuration."),

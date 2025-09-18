@@ -62,3 +62,10 @@ export const FORBID_WRITERS_TO_UPDATE: StrictInjectionKey<boolean> = Symbol(
 export const FORBID_WRITERS_TO_DELETE: StrictInjectionKey<boolean> = Symbol(
     "forbid-writers-to-delete",
 );
+export const FILENAME_PATTERN: StrictInjectionKey<string> = Symbol("filename-pattern");
+export const IS_FILENAME_PATTERN_ENFORCED: StrictInjectionKey<boolean> = Symbol(
+    "is-filename-pattern-enforced",
+);
+export const CAN_USER_SWITCH_TO_OLD_UI: StrictInjectionKey<boolean> = Symbol(
+    "can-user-switch-to-old-ui",
+);

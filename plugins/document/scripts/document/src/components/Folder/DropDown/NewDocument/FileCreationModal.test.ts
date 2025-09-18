@@ -29,7 +29,6 @@ import type { ErrorState } from "../../../../store/error/module";
 import { TYPE_FILE } from "../../../../constants";
 import { buildFakeItem } from "../../../../helpers/item-builder";
 import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
-import type { ConfigurationState } from "../../../../store/configuration";
 
 describe("FileCreationModal", () => {
     const add_event_listener = vi.fn();
@@ -58,12 +57,6 @@ describe("FileCreationModal", () => {
                             mutations: {
                                 resetModalError: reset_error_modal,
                             },
-                        },
-                        configuration: {
-                            state: {
-                                filename_pattern: "",
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
                         },
                     },
                     state: {

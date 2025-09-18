@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ConfigurationState } from "./store/configuration";
 import type { ErrorState } from "./store/error/module";
 import type { PermissionsState } from "./store/permissions/permissions-default-state";
 import type { PropertiesState } from "./store/properties/module";
@@ -53,7 +52,6 @@ export interface State {
 }
 
 export interface RootState extends State {
-    readonly configuration: ConfigurationState;
     error: ErrorState;
     permissions: PermissionsState;
     properties: PropertiesState;

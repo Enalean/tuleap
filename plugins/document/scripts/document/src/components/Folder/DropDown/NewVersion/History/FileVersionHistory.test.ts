@@ -25,8 +25,8 @@ import { TYPE_FILE } from "../../../../../constants";
 import * as version_history_retriever from "../../../../../helpers/version-history-retriever";
 import type { FileHistory } from "../../../../../type";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../../../store/configuration";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { IS_FILENAME_PATTERN_ENFORCED } from "../../../../../configuration-keys";
 
 vi.mock("vue-router");
 
@@ -48,18 +48,11 @@ describe("FileVersionHistory", () => {
                 };
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                is_filename_pattern_enforced,
-                                project_id: 25,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: ["router-link"],
+                provide: {
+                    [IS_FILENAME_PATTERN_ENFORCED.valueOf()]: is_filename_pattern_enforced,
+                },
             },
         });
     }

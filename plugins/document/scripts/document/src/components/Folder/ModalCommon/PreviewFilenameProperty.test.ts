@@ -21,28 +21,24 @@ import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PreviewFilenameProperty from "./PreviewFilenameProperty.vue";
-import type { ConfigurationState } from "../../../store/configuration";
 import type { DefaultFileItem } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { IS_FILENAME_PATTERN_ENFORCED } from "../../../configuration-keys";
 
 describe("PreviewFilenameProperty", () => {
     function getWrapper(
         item: DefaultFileItem,
-        configuration: ConfigurationState,
+        is_filename_pattern_enforced: boolean,
     ): VueWrapper<InstanceType<typeof PreviewFilenameProperty>> {
         return shallowMount(PreviewFilenameProperty, {
             props: {
                 item,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: configuration as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [IS_FILENAME_PATTERN_ENFORCED.valueOf()]: is_filename_pattern_enforced,
+                },
             },
             slots: {
                 default: "Lorem ipsum",
@@ -62,9 +58,7 @@ describe("PreviewFilenameProperty", () => {
             },
         } as DefaultFileItem;
 
-        const wrapper = getWrapper(item, {
-            is_filename_pattern_enforced: false,
-        } as ConfigurationState);
+        const wrapper = getWrapper(item, false);
 
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
@@ -72,9 +66,7 @@ describe("PreviewFilenameProperty", () => {
     it("should display nothing if item is not a file is not enforced", () => {
         const item = {} as DefaultFileItem;
 
-        const wrapper = getWrapper(item, {
-            is_filename_pattern_enforced: true,
-        } as ConfigurationState);
+        const wrapper = getWrapper(item, true);
 
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
@@ -91,9 +83,7 @@ describe("PreviewFilenameProperty", () => {
             },
         } as DefaultFileItem;
 
-        const wrapper = getWrapper(item, {
-            is_filename_pattern_enforced: true,
-        } as ConfigurationState);
+        const wrapper = getWrapper(item, true);
 
         expect(wrapper.find("[data-test=preview]").text()).toBe("Lorem ipsum");
     });
