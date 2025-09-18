@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Masschange;
 
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -51,10 +52,11 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
 
     private EventDispatcherInterface $event_dispatcher;
 
-    private Tracker|MockObject $tracker;
+    private Tracker&MockObject $tracker;
 
     private Planning $root_planning;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

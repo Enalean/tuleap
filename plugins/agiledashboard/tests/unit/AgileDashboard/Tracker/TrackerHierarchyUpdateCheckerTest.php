@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Tracker;
 
+use LogicException;
+use Override;
 use Planning;
 use PlanningFactory;
 use TrackerFactory;
@@ -34,21 +36,16 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerHierarchyUpdateCheckerTest extends TestCase
 {
-    private const PROJECT_ID         = 101;
-    private const PARENT_TRACKER_ID  = 29;
-    private const CHILD_TRACKER_ID   = 896;
-    private const ANOTHER_TRACKER_ID = 820;
+    private const int PROJECT_ID         = 101;
+    private const int PARENT_TRACKER_ID  = 29;
+    private const int CHILD_TRACKER_ID   = 896;
+    private const int ANOTHER_TRACKER_ID = 820;
 
     private TrackerHierarchyUpdateChecker $checker;
-    /**
-     * @var PlanningFactory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $planning_factory;
-    /**
-     * @var TrackerFactory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $tracker_factory;
+    private PlanningFactory&\PHPUnit\Framework\MockObject\MockObject $planning_factory;
+    private TrackerFactory&\PHPUnit\Framework\MockObject\MockObject $tracker_factory;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -175,9 +172,13 @@ final class TrackerHierarchyUpdateCheckerTest extends TestCase
             fn(int $id) => TrackerTestBuilder::aTracker()->withId($id)->build(),
             $scrum_backlog_ids
         );
+
+        if (empty($backlog_trackers)) {
+            throw new LogicException('No backlog tracker found');
+        }
         return [
             PlanningBuilder::aPlanning(self::PROJECT_ID)->build(),
-            PlanningBuilder::aPlanning(self::PROJECT_ID)->withBacklogTrackers(...$backlog_trackers)->build(),
+            PlanningBuilder::aPlanning(self::PROJECT_ID)->withBacklogTrackers(...array_values($backlog_trackers))->build(),
         ];
     }
 }
