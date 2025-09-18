@@ -35,7 +35,7 @@
                     {{/ has_types }}
                     {{# types_usage }}
                         {{# type }}
-                        <tr>
+                        <tr data-test="link-type-line">
                             <td>{{ shortname }}</td>
                             <td>{{ forward_label }}</td>
                             <td>{{ reverse_label }}</td>
@@ -68,7 +68,7 @@
                                     <button type="submit"
                                         class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small siteadmin-config-types-modal-delete-button"
                                         data-delete-modal-id="siteadmin-config-types-modal-delete-{{ shortname }}"
-                                        data-test="artlink-delete-{{ shortname }}"
+                                        data-test="link-type-delete-button"
                                     >
                                         <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_icon_label }}
                                     </button>

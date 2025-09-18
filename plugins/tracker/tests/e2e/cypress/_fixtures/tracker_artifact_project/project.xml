@@ -23,16 +23,7 @@
   <long-description></long-description>
   <services>
     <service shortname="summary" enabled="1"/>
-    <service shortname="admin" enabled="1"/>
-    <service shortname="docman" enabled="0"/>
-    <service shortname="plugin_svn" enabled="0"/>
-    <service shortname="file" enabled="0"/>
     <service shortname="plugin_tracker" enabled="1"/>
-    <service shortname="plugin_agiledashboard" enabled="0"/>
-    <service shortname="plugin_mediawiki" enabled="0"/>
-    <service shortname="hudson" enabled="0"/>
-    <service shortname="plugin_git" enabled="0"/>
-    <service shortname="plugin_testmanagement" enabled="0"/>
   </services>
   <ugroups>
     <ugroup name="project_admins" description="Project administrators">
@@ -1305,8 +1296,12 @@
         </formElement>
       </formElements>
       <semantics>
-        <semantic type="tooltip"/>
-        <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[]]></description>
+          <field REF="F18128"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>
