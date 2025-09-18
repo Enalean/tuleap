@@ -11577,9 +11577,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/dynamic_credentials/include/Credential/CredentialIdentifierExtractor.php">
-    <MissingClassConstType>
-      <code><![CDATA[EXPECTED_PREFIX = 'forge__dynamic_credential-']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$username]]></code>
     </MissingParamType>
@@ -11625,9 +11622,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/dynamic_credentials/include/User/DynamicUser.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 80]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$is_logged_in]]></code>
       <code><![CDATA[$realname]]></code>
@@ -11657,9 +11651,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'dynamic_credentials']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>

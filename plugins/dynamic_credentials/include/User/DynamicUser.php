@@ -24,7 +24,7 @@ use Tuleap\Cryptography\ConcealedString;
 
 class DynamicUser extends \PFUser
 {
-    public const ID = 80;
+    public const int ID = 80;
 
     /**
      * @var bool
