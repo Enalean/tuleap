@@ -21,10 +21,22 @@
 <template>
     <template v-if="are_versions_displayed">
         <nav class="tlp-tabs">
-            <button class="tlp-tab tlp-tab-active" type="button">
+            <button
+                type="button"
+                class="tlp-tab"
+                v-bind:class="{ 'tlp-tab-active': current_tab === TOC_TAB }"
+                v-on:click="switchToTab(TOC_TAB)"
+                data-test="toc-tab"
+            >
                 {{ $gettext("Table of contents") }}
             </button>
-            <button class="tlp-tab" type="button" disabled>
+            <button
+                type="button"
+                class="tlp-tab"
+                v-bind:class="{ 'tlp-tab-active': current_tab === VERSIONS_TAB }"
+                v-on:click="switchToTab(VERSIONS_TAB)"
+                data-test="versions-tab"
+            >
                 {{ $gettext("Versions") }}
             </button>
         </nav>
@@ -38,6 +50,20 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { ARE_VERSIONS_DISPLAYED } from "@/can-user-display-versions-injection-key";
+import type { SidebarTab } from "@/components/sidebar/document-sidebar";
+import { TOC_TAB, VERSIONS_TAB } from "@/components/sidebar/document-sidebar";
+
+defineProps<{
+    current_tab: SidebarTab;
+}>();
+
+const emit = defineEmits<{
+    (e: "switch-sidebar-tab", value: SidebarTab): void;
+}>();
+
+const switchToTab = (tab: SidebarTab): void => {
+    emit("switch-sidebar-tab", tab);
+};
 
 const { $gettext } = useGettext();
 

@@ -32,8 +32,12 @@
                 <i v-bind:class="icon" role="img"></i>
             </button>
             <div class="sidebar-contents-container">
-                <document-sidebar-header />
-                <table-of-contents />
+                <document-sidebar-header
+                    v-on:switch-sidebar-tab="switchTab"
+                    v-bind:current_tab="current_tab"
+                />
+                <table-of-contents v-if="current_tab === TOC_TAB" />
+                <list-of-versions v-if="current_tab === VERSIONS_TAB" />
             </div>
         </div>
     </aside>
@@ -46,10 +50,15 @@ import { useGettext } from "vue3-gettext";
 import DocumentSidebarHeader from "@/components/sidebar/DocumentSidebarHeader.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { ARE_VERSIONS_DISPLAYED } from "@/can-user-display-versions-injection-key";
+import type { SidebarTab } from "@/components/sidebar/document-sidebar";
+import { VERSIONS_TAB, TOC_TAB } from "@/components/sidebar/document-sidebar";
+import ListOfVersions from "@/components/sidebar/versions/ListOfVersions.vue";
 
 const are_versions_displayed = strictInject(ARE_VERSIONS_DISPLAYED);
 
 const { $gettext } = useGettext();
+
+const current_tab = ref<SidebarTab>(TOC_TAB);
 
 const is_expanded = ref(true);
 
@@ -62,6 +71,10 @@ const title = computed(() =>
 
 function toggle(): void {
     is_expanded.value = !is_expanded.value;
+}
+
+function switchTab(tab: SidebarTab): void {
+    current_tab.value = tab;
 }
 </script>
 
