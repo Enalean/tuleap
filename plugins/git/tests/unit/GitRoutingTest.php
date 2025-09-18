@@ -34,6 +34,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserDao;
@@ -41,6 +42,8 @@ use UserDao;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRoutingTest extends TestCase
 {
+    use GlobalResponseMock;
+
     public static function smartHTTPRoutesProvider(): array
     {
         return [

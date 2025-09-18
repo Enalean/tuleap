@@ -19,6 +19,7 @@
 
 namespace Tuleap\REST;
 
+use Lcobucci\Clock\SystemClock;
 use Luracast\Restler\iAuthenticate;
 use Luracast\Restler\InvalidAuthCredentials;
 use Tuleap\Cryptography\ConcealedString;
@@ -58,7 +59,7 @@ class BasicAuthentication implements iAuthenticate
             new \UserDao(),
             $this->user_manager,
             new \Tuleap\User\PasswordVerifier($password_handler),
-            new PasswordExpirationChecker(),
+            new PasswordExpirationChecker(SystemClock::fromSystemTimezone()),
             $password_handler
         );
     }

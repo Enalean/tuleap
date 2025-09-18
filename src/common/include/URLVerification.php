@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Lcobucci\Clock\SystemClock;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Error\ErrorDependenciesInjector;
@@ -323,7 +324,7 @@ class URLVerification implements CheckUserCanAccessProject, CheckUserCanAccessPr
             $url          = $this->getUrl();
             try {
                 if (! $current_user->user->isAnonymous()) {
-                    $password_expiration_checker = new PasswordExpirationChecker();
+                    $password_expiration_checker = new PasswordExpirationChecker(SystemClock::fromSystemTimezone());
                     $password_expiration_checker->checkPasswordLifetime($current_user->user);
                 }
 
