@@ -344,7 +344,7 @@ onUnmounted(() => {
 
 ul {
     height: var(--artidoc-sidebar-content-height);
-    padding: 0 0 var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) 0;
     overflow: hidden auto;
     list-style-position: inside;
     color: var(--tlp-dimmed-color);
