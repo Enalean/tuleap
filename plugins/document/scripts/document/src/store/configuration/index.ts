@@ -21,8 +21,6 @@ import type { RootState } from "../../type";
 import type { Module } from "vuex";
 
 export interface ConfigurationState {
-    readonly forbid_writers_to_update: boolean;
-    readonly forbid_writers_to_delete: boolean;
     readonly filename_pattern: string;
     readonly is_filename_pattern_enforced: boolean;
     readonly can_user_switch_to_old_ui: boolean;

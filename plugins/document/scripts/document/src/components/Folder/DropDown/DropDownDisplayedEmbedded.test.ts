@@ -22,8 +22,8 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DropDownDisplayedEmbedded from "./DropDownDisplayedEmbedded.vue";
 import type { Item, RootState } from "../../../type";
-import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { FORBID_WRITERS_TO_DELETE, FORBID_WRITERS_TO_UPDATE } from "../../../configuration-keys";
 
 describe("DropDownDisplayedEmbedded", () => {
     function createWrapper(
@@ -46,16 +46,11 @@ describe("DropDownDisplayedEmbedded", () => {
                             parent_id,
                         } as Item,
                     } as RootState,
-                    modules: {
-                        configuration: {
-                            state: {
-                                forbid_writers_to_update,
-                                forbid_writers_to_delete,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
                 }),
+                provide: {
+                    [FORBID_WRITERS_TO_UPDATE.valueOf()]: forbid_writers_to_update,
+                    [FORBID_WRITERS_TO_DELETE.valueOf()]: forbid_writers_to_delete,
+                },
             },
         });
     }

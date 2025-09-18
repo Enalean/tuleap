@@ -60,24 +60,24 @@ import DropDownItemTitle from "./DropDownItemTitle.vue";
 import type { State } from "../../../type";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
-import { useState, useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
+import { useState } from "vuex-composition-helpers";
 import { computed } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { FORBID_WRITERS_TO_DELETE, FORBID_WRITERS_TO_UPDATE } from "../../../configuration-keys";
 
 const { current_folder } = useState<Pick<State, "current_folder">>(["current_folder"]);
-const { forbid_writers_to_update, forbid_writers_to_delete } = useNamespacedState<
-    Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
->("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
+const forbid_writers_to_update = strictInject(FORBID_WRITERS_TO_UPDATE);
+const forbid_writers_to_delete = strictInject(FORBID_WRITERS_TO_DELETE);
 
 const can_user_delete_item = computed((): boolean => {
     return (
         current_folder.value.user_can_write &&
-        canDelete(forbid_writers_to_delete.value, current_folder.value) &&
+        canDelete(forbid_writers_to_delete, current_folder.value) &&
         Boolean(current_folder.value.parent_id)
     );
 });
 
 const should_display_update_properties = computed((): boolean => {
-    return canUpdateProperties(forbid_writers_to_update.value, current_folder.value);
+    return canUpdateProperties(forbid_writers_to_update, current_folder.value);
 });
 </script>

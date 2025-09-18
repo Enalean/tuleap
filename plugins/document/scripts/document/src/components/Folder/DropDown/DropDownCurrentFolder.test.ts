@@ -23,6 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import DropDownCurrentFolder from "./DropDownCurrentFolder.vue";
 import type { Folder, RootState } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { FORBID_WRITERS_TO_DELETE, FORBID_WRITERS_TO_UPDATE } from "../../../configuration-keys";
 
 describe("DropDownCurrentFolder", () => {
     function createWrapper(
@@ -36,15 +37,6 @@ describe("DropDownCurrentFolder", () => {
         return shallowMount(DropDownCurrentFolder, {
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            namespaced: true,
-                            state: {
-                                forbid_writers_to_update,
-                                forbid_writers_to_delete,
-                            },
-                        },
-                    },
                     state: {
                         current_folder: {
                             id: 42,
@@ -55,6 +47,10 @@ describe("DropDownCurrentFolder", () => {
                         } as Folder,
                     } as unknown as RootState,
                 }),
+                provide: {
+                    [FORBID_WRITERS_TO_UPDATE.valueOf()]: forbid_writers_to_update,
+                    [FORBID_WRITERS_TO_DELETE.valueOf()]: forbid_writers_to_delete,
+                },
             },
             props: { isInFolderEmptyState },
         });
