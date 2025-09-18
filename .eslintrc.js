@@ -115,15 +115,7 @@ module.exports = {
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/naming-convention": [
             "error",
-            {
-                selector: "typeLike",
-                format: ["PascalCase"],
-                filter: {
-                    // you can expand this regex to add more allowed names
-                    regex: "^(?:_Unused)$",
-                    match: false,
-                },
-            },
+            { selector: "typeLike", format: ["PascalCase"] },
         ],
         "@typescript-eslint/class-literal-property-style": "error",
         "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],

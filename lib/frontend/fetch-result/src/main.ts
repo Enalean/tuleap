@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
+/** @import { ResultAsync } from "neverthrow" */
+/** @import { Fault } from "@tuleap/fault" */
 import { AllGetter } from "./AllGetter";
 import type { RetrieveResponse } from "./ResponseRetriever";
 import { ResponseRetriever } from "./ResponseRetriever";
@@ -48,10 +48,6 @@ const restler_response_retriever: RetrieveResponse = {
             .andThen(RestlerErrorHandler().handleErrorResponse),
 };
 const all_getter = AllGetter(restler_response_retriever);
-
-// Define an unused type alias just so we can import ResultAsync and Fault types for the doc-blocks.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type _Unused = ResultAsync<never, Fault>;
 
 export { decodeJSON } from "./json-decoder";
 export { decodeAsText } from "./text-decoder";

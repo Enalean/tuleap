@@ -21,13 +21,10 @@ import type { EncodedURI } from "@tuleap/fetch-result";
 import { ResponseRetriever } from "@tuleap/fetch-result";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import type { GitLabCredentials } from "./Querier";
 import { buildGet } from "./Querier";
 
-export type { GitLabCredentials } from "./Querier";
-
-// Define an unused type alias just so we can import ResultAsync and Fault types for the doc-blocks.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type _Unused = { a: ResultAsync<never, Fault>; b: EncodedURI };
+export type { GitLabCredentials };
 
 const response_retriever = ResponseRetriever(window);
 
@@ -36,4 +33,7 @@ const response_retriever = ResponseRetriever(window);
  * @param {GitLabCredentials} credentials The GitLab access token to authenticate the request.
  * @returns {ResultAsync<Response, Fault>}
  */
-export const get = buildGet(response_retriever);
+export const get: (
+    uri: EncodedURI,
+    credentials: GitLabCredentials,
+) => ResultAsync<Response, Fault> = buildGet(response_retriever);
