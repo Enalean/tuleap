@@ -77,4 +77,11 @@ h1 {
     height: var(--artidoc-sidebar-title-height);
     margin: var(--artidoc-sidebar-title-vertical-margin) var(--tlp-medium-spacing);
 }
+
+.tlp-tabs {
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+
+    // force border to be aligned with the one of the toolbar.
+    box-shadow: none;
+}
 </style>
