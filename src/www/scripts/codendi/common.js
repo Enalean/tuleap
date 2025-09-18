@@ -17,7 +17,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global ProtoCheck:readonly Prototype:readonly Ajax:readonly $$:readonly */
+/* global ProtoCheck:readonly Prototype:readonly Ajax:readonly */
 
 var codendi = codendi || {};
 
@@ -30,22 +30,6 @@ codendi.getText = function (key1, key2) {
 };
 
 document.observe("dom:loaded", function () {
-    $$("td.matrix-cell").each(function (cell) {
-        var idx = cell.previousSiblings().length;
-        var col = cell
-            .up("table")
-            .down("tbody")
-            .childElements()
-            .collect(function (tr) {
-                return tr.childElements()[idx];
-            });
-        cell.observe("mouseover", function () {
-            col.invoke("addClassName", "matrix_highlight_col");
-        }).observe("mouseout", function () {
-            col.invoke("removeClassName", "matrix_highlight_col");
-        });
-    });
-
     //load protocheck, if needed
     new ProtoCheck();
 });

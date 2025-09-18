@@ -302,12 +302,10 @@ select[name="type_of_search"] {
 }
 
 /* stylelint-disable selector-no-qualifying-type */
-td.matrix-cell.matrix_highlight_col,
 tr.boxitem:hover {
     background-color: #fffff0;
 }
 
-td.matrix-cell.matrix_highlight_col,
 tr.boxitemalt:hover {
     background-color: #fffff0;
 }
