@@ -35,6 +35,7 @@
         v-bind:parent_caret="parent_caret"
         v-bind:reverse_links_count="reverse_links_count"
         v-bind:ancestors="ancestors"
+        v-bind:parent_row="row"
     />
 </template>
 

@@ -122,9 +122,9 @@ export type Cell =
     | LinkTypeCell;
 
 export type ArtifactRow = {
-    readonly uuid: string;
-    readonly id: number;
-    readonly uri: string;
+    readonly row_uuid: string;
+    readonly artifact_id: number;
+    readonly artifact_uri: string;
     readonly cells: Map<ColumnName, Cell>;
     readonly expected_number_of_forward_links: number;
     readonly expected_number_of_reverse_links: number;
@@ -140,3 +140,8 @@ export type ArtifactLinkDirection =
     | typeof FORWARD_DIRECTION
     | typeof REVERSE_DIRECTION
     | typeof NO_DIRECTION;
+
+export type RowEntry = {
+    readonly parent_row: ArtifactRow | null;
+    readonly row: ArtifactRow;
+};

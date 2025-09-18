@@ -40,6 +40,7 @@
                     v-bind:level="0"
                     v-bind:tql_query="tql_query"
                     v-bind:ancestors="[]"
+                    v-bind:parent_row="null"
                 />
             </div>
         </div>
@@ -63,14 +64,20 @@ import {
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
 
-import type { ArtifactsTable } from "../../domain/ArtifactsTable";
+import type { ArtifactsTable, RowEntry } from "../../domain/ArtifactsTable";
 import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "../EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
-import type { RefreshArtifactsEvent } from "../../helpers/widget-events";
+import type {
+    RemovedRowEvent,
+    InsertedRowEvent,
+    RefreshArtifactsEvent,
+} from "../../helpers/widget-events";
 import {
+    REMOVED_ROW_EVENT,
+    INSERTED_ROW_EVENT,
     SEARCH_ARTIFACTS_EVENT,
     NOTIFY_FAULT_EVENT,
     REFRESH_ARTIFACTS_EVENT,
@@ -91,6 +98,7 @@ const selectable_table_element = useTemplateRef<HTMLElement>("selectable-table")
 const is_loading = ref(false);
 const columns = ref<ArtifactsTable["columns"]>(new Set());
 const rows = ref<ArtifactsTable["rows"]>([]);
+const artifacts_entry = ref<Array<RowEntry>>([]);
 const total = ref(0);
 let offset = 0;
 const limit = 30;
@@ -125,6 +133,8 @@ onMounted(() => {
     refreshArtifactList();
     emitter.on(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
     emitter.on(SEARCH_ARTIFACTS_EVENT, handleSearchArtifactsEvent);
+    emitter.on(INSERTED_ROW_EVENT, handleInsertedRowEvent);
+    emitter.on(REMOVED_ROW_EVENT, handleRemovedRowEvent);
 
     if (!selectable_table_element.value) {
         return;
@@ -135,6 +145,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
     emitter.off(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
     emitter.off(SEARCH_ARTIFACTS_EVENT, handleSearchArtifactsEvent);
+    emitter.off(INSERTED_ROW_EVENT, handleInsertedRowEvent);
+    emitter.off(REMOVED_ROW_EVENT, handleRemovedRowEvent);
 
     if (!selectable_table_element.value) {
         return;
@@ -150,6 +162,19 @@ function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
 function handleSearchArtifactsEvent(): void {
     resetArtifactList();
     getSelectableQueryContent(props.tql_query);
+}
+
+function handleInsertedRowEvent(event: InsertedRowEvent): void {
+    artifacts_entry.value.push({
+        parent_row: event.parent_row,
+        row: event.row,
+    });
+}
+
+function handleRemovedRowEvent(event: RemovedRowEvent): void {
+    artifacts_entry.value = artifacts_entry.value.filter(
+        (item) => item.row.row_uuid !== event.row.row_uuid,
+    );
 }
 
 function getSelectableQueryContent(tql_query: string): void {

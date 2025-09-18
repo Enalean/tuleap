@@ -32,12 +32,13 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
-import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
+import { EMITTER, RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
-import ArtifactRow from "./ArtifactRow.vue";
+import RowArtifact from "./RowArtifact.vue";
 import SelectableCell from "./SelectableCell.vue";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import LoadAllButton from "../feedback/LoadAllButton.vue";
+import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 
 vi.useFakeTimers();
 
@@ -73,26 +74,29 @@ const reverse_table = new ArtifactsTableBuilder()
     .withArtifactRow(artifact_row)
     .buildWithTotal(2);
 
-describe("ArtifactRow", () => {
+describe("RowArtifact", () => {
     let artifact_links_table_retriever: RetrieveArtifactLinks,
         ancestors: number[],
         artifact_id: number,
-        level: number;
+        level: number,
+        emitter: EmitterStub;
 
     beforeEach(() => {
         artifact_id = 512;
         ancestors = [123, 234];
         artifact_links_table_retriever = RetrieveArtifactLinksStub.withDefaultContent();
         level = 0;
+        emitter = EmitterStub();
     });
 
-    function getWrapper(): VueWrapper<InstanceType<typeof ArtifactRow>> {
-        return shallowMount(ArtifactRow, {
+    function getWrapper(): VueWrapper<InstanceType<typeof RowArtifact>> {
+        return shallowMount(RowArtifact, {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
                     [RETRIEVE_ARTIFACT_LINKS.valueOf()]: artifact_links_table_retriever,
                     [WIDGET_ID.valueOf()]: 101,
+                    [EMITTER.valueOf()]: emitter,
                 },
             },
             props: {
@@ -114,6 +118,7 @@ describe("ArtifactRow", () => {
                 parent_caret: undefined,
                 reverse_links_count: undefined,
                 ancestors,
+                parent_row: null,
             },
         });
     }
@@ -446,7 +451,9 @@ describe("ArtifactRow", () => {
                 const artifact_links_rows =
                     artifact_link_rows_component.props("artifact_links_rows");
 
-                expect(artifact_links_rows.filter((row) => row.id === artifact_id)).toHaveLength(0);
+                expect(
+                    artifact_links_rows.filter((row) => row.artifact_id === artifact_id),
+                ).toHaveLength(0);
             },
         );
 
