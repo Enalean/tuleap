@@ -32,7 +32,7 @@ use Tuleap\DB\DBTransactionExecutor;
 
 final class FileToUploadCreator
 {
-    private const EXPIRATION_DELAY_IN_HOURS = 12;
+    private const int EXPIRATION_DELAY_IN_HOURS = 12;
 
     /**
      * @var FileOngoingUploadDao

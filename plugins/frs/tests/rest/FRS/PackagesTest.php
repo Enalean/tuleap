@@ -29,9 +29,9 @@ use Tuleap\REST\RestBase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PackagesTest extends RestBase
 {
-    public const PROJECT_NAME = 'frs-test';
+    public const string PROJECT_NAME = 'frs-test';
 
-    private $project_id;
+    private int $project_id;
 
     public function setUp(): void
     {

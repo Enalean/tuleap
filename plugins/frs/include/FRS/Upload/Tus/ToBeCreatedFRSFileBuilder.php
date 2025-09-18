@@ -27,8 +27,8 @@ use FRSRelease;
 
 class ToBeCreatedFRSFileBuilder
 {
-    public const DEFAULT_PROCESSOR_ID = 100;
-    public const DEFAULT_TYPE_ID      = 100;
+    public const int DEFAULT_PROCESSOR_ID = 100;
+    public const int DEFAULT_TYPE_ID      = 100;
 
     public function buildFRSFile(FRSRelease $release, string $filename, int $filesize, int $user_id): FRSFile
     {

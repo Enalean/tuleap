@@ -35,8 +35,8 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private const RELEASE_ID = 11;
-    private const PROJECT_ID = 104;
+    private const int RELEASE_ID = 11;
+    private const int PROJECT_ID = 104;
 
     /**
      * @var FileOngoingUploadDao&\PHPUnit\Framework\MockObject\MockObject

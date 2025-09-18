@@ -11815,9 +11815,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$this->id]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'frs_files']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/FileResource.php">
     <MissingParamType>
@@ -11831,9 +11828,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$this->id]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'frs_packages']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/PackageMinimalRepresentationPaginatedCollection.php">
     <MissingParamType>
@@ -11841,11 +11835,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/PackageResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_LIMIT  = 10]]></code>
-      <code><![CDATA[DEFAULT_OFFSET = 0]]></code>
-      <code><![CDATA[MAX_LIMIT      = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -11878,9 +11867,6 @@
     </InvalidDocblock>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/ProjectResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$limit]]></code>
@@ -11929,11 +11915,6 @@
     </InvalidDocblock>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/ReleaseResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_LIMIT  = 10]]></code>
-      <code><![CDATA[DEFAULT_OFFSET = 0]]></code>
-      <code><![CDATA[MAX_LIMIT      = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -11960,11 +11941,6 @@
       <code><![CDATA[public $can_admin = [];]]></code>
       <code><![CDATA[public $can_read = [];]]></code>
     </InvalidDocblock>
-  </file>
-  <file src="plugins/frs/include/FRS/REST/v1/ServiceRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'frs_service']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/frs/include/FRS/ReleasePresenter.php">
     <InvalidPropertyAssignmentValue>
@@ -12008,12 +11984,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/frs/include/FRS/Upload/Tus/ToBeCreatedFRSFileBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_PROCESSOR_ID = 100]]></code>
-      <code><![CDATA[DEFAULT_TYPE_ID      = 100]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/frs/include/Link/Dao.php">
     <DeprecatedMethod>

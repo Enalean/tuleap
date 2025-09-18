@@ -26,7 +26,7 @@ use Tuleap\REST\RestBase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReleaseTest extends RestBase
 {
-    public const PROJECT_NAME = 'frs-test';
+    public const string PROJECT_NAME = 'frs-test';
 
     public function testReleaseIsInPackagesResourcesWithUserRESTReadOnlyAdmin(): void
     {
