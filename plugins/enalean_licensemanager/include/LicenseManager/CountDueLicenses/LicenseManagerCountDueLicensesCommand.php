@@ -30,7 +30,7 @@ use UserManager;
 
 class LicenseManagerCountDueLicensesCommand extends Command
 {
-    public const NAME = 'license-manager:count-due-licenses';
+    public const string NAME = 'license-manager:count-due-licenses';
 
     /**
      * @var \UserDao

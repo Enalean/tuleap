@@ -11670,9 +11670,6 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/enalean_licensemanager/include/LicenseManager/CountDueLicenses/LicenseManagerCountDueLicensesCommand.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'license-manager:count-due-licenses']]></code>
-    </MissingClassConstType>
     <PossiblyFalseArgument>
       <code><![CDATA[file_get_contents(
                 $this->config_path
