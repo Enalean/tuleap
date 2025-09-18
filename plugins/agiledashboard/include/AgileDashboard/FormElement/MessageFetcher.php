@@ -26,31 +26,13 @@ use PlanningFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Tracker;
 
-class MessageFetcher
+readonly class MessageFetcher
 {
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var AgileDashboard_Semantic_InitialEffortFactory
-     */
-    private $initial_effort_factory;
-
-    /**
-     * @var SemanticDoneFactory
-     */
-    private $semantic_done_factory;
-
     public function __construct(
-        PlanningFactory $planning_factory,
-        AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
-        SemanticDoneFactory $semantic_done_factory,
+        private PlanningFactory $planning_factory,
+        private AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
+        private SemanticDoneFactory $semantic_done_factory,
     ) {
-        $this->planning_factory       = $planning_factory;
-        $this->initial_effort_factory = $initial_effort_factory;
-        $this->semantic_done_factory  = $semantic_done_factory;
     }
 
     /**

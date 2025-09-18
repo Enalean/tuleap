@@ -129,12 +129,6 @@
             <file name="tests/unit/tuleap-cfg/Command/TestDBWrapper.php"/>
             <file name="tests/unit/www/include/ServiceCreateServiceTest.php"/>
             <file name="tests/unit/www/include/UtilsHTTPTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/FormElement/Burnup/CountElementsCalculatorTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/FormElement/BurnupCacheCheckerTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/FormElement/BurnupCacheDateRetrieverTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/FormElement/BurnupCalculatorTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/FormElement/BurnupDataBuilderTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/FormElement/MessageFetcherTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/HierarchyCheckerTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Masschange/AdditionalMasschangeActionBuilderTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Masschange/AdditionalMasschangeActionProcessorTest.php"/>

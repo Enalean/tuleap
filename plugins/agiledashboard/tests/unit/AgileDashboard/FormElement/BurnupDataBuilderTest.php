@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use DateTime;
 use ForgeConfig;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
 use Psr\Log\NullLogger;
@@ -58,6 +59,7 @@ final class BurnupDataBuilderTest extends TestCase
     private CountElementsModeChecker&MockObject $mode_checker;
     private Tracker $artifact_tracker;
 
+    #[Override]
     protected function setUp(): void
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
