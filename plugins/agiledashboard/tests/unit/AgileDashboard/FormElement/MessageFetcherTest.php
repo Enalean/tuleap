@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashBoard_Semantic_InitialEffort;
 use AgileDashboard_Semantic_InitialEffortFactory;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use PlanningFactory;
@@ -49,6 +50,7 @@ final class MessageFetcherTest extends TestCase
     private SemanticDoneFactory&MockObject $semantic_done_factory;
     private \PFUser $user;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->planning_factory       = $this->createMock(PlanningFactory::class);

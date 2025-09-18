@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Test\Builders\FormElement;
 
+use Override;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\RetrieveBurnupEffortForArtifact;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
@@ -39,6 +40,7 @@ final class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveBurnupEffortForArtifact $artifact_effort_calculator;
     private BurnupEffort $burnup_effort;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->artifact_factory_mock      = $this->createMock(Tracker_ArtifactFactory::class);

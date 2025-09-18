@@ -20,13 +20,16 @@
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -48,6 +51,7 @@ final class CountElementsCalculatorTest extends TestCase
     private Tracker $user_story_tracker;
     private RetrieveSemanticStatusStub $semantic_status_retriever;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -345,57 +349,59 @@ final class CountElementsCalculatorTest extends TestCase
 
         $user_story_03           = ArtifactTestBuilder::anArtifact(4)->inTracker($this->user_story_tracker)->build();
         $changeset_user_story_03 = ChangesetTestBuilder::aChangeset(1)->build();
-        $matcher                 = self::exactly(3);
 
-        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $user_story_01, $user_story_02, $user_story_03) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(2, $parameters[0]);
-                return $user_story_01;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(3, $parameters[0]);
-                return $user_story_02;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame(4, $parameters[0]);
-                return $user_story_03;
-            }
-        });
-        $matcher = self::exactly(3);
+        $expected_artifact_calls = [
+            [2, $user_story_01],
+            [3, $user_story_02],
+            [4, $user_story_03],
+        ];
 
-        $this->changeset_factory->expects($matcher)->method('getChangesetAtTimestamp')->willReturnCallback(function (...$parameters) use ($matcher, $user_story_01, $timestamp, $user_story_02, $user_story_03, $changeset_user_story_01, $changeset_user_story_02, $changeset_user_story_03) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame($user_story_01, $parameters[0]);
-                self::assertSame($timestamp, $parameters[1]);
-                return $changeset_user_story_01;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame($user_story_02, $parameters[0]);
-                self::assertSame($timestamp, $parameters[1]);
-                return $changeset_user_story_02;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame($user_story_03, $parameters[0]);
-                self::assertSame($timestamp, $parameters[1]);
-                return $changeset_user_story_03;
-            }
-        });
-        $matcher = self::exactly(3);
+        $this->artifact_factory->expects($this->exactly(3))
+            ->method('getArtifactById')
+            ->willReturnCallback(
+                function (int $artifact_id) use (&$expected_artifact_calls): Artifact {
+                    $expected = array_shift($expected_artifact_calls);
+                    self::assertNotNull($expected);
+                    $this->assertSame($expected[0], $artifact_id);
+                    assert($expected[1] instanceof Artifact);
+                    return $expected[1];
+                }
+            );
 
-        $user_story_status_semantic->expects($matcher)->method('isOpenAtGivenChangeset')->willReturnCallback(function (...$parameters) use ($matcher, $changeset_user_story_01, $changeset_user_story_02, $changeset_user_story_03) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame($changeset_user_story_01, $parameters[0]);
-                return true;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame($changeset_user_story_02, $parameters[0]);
-                return false;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame($changeset_user_story_03, $parameters[0]);
-                return true;
-            }
-        });
+        $expected_changeset_calls = [
+            [$user_story_01, $timestamp, $changeset_user_story_01],
+            [$user_story_02, $timestamp, $changeset_user_story_02],
+            [$user_story_03, $timestamp, $changeset_user_story_03],
+        ];
+
+        $this->changeset_factory->expects($this->exactly(3))
+            ->method('getChangesetAtTimestamp')
+            ->willReturnCallback(
+                function (Artifact $artifact, int $time) use (&$expected_changeset_calls) {
+                    $expected = array_shift($expected_changeset_calls);
+                    self::assertNotNull($expected);
+                    $this->assertSame($expected[0], $artifact);
+                    $this->assertSame($expected[1], $time);
+                    return $expected[2];
+                }
+            );
+
+        $expected_status_calls = [
+            [$changeset_user_story_01, true],
+            [$changeset_user_story_02, false],
+            [$changeset_user_story_03, true],
+        ];
+
+        $user_story_status_semantic->expects($this->exactly(3))
+            ->method('isOpenAtGivenChangeset')
+            ->willReturnCallback(
+                function (Tracker_Artifact_Changeset $changeset) use (&$expected_status_calls) {
+                    $expected = array_shift($expected_status_calls);
+                    self::assertNotNull($expected);
+                    $this->assertSame($expected[0], $changeset);
+                    return $expected[1];
+                }
+            );
 
         $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([]);
     }
@@ -432,58 +438,59 @@ final class CountElementsCalculatorTest extends TestCase
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_03, $artifact_link_field)
             ->withForwardLinks([])
             ->build();
-        $matcher = self::exactly(3);
 
-        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $user_story_01, $user_story_02, $user_story_03) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(2, $parameters[0]);
-                return $user_story_01;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(3, $parameters[0]);
-                return $user_story_02;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame(4, $parameters[0]);
-                return $user_story_03;
-            }
-        });
-        $matcher = self::exactly(3);
+        $expected_artifact_calls = [
+            [2, $user_story_01],
+            [3, $user_story_02],
+            [4, $user_story_03],
+        ];
 
-        $this->changeset_factory->expects($matcher)->method('getChangesetAtTimestamp')->willReturnCallback(function (...$parameters) use ($matcher, $user_story_01, $timestamp, $user_story_02, $user_story_03, $changeset_user_story_01, $changeset_user_story_02, $changeset_user_story_03) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame($user_story_01, $parameters[0]);
-                self::assertSame($timestamp, $parameters[1]);
-                return $changeset_user_story_01;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame($user_story_02, $parameters[0]);
-                self::assertSame($timestamp, $parameters[1]);
-                return $changeset_user_story_02;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame($user_story_03, $parameters[0]);
-                self::assertSame($timestamp, $parameters[1]);
-                return $changeset_user_story_03;
-            }
-        });
+        $this->artifact_factory->expects($this->exactly(3))
+            ->method('getArtifactById')
+            ->willReturnCallback(
+                function (int $artifact_id) use (&$expected_artifact_calls): \Tuleap\Tracker\Artifact\Artifact {
+                    $expected = array_shift($expected_artifact_calls);
+                    self::assertNotNull($expected);
+                    $this->assertSame($expected[0], $artifact_id);
+                    return $expected[1];
+                }
+            );
+
+        $expected_changeset_calls = [
+            [$user_story_01, $timestamp, $changeset_user_story_01],
+            [$user_story_02, $timestamp, $changeset_user_story_02],
+            [$user_story_03, $timestamp, $changeset_user_story_03],
+        ];
+
+        $this->changeset_factory->expects($this->exactly(3))
+            ->method('getChangesetAtTimestamp')
+            ->willReturnCallback(
+                function (Artifact $artifact, int $time) use (&$expected_changeset_calls) {
+                    $expected = array_shift($expected_changeset_calls);
+                    self::assertNotNull($expected);
+                    $this->assertSame($expected[0], $artifact);
+                    $this->assertSame($expected[1], $time);
+                    return $expected[2];
+                }
+            );
 
         $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([$artifact_link_field]);
-        $matcher = self::exactly(3);
 
-        $user_story_status_semantic->expects($matcher)->method('isOpenAtGivenChangeset')->willReturnCallback(function (...$parameters) use ($matcher, $changeset_user_story_01, $changeset_user_story_02, $changeset_user_story_03) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame($changeset_user_story_01, $parameters[0]);
-                return true;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame($changeset_user_story_02, $parameters[0]);
-                return false;
-            }
-            if ($matcher->numberOfInvocations() === 3) {
-                self::assertSame($changeset_user_story_03, $parameters[0]);
-                return true;
-            }
-        });
+        $expected_status_calls = [
+            [$changeset_user_story_01, true],
+            [$changeset_user_story_02, false],
+            [$changeset_user_story_03, true],
+        ];
+
+        $user_story_status_semantic->expects($this->exactly(3))
+            ->method('isOpenAtGivenChangeset')
+            ->willReturnCallback(
+                function (Tracker_Artifact_Changeset $changeset) use (&$expected_status_calls) {
+                    $expected = array_shift($expected_status_calls);
+                    self::assertNotNull($expected);
+                    $this->assertSame($expected[0], $changeset);
+                    return $expected[1];
+                }
+            );
     }
 }

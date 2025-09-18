@@ -25,9 +25,9 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 require_once __DIR__ . '/../../bootstrap.php';
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItGetsDaysToCacheWhenPeriodIsOngoing()
+    public function testItGetsDaysToCacheWhenPeriodIsOngoing(): void
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '20-12-2017');
@@ -45,7 +45,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($days_to_cache, $expected_days);
     }
 
-    public function testItGetsDaysToCacheWhenPeriodHasEnded()
+    public function testItGetsDaysToCacheWhenPeriodHasEnded(): void
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '26-12-2017');
@@ -63,7 +63,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($days_to_cache, $expected_days);
     }
 
-    public function testItGetsDayToCacheWhenPeriodHasNotYetStarted()
+    public function testItGetsDayToCacheWhenPeriodHasNotYetStarted(): void
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '26-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '20-12-2017');
@@ -77,7 +77,7 @@ class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($days_to_cache, $expected_days);
     }
 
-    public function testItGetsDayToCacheWhenPeriodHasAWeekEnd()
+    public function testItGetsDayToCacheWhenPeriodHasAWeekEnd(): void
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '21-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '27-12-2017');
