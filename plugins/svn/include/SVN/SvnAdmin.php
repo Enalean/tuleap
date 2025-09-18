@@ -25,7 +25,6 @@
 namespace Tuleap\SVN;
 
 use System_Command;
-use Tuleap\SVNCore\Repository;
 use Psr\Log\LoggerInterface;
 use ForgeConfig;
 use System_Command_CommandException;

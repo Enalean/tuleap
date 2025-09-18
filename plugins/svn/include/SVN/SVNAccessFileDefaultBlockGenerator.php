@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
 
 use EventManager;
 use Project;
@@ -33,6 +33,9 @@ use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetriever;
+use Tuleap\SVNCore\SVNAccessFileDefaultBlockOverride;
+use Tuleap\SVNCore\SVNUser;
+use Tuleap\SVNCore\SVNUserGroup;
 use UGroupManager;
 
 final class SVNAccessFileDefaultBlockGenerator implements SVNAccessFileDefaultBlockGeneratorInterface

@@ -30,8 +30,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\SVNCore\Repository;
-use Tuleap\SVNCore\SVNAccessFileReader;
+use Tuleap\SVN\Repository;
+use Tuleap\SVN\SVNAccessFileReader;
 
 final class SVNCheckRepositoriesWithDuplicatedAccessFileSections extends Command
 {

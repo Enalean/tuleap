@@ -23,7 +23,7 @@ namespace Tuleap\SVN\Admin;
 use Reference;
 use SvnPlugin;
 use ReferenceManager;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class MailReference extends Reference
 {

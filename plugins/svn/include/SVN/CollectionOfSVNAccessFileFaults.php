@@ -21,29 +21,53 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
+
+use Tuleap\NeverThrow\Fault;
 
 /**
- * @psalm-immutable
+ * @template-implements \Iterator<Fault>
  */
-final class SVNAccessFileContent
+final class CollectionOfSVNAccessFileFaults implements \Iterator
 {
-    public function __construct(public readonly string $default, public readonly string $project_defined)
+    /**
+     * @var array<Fault>
+     */
+    private array $faults;
+    private int $index = 0;
+
+    public function add(Fault $fault): void
     {
+        $this->faults[] = $fault;
     }
 
-    public static function fromSubmittedContent(SVNAccessFileContent $original, string $new_content): self
+    #[\Override]
+    public function current(): Fault
     {
-        return new self($original->default, $new_content);
+        return $this->faults[$this->index];
     }
 
-    public function getFullContent(): string
+    #[\Override]
+    public function next(): void
     {
-        return $this->default . "\n" . $this->project_defined;
+        $this->index++;
     }
 
-    public function formatForSave(): string
+    #[\Override]
+    public function key(): int
     {
-        return SVNAccessFileReader::BEGIN_MARKER . "\n" . $this->default . SVNAccessFileReader::END_MARKER . "\n" . str_replace("\r", '', $this->project_defined) . "\n";
+        return $this->index;
+    }
+
+    #[\Override]
+    public function valid(): bool
+    {
+        return isset($this->faults[$this->index]);
+    }
+
+    #[\Override]
+    public function rewind(): void
+    {
+        $this->index = 0;
     }
 }

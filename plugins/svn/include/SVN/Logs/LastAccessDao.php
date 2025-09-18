@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Logs;
 
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class LastAccessDao extends \DataAccessObject
 {

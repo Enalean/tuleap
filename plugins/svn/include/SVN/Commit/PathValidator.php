@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\Commit;
 
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 interface PathValidator
 {

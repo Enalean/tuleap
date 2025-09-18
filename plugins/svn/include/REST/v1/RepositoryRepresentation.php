@@ -24,7 +24,7 @@ use Project;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\REST\v1\SvnRepositoryRepresentationBase;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 /**
  * @psalm-immutable

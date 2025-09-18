@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 use SVN_CommitToTagDeniedException;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 final class ImmutableTagCommitValidator implements PathValidator
 {

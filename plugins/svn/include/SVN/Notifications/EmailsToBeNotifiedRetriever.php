@@ -23,7 +23,7 @@ namespace Tuleap\SVN\Notifications;
 use ProjectUGroup;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Admin\MailNotificationManager;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class EmailsToBeNotifiedRetriever
 {

@@ -23,7 +23,7 @@ namespace Tuleap\SVN\Repository;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotDeleteRepositoryException;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -51,7 +51,6 @@ final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \System_Command&\PHPUnit\Framework\MockObject\MockObject
      */
     private $system_command;
-    private string $fixtures_dir;
     private \ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
 
     #[\Override]
@@ -73,16 +72,15 @@ final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository_manager,
         );
 
-        $this->repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
+        $this->repository = $this->createMock(\Tuleap\SVN\Repository::class);
         $this->project    = ProjectTestBuilder::aProject()->build();
-
-        $this->fixtures_dir = __DIR__ . '/../_fixtures';
     }
 
     public function testItReturnFalseWhenRepositoryIsNotFoundOnFileSystem(): void
     {
         $this->repository->method('getProject')->willReturn($this->project);
         $this->repository->method('getSystemPath')->willReturn('/a/non/existing/path');
+        $this->system_command->expects($this->never())->method('exec');
 
         self::assertFalse($this->repository_deleter->delete($this->repository));
     }
@@ -90,10 +88,10 @@ final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDeleteTheRepository(): void
     {
         $this->repository->method('getProject')->willReturn($this->project);
-        $this->repository->method('getSystemPath')->willReturn($this->fixtures_dir);
-        $this->system_command->method('exec')->willReturn(true);
+        $this->repository->method('getSystemPath')->willReturn('/tmp');
+        $this->system_command->expects($this->once())->method('exec');
 
-        self::assertFalse($this->repository_deleter->delete($this->repository));
+        self::assertTrue($this->repository_deleter->delete($this->repository));
     }
 
     public function testItThrowsAnExceptionWhenRepositoryCantBeMarkedAsDeleted(): void

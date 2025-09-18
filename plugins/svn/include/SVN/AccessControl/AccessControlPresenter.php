@@ -21,11 +21,11 @@
 namespace Tuleap\SVN\AccessControl;
 
 use ForgeConfig;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\SVN\Admin\SectionsPresenter;
 use Tuleap\SVN\Admin\BaseAdminPresenter;
 use CSRFSynchronizerToken;
-use Tuleap\SVNCore\SVNAccessFileContent;
+use Tuleap\SVN\SVNAccessFileContent;
 
 class AccessControlPresenter extends BaseAdminPresenter
 {

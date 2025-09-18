@@ -28,7 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ReferenceManager;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigRetriever;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

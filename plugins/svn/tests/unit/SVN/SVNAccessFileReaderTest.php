@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
 
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;

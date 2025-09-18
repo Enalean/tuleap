@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,14 +21,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
+
+use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final class SVNAccessFileDefaultBlockForCache
+final readonly class SVNAccessFileWriteFault extends Fault
 {
-    public function __construct(public readonly string $groups, public readonly SVNAccessFileDefaultBlockOverride $default_block_override)
+    public readonly string $access_file;
+
+    public static function fromWriteError(string $access_file, \Throwable $throwable): self
     {
+        $fault              = new self($throwable->getMessage(), $throwable);
+        $fault->access_file = $access_file;
+        return $fault;
     }
 }

@@ -24,7 +24,7 @@
 
 namespace Tuleap\SVN\Admin;
 
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class ImmutableTagPresenter extends BaseAdminPresenter
 {

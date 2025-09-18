@@ -32,8 +32,8 @@ use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\Settings\Settings;
 use Tuleap\SVN\Repository\SvnRepository;
-use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\CollectionOfSVNAccessFileFaults;
+use Tuleap\SVN\Repository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

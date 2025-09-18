@@ -30,7 +30,7 @@ use Tuleap\SVN\Commit\CommitInfoEnhancer;
 use Tuleap\SVN\Commit\CommitMessageValidator;
 use Tuleap\SVN\Commit\PathValidator;
 use Tuleap\SVN\Commit\Svnlook;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class PreCommit
 {

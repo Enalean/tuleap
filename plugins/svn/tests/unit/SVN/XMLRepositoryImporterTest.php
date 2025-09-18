@@ -40,7 +40,6 @@ use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RuleName;
-use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

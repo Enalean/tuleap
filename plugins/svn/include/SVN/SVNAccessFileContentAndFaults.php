@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,10 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
 
-
-interface SVNAccessFileDefaultBlockGeneratorInterface
+/**
+ * @psalm-immutable
+ */
+final class SVNAccessFileContentAndFaults
 {
-    public function getDefaultBlock(Repository $repository): SVNAccessFileDefaultBlock;
+    public function __construct(public readonly string $contents, public readonly CollectionOfSVNAccessFileFaults $faults)
+    {
+    }
 }

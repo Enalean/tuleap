@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\Explorer;
 
 use Tuleap\SVN\Commit\FileSizeValidator;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class RepositoryDisplayPresenter
 {

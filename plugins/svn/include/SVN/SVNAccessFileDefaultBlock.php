@@ -21,14 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVNCore;
+namespace Tuleap\SVN;
 
 /**
  * @psalm-immutable
  */
-final class SVNAccessFileContentAndFaults
+final class SVNAccessFileDefaultBlock
 {
-    public function __construct(public readonly string $contents, public readonly CollectionOfSVNAccessFileFaults $faults)
+    public function __construct(public readonly string $content)
     {
     }
 }

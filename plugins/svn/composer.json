@@ -8,7 +8,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\SVN\\": ["./tests/unit/"]
+      "Tuleap\\SVN\\": ["./tests/unit/", "./tests/unit/SVN"]
     }
   },
   "config": {

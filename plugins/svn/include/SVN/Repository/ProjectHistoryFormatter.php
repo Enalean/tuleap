@@ -22,7 +22,7 @@ namespace Tuleap\SVN\Repository;
 
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\MailNotification;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 class ProjectHistoryFormatter
 {

@@ -24,7 +24,7 @@
 
 namespace Tuleap\SVN\Admin;
 
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 use DataAccessObject;
 
 class ImmutableTagDao extends DataAccessObject

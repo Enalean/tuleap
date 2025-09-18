@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\Logs;
 
 use Tuleap\SVN\Commit\CommitInfo;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LastAccessUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase

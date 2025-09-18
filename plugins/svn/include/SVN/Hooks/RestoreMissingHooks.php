@@ -25,7 +25,7 @@ namespace Tuleap\SVN\Hooks;
 use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 final class RestoreMissingHooks
 {

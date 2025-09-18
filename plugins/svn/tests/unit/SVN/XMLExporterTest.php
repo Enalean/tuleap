@@ -26,7 +26,6 @@ use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\XML\Export\ZipArchive;
-use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use XML_SimpleXMLCDATAFactory;
@@ -68,7 +67,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->zip = $this->createMock(ZipArchive::class);
 
-        $repository = $this->createMock(\Tuleap\SVNCore\Repository::class);
+        $repository = $this->createMock(\Tuleap\SVN\Repository::class);
         $repository->method('getName')->willReturn('MyRepo');
         $repository->method('getSystemPath')->willReturn($this->fixtures_dir);
         $repository_manager->method('getRepositoriesInProject')->willReturn([$repository]);

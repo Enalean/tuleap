@@ -27,7 +27,7 @@ use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Tuleap\Config\ConfigKey;
-use Tuleap\SVNCore\Repository;
+use Tuleap\SVN\Repository;
 
 final class FileSizeValidator implements PathValidator
 {

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,21 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVNCore;
-
-use Tuleap\NeverThrow\Fault;
+namespace Tuleap\SVN;
 
 /**
  * @psalm-immutable
  */
-final readonly class SVNAccessFileWriteFault extends Fault
+final class SVNAccessFileContent
 {
-    public readonly string $access_file;
-
-    public static function fromWriteError(string $access_file, \Throwable $throwable): self
+    public function __construct(public readonly string $default, public readonly string $project_defined)
     {
-        $fault              = new self($throwable->getMessage(), $throwable);
-        $fault->access_file = $access_file;
-        return $fault;
+    }
+
+    public static function fromSubmittedContent(SVNAccessFileContent $original, string $new_content): self
+    {
+        return new self($original->default, $new_content);
+    }
+
+    public function getFullContent(): string
+    {
+        return $this->default . "\n" . $this->project_defined;
+    }
+
+    public function formatForSave(): string
+    {
+        return SVNAccessFileReader::BEGIN_MARKER . "\n" . $this->default . SVNAccessFileReader::END_MARKER . "\n" . str_replace("\r", '', $this->project_defined) . "\n";
     }
 }
