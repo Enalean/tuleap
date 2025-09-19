@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use ProjectUGroup;
 use Psl\Json;
+use Psr\Http\Message\ResponseInterface;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\FieldType;
@@ -106,6 +107,8 @@ final class ArtidocFieldsTest extends RestBase
 
         $test_exec_tracker = $trackers->getTrackerRest(self::TEST_EXEC_TRACKER_SHORT_NAME);
         $this->configureStepsExecution($test_exec_tracker, $root_folder_id, $real_project_id, $test_case_artifact_id);
+
+        $this->testErrorsInConfiguration($all_fields_tracker, $root_folder_id, $real_project_id);
     }
 
     private function createProject(int $template_project_id): int
@@ -399,7 +402,7 @@ final class ArtidocFieldsTest extends RestBase
                         'title'             => self::LINKED_ARTIFACT_TITLE,
                         'html_uri'          => '/plugins/tracker/?aid=' . $artifact_to_link_id,
                         'status'            => null,
-                        'link_type' => [
+                        'link_type'         => [
                             'shortname' => ArtifactLinkField::NO_TYPE,
                             'direction' => LinkDirection::FORWARD->value,
                         ],
@@ -424,20 +427,11 @@ final class ArtidocFieldsTest extends RestBase
         $summary_field_id          = $test_case_tracker->getFieldByShortName('summary')['field_id'];
         $steps_definition_field_id = $test_case_tracker->getFieldByShortName('steps')['field_id'];
 
-        $put_configuration_response = $this->getResponse(
-            $this->request_factory->createRequest(
-                'PUT',
-                'artidoc/' . urlencode((string) $artidoc_id) . '/configuration'
-            )->withBody(
-                $this->stream_factory->createStream(
-                    Json\encode([
-                        'selected_tracker_ids' => [$test_case_tracker->getTrackerID()],
-                        'fields'               => [
-                            ['field_id' => $steps_definition_field_id, 'display_type' => DisplayType::BLOCK->value],
-                        ],
-                    ])
-                )
-            )
+        $put_configuration_response = $this->putConfigurationForField(
+            $artidoc_id,
+            $test_case_tracker->getTrackerID(),
+            $steps_definition_field_id,
+            DisplayType::BLOCK
         );
         self::assertSame(200, $put_configuration_response->getStatusCode());
 
@@ -485,6 +479,15 @@ final class ArtidocFieldsTest extends RestBase
             $steps_definition['value'][0]['expected_results']
         );
 
+        $steps_in_column_response = $this->putConfigurationForField(
+            $artidoc_id,
+            $test_case_tracker->getTrackerID(),
+            $steps_definition_field_id,
+            DisplayType::COLUMN
+        );
+        // Steps definition field is not allowed to have column display type
+        self::assertSame(400, $steps_in_column_response->getStatusCode());
+
         return $artifact_id;
     }
 
@@ -504,20 +507,11 @@ final class ArtidocFieldsTest extends RestBase
         $steps_execution_field_id = $test_exec_tracker->getFieldByShortName('steps_results')['field_id'];
         $artifact_links_field_id  = $test_exec_tracker->getFieldByShortName('artifact_links')['field_id'];
 
-        $put_configuration_response = $this->getResponse(
-            $this->request_factory->createRequest(
-                'PUT',
-                'artidoc/' . urlencode((string) $artidoc_id) . '/configuration'
-            )->withBody(
-                $this->stream_factory->createStream(
-                    Json\encode([
-                        'selected_tracker_ids' => [$test_exec_tracker->getTrackerID()],
-                        'fields'               => [
-                            ['field_id' => $steps_execution_field_id, 'display_type' => DisplayType::BLOCK->value],
-                        ],
-                    ])
-                )
-            )
+        $put_configuration_response = $this->putConfigurationForField(
+            $artidoc_id,
+            $test_exec_tracker->getTrackerID(),
+            $steps_execution_field_id,
+            DisplayType::BLOCK
         );
         self::assertSame(200, $put_configuration_response->getStatusCode());
 
@@ -569,5 +563,91 @@ final class ArtidocFieldsTest extends RestBase
             $steps_execution['value'][0]['expected_results']
         );
         self::assertSame(self::STEP_EXECUTION_STATUS, $steps_execution['value'][0]['status']);
+
+        $steps_in_column_response = $this->putConfigurationForField(
+            $artidoc_id,
+            $test_exec_tracker->getTrackerID(),
+            $steps_execution_field_id,
+            DisplayType::COLUMN
+        );
+        // Steps execution field is not allowed to have column display type
+        self::assertSame(400, $steps_in_column_response->getStatusCode());
+    }
+
+    private function testErrorsInConfiguration(
+        TrackerRESTHelper $all_fields_tracker,
+        int $root_folder_id,
+        int $project_id,
+    ): void {
+        $artidoc_id = $this->artidoc_api->createArtidoc(
+            $root_folder_id,
+            'Artidoc with failing configuration',
+            DocumentPermissions::buildProjectMembersCanManage($project_id)
+        )['id'];
+
+        $tracker_id              = $all_fields_tracker->getTrackerID();
+        $title_field_id          = $all_fields_tracker->getFieldByShortName('title')['field_id'];
+        $description_field_id    = $all_fields_tracker->getFieldByShortName('description')['field_id'];
+        $text_field_id           = $all_fields_tracker->getFieldByShortName('text')['field_id'];
+        $artifact_links_field_id = $all_fields_tracker->getFieldByShortName('artifact_link')['field_id'];
+
+        $title_response = $this->putConfigurationForField(
+            $artidoc_id,
+            $tracker_id,
+            $title_field_id,
+            DisplayType::BLOCK,
+        );
+        // Title field cannot be used
+        self::assertSame(400, $title_response->getStatusCode());
+
+        $description_response = $this->putConfigurationForField(
+            $artidoc_id,
+            $tracker_id,
+            $description_field_id,
+            DisplayType::BLOCK
+        );
+        // Description field cannot be used
+        self::assertSame(400, $description_response->getStatusCode());
+
+        $text_field_in_column_response = $this->putConfigurationForField(
+            $artidoc_id,
+            $tracker_id,
+            $text_field_id,
+            DisplayType::COLUMN,
+        );
+        // Text field is not allowed to have column display type
+        self::assertSame(400, $text_field_in_column_response->getStatusCode());
+
+        $artifact_links_in_column_response = $this->putConfigurationForField(
+            $artidoc_id,
+            $tracker_id,
+            $artifact_links_field_id,
+            DisplayType::COLUMN,
+        );
+        // Artifact links field is not allowed to have column display type
+        self::assertSame(400, $artifact_links_in_column_response->getStatusCode());
+    }
+
+    private function putConfigurationForField(
+        int $artidoc_id,
+        int $tracker_id,
+        int $field_id,
+        DisplayType $display_type,
+    ): ResponseInterface {
+        return $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'artidoc/' . urlencode((string) $artidoc_id) . '/configuration'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    Json\encode(
+                        [
+                            'selected_tracker_ids' => [$tracker_id],
+                            'fields'               => [['field_id' => $field_id, 'display_type' => $display_type->value]],
+                        ]
+                    )
+                )
+            )
+        );
     }
 }
