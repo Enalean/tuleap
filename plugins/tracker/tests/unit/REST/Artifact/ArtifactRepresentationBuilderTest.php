@@ -28,6 +28,8 @@ use Tracker_FormElementFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -45,13 +47,14 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 {
     use GlobalLanguageMock;
 
-    private const ARTIFACT_ID = 756;
+    private const int ARTIFACT_ID = 756;
 
     private ArtifactRepresentationBuilder $builder;
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private ChangesetRepresentationBuilder&MockObject $changeset_representation_builder;
 
-    public function setUp(): void
+    #[\Override]
+    protected function setUp(): void
     {
         $this->form_element_factory             = $this->createMock(\Tracker_FormElementFactory::class);
         $this->changeset_representation_builder = $this->createMock(ChangesetRepresentationBuilder::class);
@@ -61,6 +64,8 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             $this->createMock(TypeDao::class),
             $this->changeset_representation_builder,
             ProvideUserAvatarUrlStub::build(),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::anActiveUser()->withId(105)->build()),
+            new AnonymousUserTestProvider(),
         );
     }
 
@@ -74,6 +79,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $artifact     = $this->buildBasicArtifactMock();
         $submitted_by = UserTestBuilder::aUser()->withId(777)->build();
         $artifact->method('getSubmittedByUser')->willReturn($submitted_by);
+        $artifact->method('getLastModifiedBy')->willReturn(105);
 
         $representation = $this->builder->getArtifactRepresentation($current_user, $artifact, $this->buildStatusValueRepresentation());
 
@@ -363,6 +369,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $artifact->method('getAssignedTo')->willReturn([]);
         $artifact->method('getXRef')->willReturn('art #' . self::ARTIFACT_ID);
         $artifact->method('getSubmittedBy')->willReturn(111);
+        $artifact->method('getLastModifiedBy')->willReturn(105);
         $artifact->method('isOpen')->willReturn(true);
         $artifact->method('getSubmittedOn')->willReturn(6546546554);
         $artifact->method('getLastUpdateDate')->willReturn(6546546554);

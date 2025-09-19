@@ -108,7 +108,8 @@ class ProjectResource
         );
         $tracker_factory                       = TrackerFactory::instance();
         $tracker_form_element_factory          = Tracker_FormElementFactory::instance();
-        $this->user                            = UserManager::instance()->getCurrentUser();
+        $user_manager                          = UserManager::instance();
+        $this->user                            = $user_manager->getCurrentUser();
 
         $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $this->config);
 
@@ -124,7 +125,7 @@ class ProjectResource
                 Tracker_ArtifactFactory::instance(),
                 new TypeDao(),
                 new ChangesetRepresentationBuilder(
-                    UserManager::instance(),
+                    $user_manager,
                     Tracker_FormElementFactory::instance(),
                     new CommentRepresentationBuilder(
                         CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
@@ -133,10 +134,14 @@ class ProjectResource
                     new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 ),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                $user_manager,
+                $user_manager,
             ),
             \Tuleap\Tracker\Artifact\PriorityManager::build(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             CachedSemanticStatusRetriever::instance(),
+            $user_manager,
+            $user_manager,
         );
 
         $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());

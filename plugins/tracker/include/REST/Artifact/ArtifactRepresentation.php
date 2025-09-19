@@ -27,7 +27,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
+use Tuleap\User\RetrieveUserById;
 
 /**
  * @psalm-immutable
@@ -52,12 +54,12 @@ class ArtifactRepresentation
     public $xref;
 
     /**
-     * @var TrackerRepresentation  {@type Tuleap\Tracker\REST\TrackerRepresentation} {@required true}
+     * @var TrackerRepresentation  {@type \Tuleap\Tracker\REST\TrackerRepresentation} {@required true}
      */
     public $tracker;
 
     /**
-     * @var \Tuleap\Project\REST\ProjectReference ID of the project the artifact belongs to {@type Tuleap\Project\REST\ProjectReference} {@required true}
+     * @var \Tuleap\Project\REST\ProjectReference ID of the project the artifact belongs to {@type \Tuleap\Project\REST\ProjectReference} {@required true}
      */
     public $project;
 
@@ -67,7 +69,7 @@ class ArtifactRepresentation
     public $submitted_by;
 
     /**
-     * @var MinimalUserRepresentation the minimal user representation who created the first version of the artifact {@type Tuleap\User\REST\MinimalUserRepresentation} {@required true}
+     * @var MinimalUserRepresentation the minimal user representation who created the first version of the artifact {@type \Tuleap\User\REST\MinimalUserRepresentation} {@required true}
      */
     public $submitted_by_user;
 
@@ -95,6 +97,16 @@ class ArtifactRepresentation
      * @var array | null values by field {@type array}
      */
     public $values_by_field = null;
+
+    /**
+     * @var int ID of the user who have done the last modification {@type int} {@required true}
+     */
+    public $last_update_by;
+
+    /**
+     * @var MinimalUserRepresentation the minimal user representation who have done the last modification {@type \Tuleap\User\REST\MinimalUserRepresentation} {@required true}
+     */
+    public $last_update_by_user;
 
     /**
      * @var string Date, when the last modification occurs {@type string} {@required true}
@@ -140,30 +152,34 @@ class ArtifactRepresentation
         ?array $values,
         ?array $values_by_field,
         string $last_modified_date,
+        int $last_update_by,
+        MinimalUserRepresentation $last_update_by_user,
         ?string $status,
         bool $is_open,
         ?string $title,
         array $assignees,
         ?StatusValueRepresentation $status_value_representation,
     ) {
-        $this->id                 = $id;
-        $this->uri                = $uri;
-        $this->xref               = $xref;
-        $this->tracker            = $tracker;
-        $this->project            = $project;
-        $this->submitted_by       = $submitted_by;
-        $this->submitted_by_user  = $submitted_by_user;
-        $this->submitted_on       = $submitted_on;
-        $this->html_url           = $html_url;
-        $this->changesets_uri     = $changesets_uri;
-        $this->values             = $values;
-        $this->values_by_field    = $values_by_field;
-        $this->last_modified_date = $last_modified_date;
-        $this->status             = $status;
-        $this->is_open            = $is_open;
-        $this->title              = $title;
-        $this->assignees          = $assignees;
-        $this->full_status        = $status_value_representation;
+        $this->id                  = $id;
+        $this->uri                 = $uri;
+        $this->xref                = $xref;
+        $this->tracker             = $tracker;
+        $this->project             = $project;
+        $this->submitted_by        = $submitted_by;
+        $this->submitted_by_user   = $submitted_by_user;
+        $this->submitted_on        = $submitted_on;
+        $this->html_url            = $html_url;
+        $this->changesets_uri      = $changesets_uri;
+        $this->values              = $values;
+        $this->values_by_field     = $values_by_field;
+        $this->last_update_by      = $last_update_by;
+        $this->last_update_by_user = $last_update_by_user;
+        $this->last_modified_date  = $last_modified_date;
+        $this->status              = $status;
+        $this->is_open             = $is_open;
+        $this->title               = $title;
+        $this->assignees           = $assignees;
+        $this->full_status         = $status_value_representation;
     }
 
     public static function build(
@@ -174,6 +190,8 @@ class ArtifactRepresentation
         TrackerRepresentation $tracker_representation,
         StatusValueRepresentation $status_value_representation,
         ProvideUserAvatarUrl $provide_user_avatar_url,
+        RetrieveUserById $retrieve_user_by_id,
+        ProvideAnonymousUser $provide_anonymous_user,
     ): self {
         $artifact_id = $artifact->getId();
 
@@ -188,7 +206,15 @@ class ArtifactRepresentation
             $status_representation = null;
         }
 
-        $submitted_by_user = $artifact->getSubmittedByUser();
+        $submitted_by_user   = $artifact->getSubmittedByUser();
+        $last_update_by      = $artifact->getLastModifiedBy();
+        $last_update_by_user = null;
+        if ($last_update_by !== null) {
+            $last_update_by_user = $retrieve_user_by_id->getUserById($last_update_by);
+        }
+        if ($last_update_by_user === null) {
+            $last_update_by_user = $provide_anonymous_user->getUserAnonymous();
+        }
 
         return new self(
             JsonCast::toInt($artifact_id),
@@ -204,6 +230,8 @@ class ArtifactRepresentation
             $values,
             $values_by_field,
             JsonCast::toDate($artifact->getLastUpdateDate()),
+            JsonCast::toInt($last_update_by_user->getId()),
+            MinimalUserRepresentation::build($last_update_by_user, $provide_user_avatar_url),
             $status_value_representation->value,
             $artifact->isOpen(),
             $artifact->getTitle(),

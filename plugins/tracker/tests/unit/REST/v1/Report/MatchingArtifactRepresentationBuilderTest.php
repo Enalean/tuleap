@@ -31,6 +31,8 @@ use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
@@ -61,6 +63,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
      */
     private $used_fields_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -77,6 +80,8 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
             $this->used_fields_retriever,
             $color_provider,
             ProvideUserAvatarUrlStub::build(),
+            RetrieveUserByIdStub::withNoUser(),
+            new AnonymousUserTestProvider(),
         );
     }
 
@@ -183,6 +188,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $artifact->method('getSubmittedOn')->willReturn(1646007489);
         $artifact->method('getUri')->willReturn('uri');
         $artifact->method('getLastUpdateDate')->willReturn(1647007489);
+        $artifact->method('getLastModifiedBy')->willReturn(105);
         $artifact->method('getStatus')->willReturn('');
         $artifact->method('isOpen')->willReturn(false);
         $artifact->method('getTitle')->willReturn('Artifact 01');

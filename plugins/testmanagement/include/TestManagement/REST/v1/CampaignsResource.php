@@ -307,7 +307,7 @@ class CampaignsResource
                     Tracker_ArtifactFactory::instance(),
                     new TypeDao(),
                     new ChangesetRepresentationBuilder(
-                        UserManager::instance(),
+                        $this->user_manager,
                         $this->formelement_factory,
                         new CommentRepresentationBuilder(
                             CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
@@ -316,10 +316,14 @@ class CampaignsResource
                         $this->provide_user_avatar_url,
                     ),
                     new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    $this->user_manager,
+                    $this->user_manager,
                 ),
                 \Tuleap\Tracker\Artifact\PriorityManager::build(),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 CachedSemanticStatusRetriever::instance(),
+                $this->user_manager,
+                $this->user_manager,
             ),
             $this->provide_user_avatar_url,
         );
@@ -360,7 +364,6 @@ class CampaignsResource
         $db_connection        = DBFactory::getMainTuleapDBConnection();
         $transaction_executor = new DBTransactionExecutorWithConnection($db_connection);
 
-        $user_manager      = UserManager::instance();
         $changeset_creator = new NewChangesetCreator(
             $transaction_executor,
             ArtifactChangesetSaver::build(),
@@ -487,7 +490,7 @@ class CampaignsResource
             BackendLogger::getDefaultLogger(),
         );
         $permissions_serializer          = new Tracker_Permission_PermissionsSerializer(
-            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+            new Tracker_Permission_PermissionRetrieveAssignee($this->user_manager)
         );
         $artifact_message_sender         = new RealTimeArtifactMessageSender(
             $node_js_client,

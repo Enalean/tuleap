@@ -25,6 +25,8 @@ namespace Tuleap\REST\Artifact;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactCollectionFormat;
@@ -106,6 +108,7 @@ final class ArtifactCollectionFormatterTest extends TestCase
         $artifact->method('getUri')->willReturn('/foo/777');
         $artifact->method('getSubmittedOn')->willReturn(1);
         $artifact->method('getLastUpdateDate')->willReturn(12);
+        $artifact->method('getLastModifiedBy')->willReturn(105);
         $artifact->method('isOpen')->willReturn(false);
         $artifact->method('getTitle')->willReturn('title');
         $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
@@ -123,6 +126,8 @@ final class ArtifactCollectionFormatterTest extends TestCase
             $this->createStub(TrackerRepresentation::class),
             StatusValueRepresentation::buildFromValues('value', null),
             ProvideUserAvatarUrlStub::build(),
+            RetrieveUserByIdStub::withNoUser(),
+            new AnonymousUserTestProvider(),
         );
     }
 }

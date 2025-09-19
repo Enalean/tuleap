@@ -91,7 +91,7 @@ class DefinitionsResource
                 Tracker_ArtifactFactory::instance(),
                 new TypeDao(),
                 new ChangesetRepresentationBuilder(
-                    UserManager::instance(),
+                    $this->user_manager,
                     Tracker_FormElementFactory::instance(),
                     new CommentRepresentationBuilder(
                         CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
@@ -100,10 +100,14 @@ class DefinitionsResource
                     new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 ),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                $this->user_manager,
+                $this->user_manager,
             ),
             \Tuleap\Tracker\Artifact\PriorityManager::build(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             CachedSemanticStatusRetriever::instance(),
+            $this->user_manager,
+            $this->user_manager,
         );
     }
 

@@ -263,6 +263,8 @@ class ArtifactsResource extends AuthenticatedResource
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            $this->user_manager,
+            $this->user_manager,
         );
         $this->moved_value_builder = new MovedArtifactValueBuilder();
 

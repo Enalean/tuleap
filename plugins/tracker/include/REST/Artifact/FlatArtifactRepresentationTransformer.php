@@ -97,6 +97,10 @@ final readonly class FlatArtifactRepresentationTransformer
                             },
                         );
                     break;
+                case 'subby':
+                case 'luby':
+                    $flat_representation[$this->getFieldName($field->field_id)] = $this->getListValueLabel($field->value)->unwrapOr(null);
+                    break;
                 default:
                     continue 2;
             }
