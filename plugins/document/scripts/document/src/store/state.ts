@@ -20,11 +20,7 @@
 import type { RootState } from "../type";
 
 export const state: RootState = {
-    configuration: {
-        filename_pattern: "",
-        is_filename_pattern_enforced: false,
-        can_user_switch_to_old_ui: false,
-    },
+    configuration: {},
     error: {
         has_document_permission_error: false,
         has_document_loading_error: false,

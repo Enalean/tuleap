@@ -20,12 +20,12 @@
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { ConfigurationState } from "../../../../store/configuration";
 import type { DefaultFileNewVersionItem, NewVersion } from "../../../../type";
 import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
 import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { TYPE_FILE } from "../../../../constants";
+import { FILENAME_PATTERN } from "../../../../configuration-keys";
 
 describe("PreviewFilenameNewVersion", () => {
     function getWrapper(
@@ -39,14 +39,10 @@ describe("PreviewFilenameNewVersion", () => {
                 version,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: { filename_pattern } as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [FILENAME_PATTERN.valueOf()]: filename_pattern,
+                },
             },
         });
     }

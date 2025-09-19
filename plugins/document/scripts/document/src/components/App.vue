@@ -50,8 +50,9 @@ import { onMounted } from "vue";
 import { useGetters, useNamespacedState, useStore } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import type { ErrorState } from "../store/error/module";
-import type { ConfigurationState } from "../store/configuration";
 import type { RootGetter } from "../store/getters";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { CAN_USER_SWITCH_TO_OLD_UI } from "../configuration-keys";
 
 const { $gettext } = useGettext();
 const store = useStore();
@@ -81,15 +82,14 @@ const {
     "has_document_lock_error",
     "has_global_modal_error",
 ]);
-const { can_user_switch_to_old_ui } = useNamespacedState<
-    Pick<ConfigurationState, "can_user_switch_to_old_ui">
->("configuration", ["can_user_switch_to_old_ui"]);
 const { is_uploading } = useGetters<Pick<RootGetter, "is_uploading">>(["is_uploading"]);
 
 defineProps<{
     csrf_token: string;
     csrf_token_name: string;
 }>();
+
+const can_user_switch_to_old_ui = strictInject(CAN_USER_SWITCH_TO_OLD_UI);
 
 onMounted(() => {
     const base_title = document.title;

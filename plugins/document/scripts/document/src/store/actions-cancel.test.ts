@@ -22,19 +22,16 @@ import { cancelFileUpload, cancelFolderUpload, cancelVersionUpload } from "./act
 import * as rest_querier from "../api/rest-querier";
 import type { ActionContext } from "vuex";
 import type { Folder, ItemFile, RootState } from "../type";
-import type { ConfigurationState } from "./configuration";
 import type { Upload } from "tus-js-client";
 
 describe("actions-cancel", () => {
     let context: ActionContext<RootState, RootState>;
 
     beforeEach(() => {
-        const project_id = "101";
         context = {
             commit: vi.fn(),
             dispatch: vi.fn(),
             state: {
-                configuration: { project_id } as unknown as ConfigurationState,
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;

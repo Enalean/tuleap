@@ -28,14 +28,11 @@ import properties from "./properties/module";
 import lock from "./lock/module";
 import preferencies from "./preferencies/module";
 import permissions from "./permissions/module";
-import { type ConfigurationState, createConfigurationModule } from "./configuration";
 import type { RootState, State } from "../type";
 
 export let store: Store<State>;
 
-export function createInitializedStore(configuration_state: ConfigurationState): Store<RootState> {
-    const configuration = createConfigurationModule(configuration_state);
-
+export function createInitializedStore(): Store<RootState> {
     return createStore({
         state,
         getters,
@@ -47,7 +44,6 @@ export function createInitializedStore(configuration_state: ConfigurationState):
             lock,
             preferencies,
             permissions,
-            configuration,
         },
     });
 }

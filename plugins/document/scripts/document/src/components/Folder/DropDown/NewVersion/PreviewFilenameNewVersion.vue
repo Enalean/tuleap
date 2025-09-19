@@ -27,17 +27,15 @@
 <script setup lang="ts">
 import type { NewVersion, DefaultFileNewVersionItem } from "../../../../type";
 import { computed } from "vue";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../../helpers/add-original-filename-extension";
 import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
 import { isFile } from "../../../../helpers/type-check-helper";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { FILENAME_PATTERN } from "../../../../configuration-keys";
 
 const props = defineProps<{ version: NewVersion; item: DefaultFileNewVersionItem }>();
 
-const { filename_pattern } = useNamespacedState<ConfigurationState>("configuration", [
-    "filename_pattern",
-]);
+const filename_pattern = strictInject(FILENAME_PATTERN);
 
 const is_file = computed((): boolean => {
     return isFile(props.item);
@@ -48,7 +46,7 @@ const preview = computed((): string => {
         return "";
     }
     return addOriginalFilenameExtension(
-        filename_pattern.value
+        filename_pattern
             // eslint-disable-next-line no-template-curly-in-string
             .replace("${ID}", String(props.item.id))
             // eslint-disable-next-line no-template-curly-in-string

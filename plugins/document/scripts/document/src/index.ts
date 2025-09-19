@@ -37,16 +37,18 @@ import {
     OTHER_ITEM_TYPES,
     SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
 } from "./injection-keys";
-import type { ConfigurationState } from "./store/configuration";
 import type { SearchCriterion, SearchListOption } from "./type";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 import {
+    CAN_USER_SWITCH_TO_OLD_UI,
     DATE_TIME_FORMAT,
     EMBEDDED_ARE_ALLOWED,
+    FILENAME_PATTERN,
     FORBID_WRITERS_TO_DELETE,
     FORBID_WRITERS_TO_UPDATE,
     IS_CHANGELOG_PROPOSED_AFTER_DND,
     IS_DELETION_ALLOWED,
+    IS_FILENAME_PATTERN_ENFORCED,
     IS_OBSOLESCENCE_DATE_PROPERTY_USED,
     IS_STATUS_PROPERTY_USED,
     MAX_ARCHIVE_SIZE,
@@ -181,13 +183,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         csrf_token,
     });
 
-    const configuration_state: ConfigurationState = {
-        filename_pattern,
-        is_filename_pattern_enforced,
-        can_user_switch_to_old_ui,
-    };
-
-    const store = createInitializedStore(configuration_state);
+    const store = createInitializedStore();
     app.use(store);
     const gettext = await initVueGettext(
         createGettext,
@@ -235,7 +231,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(SEARCH_CRITERIA, search_criteria)
         .provide(SEARCH_COLUMNS, search_columns)
         .provide(FORBID_WRITERS_TO_UPDATE, forbid_writers_to_update)
-        .provide(FORBID_WRITERS_TO_DELETE, forbid_writers_to_delete);
+        .provide(FORBID_WRITERS_TO_DELETE, forbid_writers_to_delete)
+        .provide(FILENAME_PATTERN, filename_pattern)
+        .provide(IS_FILENAME_PATTERN_ENFORCED, is_filename_pattern_enforced)
+        .provide(CAN_USER_SWITCH_TO_OLD_UI, can_user_switch_to_old_ui);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

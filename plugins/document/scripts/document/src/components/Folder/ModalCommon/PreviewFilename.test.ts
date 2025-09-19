@@ -21,28 +21,26 @@ import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PreviewFilename from "./PreviewFilename.vue";
-import type { ConfigurationState } from "../../../store/configuration";
 import type { DefaultFileItem } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { FILENAME_PATTERN, IS_FILENAME_PATTERN_ENFORCED } from "../../../configuration-keys";
 
 describe("PreviewFilename", () => {
     function getWrapper(
         item: DefaultFileItem,
-        configuration: ConfigurationState,
+        filename_pattern: string,
+        is_filename_pattern_enforced: boolean,
     ): VueWrapper<InstanceType<typeof PreviewFilename>> {
         return shallowMount(PreviewFilename, {
             props: {
                 item,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: configuration as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [FILENAME_PATTERN.valueOf()]: filename_pattern,
+                    [IS_FILENAME_PATTERN_ENFORCED.valueOf()]: is_filename_pattern_enforced,
+                },
             },
         });
     }
@@ -58,11 +56,12 @@ describe("PreviewFilename", () => {
                 file: new File([], "values.json"),
             },
         } as DefaultFileItem;
-        const wrapper = getWrapper(item, {
-            is_filename_pattern_enforced: true,
+        const wrapper = getWrapper(
+            item,
             // eslint-disable-next-line no-template-curly-in-string
-            filename_pattern: "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
-        } as ConfigurationState);
+            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
+            true,
+        );
 
         expect(wrapper.vm.preview).toBe(
             // eslint-disable-next-line no-template-curly-in-string
