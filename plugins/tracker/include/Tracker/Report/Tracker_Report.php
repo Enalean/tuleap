@@ -973,7 +973,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                     if (! $active) {
                         $href = 'href="' . $hp->purify('?' . http_build_query($parameters)) . '"';
                     }
-                    $html .= '<li id="tracker_report_renderer_' . $r->id . '"
+                    $html .= '<li id="tracker_report_renderer_' . $r->id . '" data-test="report-renderer"
                                   class="' . $active . '
                                             tracker_report_renderer_tab
                                             tracker_report_renderer_tab_' . $r->getType() . '">
