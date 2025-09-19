@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import TableOfContents from "./toc/TableOfContents.vue";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import DocumentSidebarHeader from "@/components/sidebar/DocumentSidebarHeader.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -59,6 +59,12 @@ const are_versions_displayed = strictInject(ARE_VERSIONS_DISPLAYED);
 const { $gettext } = useGettext();
 
 const current_tab = ref<SidebarTab>(TOC_TAB);
+
+watch(are_versions_displayed, (are_versions_displayed) => {
+    if (!are_versions_displayed) {
+        current_tab.value = TOC_TAB;
+    }
+});
 
 const is_expanded = ref(true);
 
