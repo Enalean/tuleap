@@ -26,7 +26,8 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import { OTHER_ITEM_TYPES } from "../../../../injection-keys";
-import { PROJECT_ID } from "../../../../configuration-keys";
+import { PROJECT } from "../../../../configuration-keys";
+import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -46,7 +47,7 @@ describe("CellTitle", () => {
                 },
                 provide: {
                     [OTHER_ITEM_TYPES.valueOf()]: other_item_types,
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
         });

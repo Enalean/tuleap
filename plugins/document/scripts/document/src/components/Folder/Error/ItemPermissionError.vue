@@ -32,7 +32,7 @@
             {{ $gettext("You may only access documents you are granted read permission on.") }}
         </p>
         <form
-            v-bind:action="`/plugins/document/PermissionDeniedRequestMessage/${project_id}`"
+            v-bind:action="`/plugins/document/PermissionDeniedRequestMessage/${project.id}`"
             method="post"
             name="display_form"
             ref="form_anchor"
@@ -60,7 +60,7 @@
                             v-model="mail_content"
                             required
                         ></textarea>
-                        <input type="hidden" name="groupId" v-bind:value="project_id" />
+                        <input type="hidden" name="groupId" v-bind:value="project.id" />
                         <p v-if="error !== ''" class="tlp-text-danger">
                             {{
                                 $gettext(
@@ -90,7 +90,7 @@ import ItemPermissionErrorSvg from "../../svg/error/ItemPermissionErrorSvg.vue";
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../../../configuration-keys";
+import { PROJECT } from "../../../configuration-keys";
 
 const { $gettext } = useGettext();
 
@@ -102,7 +102,7 @@ defineProps<{
 let error = ref("");
 let mail_content = ref("");
 
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 
 const form_anchor = ref<InstanceType<typeof HTMLFormElement>>();
 

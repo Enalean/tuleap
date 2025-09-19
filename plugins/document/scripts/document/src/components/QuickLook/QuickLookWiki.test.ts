@@ -24,7 +24,8 @@ import QuickLookWiki from "./QuickLookWiki.vue";
 import { TYPE_WIKI } from "../../constants";
 import type { Item } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { PROJECT_ID } from "../../configuration-keys";
+import { PROJECT } from "../../configuration-keys";
+import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 
 describe("QuickLookWiki", () => {
     it("renders quick look for wiki document", () => {
@@ -36,7 +37,7 @@ describe("QuickLookWiki", () => {
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
             props: { item: item },

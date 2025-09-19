@@ -25,7 +25,8 @@ import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import type { Item, RootState } from "../../type";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { PROJECT_ID, USER_ID } from "../../configuration-keys";
+import { PROJECT, USER_ID } from "../../configuration-keys";
+import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 
 describe("EmbeddedFileEditionSwitcher", () => {
     let display_in_large_mode: vi.Mock;
@@ -59,7 +60,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
                 }),
                 provide: {
                     [USER_ID.valueOf()]: 254,
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
         });

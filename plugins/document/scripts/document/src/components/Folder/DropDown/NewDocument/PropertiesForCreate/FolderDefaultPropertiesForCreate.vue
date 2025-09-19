@@ -55,11 +55,11 @@ import type { PropertiesState } from "../../../../../store/properties/module";
 import { computed, onMounted } from "vue";
 import type { PropertiesActions } from "../../../../../store/properties/properties-actions";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../../configuration-keys";
 
 const props = defineProps<{ status_value: string; properties: Array<Property> }>();
 
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
 
 const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("properties", [
@@ -72,7 +72,7 @@ const { has_loaded_properties } = useNamespacedState<
 
 onMounted((): void => {
     if (!has_loaded_properties.value) {
-        loadProjectProperties(project_id);
+        loadProjectProperties(project.id);
     }
 });
 

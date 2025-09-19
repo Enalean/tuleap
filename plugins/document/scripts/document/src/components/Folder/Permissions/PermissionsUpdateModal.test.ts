@@ -26,7 +26,8 @@ import * as handle_errors from "../../../store/actions-helpers/handle-errors";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
-import { PROJECT_ID } from "../../../configuration-keys";
+import { PROJECT } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 vi.useFakeTimers();
 
@@ -60,7 +61,7 @@ describe("PermissionsUpdateModal", () => {
                     },
                 }),
                 provide: {
-                    [PROJECT_ID.valueOf()]: 1,
+                    [PROJECT.valueOf()]: new ProjectBuilder(1).build(),
                 },
             },
         });

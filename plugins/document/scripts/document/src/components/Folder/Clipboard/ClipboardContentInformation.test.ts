@@ -27,7 +27,8 @@ import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
 import { ref } from "vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
+import { PROJECT, USER_ID } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 let pinia: TestingPinia;
 const mocked_store = { dispatch: vi.fn() };
@@ -45,7 +46,7 @@ function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformat
             ...getGlobalTestOptions({}, pinia),
             provide: {
                 [USER_ID.valueOf()]: 1,
-                [PROJECT_ID.valueOf()]: 1,
+                [PROJECT.valueOf()]: new ProjectBuilder(1).build(),
             },
         },
     });

@@ -25,7 +25,8 @@ import DeleteAssociatedWikiPageCheckbox from "./DeleteAssociatedWikiPageCheckbox
 import type { Wiki } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import { PROJECT_ID } from "../../../../configuration-keys";
+import { PROJECT } from "../../../../configuration-keys";
+import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
 
 describe("ModalConfirmationDeletion", () => {
     function createWrapper(
@@ -45,7 +46,7 @@ describe("ModalConfirmationDeletion", () => {
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [PROJECT_ID.valueOf()]: 104,
+                    [PROJECT.valueOf()]: new ProjectBuilder(104).build(),
                 },
             },
         });

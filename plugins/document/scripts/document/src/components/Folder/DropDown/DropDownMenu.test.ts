@@ -31,7 +31,8 @@ import {
     TYPE_WIKI,
 } from "../../../constants";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { IS_DELETION_ALLOWED, PROJECT_ID } from "../../../configuration-keys";
+import { IS_DELETION_ALLOWED, PROJECT } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 describe("DropDownMenu", () => {
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof DropDownMenu>> {
@@ -43,7 +44,7 @@ describe("DropDownMenu", () => {
                     RouterLink: RouterLinkStub,
                 },
                 provide: {
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                     [IS_DELETION_ALLOWED.valueOf()]: true,
                 },
             },

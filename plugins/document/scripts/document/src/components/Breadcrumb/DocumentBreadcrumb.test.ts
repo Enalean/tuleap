@@ -23,16 +23,8 @@ import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import type { Embedded, Folder, Item, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import {
-    PROJECT_FLAGS,
-    PROJECT_ICON,
-    PROJECT_ID,
-    PROJECT_PRIVACY,
-    PROJECT_PUBLIC_NAME,
-    PROJECT_URL,
-    USER_IS_ADMIN,
-} from "../../configuration-keys";
-import { ProjectPrivacyBuilder } from "../../../tests/builders/ProjectPrivacyBuilder";
+import { PROJECT, USER_IS_ADMIN } from "../../configuration-keys";
+import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 
 describe("DocumentBreadcrumb", () => {
     function createWrapper(
@@ -56,13 +48,12 @@ describe("DocumentBreadcrumb", () => {
                     RouterLink: RouterLinkStub,
                 },
                 provide: {
-                    [PROJECT_ID.valueOf()]: 101,
-                    [PROJECT_PUBLIC_NAME.valueOf()]: "My project",
+                    [PROJECT.valueOf()]: new ProjectBuilder(101)
+                        .withPublicName("My project")
+                        .withUrl("/project")
+                        .withIcon(project_icon)
+                        .build(),
                     [USER_IS_ADMIN.valueOf()]: user_is_admin,
-                    [PROJECT_URL.valueOf()]: " /project",
-                    [PROJECT_PRIVACY.valueOf()]: ProjectPrivacyBuilder.private(),
-                    [PROJECT_FLAGS.valueOf()]: [],
-                    [PROJECT_ICON.valueOf()]: project_icon,
                 },
             },
         });

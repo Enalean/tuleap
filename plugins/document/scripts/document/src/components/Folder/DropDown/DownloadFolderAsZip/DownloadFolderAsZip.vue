@@ -45,11 +45,11 @@ import { useNamespacedActions } from "vuex-composition-helpers";
 import { computed, ref } from "vue";
 import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { MAX_ARCHIVE_SIZE, PROJECT_NAME, WARNING_THRESHOLD } from "../../../../configuration-keys";
+import { MAX_ARCHIVE_SIZE, PROJECT, WARNING_THRESHOLD } from "../../../../configuration-keys";
 
 const props = defineProps<{ item: Folder }>();
 
-const project_name = strictInject(PROJECT_NAME);
+const project = strictInject(PROJECT);
 const warning_threshold = strictInject(WARNING_THRESHOLD);
 const max_archive_size = strictInject(MAX_ARCHIVE_SIZE);
 
@@ -60,7 +60,7 @@ const { getFolderProperties } = useNamespacedActions<PropertiesActions>("propert
 const is_retrieving_folder_size = ref(false);
 
 const folder_href = computed((): string => {
-    return `/plugins/document/${project_name}/folders/${encodeURIComponent(
+    return `/plugins/document/${project.name}/folders/${encodeURIComponent(
         props.item.id,
     )}/download-folder-as-zip`;
 });

@@ -39,11 +39,11 @@ import type { RestUser } from "../../../api/rest-querier";
 import { retrieveSelectedOwner } from "../../../helpers/owner/retrieve-selected-owner";
 import emitter from "../../../helpers/emitter";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_NAME } from "../../../configuration-keys";
+import { PROJECT } from "../../../configuration-keys";
 
 const props = defineProps<{ criterion: SearchCriterionOwner; value: string }>();
 
-const project_name = strictInject(PROJECT_NAME);
+const project = strictInject(PROJECT);
 
 const owner_input = ref<InstanceType<typeof HTMLElement>>();
 const select2_people_picker = ref<(Select2Plugin & { trigger(event: string): void }) | undefined>();
@@ -70,7 +70,7 @@ onMounted(async (): Promise<void> => {
         codendiUserOnly: true,
         use_tuleap_id: true,
         ajax: {
-            url: `/plugins/document/${encodeURIComponent(project_name)}/owners`,
+            url: `/plugins/document/${encodeURIComponent(project.name)}/owners`,
             dataType: "json",
             delay: 250,
             data: (params: Record<string, unknown>) => ({

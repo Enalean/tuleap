@@ -62,7 +62,7 @@ import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import { useStore } from "vuex";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
+import { PROJECT, USER_ID } from "../../../configuration-keys";
 
 const { $gettext } = useGettext();
 
@@ -75,8 +75,8 @@ const { folder_content, current_folder } = useState<
 const store = useStore();
 
 const user_id = strictInject(USER_ID);
-const project_id = strictInject(PROJECT_ID);
-const clipboard = useClipboardStore(store, project_id, user_id);
+const project = strictInject(PROJECT);
+const clipboard = useClipboardStore(store, project.id, user_id);
 
 const can_item_be_pasted = computed((): boolean => {
     if (

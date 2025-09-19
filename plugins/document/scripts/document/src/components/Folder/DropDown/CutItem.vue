@@ -39,14 +39,14 @@ import { useClipboardStore } from "../../../stores/clipboard";
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
+import { PROJECT, USER_ID } from "../../../configuration-keys";
 
 const store = useStore();
 const props = defineProps<{ item: Item }>();
 
 const user_id = strictInject(USER_ID);
-const project_id = strictInject(PROJECT_ID);
-const clipboard = useClipboardStore(store, project_id, user_id);
+const project = strictInject(PROJECT);
+const clipboard = useClipboardStore(store, project.id, user_id);
 
 const can_cut_item = computed((): boolean => {
     return props.item.user_can_write && props.item.parent_id !== 0;

@@ -30,7 +30,8 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { ErrorState } from "../../store/error/module";
 import type { Embedded, Item } from "../../type";
 import * as VersionRestQuerier from "../../api/version-rest-querier";
-import { PROJECT_ID, USER_ID } from "../../configuration-keys";
+import { PROJECT, USER_ID } from "../../configuration-keys";
+import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
@@ -103,7 +104,7 @@ describe("DisplayEmbedded", () => {
                 }),
                 provide: {
                     [USER_ID.valueOf()]: 254,
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
         });
@@ -145,7 +146,7 @@ describe("DisplayEmbedded", () => {
                 }),
                 provide: {
                     [USER_ID.valueOf()]: 254,
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
         });

@@ -30,7 +30,8 @@ import { ref } from "vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import type { Store } from "vuex";
 import emitter from "../../../helpers/emitter";
-import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
+import { PROJECT, USER_ID } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 const mocked_store = { store: { dispatch: vi.fn() } } as unknown as Store<RootState>;
 
@@ -57,7 +58,7 @@ describe("CopyItem", () => {
                 ...getGlobalTestOptions({}, pinia),
                 provide: {
                     [USER_ID.valueOf()]: 1,
-                    [PROJECT_ID.valueOf()]: 1,
+                    [PROJECT.valueOf()]: new ProjectBuilder(1).build(),
                 },
             },
         });

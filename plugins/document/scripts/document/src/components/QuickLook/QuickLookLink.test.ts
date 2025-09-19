@@ -24,7 +24,8 @@ import QuickLookLink from "./QuickLookLink.vue";
 import { TYPE_LINK } from "../../constants";
 import type { Item } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { PROJECT_ID } from "../../configuration-keys";
+import { PROJECT } from "../../configuration-keys";
+import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 
 describe("QuickLookLink", () => {
     it("renders quick look for link document", () => {
@@ -36,7 +37,7 @@ describe("QuickLookLink", () => {
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
             props: { item: item },

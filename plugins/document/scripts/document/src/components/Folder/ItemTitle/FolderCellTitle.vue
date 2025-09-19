@@ -77,7 +77,7 @@ import { abortCurrentUploads } from "../../../helpers/abort-current-uploads";
 import { useGettext } from "vue3-gettext";
 import type { RootGetter } from "../../../store/getters";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
+import { PROJECT, USER_ID } from "../../../configuration-keys";
 
 const router = useRouter();
 const { $gettext } = useGettext();
@@ -88,7 +88,7 @@ const props = defineProps<{ item: Folder }>();
 const { files_uploads_list } = useState<Pick<State, "files_uploads_list">>(["files_uploads_list"]);
 
 const user_id = strictInject(USER_ID);
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 
 const {
     initializeFolderProperties,
@@ -192,7 +192,7 @@ function toggle(): void {
         folder_id: props.item.id,
         should_be_closed: is_closed.value,
         user_id,
-        project_id,
+        project_id: project.id,
     });
 }
 </script>
