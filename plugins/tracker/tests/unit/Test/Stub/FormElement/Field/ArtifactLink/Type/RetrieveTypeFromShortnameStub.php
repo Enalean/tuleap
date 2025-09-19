@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type;
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortname;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
@@ -41,19 +42,15 @@ final class RetrieveTypeFromShortnameStub implements RetrieveTypeFromShortname
         return new self();
     }
 
-    public function withTypePresenter(?string $shortname, TypePresenter $presenter): self
+    public function withTypePresenter(string $shortname, TypePresenter $presenter): self
     {
-        $this->presenters[$shortname ?? ''] = $presenter;
+        $this->presenters[$shortname] = $presenter;
         return $this;
     }
 
     #[\Override]
     public function getFromShortname(?string $shortname): ?TypePresenter
     {
-        if (isset($this->presenters[$shortname ?? ''])) {
-            return $this->presenters[$shortname ?? ''];
-        }
-
-        return null;
+        return $this->presenters[$shortname ?? ArtifactLinkField::DEFAULT_LINK_TYPE] ?? null;
     }
 }

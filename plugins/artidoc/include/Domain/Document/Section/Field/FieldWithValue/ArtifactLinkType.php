@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
+
 /**
  * @psalm-immutable
  */
@@ -30,7 +32,7 @@ final readonly class ArtifactLinkType
     public function __construct(
         public string $link_label,
         public string $link_shortname,
-        public string $link_direction,
+        public LinkDirection $link_direction,
     ) {
     }
 }

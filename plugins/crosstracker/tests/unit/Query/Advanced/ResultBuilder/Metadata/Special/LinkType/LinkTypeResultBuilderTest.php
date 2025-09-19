@@ -46,12 +46,12 @@ final class LinkTypeResultBuilderTest extends TestCase
 
     #[DataProvider('dataProviderReverseAndForwardDirection')]
     public function testItBuildALinkedTypeRepresentationBasedArtifactLinkRepresentation(
-        string $direction,
+        LinkDirection $direction,
         string $label,
         string $link_type,
     ): void {
         $select_results = [
-            ['id' => $this->artifact->getId(), '@link_type' => $link_type, $direction => $label],
+            ['id' => $this->artifact->getId(), '@link_type' => $link_type, $direction->value => $label],
         ];
 
         $link_type_builder = new LinkTypeResultBuilder(RetrieveSystemTypePresenterStub::build());
@@ -60,7 +60,17 @@ final class LinkTypeResultBuilderTest extends TestCase
             Option::fromValue($direction)
         );
 
-        $link_type_representation = new LinkTypeRepresentation($link_type, $direction, $label, 'artifacts/' . $this->artifact->getId() . '/linked_artifacts?nature=' . $link_type . '&direction=' . $direction);
+        $link_type_representation = new LinkTypeRepresentation(
+            $link_type,
+            $direction->value,
+            $label,
+            sprintf(
+                'artifacts/%s/linked_artifacts?nature=%s&direction=%s',
+                $this->artifact->getId(),
+                $link_type,
+                $direction->value
+            )
+        );
 
         $expected = new SelectedValue('@link_type', ArtifactLinkTypeRepresentation::build($link_type_representation));
         self::assertEqualsCanonicalizing($expected, $result->values[$this->artifact->getId()]);
@@ -69,26 +79,26 @@ final class LinkTypeResultBuilderTest extends TestCase
     public static function dataProviderReverseAndForwardDirection(): array
     {
         return [
-            'forward _is_child' => [LinkDirection::FORWARD->value, 'Child', '_is_child'],
-            'reverse _is_child' => [LinkDirection::REVERSE->value, 'Parent', '_is_child'],
-            'forward custom' => [LinkDirection::FORWARD->value, 'Is custom', 'custom'],
-            'reverse custom' => [LinkDirection::REVERSE->value, 'From custom', 'custom'],
+            'forward _is_child' => [LinkDirection::FORWARD, 'Child', ArtifactLinkField::TYPE_IS_CHILD],
+            'reverse _is_child' => [LinkDirection::REVERSE, 'Parent', ArtifactLinkField::TYPE_IS_CHILD],
+            'forward custom' => [LinkDirection::FORWARD, 'Is custom', 'custom'],
+            'reverse custom' => [LinkDirection::REVERSE, 'From custom', 'custom'],
         ];
     }
 
     public static function dataProviderReverseAndForwardForNoType(): array
     {
         return [
-            'forward' => [LinkDirection::FORWARD->value, 'is Linked to'],
-            'reverse' => [LinkDirection::REVERSE->value, 'is Linked from'],
+            'forward' => [LinkDirection::FORWARD, 'is Linked to'],
+            'reverse' => [LinkDirection::REVERSE, 'is Linked from'],
         ];
     }
 
     #[DataProvider('dataProviderReverseAndForwardForNoType')]
-    public function testItBuildALinkedTypeRepresentationWhenLinkIsNotTyped(string $direction, string $expected_label): void
+    public function testItBuildALinkedTypeRepresentationWhenLinkIsNotTyped(LinkDirection $direction, string $expected_label): void
     {
         $select_results = [
-            ['id' => $this->artifact->getId(), '@link_type' => '', $direction => ''],
+            ['id' => $this->artifact->getId(), '@link_type' => ArtifactLinkField::DEFAULT_LINK_TYPE, $direction->value => ''],
         ];
 
         $link_type_builder = new LinkTypeResultBuilder(RetrieveSystemTypePresenterStub::build());
@@ -97,7 +107,7 @@ final class LinkTypeResultBuilderTest extends TestCase
             Option::fromValue($direction)
         );
 
-        $link_type_representation = new LinkTypeRepresentation(ArtifactLinkField::DEFAULT_LINK_TYPE, $direction, $expected_label, '');
+        $link_type_representation = new LinkTypeRepresentation(ArtifactLinkField::DEFAULT_LINK_TYPE, $direction->value, $expected_label, '');
 
         $expected = new SelectedValue('@link_type', ArtifactLinkTypeRepresentation::build($link_type_representation));
         self::assertEqualsCanonicalizing($expected, $result->values[$this->artifact->getId()]);

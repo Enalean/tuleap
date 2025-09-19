@@ -364,7 +364,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     new ArtifactLinkType(
                         'is Child of',
                         ArtifactLinkField::TYPE_IS_CHILD,
-                        LinkDirection::REVERSE->value,
+                        LinkDirection::REVERSE,
                     ),
                     'irrelevant',
                     ColorName::RED_WINE,

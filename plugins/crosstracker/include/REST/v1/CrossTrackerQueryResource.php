@@ -49,6 +49,7 @@ use Tuleap\Option\Option;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\Report\Query\Advanced\Errors\QueryErrorsTranslator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
@@ -65,7 +66,6 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\User\ProvideCurrentUser;
 use URLVerification;
 use UserManager;
-use function Psl\Type\string;
 
 final class CrossTrackerQueryResource extends AuthenticatedResource
 {
@@ -140,13 +140,19 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             );
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder(), $this->retrieve_cross_tracker_widget)->getArtifactsMatchingQuery(
+                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory(
+                    new WithoutLinkTypeSelectFromBuilder(),
+                    $this->retrieve_cross_tracker_widget
+                )->getArtifactsMatchingQuery(
                     $this->retrieve_cross_tracker_widget,
-                    CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($query_representation->tql_query, $query_representation->widget_id),
+                    CrossTrackerQueryFactory::fromTqlQueryAndWidgetId(
+                        $query_representation->tql_query,
+                        $query_representation->widget_id
+                    ),
                     $current_user,
                     $limit,
                     $offset,
-                    Option::nothing(string()),
+                    Option::nothing(LinkDirection::class),
                 )
             );
 
@@ -203,7 +209,17 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             $query        = $this->getQuery($id, $current_user);
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn() => $this->factory_builder->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder(), $this->retrieve_cross_tracker_widget)->getArtifactsMatchingQuery($this->retrieve_cross_tracker_widget, $query, $current_user, $limit, $offset, Option::nothing(string()))
+                fn() => $this->factory_builder->getArtifactFactory(
+                    new WithoutLinkTypeSelectFromBuilder(),
+                    $this->retrieve_cross_tracker_widget
+                )->getArtifactsMatchingQuery(
+                    $this->retrieve_cross_tracker_widget,
+                    $query,
+                    $current_user,
+                    $limit,
+                    $offset,
+                    Option::nothing(LinkDirection::class)
+                )
             );
 
             assert($artifacts instanceof CrossTrackerQueryContentRepresentation);

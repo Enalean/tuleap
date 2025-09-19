@@ -10,9 +10,14 @@ deptrac:
       collectors:
         - type: classLike
           value: Tuleap\\(?:NeverThrow\\(?:Err|Fault|Ok|Result)|Option\\Option|Color\\ColorName)
+    - name: TrackerEnums
+      collectors:
+        - type: classLike
+          value: Tuleap\\Tracker\\FormElement\\Field\\ArtifactLink\\Type\\LinkDirection
 
   ruleset:
     Domain:
       - Domain
       - CoreLibraries
+      - TrackerEnums
     CoreLibraries: ~

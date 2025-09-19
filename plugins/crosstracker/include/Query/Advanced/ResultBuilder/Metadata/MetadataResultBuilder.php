@@ -38,6 +38,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\TrackerNam
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 final readonly class MetadataResultBuilder
@@ -58,6 +59,9 @@ final readonly class MetadataResultBuilder
     ) {
     }
 
+    /**
+     * @param Option<LinkDirection> $direction
+     */
     public function getResult(
         Metadata $metadata,
         array $select_results,

@@ -28,6 +28,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuil
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\ResultBuilderVisitorParameters;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
@@ -48,6 +49,7 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
     /**
      * @param Selectable[] $selects
      * @param Tracker[] $trackers
+     * @param Option<LinkDirection> $direction
      * @return SelectedValuesCollection[]
      */
     public function buildResult(

@@ -18,30 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testFromPayload()
+    public function testFromPayload(): void
     {
-        $link = RESTForwardLinkProxy::fromPayload(['id' => 101, 'type' => '_is_child']);
+        $link = RESTForwardLinkProxy::fromPayload(['id' => 101, 'type' => ArtifactLinkField::TYPE_IS_CHILD]);
         self::assertSame(101, $link->getTargetArtifactId());
-        self::assertSame('_is_child', $link->getType());
+        self::assertSame(ArtifactLinkField::TYPE_IS_CHILD, $link->getType());
     }
 
     public function testItThrowsWhenThereIsNoArtifactIdInPayload(): void
     {
         $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
 
-        RESTForwardLinkProxy::fromPayload(['type' => '_is_child']);
+        RESTForwardLinkProxy::fromPayload(['type' => ArtifactLinkField::TYPE_IS_CHILD]);
     }
 
-    public function testItDefaultsToNoTypeWhenEmptyString(): void
+    public function testItUsesDefaultTypeWhenTypeIsMissing(): void
     {
         $link = RESTForwardLinkProxy::fromPayload(['id' => 75]);
         self::assertSame(75, $link->getTargetArtifactId());
@@ -52,14 +55,14 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
 
-        $all_link_payload = new LinkWithDirectionRepresentation(121, 'forward', null);
+        $all_link_payload = new LinkWithDirectionRepresentation(121, LinkDirection::FORWARD->value, null);
 
         RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
     }
 
-    public function testTheTypeAttributeIsLinkedToWhenTheTypeKeyFromAllLinksPayloadIsAnEmptyString(): void
+    public function testTheTypeAttributeIsDefaultWhenTheTypeKeyFromAllLinksPayloadIsAnEmptyString(): void
     {
-        $all_link_payload = new LinkWithDirectionRepresentation(121, 'forward', '');
+        $all_link_payload = new LinkWithDirectionRepresentation(121, LinkDirection::FORWARD->value, ArtifactLinkField::DEFAULT_LINK_TYPE);
 
         $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
 
@@ -69,11 +72,11 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheProxyObjectWithTheIdAndType(): void
     {
-        $all_link_payload = new LinkWithDirectionRepresentation(121, 'forward', '_is_child');
+        $all_link_payload = new LinkWithDirectionRepresentation(121, LinkDirection::FORWARD->value, '_is_child');
 
         $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
 
         self::assertSame(121, $forward_links->getTargetArtifactId());
-        self::assertSame('_is_child', $forward_links->getType());
+        self::assertSame(ArtifactLinkField::TYPE_IS_CHILD, $forward_links->getType());
     }
 }

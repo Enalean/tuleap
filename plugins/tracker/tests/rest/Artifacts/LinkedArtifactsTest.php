@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Tests\REST\Artifacts;
 
 use Tuleap\REST\RESTTestDataBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -108,13 +110,13 @@ final class LinkedArtifactsTest extends TrackerBase
                         'all_links' => [
                             [
                                 'id'        => $artifact_id_2,
-                                'direction' => 'reverse',
-                                'type'      => '',
+                                'direction' => LinkDirection::REVERSE->value,
+                                'type'      => ArtifactLinkField::DEFAULT_LINK_TYPE,
                             ],
                             [
                                 'id'        => $artifact_id_3,
-                                'direction' => 'reverse',
-                                'type'      => '',
+                                'direction' => LinkDirection::REVERSE->value,
+                                'type'      => ArtifactLinkField::DEFAULT_LINK_TYPE,
                             ],
                         ],
                     ],
@@ -140,8 +142,8 @@ final class LinkedArtifactsTest extends TrackerBase
                         'all_links' => [
                             [
                                 'id'        => $artifact_id_2,
-                                'direction' => 'reverse',
-                                'type'      => '_is_child',
+                                'direction' => LinkDirection::REVERSE->value,
+                                'type'      => ArtifactLinkField::TYPE_IS_CHILD,
                             ],
                         ],
                     ],
@@ -156,7 +158,7 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1, '_is_child');
+        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1, ArtifactLinkField::TYPE_IS_CHILD);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward')
@@ -197,13 +199,13 @@ final class LinkedArtifactsTest extends TrackerBase
                         'all_links' => [
                             [
                                 'id' => $artifact_id_1,
-                                'direction' => 'forward',
-                                'type' => '',
+                                'direction' => LinkDirection::FORWARD->value,
+                                'type' => ArtifactLinkField::DEFAULT_LINK_TYPE,
                             ],
                             [
                                 'id' => $artifact_id_2,
-                                'direction' => 'reverse',
-                                'type' => '',
+                                'direction' => LinkDirection::REVERSE->value,
+                                'type' => ArtifactLinkField::DEFAULT_LINK_TYPE,
                             ],
                         ],
                     ],
@@ -223,8 +225,8 @@ final class LinkedArtifactsTest extends TrackerBase
         $this->assertEquals(201, $response->getStatusCode());
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertReverseLinkExist($json['id'], $artifact_id_1, '');
-        $this->assertReverseLinkExist($artifact_id_2, $json['id'], '');
+        $this->assertReverseLinkExist($json['id'], $artifact_id_1, ArtifactLinkField::DEFAULT_LINK_TYPE);
+        $this->assertReverseLinkExist($artifact_id_2, $json['id'], ArtifactLinkField::DEFAULT_LINK_TYPE);
     }
 
     private function assertReverseLinkExist(int $source_artifact_id, int $artifact_id, ?string $expected_type): void

@@ -22,18 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders;
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
 final class LinkWithDirectionRepresentationBuilder
 {
     /**
      * @param positive-int $id
-     * @param 'reverse'|'forward' $direction
      */
     public function __construct(
         private int $id,
-        private string $direction,
-        private ?string $type = '',
+        private LinkDirection $direction,
+        private ?string $type = ArtifactLinkField::DEFAULT_LINK_TYPE,
     ) {
     }
 
@@ -42,7 +43,7 @@ final class LinkWithDirectionRepresentationBuilder
      */
     public static function aReverseLink(int $id): self
     {
-        return new self($id, 'reverse');
+        return new self($id, LinkDirection::REVERSE);
     }
 
     /**
@@ -50,7 +51,7 @@ final class LinkWithDirectionRepresentationBuilder
      */
     public static function aReverseLinkWithNullType(int $id): LinkWithDirectionRepresentation
     {
-        return (new self($id, 'reverse', null))->build();
+        return (new self($id, LinkDirection::REVERSE, null))->build();
     }
 
     /**
@@ -58,7 +59,7 @@ final class LinkWithDirectionRepresentationBuilder
      */
     public static function aForwardLink(int $id): self
     {
-        return new self($id, 'forward');
+        return new self($id, LinkDirection::FORWARD);
     }
 
     public function withType(string $type): self
@@ -69,6 +70,6 @@ final class LinkWithDirectionRepresentationBuilder
 
     public function build(): LinkWithDirectionRepresentation
     {
-        return new LinkWithDirectionRepresentation($this->id, $this->direction, $this->type);
+        return new LinkWithDirectionRepresentation($this->id, $this->direction->value, $this->type);
     }
 }

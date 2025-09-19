@@ -36,6 +36,7 @@ use Tuleap\Option\Option;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortname;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
@@ -172,22 +173,22 @@ final readonly class ArtifactLinkFieldWithValueBuilder
             return new ArtifactLinkType(
                 dgettext('tuleap-artidoc', 'is Parent of'),
                 $presenter->shortname,
-                LinkDirection::FORWARD->value,
+                LinkDirection::FORWARD,
             );
         }
 
-        if ($presenter->shortname === '') {
+        if ($presenter->shortname === ArtifactLinkField::DEFAULT_LINK_TYPE) {
             return new ArtifactLinkType(
                 dgettext('tuleap-artidoc', 'is Linked to'),
                 $presenter->shortname,
-                LinkDirection::FORWARD->value,
+                LinkDirection::FORWARD,
             );
         }
 
         return new ArtifactLinkType(
             $presenter->forward_label,
             $presenter->shortname,
-            LinkDirection::FORWARD->value,
+            LinkDirection::FORWARD,
         );
     }
 
@@ -197,22 +198,22 @@ final readonly class ArtifactLinkFieldWithValueBuilder
             return new ArtifactLinkType(
                 dgettext('tuleap-artidoc', 'is Child of'),
                 $presenter->shortname,
-                LinkDirection::REVERSE->value,
+                LinkDirection::REVERSE,
             );
         }
 
-        if ($presenter->shortname === '') {
+        if ($presenter->shortname === ArtifactLinkField::DEFAULT_LINK_TYPE) {
             return new ArtifactLinkType(
                 dgettext('tuleap-artidoc', 'is Linked from'),
                 $presenter->shortname,
-                LinkDirection::REVERSE->value,
+                LinkDirection::REVERSE,
             );
         }
 
         return new ArtifactLinkType(
             $presenter->reverse_label,
             $presenter->shortname,
-            LinkDirection::REVERSE->value,
+            LinkDirection::REVERSE,
         );
     }
 

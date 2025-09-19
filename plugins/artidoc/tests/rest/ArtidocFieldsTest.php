@@ -238,7 +238,7 @@ final class ArtidocFieldsTest extends RestBase
                 [
                     'field_id'  => $artifact_links_field_id,
                     'all_links' => [
-                        ['id' => $artifact_to_link_id, 'direction' => 'forward', 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
+                        ['id' => $artifact_to_link_id, 'direction' => LinkDirection::FORWARD->value, 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
                     ],
                 ],
             ]
@@ -531,7 +531,7 @@ final class ArtidocFieldsTest extends RestBase
                 [
                     'field_id'  => $artifact_links_field_id,
                     'all_links' => [
-                        ['id' => $test_case_artifact_id, 'direction' => 'forward', 'type' => TypeCoveredByPresenter::TYPE_COVERED_BY],
+                        ['id' => $test_case_artifact_id, 'direction' => LinkDirection::FORWARD->value, 'type' => TypeCoveredByPresenter::TYPE_COVERED_BY],
                     ],
                 ],
             ]

@@ -30,6 +30,7 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Redirect;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
@@ -396,7 +397,7 @@ final class UpdateArtifactActionTest extends TestCase
                 645 => psl_json_encode([
                     'field_id' => 645,
                     'all_links' => [
-                        ['id' => 529, 'direction' => 'reverse', 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
+                        ['id' => 529, 'direction' => LinkDirection::REVERSE->value, 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
                     ],
                 ]),
             ])
@@ -421,7 +422,7 @@ final class UpdateArtifactActionTest extends TestCase
                 899 => psl_json_encode([
                     'field_id' => 899,
                     'all_links' => [
-                        ['id' => 404, 'direction' => 'reverse', 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
+                        ['id' => 404, 'direction' => LinkDirection::REVERSE->value, 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
                     ],
                 ]),
             ])
