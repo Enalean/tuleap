@@ -26,9 +26,9 @@ use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent
+class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP';
+    public const string NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP';
 
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;

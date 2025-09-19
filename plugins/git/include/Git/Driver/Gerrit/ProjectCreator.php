@@ -21,11 +21,11 @@
 
 class Git_Driver_Gerrit_ProjectCreator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const GROUP_REPLICATION      = 'replication';
-    public const GROUP_REGISTERED_USERS = 'Registered Users';
+    public const string GROUP_REPLICATION      = 'replication';
+    public const string GROUP_REGISTERED_USERS = 'Registered Users';
 
-    public const NO_PERMISSIONS_MIGRATION      = 'none';
-    public const DEFAULT_PERMISSIONS_MIGRATION = 'default';
+    public const string NO_PERMISSIONS_MIGRATION      = 'none';
+    public const string DEFAULT_PERMISSIONS_MIGRATION = 'default';
 
     public static $MIGRATION_MINIMAL_PERMISSIONS = [
         [

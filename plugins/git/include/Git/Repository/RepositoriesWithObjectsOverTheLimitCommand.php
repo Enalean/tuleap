@@ -31,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class RepositoriesWithObjectsOverTheLimitCommand extends Command
 {
-    public const NAME = 'git:repositories-with-object-over-the-size-limit';
+    public const string NAME = 'git:repositories-with-object-over-the-size-limit';
 
     /**
      * @var \GitRepositoryFactory

@@ -25,7 +25,7 @@ namespace Tuleap\Git\GitPHP\SmartyPlugins;
 
 final readonly class Highlight
 {
-    public const MODIFIER = 'highlight';
+    public const string MODIFIER = 'highlight';
 
     /**
      * Smarty modifier to highlight a substring

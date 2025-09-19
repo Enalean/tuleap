@@ -37,11 +37,11 @@ use Tuleap\User\UserName;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_COMMIT_MESSAGE  = 'closes story #822';
-    private const SECOND_COMMIT_MESSAGE = 'fixes bug #684';
-    private const FIRST_COMMIT_SHA1     = '6c31bec0c';
-    private const SECOND_COMMIT_SHA1    = 'abf44468';
-    private const REPOSITORY_PATH       = 'cymogene/homiletics';
+    private const string FIRST_COMMIT_MESSAGE  = 'closes story #822';
+    private const string SECOND_COMMIT_MESSAGE = 'fixes bug #684';
+    private const string FIRST_COMMIT_SHA1     = '6c31bec0c';
+    private const string SECOND_COMMIT_SHA1    = 'abf44468';
+    private const string REPOSITORY_PATH       = 'cymogene/homiletics';
     private RetrieveCommitMessageStub $message_retriever;
     private \Project $project;
     private \PFUser $pusher;

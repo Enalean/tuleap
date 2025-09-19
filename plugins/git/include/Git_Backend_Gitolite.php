@@ -51,7 +51,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     protected $gitPlugin;
 
-    public const PREFIX = 'gitolite_';
+    public const string PREFIX = 'gitolite_';
     /**
      * @var GitoliteAccessURLGenerator
      */

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class GitRepositoryDeletionEvent implements Dispatchable
 {
-    public const NAME = 'gitRepositoryDeletion';
+    public const string NAME = 'gitRepositoryDeletion';
 
     /**
      * @var GitRepository

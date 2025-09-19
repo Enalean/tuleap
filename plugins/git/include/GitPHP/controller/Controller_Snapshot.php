@@ -31,7 +31,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
 {
     #[ConfigKey('Allow anonymous users to download snapshot archives of public Git repositories')]
     #[ConfigKeyLegacyBool(true)]
-    public const IS_ANONYMOUS_SNAPSHOT_DOWNLOAD_ALLOWED = 'git_anonymous_snapshot_download_allowed';
+    public const string IS_ANONYMOUS_SNAPSHOT_DOWNLOAD_ALLOWED = 'git_anonymous_snapshot_download_allowed';
 
     /**
      * archive

@@ -24,8 +24,8 @@ use Tuleap\REST\RESTTestDataBuilder;
 
 class GitDataBuilder extends RESTTestDataBuilder
 {
-    public const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
-    public const REPOSITORY_GIT_ID          = 1;
+    public const string PROJECT_TEST_GIT_SHORTNAME = 'test-git';
+    public const int REPOSITORY_GIT_ID             = 1;
 
     public function setUp()
     {

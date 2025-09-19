@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_HTTP_Wrapper
+class Git_HTTP_Wrapper //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var \Psr\Log\LoggerInterface
@@ -29,7 +29,7 @@ class Git_HTTP_Wrapper
      */
     private $process = false;
 
-    public const CHUNK_LENGTH = 8192;
+    public const int CHUNK_LENGTH = 8192;
 
     public function __construct(\Psr\Log\LoggerInterface $logger)
     {

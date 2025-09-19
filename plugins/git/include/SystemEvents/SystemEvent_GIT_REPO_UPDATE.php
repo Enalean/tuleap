@@ -21,9 +21,9 @@
 use Tuleap\Git\DefaultBranch\CannotExecuteDefaultBranchUpdateException;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor;
 
-class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
+class SystemEvent_GIT_REPO_UPDATE extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME = 'GIT_REPO_UPDATE';
+    public const string NAME = 'GIT_REPO_UPDATE';
 
     /** @var GitRepositoryFactory */
     private $repository_factory;

@@ -45,8 +45,8 @@ final class MembershipManagerProjectAdminTest extends TestCase
     private Git_Driver_Gerrit_MembershipManager $membership_manager;
     private Git_Driver_Gerrit&MockObject $driver;
     private PFUser $user;
-    private const PROJECT_NAME = 'some_project';
-    private const UGROUP_ID    = 115;
+    private const string PROJECT_NAME = 'some_project';
+    private const int UGROUP_ID       = 115;
     private Git_Driver_Gerrit_User&MockObject $gerrit_user;
     private Git_RemoteServer_GerritServer&MockObject $remote_server;
     private Git_RemoteServer_GerritServerFactory&MockObject $remote_server_factory;

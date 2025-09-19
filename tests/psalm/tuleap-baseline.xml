@@ -12166,41 +12166,6 @@
       <code><![CDATA[getGitoliteSizeOnFileSystem]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/Events/AfterRepositoryCreated.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'afterRepositoryCreated']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/git/include/Events/AfterRepositoryForked.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'afterRepositoryForked']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/git/include/Events/GetExternalGitHomepagePluginsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExternalGitHomepagePluginsEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/git/include/Events/GetExternalUsedServiceEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExternalUsedServiceEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/git/include/Events/GitAdminGetExternalPanePresenters.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'gitAdminGetExternalPanePresenters']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/git/include/Events/XMLExportExternalContentEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'xmlExportExternalContentEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/git/include/Events/XMLImportExternalContentEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'xmlImportExternalContentEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/Git.php">
     <DeprecatedMethod>
       <code><![CDATA[groupAddHistory]]></code>
@@ -12209,23 +12174,6 @@
     <InvalidArgument>
       <code><![CDATA[$p[1]]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project']]></code>
-      <code><![CDATA[DEFAULT_PERM_READ  = 'PLUGIN_GIT_DEFAULT_READ']]></code>
-      <code><![CDATA[DEFAULT_PERM_WPLUS = 'PLUGIN_GIT_DEFAULT_WPLUS']]></code>
-      <code><![CDATA[DEFAULT_PERM_WRITE = 'PLUGIN_GIT_DEFAULT_WRITE']]></code>
-      <code><![CDATA[PERM_ADMIN         = 'PLUGIN_GIT_ADMIN']]></code>
-      <code><![CDATA[PERM_READ  = 'PLUGIN_GIT_READ']]></code>
-      <code><![CDATA[PERM_WPLUS = 'PLUGIN_GIT_WPLUS']]></code>
-      <code><![CDATA[PERM_WRITE = 'PLUGIN_GIT_WRITE']]></code>
-      <code><![CDATA[READ_PERM = 'R']]></code>
-      <code><![CDATA[REFERENCE_KEYWORD = 'git']]></code>
-      <code><![CDATA[REFERENCE_NATURE  = 'git_commit']]></code>
-      <code><![CDATA[SCOPE_PERSONAL = 'personal']]></code>
-      <code><![CDATA[SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN']]></code>
-      <code><![CDATA[TAG_REFERENCE_KEYWORD = 'git_tag']]></code>
-      <code><![CDATA[TAG_REFERENCE_NATURE  = 'git_tag']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$action]]></code>
       <code><![CDATA[$action]]></code>
@@ -12303,9 +12251,6 @@
     </TooManyArguments>
   </file>
   <file src="plugins/git/include/Git/AdminAllowedProjectsGerritPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[TEMPLATE = 'manage-allowed-projects']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$allow_all_enabled]]></code>
     </MissingPropertyType>
@@ -12419,10 +12364,6 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/git/include/Git/AdminGitoliteConfig.php">
-    <MissingClassConstType>
-      <code><![CDATA[ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = 'update-big-objects-allowed-projects']]></code>
-      <code><![CDATA[ACTION_UPDATE_CONFIG                      = 'update_config']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$project_name_from_autocomplete]]></code>
     </MissingParamType>
@@ -12599,11 +12540,6 @@
       <code><![CDATA[launchForRepository]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/Git/CollectGitRoutesEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'collectGitRoutesEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/Git/CreateRepositoryController.php">
     <MissingReturnType>
       <code><![CDATA[createRepositoryFromRequest]]></code>
@@ -12629,9 +12565,6 @@
       <code><![CDATA[$this->project->getID()]]></code>
       <code><![CDATA[$this->project->getID()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'access_control']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$is_active]]></code>
     </MissingParamType>
@@ -12715,9 +12648,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/git/include/Git/DefaultSettings/Pane/DefaultSettingsPanesCollection.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'collectDefaultSettingsPanes']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$current_pane]]></code>
     </MissingParamType>
@@ -12855,12 +12785,6 @@
     <InvalidFalsableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidFalsableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_PERMISSIONS_MIGRATION = 'default']]></code>
-      <code><![CDATA[GROUP_REGISTERED_USERS = 'Registered Users']]></code>
-      <code><![CDATA[GROUP_REPLICATION      = 'replication']]></code>
-      <code><![CDATA[NO_PERMISSIONS_MIGRATION      = 'none']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$dir]]></code>
       <code><![CDATA[$gerrit_project]]></code>
@@ -12922,11 +12846,6 @@
     </TooManyArguments>
   </file>
   <file src="plugins/git/include/Git/Driver/Gerrit/ProjectCreatorStatus.php">
-    <MissingClassConstType>
-      <code><![CDATA[DONE  = 'DONE']]></code>
-      <code><![CDATA[ERROR = 'ERROR']]></code>
-      <code><![CDATA[QUEUE = 'QUEUE']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[canModifyPermissionsTuleapSide]]></code>
       <code><![CDATA[getEvent]]></code>
@@ -13001,9 +12920,6 @@
     </InvalidArgument>
   </file>
   <file src="plugins/git/include/Git/Driver/Gerrit/Template/TemplateProcessor.php">
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_NAME_VARIABLE = '%projectname%']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[processTemplate]]></code>
     </MissingReturnType>
@@ -13053,13 +12969,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/git/include/Git/Driver/GerritDriver.php">
-    <MissingClassConstType>
-      <code><![CDATA[CACHE_ACCOUNTS        = 'accounts']]></code>
-      <code><![CDATA[CACHE_GROUPS_INCLUDES = 'groups_byinclude']]></code>
-      <code><![CDATA[DEFAULT_PARENT_PROJECT = 'All-Projects']]></code>
-      <code><![CDATA[DELETEPROJECT_PLUGIN_NAME   = 'deleteproject']]></code>
-      <code><![CDATA[GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$group_full_name]]></code>
       <code><![CDATA[$group_name]]></code>
@@ -13095,12 +13004,6 @@
     <InvalidReturnType>
       <code><![CDATA[createProjectWithPermissionsOnly]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_GROUP_OWNER = 'Administrators']]></code>
-      <code><![CDATA[HEADER_CONTENT_TYPE = 'Content-type']]></code>
-      <code><![CDATA[MIME_JSON           = 'application/json;charset=UTF-8']]></code>
-      <code><![CDATA[MIME_TEXT           = 'plain/text']]></code>
-    </MissingClassConstType>
     <MissingClosureParamType>
       <code><![CDATA[$member]]></code>
       <code><![CDATA[$member]]></code>
@@ -13183,11 +13086,6 @@
       <code><![CDATA[unsetRestriction]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/Git/GitAdditionalActionEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'gitAdditionalAction']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/Git/GitGodObjectWrapper.php">
     <MissingReturnType>
       <code><![CDATA[process]]></code>
@@ -13202,16 +13100,7 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/git/include/Git/GitRepositoryDeletionEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'gitRepositoryDeletion']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/Git/Gitolite/ConfigPermissionsSerializer.php">
-    <MissingClassConstType>
-      <code><![CDATA[REMOVE_PERMISSION = ' - ']]></code>
-      <code><![CDATA[TEMPLATES_PATH    = 'gitolite']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$etc_templates_path]]></code>
       <code><![CDATA[$hostname]]></code>
@@ -13273,15 +13162,6 @@
     <FalseOperand>
       <code><![CDATA[$log_file]]></code>
     </FalseOperand>
-    <MissingClassConstType>
-      <code><![CDATA[ACCESS_COUNT_CACHE_KEY              = 'access_count']]></code>
-      <code><![CDATA[DAY_LAST_ACCESS_TIMESTAMP_CACHE_KEY = 'day_last_access_timestamp']]></code>
-      <code><![CDATA[EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE = 8]]></code>
-      <code><![CDATA[FILE_EXTENSION                        = '.log']]></code>
-      <code><![CDATA[FILE_NAME                             = 'gitolite-']]></code>
-      <code><![CDATA[GIT_COMMAND                           = 'pre_git']]></code>
-      <code><![CDATA[REPOSITORY_PATH                       = 'gitolite/repositories/']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$filename]]></code>
       <code><![CDATA[$log]]></code>
@@ -13309,10 +13189,6 @@
     </PossiblyNullArgument>
   </file>
   <file src="plugins/git/include/Git/Gitolite/GitoliteAccessURLGenerator.php">
-    <MissingClassConstType>
-      <code><![CDATA[HTTP_URL = 'git_http_url']]></code>
-      <code><![CDATA[SSH_URL = 'git_ssh_url']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$key]]></code>
     </MissingParamType>
@@ -13324,9 +13200,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/git/include/Git/Gitolite/GitoliteConfWriter.php">
-    <MissingClassConstType>
-      <code><![CDATA[GITOLITE_CONF_FILE = 'conf/gitolite.conf']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$config_datas]]></code>
       <code><![CDATA[$config_file]]></code>
@@ -13425,10 +13298,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Gitolite/GitoliteRCReader.php">
-    <MissingClassConstType>
-      <code><![CDATA[NEW_GITOLITE_RC_PATH = '/var/lib/gitolite/.gitolite.rc']]></code>
-      <code><![CDATA[OLD_GITOLITE_RC_PATH = '/usr/com/gitolite/.gitolite.rc']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[extractHostnameFromRCFile]]></code>
       <code><![CDATA[getGitoliteRCPath]]></code>
@@ -13439,9 +13308,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/git/include/Git/Gitolite/ProjectSerializer.php">
-    <MissingClassConstType>
-      <code><![CDATA[OBJECT_SIZE_LIMIT = 52428800]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$unix_name]]></code>
     </MissingParamType>
@@ -13455,11 +13321,6 @@
       <code><![CDATA[fetchSuspendedRepositoryConfiguration]]></code>
       <code><![CDATA[repoFullName]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Gitolite/RegenerateConfigurationCommand.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'git:regenerate-gitolite-configuration']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/git/include/Git/Gitolite/SSHKey/AuthorizedKeysFileCreator.php">
     <MissingParamType>
@@ -13508,10 +13369,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/git/include/Git/Gitolite/SSHKey/Gitolite3Dumper.php">
-    <MissingClassConstType>
-      <code><![CDATA[AUTH_OPTIONS   = 'no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty']]></code>
-      <code><![CDATA[GITOLITE_SHELL = '/usr/share/gitolite3/gitolite-shell']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[dumpKeys]]></code>
       <code><![CDATA[sanityCheck]]></code>
@@ -13542,12 +13399,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Gitolite/SSHKey/Provider/GitoliteAdmin.php">
-    <MissingClassConstType>
-      <code><![CDATA[EL6_HOME                = '/home/codendiadm']]></code>
-      <code><![CDATA[EL7_HOME                = '/var/lib/tuleap']]></code>
-      <code><![CDATA[GITOLITE_ADMIN_KEY_FILE = 'id_rsa_gl-adm.pub']]></code>
-      <code><![CDATA[GITOLITE_ADMIN_KEY_NAME = 'id_rsa_gl-adm']]></code>
-    </MissingClassConstType>
     <MissingTemplateParam>
       <code><![CDATA[GitoliteAdmin]]></code>
     </MissingTemplateParam>
@@ -13605,13 +13456,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/GitoliteHousekeeping/GitoliteHousekeepingResponse.php">
-    <MissingClassConstType>
-      <code><![CDATA[ANSI_GREEN   = "\033[32m"]]></code>
-      <code><![CDATA[ANSI_NOCOLOR = "\033[0m"]]></code>
-      <code><![CDATA[ANSI_RED     = "\033[31m"]]></code>
-      <code><![CDATA[ANSI_YELLOW  = "\033[35m"]]></code>
-      <code><![CDATA[LOG_PREFIX = '[GITOLITE_HOUSEKEEPING] ']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$msg]]></code>
       <code><![CDATA[$msg]]></code>
@@ -13683,9 +13527,6 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git/HTTP/Wrapper.php">
-    <MissingClassConstType>
-      <code><![CDATA[CHUNK_LENGTH = 8192]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[stream]]></code>
     </MissingReturnType>
@@ -13706,9 +13547,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/MarkTechnicalReference.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'markTechnicalReference']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$reference_name]]></code>
     </MissingParamType>
@@ -13833,12 +13671,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Permissions/DefaultFineGrainedPermissionFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[ADD_BRANCH_PREFIX  = 'add-branch']]></code>
-      <code><![CDATA[ADD_TAG_PREFIX     = 'add-tag']]></code>
-      <code><![CDATA[EDIT_BRANCH_PREFIX = 'edit-branch']]></code>
-      <code><![CDATA[EDIT_TAG_PREFIX    = 'edit-tag']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$index]]></code>
       <code><![CDATA[$index]]></code>
@@ -14051,12 +13883,6 @@
       <code><![CDATA[UGroups[]]]></code>
       <code><![CDATA[UGroups[]]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[ADD_BRANCH_PREFIX  = 'add-branch']]></code>
-      <code><![CDATA[ADD_TAG_PREFIX     = 'add-tag']]></code>
-      <code><![CDATA[EDIT_BRANCH_PREFIX = 'edit-branch']]></code>
-      <code><![CDATA[EDIT_TAG_PREFIX    = 'edit-tag']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$index]]></code>
       <code><![CDATA[$index]]></code>
@@ -14107,10 +13933,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Permissions/FineGrainedPermissionSaver.php">
-    <MissingClassConstType>
-      <code><![CDATA[BRANCH_PATTERN_PREFIX = 'refs/heads/']]></code>
-      <code><![CDATA[TAG_PATTERN_PREFIX    = 'refs/tags/']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$pattern]]></code>
     </MissingParamType>
@@ -14163,9 +13985,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Permissions/GetProtectedGitReferences.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getProtectedGitReferences']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[addProtectedReference]]></code>
     </MissingReturnType>
@@ -14317,10 +14136,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Permissions/TemplateFineGrainedPermissionSaver.php">
-    <MissingClassConstType>
-      <code><![CDATA[BRANCH_PATTERN_PREFIX = 'refs/heads/']]></code>
-      <code><![CDATA[TAG_PATTERN_PREFIX    = 'refs/tags/']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$pattern]]></code>
     </MissingParamType>
@@ -14336,9 +14151,6 @@
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[groupAddHistory]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[REQUEST_KEY = 'default_access_rights']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$enable_fine_grained_permissions]]></code>
       <code><![CDATA[$enable_fine_grained_permissions]]></code>
@@ -14516,11 +14328,6 @@
       <code><![CDATA[RepositoryPermissionRepresentation]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/git/include/Git/PostInitGitRepositoryWithDataEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'postInitGitRepositoryWithDataEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/Git/Reference/CrossReferenceGitEnhancer.php">
     <DeprecatedMethod>
       <code><![CDATA[getAvatarUrl]]></code>
@@ -14645,10 +14452,6 @@
     <InvalidReturnType>
       <code><![CDATA[\Git_RemoteServer_GerritReplicationSSHKey]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[KEYNAME_PREFIX = 'gerrit_']]></code>
-      <code><![CDATA[KEYNAME_SUFFIX = '@0.pub']]></code>
-    </MissingClassConstType>
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
@@ -14675,13 +14478,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/RemoteServer/GerritServer.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_GERRIT_USERNAME = 'gerrit_username']]></code>
-      <code><![CDATA[DEFAULT_HTTP_PORT       = 80]]></code>
-      <code><![CDATA[GENERIC_USER_PREFIX     = 'gerrit_']]></code>
-      <code><![CDATA[GERRIT_VERSION_2_5      = '2.5']]></code>
-      <code><![CDATA[GERRIT_VERSION_2_8_PLUS = '2.8+']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$gerrit_project]]></code>
       <code><![CDATA[$gerrit_project]]></code>
@@ -14788,15 +14584,7 @@
       <code><![CDATA[$id]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/git/include/Git/Repository/AdditionalInformationRepresentationCache.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'additionalInformationRepresentationCache']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/Git/Repository/AdditionalInformationRepresentationRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'additionalInformationRepresentationRetriever']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$information]]></code>
       <code><![CDATA[$key]]></code>
@@ -14807,9 +14595,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Repository/CollectAssets.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'collectAssets']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[addScript]]></code>
       <code><![CDATA[addStylesheet]]></code>
@@ -14819,9 +14604,6 @@
     <DeprecatedMethod>
       <code><![CDATA[groupAddHistory]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LENGTH = 1024]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$description]]></code>
     </MissingParamType>
@@ -14940,14 +14722,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Repository/View/ClonePresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[GERRIT_ID    = 'gerrit']]></code>
-      <code><![CDATA[GERRIT_LABEL = 'Gerrit']]></code>
-      <code><![CDATA[HTTPS_ID    = 'https']]></code>
-      <code><![CDATA[HTTPS_LABEL = 'HTTPS']]></code>
-      <code><![CDATA[SSH_ID    = 'ssh']]></code>
-      <code><![CDATA[SSH_LABEL = 'SSH']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[build]]></code>
     </MissingReturnType>
@@ -14977,57 +14751,9 @@
     </MissingParamType>
   </file>
   <file src="plugins/git/include/Git/Repository/View/FilesHeaderPresenterBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[GITPHP_VIEWS_WITH_SELECTOR = ['shortlog', 'search', 'blob', 'blame', 'history', 'tree', false]]]></code>
-    </MissingClassConstType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$matching_ref]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/git/include/Git/Repository/View/LanguageDetectorForPrismJS.php">
-    <MissingClassConstType>
-      <code><![CDATA[EXTENSIONS = [
-        'js'             => 'javascript',
-        'py'             => 'python',
-        'rb'             => 'ruby',
-        'ps1'            => 'powershell',
-        'psm1'           => 'powershell',
-        'sh'             => 'bash',
-        'bat'            => 'batch',
-        'h'              => 'c',
-        'tex'            => 'latex',
-        'vue'            => 'markup',
-        'mkd'            => 'markdown',
-        'yml'            => 'yaml',
-        'cmake.in'       => 'cmake',
-        'tf'             => 'hcl',
-        'tfvars'         => 'hcl',
-        'tfstate'        => 'json',
-        'tfstate.backup' => 'json',
-        'rs'             => 'rust',
-        'ipynb'          => 'json',
-        'rst'            => 'rest',
-        'cc'             => 'cpp',
-        'hh'             => 'cpp',
-        'hpp'            => 'cpp',
-        'hxx'            => 'cpp',
-        'tpp'            => 'cpp',
-        'ipp'            => 'cpp',
-        'f'              => 'fortran',
-        'for'            => 'fortran',
-        'f90'            => 'fortran',
-        'f95'            => 'fortran',
-        'f03'            => 'fortran',
-    ]]]></code>
-      <code><![CDATA[FILENAMES = [
-        'CMakeLists.txt'  => 'cmake',
-        'Dockerfile'      => 'dockerfile',
-        '.eslintignore'   => 'ignore',
-        '.prettierignore' => 'ignore',
-        'Cargo.lock'      => 'toml',
-        'Makefile'        => 'makefile',
-    ]]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/git/include/Git/Repository/View/ParentRepositoryPresenter.php">
     <MissingParamType>
@@ -15035,9 +14761,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/git/include/Git/Repository/View/RepositoryExternalNavigationTabsCollector.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'repositoryExternalNavigationTabsCollector']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$selected_tab]]></code>
     </MissingParamType>
@@ -15067,10 +14790,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/git/include/Git/Repository/View/RepositoryHeaderPresenterBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[TAB_COMMITS = 'tab-commits']]></code>
-      <code><![CDATA[TAB_FILES   = 'tab-files']]></code>
-    </MissingClassConstType>
     <MissingClosureParamType>
       <code><![CDATA[$row]]></code>
     </MissingClosureParamType>
@@ -15221,9 +14940,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/git/include/Git/SystemEventQueue.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'git']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getLogger]]></code>
@@ -15571,32 +15287,6 @@
     <InvalidOperand>
       <code><![CDATA[strtotime($deletionDate)]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[BACKEND_GITOLITE = 'gitolite']]></code>
-      <code><![CDATA[FK_PROJECT_ID               = 'project_id']]></code>
-      <code><![CDATA[NOT_DELETED_DATE = '0000-00-00 00:00:00']]></code>
-      <code><![CDATA[ORDER_BY_PATH    = 'path']]></code>
-      <code><![CDATA[REMOTE_SERVER_DELETE_DATE      = 'remote_project_deleted_date']]></code>
-      <code><![CDATA[REMOTE_SERVER_DISCONNECT_DATE  = 'remote_server_disconnect_date']]></code>
-      <code><![CDATA[REMOTE_SERVER_ID               = 'remote_server_id']]></code>
-      <code><![CDATA[REMOTE_SERVER_MIGRATION_STATUS = 'remote_server_migration_status']]></code>
-      <code><![CDATA[REPOSITORY_ACCESS           = 'repository_access']]></code>
-      <code><![CDATA[REPOSITORY_BACKEND_TYPE     = 'repository_backend_type']]></code>
-      <code><![CDATA[REPOSITORY_BACKUP_PATH      = 'repository_backup_path']]></code>
-      <code><![CDATA[REPOSITORY_CREATION_DATE    = 'repository_creation_date']]></code>
-      <code><![CDATA[REPOSITORY_CREATION_USER_ID = 'repository_creation_user_id']]></code>
-      <code><![CDATA[REPOSITORY_DELETION_DATE    = 'repository_deletion_date']]></code>
-      <code><![CDATA[REPOSITORY_DESCRIPTION      = 'repository_description']]></code>
-      <code><![CDATA[REPOSITORY_ID               = 'repository_id']]></code>
-      <code><![CDATA[REPOSITORY_IS_INITIALIZED   = 'repository_is_initialized']]></code>
-      <code><![CDATA[REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix']]></code>
-      <code><![CDATA[REPOSITORY_NAME             = 'repository_name']]></code>
-      <code><![CDATA[REPOSITORY_NAMESPACE        = 'repository_namespace']]></code>
-      <code><![CDATA[REPOSITORY_PARENT           = 'repository_parent_id']]></code>
-      <code><![CDATA[REPOSITORY_PATH             = 'repository_path']]></code>
-      <code><![CDATA[REPOSITORY_SCOPE            = 'repository_scope']]></code>
-      <code><![CDATA[REPO_NAME_MAX_LENGTH = 255]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$backend]]></code>
       <code><![CDATA[$id]]></code>
@@ -15748,13 +15438,6 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/git/include/GitPHP/Commit/CommitPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[ADDED_STATUS        = 'A']]></code>
-      <code><![CDATA[DELETED_STATUS      = 'D']]></code>
-      <code><![CDATA[MODIFIED_STATUS     = 'M']]></code>
-      <code><![CDATA[RENAMED_STATUS      = 'R']]></code>
-      <code><![CDATA[TYPE_CHANGED_STATUS = 'T']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$has_description]]></code>
       <code><![CDATA[$number_of_parents]]></code>
@@ -15797,9 +15480,6 @@
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[true]]></code>
     </InvalidPropertyAssignmentValue>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'displayFileContentInGitView']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[setFileIsInSpecialFormat]]></code>
       <code><![CDATA[setSpecialDownloadUrl]]></code>
@@ -15905,10 +15585,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_DiffBase.php">
-    <MissingClassConstType>
-      <code><![CDATA[DIFF_SIDEBYSIDE = 2]]></code>
-      <code><![CDATA[DIFF_UNIFIED    = 1]]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$this->params]]></code>
       <code><![CDATA[$this->params]]></code>
@@ -15953,11 +15629,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Search.php">
-    <MissingClassConstType>
-      <code><![CDATA[SEARCH_AUTHOR    = 'author']]></code>
-      <code><![CDATA[SEARCH_COMMIT    = 'commit']]></code>
-      <code><![CDATA[SEARCH_COMMITTER = 'committer']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$this->params]]></code>
     </MissingPropertyType>
@@ -15970,9 +15641,6 @@
     <InvalidReturnType>
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[IS_ANONYMOUS_SNAPSHOT_DOWNLOAD_ALLOWED = 'git_anonymous_snapshot_download_allowed']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$archive]]></code>
       <code><![CDATA[$this->params]]></code>
@@ -15994,9 +15662,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Tree.php">
-    <MissingClassConstType>
-      <code><![CDATA[README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$this->params]]></code>
       <code><![CDATA[$this->params]]></code>
@@ -16026,12 +15691,6 @@
     <InvalidReturnType>
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[COMPRESS_BZ2 = 'tbz2']]></code>
-      <code><![CDATA[COMPRESS_GZ  = 'tgz']]></code>
-      <code><![CDATA[COMPRESS_TAR = 'tar']]></code>
-      <code><![CDATA[COMPRESS_ZIP = 'zip']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$path]]></code>
       <code><![CDATA[$prefix]]></code>
@@ -16139,9 +15798,6 @@
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[HEADER_SIGNATURE_SECTION = 'gpgsig']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$tree]]></code>
     </MissingParamType>
@@ -16321,16 +15977,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[ARCHIVE   = 'archive']]></code>
-      <code><![CDATA[BLAME     = 'blame']]></code>
-      <code><![CDATA[DIFF      = 'diff']]></code>
-      <code><![CDATA[DIFF_TREE = 'diff-tree']]></code>
-      <code><![CDATA[GREP      = 'grep']]></code>
-      <code><![CDATA[NAME_REV  = 'name-rev']]></code>
-      <code><![CDATA[REV_LIST  = 'rev-list']]></code>
-      <code><![CDATA[SHOW_REF  = 'show-ref']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$mode]]></code>
       <code><![CDATA[$project]]></code>
@@ -16381,14 +16027,6 @@
       <code><![CDATA[array]]></code>
       <code><![CDATA[int]]></code>
     </InvalidFalsableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[OBJ_BLOB      = 3]]></code>
-      <code><![CDATA[OBJ_COMMIT    = 1]]></code>
-      <code><![CDATA[OBJ_OFS_DELTA = 6]]></code>
-      <code><![CDATA[OBJ_REF_DELTA = 7]]></code>
-      <code><![CDATA[OBJ_TAG       = 4]]></code>
-      <code><![CDATA[OBJ_TREE      = 2]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$handle]]></code>
       <code><![CDATA[$str]]></code>
@@ -16638,9 +16276,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/git/include/GitPHP/git/TreeDiff.php">
-    <MissingClassConstType>
-      <code><![CDATA[EMPTY_TREE_HASH = '4b825dc642cb6eb9a060e54bf8d69288fbee4904']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$dataRead]]></code>
       <code><![CDATA[$fileDiffs]]></code>
@@ -16791,9 +16426,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPresenters/AdminGitAdminsPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[GIT_ADMIN_SELECTBOX_NAME = 'git_admins']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$selected_ugroups]]></code>
@@ -16872,15 +16504,6 @@
     <InvalidReturnType>
       <code><![CDATA[true]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_DESCRIPTION   = '-- Default description --']]></code>
-      <code><![CDATA[DEFAULT_MAIL_PREFIX   = '[SCM]']]></code>
-      <code><![CDATA[PRIVATE_ACCESS = 'private']]></code>
-      <code><![CDATA[PUBLIC_ACCESS  = 'public']]></code>
-      <code><![CDATA[REPO_EXT = '.git']]></code>
-      <code><![CDATA[REPO_SCOPE_INDIVIDUAL = 'I']]></code>
-      <code><![CDATA[REPO_SCOPE_PROJECT    = 'P']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$access]]></code>
       <code><![CDATA[$backend]]></code>
@@ -17036,13 +16659,6 @@
       <code><![CDATA[type]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/git/include/GitRepositoryGitoliteAdmin.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID       = '-2']]></code>
-      <code><![CDATA[NAME     = 'gitolite-admin.git']]></code>
-      <code><![CDATA[USERNAME = 'id_rsa_gl-adm']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/GitRepositoryManager.php">
     <DeprecatedMethod>
       <code><![CDATA[groupAddHistory]]></code>
@@ -17185,21 +16801,6 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/git/include/GitViews/GitPhpViewer.php">
-    <MissingClassConstType>
-      <code><![CDATA[GLOSSIFIED_GITPHP_ACTIONS = [
-        'blob',
-        'blobdiff',
-        'blame',
-        'history',
-        'commit',
-        'commitdiff',
-        'shortlog',
-        'search',
-        'tree',
-        'tag',
-        false,
-    ]]]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$e->Error]]></code>
       <code><![CDATA[$e->StatusCode]]></code>
@@ -17244,11 +16845,6 @@
       <code><![CDATA[getAccessRightsPresenterOptionsBuilder]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/GitViews/RepoManagement/Pane/CIBuilds.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 'cibuilds']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/Delete.php">
     <MissingReturnType>
       <code><![CDATA[fetchConfirmDeletionButton]]></code>
@@ -17268,11 +16864,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/Gerrit.php">
-    <MissingClassConstType>
-      <code><![CDATA[OPTION_DELETE_GERRIT_PROJECT     = 'delete']]></code>
-      <code><![CDATA[OPTION_DISCONNECT_GERRIT_PROJECT = 'gerrit_project_delete']]></code>
-      <code><![CDATA[OPTION_READONLY_GERRIT_PROJECT   = 'read-only']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[doesRemoteGerritProjectNeedDeleting]]></code>
       <code><![CDATA[getDisconnectFromGerritConfirmationScreen]]></code>
@@ -17291,11 +16882,6 @@
     </RedundantCast>
   </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/Hooks.php">
-    <MissingClassConstType>
-      <code><![CDATA[ADDITIONAL_WEBHOOKS = 'plugin_git_settings_additional_webhooks']]></code>
-      <code><![CDATA[CSRF_TOKEN_ID = 'GIT-WEBHOOK-SETTINGS']]></code>
-      <code><![CDATA[ID            = 'hooks']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$status]]></code>
     </MissingParamType>
@@ -17306,9 +16892,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/Notification.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 'mail']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getPluginNotifications]]></code>
     </MissingReturnType>
@@ -17319,9 +16902,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/PanesCollection.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'collectPanes']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[add]]></code>
       <code><![CDATA[getPanes]]></code>
@@ -17345,9 +16925,6 @@
     </DeprecatedMethod>
   </file>
   <file src="plugins/git/include/GitXMLExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[EXPORT_FOLDER = 'export']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$permissions]]></code>
       <code><![CDATA[$temporary_dump_path_on_filesystem]]></code>
@@ -17386,16 +16963,6 @@
       <code><![CDATA[$fine_grained_permissions_enabled]]></code>
       <code><![CDATA[$regexp_permissions_enabled]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[BRANCH_PATTERN   = 'branch']]></code>
-      <code><![CDATA[FINE_GRAINED_TAG = 'fine_grained']]></code>
-      <code><![CDATA[READ_TAG         = 'read']]></code>
-      <code><![CDATA[SERVICE_NAME = 'git']]></code>
-      <code><![CDATA[TAG_PATTERN      = 'tag']]></code>
-      <code><![CDATA[UGROUP_TAG       = 'ugroup']]></code>
-      <code><![CDATA[WPLUS_TAG        = 'wplus']]></code>
-      <code><![CDATA[WRITE_TAG        = 'write']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$extraction_path]]></code>
       <code><![CDATA[$extraction_path]]></code>
@@ -17440,9 +17007,6 @@
     <InvalidClass>
       <code><![CDATA[gitPlugin]]></code>
     </InvalidClass>
-    <MissingClassConstType>
-      <code><![CDATA[PREFIX = 'gitolite_']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$dao]]></code>
       <code><![CDATA[$newName]]></code>
@@ -17475,9 +17039,6 @@
     </PossiblyFalseOperand>
   </file>
   <file src="plugins/git/include/Git_Backend_Interface.php">
-    <MissingClassConstType>
-      <code><![CDATA[GIT_ROOT_PATH = '/var/lib/codendi/gitroot/']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$newName]]></code>
     </MissingParamType>
@@ -17489,11 +17050,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git_Exec.php">
-    <MissingClassConstType>
-      <code><![CDATA[GIT_TULEAP_PATH = '/usr/lib/tuleap/git']]></code>
-      <code><![CDATA[TRANSPORT_EXT  = 'ext']]></code>
-      <code><![CDATA[TRANSPORT_FILE = 'file']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$branch]]></code>
       <code><![CDATA[$cmd]]></code>
@@ -17558,10 +17114,6 @@
     <InvalidFalsableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidFalsableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[NEW_AUTHORIZED_KEYS_PATH = '/var/lib/gitolite/.ssh/authorized_keys']]></code>
-      <code><![CDATA[OLD_AUTHORIZED_KEYS_PATH = '/usr/com/gitolite/.ssh/authorized_keys']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$adminPath]]></code>
       <code><![CDATA[$backup_directory]]></code>
@@ -17604,10 +17156,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/git/include/Git_Gitolite_SSHKeyDumper.php">
-    <MissingClassConstType>
-      <code><![CDATA[FIRST_KEY_ID = 0]]></code>
-      <code><![CDATA[KEYDIR       = 'keydir']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$admin_path]]></code>
       <code><![CDATA[$file]]></code>
@@ -17661,11 +17209,6 @@
     <InvalidReturnType>
       <code><![CDATA[BarPlot]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_WEEKSNUMBER  = 25]]></code>
-      <code><![CDATA[NUMBER_OF_REPOSITORIES_BEFORE_GRAPH_LABEL_BREAK_DISPLAY = 15]]></code>
-      <code><![CDATA[WEEKS_IN_SECONDS = 604800]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$columns]]></code>
       <code><![CDATA[$columns]]></code>
@@ -17813,11 +17356,6 @@
       <code><![CDATA[$hashes]]></code>
     </ArgumentTypeCoercion>
   </file>
-  <file src="plugins/git/include/Hook/LogAnalyzer.php">
-    <MissingClassConstType>
-      <code><![CDATA[FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/Hook/LogPushes.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$push_details->getUser()->getId()]]></code>
@@ -17829,18 +17367,7 @@
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/git/include/Hook/PostReceiveExecuteEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'postReceiveExecuteEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/Hook/PostReceiveMailSender.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_FROM         = 'git']]></code>
-      <code><![CDATA[DEFAULT_MAIL_SUBJECT = 'Git notification']]></code>
-      <code><![CDATA[INITIAL_COMMIT    = '0000000000000000000000000000000000000000']]></code>
-      <code><![CDATA[TIMEOUT_EXIT_CODE = 124]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$mail_raw_output]]></code>
       <code><![CDATA[$mail_raw_output]]></code>
@@ -17869,21 +17396,6 @@
       <code><![CDATA[stream_get_contents(STDIN)]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="plugins/git/include/Hook/PushDetails.php">
-    <MissingClassConstType>
-      <code><![CDATA[ACTION_CREATE = 'create']]></code>
-      <code><![CDATA[ACTION_DELETE = 'delete']]></code>
-      <code><![CDATA[ACTION_ERROR  = 'error']]></code>
-      <code><![CDATA[ACTION_UPDATE = 'update']]></code>
-      <code><![CDATA[OBJECT_TYPE_COMMIT = 'commit']]></code>
-      <code><![CDATA[OBJECT_TYPE_TAG    = 'tag']]></code>
-      <code><![CDATA[TYPE_ANNOTATED_TAG   = 'annotated_tag']]></code>
-      <code><![CDATA[TYPE_BRANCH          = 'branch']]></code>
-      <code><![CDATA[TYPE_TRACKING_BRANCH = 'tracking_branch']]></code>
-      <code><![CDATA[TYPE_UNANNOTATED_TAG = 'tag']]></code>
-      <code><![CDATA[TYPE_UNKNOWN         = '']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/git/include/PathJoinUtil.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
@@ -17902,11 +17414,6 @@
       <code><![CDATA[declareProjectPlanningResource]]></code>
       <code><![CDATA[populate]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/REST/v1/Branch/BranchCreator.php">
-    <MissingClassConstType>
-      <code><![CDATA[BRANCH_PREFIX = 'refs/heads/']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/git/include/REST/v1/GerritResource.php">
     <InvalidDocblock>
@@ -17929,9 +17436,6 @@
     <ImpureMethodCall>
       <code><![CDATA[getId]]></code>
     </ImpureMethodCall>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'gerrit']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/git/include/REST/v1/GitCommitStatusRepresentation.php">
     <InvalidPropertyAssignmentValue>
@@ -17988,11 +17492,6 @@
     <InvalidOperand>
       <code><![CDATA[$this->id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[FIELDS_ALL   = 'all']]></code>
-      <code><![CDATA[FIELDS_BASIC = 'basic']]></code>
-      <code><![CDATA[ROUTE = 'git']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/git/include/REST/v1/GitTagRepresentation.php">
     <MissingParamType>
@@ -18001,12 +17500,6 @@
     <MissingReturnType>
       <code><![CDATA[build]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/REST/v1/GitTreeRepresentationFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[BLOB_TYPE = 'blob']]></code>
-      <code><![CDATA[TREE_TYPE = 'tree']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/git/include/REST/v1/RepositoryRepresentationBuilder.php">
     <InvalidReturnStatement>
@@ -18033,11 +17526,6 @@
       <code><![CDATA[public function getTags($id, $offset = 0, $limit = self::MAX_LIMIT)]]></code>
       <code><![CDATA[public function getTree(int $id, string $ref, string $path = '', int $offset = 0, int $limit = self::MAX_LIMIT): array]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-      <code><![CDATA[MIGRATE_NO_PERMISSION      = 'none']]></code>
-      <code><![CDATA[MIGRATE_PERMISSION_DEFAULT = 'default']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$disconnect_from_gerrit]]></code>
       <code><![CDATA[$id]]></code>
@@ -18071,18 +17559,12 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/git/include/SystemEvents/ParseGitolite3Logs.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_PARSE_GITOLITE3_LOGS']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/ProjectIsSuspended.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_PROJECT_IS_SUSPENDED']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getProjectIdFromParameters]]></code>
       <code><![CDATA[injectDependencies]]></code>
@@ -18090,18 +17572,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_DUMP_ALL_SSH_KEYS.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_DUMP_ALL_SSH_KEYS']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_EDIT_SSH_KEYS.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_EDIT_SSH_KEYS']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$keys_as_string]]></code>
     </MissingParamType>
@@ -18117,9 +17593,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getServer]]></code>
       <code><![CDATA[getServerId]]></code>
@@ -18132,9 +17605,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GERRIT_MIGRATION.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_GERRIT_MIGRATION']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$log_prefix]]></code>
       <code><![CDATA[$remote_server_id]]></code>
@@ -18162,9 +17632,6 @@
     <InvalidOperand>
       <code><![CDATA[$repository->getProject()]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_GERRIT_PROJECT_DELETE']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$backend]]></code>
     </MissingParamType>
@@ -18178,9 +17645,6 @@
     <InvalidOperand>
       <code><![CDATA[$repository->getProject()]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_GERRIT_PROJECT_READONLY']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[makeGerritProjectReadOnly]]></code>
@@ -18188,9 +17652,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_PROJECTS_UPDATE.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_PROJECTS_UPDATE']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getProjectIdsFromParameters]]></code>
       <code><![CDATA[injectDependencies]]></code>
@@ -18201,9 +17662,6 @@
     </PossiblyInvalidOperand>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_REGENERATE_GITOLITE_CONFIG']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getProjectIdFromParameters]]></code>
       <code><![CDATA[injectDependencies]]></code>
@@ -18211,18 +17669,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_DELETE.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_REPO_DELETE']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_FORK..php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME =  'GIT_REPO_FORK']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getLinkToRepositoryManagement]]></code>
       <code><![CDATA[getNewRepositoryFromParameters]]></code>
@@ -18237,9 +17689,6 @@
     </PossiblyInvalidOperand>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_RESTORE.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_REPO_RESTORE']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getRepositoryFromParameters]]></code>
       <code><![CDATA[getRepositoryIdFromParameters]]></code>
@@ -18252,9 +17701,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_UPDATE.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_REPO_UPDATE']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getRepositoryFromParameters]]></code>
       <code><![CDATA[injectDependencies]]></code>
@@ -18262,9 +17708,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_USER_RENAME.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'GIT_USER_RENAME']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$with_link]]></code>
     </MissingParamType>
@@ -18422,11 +17865,6 @@
       <code><![CDATA[load]]></code>
       <code><![CDATA[load]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[LOG_IDENTIFIER = 'git_syslog']]></code>
-      <code><![CDATA[SERVICE_SHORTNAME = 'plugin_git']]></code>
-      <code><![CDATA[SYSTEM_NATURE_NAME = 'git_revision']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$error]]></code>
       <code><![CDATA[$id]]></code>

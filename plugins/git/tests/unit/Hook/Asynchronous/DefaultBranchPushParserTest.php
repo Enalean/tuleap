@@ -37,10 +37,10 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefaultBranchPushParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const GIT_REPOSITORY_ID  = 419;
-    private const FIRST_COMMIT_SHA1  = 'ee79c119';
-    private const SECOND_COMMIT_SHA1 = '6337034b';
-    private const PUSHING_USER_ID    = 148;
+    private const int GIT_REPOSITORY_ID     = 419;
+    private const string FIRST_COMMIT_SHA1  = 'ee79c119';
+    private const string SECOND_COMMIT_SHA1 = '6337034b';
+    private const int PUSHING_USER_ID       = 148;
     private array $payload;
     private string $topic;
     private RetrieveUserByIdStub $user_retriever;

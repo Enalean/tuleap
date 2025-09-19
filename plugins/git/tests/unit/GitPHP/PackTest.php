@@ -31,13 +31,13 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PackTest extends TestCase
 {
-    private const SHA1_PACK = 'e9760fd950093eb1efd59a6200469e8c2d8c9632';
+    private const string SHA1_PACK = 'e9760fd950093eb1efd59a6200469e8c2d8c9632';
 
-    private const V1_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v1.idx';
-    private const V2_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v2.idx';
-    private const V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH = __DIR__ . '/fixtures/pack/v2-64bit-index-entries.idx';
+    private const string V1_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v1.idx';
+    private const string V2_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v2.idx';
+    private const string V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH = __DIR__ . '/fixtures/pack/v2-64bit-index-entries.idx';
 
-    private const ALL_PACK_INDEX_PATHS = [self::V1_PACK_INDEX_PATH, self::V2_PACK_INDEX_PATH, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH];
+    private const array ALL_PACK_INDEX_PATHS = [self::V1_PACK_INDEX_PATH, self::V2_PACK_INDEX_PATH, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH];
 
     private Project&MockObject $project;
     private vfsStreamFile $pack_archive_file;

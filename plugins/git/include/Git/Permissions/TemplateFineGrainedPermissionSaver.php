@@ -25,8 +25,8 @@ use Feedback;
 
 class TemplateFineGrainedPermissionSaver
 {
-    public const BRANCH_PATTERN_PREFIX = 'refs/heads/';
-    public const TAG_PATTERN_PREFIX    = 'refs/tags/';
+    public const string BRANCH_PATTERN_PREFIX = 'refs/heads/';
+    public const string TAG_PATTERN_PREFIX    = 'refs/tags/';
 
     /**
      * @var FineGrainedDao

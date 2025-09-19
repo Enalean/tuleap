@@ -21,15 +21,15 @@
 /**
  * I know how to speak to a Gerrit remote server
  */
-interface Git_Driver_Gerrit
+interface Git_Driver_Gerrit //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const CACHE_ACCOUNTS        = 'accounts';
-    public const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
+    public const string CACHE_ACCOUNTS        = 'accounts';
+    public const string CACHE_GROUPS_INCLUDES = 'groups_byinclude';
 
-    public const DEFAULT_PARENT_PROJECT = 'All-Projects';
+    public const string DEFAULT_PARENT_PROJECT = 'All-Projects';
 
-    public const DELETEPROJECT_PLUGIN_NAME   = 'deleteproject';
-    public const GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED';
+    public const string DELETEPROJECT_PLUGIN_NAME   = 'deleteproject';
+    public const string GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED';
 
     /**
      *

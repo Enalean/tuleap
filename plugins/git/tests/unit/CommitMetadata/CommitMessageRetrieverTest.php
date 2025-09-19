@@ -32,7 +32,7 @@ final class CommitMessageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $git_folder;
     private \Git_Exec $git_exec;
 
-    private const COMMIT_MESSAGE = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n"
+    private const string COMMIT_MESSAGE = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n"
     . "\n"
     . "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\n"
     . "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n"

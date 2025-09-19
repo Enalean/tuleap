@@ -37,7 +37,7 @@ use Tuleap\Git\PathJoinUtil;
  * And if you don't push, you will stay in Gitolite admin directory!
  *
  */
-class Git_GitoliteDriver
+class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var \Psr\Log\LoggerInterface
@@ -65,8 +65,8 @@ class Git_GitoliteDriver
         Git::PERM_WPLUS => ' RW+',
     ];
 
-    public const OLD_AUTHORIZED_KEYS_PATH = '/usr/com/gitolite/.ssh/authorized_keys';
-    public const NEW_AUTHORIZED_KEYS_PATH = '/var/lib/gitolite/.ssh/authorized_keys';
+    public const string OLD_AUTHORIZED_KEYS_PATH = '/usr/com/gitolite/.ssh/authorized_keys';
+    public const string NEW_AUTHORIZED_KEYS_PATH = '/var/lib/gitolite/.ssh/authorized_keys';
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,

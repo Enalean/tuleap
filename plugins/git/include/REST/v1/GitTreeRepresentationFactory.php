@@ -26,8 +26,8 @@ use Tuleap\Git\GitPHP\Project;
 
 class GitTreeRepresentationFactory
 {
-    private const TREE_TYPE = 'tree';
-    private const BLOB_TYPE = 'blob';
+    private const string TREE_TYPE = 'tree';
+    private const string BLOB_TYPE = 'blob';
 
     /**
      * @throws \GitRepositoryException

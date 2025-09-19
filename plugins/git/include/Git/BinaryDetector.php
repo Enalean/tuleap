@@ -24,7 +24,7 @@ namespace Tuleap\Git;
 
 final class BinaryDetector
 {
-    private const INSPECTED_BYTES = 8000;
+    private const int INSPECTED_BYTES = 8000;
 
     /**
      * @see https://git.kernel.org/pub/scm/git/git.git/tree/xdiff-interface.c?id=v2.20.1#n187

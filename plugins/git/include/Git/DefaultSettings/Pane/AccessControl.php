@@ -34,7 +34,7 @@ use UserManager;
 
 class AccessControl extends Pane
 {
-    public const NAME = 'access_control';
+    public const string NAME = 'access_control';
     /**
      * @var Project
      */

@@ -25,7 +25,7 @@ use Tuleap\Git\Permissions\Permission;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Project\UGroupLiteralizer;
 
-class Git_Gitolite_ConfigPermissionsSerializer
+class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var FineGrainedPermissionFactory
@@ -37,8 +37,8 @@ class Git_Gitolite_ConfigPermissionsSerializer
      */
     private $fine_grained_retriever;
 
-    public const TEMPLATES_PATH    = 'gitolite';
-    public const REMOVE_PERMISSION = ' - ';
+    public const string TEMPLATES_PATH    = 'gitolite';
+    public const string REMOVE_PERMISSION = ' - ';
 
     /**
      * @var TemplateRenderer

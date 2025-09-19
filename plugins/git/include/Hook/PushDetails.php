@@ -28,19 +28,19 @@ use PFUser;
  */
 class PushDetails
 {
-    public const ACTION_ERROR  = 'error';
-    public const ACTION_CREATE = 'create';
-    public const ACTION_DELETE = 'delete';
-    public const ACTION_UPDATE = 'update';
+    public const string ACTION_ERROR  = 'error';
+    public const string ACTION_CREATE = 'create';
+    public const string ACTION_DELETE = 'delete';
+    public const string ACTION_UPDATE = 'update';
 
-    public const OBJECT_TYPE_COMMIT = 'commit';
-    public const OBJECT_TYPE_TAG    = 'tag';
+    public const string OBJECT_TYPE_COMMIT = 'commit';
+    public const string OBJECT_TYPE_TAG    = 'tag';
 
-    public const TYPE_BRANCH          = 'branch';
-    public const TYPE_UNANNOTATED_TAG = 'tag';
-    public const TYPE_ANNOTATED_TAG   = 'annotated_tag';
-    public const TYPE_TRACKING_BRANCH = 'tracking_branch';
-    public const TYPE_UNKNOWN         = '';
+    public const string TYPE_BRANCH          = 'branch';
+    public const string TYPE_UNANNOTATED_TAG = 'tag';
+    public const string TYPE_ANNOTATED_TAG   = 'annotated_tag';
+    public const string TYPE_TRACKING_BRANCH = 'tracking_branch';
+    public const string TYPE_UNKNOWN         = '';
 
     public function __construct(
         private GitRepository $repository,

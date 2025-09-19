@@ -26,9 +26,9 @@ class Git_Driver_Gerrit_ProjectCreatorStatus
     /** @var array */
     private $cache = [];
 
-    public const ERROR = 'ERROR';
-    public const QUEUE = 'QUEUE';
-    public const DONE  = 'DONE';
+    public const string ERROR = 'ERROR';
+    public const string QUEUE = 'QUEUE';
+    public const string DONE  = 'DONE';
 
     public function __construct(Git_Driver_Gerrit_ProjectCreatorStatusDao $dao)
     {

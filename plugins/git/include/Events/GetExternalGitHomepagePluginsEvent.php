@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetExternalGitHomepagePluginsEvent implements Dispatchable
 {
-    public const NAME = 'getExternalGitHomepagePluginsEvent';
+    public const string NAME = 'getExternalGitHomepagePluginsEvent';
 
     /** @var Project */
     private $project;

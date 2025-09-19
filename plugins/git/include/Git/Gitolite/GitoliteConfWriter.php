@@ -20,7 +20,7 @@
 
 class Git_Gitolite_GitoliteConfWriter
 {
-    public const GITOLITE_CONF_FILE = 'conf/gitolite.conf';
+    public const string GITOLITE_CONF_FILE = 'conf/gitolite.conf';
 
     /** @var Git_Gitolite_GitoliteRCReader */
     private $gitoliterc_reader;

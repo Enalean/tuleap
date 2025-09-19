@@ -36,7 +36,7 @@ use Tuleap\User\Account\UserPreferencesHeader;
 
 final class AccountGerritController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/plugins/git/account/gerrit';
+    public const string URL = '/plugins/git/account/gerrit';
 
     /**
      * @var EventDispatcherInterface

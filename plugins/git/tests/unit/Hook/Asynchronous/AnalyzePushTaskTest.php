@@ -30,10 +30,10 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AnalyzePushTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_COMMIT_SHA1  = '98126434';
-    private const SECOND_COMMIT_SHA1 = '93b34c74';
-    private const PUSHING_USER_ID    = 183;
-    private const GIT_REPOSITORY_ID  = 555;
+    private const string FIRST_COMMIT_SHA1  = '98126434';
+    private const string SECOND_COMMIT_SHA1 = '93b34c74';
+    private const int PUSHING_USER_ID       = 183;
+    private const int GIT_REPOSITORY_ID     = 555;
     private \PFUser $pusher;
     /**
      * @var \GitRepository & \PHPUnit\Framework\MockObject\Stub

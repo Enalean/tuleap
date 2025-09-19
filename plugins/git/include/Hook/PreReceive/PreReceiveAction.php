@@ -41,8 +41,8 @@ use Tuleap\WebAssembly\WASMRuntimeLimits;
 
 final class PreReceiveAction
 {
-    private const MAX_EXEC_TIME_IN_MS      = 15000;
-    private const MAX_MEMORY_SIZE_IN_BYTES = 256 * 1024 * 1024;
+    private const int MAX_EXEC_TIME_IN_MS      = 15000;
+    private const int MAX_MEMORY_SIZE_IN_BYTES = 256 * 1024 * 1024;
 
     public function __construct(
         private readonly GitRepositoryFactory $git_repository_factory,

@@ -24,14 +24,14 @@ use GitRepository;
 
 class ClonePresenter
 {
-    public const  GERRIT_ID    = 'gerrit';
-    public const  GERRIT_LABEL = 'Gerrit';
+    public const  string GERRIT_ID    = 'gerrit';
+    public const  string GERRIT_LABEL = 'Gerrit';
 
-    public const  SSH_ID    = 'ssh';
-    public const  SSH_LABEL = 'SSH';
+    public const  string SSH_ID    = 'ssh';
+    public const  string SSH_LABEL = 'SSH';
 
-    public const  HTTPS_ID    = 'https';
-    public const  HTTPS_LABEL = 'HTTPS';
+    public const  string HTTPS_ID    = 'https';
+    public const  string HTTPS_LABEL = 'HTTPS';
 
     /** @var CloneURLPresenter[] */
     public $clone_url_presenters = [];

@@ -43,7 +43,7 @@ use XML_SimpleXMLCDATAFactory;
 
 class GitXmlExporter
 {
-    public const EXPORT_FOLDER = 'export';
+    public const string EXPORT_FOLDER = 'export';
 
     public function __construct(
         private readonly Project $project,

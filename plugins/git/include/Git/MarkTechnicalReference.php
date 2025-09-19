@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class MarkTechnicalReference implements Dispatchable
 {
-    public const NAME = 'markTechnicalReference';
+    public const string NAME = 'markTechnicalReference';
 
     /**
      * @var string

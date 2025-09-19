@@ -30,7 +30,7 @@ use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushReceived;
  */
 final class AnalyzePushTask implements \Tuleap\Queue\QueueTask
 {
-    public const TOPIC = 'tuleap.git.hooks.post-receive';
+    public const string TOPIC = 'tuleap.git.hooks.post-receive';
 
     private function __construct(
         /**

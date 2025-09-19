@@ -32,7 +32,7 @@ use Tuleap\REST\I18NRestException;
 
 class BranchCreator
 {
-    private const BRANCH_PREFIX = 'refs/heads/';
+    private const string BRANCH_PREFIX = 'refs/heads/';
 
     public function __construct(
         private \Git_Exec $git_exec,

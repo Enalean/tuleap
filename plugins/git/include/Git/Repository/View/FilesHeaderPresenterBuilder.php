@@ -43,7 +43,7 @@ class FilesHeaderPresenterBuilder
      */
     private $gitphp_project_retriever;
 
-    public const GITPHP_VIEWS_WITH_SELECTOR = ['shortlog', 'search', 'blob', 'blame', 'history', 'tree', false];
+    public const array GITPHP_VIEWS_WITH_SELECTOR = ['shortlog', 'search', 'blob', 'blame', 'history', 'tree', false];
 
     public function __construct(
         GitPHPProjectRetriever $gitphp_project_retriever,

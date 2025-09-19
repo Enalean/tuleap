@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse
+class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const ANSI_NOCOLOR = "\033[0m";
-    public const ANSI_GREEN   = "\033[32m";
-    public const ANSI_YELLOW  = "\033[35m";
-    public const ANSI_RED     = "\033[31m";
+    public const string ANSI_NOCOLOR = "\033[0m";
+    public const string ANSI_GREEN   = "\033[32m";
+    public const string ANSI_YELLOW  = "\033[35m";
+    public const string ANSI_RED     = "\033[31m";
 
-    public const LOG_PREFIX = '[GITOLITE_HOUSEKEEPING] ';
+    public const string LOG_PREFIX = '[GITOLITE_HOUSEKEEPING] ';
 
     /** @var \Psr\Log\LoggerInterface */
     private $logger;

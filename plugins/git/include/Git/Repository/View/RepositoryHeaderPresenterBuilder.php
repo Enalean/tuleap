@@ -34,8 +34,8 @@ use URLVerification;
 
 class RepositoryHeaderPresenterBuilder
 {
-    public const TAB_FILES   = 'tab-files';
-    public const TAB_COMMITS = 'tab-commits';
+    public const string TAB_FILES   = 'tab-files';
+    public const string TAB_COMMITS = 'tab-commits';
 
     /**
      * @var Git_GitRepositoryUrlManager

@@ -21,8 +21,8 @@
 
 class Git_Gitolite_GitoliteRCReader
 {
-    public const OLD_GITOLITE_RC_PATH = '/usr/com/gitolite/.gitolite.rc';
-    public const NEW_GITOLITE_RC_PATH = '/var/lib/gitolite/.gitolite.rc';
+    public const string OLD_GITOLITE_RC_PATH = '/usr/com/gitolite/.gitolite.rc';
+    public const string NEW_GITOLITE_RC_PATH = '/var/lib/gitolite/.gitolite.rc';
 
     private function getGitoliteRCPath()
     {

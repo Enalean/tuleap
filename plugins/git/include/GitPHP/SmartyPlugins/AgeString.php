@@ -25,7 +25,7 @@ namespace Tuleap\Git\GitPHP\SmartyPlugins;
 
 final readonly class AgeString
 {
-    public const MODIFIER = 'agestring';
+    public const string MODIFIER = 'agestring';
 
     /**
      * Smarty modifier to turn an age in seconds into a

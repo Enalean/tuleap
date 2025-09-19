@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Driver_Gerrit_Template_TemplateProcessor
+class Git_Driver_Gerrit_Template_TemplateProcessor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const PROJECT_NAME_VARIABLE = '%projectname%';
+    public const string PROJECT_NAME_VARIABLE = '%projectname%';
 
     public function processTemplate(Git_Driver_Gerrit_Template_Template $template, Project $project)
     {

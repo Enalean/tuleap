@@ -33,7 +33,7 @@ use Tuleap\Layout\JavascriptViteAsset;
 
 class Notification extends Pane
 {
-    public const ID = 'mail';
+    public const string ID = 'mail';
 
     /**
      * @var CollectionOfUserToBeNotifiedPresenterBuilder

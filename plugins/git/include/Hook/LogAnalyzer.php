@@ -32,7 +32,7 @@ use Psr\Log\LoggerInterface;
  */
 class LogAnalyzer
 {
-    public const FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000';
+    public const string FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000';
 
     public function __construct(private Git_Exec $exec_repo, private LoggerInterface $logger)
     {

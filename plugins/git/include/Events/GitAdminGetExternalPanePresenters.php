@@ -26,7 +26,7 @@ use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 
 class GitAdminGetExternalPanePresenters implements Dispatchable
 {
-    public const NAME = 'gitAdminGetExternalPanePresenters';
+    public const string NAME = 'gitAdminGetExternalPanePresenters';
 
     public function __construct(private Project $project, private string $current_tab_name = '')
     {

@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class XMLExportExternalContentEvent implements Dispatchable
 {
-    public const NAME = 'xmlExportExternalContentEvent';
+    public const string NAME = 'xmlExportExternalContentEvent';
 
     /**
      * @var Project

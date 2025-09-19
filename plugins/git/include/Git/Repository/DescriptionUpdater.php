@@ -28,7 +28,7 @@ use ProjectHistoryDao;
 
 class DescriptionUpdater
 {
-    public const MAX_LENGTH = 1024;
+    public const int MAX_LENGTH = 1024;
 
     /**
      * @var ProjectHistoryDao

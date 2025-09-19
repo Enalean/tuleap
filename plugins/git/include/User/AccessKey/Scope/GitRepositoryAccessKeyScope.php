@@ -34,7 +34,7 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
  */
 final class GitRepositoryAccessKeyScope implements AuthenticationScope
 {
-    private const IDENTIFIER_KEY = 'write:git_repository';
+    private const string IDENTIFIER_KEY = 'write:git_repository';
 
     /**
      * @var AccessKeyScopeIdentifier

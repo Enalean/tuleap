@@ -20,9 +20,9 @@
 
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 
-class SystemEvent_GIT_REPO_FORK extends SystemEvent
+class SystemEvent_GIT_REPO_FORK extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME =  'GIT_REPO_FORK';
+    public const string NAME =  'GIT_REPO_FORK';
 
     /** @var GitRepositoryFactory */
     private $repository_factory;

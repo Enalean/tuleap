@@ -33,10 +33,10 @@ namespace Tuleap\Git\GitPHP;
  */
 class Archive
 {
-    public const COMPRESS_TAR = 'tar';
-    public const COMPRESS_BZ2 = 'tbz2';
-    public const COMPRESS_GZ  = 'tgz';
-    public const COMPRESS_ZIP = 'zip';
+    public const string COMPRESS_TAR = 'tar';
+    public const string COMPRESS_BZ2 = 'tbz2';
+    public const string COMPRESS_GZ  = 'tgz';
+    public const string COMPRESS_ZIP = 'zip';
 
     /**
      * gitObject

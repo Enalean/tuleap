@@ -46,10 +46,10 @@ final class PostReceiveTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private const MASTER_REF_NAME = 'refs/heads/master';
-    private const OLD_REV_SHA1    = 'd8f1e57';
-    private const NEW_REV_SHA1    = '469eaa9';
-    private const REPOSITORY_PATH = '/var/lib/tuleap/gitolite/repositories/garden/dev.git';
+    private const string MASTER_REF_NAME = 'refs/heads/master';
+    private const string OLD_REV_SHA1    = 'd8f1e57';
+    private const string NEW_REV_SHA1    = '469eaa9';
+    private const string REPOSITORY_PATH = '/var/lib/tuleap/gitolite/repositories/garden/dev.git';
 
     private LogAnalyzer&MockObject $log_analyzer;
     private GitRepositoryFactory&MockObject $git_repository_factory;

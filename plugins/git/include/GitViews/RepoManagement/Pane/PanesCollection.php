@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class PanesCollection implements Dispatchable
 {
-    public const NAME = 'collectPanes';
+    public const string NAME = 'collectPanes';
 
     /**
      * @var Pane[]

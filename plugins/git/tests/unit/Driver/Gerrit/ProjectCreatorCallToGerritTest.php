@@ -53,27 +53,27 @@ final class ProjectCreatorCallToGerritTest extends TestCase
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
-    private const CONTRIBUTORS = 'tuleap-localhost-mozilla/firefox-contributors';
-    private const INTEGRATORS  = 'tuleap-localhost-mozilla/firefox-integrators';
-    private const SUPERMEN     = 'tuleap-localhost-mozilla/firefox-supermen';
-    private const OWNERS       = 'tuleap-localhost-mozilla/firefox-owners';
-    private const REPLICATION  = 'tuleap.example.com-replication';
+    private const string CONTRIBUTORS = 'tuleap-localhost-mozilla/firefox-contributors';
+    private const string INTEGRATORS  = 'tuleap-localhost-mozilla/firefox-integrators';
+    private const string SUPERMEN     = 'tuleap-localhost-mozilla/firefox-supermen';
+    private const string OWNERS       = 'tuleap-localhost-mozilla/firefox-owners';
+    private const string REPLICATION  = 'tuleap.example.com-replication';
 
-    private const CONTRIBUTORS_UUID = '8bd90045412f95ff348f41fa63606171f2328db3';
-    private const INTEGRATORS_UUID  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
-    private const SUPERMEN_UUID     = '8a7e856ce3c55f555c228bd90045412f95ff348';
-    private const OWNERS_UUID       = 'f9427648913e6ff14190d81b7b0abc60fa325d3a';
-    private const REPLICATION_UUID  = '2ce5c45e3b88415e51ce7e0d3a1ba0526dce6424';
+    private const string CONTRIBUTORS_UUID = '8bd90045412f95ff348f41fa63606171f2328db3';
+    private const string INTEGRATORS_UUID  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
+    private const string SUPERMEN_UUID     = '8a7e856ce3c55f555c228bd90045412f95ff348';
+    private const string OWNERS_UUID       = 'f9427648913e6ff14190d81b7b0abc60fa325d3a';
+    private const string REPLICATION_UUID  = '2ce5c45e3b88415e51ce7e0d3a1ba0526dce6424';
 
-    private const PROJECT_ADMINS_GERRIT_NAME = 'mozilla/project_admins';
+    private const string PROJECT_ADMINS_GERRIT_NAME = 'mozilla/project_admins';
 
     private string $tmpdir;
 
     private Git_RemoteServer_GerritServer&MockObject $server;
 
     private Project $project;
-    private const PROJECT_ID        = 103;
-    private const PROJECT_UNIX_NAME = 'mozilla';
+    private const int PROJECT_ID           = 103;
+    private const string PROJECT_UNIX_NAME = 'mozilla';
 
     private UGroupManager&MockObject $ugroup_manager;
 

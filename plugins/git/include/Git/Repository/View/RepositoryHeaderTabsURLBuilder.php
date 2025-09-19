@@ -26,8 +26,8 @@ use GitRepository;
 
 final class RepositoryHeaderTabsURLBuilder
 {
-    private const BRANCH_NAME_QUERY_PARAMETER = 'hb';
-    private const COMMIT_NAME_QUERY_PARAMETER = 'h';
+    private const string BRANCH_NAME_QUERY_PARAMETER = 'hb';
+    private const string COMMIT_NAME_QUERY_PARAMETER = 'h';
 
     public function __construct(private readonly Git_GitRepositoryUrlManager $url_manager)
     {

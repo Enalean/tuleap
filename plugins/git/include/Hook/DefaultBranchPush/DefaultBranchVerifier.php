@@ -24,7 +24,7 @@ namespace Tuleap\Git\Hook\DefaultBranchPush;
 
 final class DefaultBranchVerifier implements VerifyIsDefaultBranch
 {
-    private const BRANCH_REF = 'refs/heads/';
+    private const string BRANCH_REF = 'refs/heads/';
 
     public function __construct(private \Git_Exec $git_exec)
     {

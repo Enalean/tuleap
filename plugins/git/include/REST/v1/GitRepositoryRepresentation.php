@@ -29,10 +29,10 @@ use Tuleap\REST\JsonCast;
  */
 class GitRepositoryRepresentation
 {
-    public const ROUTE = 'git';
+    public const string ROUTE = 'git';
 
-    public const FIELDS_BASIC = 'basic';
-    public const FIELDS_ALL   = 'all';
+    public const string FIELDS_BASIC = 'basic';
+    public const string FIELDS_ALL   = 'all';
 
     /**
      * @var int
