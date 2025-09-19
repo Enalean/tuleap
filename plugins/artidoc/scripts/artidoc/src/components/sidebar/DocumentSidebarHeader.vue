@@ -79,9 +79,10 @@ h1 {
 }
 
 .tlp-tabs {
-    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    margin: 0;
 
     // force border to be aligned with the one of the toolbar.
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
     box-shadow: none;
 }
 </style>

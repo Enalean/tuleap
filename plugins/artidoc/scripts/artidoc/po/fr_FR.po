@@ -359,6 +359,9 @@ msgstr "Cette activation est personnelle et n'est pas sauvegardée."
 msgid "This document is empty"
 msgstr "Ce document est vide"
 
+msgid "This feature of artidoc is under construction"
+msgstr "Cette fonctionnalité d'artidoc est en cours de développement"
+
 msgid ""
 "This option is here to gather feedback about versions display, feel free to "
 "get back to Tuleap development team if you have something to share."

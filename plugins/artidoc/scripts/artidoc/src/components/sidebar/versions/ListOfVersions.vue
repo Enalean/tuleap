@@ -19,5 +19,19 @@
   -->
 
 <template>
-    <p class="tlp-text-muted">Under development</p>
+    <div class="tlp-alert-info">
+        {{ $gettext("This feature of artidoc is under construction") }}
+    </div>
 </template>
+
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+</script>
+
+<style scoped lang="scss">
+.tlp-alert-info {
+    border: 0;
+}
+</style>
