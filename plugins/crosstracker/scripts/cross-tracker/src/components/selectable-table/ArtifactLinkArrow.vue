@@ -172,6 +172,7 @@ function getReversePath(): string {
 }
 
 onMounted(() => {
+    emitter.emit(SELECTABLE_TABLE_RESIZED_EVENT);
     emitter.on(SELECTABLE_TABLE_RESIZED_EVENT, resetProps);
 });
 

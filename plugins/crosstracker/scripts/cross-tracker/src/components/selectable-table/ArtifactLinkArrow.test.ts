@@ -17,13 +17,14 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { Events } from "../../helpers/widget-events";
+import { SELECTABLE_TABLE_RESIZED_EVENT } from "../../helpers/widget-events";
 import { EMITTER } from "../../injection-symbols";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
@@ -61,13 +62,25 @@ describe("ArtifactLinkArrow", () => {
     let emitter: Emitter<Events>,
         is_last_link: boolean,
         reverse_links_count: number,
-        direction: ArtifactLinkDirection;
+        direction: ArtifactLinkDirection,
+        tableResizedEventsCounter: number;
+
+    function registerTableResizedEvents(): void {
+        tableResizedEventsCounter++;
+    }
 
     beforeEach(() => {
         emitter = mitt<Events>();
         is_last_link = false;
         reverse_links_count = 0;
         direction = FORWARD_DIRECTION;
+        tableResizedEventsCounter = 0;
+
+        emitter.on(SELECTABLE_TABLE_RESIZED_EVENT, registerTableResizedEvents);
+    });
+
+    afterEach(() => {
+        emitter.off(SELECTABLE_TABLE_RESIZED_EVENT, registerTableResizedEvents);
     });
 
     function getWrapper(): VueWrapper {
@@ -155,6 +168,13 @@ describe("ArtifactLinkArrow", () => {
                       M8.5 1
                       L12.5 5"
             `);
+        });
+    });
+
+    describe("Redraw of arrows", () => {
+        it("should trigger a redraw of arrows on mount to compensate for the mutation of the table", () => {
+            getWrapper();
+            expect(tableResizedEventsCounter).toBe(1);
         });
     });
 });
