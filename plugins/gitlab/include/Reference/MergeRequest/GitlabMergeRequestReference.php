@@ -27,8 +27,8 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class GitlabMergeRequestReference extends \Reference
 {
-    public const REFERENCE_NAME = 'gitlab_mr';
-    public const NATURE_NAME    = 'plugin_gitlab_mr';
+    public const string REFERENCE_NAME = 'gitlab_mr';
+    public const string NATURE_NAME    = 'plugin_gitlab_mr';
 
     public function __construct(
         GitlabRepositoryIntegration $repository_integration,

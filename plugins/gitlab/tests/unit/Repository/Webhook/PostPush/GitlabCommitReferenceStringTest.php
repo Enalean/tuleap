@@ -29,8 +29,8 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabCommitReferenceStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const REPOSITORY_NAME = 'numerably';
-    private const COMMIT_SHA1     = '990e5954';
+    private const string REPOSITORY_NAME = 'numerably';
+    private const string COMMIT_SHA1     = '990e5954';
 
     private function getStringReference(): string
     {

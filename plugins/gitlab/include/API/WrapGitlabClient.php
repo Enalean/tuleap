@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\API;
 
 interface WrapGitlabClient
 {
-    public const DEFAULT_NUMBER_OF_ROW_PER_PAGE = 20;
+    public const int DEFAULT_NUMBER_OF_ROW_PER_PAGE = 20;
     /**
      * @throws GitlabRequestException
      * @throws GitlabResponseAPIException

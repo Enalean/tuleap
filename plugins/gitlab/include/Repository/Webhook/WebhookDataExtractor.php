@@ -29,13 +29,13 @@ use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 
 class WebhookDataExtractor
 {
-    private const EVENT_HEADER        = 'X-Gitlab-Event';
-    private const PROJECT_KEY         = 'project';
-    private const PROJECT_ID_KEY      = 'id';
-    private const PROJECT_URL_KEY     = 'web_url';
-    private const PUSH_EVENT          = 'Push Hook';
-    private const MERGE_REQUEST_EVENT = 'Merge Request Hook';
-    private const TAG_PUSH_EVENT      = 'Tag Push Hook';
+    private const string EVENT_HEADER        = 'X-Gitlab-Event';
+    private const string PROJECT_KEY         = 'project';
+    private const string PROJECT_ID_KEY      = 'id';
+    private const string PROJECT_URL_KEY     = 'web_url';
+    private const string PUSH_EVENT          = 'Push Hook';
+    private const string MERGE_REQUEST_EVENT = 'Merge Request Hook';
+    private const string TAG_PUSH_EVENT      = 'Tag Push Hook';
 
     /**
      * @var LoggerInterface

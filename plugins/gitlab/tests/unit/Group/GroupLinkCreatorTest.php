@@ -48,8 +48,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkCreatorTest extends TestCase
 {
-    private const INTEGRATED_GROUP_ID = 15;
-    private const PROJECT_ID          = 101;
+    private const int INTEGRATED_GROUP_ID = 15;
+    private const int PROJECT_ID          = 101;
 
     private BuildGitlabProjectsStub $project_builder;
     private VerifyGroupIsAlreadyLinkedStub $group_integrated_verifier;

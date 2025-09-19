@@ -26,8 +26,8 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class GitlabTagReference extends \Reference
 {
-    public const REFERENCE_NAME = 'gitlab_tag';
-    public const NATURE_NAME    = 'plugin_gitlab_tag';
+    public const string REFERENCE_NAME = 'gitlab_tag';
+    public const string NATURE_NAME    = 'plugin_gitlab_tag';
 
     public function __construct(
         GitlabRepositoryIntegration $repository_integration,

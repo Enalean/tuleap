@@ -41,7 +41,7 @@ use Tuleap\NeverThrow\Ok;
 
 final class GitlabRepositoryGroupLinkHandler
 {
-    private const FAKE_BRANCH_NAME = 'branch_name';
+    private const string FAKE_BRANCH_NAME = 'branch_name';
 
     public function __construct(
         private DBTransactionExecutor $db_transaction_executor,

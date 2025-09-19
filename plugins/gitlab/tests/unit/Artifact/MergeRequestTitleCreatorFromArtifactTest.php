@@ -30,7 +30,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MergeRequestTitleCreatorFromArtifactTest extends TestCase
 {
-    private const ARTIFACT_ID = 123;
+    private const int ARTIFACT_ID = 123;
 
     private MergeRequestTitleCreatorFromArtifact $merge_request_title_creator_from_artifact;
 

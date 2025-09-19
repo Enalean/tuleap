@@ -49,8 +49,8 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkSynchronizerTest extends TestCase
 {
-    private const GROUP_LINK_ID = 10;
-    private const PROJECT_ID    = 101;
+    private const int GROUP_LINK_ID = 10;
+    private const int PROJECT_ID    = 101;
 
     private BuildGitlabProjectsStub $project_builder;
     private UpdateSynchronizationDateStub $date_updater;

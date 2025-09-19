@@ -86,7 +86,7 @@ use UserManager;
 
 final class GitlabGroupResource
 {
-    public const ROUTE = 'gitlab_groups';
+    public const string ROUTE = 'gitlab_groups';
 
     /**
      * @url OPTIONS

@@ -47,7 +47,7 @@ use UserManager;
 
 class GitlabBranchResource
 {
-    public const ROUTE = 'gitlab_branch';
+    public const string ROUTE = 'gitlab_branch';
 
      /**
       * @url OPTIONS

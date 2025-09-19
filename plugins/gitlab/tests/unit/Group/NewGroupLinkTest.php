@@ -30,14 +30,14 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewGroupLinkTest extends TestCase
 {
-    private const PROJECT_ID                     = 136;
-    private const GITLAB_GROUP_ID                = 84;
-    private const GROUP_NAME                     = 'foldy-logarithm';
-    private const FULL_PATH                      = 'Saltigradae/foldy-logarithm';
-    private const WEB_URL                        = 'https://gitlab.example.com/Saltigradae/foldy-logarithm';
-    private const AVATAR_URL                     = 'https://gitlab.example.com/avatar';
-    private const LAST_SYNCHRONIZATION_TIMESTAMP = 1658457229;
-    private const BRANCH_PREFIX                  = 'dev-';
+    private const int PROJECT_ID                     = 136;
+    private const int GITLAB_GROUP_ID                = 84;
+    private const string GROUP_NAME                  = 'foldy-logarithm';
+    private const string FULL_PATH                   = 'Saltigradae/foldy-logarithm';
+    private const string WEB_URL                     = 'https://gitlab.example.com/Saltigradae/foldy-logarithm';
+    private const string AVATAR_URL                  = 'https://gitlab.example.com/avatar';
+    private const int LAST_SYNCHRONIZATION_TIMESTAMP = 1658457229;
+    private const string BRANCH_PREFIX               = 'dev-';
 
     public function testItBuildsFromAPIRepresentation(): void
     {

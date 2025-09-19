@@ -26,7 +26,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class TagPushWebhookActionProcessor
 {
-    private const NO_REFERENCE = '0000000000000000000000000000000000000000';
+    private const string NO_REFERENCE = '0000000000000000000000000000000000000000';
 
     /**
      * @var TagPushWebhookDeleteAction

@@ -26,8 +26,8 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class GitlabBranchReference extends \Reference
 {
-    public const REFERENCE_NAME = 'gitlab_branch';
-    public const NATURE_NAME    = 'plugin_gitlab_branch';
+    public const string REFERENCE_NAME = 'gitlab_branch';
+    public const string NATURE_NAME    = 'plugin_gitlab_branch';
 
     public function __construct(
         GitlabRepositoryIntegration $repository_integration,

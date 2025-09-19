@@ -30,13 +30,13 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabRepositoryIntegrationDaoTest extends TestIntegrationTestCase
 {
-    private const GITLAB_REPOSITORY_ID = 23;
-    private const NAME                 = 'sloeberry';
-    private const DESCRIPTION          = 'vestrymanly biophagous stitch minify hebetic unpooled clipei lennow';
-    private const WEB_URL              = 'https://gitlab.example.com/quadriradiate/' . self::NAME;
-    private const LAST_PUSH_TIMESTAMP  = 1462224394;
-    private const PROJECT_ID           = 119;
-    private const GROUP_LINK_ID        = 4;
+    private const int GITLAB_REPOSITORY_ID = 23;
+    private const string NAME              = 'sloeberry';
+    private const string DESCRIPTION       = 'vestrymanly biophagous stitch minify hebetic unpooled clipei lennow';
+    private const string WEB_URL           = 'https://gitlab.example.com/quadriradiate/' . self::NAME;
+    private const int LAST_PUSH_TIMESTAMP  = 1462224394;
+    private const int PROJECT_ID           = 119;
+    private const int GROUP_LINK_ID        = 4;
 
     private GitlabRepositoryIntegrationDao $repository_dao;
     private GroupLinkRepositoryIntegrationDAO $group_repositories_dao;

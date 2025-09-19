@@ -33,7 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkTokenRetrieverTest extends TestCase
 {
-    private const STORED_TOKEN = 'L4l4';
+    private const string STORED_TOKEN = 'L4l4';
 
     /**
      * @var KeyFactory&MockObject

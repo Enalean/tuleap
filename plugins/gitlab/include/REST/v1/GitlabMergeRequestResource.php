@@ -46,7 +46,7 @@ use UserManager;
 
 final class GitlabMergeRequestResource
 {
-    public const ROUTE = 'gitlab_merge_request';
+    public const string ROUTE = 'gitlab_merge_request';
 
     /**
      * @url OPTIONS

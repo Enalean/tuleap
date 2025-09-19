@@ -18223,11 +18223,6 @@
       <code><![CDATA[! $gitlab_tag_data]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/gitlab/include/API/WrapGitlabClient.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_NUMBER_OF_ROW_PER_PAGE = 20]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/gitlab/include/Admin/LinkedGroupPresenter.php">
     <DeprecatedMethod>
       <code><![CDATA[DateHelper::timeAgoInWords(
@@ -18242,11 +18237,6 @@
       <code><![CDATA[stripos($exception->getMessage(), 'branch already exists')]]></code>
       <code><![CDATA[stripos($exception->getMessage(), 'invalid reference name')]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/gitlab/include/REST/v1/GitlabBranchResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'gitlab_branch']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/gitlab/include/REST/v1/GitlabGroupResource.php">
     <RiskyTruthyFalsyComparison>
@@ -18266,11 +18256,6 @@
       <code><![CDATA[$gitlab_server_url]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/gitlab/include/REST/v1/GitlabRepositoryRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'gitlab_repositories']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/gitlab/include/REST/v1/GitlabRepositoryResource.php">
     <MissingPropertyType>
       <code><![CDATA[$gitlab_repository->gitlab_server_url]]></code>
@@ -18281,22 +18266,10 @@
       <code><![CDATA[public string $gitlab_server_url;]]></code>
     </MissingDocblockType>
   </file>
-  <file src="plugins/gitlab/include/Reference/Branch/GitlabBranchReference.php">
-    <MissingClassConstType>
-      <code><![CDATA[NATURE_NAME    = 'plugin_gitlab_branch']]></code>
-      <code><![CDATA[REFERENCE_NAME = 'gitlab_branch']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/gitlab/include/Reference/Commit/GitlabCommitCrossReferenceEnhancer.php">
     <DeprecatedMethod>
       <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
-  </file>
-  <file src="plugins/gitlab/include/Reference/Commit/GitlabCommitReference.php">
-    <MissingClassConstType>
-      <code><![CDATA[NATURE_NAME    = 'plugin_gitlab_commit']]></code>
-      <code><![CDATA[REFERENCE_NAME = 'gitlab_commit']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/gitlab/include/Reference/GitlabCrossReferenceOrganizer.php">
     <DeprecatedMethod>
@@ -18313,80 +18286,15 @@
       <code><![CDATA[! $repository_name]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/gitlab/include/Reference/MergeRequest/GitlabMergeRequestReference.php">
-    <MissingClassConstType>
-      <code><![CDATA[NATURE_NAME    = 'plugin_gitlab_mr']]></code>
-      <code><![CDATA[REFERENCE_NAME = 'gitlab_mr']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/gitlab/include/Reference/Tag/GitlabTagReference.php">
-    <MissingClassConstType>
-      <code><![CDATA[NATURE_NAME    = 'plugin_gitlab_tag']]></code>
-      <code><![CDATA[REFERENCE_NAME = 'gitlab_tag']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/gitlab/include/Repository/Webhook/PostMergeRequest/PostMergeRequestWebhookActionProcessor.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$author_data]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/PostMergeRequest/PostMergeRequestWebhookDataBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[MERGE_REQUEST_AUTHOR_ID_KEY   = 'author_id']]></code>
-      <code><![CDATA[MERGE_REQUEST_CREATED_AT_KEY  = 'created_at']]></code>
-      <code><![CDATA[MERGE_REQUEST_DESCRIPTION_KEY = 'description']]></code>
-      <code><![CDATA[MERGE_REQUEST_ID_KEY          = 'iid']]></code>
-      <code><![CDATA[MERGE_REQUEST_SOURCE_BRANCH   = 'source_branch']]></code>
-      <code><![CDATA[MERGE_REQUEST_STATE_KEY       = 'state']]></code>
-      <code><![CDATA[MERGE_REQUEST_TITLE_KEY       = 'title']]></code>
-      <code><![CDATA[OBJECT_ATTRIBUTES_KEY         = 'object_attributes']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/PostPush/Branch/BranchNameTuleapReferenceParser.php">
-    <MissingClassConstType>
-      <code><![CDATA[PATTERN = '/tuleap-(\d+)/i']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/PostPush/PostPushCommitWebhookDataExtractor.php">
-    <MissingClassConstType>
-      <code><![CDATA[COMMITS_BRANCH_KEY      = 'ref']]></code>
-      <code><![CDATA[COMMIT_AUTHOR_EMAIL_KEY = 'email']]></code>
-      <code><![CDATA[COMMIT_AUTHOR_KEY       = 'author']]></code>
-      <code><![CDATA[COMMIT_AUTHOR_NAME_KEY  = 'name']]></code>
-      <code><![CDATA[COMMIT_DATE_KEY         = 'timestamp']]></code>
-      <code><![CDATA[COMMIT_KEY              = 'commits']]></code>
-      <code><![CDATA[COMMIT_MESSAGE_KEY      = 'message']]></code>
-      <code><![CDATA[COMMIT_SHA1_KEY         = 'id']]></code>
-      <code><![CDATA[COMMIT_TITLE_KEY        = 'title']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/PostPush/PostPushWebhookDataBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[CHECKOUT_SHA_KEY = 'checkout_sha']]></code>
-      <code><![CDATA[REFERENCE_KEY    = 'ref']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/gitlab/include/Repository/Webhook/PostPush/PrefixedLogger.php">
     <ImplicitToStringCast>
       <code><![CDATA[$message]]></code>
     </ImplicitToStringCast>
-  </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/Secret/SecretChecker.php">
-    <MissingClassConstType>
-      <code><![CDATA[GITLAB_TOKEN_HEADER = 'X-Gitlab-Token']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/TagPush/TagPushWebhookActionProcessor.php">
-    <MissingClassConstType>
-      <code><![CDATA[NO_REFERENCE = '0000000000000000000000000000000000000000']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/TagPush/TagPushWebhookDataBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[AFTER_KEY  = 'after']]></code>
-      <code><![CDATA[BEFORE_KEY = 'before']]></code>
-      <code><![CDATA[REF_KEY    = 'ref']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/gitlab/include/Repository/Webhook/WebhookDataBranchNameExtractor.php">
     <InvalidNullableReturnType>
@@ -18395,17 +18303,6 @@
     <NullableReturnStatement>
       <code><![CDATA[preg_replace('%^refs/heads/%', '', $ref)]]></code>
     </NullableReturnStatement>
-  </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/WebhookDataExtractor.php">
-    <MissingClassConstType>
-      <code><![CDATA[EVENT_HEADER        = 'X-Gitlab-Event']]></code>
-      <code><![CDATA[MERGE_REQUEST_EVENT = 'Merge Request Hook']]></code>
-      <code><![CDATA[PROJECT_ID_KEY      = 'id']]></code>
-      <code><![CDATA[PROJECT_KEY         = 'project']]></code>
-      <code><![CDATA[PROJECT_URL_KEY     = 'web_url']]></code>
-      <code><![CDATA[PUSH_EVENT          = 'Push Hook']]></code>
-      <code><![CDATA[TAG_PUSH_EVENT      = 'Tag Push Hook']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/gitlab/include/Repository/Webhook/WebhookTuleapReferenceCollection.php">
     <NamedArgumentNotAllowed>
@@ -18416,13 +18313,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$close_artifact_keyword]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/gitlab/include/gitlabPlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[LOG_IDENTIFIER       = 'gitlab_syslog']]></code>
-      <code><![CDATA[POST_PUSH_LOG_PREFIX = '|  |  |_ ']]></code>
-      <code><![CDATA[SERVICE_NAME         = 'gitlab']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/gitlab/tests/unit/API/ClientWrapperTest.php">
     <PossiblyFalseArgument>
