@@ -26,7 +26,8 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { RouteLocationNormalized } from "vue-router";
 import * as router from "vue-router";
 import type { Folder, RootState } from "../../type";
-import { PROJECT_ID } from "../../configuration-keys";
+import { PROJECT } from "../../configuration-keys";
+import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
 
 vi.mock("vue-router");
 
@@ -44,7 +45,7 @@ describe("SwitchToOldUI", () => {
                         } as unknown as RootState,
                     }),
                     provide: {
-                        [PROJECT_ID.valueOf()]: 101,
+                        [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                     },
                 },
             });

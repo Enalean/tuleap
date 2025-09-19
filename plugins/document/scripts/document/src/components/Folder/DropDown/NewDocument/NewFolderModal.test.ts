@@ -26,7 +26,8 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
-import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../configuration-keys";
+import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
 
 describe("NewFolderModal", () => {
     const load_projects_ugroups = vi.fn();
@@ -97,7 +98,7 @@ describe("NewFolderModal", () => {
                     },
                 }),
                 provide: {
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                     [IS_STATUS_PROPERTY_USED.valueOf()]: true,
                 },
             },

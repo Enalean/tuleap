@@ -80,7 +80,7 @@ import type { Item, RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
 import type { PermissionsState } from "../../../../store/permissions/permissions-default-state";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../configuration-keys";
 
 const $store = useStore();
 
@@ -99,7 +99,7 @@ const { project_ugroups } = useNamespacedState<Pick<PermissionsState, "project_u
     "permissions",
     ["project_ugroups"],
 );
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
 
 onMounted(() => {
@@ -147,7 +147,7 @@ async function show(event: { detail: { parent: Item } }): Promise<void> {
     is_displayed.value = true;
     modal?.show();
     try {
-        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project_id);
+        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project.id);
     } catch (err) {
         await handleErrors($store, err);
         modal?.hide();

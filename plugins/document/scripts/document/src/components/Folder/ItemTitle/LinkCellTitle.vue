@@ -40,13 +40,13 @@ import { ICON_LINK, ACTION_ICON_LINK } from "../../../constants";
 import type { Item } from "../../../type";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../../../configuration-keys";
+import { PROJECT } from "../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 
 const document_link_url = computed((): string => {
-    return `/plugins/docman/?group_id=${project_id}&action=show&id=${props.item.id}`;
+    return `/plugins/docman/?group_id=${project.id}&action=show&id=${props.item.id}`;
 });
 </script>

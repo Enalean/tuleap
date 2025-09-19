@@ -28,16 +28,16 @@ import { onMounted } from "vue";
 import { useActions, useMutations } from "vuex-composition-helpers";
 import FolderContainer from "./FolderContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../../configuration-keys";
+import { PROJECT } from "../../configuration-keys";
 
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 
 const { loadRootFolder, removeQuickLook } = useActions(["loadRootFolder", "removeQuickLook"]);
 
 const { resetAscendantHierarchy } = useMutations(["resetAscendantHierarchy"]);
 
 onMounted((): void => {
-    loadRootFolder(project_id);
+    loadRootFolder(project.id);
     resetAscendantHierarchy();
     removeQuickLook();
 });

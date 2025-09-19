@@ -26,7 +26,8 @@ import type { Folder, RootState } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import * as router from "../../../helpers/use-router";
 import type { Router } from "vue-router";
-import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
+import { PROJECT, USER_ID } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 vi.useFakeTimers();
 
@@ -96,7 +97,7 @@ describe("FolderCellTitle", () => {
                 stubs: ["router-link", "router-view"],
                 provide: {
                     [USER_ID.valueOf()]: 254,
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
         });

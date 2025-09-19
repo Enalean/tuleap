@@ -54,13 +54,7 @@ import {
     MAX_ARCHIVE_SIZE,
     MAX_FILES_DRAGNDROP,
     MAX_SIZE_UPLOAD,
-    PROJECT_FLAGS,
-    PROJECT_ICON,
-    PROJECT_ID,
-    PROJECT_NAME,
-    PROJECT_PRIVACY,
-    PROJECT_PUBLIC_NAME,
-    PROJECT_URL,
+    PROJECT,
     RELATIVE_DATES_DISPLAY,
     ROOT_ID,
     SEARCH_COLUMNS,
@@ -205,10 +199,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(NEW_ITEMS_ALTERNATIVES, create_new_item_alternatives);
     app.provide(OTHER_ITEM_TYPES, other_item_types);
     app.provide(USER_ID, user_id)
-        .provide(PROJECT_ID, project_id)
+        .provide(PROJECT, {
+            id: project_id,
+            name: project_name,
+            public_name: project_public_name,
+            url: project_url,
+            privacy: project_privacy,
+            flags: project_flags,
+            icon: project_icon,
+        })
         .provide(ROOT_ID, root_id)
-        .provide(PROJECT_NAME, project_name)
-        .provide(PROJECT_PUBLIC_NAME, project_public_name)
         .provide(USER_IS_ADMIN, user_is_admin)
         .provide(USER_CAN_CREATE_WIKI, user_can_create_wiki)
         .provide(EMBEDDED_ARE_ALLOWED, embedded_are_allowed)
@@ -219,15 +219,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(MAX_SIZE_UPLOAD, max_size_upload)
         .provide(WARNING_THRESHOLD, warning_threshold)
         .provide(MAX_ARCHIVE_SIZE, max_archive_size)
-        .provide(PROJECT_URL, project_url)
         .provide(DATE_TIME_FORMAT, date_time_format)
-        .provide(PROJECT_PRIVACY, project_privacy)
-        .provide(PROJECT_FLAGS, project_flags)
         .provide(IS_CHANGELOG_PROPOSED_AFTER_DND, is_changelog_proposed_after_dnd)
         .provide(IS_DELETION_ALLOWED, is_deletion_allowed)
         .provide(USER_LOCALE, user_locale)
         .provide(RELATIVE_DATES_DISPLAY, relative_dates_display)
-        .provide(PROJECT_ICON, project_icon)
         .provide(SEARCH_CRITERIA, search_criteria)
         .provide(SEARCH_COLUMNS, search_columns)
         .provide(FORBID_WRITERS_TO_UPDATE, forbid_writers_to_update)

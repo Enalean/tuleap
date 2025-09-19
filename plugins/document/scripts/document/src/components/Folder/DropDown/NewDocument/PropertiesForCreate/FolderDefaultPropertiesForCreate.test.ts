@@ -24,7 +24,8 @@ import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate
 import type { ListValue, Property } from "../../../../../type";
 import type { PropertiesState } from "../../../../../store/properties/module";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
-import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../../configuration-keys";
+import { ProjectBuilder } from "../../../../../../tests/builders/ProjectBuilder";
 
 describe("FolderDefaultPropertiesForCreate", () => {
     function createWrapper(
@@ -47,7 +48,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
                     },
                 }),
                 provide: {
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                     [IS_STATUS_PROPERTY_USED.valueOf()]: is_status_property_used,
                 },
             },

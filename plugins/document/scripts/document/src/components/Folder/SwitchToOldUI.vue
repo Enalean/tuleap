@@ -36,14 +36,14 @@ import { computed } from "vue";
 import { useState } from "vuex-composition-helpers";
 import type { RootState } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../../configuration-keys";
+import { PROJECT } from "../../configuration-keys";
 
 const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 
 const redirectUrl = computed(() => {
     const route = useRoute();
-    const encoded_project_id = encodeURIComponent(project_id);
+    const encoded_project_id = encodeURIComponent(project.id);
     if (route.name === "folder") {
         let item_id = route.params.item_id;
         if (Array.isArray(item_id)) {

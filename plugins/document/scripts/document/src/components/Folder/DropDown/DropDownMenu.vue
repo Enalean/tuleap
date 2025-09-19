@@ -115,11 +115,11 @@ import {
 import type { Item } from "../../../type";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { IS_DELETION_ALLOWED, PROJECT_ID } from "../../../configuration-keys";
+import { IS_DELETION_ALLOWED, PROJECT } from "../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 const is_deletion_allowed = strictInject(IS_DELETION_ALLOWED);
 
 const NOTIFS_PANE_NAME = "notifications";
@@ -140,7 +140,7 @@ const should_display_approval = computed(
 );
 
 function getUrlForPane(pane_name: string): string {
-    return `/plugins/docman/?group_id=${project_id}&id=${props.item.id}&action=details&section=${pane_name}`;
+    return `/plugins/docman/?group_id=${project.id}&id=${props.item.id}&action=details&section=${pane_name}`;
 }
 
 defineExpose({ is_item_an_empty_document, is_item_a_folder, should_display_versions_link });

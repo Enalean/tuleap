@@ -68,7 +68,7 @@ import type { PreferenciesActions } from "../../store/preferencies/preferencies-
 import type { RootState } from "../../type";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID, USER_ID } from "../../configuration-keys";
+import { PROJECT, USER_ID } from "../../configuration-keys";
 
 const { is_embedded_in_large_view } = useNamespacedState<PreferenciesState>("preferencies", [
     "is_embedded_in_large_view",
@@ -79,7 +79,7 @@ const narrow_view_title = ref($gettext("Narrow view"));
 const large_view_title = ref($gettext("Large view"));
 
 const user_id = strictInject(USER_ID);
-const project_id = strictInject(PROJECT_ID);
+const project = strictInject(PROJECT);
 
 const { currently_previewed_item } = useState<RootState>(["currently_previewed_item"]);
 const { displayEmbeddedInLargeMode, displayEmbeddedInNarrowMode } =
@@ -89,13 +89,21 @@ const { displayEmbeddedInLargeMode, displayEmbeddedInNarrowMode } =
     ]);
 function switchToLargeView() {
     if (currently_previewed_item.value) {
-        displayEmbeddedInLargeMode({ item: currently_previewed_item.value, user_id, project_id });
+        displayEmbeddedInLargeMode({
+            item: currently_previewed_item.value,
+            user_id,
+            project_id: project.id,
+        });
     }
 }
 
 function switchToNarrowView() {
     if (currently_previewed_item.value) {
-        displayEmbeddedInNarrowMode({ item: currently_previewed_item.value, user_id, project_id });
+        displayEmbeddedInNarrowMode({
+            item: currently_previewed_item.value,
+            user_id,
+            project_id: project.id,
+        });
     }
 }
 </script>

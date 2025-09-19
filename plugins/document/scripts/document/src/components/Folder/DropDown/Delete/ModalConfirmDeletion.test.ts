@@ -29,7 +29,8 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import * as router from "../../../../helpers/use-router";
 import type { Router } from "vue-router";
-import { PROJECT_ID, USER_ID } from "../../../../configuration-keys";
+import { PROJECT, USER_ID } from "../../../../configuration-keys";
+import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
 
 vi.useFakeTimers();
 
@@ -91,7 +92,7 @@ describe("ModalConfirmDeletion", () => {
                 stubs: ["router-link", "router-view"],
                 provide: {
                     [USER_ID.valueOf()]: 1,
-                    [PROJECT_ID.valueOf()]: 1,
+                    [PROJECT.valueOf()]: new ProjectBuilder(1).build(),
                 },
             },
         });

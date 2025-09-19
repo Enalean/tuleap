@@ -24,7 +24,8 @@ import { shallowMount } from "@vue/test-utils";
 import { TYPE_LINK } from "../../../constants";
 import type { Link } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { PROJECT_ID } from "../../../configuration-keys";
+import { PROJECT } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 describe("LinkCellTitle", () => {
     it(`should render link title`, () => {
@@ -40,7 +41,7 @@ describe("LinkCellTitle", () => {
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
         });

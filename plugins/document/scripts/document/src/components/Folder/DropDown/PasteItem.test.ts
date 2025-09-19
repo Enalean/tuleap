@@ -36,7 +36,8 @@ import type { Folder, Item, RootState } from "../../../type";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { Store } from "vuex";
 import emitter from "../../../helpers/emitter";
-import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
+import { PROJECT, USER_ID } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 const mocked_store = { store: { dispatch: vi.fn() } } as unknown as Store<RootState>;
 
@@ -88,7 +89,7 @@ describe("PasteItem", () => {
                 ),
                 provide: {
                     [USER_ID.valueOf()]: 1,
-                    [PROJECT_ID.valueOf()]: 1,
+                    [PROJECT.valueOf()]: new ProjectBuilder(1).build(),
                 },
             },
             props: { destination },

@@ -27,7 +27,8 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 import type { PropertiesState } from "../../../../store/properties/module";
 import type { Folder } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
-import { MAX_ARCHIVE_SIZE, PROJECT_NAME, WARNING_THRESHOLD } from "../../../../configuration-keys";
+import { MAX_ARCHIVE_SIZE, PROJECT, WARNING_THRESHOLD } from "../../../../configuration-keys";
+import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
 
 describe("DownloadFolderAsZip", () => {
     let load_properties: vi.Mock, item: Folder;
@@ -57,7 +58,9 @@ describe("DownloadFolderAsZip", () => {
                     },
                 }),
                 provide: {
-                    [PROJECT_NAME.valueOf()]: "tuleap-documentation",
+                    [PROJECT.valueOf()]: new ProjectBuilder(101)
+                        .withName("tuleap-documentation")
+                        .build(),
                     [WARNING_THRESHOLD.valueOf()]: 0.5,
                     [MAX_ARCHIVE_SIZE.valueOf()]: max_archive_size,
                 },

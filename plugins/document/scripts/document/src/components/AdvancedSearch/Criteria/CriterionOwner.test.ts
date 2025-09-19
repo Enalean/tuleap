@@ -25,7 +25,8 @@ import * as autocomplete from "@tuleap/autocomplete-for-select2";
 import * as retrieve_selected_owner from "../../../helpers/owner/retrieve-selected-owner";
 import type { RestUser } from "../../../api/rest-querier";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { PROJECT_NAME } from "../../../configuration-keys";
+import { PROJECT } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
@@ -64,7 +65,7 @@ describe("CriterionOwner", () => {
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [PROJECT_NAME.valueOf()]: "test",
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).withName("test").build(),
                 },
             },
         });

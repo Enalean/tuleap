@@ -22,7 +22,8 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import ItemPermissionError from "./ItemPermissionError.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { PROJECT_ID } from "../../../configuration-keys";
+import { PROJECT } from "../../../configuration-keys";
+import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 
 describe("ItemPermissionError", () => {
     it("displays the error with a for to send custom email", () => {
@@ -37,7 +38,7 @@ describe("ItemPermissionError", () => {
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [PROJECT_ID.valueOf()]: 101,
+                    [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                 },
             },
         });
