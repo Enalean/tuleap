@@ -237,18 +237,6 @@ Cypress.Commands.add(
     },
 );
 
-Cypress.Commands.add("addLinkToArtifact", (link_type, artifact_id) => {
-    cy.get("[data-test=artifact-link-field]")
-        .find("[data-test=link-field-table-skeleton]")
-        .should("not.exist");
-    cy.get("[data-test=artifact-link-field]").within(() => {
-        cy.get("[data-test=link-field-add-link-section]")
-            .find("[data-test=link-type-select]")
-            .select(link_type);
-        cy.searchItemInLazyboxDropdown(artifact_id, artifact_id).click();
-    });
-});
-
 const LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
 
 Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
