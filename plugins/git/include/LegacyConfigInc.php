@@ -36,9 +36,9 @@ final class LegacyConfigInc
 {
     #[ConfigKey('Backup directory')]
     #[ConfigKeyString('/tmp')]
-    public const BACKUP_DIR = 'git_backup_dir';
+    public const string BACKUP_DIR = 'git_backup_dir';
 
     #[ConfigKey('Number of weeks displayed in widget last project pushes')]
     #[ConfigKeyInt(12)]
-    public const WEEKS_NUMBER = 'git_weeks_number';
+    public const string WEEKS_NUMBER = 'git_weeks_number';
 }

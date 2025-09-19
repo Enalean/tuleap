@@ -232,7 +232,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const LOG_IDENTIFIER = 'git_syslog';
+    public const string LOG_IDENTIFIER = 'git_syslog';
 
     /**
      *
@@ -250,9 +250,9 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
      *
      * Should be transfered in 'ServiceGit' class when we introduce it
      */
-    public const SERVICE_SHORTNAME = 'plugin_git';
+    public const string SERVICE_SHORTNAME = 'plugin_git';
 
-    public const SYSTEM_NATURE_NAME = 'git_revision';
+    public const string SYSTEM_NATURE_NAME = 'git_revision';
 
     private static $FREQUENCIES_GIT_READ = 'git';
 

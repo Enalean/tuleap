@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class PullRequestEndpointsAvailableEvent implements Dispatchable
 {
-    public const NAME = 'pullRequestEndpointsAvailableEvent';
+    public const string NAME = 'pullRequestEndpointsAvailableEvent';
 
     private bool $are_endpoints_available = false;
 

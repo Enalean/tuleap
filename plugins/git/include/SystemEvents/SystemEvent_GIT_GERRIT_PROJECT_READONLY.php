@@ -22,9 +22,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent
+class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME = 'GIT_GERRIT_PROJECT_READONLY';
+    public const string NAME = 'GIT_GERRIT_PROJECT_READONLY';
 
     /**
      * @var GitRepositoryFactory

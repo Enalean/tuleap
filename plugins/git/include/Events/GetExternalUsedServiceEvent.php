@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetExternalUsedServiceEvent implements Dispatchable
 {
-    public const NAME = 'getExternalUsedServiceEvent';
+    public const string NAME = 'getExternalUsedServiceEvent';
 
     /**
      * @var \Project

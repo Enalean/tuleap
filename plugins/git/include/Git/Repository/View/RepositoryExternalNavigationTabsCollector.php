@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class RepositoryExternalNavigationTabsCollector implements Dispatchable
 {
-    public const NAME = 'repositoryExternalNavigationTabsCollector';
+    public const string NAME = 'repositoryExternalNavigationTabsCollector';
     /**
      * @var array
      */

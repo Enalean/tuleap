@@ -21,9 +21,9 @@
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 use Tuleap\Git\Gitolite\SSHKey\MassDumper;
 
-class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent
+class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME = 'GIT_DUMP_ALL_SSH_KEYS';
+    public const string NAME = 'GIT_DUMP_ALL_SSH_KEYS';
 
     /** @var \Psr\Log\LoggerInterface */
     private $logger;

@@ -47,10 +47,10 @@ use URLVerification;
 
 final class GitProjectResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT              = 50;
-    private const PROJECT                = 'project';
-    private const INDIVIDUAL             = 'individual';
-    private const SCOPES_REPRESENTATIONS = [
+    private const int MAX_LIMIT                = 50;
+    private const string PROJECT               = 'project';
+    private const string INDIVIDUAL            = 'individual';
+    private const array SCOPES_REPRESENTATIONS = [
         self::PROJECT    => GitRepository::REPO_SCOPE_PROJECT,
         self::INDIVIDUAL => GitRepository::REPO_SCOPE_INDIVIDUAL,
     ];

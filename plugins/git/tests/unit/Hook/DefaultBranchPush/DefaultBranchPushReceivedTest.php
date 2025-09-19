@@ -28,8 +28,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefaultBranchPushReceivedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_COMMIT_SHA1  = '14fdcf24';
-    private const SECOND_COMMIT_SHA1 = 'e512f025';
+    private const string FIRST_COMMIT_SHA1  = '14fdcf24';
+    private const string SECOND_COMMIT_SHA1 = 'e512f025';
 
     private \PFUser $user;
     /**

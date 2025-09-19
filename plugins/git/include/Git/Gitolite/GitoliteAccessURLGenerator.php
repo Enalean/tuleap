@@ -43,7 +43,7 @@ class GitoliteAccessURLGenerator implements GenerateGitoliteAccessURL
 
     You can disable display of this url by activating this variable and setting '' (empty string)
     EOT)]
-    public const SSH_URL = 'git_ssh_url';
+    public const string SSH_URL = 'git_ssh_url';
 
     #[ConfigKey('Define a custom HTTPS URL to get access to the sources')]
     #[ConfigKeyString('https://%server_name%/plugins/git')]
@@ -51,7 +51,7 @@ class GitoliteAccessURLGenerator implements GenerateGitoliteAccessURL
     For convenience, you can either hardcode the URLs or you can use `%server_name%`
     variable that will be replace automatically by the value of `sys_default_domain`
     EOT)]
-    public const HTTP_URL = 'git_http_url';
+    public const string HTTP_URL = 'git_http_url';
 
     #[\Override]
     public function getSSHURL(GitRepository $repository): string

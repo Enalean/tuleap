@@ -41,8 +41,8 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private const PRE_RECEIVE_HOOK_INPUT           = 'aaa bbb refs/heads/main';
-    private const TECHNICAL_PRE_RECEIVE_HOOK_INPUT = 'aaa bbb refs/tlpr/42/head';
+    private const string PRE_RECEIVE_HOOK_INPUT           = 'aaa bbb refs/heads/main';
+    private const string TECHNICAL_PRE_RECEIVE_HOOK_INPUT = 'aaa bbb refs/tlpr/42/head';
 
     #[\Override]
     protected function setUp(): void

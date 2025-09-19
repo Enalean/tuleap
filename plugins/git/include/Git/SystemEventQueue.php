@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_SystemEventQueue extends SystemEventQueue
+class Git_SystemEventQueue extends SystemEventQueue //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
-    public const NAME = 'git';
+    public const string NAME = 'git';
 
     public function __construct(\Psr\Log\LoggerInterface $logger)
     {

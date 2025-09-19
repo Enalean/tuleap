@@ -26,7 +26,7 @@ use Tuleap\Git\Gitolite\Gitolite3LogParser;
 
 class ParseGitolite3Logs extends SystemEvent
 {
-    public const NAME = 'GIT_PARSE_GITOLITE3_LOGS';
+    public const string NAME = 'GIT_PARSE_GITOLITE3_LOGS';
 
     /** @var Gitolite3LogParser */
     private $gitolite_parser;

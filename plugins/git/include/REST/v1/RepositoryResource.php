@@ -109,10 +109,10 @@ include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
 
 class RepositoryResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
-    public const MIGRATE_PERMISSION_DEFAULT = 'default';
-    public const MIGRATE_NO_PERMISSION      = 'none';
+    public const string MIGRATE_PERMISSION_DEFAULT = 'default';
+    public const string MIGRATE_NO_PERMISSION      = 'none';
     /**
      * @var RepositoryCreator
      */

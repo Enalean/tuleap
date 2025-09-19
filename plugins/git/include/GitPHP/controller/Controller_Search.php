@@ -33,9 +33,9 @@ use UserManager;
  */
 class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
 {
-    public const SEARCH_COMMIT    = 'commit';
-    public const SEARCH_AUTHOR    = 'author';
-    public const SEARCH_COMMITTER = 'committer';
+    public const string SEARCH_COMMIT    = 'commit';
+    public const string SEARCH_AUTHOR    = 'author';
+    public const string SEARCH_COMMITTER = 'committer';
 
     public function __construct()
     {

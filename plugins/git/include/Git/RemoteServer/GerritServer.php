@@ -20,13 +20,13 @@
 /**
  * @see Git_Driver_Gerrit_RemoteSSHConfig
  */
-class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
+class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const DEFAULT_HTTP_PORT       = 80;
-    public const DEFAULT_GERRIT_USERNAME = 'gerrit_username';
-    public const GERRIT_VERSION_2_5      = '2.5';
-    public const GERRIT_VERSION_2_8_PLUS = '2.8+';
-    public const GENERIC_USER_PREFIX     = 'gerrit_';
+    public const int DEFAULT_HTTP_PORT          = 80;
+    public const string DEFAULT_GERRIT_USERNAME = 'gerrit_username';
+    public const string GERRIT_VERSION_2_5      = '2.5';
+    public const string GERRIT_VERSION_2_8_PLUS = '2.8+';
+    public const string GENERIC_USER_PREFIX     = 'gerrit_';
 
     private $id;
     private $host;

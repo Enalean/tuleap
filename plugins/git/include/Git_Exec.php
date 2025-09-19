@@ -25,12 +25,12 @@ use Tuleap\Http\Client\OutboundHTTPRequestProxy;
 /**
  * Wrap access to git commands
  */
-class Git_Exec
+class Git_Exec //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const GIT_TULEAP_PATH = '/usr/lib/tuleap/git';
+    public const string GIT_TULEAP_PATH = '/usr/lib/tuleap/git';
 
-    public const TRANSPORT_EXT  = 'ext';
-    public const TRANSPORT_FILE = 'file';
+    public const string TRANSPORT_EXT  = 'ext';
+    public const string TRANSPORT_FILE = 'file';
 
     private $work_tree;
     private $git_dir;

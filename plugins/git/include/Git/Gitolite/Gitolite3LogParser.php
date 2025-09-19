@@ -34,14 +34,14 @@ use GitRepository;
 
 class Gitolite3LogParser
 {
-    public const REPOSITORY_PATH                       = 'gitolite/repositories/';
-    public const GIT_COMMAND                           = 'pre_git';
-    public const FILE_NAME                             = 'gitolite-';
-    public const FILE_EXTENSION                        = '.log';
-    public const EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE = 8;
+    public const string REPOSITORY_PATH                    = 'gitolite/repositories/';
+    public const string GIT_COMMAND                        = 'pre_git';
+    public const string FILE_NAME                          = 'gitolite-';
+    public const string FILE_EXTENSION                     = '.log';
+    public const int EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE = 8;
 
-    private const ACCESS_COUNT_CACHE_KEY              = 'access_count';
-    private const DAY_LAST_ACCESS_TIMESTAMP_CACHE_KEY = 'day_last_access_timestamp';
+    private const string ACCESS_COUNT_CACHE_KEY              = 'access_count';
+    private const string DAY_LAST_ACCESS_TIMESTAMP_CACHE_KEY = 'day_last_access_timestamp';
 
 
     /**

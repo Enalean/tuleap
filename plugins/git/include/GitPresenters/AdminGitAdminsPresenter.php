@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
+class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const GIT_ADMIN_SELECTBOX_NAME = 'git_admins';
+    public const string GIT_ADMIN_SELECTBOX_NAME = 'git_admins';
 
     /** @var ProjectUGroup[] */
     private $static_ugroups;
@@ -41,38 +41,38 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
         $this->selected_ugroups = $selected_ugroups;
     }
 
-    public function git_admins_section()
+    public function git_admins_section() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Git administrators');
     }
 
-    public function git_admins_description()
+    public function git_admins_description() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'This section allows you to select Git service administrators, in addition to project administrators.');
     }
 
-    public function git_admins_submit_button()
+    public function git_admins_submit_button() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Submit');
     }
 
     #[\Override]
-    public function form_action(): string
+    public function form_action(): string  //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return '/plugins/git/?group_id=' . $this->project_id . '&action=admin-git-admins';
     }
 
-    public function git_admins_selectbox_name()
+    public function git_admins_selectbox_name()  //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return self::GIT_ADMIN_SELECTBOX_NAME . '[]';
     }
 
-    public function git_admins_selectbox_id()
+    public function git_admins_selectbox_id() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return self::GIT_ADMIN_SELECTBOX_NAME;
     }
 
-    public function git_admins_options()
+    public function git_admins_options() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->getSelectorOptions();
     }

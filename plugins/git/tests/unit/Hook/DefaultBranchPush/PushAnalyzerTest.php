@@ -30,8 +30,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PushAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_COMMIT_SHA1  = 'a53ff58a';
-    private const SECOND_COMMIT_SHA1 = 'c7db9df4';
+    private const string FIRST_COMMIT_SHA1  = 'a53ff58a';
+    private const string SECOND_COMMIT_SHA1 = 'c7db9df4';
 
     private VerifyIsDefaultBranchStub $default_branch_verifier;
     /**

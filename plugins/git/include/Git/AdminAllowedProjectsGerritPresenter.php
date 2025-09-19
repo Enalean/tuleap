@@ -22,10 +22,11 @@ namespace Tuleap\Git;
 
 use Git_RemoteServer_GerritServer;
 use CSRFSynchronizerToken;
+use Project;
 
 class AdminAllowedProjectsGerritPresenter
 {
-    public const TEMPLATE = 'manage-allowed-projects';
+    public const string TEMPLATE = 'manage-allowed-projects';
 
     /**
      * @var Git_RemoteServer_GerritServer
@@ -53,126 +54,126 @@ class AdminAllowedProjectsGerritPresenter
         return self::TEMPLATE;
     }
 
-    public function there_is_no_project()
+    public function there_is_no_project() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return count($this->allowed_projects) === 0;
     }
 
-    public function restricted_resource_action()
+    public function restricted_resource_action() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return GIT_SITE_ADMIN_BASE_URL . '?view=gerrit_servers_restriction&action=set-gerrit-server-restriction&gerrit_server_id=' .
                 urlencode($this->gerrit->getId());
     }
 
-    public function restricted_resource_action_csrf()
+    public function restricted_resource_action_csrf() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $csrf = new CSRFSynchronizerToken($this->restricted_resource_action());
         return $csrf->fetchHTMLInput();
     }
 
-    public function update_allowed_projects_action()
+    public function update_allowed_projects_action() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return GIT_SITE_ADMIN_BASE_URL . '?view=gerrit_servers_restriction&action=update-allowed-project-list&gerrit_server_id=' .
                 urlencode($this->gerrit->getId());
     }
 
-    public function update_allowed_projects_action_csrf()
+    public function update_allowed_projects_action_csrf() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $csrf = new CSRFSynchronizerToken($this->update_allowed_projects_action());
         return $csrf->fetchHTMLInput();
     }
 
-    public function resource_allowed_project_back_link_title()
+    public function resource_allowed_project_back_link_title() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Back to Gerrit servers list');
     }
 
-    public function resource_allowed_project_title()
+    public function resource_allowed_project_title() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return sprintf(dgettext('tuleap-git', '%1$s projects restriction'), $this->gerrit->getHost());
     }
 
-    public function resource_allowed_project_pane_title()
+    public function resource_allowed_project_pane_title() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return sprintf(dgettext('tuleap-git', 'Projects allowed to use %1$s'), $this->gerrit->getHost());
     }
 
-    public function resource_allowed_project_information()
+    public function resource_allowed_project_information() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return '';
     }
 
-    public function resource_allowed_project_allow_all()
+    public function resource_allowed_project_allow_all() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Allow all the projects to use this Gerrit server.');
     }
 
-    public function resource_allowed_project_allow_all_submit()
+    public function resource_allowed_project_allow_all_submit() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Save');
     }
 
-    public function resource_allowed_project_list()
+    public function resource_allowed_project_list() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'List of allowed projects');
     }
 
-    public function resource_allowed_project_list_allow_placeholder()
+    public function resource_allowed_project_list_allow_placeholder() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Project name');
     }
 
-    public function resource_allowed_project_list_filter_placeholder()
+    public function resource_allowed_project_list_filter_placeholder() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Filter on project id or name');
     }
 
-    public function resource_allowed_project_list_allow_project()
+    public function resource_allowed_project_list_allow_project() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Allow access');
     }
 
-    public function resource_allowed_project_list_revoke_projects()
+    public function resource_allowed_project_list_revoke_projects() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Revoke access to selected');
     }
 
-    public function resource_allowed_project_list_id()
+    public function resource_allowed_project_list_id() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Id');
     }
 
-    public function resource_allowed_project_list_name()
+    public function resource_allowed_project_list_name() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Name');
     }
 
-    public function resource_allowed_project_list_empty()
+    public function resource_allowed_project_list_empty() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Currently, there\'s no project allowed to use this Gerrit server.');
     }
 
-    public function resource_allowed_project_revoke_title()
+    public function resource_allowed_project_revoke_title() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Warning');
     }
 
-    public function resource_allowed_project_revoke_description()
+    public function resource_allowed_project_revoke_description() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'You are about to revoke the access to this Gerrit server to one or several projects. Are you sure you want to do this?');
     }
 
-    public function resource_allowed_project_revoke_yes()
+    public function resource_allowed_project_revoke_yes() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'Yes, revoke access');
     }
 
-    public function resource_allowed_project_revoke_no()
+    public function resource_allowed_project_revoke_no() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-git', 'No');
     }
 
-    public function resource_allowed_project_filter_empty()
+    public function resource_allowed_project_filter_empty() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('admin', 'allowed_projects_filter_empty');
     }

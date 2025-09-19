@@ -22,12 +22,12 @@
 use Tuleap\Chart\Chart;
 use Tuleap\Chart\ColorsForCharts;
 
-class Git_LastPushesGraph
+class Git_LastPushesGraph //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const MAX_WEEKSNUMBER  = 25;
-    public const WEEKS_IN_SECONDS = 604800;
+    public const int MAX_WEEKSNUMBER  = 25;
+    public const int WEEKS_IN_SECONDS = 604800;
 
-    public const NUMBER_OF_REPOSITORIES_BEFORE_GRAPH_LABEL_BREAK_DISPLAY = 15;
+    public const int NUMBER_OF_REPOSITORIES_BEFORE_GRAPH_LABEL_BREAK_DISPLAY = 15;
 
     /**
      * @var bool

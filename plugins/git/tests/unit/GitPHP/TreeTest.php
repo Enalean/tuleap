@@ -33,7 +33,7 @@ final class TreeTest extends TestCase
      * 040000 tree   0543c7a05785554d8f80b7a4b40bc64add26b7d2    folder1
      * 160000 commit 6e8099ef4091a5634bfc3e632eaf3c5ddd6c2787    vault
      */
-    private const TREE_CONTENT_BASE64 = 'MTAwNjQ0IC5naXRtb2R1bGVzAIH4hHzMXEmTFmPe3+0WwsPcnqadMTAwNjQ0IGYxAFnFDa6mssI1RMd2KaKvTRE07gvDNDAwMDAgZm9sZGVyMQAFQ8egV4VVTY+At6S0C8ZK3Sa30jE2MDAwMCB2YXVsdABugJnvQJGlY0v8PmMurzxd3Wwnhw==';
+    private const string TREE_CONTENT_BASE64 = 'MTAwNjQ0IC5naXRtb2R1bGVzAIH4hHzMXEmTFmPe3+0WwsPcnqadMTAwNjQ0IGYxAFnFDa6mssI1RMd2KaKvTRE07gvDNDAwMDAgZm9sZGVyMQAFQ8egV4VVTY+At6S0C8ZK3Sa30jE2MDAwMCB2YXVsdABugJnvQJGlY0v8PmMurzxd3Wwnhw==';
 
     public function testContentIsRetrieved(): void
     {

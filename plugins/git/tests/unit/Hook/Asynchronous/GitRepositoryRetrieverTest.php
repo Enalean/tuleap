@@ -31,7 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const GIT_REPOSITORY_ID = 590;
+    private const int GIT_REPOSITORY_ID = 590;
     /**
      * @var \GitRepositoryFactory & \PHPUnit\Framework\MockObject\Stub
      */

@@ -24,8 +24,8 @@ use Tuleap\Layout\JavascriptAssetGeneric;
 
 class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const ACTION_UPDATE_CONFIG                      = 'update_config';
-    public const ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = 'update-big-objects-allowed-projects';
+    public const string ACTION_UPDATE_CONFIG                      = 'update_config';
+    public const string ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = 'update-big-objects-allowed-projects';
 
     /**
      * @var Git_SystemEventManager

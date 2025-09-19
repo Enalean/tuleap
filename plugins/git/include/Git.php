@@ -50,36 +50,37 @@ use Tuleap\User\RequestFromAutocompleter;
 /**
  * Git
  */
-class Git extends PluginController
+class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    public const string GIT_PLUGIN_NAME = 'git';
     /**
      * @var DescriptionUpdater
      */
     private $description_updater;
     private DefaultBranchUpdater $default_branch_updater;
 
-    public const PERM_READ  = 'PLUGIN_GIT_READ';
-    public const PERM_WRITE = 'PLUGIN_GIT_WRITE';
-    public const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
+    public const string PERM_READ  = 'PLUGIN_GIT_READ';
+    public const string PERM_WRITE = 'PLUGIN_GIT_WRITE';
+    public const string PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
-    public const READ_PERM = 'R';
+    public const string READ_PERM = 'R';
 
-    public const DEFAULT_PERM_READ  = 'PLUGIN_GIT_DEFAULT_READ';
-    public const DEFAULT_PERM_WRITE = 'PLUGIN_GIT_DEFAULT_WRITE';
-    public const DEFAULT_PERM_WPLUS = 'PLUGIN_GIT_DEFAULT_WPLUS';
+    public const string DEFAULT_PERM_READ  = 'PLUGIN_GIT_DEFAULT_READ';
+    public const string DEFAULT_PERM_WRITE = 'PLUGIN_GIT_DEFAULT_WRITE';
+    public const string DEFAULT_PERM_WPLUS = 'PLUGIN_GIT_DEFAULT_WPLUS';
 
-    public const PERM_ADMIN         = 'PLUGIN_GIT_ADMIN';
-    public const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
+    public const string PERM_ADMIN         = 'PLUGIN_GIT_ADMIN';
+    public const string SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
 
-    public const SCOPE_PERSONAL = 'personal';
+    public const string SCOPE_PERSONAL = 'personal';
 
-    public const REFERENCE_KEYWORD = 'git';
-    public const REFERENCE_NATURE  = 'git_commit';
+    public const string REFERENCE_KEYWORD = 'git';
+    public const string REFERENCE_NATURE  = 'git_commit';
 
-    public const TAG_REFERENCE_KEYWORD = 'git_tag';
-    public const TAG_REFERENCE_NATURE  = 'git_tag';
+    public const string TAG_REFERENCE_KEYWORD = 'git_tag';
+    public const string TAG_REFERENCE_NATURE  = 'git_tag';
 
-    public const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
+    public const string DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
 
     /**
      * @var RegexpFineGrainedRetriever
@@ -559,7 +560,7 @@ class Git extends PluginController
         $this->_dispatchActionAndView($this->action, $repository, $repoId, $repositoryName, $user);
     }
 
-    public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repo_id, $repositoryName, $user)
+    public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repo_id, $repositoryName, $user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $pane = $this->request->get('pane');
         switch ($action) {
@@ -1140,7 +1141,7 @@ class Git extends PluginController
         $this->addAction('redirectToRepoManagement', [$this->groupId, $repoId, $pane]);
     }
 
-    protected function _informAboutPendingEvents(/* GitRepository */ $repository)
+    protected function _informAboutPendingEvents(/* GitRepository */ $repository) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $sem = SystemEventManager::instance();
         $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, ['GIT_REPO_CREATE', 'GIT_REPO_DELETE'], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]);
@@ -1214,7 +1215,7 @@ class Git extends PluginController
         return $instance;
     }
 
-    public function _doDispatchForkCrossProject($request, $user)
+    public function _doDispatchForkCrossProject($request, $user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $this->checkSynchronizerToken('/plugins/git/?group_id=' . (int) $this->groupId . '&action=fork_repositories');
         $validators = [new Valid_UInt('to_project'), new Valid_String('repos'), new Valid_Array('repo_access')];
@@ -1279,7 +1280,7 @@ class Git extends PluginController
         $token->check();
     }
 
-    public function _doDispatchForkRepositories($request, $user)
+    public function _doDispatchForkRepositories($request, $user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $this->addAction('getProjectRepositoryList', [$this->groupId]);
         $this->checkSynchronizerToken('/plugins/git/?group_id=' . (int) $this->groupId . '&action=fork_repositories');

@@ -21,9 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent
+class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME = 'GIT_GERRIT_PROJECT_DELETE';
+    public const string NAME = 'GIT_GERRIT_PROJECT_DELETE';
 
     /**
      * @var GitRepositoryFactory

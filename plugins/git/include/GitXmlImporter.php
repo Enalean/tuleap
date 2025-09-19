@@ -33,17 +33,17 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\PHPCast;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class GitXmlImporter
+class GitXmlImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const READ_TAG         = 'read';
-    public const WRITE_TAG        = 'write';
-    public const WPLUS_TAG        = 'wplus';
-    public const UGROUP_TAG       = 'ugroup';
-    public const FINE_GRAINED_TAG = 'fine_grained';
-    public const TAG_PATTERN      = 'tag';
-    public const BRANCH_PATTERN   = 'branch';
+    public const string READ_TAG         = 'read';
+    public const string WRITE_TAG        = 'write';
+    public const string WPLUS_TAG        = 'wplus';
+    public const string UGROUP_TAG       = 'ugroup';
+    public const string FINE_GRAINED_TAG = 'fine_grained';
+    public const string TAG_PATTERN      = 'tag';
+    public const string BRANCH_PATTERN   = 'branch';
 
-    public const SERVICE_NAME = 'git';
+    public const string SERVICE_NAME = 'git';
 
     public function __construct(
         private readonly \Psr\Log\LoggerInterface $logger,

@@ -29,7 +29,7 @@ use Tuleap\REST\JsonCast;
  */
 class GerritServerRepresentation
 {
-    public const ROUTE = 'gerrit';
+    public const string ROUTE = 'gerrit';
 
     /**
      * @var int {@type int}

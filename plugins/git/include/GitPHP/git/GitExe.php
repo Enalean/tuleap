@@ -27,14 +27,14 @@ namespace Tuleap\Git\GitPHP;
  */
 class GitExe
 {
-    public const DIFF_TREE = 'diff-tree';
-    public const REV_LIST  = 'rev-list';
-    public const SHOW_REF  = 'show-ref';
-    public const ARCHIVE   = 'archive';
-    public const GREP      = 'grep';
-    public const BLAME     = 'blame';
-    public const NAME_REV  = 'name-rev';
-    public const DIFF      = 'diff';
+    public const string DIFF_TREE = 'diff-tree';
+    public const string REV_LIST  = 'rev-list';
+    public const string SHOW_REF  = 'show-ref';
+    public const string ARCHIVE   = 'archive';
+    public const string GREP      = 'grep';
+    public const string BLAME     = 'blame';
+    public const string NAME_REV  = 'name-rev';
+    public const string DIFF      = 'diff';
 
     /**
      * project

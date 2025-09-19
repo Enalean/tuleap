@@ -21,17 +21,17 @@
 
 use Tuleap\Git\PathJoinUtil;
 
-class GitRepository
+class GitRepository //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const REPO_EXT = '.git';
+    public const string REPO_EXT = '.git';
 
-    public const PRIVATE_ACCESS = 'private';
-    public const PUBLIC_ACCESS  = 'public';
+    public const string PRIVATE_ACCESS = 'private';
+    public const string PUBLIC_ACCESS  = 'public';
 
-    public const DEFAULT_MAIL_PREFIX   = '[SCM]';
-    public const REPO_SCOPE_PROJECT    = 'P';
-    public const REPO_SCOPE_INDIVIDUAL = 'I';
-    public const DEFAULT_DESCRIPTION   = '-- Default description --';
+    public const string DEFAULT_MAIL_PREFIX   = '[SCM]';
+    public const string REPO_SCOPE_PROJECT    = 'P';
+    public const string REPO_SCOPE_INDIVIDUAL = 'I';
+    public const string DEFAULT_DESCRIPTION   = '-- Default description --';
 
     private $id;
     private $parentId;
@@ -90,7 +90,7 @@ class GitRepository
      *
      * @return UserManager
      */
-    public function _getUserManager()
+    public function _getUserManager() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance();
     }
@@ -100,7 +100,7 @@ class GitRepository
      *
      * @return ProjectManager
      */
-    public function _getProjectManager()
+    public function _getProjectManager() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return ProjectManager::instance();
     }

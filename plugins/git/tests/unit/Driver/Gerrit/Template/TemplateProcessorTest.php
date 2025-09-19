@@ -31,7 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TemplateProcessorTest extends TestCase
 {
-    private const PROJECT_NAME = 'some_project';
+    private const string PROJECT_NAME = 'some_project';
 
     private Git_Driver_Gerrit_Template_TemplateProcessor $template_processor;
     private Git_Driver_Gerrit_Template_Template $template;

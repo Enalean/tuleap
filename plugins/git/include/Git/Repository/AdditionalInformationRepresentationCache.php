@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class AdditionalInformationRepresentationCache implements Dispatchable
 {
-    public const NAME = 'additionalInformationRepresentationCache';
+    public const string NAME = 'additionalInformationRepresentationCache';
     /**
      * @var array
      */

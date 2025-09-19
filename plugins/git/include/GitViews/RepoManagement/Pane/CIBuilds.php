@@ -30,7 +30,7 @@ use TemplateRendererFactory;
 
 class CIBuilds extends Pane
 {
-    public const ID = 'cibuilds';
+    public const string ID = 'cibuilds';
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()

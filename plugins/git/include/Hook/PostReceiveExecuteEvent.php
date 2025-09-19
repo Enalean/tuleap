@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 class PostReceiveExecuteEvent implements Dispatchable
 {
-    public const NAME = 'postReceiveExecuteEvent';
+    public const string NAME = 'postReceiveExecuteEvent';
 
     /**
      * @var GitRepository

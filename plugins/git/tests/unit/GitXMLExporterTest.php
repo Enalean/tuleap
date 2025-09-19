@@ -62,9 +62,9 @@ final class GitXMLExporterTest extends TestCase
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    private const REPOSITORY_ID        = 101;
-    private const EMPTY_REPOSITORY_ID  = 102;
-    private const FORKED_REPOSITORY_IP = 103;
+    private const int REPOSITORY_ID        = 101;
+    private const int EMPTY_REPOSITORY_ID  = 102;
+    private const int FORKED_REPOSITORY_IP = 103;
 
     private UserManager&MockObject $user_manager;
     private Git_LogDao&MockObject $git_log_dao;

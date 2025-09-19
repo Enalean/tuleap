@@ -42,7 +42,7 @@ use Tuleap\User\UserName;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PUSHING_USER_ID = 136;
+    private const int PUSHING_USER_ID = 136;
     private string $topic;
     private TestLogger $logger;
     private RetrieveGitRepositoryStub $git_repository_retriever;

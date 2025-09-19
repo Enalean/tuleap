@@ -29,7 +29,7 @@ use Tuleap\Markdown\EnhancedCodeBlockExtension;
 
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
-    public const README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
+    public const string README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
 
     public function __construct(private readonly BlobDataReader $data_reader)
     {

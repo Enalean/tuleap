@@ -32,7 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RegenerateConfigurationCommand extends Command
 {
-    public const NAME = 'git:regenerate-gitolite-configuration';
+    public const string NAME = 'git:regenerate-gitolite-configuration';
 
     /**
      * @var \ProjectManager

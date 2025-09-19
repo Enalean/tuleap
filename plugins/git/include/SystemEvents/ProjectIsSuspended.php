@@ -27,7 +27,7 @@ use SystemEvent;
 
 class ProjectIsSuspended extends SystemEvent
 {
-    public const NAME = 'GIT_PROJECT_IS_SUSPENDED';
+    public const string NAME = 'GIT_PROJECT_IS_SUSPENDED';
 
     /** @var Git_GitoliteDriver */
     private $gitolite_driver;

@@ -35,8 +35,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BranchCreatorTest extends TestCase
 {
-    private const REPO_ID    = 1;
-    private const PROJECT_ID = 101;
+    private const int REPO_ID    = 1;
+    private const int PROJECT_ID = 101;
 
     private BranchCreator $creator;
     /**

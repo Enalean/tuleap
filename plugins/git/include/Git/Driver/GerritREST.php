@@ -28,17 +28,17 @@ use Tuleap\Git\Driver\GerritHTTPClientFactory;
 /**
  * I know how to speak to a Gerrit 2.8+ remote server
  */
-class Git_Driver_GerritREST implements Git_Driver_Gerrit
+class Git_Driver_GerritREST implements Git_Driver_Gerrit //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * When one create a group when no owners, set Administrators as default
      * @see: https://groups.google.com/d/msg/repo-discuss/kVDkj7Ds970/xzLP1WQI2BAJ
      */
-    public const DEFAULT_GROUP_OWNER = 'Administrators';
+    public const string DEFAULT_GROUP_OWNER = 'Administrators';
 
-    public const HEADER_CONTENT_TYPE = 'Content-type';
-    public const MIME_JSON           = 'application/json;charset=UTF-8';
-    public const MIME_TEXT           = 'plain/text';
+    public const string HEADER_CONTENT_TYPE = 'Content-type';
+    public const string MIME_JSON           = 'application/json;charset=UTF-8';
+    public const string MIME_TEXT           = 'plain/text';
 
     /**
      * @var GerritHTTPClientFactory

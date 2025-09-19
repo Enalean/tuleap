@@ -22,7 +22,7 @@ namespace Tuleap\Git\CommitStatus;
 
 final class CommitStatusUnknown implements CommitStatus
 {
-    public const NAME = 'unknown';
+    public const string NAME = 'unknown';
 
     private $date;
 

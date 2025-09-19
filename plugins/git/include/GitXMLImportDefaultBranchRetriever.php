@@ -25,8 +25,8 @@ namespace Tuleap\Git;
 
 final class GitXMLImportDefaultBranchRetriever implements RetrieveGitDefaultBranchInXMLImport
 {
-    private const LEGACY_DEFAULT_GIT_BRANCH = 'master';
-    private const DEFAULT_GIT_BRANCH        = 'main';
+    private const string LEGACY_DEFAULT_GIT_BRANCH = 'master';
+    private const string DEFAULT_GIT_BRANCH        = 'main';
 
     #[\Override]
     public function retrieveDefaultBranchFromXMLContent(\Git_Exec $git_exec, \SimpleXMLElement $repository_info): string

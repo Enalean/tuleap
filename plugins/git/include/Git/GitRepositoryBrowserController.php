@@ -49,7 +49,7 @@ final readonly class GitRepositoryBrowserController implements DispatchableWithR
 {
     #[ConfigKey('Allow anonymous users to browse git repositories (useful to protect from bot scrapping)')]
     #[ConfigKeyLegacyBool(true)]
-    public const CONFIG_IS_ANONYMOUS_GIT_BROWSING_ALLOWED = 'git_anonymous_browsing_allowed';
+    public const string CONFIG_IS_ANONYMOUS_GIT_BROWSING_ALLOWED = 'git_anonymous_browsing_allowed';
 
     public function __construct(
         private \GitRepositoryFactory $repository_factory,
