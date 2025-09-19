@@ -620,8 +620,8 @@ class DateField extends TrackerField
 
     private function formatDateForReport($criteria_value)
     {
-        $date_formatter = new Tracker_FormElement_DateFormatter($this);
-        return $date_formatter->formatDate($criteria_value);
+        $date_formatter = new Tracker_FormElement_DateFormatter($this, UserManager::instance());
+        return $date_formatter->formatDate($criteria_value, null);
     }
 
     public function fetchMasschange()
@@ -1056,7 +1056,7 @@ class DateField extends TrackerField
      *
      * @param string $value
      *
-     * @return String the field data corresponding to the value for artifact submision, or null if date format is wrong
+     * @return ?string the field data corresponding to the value for artifact submision, or null if date format is wrong
      */
     #[Override]
     public function getFieldData($value)
@@ -1093,7 +1093,7 @@ class DateField extends TrackerField
 
         if ((int) $value == $value) {
             // Assume it's a timestamp
-            return $this->getFormatter()->formatDate((int) $value);
+            return $this->getFormatter()->formatDate((int) $value, null);
         }
 
         if (trim($value) === '') {
@@ -1180,12 +1180,12 @@ class DateField extends TrackerField
     #[Override]
     public function formatDate($date)
     {
-        return $this->getFormatter()->formatDate($date);
+        return $this->getFormatter()->formatDate($date, null);
     }
 
     public function formatDateForDisplay($timestamp)
     {
-        return $this->getFormatter()->formatDateForDisplay($timestamp);
+        return $this->getFormatter()->formatDateForDisplay($timestamp, null);
     }
 
     /**
@@ -1194,10 +1194,10 @@ class DateField extends TrackerField
     public function getFormatter()
     {
         if ($this->isTimeDisplayed()) {
-            return new Tracker_FormElement_DateTimeFormatter($this);
+            return new Tracker_FormElement_DateTimeFormatter($this, UserManager::instance());
         }
 
-        return new Tracker_FormElement_DateFormatter($this);
+        return new Tracker_FormElement_DateFormatter($this, UserManager::instance());
     }
 
     protected function getArtifactTimeframeHelper(): ArtifactTimeframeHelper
