@@ -28,7 +28,6 @@ use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
@@ -46,6 +45,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ComputedFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
 use UserManager;
@@ -81,7 +81,7 @@ class ComputedField extends FloatField
         $required,
         $notifications,
         $rank,
-        ?Tracker_FormElement $original_field = null,
+        ?TrackerFormElement $original_field = null,
     ) {
         parent::__construct(
             $id,

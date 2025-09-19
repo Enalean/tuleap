@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
-use Tracker_FormElement;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 /**
  * @psalm-immutable
@@ -35,7 +35,7 @@ final class TooltipFieldPresenter
     ) {
     }
 
-    public static function buildFromFormElement(Tracker_FormElement $field): self
+    public static function buildFromFormElement(TrackerFormElement $field): self
     {
         return new self($field->getId(), $field->getLabel());
     }

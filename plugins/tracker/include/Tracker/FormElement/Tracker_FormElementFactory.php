@@ -63,6 +63,7 @@ use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
 use Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField;
 use Tuleap\Tracker\FormElement\StaticField\RichText\RichTextStaticField;
 use Tuleap\Tracker\FormElement\StaticField\Separator\SeparatorStaticField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -226,13 +227,13 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::clearInstance();
     }
 
-    public function clearElementFromCache(Tracker_FormElement $form_element): void
+    public function clearElementFromCache(TrackerFormElement $form_element): void
     {
         unset($this->formElements[$form_element->getId()]);
     }
 
     #[\Override]
-    public function getType(Tracker_FormElement $form_element): string
+    public function getType(TrackerFormElement $form_element): string
     {
         $all_classnames = array_merge(
             $this->classnames,
@@ -507,7 +508,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * Get all formElements by parent id
      * @param int parent_id
-     * @return Tracker_FormElement[]
+     * @return TrackerFormElement[]
      */
     public function getAllFormElementsByParentId($parent_id): array
     {
@@ -874,7 +875,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * It retrieves by its Id a simple value field that can potentially contain numeric values
      * @param Tracker $tracker
      * @param int $field_id
-     * @return Tracker_FormElement | void
+     * @return TrackerFormElement | void
      */
     public function getUsedPotentiallyContainingNumericValueFieldById($tracker, $field_id)
     {
@@ -995,7 +996,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     }
 
     /**
-     * @return Tracker_FormElement[]
+     * @return TrackerFormElement[]
      */
     #[\Override]
     public function getUsedFormElementForTracker(Tracker $tracker): array
@@ -1029,7 +1030,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * @param array $row Raw data (typically from the db) of the form element
      *
-     * @return Tracker_FormElement
+     * @return TrackerFormElement
      */
     public function getCachedInstanceFromRow($row)
     {
@@ -1043,7 +1044,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * @param array the row allowing the construction of a Tracker_FormElement
      *
-     * @return Tracker_FormElement Object
+     * @return TrackerFormElement Object
      */
     public function getInstanceFromRow($row)
     {
@@ -1081,7 +1082,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      *
      * @param array $rows
      *
-     * @return Tracker_FormElement[]
+     * @return TrackerFormElement[]
      */
     private function getCachedInstancesFromRows($rows): array
     {
@@ -1099,7 +1100,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * @param SimpleXMLElement $xml         containing the structure of the imported Tracker_FormElement
      * @param array            &$xmlMapping where the newly created formElements indexed by their XML IDs are stored
      *
-     * @return Tracker_FormElement | null
+     * @return TrackerFormElement | null
      */
     public function getInstanceFromXML(
         Tracker $tracker,
@@ -1180,9 +1181,9 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * Returns the FormElements that are a copy of given element
      *
      *
-     * @return Tracker_FormElement[]
+     * @return TrackerFormElement[]
      */
-    public function getSharedTargets(Tracker_FormElement $element): array
+    public function getSharedTargets(TrackerFormElement $element): array
     {
         $dar = $this->getDao()->searchSharedTargets($element->getId());
         return $this->getCachedInstancesFromRows($dar);
@@ -1264,12 +1265,12 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return in_array($shared_field['original_field_id'], $original_shared_field_ids);
     }
 
-    protected function userCanReadSharedField(PFUser $user, Tracker_FormElement $field)
+    protected function userCanReadSharedField(PFUser $user, TrackerFormElement $field)
     {
         return ($field->userCanRead($user) && $this->canReadAllTargets($user, $field));
     }
 
-    private function canReadAllTargets(PFUser $user, Tracker_FormElement $field)
+    private function canReadAllTargets(PFUser $user, TrackerFormElement $field)
     {
         foreach ($this->getSharedTargets($field) as $target_field) {
             if (! $target_field->userCanRead($user)) {
@@ -1279,7 +1280,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return true;
     }
 
-    public function updateFormElement(Tracker_FormElement $form_element, $form_element_data)
+    public function updateFormElement(TrackerFormElement $form_element, $form_element_data)
     {
         //check that the new name is not already used
         if (isset($form_element_data['name'])) {
@@ -1685,7 +1686,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * Creates new Tracker_Form element in the database
      *
      * @param Tracker $tracker of the created tracker
-     * @param Tracker_FormElement $form_element
+     * @param TrackerFormElement $form_element
      * @param int $parent_id the id of the newly created parent formElement (0 when no parent)
      *
      * @return mixed the id of the newly created FormElement
@@ -1705,9 +1706,9 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * Get the next used sibbling of an element.
      *
-     * @param Tracker_FormElement $element
+     * @param TrackerFormElement $element
      *
-     * @return Tracker_FormElement|null null if not found
+     * @return TrackerFormElement|null null if not found
      */
     public function getNextSibling($element)
     {

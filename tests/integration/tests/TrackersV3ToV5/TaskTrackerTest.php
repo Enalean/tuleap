@@ -30,7 +30,6 @@ use Tracker_DateReminder;
 use Tracker_DateReminder_Role_Submitter;
 use Tracker_DateReminderFactory;
 use Tracker_DateReminderRenderer;
-use Tracker_FormElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElementFactory;
 use Tracker_Migration_V3;
@@ -43,9 +42,10 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 
@@ -169,11 +169,11 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_SUBMIT,
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_SUBMIT,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -188,10 +188,10 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -218,11 +218,11 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isMultiple());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_SUBMIT,
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_SUBMIT,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -237,7 +237,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -252,11 +252,11 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_SUBMIT,
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_SUBMIT,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -271,11 +271,11 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_SUBMIT,
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_SUBMIT,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }

@@ -27,7 +27,6 @@ use PFUser;
 use Project;
 use Project_AccessException;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker_FormElement;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_UserWithReadAllPermission;
 use Tracker_Workflow_WorkflowUser;
@@ -37,6 +36,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 use Tuleap\User\RetrieveUserById;
 use Tuleap\User\TuleapFunctionsUser;
@@ -87,7 +87,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
         $user_groups_id = $this->getUserUGroupsFromFields($user, $fields);
         $results        = $this->fields_dao->searchUserGroupsPermissionOnFields(
             $user_groups_id,
-            array_map(static fn(Tracker_FormElement $element) => $element->getId(), $fields),
+            array_map(static fn(TrackerFormElement $element) => $element->getId(), $fields),
             $permission
         );
         if ($permission === FieldPermissionType::PERMISSION_READ) {
@@ -96,7 +96,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
                 $results,
                 $this->fields_dao->searchUserGroupsPermissionOnFields(
                     $user_groups_id,
-                    array_map(static fn(Tracker_FormElement $element) => $element->getId(), $fields),
+                    array_map(static fn(TrackerFormElement $element) => $element->getId(), $fields),
                     FieldPermissionType::PERMISSION_UPDATE,
                 ),
             );
@@ -237,7 +237,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
     }
 
     /**
-     * @param Tracker_FormElement[] $fields
+     * @param TrackerFormElement[] $fields
      * @return list<UserGroupInProject>
      */
     private function getUserUGroupsFromFields(PFUser $user, array $fields): array

@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement;
-
 interface RetrieveFieldType
 {
-    public function getType(Tracker_FormElement $form_element): string;
+    public function getType(TrackerFormElement $form_element): string;
 }

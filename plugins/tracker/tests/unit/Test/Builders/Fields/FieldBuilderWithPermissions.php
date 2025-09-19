@@ -56,7 +56,7 @@ trait FieldBuilderWithPermissions
         return $this;
     }
 
-    private function setPermissions(\Tracker_FormElement $field): void
+    private function setPermissions(\Tuleap\Tracker\FormElement\TrackerFormElement $field): void
     {
         foreach ($this->user_with_read_permissions as $user) {
             $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);

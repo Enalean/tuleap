@@ -62,6 +62,7 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
 use Tuleap\Tracker\FormElement\ListFormElementTypeUpdater;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\Report\Criteria\CriteriaListValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
@@ -1572,7 +1573,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
     }
 
     /**
-     * @see Tracker_FormElement::process()
+     * @see TrackerFormElement::process()
      */
     #[Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)

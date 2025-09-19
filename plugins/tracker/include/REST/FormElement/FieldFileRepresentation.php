@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\REST\FormElement;
 
-use Tracker_FormElement;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\REST\v1\TrackerFieldsResource;
 
 /**
@@ -51,7 +51,7 @@ class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
 
     #[\Override]
     public static function build(
-        Tracker_FormElement $form_element,
+        TrackerFormElement $form_element,
         string $type,
         array $permissions,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,

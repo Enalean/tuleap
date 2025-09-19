@@ -31,7 +31,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ValueDao;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_IAcceptFieldVisitor;
@@ -58,6 +57,7 @@ use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\FieldIsAlwaysInEditMode;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
@@ -82,7 +82,7 @@ use XML_SimpleXMLCDATAFactory;
  * Composite fields are excluded.
  */
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-abstract class TrackerField extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor, FieldIsAlwaysInEditMode
+abstract class TrackerField extends TrackerFormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor, FieldIsAlwaysInEditMode
 {
     private const string PREFIX_NAME_SQL_COLUMN = 'user_defined_';
 
@@ -510,7 +510,7 @@ abstract class TrackerField extends Tracker_FormElement implements Tracker_Repor
     }
 
     /**
-     * @see Tracker_FormElement::fetchArtifactCopyMode
+     * @see TrackerFormElement::fetchArtifactCopyMode
      */
     #[Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)

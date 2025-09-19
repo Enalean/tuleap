@@ -20,15 +20,15 @@
 
 namespace Tuleap\Tracker\Events;
 
-use Tracker_FormElement;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 class AllowedFieldTypeChangesRetriever implements Dispatchable
 {
     public const NAME = 'semanticAllowedFieldTypeRetriever';
 
     /**
-     * @var \Tracker_FormElement
+     * @var \Tuleap\Tracker\FormElement\TrackerFormElement
      */
     private $field;
 
@@ -39,14 +39,14 @@ class AllowedFieldTypeChangesRetriever implements Dispatchable
 
 
     /**
-     * @return \Tracker_FormElement
+     * @return \Tuleap\Tracker\FormElement\TrackerFormElement
      */
     public function getField()
     {
         return $this->field;
     }
 
-    public function setField(Tracker_FormElement $field)
+    public function setField(TrackerFormElement $field)
     {
         $this->field = $field;
     }

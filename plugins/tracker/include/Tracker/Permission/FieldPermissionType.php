@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission;
 
-use Tracker_FormElement;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 enum FieldPermissionType: string
 {
-    case PERMISSION_READ   = Tracker_FormElement::PERMISSION_READ;
-    case PERMISSION_UPDATE = Tracker_FormElement::PERMISSION_UPDATE;
-    case PERMISSION_SUBMIT = Tracker_FormElement::PERMISSION_SUBMIT;
+    case PERMISSION_READ   = TrackerFormElement::PERMISSION_READ;
+    case PERMISSION_UPDATE = TrackerFormElement::PERMISSION_UPDATE;
+    case PERMISSION_SUBMIT = TrackerFormElement::PERMISSION_SUBMIT;
 }

@@ -27,6 +27,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\TrackerFormElementContainer;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
 class ColumnContainer extends TrackerFormElementContainer
@@ -81,7 +82,7 @@ class ColumnContainer extends TrackerFormElementContainer
     }
 
     /**
-     * @see Tracker_FormElement::fetchArtifactCopyMode
+     * @see TrackerFormElement::fetchArtifactCopyMode
      */
     #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)

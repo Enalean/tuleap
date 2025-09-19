@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST;
 
-use Tracker_FormElement;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -90,7 +90,7 @@ final class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\T
         $permissions_for_groups_builder->expects($this->exactly(2))
             ->method('getPermissionsForGroups')
             ->willReturnCallback(
-                static fn (Tracker_FormElement $form_element) => match ($form_element) {
+                static fn (TrackerFormElement $form_element) => match ($form_element) {
                     $field1, $field3 => new PermissionsForGroupsRepresentation([], [], []),
                 }
             );

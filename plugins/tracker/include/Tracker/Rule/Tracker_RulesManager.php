@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
@@ -515,7 +516,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     }
 
     /** @return bool */
-    public function isUsedInFieldDependency(Tracker_FormElement $field)
+    public function isUsedInFieldDependency(TrackerFormElement $field)
     {
         $field_id   = $field->getId();
         $list_rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());

@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use ParagonIE\EasyDB\EasyDB;
-use Tracker_FormElement;
 use Tracker_FormElementFactory;
 use Tuleap\Color\ColorName;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use Tuleap\Tracker\Tracker;
@@ -325,7 +325,7 @@ final class TrackerDatabaseBuilder
         $this->db->insert(
             'permissions',
             [
-                'permission_type' => Tracker_FormElement::PERMISSION_READ,
+                'permission_type' => TrackerFormElement::PERMISSION_READ,
                 'object_id'       => (string) $field_id,
                 'ugroup_id'       => $user_group_id,
             ]
@@ -337,7 +337,7 @@ final class TrackerDatabaseBuilder
         $this->db->insert(
             'permissions',
             [
-                'permission_type' => Tracker_FormElement::PERMISSION_SUBMIT,
+                'permission_type' => TrackerFormElement::PERMISSION_SUBMIT,
                 'object_id'       => (string) $field_id,
                 'ugroup_id'       => $user_group_id,
             ]

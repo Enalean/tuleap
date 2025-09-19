@@ -48,6 +48,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField;
 use Tuleap\Tracker\FormElement\StaticField\Separator\SeparatorStaticField;
 use Tuleap\Tracker\FormElement\StaticField\TrackerStaticField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
@@ -65,7 +66,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     protected $adminElement = null;
 
     /**
-     * @var Tracker_FormElement
+     * @var TrackerFormElement
      */
     protected $element = null;
 
@@ -82,7 +83,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     /**
      * Inspect the element
      *
-     * @param Tracker_FormElement $element
+     * @param TrackerFormElement $element
      */
     #[\Override]
     public function visit(/*Tracker_FormElement*/ $element)

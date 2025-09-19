@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\FormElement;
 use ForgeConfig;
 use HTTPRequest;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\ForgeConfigSandbox;
@@ -51,11 +50,13 @@ final class TrackerFormElementTest extends TestCase
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['HTML']);
@@ -86,7 +87,7 @@ final class TrackerFormElementTest extends TestCase
         self::assertEquals(0, $element->getOriginalFieldId());
     }
 
-    protected function givenAFormElementWithIdAndOriginalField(?int $id, ?Tracker_FormElement $original_field): SeparatorStaticField
+    protected function givenAFormElementWithIdAndOriginalField(?int $id, ?TrackerFormElement $original_field): SeparatorStaticField
     {
         return new SeparatorStaticField(
             $id,
@@ -125,7 +126,7 @@ final class TrackerFormElementTest extends TestCase
         self::assertMatchesRegularExpression('%</form>%', $content);
     }
 
-    private function whenIDisplayAdminFormElement(Tracker_FormElement $form_element): string
+    private function whenIDisplayAdminFormElement(TrackerFormElement $form_element): string
     {
         $GLOBALS['HTML'] = new TestLayout(new LayoutInspector());
 

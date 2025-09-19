@@ -26,7 +26,6 @@ namespace Tuleap\TrackersV3ToV5;
 use ArtifactType;
 use ProjectManager;
 use ProjectUGroup;
-use Tracker_FormElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElementFactory;
 use Tracker_Migration_V3;
@@ -38,9 +37,10 @@ use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 
@@ -153,13 +153,13 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::REGISTERED      => [
-                Tracker_FormElement::PERMISSION_SUBMIT,
+                TrackerFormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -174,10 +174,10 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -204,13 +204,13 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($field->isMultiple());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::REGISTERED      => [
-                Tracker_FormElement::PERMISSION_SUBMIT,
+                TrackerFormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -225,7 +225,7 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -240,13 +240,13 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::REGISTERED      => [
-                Tracker_FormElement::PERMISSION_SUBMIT,
+                TrackerFormElement::PERMISSION_SUBMIT,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }
@@ -261,10 +261,10 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($field->isUsed());
         self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS       => [
-                Tracker_FormElement::PERMISSION_READ,
+                TrackerFormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
-                Tracker_FormElement::PERMISSION_UPDATE,
+                TrackerFormElement::PERMISSION_UPDATE,
             ],
         ], $field->getPermissionsByUgroupId());
     }

@@ -26,16 +26,16 @@
 namespace Tuleap\Tracker\FormElement\StaticField;
 
 use PFUser;
-use Tracker_FormElement;
 use Tracker_FormElement_Visitor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 /**
  * The base class for static fields in trackers.
  * Static Fields are not real fields, as they don't have a specific value for each artifact.
  * The value can be updated, but is the same for every artifact.
  */
-abstract class TrackerStaticField extends Tracker_FormElement
+abstract class TrackerStaticField extends TrackerFormElement
 {
     // TODO : remove these functions (no need for that kind of "fields"
     #[\Override]
@@ -177,7 +177,7 @@ abstract class TrackerStaticField extends Tracker_FormElement
     abstract protected function fetchReadOnly();
 
     /**
-     * @see Tracker_FormElement::fetchArtifactCopyMode
+     * @see TrackerFormElement::fetchArtifactCopyMode
      */
     #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)

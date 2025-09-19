@@ -31,13 +31,13 @@ abstract class GroupPermission
      */
     public $ugroup_name;
     /**
-     * @var \Tracker_FormElement::PERMISSION_*
+     * @var \Tuleap\Tracker\FormElement\TrackerFormElement::PERMISSION_*
      * @readonly
      */
     public $type;
 
     /**
-     * @param \Tracker_FormElement::PERMISSION_* $type
+     * @param \Tuleap\Tracker\FormElement\TrackerFormElement::PERMISSION_* $type
      */
     public function __construct(string $ugroup_name, string $type)
     {

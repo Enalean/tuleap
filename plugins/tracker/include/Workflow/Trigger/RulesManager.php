@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
@@ -197,7 +198,7 @@ class Tracker_Workflow_Trigger_RulesManager
         return $rules;
     }
 
-    public function getTriggerByFieldId(Tracker_FormElement $field)
+    public function getTriggerByFieldId(TrackerFormElement $field)
     {
         return $this->dao->searchTriggersByFieldId($field->getId());
     }
@@ -349,7 +350,7 @@ class Tracker_Workflow_Trigger_RulesManager
         return $new_triggers;
     }
 
-    public function isUsedInTrigger(Tracker_FormElement $field): bool
+    public function isUsedInTrigger(TrackerFormElement $field): bool
     {
         $triggered_trackers = $this->trigger_builder->getTriggeringFieldForTracker($field->getTracker())->getFields();
 

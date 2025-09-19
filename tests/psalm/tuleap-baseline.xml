@@ -34680,6 +34680,76 @@
       <code><![CDATA[getDefaultValue]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/FormElement/TrackerFormElement.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$layout]]></code>
+      <code><![CDATA[$request]]></code>
+    </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code><![CDATA[groupAddHistory]]></code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code><![CDATA[$date]]></code>
+      <code><![CDATA[$force_absolute_ranking]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$ignore_perms]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$p]]></code>
+      <code><![CDATA[$parent_id]]></code>
+      <code><![CDATA[$recipient]]></code>
+      <code><![CDATA[$xmlMapping]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$cache_permissions]]></code>
+      <code><![CDATA[$cache_specific_properties]]></code>
+      <code><![CDATA[$user_can_read]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[exportCurrentUserPermissionsToREST]]></code>
+      <code><![CDATA[exportPermissionsToXML]]></code>
+      <code><![CDATA[fetchAdmin]]></code>
+      <code><![CDATA[fetchArtifactForOverlay]]></code>
+      <code><![CDATA[fetchSubmitForOverlay]]></code>
+      <code><![CDATA[formatDate]]></code>
+      <code><![CDATA[getDefaultRESTValue]]></code>
+      <code><![CDATA[getOriginalField]]></code>
+      <code><![CDATA[getOriginalFieldId]]></code>
+      <code><![CDATA[getOriginalProject]]></code>
+      <code><![CDATA[getOriginalTracker]]></code>
+      <code><![CDATA[getParentId]]></code>
+      <code><![CDATA[getRESTAvailableValues]]></code>
+      <code><![CDATA[getRESTContent]]></code>
+      <code><![CDATA[getRank]]></code>
+      <code><![CDATA[getScope]]></code>
+      <code><![CDATA[getTriggerManager]]></code>
+      <code><![CDATA[getXMLId]]></code>
+      <code><![CDATA[isUsedInTrigger]]></code>
+      <code><![CDATA[setCacheSpecificProperties]]></code>
+      <code><![CDATA[setCriteriaValueFromREST]]></code>
+      <code><![CDATA[setFormElementFactory]]></code>
+      <code><![CDATA[setTracker]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$this->getTracker()->getProject()->getId()]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullIterator>
+      <code><![CDATA[$xml->properties->attributes()]]></code>
+    </PossiblyNullIterator>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$original_field]]></code>
+      <code><![CDATA[null]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+    <UndefinedClass>
+      <code><![CDATA[Tracker_FormElement_DateFormatter]]></code>
+    </UndefinedClass>
+    <UndefinedMethod>
+      <code><![CDATA[accept]]></code>
+    </UndefinedMethod>
+  </file>
   <file src="plugins/tracker/include/PermissionsPerGroup/PermissionPerGroupPanePresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -35076,8 +35146,8 @@
   <file src="plugins/tracker/include/REST/PermissionsExporter.php">
     <MissingClassConstType>
       <code><![CDATA[READ_ONLY_PRESERVED_PERMISSIONS = [
-        Tracker_FormElement::REST_PERMISSION_READ,
-        Tracker_FormElement::REST_PERMISSION_SUBMIT,
+        TrackerFormElement::REST_PERMISSION_READ,
+        TrackerFormElement::REST_PERMISSION_SUBMIT,
     ]]]></code>
     </MissingClassConstType>
   </file>
@@ -41743,86 +41813,6 @@
       <code><![CDATA[getFormAdminVisitor]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$layout]]></code>
-      <code><![CDATA[$request]]></code>
-    </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code><![CDATA[groupAddHistory]]></code>
-    </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ']]></code>
-      <code><![CDATA[PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT']]></code>
-      <code><![CDATA[PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE']]></code>
-      <code><![CDATA[PROJECT_HISTORY_UPDATE = 'tracker_formelement_update']]></code>
-      <code><![CDATA[REST_PERMISSION_READ   = 'read']]></code>
-      <code><![CDATA[REST_PERMISSION_SUBMIT = 'submit']]></code>
-      <code><![CDATA[REST_PERMISSION_UPDATE = 'update']]></code>
-      <code><![CDATA[VIEW_ADMIN_UPDATE_VISITOR = 'tracker_formelement_view_admin_update_visitor']]></code>
-      <code><![CDATA[XML_ID_PREFIX          = 'F']]></code>
-      <code><![CDATA[XML_TAG                = 'formElement']]></code>
-      <code><![CDATA[XML_TAG_EXTERNAL_FIELD = 'externalField']]></code>
-    </MissingClassConstType>
-    <MissingParamType>
-      <code><![CDATA[$date]]></code>
-      <code><![CDATA[$force_absolute_ranking]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$ignore_perms]]></code>
-      <code><![CDATA[$notifications]]></code>
-      <code><![CDATA[$p]]></code>
-      <code><![CDATA[$parent_id]]></code>
-      <code><![CDATA[$recipient]]></code>
-      <code><![CDATA[$xmlMapping]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$cache_permissions]]></code>
-      <code><![CDATA[$cache_specific_properties]]></code>
-      <code><![CDATA[$user_can_read]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[exportCurrentUserPermissionsToREST]]></code>
-      <code><![CDATA[exportPermissionsToXML]]></code>
-      <code><![CDATA[fetchAdmin]]></code>
-      <code><![CDATA[fetchArtifactForOverlay]]></code>
-      <code><![CDATA[fetchSubmitForOverlay]]></code>
-      <code><![CDATA[formatDate]]></code>
-      <code><![CDATA[getDefaultRESTValue]]></code>
-      <code><![CDATA[getOriginalField]]></code>
-      <code><![CDATA[getOriginalFieldId]]></code>
-      <code><![CDATA[getOriginalProject]]></code>
-      <code><![CDATA[getOriginalTracker]]></code>
-      <code><![CDATA[getParentId]]></code>
-      <code><![CDATA[getRESTAvailableValues]]></code>
-      <code><![CDATA[getRESTContent]]></code>
-      <code><![CDATA[getRank]]></code>
-      <code><![CDATA[getScope]]></code>
-      <code><![CDATA[getTriggerManager]]></code>
-      <code><![CDATA[getXMLId]]></code>
-      <code><![CDATA[isUsedInTrigger]]></code>
-      <code><![CDATA[setCacheSpecificProperties]]></code>
-      <code><![CDATA[setCriteriaValueFromREST]]></code>
-      <code><![CDATA[setFormElementFactory]]></code>
-      <code><![CDATA[setTracker]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$this->getTracker()->getProject()->getId()]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullIterator>
-      <code><![CDATA[$xml->properties->attributes()]]></code>
-    </PossiblyNullIterator>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$original_field]]></code>
-      <code><![CDATA[null]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-    <UndefinedMethod>
-      <code><![CDATA[accept]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElementFactory.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$request]]></code>
@@ -41983,7 +41973,7 @@
       <code><![CDATA[userCanReadSharedField]]></code>
     </MissingReturnType>
     <MoreSpecificReturnType>
-      <code><![CDATA[Tracker_FormElement]]></code>
+      <code><![CDATA[TrackerFormElement]]></code>
     </MoreSpecificReturnType>
     <NullableReturnStatement>
       <code><![CDATA[$this->formElements[$form_element_id]]]></code>
@@ -65364,26 +65354,6 @@
     <MissingReturnType>
       <code><![CDATA[setUsername]]></code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVNAccessFileReader.php">
-    <MissingClassConstType>
-      <code><![CDATA[BEGIN_MARKER = '# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE']]></code>
-      <code><![CDATA[END_MARKER   = '# END CODENDI DEFAULT SETTINGS']]></code>
-      <code><![CDATA[FILENAME     = '.SVNAccessFile']]></code>
-    </MissingClassConstType>
-    <PossiblyFalseIterator>
-      <code><![CDATA[file($this->getPath($repository))]]></code>
-    </PossiblyFalseIterator>
-  </file>
-  <file src="src/common/SVNCore/SVNAccessFileSectionParser.php">
-    <MissingClassConstType>
-      <code><![CDATA[GROUPNAME_PATTERN = '([a-zA-Z0-9_-]+)']]></code>
-      <code><![CDATA[UGROUP_DEFAULT = 1]]></code>
-      <code><![CDATA[UGROUP_REDEFINED = 0]]></code>
-    </MissingClassConstType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($this->ugroupNewName)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/SVNCore/SVN_AccessFile_DAO.php">
     <DeprecatedMethod>

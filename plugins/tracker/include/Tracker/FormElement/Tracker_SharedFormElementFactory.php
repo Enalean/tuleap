@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 
 class Tracker_SharedFormElementFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -55,7 +56,7 @@ class Tracker_SharedFormElementFactory // phpcs:ignore PSR1.Classes.ClassDeclara
         return $id;
     }
 
-    private function getRootOriginalField(Tracker_FormElement $field)
+    private function getRootOriginalField(TrackerFormElement $field)
     {
         $originalField = $field->getOriginalField();
         if ($originalField === null) {
@@ -68,14 +69,14 @@ class Tracker_SharedFormElementFactory // phpcs:ignore PSR1.Classes.ClassDeclara
      *
      * @throws Exception
      */
-    private function assertFieldCanBeCopied(Tracker_FormElement $field, PFUser $user)
+    private function assertFieldCanBeCopied(TrackerFormElement $field, PFUser $user)
     {
         $this->assertProjectIsActive($field->getTracker()->getProject());
         $this->assertFieldIsReadable($field, $user);
         $this->assertFieldIsStaticSelectbox($field);
     }
 
-    private function assertFieldIsReadable(Tracker_FormElement $field, PFUser $user)
+    private function assertFieldIsReadable(TrackerFormElement $field, PFUser $user)
     {
         if (
             ! ($field->userCanRead($user)
@@ -86,7 +87,7 @@ class Tracker_SharedFormElementFactory // phpcs:ignore PSR1.Classes.ClassDeclara
         }
     }
 
-    private function assertFieldIsStaticSelectbox(Tracker_FormElement $field)
+    private function assertFieldIsStaticSelectbox(TrackerFormElement $field)
     {
         if (
             ! ($field instanceof SelectboxField

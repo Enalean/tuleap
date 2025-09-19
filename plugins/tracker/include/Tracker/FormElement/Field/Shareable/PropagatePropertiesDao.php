@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\Shareable;
 
 use DataAccessObject;
 use DataAccessQueryException;
-use Tracker_FormElement;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 class PropagatePropertiesDao extends DataAccessObject
 {
@@ -32,7 +32,7 @@ class PropagatePropertiesDao extends DataAccessObject
         $this->enableExceptionsOnError();
     }
 
-    public function propagateProperties(Tracker_FormElement $original_field)
+    public function propagateProperties(TrackerFormElement $original_field)
     {
         $this->startTransaction();
         try {
@@ -47,7 +47,7 @@ class PropagatePropertiesDao extends DataAccessObject
         }
     }
 
-    private function propagateNameIfPossible(Tracker_FormElement $original_field)
+    private function propagateNameIfPossible(TrackerFormElement $original_field)
     {
         $original_field_id = $this->da->escapeInt($original_field->id);
 
@@ -76,7 +76,7 @@ class PropagatePropertiesDao extends DataAccessObject
         $this->update($sql);
     }
 
-    private function propagateLabelAndDescription(Tracker_FormElement $original_field)
+    private function propagateLabelAndDescription(TrackerFormElement $original_field)
     {
         $original_field_id = $this->da->escapeInt($original_field->id);
 

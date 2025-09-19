@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement;
 use Tuleap\Tracker\FormElement\Container\Column\ColumnContainer;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 final class ColumnContainerBuilder
 {
-    /** @var Tracker_FormElement[] */
+    /** @var TrackerFormElement[] */
     private array $form_elements = [];
     private string $name         = 'Column';
 
@@ -40,7 +40,7 @@ final class ColumnContainerBuilder
         return new self($id);
     }
 
-    public function containsFormElements(Tracker_FormElement ...$elements): self
+    public function containsFormElements(TrackerFormElement ...$elements): self
     {
         $this->form_elements = $elements;
 

@@ -37,6 +37,6 @@ final class XMLStepDefinition extends XMLField
     #[\Override]
     protected function getXMLTagName(): string
     {
-        return \Tracker_FormElement::XML_TAG_EXTERNAL_FIELD;
+        return \Tuleap\Tracker\FormElement\TrackerFormElement::XML_TAG_EXTERNAL_FIELD;
     }
 }

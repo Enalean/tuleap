@@ -19,6 +19,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use CSRFSynchronizerToken;
+use EventManager;
+use Feedback;
+use HTTPRequest;
+use PermissionsManager;
+use PFUser;
+use ProjectHistoryDao;
+use RuntimeException;
+use SimpleXMLElement;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_FormElement_Field_ReadOnly;
+use Tracker_FormElement_Interface;
+use Tracker_FormElement_View_Admin_UpdateSharedVisitor;
+use Tracker_FormElement_View_Admin_UpdateVisitor;
+use Tracker_FormElementFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_IProvideJsonFormatOfMyself;
+use Tracker_Report_Criteria;
+use Tracker_UserWithReadAllPermission;
+use Tracker_Workflow_WorkflowUser;
+use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -29,34 +54,32 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\FieldPropertiesRetriever;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
-use Tuleap\Tracker\FormElement\FormElementTypeCannotBeChangedException;
-use Tuleap\Tracker\FormElement\FormElementTypeUpdateErrorException;
-use Tuleap\Tracker\FormElement\ProvideFactoryButtonInformation;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementImpl;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+use User;
+use UserManager;
+use UserXMLExporter;
 
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-abstract class Tracker_FormElement extends ProvideFactoryButtonInformation implements Tracker_FormElement_Interface, Tracker_IProvideJsonFormatOfMyself
+abstract class TrackerFormElement extends ProvideFactoryButtonInformation implements Tracker_FormElement_Interface, Tracker_IProvideJsonFormatOfMyself
 {
-    public const PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
-    public const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
-    public const PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
+    public const string PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
+    public const string PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
+    public const string PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
 
-    public const REST_PERMISSION_READ   = 'read';
-    public const REST_PERMISSION_UPDATE = 'update';
-    public const REST_PERMISSION_SUBMIT = 'submit';
+    public const string REST_PERMISSION_READ   = 'read';
+    public const string REST_PERMISSION_UPDATE = 'update';
+    public const string REST_PERMISSION_SUBMIT = 'submit';
 
-    public const PROJECT_HISTORY_UPDATE = 'tracker_formelement_update';
+    public const string PROJECT_HISTORY_UPDATE = 'tracker_formelement_update';
 
-    public const XML_ID_PREFIX          = 'F';
-    public const XML_TAG_EXTERNAL_FIELD = 'externalField';
-    public const XML_TAG                = 'formElement';
+    public const string XML_ID_PREFIX          = 'F';
+    public const string XML_TAG_EXTERNAL_FIELD = 'externalField';
+    public const string XML_TAG                = 'formElement';
 
     /**
      * Get the visitor responsible of the display of update interface for the element
@@ -65,7 +88,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      *  - all_used_elements => Tracker_FormElement[]
      *  - visitor           => (output) Tracker_FormElement_View_Admin_UpdateVisitor
      */
-    public const VIEW_ADMIN_UPDATE_VISITOR = 'tracker_formelement_view_admin_update_visitor';
+    public const string VIEW_ADMIN_UPDATE_VISITOR = 'tracker_formelement_view_admin_update_visitor';
 
     /**
      * The field id
@@ -142,7 +165,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     public $rank;
 
     /**
-     * @var Tracker_FormElement
+     * @var TrackerFormElement
      */
     protected $original_field = null;
 
@@ -154,21 +177,21 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Base constructor
      *
-     * @param int|string    $id                          The id of the field
-     * @param int|string    $tracker_id                  The id of the tracker this field belongs to
-     * @param int|string    $parent_id                   The id of the parent element
-     * @param ?string $name                        The short name of the field
-     * @param string $label                       The label of the element
-     * @param string $description                 The description of the element
-     * @param int|bool|null|string $use_it        Is the element used?
-     * @param string $scope                       The scope of the plugin 'S' | 'P'
-     * @param int|bool|null|string   $required                    Is the element required? Todo: move this in field?
-     * @param int|string    $rank                        The rank of the field (in the parent)
-     * @param Tracker_FormElement $original_field The field the current field is refering to (null if no references)
+     * @param int|string $id The id of the field
+     * @param int|string $tracker_id The id of the tracker this field belongs to
+     * @param int|string $parent_id The id of the parent element
+     * @param ?string $name The short name of the field
+     * @param string $label The label of the element
+     * @param string $description The description of the element
+     * @param int|bool|null|string $use_it Is the element used?
+     * @param string $scope The scope of the plugin 'S' | 'P'
+     * @param int|bool|null|string $required Is the element required? Todo: move this in field?
+     * @param int|string $rank The rank of the field (in the parent)
+     * @param TrackerFormElement $original_field The field the current field is refering to (null if no references)
      *
      * @return void
      */
-    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, ?Tracker_FormElement $original_field = null)
+    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, ?TrackerFormElement $original_field = null)
     {
         $this->id          = (int) $id;
         $this->tracker_id  = (int) $tracker_id;
@@ -223,16 +246,16 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     public function getFormElementDataForCreation($parent_id): array
     {
         return [
-            'name'          => $this->name,
-            'label'         => $this->label,
-            'parent_id'     => $parent_id,
-            'description'   => $this->description,
-            'use_it'        => $this->use_it ? 1 : 0,
-            'scope'         => $this->scope,
-            'required'      => $this->required,
-            'notifications' => $this->notifications,
-            'rank'          => $this->rank,
-            'permissions'   => $this->getPermissionsByUgroupId(),
+            'name'                => $this->name,
+            'label'               => $this->label,
+            'parent_id'           => $parent_id,
+            'description'         => $this->description,
+            'use_it'              => $this->use_it ? 1 : 0,
+            'scope'               => $this->scope,
+            'required'            => $this->required,
+            'notifications'       => $this->notifications,
+            'rank'                => $this->rank,
+            'permissions'         => $this->getPermissionsByUgroupId(),
             'specific_properties' => $this->getFlattenPropertiesValues(),
         ];
     }
@@ -255,9 +278,9 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Process the request
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param HTTPRequest                $request         The data coming from the user
-     * @param PFUser                           $current_user    The user who mades the request
+     * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
+     * @param HTTPRequest $request The data coming from the user
+     * @param PFUser $current_user The user who mades the request
      *
      * @return void
      */
@@ -311,10 +334,10 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Update the form element
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param Codendi_Request                $request         The data coming from the user
-     * @param PFUser                           $current_user    The user who mades the request
-     * @param bool                           $redirect        Do we need to redirect? default is false
+     * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
+     * @param Codendi_Request $request The data coming from the user
+     * @param PFUser $current_user The user who mades the request
+     * @param bool $redirect Do we need to redirect? default is false
      *
      * @return void
      */
@@ -405,7 +428,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Fetch the "add criteria" box in query form
      *
-     * @param array  $used   Current used formElements as criteria.
+     * @param array $used Current used formElements as criteria.
      * @param string $prefix Prefix to add before label in optgroups
      *
      * @return string
@@ -416,7 +439,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Fetch the "add column" box in table renderer
      *
-     * @param array  $used   Current used formElements as column.
+     * @param array $used Current used formElements as column.
      * @param string $prefix Prefix to add before label in optgroups
      *
      * @return string
@@ -424,7 +447,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     abstract public function fetchAddColumn($used, $prefix = '');
 
     /**
-     * @param array<int, TrackerField>  $used_fields
+     * @param array<int, TrackerField> $used_fields
      */
     abstract public function fetchAddCardFields(array $used_fields, string $prefix = ''): string;
 
@@ -443,8 +466,8 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Display the form to administrate the element
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param Codendi_Request                $request         The data coming from the user
+     * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
+     * @param Codendi_Request $request The data coming from the user
      */
     public function displayAdminFormElement(Tracker_IDisplayTrackerLayout $layout, $request, ?CSRFSynchronizerToken $csrf_token = null): void
     {
@@ -550,8 +573,8 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Retreive a property value in the recursive collection $array
      *
-     * @param array  $array The collection or subcollection to search for
-     * @param string $key   The property to search
+     * @param array $array The collection or subcollection to search for
+     * @param string $key The property to search
      *
      * @return mixed the value or null if not found
      */
@@ -806,15 +829,15 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
         if (isset($properties['label']) && ! trim($properties['label'])) {
             return false;
         }
-        $this->parent_id     = isset($properties['parent_id'])     ? (int) $properties['parent_id']                : $this->parent_id;
+        $this->parent_id     = isset($properties['parent_id']) ? (int) $properties['parent_id'] : $this->parent_id;
         $this->name          = trim($properties['name'] ?? $this->name);
-        $this->label         = isset($properties['label'])         ? $properties['label']                          : $this->label;
-        $this->description   = isset($properties['description'])   ? $properties['description']                    : $this->description;
-        $this->use_it        = isset($properties['use_it'])        ? ($properties['use_it'] ? true : false)        : $this->use_it;
-        $this->scope         = isset($properties['scope'])         ? $properties['scope']                          : $this->scope;
-        $this->required      = isset($properties['required'])      ? ($properties['required'] ? true : false)      : $this->required;
+        $this->label         = isset($properties['label']) ? $properties['label'] : $this->label;
+        $this->description   = isset($properties['description']) ? $properties['description'] : $this->description;
+        $this->use_it        = isset($properties['use_it']) ? ($properties['use_it'] ? true : false) : $this->use_it;
+        $this->scope         = isset($properties['scope']) ? $properties['scope'] : $this->scope;
+        $this->required      = isset($properties['required']) ? ($properties['required'] ? true : false) : $this->required;
         $this->notifications = isset($properties['notifications']) ? ($properties['notifications'] ? true : false) : $this->notifications;
-        $this->rank          = isset($properties['rank'])          ? $properties['rank']                           : $this->rank;
+        $this->rank          = isset($properties['rank']) ? $properties['rank'] : $this->rank;
         return $this->updateSpecificProperties($properties);
     }
 
@@ -854,25 +877,25 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     public function getAdminEditUrl(): string
     {
         return TRACKER_BASE_URL . '/?' .
-            http_build_query(
-                [
-                    'tracker'     => $this->getTracker()->getId(),
-                    'func'        => Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW,
-                    'formElement' => $this->id,
-                ]
-            );
+               http_build_query(
+                   [
+                       'tracker'     => $this->getTracker()->getId(),
+                       'func'        => Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW,
+                       'formElement' => $this->id,
+                   ]
+               );
     }
 
     public function getAdminEditSubmitUrl(): string
     {
         return TRACKER_BASE_URL . '/?' .
-            http_build_query(
-                [
-                    'tracker'     => $this->getTracker()->getId(),
-                    'func'        => Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE,
-                    'formElement' => $this->id,
-                ]
-            );
+               http_build_query(
+                   [
+                       'tracker'     => $this->getTracker()->getId(),
+                       'func'        => Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE,
+                       'formElement' => $this->id,
+                   ]
+               );
     }
 
     protected function getXMLInternalRepresentation(): XMLFormElement
@@ -950,7 +973,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      * Continue the initialisation from an xml (FormElementFactory is not smart enough to do all stuff.
      * Polymorphism rulez!!!
      *
-     * @param SimpleXMLElement $xml         containing the structure of the imported Tracker_FormElement
+     * @param SimpleXMLElement $xml containing the structure of the imported Tracker_FormElement
      * @param array            &$xmlMapping where the newly created formElements indexed by their XML IDs are stored (and values)
      *
      * @return void
@@ -997,7 +1020,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      *
      * @param int $id
      *
-     * @return Tracker_FormElement
+     * @return TrackerFormElement
      */
     public function setId($id)
     {
@@ -1121,7 +1144,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     /**
      * Returns FormElements that are a copy of the current FormElement
      *
-     * @return Tracker_FormElement[]
+     * @return TrackerFormElement[]
      */
     public function getSharedTargets(): array
     {
@@ -1180,6 +1203,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     }
 
     private $user_can_read = [];
+
     public function setUserCanRead(PFUser $user, bool $can_read): void
     {
         $this->user_can_read[$user->getId()] = $can_read;
@@ -1189,6 +1213,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      * @var array<int, bool>
      */
     private array $user_can_update = [];
+
     public function setUserCanUpdate(PFUser $user, bool $can_update): void
     {
         $this->user_can_update[(int) $user->getId()] = $can_update;
@@ -1198,6 +1223,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      * @var array<int, bool>
      */
     private array $user_can_submit = [];
+
     public function setUserCanSubmit(PFUser $user, bool $can_submit): void
     {
         $this->user_can_submit[(int) $user->getId()] = $can_submit;
@@ -1218,7 +1244,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
 
         if (! isset($this->user_can_read[$user->getId()])) {
             $this->user_can_read[$user->getId()] = $this->userHasPermission(self::PERMISSION_READ, $user)
-                || $this->userHasPermission(self::PERMISSION_UPDATE, $user);
+                                                   || $this->userHasPermission(self::PERMISSION_UPDATE, $user);
         }
         return $this->user_can_read[$user->getId()];
     }
@@ -1239,7 +1265,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
         $user_id = (int) $user->getId();
         if (! isset($this->user_can_update[$user_id])) {
             $this->user_can_update[$user_id] = $this->isUpdateable()
-                && $this->userHasPermission(self::PERMISSION_UPDATE, $user);
+                                               && $this->userHasPermission(self::PERMISSION_UPDATE, $user);
         }
 
         return $this->user_can_update[$user_id];
@@ -1261,7 +1287,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
         $user_id = (int) $user->getId();
         if (! isset($this->user_can_submit[$user_id])) {
             $this->user_can_submit[$user_id] = $this->isSubmitable()
-                && $this->userHasPermission(self::PERMISSION_SUBMIT, $user);
+                                               && $this->userHasPermission(self::PERMISSION_SUBMIT, $user);
         }
 
         return $this->user_can_submit[$user_id];
@@ -1379,6 +1405,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     abstract public function canBeRemovedFromUsage();
 
     protected $cache_permissions = [];
+
     /**
      * get the permissions for this field
      *
@@ -1394,7 +1421,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
      * Set the cache permission for the ugroup_id
      * Use during the two-step xml import
      *
-     * @param int    $ugroup_id The ugroup id
+     * @param int $ugroup_id The ugroup id
      * @param string $permission_type The permission type
      *
      * @return void

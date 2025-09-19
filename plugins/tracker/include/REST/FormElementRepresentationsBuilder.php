@@ -21,18 +21,18 @@
 namespace Tuleap\Tracker\REST;
 
 use PFUser;
-use Tracker_FormElement;
 use Tracker_FormElementFactory;
 use Tracker_REST_FormElement_FieldDateRepresentation;
 use Tracker_REST_FormElement_FieldOpenListRepresentation;
 use Tracker_REST_FormElementRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\REST\FormElement\FieldFileRepresentation;
 use Tuleap\Tracker\REST\FormElement\LinksFieldRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
@@ -152,7 +152,7 @@ class FormElementRepresentationsBuilder
     }
 
     private function getPermissionsForFormElement(
-        Tracker_FormElement $form_element,
+        TrackerFormElement $form_element,
         ?Artifact $artifact,
         PFUser $user,
     ): array {

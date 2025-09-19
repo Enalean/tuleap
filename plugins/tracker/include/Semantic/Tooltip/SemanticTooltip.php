@@ -235,7 +235,7 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
             $this->getCSRFToken(),
             array_values(
                 array_map(
-                    static fn (\Tracker_FormElement $field) => TooltipFieldPresenter::buildFromFormElement($field),
+                    static fn (\Tuleap\Tracker\FormElement\TrackerFormElement $field) => TooltipFieldPresenter::buildFromFormElement($field),
                     $fields,
                 ),
             ),

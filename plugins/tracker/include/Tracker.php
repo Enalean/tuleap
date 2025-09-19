@@ -59,7 +59,6 @@ use Tracker_CannedResponseManager;
 use Tracker_ColorPresenterCollection;
 use Tracker_Dispatchable_Interface;
 use Tracker_Exception;
-use Tracker_FormElement;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElementFactory;
 use Tracker_GeneralSettings_Presenter;
@@ -191,6 +190,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -590,7 +590,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     }
 
     /**
-     * @return Tracker_FormElement[] array of formElements used by this tracker
+     * @return TrackerFormElement[] array of formElements used by this tracker
      */
     public function getFormElements()
     {
@@ -2881,7 +2881,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                                 $is_error = true;
                             }
                         }
-                    } elseif ($fields[$idx] instanceof \Tracker_FormElement) {
+                    } elseif ($fields[$idx] instanceof FormElement\TrackerFormElement) {
                         $field = $fields[$idx];
                         if ($field->isCSVImportable()) {
                             $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell, $artifact);

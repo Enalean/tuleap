@@ -20,6 +20,7 @@
 
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
 /**
@@ -99,7 +100,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
      * @param mixed $default_rest_value
      */
     protected function __construct(
-        Tracker_FormElement $form_element,
+        TrackerFormElement $form_element,
         string $type,
         bool $is_collapsed,
         $default_rest_value,
@@ -141,11 +142,11 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         $this->permissions = array_map(
             function ($permission) {
                 switch ($permission) {
-                    case Tracker_FormElement::REST_PERMISSION_READ:
+                    case TrackerFormElement::REST_PERMISSION_READ:
                         return Tracker_REST_FormElementRepresentation::PERM_READ;
-                    case Tracker_FormElement::REST_PERMISSION_UPDATE:
+                    case TrackerFormElement::REST_PERMISSION_UPDATE:
                         return Tracker_REST_FormElementRepresentation::PERM_UPDATE;
-                    case Tracker_FormElement::REST_PERMISSION_SUBMIT:
+                    case TrackerFormElement::REST_PERMISSION_SUBMIT:
                         return Tracker_REST_FormElementRepresentation::PERM_CREATE;
                 }
             },
@@ -155,7 +156,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         $this->permissions_for_groups = $permissions_for_groups;
     }
 
-    public static function build(Tracker_FormElement $form_element, string $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups): Tracker_REST_FormElementRepresentation
+    public static function build(TrackerFormElement $form_element, string $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups): Tracker_REST_FormElementRepresentation
     {
         return new self(
             $form_element,

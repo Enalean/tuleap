@@ -24,11 +24,11 @@ namespace Tuleap\Tracker\FormElement\Container;
 use Codendi_HTMLPurifier;
 use PFUser;
 use SimpleXMLElement;
-use Tracker_FormElement;
 use Tracker_FormElement_Visitor;
 use Tracker_FormElementFactory;
 use Tuleap;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use User;
@@ -40,7 +40,7 @@ use UserXMLExporter;
  * A composite is a component which contain other component.
  * See DesignPattern Composite for more details.
  */
-abstract class TrackerFormElementContainer extends Tracker_FormElement
+abstract class TrackerFormElementContainer extends TrackerFormElement
 {
     /**
      * The formElements of this container
@@ -48,7 +48,7 @@ abstract class TrackerFormElementContainer extends Tracker_FormElement
     public $formElements = null;
 
     /**
-     * @return Tracker_FormElement[] the used formElements contained in this container
+     * @return TrackerFormElement[] the used formElements contained in this container
      */
     public function getFormElements()
     {
@@ -59,7 +59,7 @@ abstract class TrackerFormElementContainer extends Tracker_FormElement
     }
 
     /**
-     * @return Tracker_FormElement[]
+     * @return TrackerFormElement[]
      */
     public function getAllFormElements()
     {
@@ -280,7 +280,7 @@ abstract class TrackerFormElementContainer extends Tracker_FormElement
     }
 
     /**
-     * @see Tracker_FormElement::fetchArtifactCopyMode
+     * @see TrackerFormElement::fetchArtifactCopyMode
      */
     #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)

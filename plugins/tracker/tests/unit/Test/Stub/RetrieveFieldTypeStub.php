@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 final class RetrieveFieldTypeStub implements RetrieveFieldType
 {
@@ -52,7 +52,7 @@ final class RetrieveFieldTypeStub implements RetrieveFieldType
     }
 
     #[\Override]
-    public function getType(Tracker_FormElement $form_element): string
+    public function getType(TrackerFormElement $form_element): string
     {
         if ($this->predefined_type !== '') {
             return $this->predefined_type;

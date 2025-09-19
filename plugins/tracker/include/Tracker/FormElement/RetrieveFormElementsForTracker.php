@@ -20,13 +20,12 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement;
 use Tuleap\Tracker\Tracker;
 
 interface RetrieveFormElementsForTracker
 {
     /**
-     * @return Tracker_FormElement[]
+     * @return TrackerFormElement[]
      */
     public function getUsedFormElementForTracker(Tracker $tracker): array;
 }

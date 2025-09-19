@@ -27,7 +27,6 @@ use Project;
 use SimpleXMLElement;
 use Tracker_CannedResponseFactory;
 use Tracker_Exception;
-use Tracker_FormElement;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
@@ -36,6 +35,7 @@ use TrackerFactory;
 use Tuleap\Color\ColorName;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -480,10 +480,10 @@ readonly class GetInstanceFromXml
 
         $form_element = [];
         foreach ($children as $index => $elem) {
-            if ($index === Tracker_FormElement::XML_TAG) {
+            if ($index === TrackerFormElement::XML_TAG) {
                 $form_element[] = $elem;
             }
-            if ($index === Tracker_FormElement::XML_TAG_EXTERNAL_FIELD) {
+            if ($index === TrackerFormElement::XML_TAG_EXTERNAL_FIELD) {
                 $form_element[] = $elem;
             }
         }
