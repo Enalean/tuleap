@@ -160,7 +160,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
                 [
                     'shortname' => $nature_empty,
                     'direction' => 'forward',
-                    'label'     => '',
+                    'label'     => 'is Linked to',
                     'uri'       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_empty&direction=forward",
                 ],
             ],

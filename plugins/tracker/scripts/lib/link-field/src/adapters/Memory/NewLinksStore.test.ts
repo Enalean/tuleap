@@ -27,7 +27,7 @@ describe(`NewLinksStore`, () => {
     it(`adds, changes types of new links, and deletes new links`, () => {
         const store = NewLinksStore();
 
-        const first_link = NewLinkStub.withIdAndType(48, LinkTypeStub.buildUntyped());
+        const first_link = NewLinkStub.withIdAndType(48, LinkTypeStub.buildDefaultLinkType());
         const second_link = NewLinkStub.withIdAndType(58, LinkTypeStub.buildParentLinkType());
 
         store.addNewLink(first_link);
@@ -38,11 +38,11 @@ describe(`NewLinksStore`, () => {
         expect(stored_links).toContain(first_link);
         expect(stored_links).toContain(second_link);
 
-        store.changeNewLinkType(second_link, LinkTypeStub.buildUntyped());
+        store.changeNewLinkType(second_link, LinkTypeStub.buildDefaultLinkType());
         const links_after_update = store.getNewLinks();
         expect(links_after_update).toHaveLength(2);
         expect(links_after_update).toContain(first_link);
-        expect(LinkType.isUntypedLink(links_after_update[1].link_type)).toBe(true);
+        expect(LinkType.isDefaultTypeLabel(links_after_update[1].link_type)).toBe(true);
 
         store.deleteNewLink(first_link);
 
@@ -54,7 +54,10 @@ describe(`NewLinksStore`, () => {
     it(`does not update new links that were never added to the store`, () => {
         const store = NewLinksStore();
 
-        const non_existing_link = NewLinkStub.withIdAndType(54, LinkTypeStub.buildUntyped());
+        const non_existing_link = NewLinkStub.withIdAndType(
+            54,
+            LinkTypeStub.buildDefaultLinkType(),
+        );
 
         store.changeNewLinkType(non_existing_link, LinkTypeStub.buildChildLinkType());
         const stored_links = store.getNewLinks();

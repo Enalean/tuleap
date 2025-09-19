@@ -63,7 +63,7 @@ describe(`NewLink`, () => {
     });
 
     it(`builds a NewLink from an existing one with a new type`, () => {
-        const link = NewLinkStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildUntyped());
+        const link = NewLinkStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildDefaultLinkType());
         const new_type = LinkTypeStub.buildParentLinkType();
         const changed_link = NewLink.fromNewLinkAndType(link, new_type);
 

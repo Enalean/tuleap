@@ -106,7 +106,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $program_increment_artifact,
                 [],
                 [$feature_removal->feature_id],
-                \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE
+                \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE
             );
 
         $this->getProcessor()->removeFromAllProgramIncrements($feature_removal);

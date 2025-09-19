@@ -85,7 +85,7 @@ describe(`NewLinkTemplate`, () => {
                 uri: "/plugins/tracker/?aid=196",
                 status: { value: "On Going", color: "daphne-blue" },
                 is_open: true,
-                link_type: LinkTypeStub.buildUntyped(),
+                link_type: LinkTypeStub.buildDefaultLinkType(),
             }),
         ],
         [

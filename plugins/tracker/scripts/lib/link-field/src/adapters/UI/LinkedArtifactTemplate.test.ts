@@ -112,7 +112,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     uri: "/url/to/artifact/234",
                     status: { value: "Open", color: "flamingo-pink" },
                     is_open: false,
-                    link_type: LinkTypeStub.buildUntyped(),
+                    link_type: LinkTypeStub.buildDefaultLinkType(),
                 }),
                 false,
                 true,
@@ -339,7 +339,7 @@ describe(`LinkedArtifactTemplate`, () => {
             it(`when I can change the type of link, it returns a type selector`, () => {
                 const linked_artifact = LinkedArtifactStub.withIdAndType(
                     58,
-                    LinkTypeStub.buildUntyped(),
+                    LinkTypeStub.buildDefaultLinkType(),
                 );
 
                 render(getHost(linked_artifact), linked_artifact);

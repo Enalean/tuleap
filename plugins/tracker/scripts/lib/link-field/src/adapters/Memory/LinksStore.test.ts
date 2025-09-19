@@ -27,7 +27,10 @@ describe(`LinksStore`, () => {
     it(`adds, retrieves, and changes types of links`, () => {
         const store = LinksStore();
 
-        const first_link = LinkedArtifactStub.withIdAndType(90, LinkTypeStub.buildUntyped());
+        const first_link = LinkedArtifactStub.withIdAndType(
+            90,
+            LinkTypeStub.buildDefaultLinkType(),
+        );
         const second_link = LinkedArtifactStub.withIdAndType(
             55,
             LinkTypeStub.buildParentLinkType(),
@@ -40,17 +43,20 @@ describe(`LinksStore`, () => {
         expect(stored_links).toContain(first_link);
         expect(stored_links).toContain(second_link);
 
-        store.changeLinkType(second_link, LinkTypeStub.buildUntyped());
+        store.changeLinkType(second_link, LinkTypeStub.buildDefaultLinkType());
         const links_after_update = store.getLinkedArtifacts();
         expect(links_after_update).toHaveLength(2);
         expect(links_after_update).toContain(first_link);
-        expect(LinkType.isUntypedLink(links_after_update[1].link_type)).toBe(true);
+        expect(LinkType.isDefaultTypeLabel(links_after_update[1].link_type)).toBe(true);
     });
 
     it(`does not update links that were never added to the store`, () => {
         const store = LinksStore();
 
-        const non_existing_link = LinkedArtifactStub.withIdAndType(18, LinkTypeStub.buildUntyped());
+        const non_existing_link = LinkedArtifactStub.withIdAndType(
+            18,
+            LinkTypeStub.buildDefaultLinkType(),
+        );
 
         store.changeLinkType(non_existing_link, LinkTypeStub.buildChildLinkType());
         const stored_links = store.getLinkedArtifacts();

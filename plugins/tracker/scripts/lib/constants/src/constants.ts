@@ -155,7 +155,7 @@ export const FIELD_PERMISSION_READ: ReadPermission = "read";
 export const FIELD_PERMISSION_CREATE: CreatePermission = "create";
 export const FIELD_PERMISSION_UPDATE: UpdatePermission = "update";
 
-export const UNTYPED_LINK = "";
+export const DEFAULT_LINK_TYPE = "";
 export const IS_CHILD_LINK_TYPE = "_is_child";
 export const MIRRORED_MILESTONE_LINK_TYPE = "_mirrored_milestone";
 

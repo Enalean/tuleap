@@ -38,8 +38,8 @@ final class SystemTypePresenterBuilder implements RetrieveSystemTypePresenter
             return new TypePresenter('', '', '', true);
         }
 
-        if ($shortname === ArtifactLinkField::NO_TYPE) {
-            return new TypePresenter('', '', '', true);
+        if ($shortname === ArtifactLinkField::DEFAULT_LINK_TYPE) {
+            return new DefaultLinkTypePresenter();
         }
 
         if ($shortname === ArtifactLinkField::TYPE_IS_CHILD) {

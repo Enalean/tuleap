@@ -171,6 +171,9 @@ msgstr "Vous n'avez pas la permission de mettre à jour le document."
 msgid "is Child of"
 msgstr "est Enfant de"
 
+msgid "is Linked from"
+msgstr "est Lié depuis"
+
 msgid "is Linked to"
 msgstr "est Lié à"
 

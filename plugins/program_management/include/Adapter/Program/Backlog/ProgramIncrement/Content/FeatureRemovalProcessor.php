@@ -55,7 +55,7 @@ final class FeatureRemovalProcessor implements RemoveFeature
                     $program_increment_artifact,
                     [],
                     [$feature_removal->feature_id],
-                    \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE
+                    \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE
                 );
             } catch (\Tracker_NoArtifactLinkFieldException | \Tracker_Exception $e) {
                 throw new RemoveFeatureException($feature_removal->feature_id, $e);

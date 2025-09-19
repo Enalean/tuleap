@@ -222,7 +222,7 @@ class ArtifactLinkValueSaver
             && ! $is_child
             && $existing_type === ArtifactLinkField::TYPE_IS_CHILD
         ) {
-            return ArtifactLinkField::NO_TYPE;
+            return ArtifactLinkField::DEFAULT_LINK_TYPE;
         }
 
         return null;

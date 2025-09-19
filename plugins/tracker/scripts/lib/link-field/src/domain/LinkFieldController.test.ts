@@ -25,7 +25,7 @@ import {
     FORWARD_DIRECTION,
     IS_CHILD_LINK_TYPE,
     REVERSE_DIRECTION,
-    UNTYPED_LINK,
+    DEFAULT_LINK_TYPE,
 } from "@tuleap/plugin-tracker-constants";
 import {
     CurrentProjectIdentifier,
@@ -153,7 +153,7 @@ describe(`LinkFieldController`, () => {
         it(`returns false when there is no existing reverse _is_child link`, () => {
             expect(
                 getController().hasParentLink(
-                    [LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildUntyped())],
+                    [LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildDefaultLinkType())],
                     [],
                 ),
             ).toBe(false);
@@ -163,7 +163,7 @@ describe(`LinkFieldController`, () => {
             expect(
                 getController().hasParentLink(
                     [],
-                    [NewLinkStub.withIdAndType(162, LinkTypeStub.buildUntyped())],
+                    [NewLinkStub.withIdAndType(162, LinkTypeStub.buildDefaultLinkType())],
                 ),
             ).toBe(false);
         });
@@ -198,11 +198,11 @@ describe(`LinkFieldController`, () => {
 
         it(`When the tracker has no parent,
             And the current artifact has no possible parents
-            Then it will return the untyped link type`, () => {
+            Then it will return the default link type`, () => {
             parent_tracker_identifier = Option.nothing();
 
             const selected_link_type = getController().getCurrentLinkType(false, [], []);
-            expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
+            expect(selected_link_type.shortname).toBe(DEFAULT_LINK_TYPE);
             expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
         });
 
@@ -218,35 +218,35 @@ describe(`LinkFieldController`, () => {
         });
 
         it(`When the artifact under creation was given a parent by the caller of the modal,
-            then it will return the untyped link type`, () => {
+            then it will return the default link type`, () => {
             parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifier.fromId(123));
             parent_tracker_identifier = Option.fromValue(ParentTrackerIdentifier.fromId(88));
 
             const selected_link_type = getController().getCurrentLinkType(true, [], []);
 
-            expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
+            expect(selected_link_type.shortname).toBe(DEFAULT_LINK_TYPE);
             expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
         });
 
-        it(`When the artifact has an existing parent link, then it should return the untyped link type`, () => {
+        it(`When the artifact has an existing parent link, then it should return the default link type`, () => {
             const selected_link_type = getController().getCurrentLinkType(
                 true,
                 [LinkedArtifactStub.withIdAndType(534, LinkTypeStub.buildChildLinkType())],
                 [],
             );
 
-            expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
+            expect(selected_link_type.shortname).toBe(DEFAULT_LINK_TYPE);
             expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
         });
 
-        it(`When the artifact has a new parent link, then it should return the untyped link type`, () => {
+        it(`When the artifact has a new parent link, then it should return the default link type`, () => {
             const selected_link_type = getController().getCurrentLinkType(
                 true,
                 [],
                 [NewLinkStub.withIdAndType(92, LinkTypeStub.buildChildLinkType())],
             );
 
-            expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
+            expect(selected_link_type.shortname).toBe(DEFAULT_LINK_TYPE);
             expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
         });
     });
@@ -316,7 +316,7 @@ describe(`LinkFieldController`, () => {
     describe(`canMarkForRemoval()`, () => {
         let link_type: LinkType;
         beforeEach(() => {
-            link_type = LinkTypeStub.buildUntyped();
+            link_type = LinkTypeStub.buildDefaultLinkType();
         });
 
         const canMark = (): boolean => {
@@ -393,7 +393,7 @@ describe(`LinkFieldController`, () => {
         let link_type: LinkType;
 
         beforeEach(() => {
-            link_type = LinkTypeStub.buildUntyped();
+            link_type = LinkTypeStub.buildDefaultLinkType();
         });
         const canChangeType = (): boolean => {
             const linked_artifact = LinkedArtifactStub.withIdAndType(ARTIFACT_ID, link_type);
@@ -412,7 +412,7 @@ describe(`LinkFieldController`, () => {
 
     describe(`changeLinkType()`, () => {
         const changeLinkType = (): ReadonlyArray<LinkedArtifact> => {
-            const link = LinkedArtifactStub.withIdAndType(113, LinkTypeStub.buildUntyped());
+            const link = LinkedArtifactStub.withIdAndType(113, LinkTypeStub.buildDefaultLinkType());
             const type = LinkTypeStub.buildForwardCustom();
             links_retriever_sync = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(link);
             return getController().changeLinkType(link, type);
@@ -471,7 +471,7 @@ describe(`LinkFieldController`, () => {
 
     describe(`changeNewLinkType()`, () => {
         const changeNewLinkType = (): ReadonlyArray<NewLink> => {
-            const new_link = NewLinkStub.withIdAndType(96, LinkTypeStub.buildUntyped());
+            const new_link = NewLinkStub.withIdAndType(96, LinkTypeStub.buildDefaultLinkType());
             const type = LinkTypeStub.buildForwardCustom();
             new_links_retriever = RetrieveNewLinksStub.withNewLinks(new_link);
             return getController().changeNewLinkType(new_link, type);

@@ -97,7 +97,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
         get_parents_promise = Promise.resolve([]);
         host = {
-            current_link_type: LinkTypeStub.buildUntyped(),
+            current_link_type: LinkTypeStub.buildDefaultLinkType(),
             recently_viewed_section: initial_dropdown_content,
             matching_artifact_section: initial_dropdown_content,
             possible_parents_section: initial_dropdown_content,

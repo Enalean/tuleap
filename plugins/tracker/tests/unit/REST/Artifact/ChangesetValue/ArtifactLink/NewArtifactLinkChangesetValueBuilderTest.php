@@ -126,7 +126,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertCount(1, $links_to_change);
         [$first_link] = $links_to_change;
         self::assertSame(self::FIRST_UNCHANGED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::DEFAULT_LINK_TYPE, $first_link->getType());
     }
 
     public function testItBuildsFromARESTPayloadWithReverseLinks(): void

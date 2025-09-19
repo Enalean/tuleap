@@ -138,7 +138,7 @@ export const LinkFieldController = (
                 !hasParentLink(existing_links, new_links) &&
                 (is_tracker_in_a_hierarchy || has_possible_parents)
                 ? reverse_child_type
-                : LinkType.buildUntyped();
+                : LinkType.buildDefaultLinkType();
         },
 
         getAllowedLinkTypes: () => allowed_link_types_collection,

@@ -48,13 +48,13 @@ final class SystemTypePresenterFactoryTest extends TestCase
         self::assertFalse($presenter->is_system);
     }
 
-    public function testItReturnsAnEmptyPresenterWhenShortnameHasNoType(): void
+    public function testItReturnsTypeIsLinkedToPresenterForTypeIsLinkedToShortname(): void
     {
-        $presenter = $this->factory->getSystemTypeFromShortname(ArtifactLinkField::NO_TYPE);
+        $presenter = $this->factory->getSystemTypeFromShortname(ArtifactLinkField::DEFAULT_LINK_TYPE);
 
-        self::assertInstanceOf(TypePresenter::class, $presenter);
+        self::assertInstanceOf(DefaultLinkTypePresenter::class, $presenter);
         self::assertSame('', $presenter->shortname);
-        self::assertFalse($presenter->is_system);
+        self::assertTrue($presenter->is_system);
     }
 
     public function testItReturnsTypeIsChildPresenterForTypeIsChildShortname(): void

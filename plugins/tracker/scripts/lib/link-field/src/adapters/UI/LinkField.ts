@@ -187,10 +187,10 @@ export const getAllowedLinkTypes = (
 export const current_link_type_descriptor = {
     value: (host: LinkField, link_type: LinkType | undefined): LinkType => {
         if (!link_type) {
-            return LinkType.buildUntyped();
+            return LinkType.buildDefaultLinkType();
         }
         if (LinkType.isReverseChild(link_type) && host.allowed_link_types.is_parent_type_disabled) {
-            return LinkType.buildUntyped();
+            return LinkType.buildDefaultLinkType();
         }
         return link_type;
     },

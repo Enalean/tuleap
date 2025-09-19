@@ -203,7 +203,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder
 
         if ($presenter->shortname === '') {
             return new ArtifactLinkType(
-                dgettext('tuleap-artidoc', 'is Linked to'),
+                dgettext('tuleap-artidoc', 'is Linked from'),
                 $presenter->shortname,
                 LinkDirection::REVERSE->value,
             );

@@ -18,14 +18,14 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { FORWARD_DIRECTION, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { FORWARD_DIRECTION, DEFAULT_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { LinkType } from "./LinkType";
 import { LinkTypeStub } from "../../../tests/stubs/links/LinkTypeStub";
 
 describe(`LinkType`, () => {
-    it(`builds the "Untyped" link type`, () => {
-        const type = LinkType.buildUntyped();
-        expect(type.shortname).toBe(UNTYPED_LINK);
+    it(`builds the "Default" link type`, () => {
+        const type = LinkType.buildDefaultLinkType();
+        expect(type.shortname).toBe(DEFAULT_LINK_TYPE);
         expect(type.direction).toBe(FORWARD_DIRECTION);
         expect(type.label).toBe("");
     });
@@ -33,7 +33,7 @@ describe(`LinkType`, () => {
     it.each([
         [true, "reverse _is_child", LinkTypeStub.buildChildLinkType()],
         [false, "forward _is_child", LinkTypeStub.buildParentLinkType()],
-        [false, "untyped", LinkTypeStub.buildUntyped()],
+        [false, "default", LinkTypeStub.buildDefaultLinkType()],
     ])(
         `isReverseChild() returns %s when given a %s link type`,
         (expected_return, link_type_string, link_type) => {
@@ -44,7 +44,7 @@ describe(`LinkType`, () => {
     it.each([
         [true, "forward _is_child", LinkTypeStub.buildParentLinkType()],
         [false, "reverse _is_child", LinkTypeStub.buildChildLinkType()],
-        [false, "untyped", LinkTypeStub.buildUntyped()],
+        [false, "default", LinkTypeStub.buildDefaultLinkType()],
     ])(
         `isForwardChild() returns %s when given a %s link type`,
         (expected_return, link_type_string, link_type) => {
@@ -55,7 +55,7 @@ describe(`LinkType`, () => {
     it.each([
         [true, "forward _mirrored_milestone", LinkTypeStub.buildMirrors()],
         [true, "reverse _mirrored_milestone", LinkTypeStub.buildMirroredBy()],
-        [false, "untyped", LinkTypeStub.buildUntyped()],
+        [false, "default", LinkTypeStub.buildDefaultLinkType()],
     ])(
         `isMirroredMilestone() returns %s when given a %s link type`,
         (expected_return, link_type_string, link_type) => {

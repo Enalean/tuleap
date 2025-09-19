@@ -35,6 +35,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\DefaultLinkTypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
@@ -97,7 +98,7 @@ final class ArtifactLinkValidatorTest extends TestCase
 
         $this->type_is_child = new TypeIsChildPresenter();
         $this->type_fixed_in = new TypePresenter('fixed_in', '', '', true);
-        $this->type_no_type  = new TypePresenter('', '', '', true);
+        $this->type_no_type  = new DefaultLinkTypePresenter();
     }
 
     public function testItReturnsTrueWhenNoNewValuesAreSent(): void

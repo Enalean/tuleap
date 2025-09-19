@@ -99,7 +99,7 @@ final class MilestoneElementMoverTest extends TestCase
                 $milestone->getArtifact(),
                 $valid_to_add,
                 [],
-                ArtifactLinkField::NO_TYPE,
+                ArtifactLinkField::DEFAULT_LINK_TYPE,
             );
         $this->resources_patcher->expects($this->once())->method('commit');
 

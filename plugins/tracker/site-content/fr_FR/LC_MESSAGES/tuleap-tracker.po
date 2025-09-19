@@ -5255,6 +5255,12 @@ msgstr "accès seulement aux artifacts qu'ils ont soumis"
 msgid "in"
 msgstr "dans"
 
+msgid "is Linked from"
+msgstr "est Lié depuis"
+
+msgid "is Linked to"
+msgstr "est Lié à"
+
 msgid "is not a float."
 msgstr "n'est pas une valeur du type flottant."
 

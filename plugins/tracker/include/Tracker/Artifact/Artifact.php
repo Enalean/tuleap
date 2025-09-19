@@ -1829,7 +1829,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function linkArtifact(
         int $linked_artifact_id,
         PFUser $current_user,
-        string $artifact_link_type = ArtifactLinkField::NO_TYPE,
+        string $artifact_link_type = ArtifactLinkField::DEFAULT_LINK_TYPE,
     ): bool {
         $validator = $this->getFieldValidator();
 
@@ -1860,7 +1860,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $links = [];
         foreach ($linked_artifact_ids as $linked_artifact_id) {
-            $links[] = ForwardLinkProxy::buildFromData((int) $linked_artifact_id, ArtifactLinkField::NO_TYPE);
+            $links[] = ForwardLinkProxy::buildFromData((int) $linked_artifact_id, ArtifactLinkField::DEFAULT_LINK_TYPE);
         }
         $forward_links = new CollectionOfForwardLinks($links);
 

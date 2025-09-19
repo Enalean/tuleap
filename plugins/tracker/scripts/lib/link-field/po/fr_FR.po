@@ -131,6 +131,9 @@ msgstr "Voir les détails"
 msgid "is Child of"
 msgstr "est Enfant de"
 
+msgid "is Linked from"
+msgstr "est Lié depuis"
+
 msgid "is Linked to"
 msgstr "est Lié à"
 

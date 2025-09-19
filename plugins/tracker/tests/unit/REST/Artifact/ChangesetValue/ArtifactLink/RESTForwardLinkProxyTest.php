@@ -45,7 +45,7 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $link = RESTForwardLinkProxy::fromPayload(['id' => 75]);
         self::assertSame(75, $link->getTargetArtifactId());
-        self::assertSame(ArtifactLinkField::NO_TYPE, $link->getType());
+        self::assertSame(ArtifactLinkField::DEFAULT_LINK_TYPE, $link->getType());
     }
 
     public function testItThrowsExceptionIfTheTypeKeyInAllLinksPayloadIsNotAString(): void
@@ -57,14 +57,14 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
     }
 
-    public function testTheTypeAttributeIsNoTypeWhenTheTypeKeyFromAllLinksPayloadIsAnEmptyString(): void
+    public function testTheTypeAttributeIsLinkedToWhenTheTypeKeyFromAllLinksPayloadIsAnEmptyString(): void
     {
         $all_link_payload = new LinkWithDirectionRepresentation(121, 'forward', '');
 
         $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
 
         self::assertSame(121, $forward_links->getTargetArtifactId());
-        self::assertSame(ArtifactLinkField::NO_TYPE, $forward_links->getType());
+        self::assertSame(ArtifactLinkField::DEFAULT_LINK_TYPE, $forward_links->getType());
     }
 
     public function testItReturnsTheProxyObjectWithTheIdAndType(): void

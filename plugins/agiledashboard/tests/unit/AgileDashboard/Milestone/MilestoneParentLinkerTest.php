@@ -161,7 +161,7 @@ final class MilestoneParentLinkerTest extends TestCase
         $this->milestone->method('getParent')->willReturn($parent_milestone);
 
         $this->artifact_linker->expects($this->once())->method('linkArtifact')->with($parent_milestone_artifact, new CollectionOfForwardLinks([
-            ForwardLinkProxy::buildFromData(101, ArtifactLinkField::NO_TYPE),
+            ForwardLinkProxy::buildFromData(101, ArtifactLinkField::DEFAULT_LINK_TYPE),
         ]), $this->user);
 
         $this->milestone_parent_linker->linkToMilestoneParent(
@@ -192,7 +192,7 @@ final class MilestoneParentLinkerTest extends TestCase
         $this->milestone->method('getParent')->willReturn($parent_milestone);
 
         $this->artifact_linker->expects($this->once())->method('linkArtifact')->with($parent_milestone_artifact, new CollectionOfForwardLinks([
-            ForwardLinkProxy::buildFromData(101, ArtifactLinkField::NO_TYPE),
+            ForwardLinkProxy::buildFromData(101, ArtifactLinkField::DEFAULT_LINK_TYPE),
         ]), $this->user);
 
         $this->milestone_parent_linker->linkToMilestoneParent(

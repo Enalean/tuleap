@@ -75,7 +75,7 @@ final class FieldChangeArtifactLinksUpdater implements UpdateArtifactLinkXML
                 in_array($nature, $system_natures_shortnames, true) ||
                 ! in_array($nature, $usable_natures_in_destination_project, true)
             ) {
-                $link->attributes()->nature = \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE;
+                $link->attributes()->nature = \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE;
 
                 $comment[(string) $link] = sprintf(
                     dgettext('tuleap-tracker', 'The type "%s" of the link to artifact #%s has been set to "no type"'),
