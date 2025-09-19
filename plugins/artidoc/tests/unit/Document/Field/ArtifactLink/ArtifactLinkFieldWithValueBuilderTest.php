@@ -32,14 +32,17 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -115,12 +118,12 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
         $changeset = ChangesetValueArtifactLinkTestBuilder::aValue(12, ChangesetTestBuilder::aChangeset(852)->build(), $link_field)
             ->withForwardLinks([
                 15 => new Tracker_ArtifactLinkInfo(15, 'art', 101, 35, 123, ArtifactLinkField::TYPE_IS_CHILD),
-                16 => new Tracker_ArtifactLinkInfo(16, 'art', 101, 35, 124, '_covered_by'),
+                16 => new Tracker_ArtifactLinkInfo(16, 'art', 101, 35, 124, TypeCoveredByPresenter::TYPE_COVERED_BY),
                 17 => new Tracker_ArtifactLinkInfo(17, 'art', 101, 35, 125, null),
             ])
             ->withReverseLinks([
                 21 => new Tracker_ArtifactLinkInfo(21, 'art', 101, 35, 235, ArtifactLinkField::TYPE_IS_CHILD),
-                22 => new Tracker_ArtifactLinkInfo(22, 'art', 101, 35, 236, '_covered_by'),
+                22 => new Tracker_ArtifactLinkInfo(22, 'art', 101, 35, 236, TypeCoveredByPresenter::TYPE_COVERED_BY),
                 23 => new Tracker_ArtifactLinkInfo(23, 'art', 101, 35, 237, null),
             ])
             ->build();
@@ -131,7 +134,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
             RetrieveSemanticStatusStub::build()->withSemanticStatus(new TrackerSemanticStatus($tracker, $status_field, [$open_value->getId()])),
             RetrieveTypeFromShortnameStub::build()
                 ->withTypePresenter(ArtifactLinkField::TYPE_IS_CHILD, new TypeIsChildPresenter())
-                ->withTypePresenter('_covered_by', new TypePresenter('_covered_by', 'Covers', 'Covered by', true))
+                ->withTypePresenter(TypeCoveredByPresenter::TYPE_COVERED_BY, new TypePresenter(TypeCoveredByPresenter::TYPE_COVERED_BY, 'Covers', 'Covered by', true))
                 ->withTypePresenter(null, new TypePresenter('', '', '', true)),
         );
 
@@ -142,7 +145,11 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                 DisplayType::BLOCK,
                 [
                     new ArtifactLinkValue(
-                        'is Parent of',
+                        new ArtifactLinkType(
+                            'is Parent of',
+                            ArtifactLinkField::TYPE_IS_CHILD,
+                            LinkDirection::FORWARD->value,
+                        ),
                         'my_tracker',
                         ColorName::PANTHER_PINK,
                         $link_project,
@@ -152,7 +159,11 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         Option::fromValue(new ArtifactLinkStatusValue('Open', Option::fromValue(ColorName::NEON_GREEN), true)),
                     ),
                     new ArtifactLinkValue(
-                        'Covers',
+                        new ArtifactLinkType(
+                            'Covers',
+                            TypeCoveredByPresenter::TYPE_COVERED_BY,
+                            LinkDirection::FORWARD->value,
+                        ),
                         'my_tracker',
                         ColorName::PANTHER_PINK,
                         $link_project,
@@ -162,7 +173,11 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ColorName::class), false)),
                     ),
                     new ArtifactLinkValue(
-                        'is Linked to',
+                        new ArtifactLinkType(
+                            'is Linked to',
+                            ArtifactLinkField::NO_TYPE,
+                            LinkDirection::FORWARD->value,
+                        ),
                         'my_tracker',
                         ColorName::PANTHER_PINK,
                         $link_project,
@@ -172,7 +187,11 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         Option::nothing(ArtifactLinkStatusValue::class),
                     ),
                     new ArtifactLinkValue(
-                        'is Child of',
+                        new ArtifactLinkType(
+                            'is Child of',
+                            ArtifactLinkField::TYPE_IS_CHILD,
+                            LinkDirection::REVERSE->value,
+                        ),
                         'my_tracker',
                         ColorName::PANTHER_PINK,
                         $link_project,
@@ -182,7 +201,11 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         Option::fromValue(new ArtifactLinkStatusValue('Open', Option::fromValue(ColorName::NEON_GREEN), true)),
                     ),
                     new ArtifactLinkValue(
-                        'Covered by',
+                        new ArtifactLinkType(
+                            'Covered by',
+                            TypeCoveredByPresenter::TYPE_COVERED_BY,
+                            LinkDirection::REVERSE->value,
+                        ),
                         'my_tracker',
                         ColorName::PANTHER_PINK,
                         $link_project,
@@ -192,7 +215,11 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ColorName::class), false)),
                     ),
                     new ArtifactLinkValue(
-                        'is Linked to',
+                        new ArtifactLinkType(
+                            'is Linked to',
+                            ArtifactLinkField::NO_TYPE,
+                            LinkDirection::REVERSE->value,
+                        ),
                         'my_tracker',
                         ColorName::PANTHER_PINK,
                         $link_project,

@@ -24,6 +24,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
@@ -59,7 +60,7 @@ final class ArtifactLinkRepresentation
             if (! $type) {
                 break;
             }
-            $types[] = self::formatType($type, $artifact, TypePresenter::FORWARD_LABEL);
+            $types[] = self::formatType($type, $artifact, LinkDirection::FORWARD);
         }
 
         return $types;
@@ -80,7 +81,7 @@ final class ArtifactLinkRepresentation
             if (! $type) {
                 break;
             }
-            $types[] = self::formatType($type, $artifact, TypePresenter::REVERSE_LABEL);
+            $types[] = self::formatType($type, $artifact, LinkDirection::REVERSE);
         }
 
         return $types;
@@ -94,12 +95,12 @@ final class ArtifactLinkRepresentation
         return new TypePresenterFactory($type_dao, $artifact_link_usage_dao, new SystemTypePresenterBuilder(\EventManager::instance()));
     }
 
-    private static function formatType(TypePresenter $type, Artifact $artifact, string $direction): LinkTypeRepresentation
+    private static function formatType(TypePresenter $type, Artifact $artifact, LinkDirection $direction): LinkTypeRepresentation
     {
-        $label = $direction === TypePresenter::FORWARD_LABEL ? $type->forward_label : $type->reverse_label;
+        $label = $direction === LinkDirection::FORWARD ? $type->forward_label : $type->reverse_label;
         $uri   = 'artifacts/' . $artifact->getId() . '/linked_artifacts?nature=' . urlencode($type->shortname) .
-            '&direction=' . urlencode($direction);
+            '&direction=' . urlencode($direction->value);
 
-        return new LinkTypeRepresentation($type->shortname, $direction, $label, $uri);
+        return new LinkTypeRepresentation($type->shortname, $direction->value, $label, $uri);
     }
 }

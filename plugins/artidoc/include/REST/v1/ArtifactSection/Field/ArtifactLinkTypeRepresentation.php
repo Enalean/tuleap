@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-use Tuleap\Color\ColorName;
-use Tuleap\Option\Option;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkType;
 
 /**
  * @psalm-immutable
  */
-final readonly class ArtifactLinkValue
+final class ArtifactLinkTypeRepresentation
 {
-    /**
-     * @param Option<ArtifactLinkStatusValue> $status
-     */
-    public function __construct(
-        public ArtifactLinkType $link_type,
-        public string $tracker_shortname,
-        public ColorName $tracker_color,
-        public ArtifactLinkProject $project,
-        public int $artifact_id,
-        public string $title,
-        public string $html_uri,
-        public Option $status,
-    ) {
+    public string $shortname;
+    public string $direction;
+
+    public function __construct(ArtifactLinkType $link_type)
+    {
+        $this->shortname = $link_type->link_shortname;
+        $this->direction = $link_type->link_direction;
     }
 }

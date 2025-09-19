@@ -23,9 +23,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 class TypePresenter
 {
-    public const FORWARD_LABEL = 'forward';
-    public const REVERSE_LABEL = 'reverse';
-
     /**
      * @var string
      */

@@ -21,7 +21,7 @@
     <label class="tlp-label document-label">{{ field.label }}</label>
     <div
         class="artidoc-link-field-row document-artifact-link-row"
-        v-for="link of field.value"
+        v-for="link of sortLinkedArtifacts(field.value)"
         v-bind:key="link.artifact_id"
         v-bind:title="link.title"
         data-test="linked-artifact"
@@ -63,6 +63,7 @@ import type {
     ReadonlyFieldLinks,
 } from "@/sections/readonly-fields/ReadonlyFields";
 import { PROJECT_ID } from "@/project-id-injection-key";
+import { sortLinkedArtifacts } from "@/components/section/readonly-fields/sort-linked-artifacts";
 
 const { $gettext } = useGettext();
 const current_project_id = strictInject(PROJECT_ID);

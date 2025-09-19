@@ -26,7 +26,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\ArtifactLin
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\v1\TrackerFieldRepresentations\LinkTypeRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveSystemTypePresenterStub;
@@ -67,16 +67,16 @@ final class LinkTypeResultBuilderTest extends TestCase
     public static function dataProviderReverseAndForwardDirection(): array
     {
         return [
-            'forward _is_child' => [TypePresenter::FORWARD_LABEL, 'Child', '_is_child'],
-            'reverse _is_child' => [TypePresenter::REVERSE_LABEL, 'Parent', '_is_child'],
-            'forward custom' => [TypePresenter::FORWARD_LABEL, 'Is custom', 'custom'],
-            'reverse custom' => [TypePresenter::REVERSE_LABEL, 'From custom', 'custom'],
+            'forward _is_child' => [LinkDirection::FORWARD->value, 'Child', '_is_child'],
+            'reverse _is_child' => [LinkDirection::REVERSE->value, 'Parent', '_is_child'],
+            'forward custom' => [LinkDirection::FORWARD->value, 'Is custom', 'custom'],
+            'reverse custom' => [LinkDirection::REVERSE->value, 'From custom', 'custom'],
         ];
     }
 
     public function testItBuildALinkedTypeRepresentationWhenLinkIsNotTyped(): void
     {
-        $direction      = TypePresenter::REVERSE_LABEL;
+        $direction      = LinkDirection::REVERSE->value;
         $select_results = [
             ['id' => $this->artifact->getId(), '@link_type' => '', $direction => ''],
         ];
