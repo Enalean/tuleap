@@ -129,7 +129,7 @@
             <file name="tests/unit/tuleap-cfg/Command/TestDBWrapper.php"/>
             <file name="tests/unit/www/include/ServiceCreateServiceTest.php"/>
             <file name="tests/unit/www/include/UtilsHTTPTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/HierarchyCheckerTest.php"/>
+            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Tracker/HierarchyCheckerTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Masschange/AdditionalMasschangeActionBuilderTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Masschange/AdditionalMasschangeActionProcessorTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Backlog/AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest.php"/>

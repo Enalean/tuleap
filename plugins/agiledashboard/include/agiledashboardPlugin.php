@@ -22,6 +22,7 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\VisitRetriever;
+use Tuleap\AgileDashboard\Tracker\HierarchyChecker;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
 use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHandler;
@@ -601,7 +602,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     #[ListeningToEventClass]
     public function generalSettingsEvent(GeneralSettingsEvent $event): void
     {
-        $hierarchyChecker = new AgileDashboard_HierarchyChecker(
+        $hierarchyChecker = new HierarchyChecker(
             $this->getPlanningFactory(),
             $this->getTrackerFactory()
         );
@@ -640,7 +641,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function tracker_event_project_creation_trackers_required($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $hierarchyChecker           = new AgileDashboard_HierarchyChecker(
+        $hierarchyChecker           = new HierarchyChecker(
             $this->getPlanningFactory(),
             $this->getTrackerFactory()
         );
