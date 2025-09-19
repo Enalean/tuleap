@@ -22,9 +22,9 @@
 namespace Tuleap\Tracker\FormElement\StaticField\Separator;
 
 use Codendi_HTMLPurifier;
-use Tracker_FormElement_StaticField;
+use Tuleap\Tracker\FormElement\StaticField\TrackerStaticField;
 
-final class SeparatorStaticField extends Tracker_FormElement_StaticField
+final class SeparatorStaticField extends TrackerStaticField
 {
     #[\Override]
     protected function fetchReadOnly()

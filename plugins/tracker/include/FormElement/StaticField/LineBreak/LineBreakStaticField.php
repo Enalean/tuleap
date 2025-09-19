@@ -22,9 +22,9 @@
 namespace Tuleap\Tracker\FormElement\StaticField\LineBreak;
 
 use Codendi_HTMLPurifier;
-use Tracker_FormElement_StaticField;
+use Tuleap\Tracker\FormElement\StaticField\TrackerStaticField;
 
-class LineBreakStaticField extends Tracker_FormElement_StaticField
+class LineBreakStaticField extends TrackerStaticField
 {
     #[\Override]
     protected function fetchReadOnly()

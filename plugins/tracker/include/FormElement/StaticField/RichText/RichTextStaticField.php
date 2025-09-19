@@ -22,11 +22,11 @@
 namespace Tuleap\Tracker\FormElement\StaticField\RichText;
 
 use Codendi_HTMLPurifier;
-use Tracker_FormElement_StaticField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\RichTextFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\StaticField\TrackerStaticField;
 
-final class RichTextStaticField extends Tracker_FormElement_StaticField
+final class RichTextStaticField extends TrackerStaticField
 {
     public array $default_properties = [
         'static_value' => [
