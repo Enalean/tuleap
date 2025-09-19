@@ -28,5 +28,4 @@ export default {
         ...configuration.transform,
         "^.+\\.vue$": "@vue/vue3-jest",
     },
-    testEnvironment: "./src/FixJSDOMEnvironment.ts",
 };
