@@ -22,9 +22,23 @@ function submitArtifactAndStay(): void {
     cy.get("[data-test=artifact-submit-and-stay]").click();
 }
 
-describe("Artifact link usage", () => {
-    describe("Site administrator", () => {
-        it("must be able to create and delete new types of link", () => {
+function toggleLinkTypeUsage(project_id: string): void {
+    cy.visit("/plugins/tracker/global-admin/" + project_id);
+    cy.get("[data-test=artifact-links]").click();
+    cy.getContains("[data-test=artifact-link-type-line]", "fixed_in")
+        .find("[data-test=toggle-link-type]")
+        .click();
+}
+
+function waitForArtifactLinksToBeLoaded(): void {
+    cy.get("[data-test=artifact-link-field]")
+        .find("[data-test=link-field-table-skeleton]")
+        .should("not.exist");
+}
+
+describe(`Artifact links usage`, () => {
+    describe(`Site administrator`, () => {
+        it(`can create and delete types of links`, () => {
             cy.siteAdministratorSession();
             cy.visit("/admin/");
             cy.get("[data-test=admin-tracker]").click();
@@ -39,113 +53,130 @@ describe("Artifact link usage", () => {
             cy.get("[data-test=artlink-add-button]").click();
             cy.get("[data-test=feedback]").contains("The type test has been successfully created.");
 
-            cy.get("[data-test=artlink-delete-test]").click();
-            cy.get("[data-test=confirm-delete-test-button]").click();
-
+            cy.getContains("[data-test=link-type-line]", "test")
+                .find("[data-test=link-type-delete-button]")
+                .click();
+            cy.get("[data-test=link-type-delete-modal].tlp-modal-shown")
+                .find("[data-test=confirm-delete-link-type-button]")
+                .click();
             cy.get("[data-test=feedback]").contains("The type has been successfully deleted.");
         });
     });
 
-    function disableArtifactLinkUsage(project_id: string): void {
-        cy.visit("/plugins/tracker/global-admin/" + project_id);
-        cy.get("[data-test=artifact-links]").click();
-        // tlp switch made input not visible, need to force the uncheck action
-        cy.get("[data-test=toggle-fixed_in-link]").uncheck({ force: true });
-    }
-
-    function enableArtifactLinkUsage(project_id: string): void {
-        cy.visit("/plugins/tracker/global-admin/" + project_id);
-        cy.get("[data-test=artifact-links]").click();
-        // tlp switch made input not visible, need to force the uncheck action
-        cy.get("[data-test=toggle-fixed_in-link]").check({ force: true });
-    }
-
-    describe("Tracker administration", function () {
+    describe(`Tracker administrator`, function () {
         before(function () {
             cy.projectAdministratorSession();
             cy.getProjectId("tracker-artifact")
                 .as("project_id")
                 .then((project_id) => {
                     cy.getTrackerIdFromREST(project_id, "artifact_link").then((tracker_id) => {
-                        cy.wrap(tracker_id).as("tracker_id");
                         cy.createArtifact({
                             tracker_id,
-                            artifact_title: "Fixed By",
+                            artifact_title: "Fixed By Artifact",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("fixed_by_artifact");
 
                         cy.createArtifact({
                             tracker_id,
-                            artifact_title: "Fixed In",
+                            artifact_title: "Fixed In Artifact",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("fixed_in_artifact");
 
                         cy.createArtifact({
                             tracker_id,
-                            artifact_title: "Parent of",
+                            artifact_title: "Parent of Artifact",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("parent_of_artifact");
 
                         cy.createArtifact({
                             tracker_id,
-                            artifact_title: "Child of",
+                            artifact_title: "Child of Artifact",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("child_of_artifact");
                     });
                 });
         });
 
-        it("can enable/disable artifact links", function () {
+        it(`can enable/disable artifact link types`, function () {
             cy.projectAdministratorSession();
-            disableArtifactLinkUsage(this.project_id);
+            toggleLinkTypeUsage(this.project_id);
 
-            cy.log("Fixed in nature is not available when nature is disabled");
-            cy.visit(`/plugins/tracker/?tracker=${this.tracker_id}`);
-            cy.get("[data-test=direct-link-to-artifact]").first().click();
-
+            cy.log(`"Fixed in" type is not available when it is disabled`);
+            cy.visit("/plugins/tracker/?&aid=" + this.fixed_in_artifact);
+            waitForArtifactLinksToBeLoaded();
             cy.get("[data-test=link-type-select]").should("not.contain", "Fixed in");
 
-            enableArtifactLinkUsage(this.project_id);
-            cy.log("Fixed in nature can be used");
+            toggleLinkTypeUsage(this.project_id);
+
+            cy.log(`"Fixed in" type can be used when enabled again`);
+            cy.projectMemberSession();
             cy.visit("/plugins/tracker/?&aid=" + this.fixed_in_artifact);
-            cy.get("[data-test=link-type-select]").first().select("Fixed in");
-            cy.get("[data-test=link-field-add-link-input]").click();
-            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-                .focus()
-                .type(this.fixed_by_artifact);
-            cy.get("[data-test=lazybox-item]").first().click();
+            waitForArtifactLinksToBeLoaded();
+            cy.get("[data-test=artifact-link-field]").within(() => {
+                cy.get("[data-test=link-field-add-link-section]")
+                    .find("[data-test=link-type-select]")
+                    .select("Fixed in");
+                cy.searchItemInLazyboxDropdown(
+                    this.fixed_by_artifact,
+                    this.fixed_by_artifact,
+                ).click();
+            });
             submitArtifactAndStay();
 
             cy.get("[data-test=feedback]").contains("Successfully Updated");
-
             cy.get("[data-test=tracker-artifact-value-links]").contains(this.fixed_by_artifact);
 
-            cy.log("Reverse link display fixed in nature");
+            cy.log(`Reverse link displays "Fixed in" type`);
             cy.visit("/plugins/tracker/?&aid=" + this.fixed_by_artifact);
             cy.get("[data-test=tracker-artifact-value-links").contains(this.fixed_in_artifact);
         });
 
-        it("can use _is_child nature", function () {
-            cy.projectAdministratorSession();
+        it(`can use _is_child type`, function () {
+            cy.projectMemberSession();
             cy.visit("/plugins/tracker/?&aid=" + this.child_of_artifact);
-            cy.get("[data-test=link-type-select]").select("is Child of");
-            cy.get("[data-test=link-field-add-link-input]").click();
-            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-                .focus()
-                .type(this.parent_of_artifact);
-            cy.get("[data-test=lazybox-item]").first().click();
+
+            waitForArtifactLinksToBeLoaded();
+            cy.get("[data-test=artifact-link-field]").within(() => {
+                cy.get("[data-test=link-field-add-link-section]")
+                    .find("[data-test=link-type-select]")
+                    .select("is Child of");
+                cy.searchItemInLazyboxDropdown(
+                    this.parent_of_artifact,
+                    this.parent_of_artifact,
+                ).click();
+            });
             submitArtifactAndStay();
-
             cy.get("[data-test=feedback]").contains("Successfully Updated");
-
-            cy.get("[data-test=tracker-artifact-value-links]").contains(this.parent_of_artifact);
+            cy.log(`Parent is shown in the title`);
+            cy.get("[data-test=tracker-hierarchy]").contains(this.parent_of_artifact);
 
             cy.visit("https://tuleap/plugins/tracker/?&aid=" + this.parent_of_artifact);
             cy.get("[data-test=tracker-artifact-value-links").contains(this.child_of_artifact);
         });
+
+        it(`can create a new artifact by editing artifact links`, function () {
+            const new_artifact_title = "New artifact";
+
+            cy.projectMemberSession();
+
+            cy.visit("/plugins/tracker/?&aid=" + this.child_of_artifact);
+
+            cy.get("[data-test=artifact-link-field]").within(() => {
+                cy.get("[data-test=lazybox]").click();
+                cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+                    .focus()
+                    .type(new_artifact_title);
+                cy.get("[data-test=new-item-button]").click();
+                cy.get("[data-test=artifact-creator-submit]").click();
+            });
+            submitArtifactAndStay();
+
+            cy.get("[data-test=artifact-link-field]").contains(new_artifact_title);
+        });
     });
 
-    describe("Project administration", function () {
+    describe(`Legacy artifact links field`, function () {
+        const PARENT_ARTIFACT_TITLE = "Parent";
         before(function () {
             cy.projectAdministratorSession();
             cy.getProjectId("hierarchy")
@@ -154,7 +185,7 @@ describe("Artifact link usage", () => {
                     cy.getTrackerIdFromREST(project_id, "issue").then((tracker_id) => {
                         cy.createArtifact({
                             tracker_id,
-                            artifact_title: "Parent",
+                            artifact_title: PARENT_ARTIFACT_TITLE,
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("parent_artifact");
 
@@ -169,69 +200,58 @@ describe("Artifact link usage", () => {
                             artifact_title: "Create parent",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("create_parent");
+
+                        cy.log(`Use the legacy artifact links field`);
+                        cy.visit(`/plugins/tracker/?tracker=${tracker_id}&func=admin-formElements`);
+                        // eslint-disable-next-line cypress/no-force -- edit button is shown only on CSS :hover
+                        cy.getContains("[data-test=tracker-admin-field]", "Linked Issues")
+                            .find("[data-test=edit-field]")
+                            .click({ force: true });
+
+                        cy.get(
+                            "[data-test=checkbox-specific-properties] > [data-test=input-type-checkbox]",
+                        ).uncheck();
+                        cy.get("[data-test=formElement-submit]").click();
                     });
                 });
         });
 
-        it("can create a new `Parent` link between two artifact", function () {
+        it(`can create a new Parent link between two artifact`, function () {
             cy.projectMemberSession();
-
             cy.visit("/plugins/tracker/?&aid=" + this.create_parent);
-
-            cy.get("[data-test=link-type-select]").first().select("is Child of");
-            cy.get("[data-test=link-field-add-link-input]").click();
-            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-                .focus()
-                .type(this.parent_artifact);
-            cy.get("[data-test=lazybox-item]").first().click();
-
+            cy.getContains("[data-test-artifact-form-element]", "Linked Issues")
+                .find("[data-test-edit-field]")
+                .click();
+            cy.get("[data-test=artifact-link-submit]").type(this.parent_artifact);
+            cy.get("[data-test=artifact-link-type-selector]").first().select("Parent");
             submitArtifactAndStay();
 
-            cy.get("[data-test=tracker-hierarchy]").contains(`${this.parent_artifact}`);
-            cy.get("[data-test=tracker-artifact-title]").contains("issue");
+            cy.get("[data-test=tracker-hierarchy]").contains(this.parent_artifact);
+            cy.get("[data-test=tracker-hierarchy]").contains(PARENT_ARTIFACT_TITLE);
         });
 
-        it("can update a `Parent` link between two existing artifact", function () {
+        it(`can update a Parent link between two existing artifact`, function () {
             cy.projectMemberSession();
-            cy.intercept("api/v1/artifacts/*").as("getArtifact");
+            cy.intercept("*?func=artifactlink-renderer-async*").as("loadLinksPost");
 
             cy.visit("/plugins/tracker/?&aid=" + this.update_parent);
-
-            cy.get("[data-test=link-field-add-link-input]").click();
-            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-                .focus()
-                .type(this.parent_artifact);
-            cy.wait("@getArtifact");
-            cy.get("[data-test=lazybox-item]").first().click();
+            cy.getContains("[data-test-artifact-form-element]", "Linked Issues")
+                .find("[data-test-edit-field]")
+                .click();
+            cy.get("[data-test=artifact-link-submit]").type(this.parent_artifact);
             submitArtifactAndStay();
 
-            cy.get("[data-test=artifact-link-field]").within(() => {
-                cy.get("[data-test=link-type-select]")
-                    .first()
-                    .select("is Child of", { force: true });
-            });
-
+            cy.getContains("[data-test-artifact-form-element]", "Linked Issues")
+                .find("[data-test-edit-field]")
+                .click();
+            cy.wait("@loadLinksPost", { timeout: 6000 });
+            cy.get("[data-test=artifact-report-table] [data-test=artifact-link-type-selector]")
+                .last()
+                .select("Parent", { force: true });
             submitArtifactAndStay();
 
-            cy.get("[data-test=tracker-hierarchy]").contains("Parent");
-        });
-
-        it("can create a new artifact by editing artifact links", function () {
-            const new_artifact_title = "New artifact";
-
-            cy.projectMemberSession();
-
-            cy.visit("/plugins/tracker/?&aid=" + this.update_parent);
-
-            cy.get("[data-test=link-field-add-link-input]").click();
-            cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-                .focus()
-                .type(new_artifact_title);
-            cy.get("[data-test=new-item-button]").click();
-            cy.get("[data-test=artifact-creator-submit]").click();
-            submitArtifactAndStay();
-
-            cy.get("[data-test=artifact-link-field]").contains(new_artifact_title);
+            cy.get("[data-test=tracker-hierarchy]").contains(this.parent_artifact);
+            cy.get("[data-test=tracker-hierarchy]").contains(PARENT_ARTIFACT_TITLE);
         });
     });
 });

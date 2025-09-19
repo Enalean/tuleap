@@ -74,12 +74,12 @@
                         </thead>
                         <tbody>
                             {{# artifact_link_types }}
-                            <tr>
+                            <tr data-test="artifact-link-type-line">
                                 <td>{{ shortname }}</td>
                                 <td>{{ forward_label }}</td>
                                 <td>{{ reverse_label }}</td>
                                 <td>
-                                    <form id="use-{{ shortname }}-form" data-test="artifact-link-form-{{ shortname }}" action="{{ form_type_url }}" method="POST">
+                                    <form id="use-{{ shortname }}-form" action="{{ form_type_url }}" method="POST">
                                         <input type="hidden" name="type-shortname" value="{{ shortname }}">
                                         <div class="tlp-form-element">
                                             <div class="tlp-switch tlp-switch-mini">
@@ -88,13 +88,12 @@
                                                        name="use-{{ shortname }}"
                                                        class="tlp-switch-checkbox"
                                                        data-form-id="use-{{ shortname }}-form"
-                                                       data-test="toggle-{{ shortname }}-link"
                                                        data-switch
                                                        value="1"
                                                        {{# is_used }} checked="checked" {{/ is_used }}
                                                        {{^ can_be_unused }} disabled {{/ can_be_unused }}
                                                 >
-                                                <label for="use-{{ shortname }}" class="tlp-switch-button">{{ switch_button_label }} {{ shortname }}</label>
+                                                <label for="use-{{ shortname }}" class="tlp-switch-button" data-test="toggle-link-type">{{ switch_button_label }} {{ shortname }}</label>
                                             </div>
                                         </div>
                                     </form>

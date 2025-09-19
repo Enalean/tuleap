@@ -3,6 +3,7 @@
         class="tlp-modal tlp-modal-danger siteadmin-config-types-modal-delete"
         role="dialog"
         aria-labelledby="siteadmin-config-types-modal-delete-{{ shortname }}-label"
+        data-test="link-type-delete-modal"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="modal-danger-label">
@@ -22,7 +23,7 @@
         </div>
         <div class="tlp-modal-footer">
             <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ btn_close }}</button>
-            <button type="submit" form="siteadmin-config-types-modal-delete-{{ shortname }}-form" class="tlp-button-danger tlp-modal-action" data-test="confirm-delete-{{ shortname }}-button">
+            <button type="submit" form="siteadmin-config-types-modal-delete-{{ shortname }}-form" class="tlp-button-danger tlp-modal-action" data-test="confirm-delete-link-type-button">
                 <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_modal_submit }}
             </button>
         </div>

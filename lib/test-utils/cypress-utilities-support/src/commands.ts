@@ -238,13 +238,14 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("addLinkToArtifact", (link_type, artifact_id) => {
+    cy.get("[data-test=artifact-link-field]")
+        .find("[data-test=link-field-table-skeleton]")
+        .should("not.exist");
     cy.get("[data-test=artifact-link-field]").within(() => {
-        cy.get("[data-test=link-type-select]").last().select(link_type);
-        cy.get("[data-test=link-field-add-link-input]").click();
-        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
-            .focus()
-            .type(artifact_id, { force: true });
-        cy.get("[data-test=lazybox-item]").first().click();
+        cy.get("[data-test=link-field-add-link-section]")
+            .find("[data-test=link-type-select]")
+            .select(link_type);
+        cy.searchItemInLazyboxDropdown(artifact_id, artifact_id).click();
     });
 });
 
