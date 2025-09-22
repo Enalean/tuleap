@@ -5,9 +5,9 @@
             "src": "scripts/personal-timetracking-widget/src",
             "po": "scripts/personal-timetracking-widget/po"
         },
-        "timetracking-management-widget": {
-            "src": "scripts/timetracking-management-widget/src",
-            "po": "scripts/timetracking-management-widget/po"
+        "people-timetracking-widget": {
+            "src": "scripts/people-timetracking-widget/src",
+            "po": "scripts/people-timetracking-widget/po"
         },
         "timetracking-overview-widget": {
             "src": "scripts/timetracking-overview-widget/src",

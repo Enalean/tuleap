@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Tests\Stub;
 
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\CheckPermission;
+use Tuleap\Timetracking\REST\v1\PeopleTimetracking\CheckPermission;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\WidgetNotFoundFault;
+use Tuleap\Timetracking\REST\v1\PeopleTimetracking\WidgetNotFoundFault;
 
 final readonly class CheckPermissionStub implements CheckPermission
 {

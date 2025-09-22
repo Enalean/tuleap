@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\Tests\Stub;
 
 use PFUser;
-use Tuleap\Timetracking\Widget\Management\ProvideViewableUsersForManager;
+use Tuleap\Timetracking\Widget\People\ProvideViewableUsersForManager;
 
 final readonly class ProvideViewableUsersForManagerStub implements ProvideViewableUsersForManager
 {

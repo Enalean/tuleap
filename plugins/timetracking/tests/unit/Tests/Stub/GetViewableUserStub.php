@@ -26,9 +26,9 @@ use PFUser;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Timetracking\Widget\Management\GetViewableUser;
-use Tuleap\Timetracking\Widget\Management\NotAllowedToSeeTimetrackingOfUserFault;
-use Tuleap\Timetracking\Widget\Management\QueryInvalidUserIdFault;
+use Tuleap\Timetracking\Widget\People\GetViewableUser;
+use Tuleap\Timetracking\Widget\People\NotAllowedToSeeTimetrackingOfUserFault;
+use Tuleap\Timetracking\Widget\People\QueryInvalidUserIdFault;
 
 final class GetViewableUserStub implements GetViewableUser
 {

@@ -127,7 +127,7 @@ export const renderContent = (
     host: InternalPredefinedTimePeriodSelect,
 ): UpdateFunction<InternalPredefinedTimePeriodSelect> => html`
     <div class="tlp-form-element">
-        <label for="timetracking-management-query-editor-predefined-periods" class="tlp-label">
+        <label for="people-timetracking-query-editor-predefined-periods" class="tlp-label">
             ${gettext_provider.gettext("Predefined periods")}
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">

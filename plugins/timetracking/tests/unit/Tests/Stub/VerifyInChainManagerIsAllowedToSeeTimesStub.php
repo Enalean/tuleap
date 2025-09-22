@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Tests\Stub;
 
-use Tuleap\Timetracking\Widget\Management\TimeSpentInArtifact;
-use Tuleap\Timetracking\Widget\Management\VerifierChain\VerifyInChainManagerIsAllowedToSeeTimes;
+use Tuleap\Timetracking\Widget\People\TimeSpentInArtifact;
+use Tuleap\Timetracking\Widget\People\VerifierChain\VerifyInChainManagerIsAllowedToSeeTimes;
 
 final class VerifyInChainManagerIsAllowedToSeeTimesStub implements VerifyInChainManagerIsAllowedToSeeTimes
 {

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\Tests\Stub;
 
 use PFUser;
-use Tuleap\Timetracking\Widget\Management\VerifyManagerCanSeeTimetrackingOfUser;
+use Tuleap\Timetracking\Widget\People\VerifyManagerCanSeeTimetrackingOfUser;
 
 final class VerifyManagerCanSeeTimetrackingOfUserStub implements VerifyManagerCanSeeTimetrackingOfUser
 {

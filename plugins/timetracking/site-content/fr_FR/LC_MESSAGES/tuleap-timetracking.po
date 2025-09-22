@@ -65,6 +65,9 @@ msgstr "Activer le suivi de temps pour ce tracker"
 msgid "No times saved"
 msgstr "Aucun temps n'a été enregistré"
 
+msgid "People timetracking"
+msgstr "Suivi du temps passé par les collaborateurs"
+
 msgid "Permissions"
 msgstr "Permissions"
 
@@ -145,9 +148,6 @@ msgstr "Le suivi de temps est désactivé pour ce tracker."
 
 msgid "Time tracking is enabled for tracker."
 msgstr "Le suivi de temps est activé pour ce tracker."
-
-msgid "Timetracking management"
-msgstr "Gestion du suivi du temps"
 
 msgid "Timetracking overview"
 msgstr "Aperçu des suivis de temps"

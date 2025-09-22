@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Tests\Stub;
 
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SearchQueryByWidgetId;
+use Tuleap\Timetracking\REST\v1\PeopleTimetracking\SearchQueryByWidgetId;
 
 final class SearchQueryByWidgetIdStub implements SearchQueryByWidgetId
 {

@@ -56,6 +56,9 @@ msgstr ""
 msgid "No times saved"
 msgstr ""
 
+msgid "People timetracking"
+msgstr ""
+
 msgid "Permissions"
 msgstr ""
 
@@ -132,9 +135,6 @@ msgid "Time tracking is disabled for tracker."
 msgstr ""
 
 msgid "Time tracking is enabled for tracker."
-msgstr ""
-
-msgid "Timetracking management"
 msgstr ""
 
 msgid "Timetracking overview"

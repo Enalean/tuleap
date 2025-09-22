@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Tests\Stub;
 
-use Tuleap\Timetracking\Widget\Management\GetWidgetInformation;
+use Tuleap\Timetracking\Widget\People\GetWidgetInformation;
 
 /**
  * @psalm-immutable

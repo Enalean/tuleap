@@ -24,8 +24,8 @@ namespace Tuleap\Timetracking\Tests\Stub;
 
 use Closure;
 use PFUser;
-use Tuleap\Timetracking\Widget\Management\TimeSpentInArtifact;
-use Tuleap\Timetracking\Widget\Management\VerifyManagerIsAllowedToSeeTimes;
+use Tuleap\Timetracking\Widget\People\TimeSpentInArtifact;
+use Tuleap\Timetracking\Widget\People\VerifyManagerIsAllowedToSeeTimes;
 
 final class VerifyManagerIsAllowedToSeeTimesStub implements VerifyManagerIsAllowedToSeeTimes
 {

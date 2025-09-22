@@ -24,8 +24,8 @@ namespace Tuleap\Timetracking\Tests\Stub;
 
 use DateTimeImmutable;
 use Error;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithDates;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\UserList;
+use Tuleap\Timetracking\REST\v1\PeopleTimetracking\SaveQueryWithDates;
+use Tuleap\Timetracking\REST\v1\PeopleTimetracking\UserList;
 
 final class SaveQueryWithDatesStub implements SaveQueryWithDates
 {
