@@ -21,7 +21,7 @@
     "vue3-gettext": "^2.4.0",
     "vuex": "^4.0.2",
     "vuex-composition-helpers": "^2.0.1",
-    "xlsx": "git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#a0bed2a97dcb1e3b76049be91abf3747f333c975"
+    "xlsx": "git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#8a7cfd47bde8258c0d91df6a737bf0136699cdf8"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

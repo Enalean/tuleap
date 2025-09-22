@@ -58,8 +58,8 @@ dependencies:
     specifier: ^2.0.1
     version: 2.0.1(vue@3.4.38)(vuex@4.0.2)
   xlsx:
-    specifier: git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#a0bed2a97dcb1e3b76049be91abf3747f333c975
-    version: tuleap.net/plugins/git/tuleap/deps/sheetjs/a0bed2a97dcb1e3b76049be91abf3747f333c975
+    specifier: git+https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git#8a7cfd47bde8258c0d91df6a737bf0136699cdf8
+    version: tuleap.net/plugins/git/tuleap/deps/sheetjs/8a7cfd47bde8258c0d91df6a737bf0136699cdf8
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -905,10 +905,10 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  tuleap.net/plugins/git/tuleap/deps/sheetjs/a0bed2a97dcb1e3b76049be91abf3747f333c975:
-    resolution: {commit: a0bed2a97dcb1e3b76049be91abf3747f333c975, repo: https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git, type: git}
+  tuleap.net/plugins/git/tuleap/deps/sheetjs/8a7cfd47bde8258c0d91df6a737bf0136699cdf8:
+    resolution: {commit: 8a7cfd47bde8258c0d91df6a737bf0136699cdf8, repo: https://tuleap.net/plugins/git/tuleap/deps/sheetjs.git, type: git}
     name: xlsx
-    version: 0.20.2
+    version: 0.20.3
     engines: {node: '>=0.8'}
     hasBin: true
     dev: false
