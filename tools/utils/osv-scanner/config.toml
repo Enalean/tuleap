@@ -93,6 +93,15 @@ reason = "Fixed in v2.0.2 but advisory range does not take it into account."
 id = "GHSA-rvmg-xc29-rvxf" # CVE-2017-15363
 reason = "Code is not accessible in Tuleap context."
 
+# xlsx
+[[IgnoredVulns]]
+id = "GHSA-4r6h-8v6p-xvw6" # CVE-2023-30533
+reason = "Fixed in 0.19.3 but scanner is not correctly resolving our current version (0.20.2)"
+
+[[IgnoredVulns]]
+id = "GHSA-5pgg-2g8v-p4x9" # CVE-2024-22363
+reason = "Fixed in 0.20.2 but scanner is not correctly resolving our current version (0.20.2)"
+
 ### TO BE FIXED
 
 # wasmtime
