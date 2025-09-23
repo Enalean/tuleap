@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Masschange;
 
 use Codendi_Request;
-use PFUser;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
@@ -38,24 +38,23 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AdditionalMasschangeActionProcessorTest extends TestCase
+final class AdditionalMasschangeActionProcessorTest extends TestCase
 {
     use GlobalResponseMock;
 
     private AdditionalMasschangeActionProcessor $processor;
 
-    private PFUser $user;
+    private Tracker&MockObject $tracker;
 
-    private Tracker|MockObject $tracker;
+    private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
 
-    private ArtifactsInExplicitBacklogDao|MockObject $artifacts_in_explicit_backlog_dao;
+    private PlannedArtifactDao&MockObject $planned_artifact_dao;
 
-    private PlannedArtifactDao|MockObject $planned_artifact_dao;
-
-    private UnplannedArtifactsAdder|MockObject $unplanned_artifacts_adder;
+    private UnplannedArtifactsAdder&MockObject $unplanned_artifacts_adder;
 
     private EventDispatcherInterface $event_dispatcher;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -213,17 +212,29 @@ class AdditionalMasschangeActionProcessorTest extends TestCase
             ->willReturn(true);
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('removeItemsFromExplicitBacklogOfProject');
-        $matcher = $this->exactly(2);
-        $this->unplanned_artifacts_adder->expects($matcher)->method('addArtifactToTopBacklogFromIds')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(125, $parameters[0]);
-                self::assertSame(101, $parameters[1]);
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(144, $parameters[0]);
-                self::assertSame(101, $parameters[1]);
-            }
-        });
+        $expected_calls = [
+            [
+                'artifact_id' => 125,
+                'project_id' => 101,
+            ],
+            [
+                'artifact_id' => 144,
+                'project_id' => 101,
+            ],
+        ];
+
+        $this->unplanned_artifacts_adder->expects($this->exactly(2))
+            ->method('addArtifactToTopBacklogFromIds')
+            ->willReturnCallback(
+                function (int $artifact_id, int $project_id) use (&$expected_calls): void {
+                    $expected = array_shift($expected_calls);
+                    self::assertNotNull($expected);
+
+                    self::assertSame($expected['artifact_id'], $artifact_id);
+                    self::assertSame($expected['project_id'], $project_id);
+                }
+            );
+
 
         $this->processAction(
             $request,

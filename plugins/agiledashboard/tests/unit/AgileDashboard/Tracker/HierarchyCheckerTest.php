@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Tracker;
 
+use Override;
 use PlanningFactory;
 use Tracker_Hierarchy;
 use TrackerFactory;
@@ -29,11 +30,12 @@ use Tuleap\Tracker\Tracker;
 final class HierarchyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private HierarchyChecker $hierarchy_checker;
-    private Tracker|\PHPUnit\Framework\MockObject\MockObject $tracker;
-    private PlanningFactory|\PHPUnit\Framework\MockObject\Stub $planning_factory;
-    private Tracker_Hierarchy|\PHPUnit\Framework\MockObject\Stub $hierarchy;
-    private TrackerFactory|\PHPUnit\Framework\MockObject\Stub $tracker_factory;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
+    private PlanningFactory&\PHPUnit\Framework\MockObject\Stub $planning_factory;
+    private Tracker_Hierarchy&\PHPUnit\Framework\MockObject\Stub $hierarchy;
+    private TrackerFactory&\PHPUnit\Framework\MockObject\Stub $tracker_factory;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

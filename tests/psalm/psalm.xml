@@ -129,9 +129,6 @@
             <file name="tests/unit/tuleap-cfg/Command/TestDBWrapper.php"/>
             <file name="tests/unit/www/include/ServiceCreateServiceTest.php"/>
             <file name="tests/unit/www/include/UtilsHTTPTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Tracker/HierarchyCheckerTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Masschange/AdditionalMasschangeActionBuilderTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Masschange/AdditionalMasschangeActionProcessorTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Backlog/AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Backlog/AgileDashboard_SequenceIdManagerTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Backlog/Backlog/BacklogItemPresenterCollectionTest.php"/>
@@ -194,7 +191,6 @@
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Semantic/InitialEffortSemanticAdminPresenterBuilderTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Semantic/PossibleFieldsPresenterTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Semantic/XML/SemanticExporterTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Tracker/TrackerHierarchyUpdateCheckerTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Workflow/AddToTopBacklogPostActionFactoryTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Workflow/PostAction/Update/Internal/AddToTopBacklogValueUpdaterTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Workflow/REST/v1/AddToTopBacklogJsonParserTest.php"/>
