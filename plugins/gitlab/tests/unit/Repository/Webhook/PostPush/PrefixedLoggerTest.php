@@ -28,7 +28,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixedLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PREFIX = '| |';
+    private const string PREFIX = '| |';
     private TestLogger $sub_logger;
 
     #[\Override]

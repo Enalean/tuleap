@@ -27,9 +27,9 @@ use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 class TagPushWebhookDataBuilder
 {
-    private const REF_KEY    = 'ref';
-    private const BEFORE_KEY = 'before';
-    private const AFTER_KEY  = 'after';
+    private const string REF_KEY    = 'ref';
+    private const string BEFORE_KEY = 'before';
+    private const string AFTER_KEY  = 'after';
 
     /**
      * @throws MissingKeyException

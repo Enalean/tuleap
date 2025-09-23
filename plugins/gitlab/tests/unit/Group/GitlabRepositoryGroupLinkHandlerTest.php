@@ -43,9 +43,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
 {
-    private const GROUP_ID                    = 45;
-    private const SECOND_GITLAB_REPOSITORY_ID = 10;
-    private const FIRST_GITLAB_REPOSITORY_ID  = 9;
+    private const int GROUP_ID                    = 45;
+    private const int SECOND_GITLAB_REPOSITORY_ID = 10;
+    private const int FIRST_GITLAB_REPOSITORY_ID  = 9;
     private string $branch_prefix;
 
     #[\Override]

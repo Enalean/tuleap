@@ -35,7 +35,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CreateBranchPrefixUpdaterTest extends TestCase
 {
-    private const INTEGRATION_ID = 18;
+    private const int INTEGRATION_ID = 18;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationFactory
      */

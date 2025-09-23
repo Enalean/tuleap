@@ -31,17 +31,17 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkDAOTest extends TestIntegrationTestCase
 {
-    private const GITLAB_GROUP_ID                = 99;
-    private const NAME                           = 'lamany';
-    private const FULL_PATH                      = 'sheikly/lamany';
-    private const WEB_URL                        = 'https://gitlab.example.com/' . self::FULL_PATH;
-    private const AVATAR_URL                     = 'https://gitlab.example.com/uploads/-/system/group/avatar/99/avatar.png';
-    private const PROJECT_ID                     = 113;
-    private const LAST_SYNCHRONIZATION_TIMESTAMP = 1685019983;
-    private const BRANCH_PREFIX                  = 'dev-';
-    private const FIRST_REPOSITORY_ID            = 117;
-    private const SECOND_REPOSITORY_ID           = 267;
-    private const ENCRYPTED_TOKEN                = 'OxFA97D2DFD016C0E9E42E';
+    private const int GITLAB_GROUP_ID                = 99;
+    private const string NAME                        = 'lamany';
+    private const string FULL_PATH                   = 'sheikly/lamany';
+    private const string WEB_URL                     = 'https://gitlab.example.com/' . self::FULL_PATH;
+    private const string AVATAR_URL                  = 'https://gitlab.example.com/uploads/-/system/group/avatar/99/avatar.png';
+    private const int PROJECT_ID                     = 113;
+    private const int LAST_SYNCHRONIZATION_TIMESTAMP = 1685019983;
+    private const string BRANCH_PREFIX               = 'dev-';
+    private const int FIRST_REPOSITORY_ID            = 117;
+    private const int SECOND_REPOSITORY_ID           = 267;
+    private const string ENCRYPTED_TOKEN             = 'OxFA97D2DFD016C0E9E42E';
 
     private GroupLinkDAO $group_dao;
     private GroupLinkRepositoryIntegrationDAO $integrations_dao;

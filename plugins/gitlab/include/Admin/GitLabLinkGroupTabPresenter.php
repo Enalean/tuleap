@@ -27,7 +27,7 @@ use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 
 final class GitLabLinkGroupTabPresenter
 {
-    public const PANE_NAME = 'gitlab';
+    public const string PANE_NAME = 'gitlab';
 
     public static function withInactiveState(Project $project): AdminExternalPanePresenter
     {

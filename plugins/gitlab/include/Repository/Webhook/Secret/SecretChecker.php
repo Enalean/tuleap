@@ -26,7 +26,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class SecretChecker
 {
-    public const GITLAB_TOKEN_HEADER = 'X-Gitlab-Token';
+    public const string GITLAB_TOKEN_HEADER = 'X-Gitlab-Token';
 
     /**
      * @var SecretRetriever

@@ -50,8 +50,8 @@ final class GitLabLinkGroupControllerTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private const PROJECT_ID        = 150;
-    private const PROJECT_UNIX_NAME = 'tuleap-gitlab';
+    private const int PROJECT_ID           = 150;
+    private const string PROJECT_UNIX_NAME = 'tuleap-gitlab';
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&HeaderRenderer

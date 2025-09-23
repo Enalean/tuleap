@@ -38,7 +38,7 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupUnlinkHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const GROUP_LINK_ID = 29;
+    private const int GROUP_LINK_ID = 29;
     private DeleteGroupLinkStub $group_link_deleter;
 
     #[\Override]

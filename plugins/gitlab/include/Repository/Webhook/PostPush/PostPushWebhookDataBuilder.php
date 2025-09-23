@@ -27,8 +27,8 @@ use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 class PostPushWebhookDataBuilder
 {
-    private const REFERENCE_KEY    = 'ref';
-    private const CHECKOUT_SHA_KEY = 'checkout_sha';
+    private const string REFERENCE_KEY    = 'ref';
+    private const string CHECKOUT_SHA_KEY = 'checkout_sha';
 
     /**
      * @var PostPushCommitWebhookDataExtractor

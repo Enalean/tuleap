@@ -35,7 +35,7 @@ use URLVerification;
 
 final class GitlabProjectResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 50;
+    private const int MAX_LIMIT = 50;
 
     /**
      * @url    OPTIONS {id}/gitlab_repositories

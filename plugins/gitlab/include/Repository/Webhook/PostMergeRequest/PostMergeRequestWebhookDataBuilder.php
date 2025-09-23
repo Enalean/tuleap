@@ -26,14 +26,14 @@ use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 class PostMergeRequestWebhookDataBuilder
 {
-    private const OBJECT_ATTRIBUTES_KEY         = 'object_attributes';
-    private const MERGE_REQUEST_ID_KEY          = 'iid';
-    private const MERGE_REQUEST_TITLE_KEY       = 'title';
-    private const MERGE_REQUEST_DESCRIPTION_KEY = 'description';
-    private const MERGE_REQUEST_STATE_KEY       = 'state';
-    private const MERGE_REQUEST_CREATED_AT_KEY  = 'created_at';
-    private const MERGE_REQUEST_AUTHOR_ID_KEY   = 'author_id';
-    private const MERGE_REQUEST_SOURCE_BRANCH   = 'source_branch';
+    private const string OBJECT_ATTRIBUTES_KEY         = 'object_attributes';
+    private const string MERGE_REQUEST_ID_KEY          = 'iid';
+    private const string MERGE_REQUEST_TITLE_KEY       = 'title';
+    private const string MERGE_REQUEST_DESCRIPTION_KEY = 'description';
+    private const string MERGE_REQUEST_STATE_KEY       = 'state';
+    private const string MERGE_REQUEST_CREATED_AT_KEY  = 'created_at';
+    private const string MERGE_REQUEST_AUTHOR_ID_KEY   = 'author_id';
+    private const string MERGE_REQUEST_SOURCE_BRANCH   = 'source_branch';
 
     /**
      * @var LoggerInterface

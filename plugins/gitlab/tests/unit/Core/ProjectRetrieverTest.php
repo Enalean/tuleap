@@ -31,7 +31,7 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID = 130;
+    private const int PROJECT_ID = 130;
     private ProjectByIDFactoryStub $project_factory;
     private \Project $project;
 

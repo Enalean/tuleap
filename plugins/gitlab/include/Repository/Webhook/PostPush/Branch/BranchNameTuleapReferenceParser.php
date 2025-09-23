@@ -25,7 +25,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 
 class BranchNameTuleapReferenceParser
 {
-    private const PATTERN = '/tuleap-(\d+)/i';
+    private const string PATTERN = '/tuleap-(\d+)/i';
 
     public function extractTuleapReferenceFromBranchName(string $branch_name): ?WebhookTuleapReference
     {

@@ -28,15 +28,15 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookDataBranchNameExtractor;
 
 class PostPushCommitWebhookDataExtractor
 {
-    private const COMMIT_KEY              = 'commits';
-    private const COMMIT_SHA1_KEY         = 'id';
-    private const COMMIT_TITLE_KEY        = 'title';
-    private const COMMIT_MESSAGE_KEY      = 'message';
-    private const COMMIT_DATE_KEY         = 'timestamp';
-    private const COMMIT_AUTHOR_KEY       = 'author';
-    private const COMMIT_AUTHOR_EMAIL_KEY = 'email';
-    private const COMMIT_AUTHOR_NAME_KEY  = 'name';
-    private const COMMITS_BRANCH_KEY      = 'ref';
+    private const string COMMIT_KEY              = 'commits';
+    private const string COMMIT_SHA1_KEY         = 'id';
+    private const string COMMIT_TITLE_KEY        = 'title';
+    private const string COMMIT_MESSAGE_KEY      = 'message';
+    private const string COMMIT_DATE_KEY         = 'timestamp';
+    private const string COMMIT_AUTHOR_KEY       = 'author';
+    private const string COMMIT_AUTHOR_EMAIL_KEY = 'email';
+    private const string COMMIT_AUTHOR_NAME_KEY  = 'name';
+    private const string COMMITS_BRANCH_KEY      = 'ref';
 
     /**
      * @var LoggerInterface

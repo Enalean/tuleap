@@ -26,8 +26,8 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class GitlabCommitReference extends \Reference
 {
-    public const REFERENCE_NAME = 'gitlab_commit';
-    public const NATURE_NAME    = 'plugin_gitlab_commit';
+    public const string REFERENCE_NAME = 'gitlab_commit';
+    public const string NATURE_NAME    = 'plugin_gitlab_commit';
 
     public function __construct(
         GitlabRepositoryIntegration $repository_integration,

@@ -32,11 +32,11 @@ final class LinkedGroupPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    private const PROJECT_NAME                  = 'impierceable';
-    private const GROUP_NAME                    = 'Nonannuitant';
-    private const GROUP_PATH                    = 'cottonbush/nonannuitant';
-    private const GITLAB_URI                    = 'https://gitlab.example.com';
-    private const NUMBER_OF_INTEGRATED_PROJECTS = 6;
+    private const string PROJECT_NAME               = 'impierceable';
+    private const string GROUP_NAME                 = 'Nonannuitant';
+    private const string GROUP_PATH                 = 'cottonbush/nonannuitant';
+    private const string GITLAB_URI                 = 'https://gitlab.example.com';
+    private const int NUMBER_OF_INTEGRATED_PROJECTS = 6;
 
     public function testItBuilds(): void
     {

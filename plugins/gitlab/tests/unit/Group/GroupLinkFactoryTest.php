@@ -32,8 +32,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkFactoryTest extends TestCase
 {
-    private const GROUP_ID            = 85;
-    private const INTEGRATED_GROUP_ID = 77;
+    private const int GROUP_ID            = 85;
+    private const int INTEGRATED_GROUP_ID = 77;
     private VerifyGroupIsAlreadyLinkedStub $group_verifier;
     private VerifyProjectIsAlreadyLinkedStub $project_verifier;
     private AddNewGroupLinkStub $group_adder;

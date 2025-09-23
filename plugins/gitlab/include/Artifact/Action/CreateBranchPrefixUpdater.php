@@ -31,7 +31,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationNotFoundException;
 
 final class CreateBranchPrefixUpdater
 {
-    private const FAKE_BRANCH_NAME = 'branch_name';
+    private const string FAKE_BRANCH_NAME = 'branch_name';
 
     public function __construct(
         private GitlabRepositoryIntegrationFactory $integration_factory,

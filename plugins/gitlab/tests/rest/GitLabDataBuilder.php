@@ -30,7 +30,7 @@ use Tuleap\REST\RESTTestDataBuilder;
 
 class GitLabDataBuilder extends RESTTestDataBuilder
 {
-    public const PROJECT_TEST_GITLAB_SHORTNAME = 'test-gitlab';
+    public const string PROJECT_TEST_GITLAB_SHORTNAME = 'test-gitlab';
 
     public function setUp()
     {

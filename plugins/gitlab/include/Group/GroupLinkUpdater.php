@@ -32,7 +32,7 @@ use Tuleap\NeverThrow\Result;
 
 final class GroupLinkUpdater
 {
-    private const FAKE_BRANCH_NAME = 'branch_name';
+    private const string FAKE_BRANCH_NAME = 'branch_name';
 
     public function __construct(
         private UpdateBranchPrefixOfGroupLink $update_branch_prefix_of_group,

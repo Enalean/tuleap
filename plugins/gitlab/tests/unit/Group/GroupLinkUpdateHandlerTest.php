@@ -42,8 +42,8 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GroupLinkUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const GROUP_LINK_ID = 62;
-    private const PROJECT_ID    = 144;
+    private const int GROUP_LINK_ID = 62;
+    private const int PROJECT_ID    = 144;
     private GroupLink $updated_group_link;
 
     #[\Override]

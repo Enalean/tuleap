@@ -28,7 +28,7 @@ use Tuleap\User\UserName;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostPushBadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USERNAME = 'asticotc';
+    private const string USERNAME = 'asticotc';
 
     private UserName $committer_username;
 
