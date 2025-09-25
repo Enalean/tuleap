@@ -24,8 +24,8 @@ use Tuleap\REST\RestBase;
 
 class TestBase extends RestBase
 {
-    private const EXPLICIT_BACKLOG_STORY_TRACKER_SHORTNAME   = 'story';
-    private const EXPLICIT_BACKLOG_RELEASE_TRACKER_SHORTNAME = 'rel';
+    private const string EXPLICIT_BACKLOG_STORY_TRACKER_SHORTNAME   = 'story';
+    private const string EXPLICIT_BACKLOG_RELEASE_TRACKER_SHORTNAME = 'rel';
 
     protected $explicit_backlog_project_id;
     protected $explicit_backlog_story_tracker_id;

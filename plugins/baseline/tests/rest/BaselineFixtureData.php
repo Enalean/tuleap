@@ -25,8 +25,8 @@ namespace Tuleap\Baseline\Tests\REST;
 
 class BaselineFixtureData
 {
-    public const TEST_USER_NAME = 'rest_api_tester_1';
-    public const PROJECT_NAME   = 'baseline-test';
-    public const TRACKER_NAME   = 'base';
-    public const ARTIFACT_TITLE = 'new title';
+    public const string TEST_USER_NAME = 'rest_api_tester_1';
+    public const string PROJECT_NAME   = 'baseline-test';
+    public const string TRACKER_NAME   = 'base';
+    public const string ARTIFACT_TITLE = 'new title';
 }
