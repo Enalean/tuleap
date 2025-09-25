@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
 use Luracast\Restler\RestException;
 use PFUser;
@@ -39,6 +38,7 @@ use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
@@ -113,7 +113,7 @@ class ProjectBacklogResource
             new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
         );
 
-        $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+        $backlog_item_collection_factory = new BacklogItemCollectionFactory(
             new BacklogItemDao(),
             $tracker_artifact_factory,
             $this->milestone_factory,

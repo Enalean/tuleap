@@ -18,26 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+
 class AgileDashboard_SequenceIdManager
 {
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
-     */
-    private $backlog_item_collection_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
-    private $backlog_factory;
-
     /** @var array<int, array<int, int>> */
     private array $backlog_item_ids;
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
+        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly BacklogItemCollectionFactory $backlog_item_collection_factory,
     ) {
-        $this->backlog_item_collection_factory = $backlog_item_collection_factory;
-        $this->backlog_factory                 = $backlog_factory;
-        $this->backlog_item_ids                = [];
+        $this->backlog_item_ids = [];
     }
 
     public function getSequenceId(PFUser $user, Planning_Milestone $milestone, $artifact_id): ?int

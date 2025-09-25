@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\BacklogItem;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use PFUser;
 use Planning_Milestone;
 use PlanningFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\Tracker\Artifact\Dao\ArtifactDao;
 use Tuleap\Tracker\Tracker;
 
@@ -52,7 +52,7 @@ final class SubBacklogItemProvider
     public function __construct(
         private readonly ArtifactDao $dao,
         private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        private readonly AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
+        private readonly BacklogItemCollectionFactory $backlog_item_collection_factory,
         private readonly PlanningFactory $planning_factory,
         private readonly ExplicitBacklogDao $explicit_backlog_dao,
         private readonly ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,

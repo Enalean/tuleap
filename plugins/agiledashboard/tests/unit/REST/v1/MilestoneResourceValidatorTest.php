@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,6 +35,7 @@ use Planning_VirtualTopMilestone;
 use PlanningFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\BacklogItemPresenter;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -99,7 +99,7 @@ final class MilestoneResourceValidatorTest extends TestCase
         $this->tracker_artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
         $backlog_factory                = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $milestone_factory              = $this->createMock(Planning_MilestoneFactory::class);
-        $backlog_row_collection_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
+        $backlog_row_collection_factory = $this->createMock(BacklogItemCollectionFactory::class);
 
         $backlog_factory->method('getSelfBacklog')->with($this->milestone)->willReturn($self_backlog);
         $backlog_factory->method('getBacklog')->willReturn($backlog);

@@ -23,37 +23,20 @@
  */
 
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPresenterBuilder;
 
 /**
  * Like RepRap, I build builders
  */
-class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory
+class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
-    private $backlog_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
-    private $row_collection_factory;
-    /**
-     * @var BurnupFieldRetriever
-     */
-    private $field_retriever;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $row_collection_factory,
-        BurnupFieldRetriever $field_retriever,
-        EventManager $event_manager,
+        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly BacklogItemCollectionFactory $row_collection_factory,
+        private readonly BurnupFieldRetriever $field_retriever,
+        private readonly EventManager $event_manager,
     ) {
-        $this->backlog_factory        = $backlog_factory;
-        $this->row_collection_factory = $row_collection_factory;
-        $this->field_retriever        = $field_retriever;
-        $this->event_manager          = $event_manager;
     }
 
     /**

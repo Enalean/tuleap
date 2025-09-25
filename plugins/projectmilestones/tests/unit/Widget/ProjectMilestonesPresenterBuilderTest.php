@@ -24,7 +24,6 @@ namespace Tuleap\ProjectMilestones\Widget;
 
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use AgileDashboardPlugin;
 use HTTPRequest;
@@ -38,6 +37,7 @@ use Project_AccessProjectNotFoundException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\Color\ColorName;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -56,7 +56,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
     private \PHPUnit\Framework\MockObject\MockObject&PFUser $john_doe;
     private Planning_VirtualTopMilestone&\PHPUnit\Framework\MockObject\MockObject $planning_virtual_top_milestone;
     private AgileDashboard_Milestone_Backlog_IBacklogItemCollection&\PHPUnit\Framework\MockObject\MockObject $agileDashboard_milestone_backlog_item_collection;
-    private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&\PHPUnit\Framework\MockObject\MockObject $agiledashboard_milestone_backlog_item_collection_factory;
+    private BacklogItemCollectionFactory&\PHPUnit\Framework\MockObject\MockObject $agiledashboard_milestone_backlog_item_collection_factory;
     private \PHPUnit\Framework\MockObject\MockObject&AgileDashboard_Milestone_Backlog_BacklogFactory $agiledashboard_milestone_backlog_factory;
     private AgileDashboard_Milestone_Backlog_Backlog&\PHPUnit\Framework\MockObject\MockObject $agiledashboard_milestone_backlog;
     private ExplicitBacklogDao&\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
@@ -78,7 +78,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->john_doe                                                 = $this->createMock(PFUser::class);
         $this->planning_virtual_top_milestone                           = $this->createMock(Planning_VirtualTopMilestone::class);
         $this->agileDashboard_milestone_backlog_item_collection         = $this->createMock(AgileDashboard_Milestone_Backlog_IBacklogItemCollection::class);
-        $this->agiledashboard_milestone_backlog_item_collection_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
+        $this->agiledashboard_milestone_backlog_item_collection_factory = $this->createMock(BacklogItemCollectionFactory::class);
         $this->agiledashboard_milestone_backlog_factory                 = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $this->agiledashboard_milestone_backlog                         = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
         $this->explicit_backlog_dao                                     = $this->createMock(ExplicitBacklogDao::class);
@@ -703,7 +703,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
     }
 
     private function mockAgiledashboardBacklogItemFactory(
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&\PHPUnit\Framework\MockObject\MockObject $agiledashboard_milestone_backlog_item_collection_factory,
+        BacklogItemCollectionFactory&\PHPUnit\Framework\MockObject\MockObject $agiledashboard_milestone_backlog_item_collection_factory,
     ): void {
         $agiledashboard_milestone_backlog_item_collection_factory->expects($this->once())->method('getUnassignedOpenCollection')
             ->with($this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false)

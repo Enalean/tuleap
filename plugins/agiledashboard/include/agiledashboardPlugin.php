@@ -22,7 +22,6 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\VisitRetriever;
-use Tuleap\AgileDashboard\Tracker\HierarchyChecker;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
 use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHandler;
@@ -63,6 +62,7 @@ use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\MilestoneReportCriterionDao;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
@@ -74,6 +74,7 @@ use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Semantic\XML\SemanticsExporter;
 use Tuleap\AgileDashboard\SplitModalPresenter;
+use Tuleap\AgileDashboard\Tracker\HierarchyChecker;
 use Tuleap\AgileDashboard\Tracker\TrackerHierarchyUpdateChecker;
 use Tuleap\AgileDashboard\Tracker\TrackersCannotBeLinkedWithHierarchyException;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklog;
@@ -1378,10 +1379,10 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getBacklogItemCollectionFactory(
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $presenter_builder,
-    ): AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
+    ): BacklogItemCollectionFactory {
         $form_element_factory = Tracker_FormElementFactory::instance();
 
-        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+        return new BacklogItemCollectionFactory(
             new BacklogItemDao(),
             $this->getArtifactFactory(),
             $milestone_factory,

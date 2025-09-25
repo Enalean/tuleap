@@ -24,21 +24,21 @@ namespace Tuleap\AgileDashboard\BacklogItem;
 
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
+use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 
-final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
+final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct(
         private BacklogItemRepresentationFactory $backlog_item_representation_factory,
-        private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
+        private BacklogItemCollectionFactory $backlog_item_collection_factory,
         private AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         private ExplicitBacklogDao $explicit_backlog_dao,
     ) {

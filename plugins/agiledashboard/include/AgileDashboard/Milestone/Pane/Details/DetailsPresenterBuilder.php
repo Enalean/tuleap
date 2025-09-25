@@ -25,40 +25,21 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use EventManager;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneRedirectParameter;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 
 class DetailsPresenterBuilder
 {
-    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
-    private $backlog_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
-    private $collection_factory;
-
-    /**
-     * @var BurnupFieldRetriever
-     */
-    private $field_retriever;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory,
-        BurnupFieldRetriever $field_retriever,
-        EventManager $event_manager,
+        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly BacklogItemCollectionFactory $collection_factory,
+        private readonly BurnupFieldRetriever $field_retriever,
+        private readonly EventManager $event_manager,
     ) {
-        $this->backlog_factory    = $backlog_factory;
-        $this->collection_factory = $collection_factory;
-        $this->field_retriever    = $field_retriever;
-        $this->event_manager      = $event_manager;
     }
 
     public function getMilestoneDetailsPresenter(PFUser $user, Planning_Milestone $milestone): DetailsPresenter
