@@ -32,7 +32,7 @@ import {
     FORWARD_DIRECTION,
     IS_CHILD_LINK_TYPE,
     REVERSE_DIRECTION,
-    UNTYPED_LINK,
+    DEFAULT_LINK_TYPE,
 } from "@tuleap/plugin-tracker-constants";
 import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
 
@@ -58,10 +58,13 @@ describe("LinkFieldValueFormatter", () => {
                 SECOND_LINKED_ARTIFACT_ID,
                 LinkTypeStub.buildParentLinkType(),
             ),
-            LinkedArtifactStub.withIdAndType(THIRD_LINKED_ARTIFACT_ID, LinkTypeStub.buildUntyped()),
+            LinkedArtifactStub.withIdAndType(
+                THIRD_LINKED_ARTIFACT_ID,
+                LinkTypeStub.buildDefaultLinkType(),
+            ),
         );
         new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-            NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildUntyped()),
+            NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildDefaultLinkType()),
             NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildChildLinkType()),
         );
 
@@ -101,8 +104,12 @@ describe("LinkFieldValueFormatter", () => {
                     type: IS_CHILD_LINK_TYPE,
                     direction: FORWARD_DIRECTION,
                 },
-                { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
-                { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
+                {
+                    id: THIRD_LINKED_ARTIFACT_ID,
+                    type: DEFAULT_LINK_TYPE,
+                    direction: FORWARD_DIRECTION,
+                },
+                { id: FIRST_NEW_LINK_ID, type: DEFAULT_LINK_TYPE, direction: FORWARD_DIRECTION },
                 { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE, direction: REVERSE_DIRECTION },
             ],
         });
@@ -114,7 +121,7 @@ describe("LinkFieldValueFormatter", () => {
         expect(format()).toStrictEqual({
             field_id: FIELD_ID,
             all_links: [
-                { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
+                { id: FIRST_NEW_LINK_ID, type: DEFAULT_LINK_TYPE, direction: FORWARD_DIRECTION },
                 { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE, direction: REVERSE_DIRECTION },
             ],
         });
@@ -136,7 +143,11 @@ describe("LinkFieldValueFormatter", () => {
                     type: IS_CHILD_LINK_TYPE,
                     direction: FORWARD_DIRECTION,
                 },
-                { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
+                {
+                    id: THIRD_LINKED_ARTIFACT_ID,
+                    type: DEFAULT_LINK_TYPE,
+                    direction: FORWARD_DIRECTION,
+                },
             ],
         });
     });

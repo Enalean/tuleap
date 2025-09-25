@@ -175,7 +175,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                     new ArtifactLinkValue(
                         new ArtifactLinkType(
                             'is Linked to',
-                            ArtifactLinkField::NO_TYPE,
+                            ArtifactLinkField::DEFAULT_LINK_TYPE,
                             LinkDirection::FORWARD->value,
                         ),
                         'my_tracker',
@@ -216,8 +216,8 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                     ),
                     new ArtifactLinkValue(
                         new ArtifactLinkType(
-                            'is Linked to',
-                            ArtifactLinkField::NO_TYPE,
+                            'is Linked from',
+                            ArtifactLinkField::DEFAULT_LINK_TYPE,
                             LinkDirection::REVERSE->value,
                         ),
                         'my_tracker',

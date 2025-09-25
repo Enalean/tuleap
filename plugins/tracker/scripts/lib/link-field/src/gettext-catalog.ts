@@ -39,7 +39,8 @@ export const getLinkFieldTypeAlreadySet = (): string => {
 };
 export const getUnlinkLabel = (): string => gettext_provider.gettext("Unlink");
 export const getRestoreLabel = (): string => gettext_provider.gettext("Restore");
-export const getDefaultLinkTypeLabel = (): string => gettext_provider.gettext("is Linked to");
+export const getLinkedToTypeLabel = (): string => gettext_provider.gettext("is Linked to");
+export const getLinkedFromTypeLabel = (): string => gettext_provider.gettext("is Linked from");
 export const getChildTypeLabel = (): string => gettext_provider.gettext("is Child of");
 export const getParentTypeLabel = (): string => gettext_provider.gettext("is Parent of");
 

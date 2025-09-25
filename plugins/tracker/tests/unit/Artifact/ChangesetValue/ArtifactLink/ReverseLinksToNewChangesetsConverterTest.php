@@ -177,7 +177,7 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
             self::ADDED_LINK_FIELD_ID => [
                 'new_values'     => (string) self::TARGET_ARTIFACT_ID,
                 'removed_values' => [],
-                'types'          => [self::TARGET_ARTIFACT_ID => ArtifactLinkField::NO_TYPE],
+                'types'          => [self::TARGET_ARTIFACT_ID => ArtifactLinkField::DEFAULT_LINK_TYPE],
             ],
         ], $second_added_changeset->getFieldsData());
     }
@@ -258,7 +258,7 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
             self::ADDED_LINK_FIELD_ID => [
                 'new_values'     => (string) self::TARGET_ARTIFACT_ID,
                 'removed_values' => [],
-                'types'          => [self::TARGET_ARTIFACT_ID => ArtifactLinkField::NO_TYPE],
+                'types'          => [self::TARGET_ARTIFACT_ID => ArtifactLinkField::DEFAULT_LINK_TYPE],
             ],
         ], $new_changeset_add_link->getFieldsData());
 

@@ -96,7 +96,7 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'removed_values' => [53 => [53], 34 => [34]],
                 'types'          => [
                     99 => 'custom_type',
-                    42 => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE,
+                    42 => \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE,
                 ],
                 'parent'         => [63],
             ],

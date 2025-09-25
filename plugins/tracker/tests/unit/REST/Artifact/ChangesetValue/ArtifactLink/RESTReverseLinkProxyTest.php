@@ -35,16 +35,16 @@ final class RESTReverseLinkProxyTest extends TestCase
             LinkWithDirectionRepresentationBuilder::aReverseLink(101)->withType('_is_child')->build()
         );
         self::assertSame(101, $reverse->getSourceArtifactId());
-        self::assertSame('_is_child', $reverse->getType());
+        self::assertSame(ArtifactLinkField::TYPE_IS_CHILD, $reverse->getType());
     }
 
-    public function testWithDefaultsEmptyType(): void
+    public function testWithDefaultsLinkedToType(): void
     {
         $link = RESTReverseLinkProxy::fromPayload(
             LinkWithDirectionRepresentationBuilder::aReverseLink(49)->withType('')->build()
         );
         self::assertSame(49, $link->getSourceArtifactId());
-        self::assertSame(ArtifactLinkField::NO_TYPE, $link->getType());
+        self::assertSame(ArtifactLinkField::DEFAULT_LINK_TYPE, $link->getType());
     }
 
     public function testItThrowsWhenTypeIsNull(): void

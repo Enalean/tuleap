@@ -69,7 +69,7 @@ final class StoredForwardLinkTest extends \Tuleap\Test\PHPUnit\TestCase
         $link                = $this->build();
         self::assertNotNull($link);
         self::assertSame(self::ARTIFACT_ID, $link->getTargetArtifactId());
-        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, $link->getType());
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE, $link->getType());
     }
 
     public function testItReturnsNullWhenArtifactCannotBeRetrieved(): void

@@ -59,7 +59,7 @@ class MilestoneContentUpdater
                 $this->artifact_factory,
                 $milestone
             ),
-            ArtifactLinkField::NO_TYPE
+            ArtifactLinkField::DEFAULT_LINK_TYPE
         );
     }
 

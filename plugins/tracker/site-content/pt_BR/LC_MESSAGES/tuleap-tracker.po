@@ -4570,6 +4570,12 @@ msgstr ""
 msgid "in"
 msgstr ""
 
+msgid "is Linked from"
+msgstr ""
+
+msgid "is Linked to"
+msgstr ""
+
 msgid "is not a float."
 msgstr ""
 

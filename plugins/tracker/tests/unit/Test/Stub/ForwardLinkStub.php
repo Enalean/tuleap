@@ -35,7 +35,7 @@ final class ForwardLinkStub implements ForwardLink
 
     public static function withNoType(int $id): self
     {
-        return new self($id, \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE);
+        return new self($id, \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE);
     }
 
     public static function withType(int $id, string $type): self

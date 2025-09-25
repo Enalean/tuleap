@@ -70,7 +70,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         self::assertCount(2, $new_links->getArtifactLinks());
         [$first_link, $second_link] = $new_links->getArtifactLinks();
         self::assertSame(self::FIRST_ADDED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::DEFAULT_LINK_TYPE, $first_link->getType());
         self::assertSame(self::SECOND_ADDED_ARTIFACT_ID, $second_link->getTargetArtifactId());
         self::assertSame('custom_type', $second_link->getType());
     }
@@ -105,7 +105,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         self::assertCount(2, $new_links->getArtifactLinks());
         [$first_link, $second_link] = $new_links->getArtifactLinks();
         self::assertSame(self::FIRST_ADDED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::DEFAULT_LINK_TYPE, $first_link->getType());
         self::assertSame(self::SECOND_ADDED_ARTIFACT_ID, $second_link->getTargetArtifactId());
         self::assertSame('custom_type', $second_link->getType());
     }
@@ -127,12 +127,12 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         self::assertCount(1, $new_links->getArtifactLinks());
         [$first_link] = $new_links->getArtifactLinks();
         self::assertSame(self::FIRST_ADDED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::DEFAULT_LINK_TYPE, $first_link->getType());
 
         $reverse_links = $value->getReverseLinks();
         self::assertCount(1, $reverse_links->links);
         [$first_link] = $reverse_links->links;
         self::assertSame(self::SECOND_ADDED_ARTIFACT_ID, $first_link->getSourceArtifactId());
-        self::assertSame(ArtifactLinkField::NO_TYPE, $first_link->getType());
+        self::assertSame(ArtifactLinkField::DEFAULT_LINK_TYPE, $first_link->getType());
     }
 }

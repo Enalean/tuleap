@@ -22,7 +22,7 @@ import { http, HttpResponse } from "msw";
 import {
     FORWARD_DIRECTION,
     IS_CHILD_LINK_TYPE,
-    UNTYPED_LINK,
+    DEFAULT_LINK_TYPE,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     JustCreatedArtifactResponse,
@@ -47,7 +47,7 @@ import { Option } from "@tuleap/option";
 
 function isGettingUntypedLinks(url: URL): boolean {
     return (
-        url.searchParams.get("nature") === UNTYPED_LINK &&
+        url.searchParams.get("nature") === DEFAULT_LINK_TYPE &&
         url.searchParams.get("direction") === FORWARD_DIRECTION
     );
 }
@@ -125,7 +125,7 @@ export const RequestHandlersBuilder = (
         () =>
             HttpResponse.json({
                 natures: [
-                    LinkTypeRepresentationBuilder.buildUntypedLinkTo(),
+                    LinkTypeRepresentationBuilder.buildLinkedTo(),
                     LinkTypeRepresentationBuilder.buildParentOf(),
                 ],
             }),

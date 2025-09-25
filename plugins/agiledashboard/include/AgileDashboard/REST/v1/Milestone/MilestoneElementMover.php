@@ -122,7 +122,7 @@ class MilestoneElementMover
             $milestone->getArtifact(),
             $to_add,
             [],
-            ArtifactLinkField::NO_TYPE
+            ArtifactLinkField::DEFAULT_LINK_TYPE
         );
     }
 
@@ -140,7 +140,7 @@ class MilestoneElementMover
                         $milestone->getArtifact(),
                         $this->getFilteredArtifactIdsToAdd($milestone, $to_add),
                         [],
-                        ArtifactLinkField::NO_TYPE
+                        ArtifactLinkField::DEFAULT_LINK_TYPE
                     );
                     $this->linkToMilestoneParent($milestone, $user, $to_add);
                     $this->removeItemsFromExplicitBacklog($milestone->getProject(), $to_add);

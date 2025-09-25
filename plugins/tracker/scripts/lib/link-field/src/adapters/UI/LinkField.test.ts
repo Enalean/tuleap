@@ -150,7 +150,7 @@ describe("LinkField", () => {
                 return {
                     controller: {} as LinkFieldController,
                     link_selector,
-                    current_link_type: LinkTypeStub.buildUntyped(),
+                    current_link_type: LinkTypeStub.buildDefaultLinkType(),
                     matching_artifact_section: initial_dropdown_content,
                     possible_parents_section: initial_dropdown_content,
                     recently_viewed_section: initial_dropdown_content,
@@ -196,7 +196,7 @@ describe("LinkField", () => {
                             is_parent_type_disabled,
                             LinkTypesCollectionStub.withParentPair(),
                         ),
-                    current_link_type: LinkTypeStub.buildUntyped(),
+                    current_link_type: LinkTypeStub.buildDefaultLinkType(),
                 } as HostElement;
             };
 
@@ -206,7 +206,7 @@ describe("LinkField", () => {
 
             it(`defaults to Untyped link`, () => {
                 const link_type = getType(undefined);
-                expect(LinkType.isUntypedLink(link_type)).toBe(true);
+                expect(LinkType.isDefaultTypeLabel(link_type)).toBe(true);
             });
 
             it(`When the current link is a reverse child and the child link type is disabled,
@@ -214,7 +214,7 @@ describe("LinkField", () => {
                 is_parent_type_disabled = true;
                 const current_link_type = getType(LinkTypeStub.buildChildLinkType());
 
-                expect(LinkType.isUntypedLink(current_link_type)).toBe(true);
+                expect(LinkType.isDefaultTypeLabel(current_link_type)).toBe(true);
             });
 
             it(`when the current link is a reverse child and the child link type is allowed,
@@ -241,7 +241,7 @@ describe("LinkField", () => {
                 const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];
                 const new_links: ReadonlyArray<NewLink> = [];
                 return {
-                    current_link_type: LinkTypeStub.buildUntyped(),
+                    current_link_type: LinkTypeStub.buildDefaultLinkType(),
                     linked_artifacts,
                     new_links,
                 } as LinkField;
@@ -355,7 +355,7 @@ describe("LinkField", () => {
         it(`when it receives a "type-changed" event from the link type selector element,
             it will set the current link type`, () => {
             const host = {
-                current_link_type: LinkTypeStub.buildUntyped(),
+                current_link_type: LinkTypeStub.buildDefaultLinkType(),
             } as LinkField;
 
             onLinkTypeChanged(

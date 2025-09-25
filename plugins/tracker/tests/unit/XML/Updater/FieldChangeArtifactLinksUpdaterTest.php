@@ -85,7 +85,7 @@ final class FieldChangeArtifactLinksUpdaterTest extends TestCase
             0
         );
 
-        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
         self::assertSame(self::ARTIFACT_ID, (string) $changeset_xml->field_change[0]->value);
         self::assertSame('The type "system_1" of the link to artifact #101 has been set to "no type"', (string) $changeset_xml->comments->comment->body);
     }
@@ -102,7 +102,7 @@ final class FieldChangeArtifactLinksUpdaterTest extends TestCase
             0
         );
 
-        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE, (string) $changeset_xml->field_change[0]->value->attributes()->nature);
         self::assertSame(self::ARTIFACT_ID, (string) $changeset_xml->field_change[0]->value);
         self::assertSame('The type "my_custom_type" of the link to artifact #101 has been set to "no type"', (string) $changeset_xml->comments->comment->body);
     }

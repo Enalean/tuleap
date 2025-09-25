@@ -86,13 +86,13 @@ use UserManager;
 #[ConfigKeyCategory('Tracker')]
 class ArtifactLinkField extends TrackerField
 {
-    public const TYPE                    = 'art_link';
-    public const CREATE_NEW_PARENT_VALUE = -1;
-    public const NEW_VALUES_KEY          = 'new_values';
-    public const TYPE_IS_CHILD           = '_is_child';
-    public const FAKE_TYPE_IS_PARENT     = '_is_parent';
-    public const NO_TYPE                 = '';
-    public const FIELDS_DATA_PARENT_KEY  = 'parent';
+    public const string TYPE                   = 'art_link';
+    public const int CREATE_NEW_PARENT_VALUE   = -1;
+    public const string NEW_VALUES_KEY         = 'new_values';
+    public const string TYPE_IS_CHILD          = '_is_child';
+    public const string FAKE_TYPE_IS_PARENT    = '_is_parent';
+    public const string DEFAULT_LINK_TYPE      = '';
+    public const string FIELDS_DATA_PARENT_KEY = 'parent';
 
     public array $default_properties = [
         'can_edit_reverse_links' => [

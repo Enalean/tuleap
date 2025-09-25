@@ -18,7 +18,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { FORWARD_DIRECTION, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { FORWARD_DIRECTION, DEFAULT_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { LinkType } from "../../domain/links/LinkType";
 import { LinkTypeProxy } from "./LinkTypeProxy";
 
@@ -48,7 +48,7 @@ describe(`LinkTypeProxy`, () => {
 
     it(`builds from change event on type select`, () => {
         triggerEvent();
-        expect(type.shortname).toBe(UNTYPED_LINK);
+        expect(type.shortname).toBe(DEFAULT_LINK_TYPE);
         expect(type.direction).toBe(FORWARD_DIRECTION);
         expect(type.label).toBe(LABEL);
     });

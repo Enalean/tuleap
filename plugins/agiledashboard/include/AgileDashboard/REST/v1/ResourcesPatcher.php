@@ -82,7 +82,7 @@ class ResourcesPatcher
                     $from_artifact,
                     [],
                     [$added_id],
-                    \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE
+                    \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE
                 );
             }
         }

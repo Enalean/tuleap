@@ -104,7 +104,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->artifact,
                 [self::FEATURE_ID],
                 [],
-                \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE
+                \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE
             );
 
         $this->getProcessor()->add($this->buildFeatureAddition());

@@ -719,7 +719,7 @@ class CampaignsResource
             $artifact,
             $new_execution_ids,
             $execution_ids_to_remove,
-            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE
+            \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE
         );
 
         foreach ($executions_to_remove as $execution) {

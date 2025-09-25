@@ -238,7 +238,7 @@ final class ArtidocFieldsTest extends RestBase
                 [
                     'field_id'  => $artifact_links_field_id,
                     'all_links' => [
-                        ['id' => $artifact_to_link_id, 'direction' => 'forward', 'type' => ArtifactLinkField::NO_TYPE],
+                        ['id' => $artifact_to_link_id, 'direction' => 'forward', 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
                     ],
                 ],
             ]
@@ -402,8 +402,8 @@ final class ArtidocFieldsTest extends RestBase
                         'title'             => self::LINKED_ARTIFACT_TITLE,
                         'html_uri'          => '/plugins/tracker/?aid=' . $artifact_to_link_id,
                         'status'            => null,
-                        'link_type'         => [
-                            'shortname' => ArtifactLinkField::NO_TYPE,
+                        'link_type' => [
+                            'shortname' => ArtifactLinkField::DEFAULT_LINK_TYPE,
                             'direction' => LinkDirection::FORWARD->value,
                         ],
                     ],

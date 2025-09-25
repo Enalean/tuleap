@@ -23,7 +23,7 @@ import {
     IS_CHILD_LINK_TYPE,
     MIRRORED_MILESTONE_LINK_TYPE,
     REVERSE_DIRECTION,
-    UNTYPED_LINK,
+    DEFAULT_LINK_TYPE,
 } from "@tuleap/plugin-tracker-constants";
 
 export interface LinkType {
@@ -33,8 +33,8 @@ export interface LinkType {
 }
 
 export const LinkType = {
-    buildUntyped: (): LinkType => ({
-        shortname: UNTYPED_LINK,
+    buildDefaultLinkType: (): LinkType => ({
+        shortname: DEFAULT_LINK_TYPE,
         direction: FORWARD_DIRECTION,
         label: "",
     }),
@@ -45,7 +45,7 @@ export const LinkType = {
     isReverseChild: (type: LinkType): boolean =>
         type.shortname === IS_CHILD_LINK_TYPE && type.direction === REVERSE_DIRECTION,
 
-    isUntypedLink: (type: LinkType): boolean => type.shortname === UNTYPED_LINK,
+    isDefaultTypeLabel: (type: LinkType): boolean => type.shortname === DEFAULT_LINK_TYPE,
 
     isMirroredMilestone: (type: LinkType): boolean =>
         type.shortname === MIRRORED_MILESTONE_LINK_TYPE,

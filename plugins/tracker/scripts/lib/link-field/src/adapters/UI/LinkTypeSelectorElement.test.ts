@@ -52,7 +52,7 @@ describe("LinkTypeSelectorElement", () => {
     const getHost = (): HostElement => {
         const element = doc.createElement("span");
         return Object.assign(element, {
-            value: LinkTypeStub.buildUntyped(),
+            value: LinkTypeStub.buildDefaultLinkType(),
             disabled: false,
             current_artifact_reference: cross_reference,
             available_types: allowed_link_types,
@@ -76,11 +76,13 @@ describe("LinkTypeSelectorElement", () => {
         );
         const separators = Array.from(select.options).filter((option) => option.label === "–");
         expect(separators).toHaveLength(1);
-        expect(options_with_label).toHaveLength(3);
+        expect(options_with_label).toHaveLength(4);
 
-        const [untyped_option, parent_option, child_option] = options_with_label;
-        expect(untyped_option.selected).toBe(true);
-        expect(untyped_option.label).toBe("is Linked to");
+        const [linked_to_option, linked_from_option, parent_option, child_option] =
+            options_with_label;
+        expect(linked_to_option.selected).toBe(true);
+        expect(linked_to_option.label).toBe("is Linked to");
+        expect(linked_from_option.label).toBe("is Linked from");
         expect(parent_option.label).toBe("is Parent of");
         expect(child_option.label).toBe("is Child of");
 

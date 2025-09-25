@@ -152,7 +152,7 @@ class CreateArtifactAction
         $this->artifact_linker->linkArtifact(
             $source_artifact,
             new CollectionOfForwardLinks([
-                ForwardLinkProxy::buildFromData($new_artifact->getId(), $artifact_link_type ?: ArtifactLinkField::NO_TYPE),
+                ForwardLinkProxy::buildFromData($new_artifact->getId(), $artifact_link_type ?: ArtifactLinkField::DEFAULT_LINK_TYPE),
             ]),
             $current_user,
         );

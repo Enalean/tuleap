@@ -115,7 +115,7 @@ class RequestDataAugmentor
         $new_values = $fields_data[$artifact_link_field->getId()]['new_values'];
 
         if (! isset($fields_data[$artifact_link_field->getId()]['type'])) {
-            $fields_data[$artifact_link_field->getId()]['type'] = ArtifactLinkField::NO_TYPE;
+            $fields_data[$artifact_link_field->getId()]['type'] = ArtifactLinkField::DEFAULT_LINK_TYPE;
         }
 
         if (trim($new_values) != '') {

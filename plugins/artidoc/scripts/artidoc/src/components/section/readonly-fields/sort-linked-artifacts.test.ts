@@ -23,7 +23,7 @@ import {
     FORWARD_DIRECTION,
     IS_CHILD_LINK_TYPE,
     REVERSE_DIRECTION,
-    UNTYPED_LINK,
+    DEFAULT_LINK_TYPE,
 } from "@tuleap/plugin-tracker-constants";
 import { sortLinkedArtifacts } from "@/components/section/readonly-fields/sort-linked-artifacts";
 
@@ -35,10 +35,10 @@ describe("sort-linked-artifacts", () => {
         link_type: { shortname: IS_CHILD_LINK_TYPE, direction: REVERSE_DIRECTION },
     });
     const link_1 = LinkedArtifactStub.override({
-        link_type: { shortname: UNTYPED_LINK, direction: REVERSE_DIRECTION },
+        link_type: { shortname: DEFAULT_LINK_TYPE, direction: REVERSE_DIRECTION },
     });
     const link_2 = LinkedArtifactStub.override({
-        link_type: { shortname: UNTYPED_LINK, direction: FORWARD_DIRECTION },
+        link_type: { shortname: DEFAULT_LINK_TYPE, direction: FORWARD_DIRECTION },
     });
     const link_3 = LinkedArtifactStub.override({
         link_type: { shortname: "_duplicates", direction: FORWARD_DIRECTION },

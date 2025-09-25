@@ -126,7 +126,7 @@ final class UpdateArtifactActionTest extends TestCase
 
         $this->forward_links_retriever     = RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([
             ForwardLinkProxy::buildFromData(1, ArtifactLinkField::TYPE_IS_CHILD),
-            ForwardLinkProxy::buildFromData(2, ArtifactLinkField::NO_TYPE),
+            ForwardLinkProxy::buildFromData(2, ArtifactLinkField::DEFAULT_LINK_TYPE),
         ]));
         $this->artifact_retriever          = RetrieveViewableArtifactStub::withNoArtifact();
         $this->project_dashboard_retriever = $this->createStub(ProjectDashboardRetriever::class);
@@ -396,7 +396,7 @@ final class UpdateArtifactActionTest extends TestCase
                 645 => psl_json_encode([
                     'field_id' => 645,
                     'all_links' => [
-                        ['id' => 529, 'direction' => 'reverse', 'type' => ArtifactLinkField::NO_TYPE],
+                        ['id' => 529, 'direction' => 'reverse', 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
                     ],
                 ]),
             ])
@@ -421,7 +421,7 @@ final class UpdateArtifactActionTest extends TestCase
                 899 => psl_json_encode([
                     'field_id' => 899,
                     'all_links' => [
-                        ['id' => 404, 'direction' => 'reverse', 'type' => ArtifactLinkField::NO_TYPE],
+                        ['id' => 404, 'direction' => 'reverse', 'type' => ArtifactLinkField::DEFAULT_LINK_TYPE],
                     ],
                 ]),
             ])

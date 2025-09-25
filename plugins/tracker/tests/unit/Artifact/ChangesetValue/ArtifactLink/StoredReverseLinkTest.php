@@ -97,6 +97,6 @@ final class StoredReverseLinkTest extends TestCase
         );
 
         self::assertNotNull($reverse_link);
-        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE, $reverse_link->getType());
+        self::assertSame(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE, $reverse_link->getType());
     }
 }

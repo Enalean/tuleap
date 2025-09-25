@@ -23,11 +23,18 @@ import {
     IS_CHILD_LINK_TYPE,
     MIRRORED_MILESTONE_LINK_TYPE,
     REVERSE_DIRECTION,
+    DEFAULT_LINK_TYPE,
 } from "@tuleap/plugin-tracker-constants";
 
 const CUSTOM_TYPE = "custom";
 export const LinkTypeStub = {
-    buildUntyped: LinkType.buildUntyped,
+    buildDefaultLinkType: LinkType.buildDefaultLinkType,
+
+    buildLinkedFromLinkType: (): LinkType => ({
+        shortname: DEFAULT_LINK_TYPE,
+        direction: REVERSE_DIRECTION,
+        label: "is Linked from",
+    }),
     buildParentLinkType: (): LinkType => ({
         shortname: IS_CHILD_LINK_TYPE,
         direction: FORWARD_DIRECTION,

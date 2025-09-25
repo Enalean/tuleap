@@ -43,7 +43,7 @@ final class StoredForwardLink implements ForwardLink
         if (! $artifact || ! $artifact->userCanView($user)) {
             return null;
         }
-        return new self($artifact->getId(), $row['nature'] ?? \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE);
+        return new self($artifact->getId(), $row['nature'] ?? \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::DEFAULT_LINK_TYPE);
     }
 
     #[\Override]

@@ -21,15 +21,20 @@ import type { LinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-typ
 import {
     FORWARD_DIRECTION,
     IS_CHILD_LINK_TYPE,
-    UNTYPED_LINK,
+    DEFAULT_LINK_TYPE,
     REVERSE_DIRECTION,
 } from "@tuleap/plugin-tracker-constants";
 
 export const LinkTypeRepresentationBuilder = {
-    buildUntypedLinkTo: (): LinkTypeRepresentation => ({
-        shortname: UNTYPED_LINK,
+    buildLinkedTo: (): LinkTypeRepresentation => ({
+        shortname: DEFAULT_LINK_TYPE,
         direction: FORWARD_DIRECTION,
-        label: "",
+        label: "Linked to",
+    }),
+    buildLinkedFrom: (): LinkTypeRepresentation => ({
+        shortname: DEFAULT_LINK_TYPE,
+        direction: REVERSE_DIRECTION,
+        label: "Linked from",
     }),
     buildParentOf: (): LinkTypeRepresentation => ({
         shortname: IS_CHILD_LINK_TYPE,

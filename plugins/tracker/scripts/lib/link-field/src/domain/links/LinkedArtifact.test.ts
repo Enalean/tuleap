@@ -25,7 +25,7 @@ import { LinkType } from "./LinkType";
 
 describe(`LinkedArtifact`, () => {
     it(`builds a LinkedArtifact from an existing one with a new type`, () => {
-        const link = LinkedArtifactStub.withIdAndType(46, LinkTypeStub.buildUntyped());
+        const link = LinkedArtifactStub.withIdAndType(46, LinkTypeStub.buildDefaultLinkType());
         const new_type = LinkTypeStub.buildParentLinkType();
         const changed_link = LinkedArtifact.fromLinkAndType(link, new_type);
 
