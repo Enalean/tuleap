@@ -42,6 +42,7 @@
             <template v-if="should_display_lock_unlock">
                 <lock-item
                     v-bind:item="item"
+                    v-bind:document_lock="getDocumentLock()"
                     data-test="document-dropdown-menu-lock-item"
                     slot="lock-item"
                 />
@@ -96,6 +97,7 @@ import {
     FORBID_WRITERS_TO_UPDATE,
     IS_DELETION_ALLOWED,
 } from "../../../configuration-keys";
+import { getDocumentLock } from "../../../helpers/lock/document-lock";
 
 const props = defineProps<{ item: Item }>();
 

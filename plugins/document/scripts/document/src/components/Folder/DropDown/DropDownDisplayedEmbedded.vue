@@ -22,6 +22,7 @@
         <template v-if="currently_previewed_item.user_can_write">
             <lock-item
                 v-bind:item="currently_previewed_item"
+                v-bind:document_lock="getDocumentLock()"
                 data-test="document-dropdown-menu-lock-item"
                 slot="lock-item"
             />
@@ -70,6 +71,7 @@ import { useState } from "vuex-composition-helpers";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { FORBID_WRITERS_TO_DELETE, FORBID_WRITERS_TO_UPDATE } from "../../../configuration-keys";
+import { getDocumentLock } from "../../../helpers/lock/document-lock";
 
 const { currently_previewed_item } = useState<Pick<State, "currently_previewed_item">>([
     "currently_previewed_item",

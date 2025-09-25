@@ -34,6 +34,7 @@
         <template v-if="should_display_lock_unlock">
             <lock-item
                 v-bind:item="item"
+                v-bind:document_lock="getDocumentLock()"
                 data-test="document-dropdown-menu-lock-item"
                 slot="lock-item"
             />
@@ -109,6 +110,7 @@ import NewItemSubmenu from "./NewDocument/NewItemSubmenu.vue";
 import NewVersionEmptySubmenu from "./NewVersion/NewVersionEmptySubmenu.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { FORBID_WRITERS_TO_DELETE, FORBID_WRITERS_TO_UPDATE } from "../../../configuration-keys";
+import { getDocumentLock } from "../../../helpers/lock/document-lock";
 
 const props = defineProps<{ item: Item }>();
 
