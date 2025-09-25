@@ -26,7 +26,7 @@ use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class KeyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class KeyFactoryFromFileSystemTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
@@ -37,7 +37,7 @@ final class KeyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(dirname($encryption_key_file));
         \ForgeConfig::set('sys_custom_dir', $temporary_dir);
 
-        $key_factory   = new KeyFactory();
+        $key_factory   = new KeyFactoryFromFileSystem();
         $key_generated = $key_factory->getEncryptionKey();
 
         $this->assertFileExists($encryption_key_file);
@@ -60,7 +60,7 @@ final class KeyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         file_put_contents($encryption_key_file, sodium_bin2hex($raw_key_material));
 
-        $key_factory = new KeyFactory();
+        $key_factory = new KeyFactoryFromFileSystem();
         $key         = $key_factory->getEncryptionKey();
 
         $this->assertEquals($raw_key_material, $key->getRawKeyMaterial());
@@ -73,7 +73,7 @@ final class KeyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(dirname($encryption_key_file));
         \ForgeConfig::set('sys_custom_dir', $temporary_dir);
 
-        $key_factory     = new KeyFactory();
+        $key_factory     = new KeyFactoryFromFileSystem();
         $key_generated_1 = $key_factory->getEncryptionKey();
 
         unlink($encryption_key_file);

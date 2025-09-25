@@ -30,7 +30,6 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -218,7 +217,7 @@ final class oauth2_serverPlugin extends Plugin
             new SplitTokenVerificationStringHasher(),
             new LastGeneratedClientSecretStore(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
-                (new KeyFactory())->getEncryptionKey(),
+                (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getEncryptionKey(),
                 $storage
             ),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
@@ -246,7 +245,7 @@ final class oauth2_serverPlugin extends Plugin
             new SplitTokenVerificationStringHasher(),
             new LastGeneratedClientSecretStore(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
-                (new KeyFactory())->getEncryptionKey(),
+                (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getEncryptionKey(),
                 $storage
             ),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
@@ -325,7 +324,7 @@ final class oauth2_serverPlugin extends Plugin
                 $app_dao,
                 new LastGeneratedClientSecretStore(
                     new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
-                    (new KeyFactory())->getEncryptionKey(),
+                    (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getEncryptionKey(),
                     $storage
                 )
             ),
@@ -357,7 +356,7 @@ final class oauth2_serverPlugin extends Plugin
                 $app_dao,
                 new LastGeneratedClientSecretStore(
                     new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
-                    (new KeyFactory())->getEncryptionKey(),
+                    (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getEncryptionKey(),
                     $storage
                 )
             ),

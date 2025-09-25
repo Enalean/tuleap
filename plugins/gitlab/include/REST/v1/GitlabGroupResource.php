@@ -31,7 +31,6 @@ use Luracast\Restler\RestException;
 use ProjectManager;
 use SystemEventManager;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -153,7 +152,7 @@ final class GitlabGroupResource
                         DBFactory::getMainTuleapDBConnection()
                     );
                     $integration_dao       = new GitlabRepositoryIntegrationDao();
-                    $key_factory           = new KeyFactory();
+                    $key_factory           = new \Tuleap\Cryptography\KeyFactoryFromFileSystem();
                     $group_dao             = new GroupLinkDAO();
 
                     $gitlab_repository_creator = new GitlabRepositoryCreator(
@@ -284,7 +283,7 @@ final class GitlabGroupResource
             new ProjectRetriever(\ProjectManager::instance()),
             new GitAdministratorChecker($this->getGitPermissionsManager()),
             new GroupLinkRetriever($group_dao),
-            new GroupLinkUpdater($group_dao, $group_dao, new GroupLinkTokenUpdater(new GroupLinkApiTokenDAO(), new KeyFactory()))
+            new GroupLinkUpdater($group_dao, $group_dao, new GroupLinkTokenUpdater(new GroupLinkApiTokenDAO(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem()))
         );
         return $handler->handleGroupLinkUpdate(
             new UpdateGroupLinkCommand(
@@ -384,7 +383,7 @@ final class GitlabGroupResource
             DBFactory::getMainTuleapDBConnection()
         );
 
-        $key_factory = new KeyFactory();
+        $key_factory = new \Tuleap\Cryptography\KeyFactoryFromFileSystem();
 
         $gitlab_api_client = new ClientWrapper(
             HTTPFactoryBuilder::requestFactory(),

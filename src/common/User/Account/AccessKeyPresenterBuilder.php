@@ -27,7 +27,6 @@ use ForgeConfig;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Date\DateHelper;
 use Tuleap\User\AccessKey\AccessKeyDAO;
@@ -92,7 +91,7 @@ class AccessKeyPresenterBuilder
                 )
             ),
             new PrefixedSplitTokenSerializer(new PrefixAccessKey()),
-            (new KeyFactory())->getEncryptionKey(),
+            (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getEncryptionKey(),
         );
     }
 

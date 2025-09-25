@@ -24,7 +24,6 @@ namespace Tuleap\OnlyOffice\DocumentServer;
 
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
@@ -44,7 +43,7 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
         mkdir($root . '/conf/');
         \ForgeConfig::set('sys_custom_dir', $root);
 
-        $this->encryption = new DocumentServerKeyEncryption(new KeyFactory());
+        $this->encryption = new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem());
         $this->dao        = new DocumentServerDao($this->encryption);
 
         $this->db           = DBFactory::getMainTuleapDBConnection()->getDB();

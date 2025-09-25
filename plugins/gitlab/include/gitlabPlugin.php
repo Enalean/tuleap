@@ -19,7 +19,6 @@
  */
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -283,7 +282,7 @@ class gitlabPlugin extends Plugin
         );
 
         $credentials_retriever          = new CredentialsRetriever(
-            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())
+            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())
         );
         $commenter                      = new PostPushCommitBotCommenter(
             $comment_sender,
@@ -377,7 +376,7 @@ class gitlabPlugin extends Plugin
             new SecretChecker(
                 new SecretRetriever(
                     new WebhookDao(),
-                    new KeyFactory()
+                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 )
             ),
             new WebhookActions(
@@ -518,7 +517,7 @@ class gitlabPlugin extends Plugin
         );
 
         $credentials_retriever = new CredentialsRetriever(
-            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())
+            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())
         );
         $commenter             = new PostPushCommitBotCommenter(
             $comment_sender,
@@ -613,7 +612,7 @@ class gitlabPlugin extends Plugin
             new SecretChecker(
                 new SecretRetriever(
                     new WebhookDao(),
-                    new KeyFactory()
+                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 )
             ),
             new WebhookActions(

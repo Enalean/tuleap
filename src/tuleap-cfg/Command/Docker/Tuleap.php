@@ -30,6 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactoryFromFileSystem;
 use Tuleap\DB\DBConfig;
 use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
@@ -154,9 +155,9 @@ final class Tuleap
         $forge_upgrade->recordOnlyCore();
 
         $output->writeln('Generate platform secret');
-        $secret_key = new \Tuleap\Cryptography\SecretKeyFileOnFileSystem();
-        $secret_key->initAndGetEncryptionKeyPath();
-        $secret_key->restoreOwnership(new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]));
+        $key_factory = new KeyFactoryFromFileSystem();
+        $key_factory->getEncryptionKey();
+        $key_factory->restoreOwnership(new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]));
 
         $output->writeln('Start SSH daemon for initial setup (git)');
         $ssh_daemon = new SSHDaemon($this->process_factory);

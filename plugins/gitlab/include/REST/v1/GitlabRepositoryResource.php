@@ -31,7 +31,6 @@ use Project;
 use ProjectManager;
 use SystemEventManager;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\Branch\InvalidBranchNameException;
@@ -154,7 +153,7 @@ final class GitlabRepositoryResource
                 ),
                 new GitlabRepositoryIntegrationDao(),
                 new WebhookCreator(
-                    new KeyFactory(),
+                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                     new WebhookDao(),
                     new WebhookDeletor(
                         new WebhookDao(),
@@ -164,7 +163,7 @@ final class GitlabRepositoryResource
                     $gitlab_api_client,
                     BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER),
                 ),
-                new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), new KeyFactory())
+                new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())
             );
 
             if (isset($gitlab_repository->allow_artifact_closure) && $gitlab_repository->allow_artifact_closure === true) {
@@ -280,7 +279,7 @@ final class GitlabRepositoryResource
             new MergeRequestTuleapReferenceDao(),
             new TagInfoDao(),
             new BranchInfoDao(),
-            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())),
             new CreateBranchPrefixDao()
         );
 
@@ -380,10 +379,10 @@ final class GitlabRepositoryResource
                 $this->getGitPermissionsManager(),
                 new IntegrationApiTokenInserter(
                     new IntegrationApiTokenDao(),
-                    new KeyFactory()
+                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 ),
                 new WebhookCreator(
-                    new KeyFactory(),
+                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                     new WebhookDao(),
                     new WebhookDeletor(
                         new WebhookDao(),
@@ -417,11 +416,11 @@ final class GitlabRepositoryResource
                 new CredentialsRetriever(
                     new IntegrationApiTokenRetriever(
                         new IntegrationApiTokenDao(),
-                        new KeyFactory()
+                        new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                     ),
                 ),
                 new WebhookCreator(
-                    new KeyFactory(),
+                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                     new WebhookDao(),
                     new WebhookDeletor(
                         new WebhookDao(),
@@ -531,7 +530,7 @@ final class GitlabRepositoryResource
                 new GitlabRepositoryIntegrationDao(),
                 ProjectManager::instance()
             ),
-            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem())),
             new GitlabProjectBuilder(
                 new ClientWrapper(
                     HTTPFactoryBuilder::requestFactory(),

@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -25,17 +24,48 @@ namespace Tuleap\Cryptography;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey as Legacy2025EncryptionKey;
 
-final class SecretKeyFileOnFileSystem implements SecretKeyFile
+final readonly class KeyFactoryFromFileSystem implements KeyFactory
 {
     /**
      * @throws CannotPerformIOOperationException
-     * @throws Exception\InvalidKeyException
-     * @throws \SodiumException
      */
     #[\Override]
-    public function initAndGetEncryptionKeyPath(): string
+    public function getEncryptionKey(): EncryptionKey
+    {
+        return new EncryptionKey($this->getKeyMaterial());
+    }
+
+    /**
+     * @throws CannotPerformIOOperationException
+     */
+    #[\Override]
+    public function getLegacy2025EncryptionKey(): Legacy2025EncryptionKey
+    {
+        return new Legacy2025EncryptionKey($this->getKeyMaterial());
+    }
+
+    private function getKeyMaterial(): ConcealedString
+    {
+        $encryption_key_file_path = $this->initAndGetEncryptionKeyPath();
+        $file_data                = \file_get_contents($encryption_key_file_path);
+        if ($file_data === false) {
+            throw new CannotPerformIOOperationException("Cannot read the encryption key $encryption_key_file_path");
+        }
+
+        $file_data_hex = sodium_hex2bin($file_data);
+        \sodium_memzero($file_data);
+
+        $key_material = new ConcealedString($file_data_hex);
+
+        \sodium_memzero($file_data_hex);
+
+        return $key_material;
+    }
+
+    private function initAndGetEncryptionKeyPath(): string
     {
         $encryption_key_file_path = $this->getKeyPath();
         if (! \file_exists($encryption_key_file_path)) {
@@ -54,13 +84,13 @@ final class SecretKeyFileOnFileSystem implements SecretKeyFile
      * @throws Exception\InvalidKeyException
      * @throws \SodiumException
      */
-    private function generateEncryptionKey(): EncryptionKey
+    private function generateEncryptionKey(): \Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey
     {
         $raw_encryption_key = \sodium_crypto_aead_xchacha20poly1305_ietf_keygen();
         $key_data           = new ConcealedString($raw_encryption_key);
         \sodium_memzero($raw_encryption_key);
 
-        return new EncryptionKey($key_data);
+        return new Legacy2025EncryptionKey($key_data);
     }
 
     private function saveKeyFile(Key $key, string $file_path): void

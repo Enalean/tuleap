@@ -28,7 +28,6 @@ use Luracast\Restler\RestException;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AccessKeyHeaderExtractor;
@@ -100,7 +99,7 @@ class AccessKeyResource extends AuthenticatedResource
         $storage_access_key_identifier_store = [];
         $last_access_key_identifier_store    = new LastAccessKeyIdentifierStore(
             new PrefixedSplitTokenSerializer(new PrefixAccessKey()),
-            (new KeyFactory())->getEncryptionKey(),
+            (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getEncryptionKey(),
             $storage_access_key_identifier_store
         );
         $access_key_creator                  = new AccessKeyCreator(

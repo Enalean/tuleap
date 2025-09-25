@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Administration;
 
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
@@ -55,7 +54,7 @@ class AdminOAuth2AppsPresenterBuilder
             new AppFactory(new AppDao(), \ProjectManager::instance()),
             new LastGeneratedClientSecretStore(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
-                (new KeyFactory())->getEncryptionKey(),
+                (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getEncryptionKey(),
                 $storage
             )
         );
