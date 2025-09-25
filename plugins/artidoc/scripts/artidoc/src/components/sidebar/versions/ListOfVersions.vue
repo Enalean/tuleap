@@ -108,6 +108,7 @@ ul {
         color: var(--tlp-main-color-transparent-90);
         font-size: 5rem;
         font-weight: 600;
+        pointer-events: none;
     }
 }
 

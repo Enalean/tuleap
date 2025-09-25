@@ -109,6 +109,9 @@ msgstr "Fermer"
 msgid "Close sidebar"
 msgstr "Fermer la barre latérale"
 
+msgid "Collapse"
+msgstr "Réduire"
+
 msgid "Configuration failure"
 msgstr "Échec de la configuration"
 
@@ -147,6 +150,9 @@ msgstr "Erreur"
 
 msgid "Error details"
 msgstr "Détails de l'erreur"
+
+msgid "Expand"
+msgstr "Agrandir"
 
 msgid "Expected results"
 msgstr "Résultats attendus"
