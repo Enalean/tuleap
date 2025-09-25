@@ -75,15 +75,12 @@ final readonly class ExpertQueryValidator
      */
     public function validateLinks(
         string $expert_query,
-        IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
         IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
         IBuildInvalidOrderBy $invalid_order_by_builder,
     ): void {
         $query     = $this->parser->parse($expert_query);
         $condition = $query->getCondition();
         $this->size_validator->checkSizeOfTree($condition);
-
-        $this->checkSearchablesForLinks($condition, $invalid_searchables_collection_builder);
 
         $this->validate($query, $invalid_selectables_collection_builder, $invalid_order_by_builder);
     }
@@ -166,22 +163,6 @@ final readonly class ExpertQueryValidator
         }
 
         $invalid_searchable_errors = $invalid_searchables_collection->getInvalidSearchableErrors();
-        if ($invalid_searchable_errors) {
-            throw new SearchablesAreInvalidException($invalid_searchable_errors);
-        }
-    }
-
-    /**
-     * @throws SearchablesAreInvalidException
-     */
-    private function checkSearchablesForLinks(
-        Logical $condition,
-        IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
-    ): void {
-        $invalid_searchables_collection = $invalid_searchables_collection_builder->buildCollectionOfInvalidSearchables(
-            $condition
-        );
-        $invalid_searchable_errors      = $invalid_searchables_collection->getInvalidSearchableErrors();
         if ($invalid_searchable_errors) {
             throw new SearchablesAreInvalidException($invalid_searchable_errors);
         }

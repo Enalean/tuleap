@@ -384,7 +384,6 @@ final readonly class CrossTrackerArtifactQueryFactory
         $expert_query = $query->getQuery();
         $this->expert_query_validator->validateLinks(
             $expert_query,
-            new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
             new InvalidOrderByBuilder($this->field_checker, $this->metadata_checker, $trackers, $current_user),
         );
