@@ -1242,12 +1242,6 @@ msgstr "이메일이 이미 인증되었습니다."
 msgid "Email me a recovery link"
 msgstr "복구 링크를 이메일로 보내기"
 
-msgid "Email not sent"
-msgstr "이메일이 전송되지 않음"
-
-msgid "Email sent"
-msgstr "이메일 전송됨"
-
 msgid "Email was not updated"
 msgstr "이메일이 업데이트되지 않았습니다."
 
@@ -1304,9 +1298,6 @@ msgstr "오류"
 
 msgid "Error - choose a forum first"
 msgstr "오류 - 포럼을 먼저 선택하세요."
-
-msgid "Error - this news item was not found"
-msgstr "오류 - 이 뉴스 항목을 찾을 수 없습니다."
 
 #, php-format
 msgid "Error Adding Forum '%1$s'."
@@ -2053,9 +2044,6 @@ msgstr ""
 msgid "New user"
 msgstr "신규 사용자"
 
-msgid "News"
-msgstr "뉴스"
-
 msgid "Next Messages"
 msgstr "다음 메시지"
 
@@ -2109,9 +2097,6 @@ msgstr "일치하는 레이블이 없습니다."
 msgid "No need to register, you are already logged in."
 msgstr "이미 로그인되어 있어 등록할 필요가 없습니다."
 
-msgid "No one monitoring"
-msgstr "아무도 모니터링하지 않고 있습니다."
-
 msgid "No project ID has been provided for the template"
 msgstr "템플릿에 대한 프로젝트 ID가 제공되지 않았습니다."
 
@@ -2138,9 +2123,6 @@ msgstr "모두 제외"
 
 msgid "None"
 msgstr ""
-
-msgid "Not Found"
-msgstr "찾을 수 없습니다."
 
 msgid "Not a member yet?"
 msgstr "아직 멤버가 아니신가요?"
@@ -2413,9 +2395,6 @@ msgstr "댓글 작성"
 msgid "Post a followup to this message"
 msgstr "이 메시지에 대한 후속 댓글 남기기"
 
-msgid "Posted By"
-msgstr "게시자"
-
 msgid "Posting Failed"
 msgstr "게시 실패"
 
@@ -2471,9 +2450,6 @@ msgstr "프로젝트 #%d은(는) 비활성화 상태입니다."
 
 msgid "Project (read only)"
 msgstr "프로젝트 (읽기 전용)"
-
-msgid "Project Latest News"
-msgstr "프로젝트 최신 뉴스"
 
 msgid "Project Name"
 msgstr "프로젝트 이름"
@@ -2699,9 +2675,6 @@ msgstr "RSS"
 
 msgid "Rank"
 msgstr "순위"
-
-msgid "Read and respond to this message at"
-msgstr "다음에서 이 메시지를 읽고 응답하십시오."
 
 msgid "Read only access to information about projects"
 msgstr "프로젝트에 정보에 대한 읽기 전용 액세스"
@@ -3174,9 +3147,6 @@ msgstr ""
 
 msgid "Successfully updated."
 msgstr "성공적으로 업데이트되었습니다."
-
-msgid "Summary"
-msgstr "요약"
 
 msgid "Suspended"
 msgstr "중지됨"
@@ -4323,22 +4293,6 @@ msgstr ""
 
 #, php-format
 msgid ""
-"You are receiving this email because you elected to monitor this forum or "
-"this thread.\n"
-"To stop monitoring this forum, login and visit:\n"
-" %1$s .\n"
-"To change thread monitoring settings, visit:\n"
-" %2$s."
-msgstr ""
-"이 포럼 또는 이 스레드를 모니터링하도록 선택했기 때문에 이 이메일이 전송되었"
-"습니다.\n"
-"이 포럼 모니터링을 중지하려면 로그인 후 다음을 방문하십시오.\n"
-" %1$s .\n"
-"스레드 모니터링 설정을 변경하려면 다음을 방문하십시오.\n"
-" %2$s."
-
-#, php-format
-msgid ""
 "You are trying to send %1$s invitation, but the maximum is %2$s per day."
 msgid_plural ""
 "You are trying to send %1$s invitations, but the maximum is %2$s per day."
@@ -4788,9 +4742,6 @@ msgstr ""
 
 msgid "pending"
 msgstr "보류중"
-
-msgid "people monitoring"
-msgstr "모니터링 중인 사람"
 
 msgid "permissions"
 msgstr "권한"

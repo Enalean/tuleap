@@ -1273,12 +1273,6 @@ msgstr "Email já está validado"
 msgid "Email me a recovery link"
 msgstr "Me envie um link de recuperação por email"
 
-msgid "Email not sent"
-msgstr "Email não enviado"
-
-msgid "Email sent"
-msgstr "Email enviado"
-
 msgid "Email was not updated"
 msgstr "O email não foi atualizado"
 
@@ -1336,9 +1330,6 @@ msgstr "Erro"
 
 msgid "Error - choose a forum first"
 msgstr "Erro - escolha primeiro um Fórum"
-
-msgid "Error - this news item was not found"
-msgstr "Erro - esta notícia não foi encontrada"
 
 #, php-format
 msgid "Error Adding Forum '%1$s'."
@@ -2102,9 +2093,6 @@ msgstr ""
 msgid "New user"
 msgstr "Novo usuário"
 
-msgid "News"
-msgstr "Notícias"
-
 msgid "Next Messages"
 msgstr "Mensagens seguintes"
 
@@ -2160,9 +2148,6 @@ msgstr "Sem rótulos correspondentes"
 msgid "No need to register, you are already logged in."
 msgstr "Não é necessário se registrar, você já está logado."
 
-msgid "No one monitoring"
-msgstr "Ninguém monitorando"
-
 msgid "No project ID has been provided for the template"
 msgstr "Não foi fornecida nenhuma identificação de projeto para o modelo"
 
@@ -2189,9 +2174,6 @@ msgstr "Ninguém"
 
 msgid "None"
 msgstr ""
-
-msgid "Not Found"
-msgstr "Não Encontrado"
 
 msgid "Not a member yet?"
 msgstr "Ainda não é um membro?"
@@ -2470,9 +2452,6 @@ msgstr "Comentário"
 msgid "Post a followup to this message"
 msgstr "Postar um acompanhamento a esta mensagem"
 
-msgid "Posted By"
-msgstr "Postada por"
-
 msgid "Posting Failed"
 msgstr "Postagem falhou"
 
@@ -2528,9 +2507,6 @@ msgstr "O projeto #%d não está ativo."
 
 msgid "Project (read only)"
 msgstr "Projeto (somente leitura)"
-
-msgid "Project Latest News"
-msgstr "Últimas Notícias do Projeto"
 
 msgid "Project Name"
 msgstr "Nome do Projeto"
@@ -2760,9 +2736,6 @@ msgstr "RSS"
 
 msgid "Rank"
 msgstr "Rank"
-
-msgid "Read and respond to this message at"
-msgstr "Leia e responda a esta mensagem em"
 
 msgid "Read only access to information about projects"
 msgstr "Acesso somente leitura das informações sobre projetos"
@@ -3238,9 +3211,6 @@ msgstr ""
 
 msgid "Successfully updated."
 msgstr "Atualizado com sucesso."
-
-msgid "Summary"
-msgstr "Resumo"
 
 msgid "Suspended"
 msgstr "Suspenso"
@@ -4439,22 +4409,6 @@ msgstr ""
 
 #, php-format
 msgid ""
-"You are receiving this email because you elected to monitor this forum or "
-"this thread.\n"
-"To stop monitoring this forum, login and visit:\n"
-" %1$s .\n"
-"To change thread monitoring settings, visit:\n"
-" %2$s."
-msgstr ""
-"Você está recebendo este email porque escolheu monitorar este fórum ou este "
-"tópico.\n"
-"Para parar de monitorar este fórum, faça o login e visite:\n"
-" %1$s .\n"
-"Para alterar as configurações de monitoramento do tópico, visite:\n"
-" %2$s."
-
-#, php-format
-msgid ""
 "You are trying to send %1$s invitation, but the maximum is %2$s per day."
 msgid_plural ""
 "You are trying to send %1$s invitations, but the maximum is %2$s per day."
@@ -4933,9 +4887,6 @@ msgstr ""
 
 msgid "pending"
 msgstr "pendente"
-
-msgid "people monitoring"
-msgstr "monitoramento de pessoas"
 
 msgid "permissions"
 msgstr "permissões"

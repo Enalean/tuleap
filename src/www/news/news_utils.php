@@ -36,8 +36,6 @@
  *
  */
 
-use Tuleap\Date\DateHelper;
-
 require_once __DIR__ . '/../project/admin/permissions.php';
 require_once __DIR__ . '/../project/admin/ugroup_utils.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
@@ -45,7 +43,7 @@ require_once __DIR__ . '/../forum/forum_utils.php';
 
 function news_header(Tuleap\Layout\HeaderConfiguration $params)
 {
-    global $HTML,$group_id,$news_name,$news_id,$Language;
+    global $HTML,$group_id, $Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('news');
 
@@ -89,165 +87,6 @@ function news_header(Tuleap\Layout\HeaderConfiguration $params)
 function news_footer($params)
 {
     site_project_footer($params);
-}
-
-function news_show_latest($group_id = '', $limit = 10, $show_projectname = true, $allow_submit = true, $hide_nb_comments = false, $tail_headlines = 0)
-{
-    global $Language;
-    $sys_news_group = ForgeConfig::get('sys_news_group');
-
-    $return = '';
-    if (! $group_id) {
-        $group_id = $sys_news_group;
-    }
-
-    /*
-    Show a simple list of the latest news items with a link to the forum
-    */
-
-    if ($group_id != $sys_news_group) {
-        $wclause = 'news_bytes.group_id = ' . db_ei($group_id) . ' AND news_bytes.is_approved < 4';
-    } else {
-        $wclause = 'news_bytes.is_approved = 1';
-    }
-
-    $sql = "SELECT `groups`.group_name,
-                    `groups`.unix_group_name,
-                    news_bytes.submitted_by,
-                    news_bytes.forum_id,
-                    news_bytes.summary,
-                    news_bytes.date,
-                    news_bytes.details,
-                    count(forum.msg_id) AS num_comments
-            FROM news_bytes
-                INNER JOIN `groups` ON (news_bytes.group_id = `groups`.group_id)
-                LEFT JOIN forum ON (forum.group_forum_id = news_bytes.forum_id)
-            WHERE $wclause
-              AND `groups`.status = 'A'
-            GROUP BY news_bytes.forum_id
-            ORDER BY date DESC LIMIT " . db_ei($limit + $tail_headlines);
-
-    $result = db_query($sql);
-    $rows   = db_numrows($result);
-
-    if (! $result || $rows < 1) {
-        $return .= '<b>' . $Language->getText('news_utils', 'no_news_item_found') . '</b>';
-    } else {
-        $news_item_displayed = false;
-        while ($data = db_fetch_array($result)) {
-            //check if the news is private (project members) or public (registered users)
-            $forum_id = $data['forum_id'];
-            if (news_check_permission($forum_id, $group_id)) {
-                $return .= news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments);
-
-                if ($limit == 1 && $tail_headlines) {
-                    $return .= '<ul class="unstyled">';
-                }
-                if ($limit) {
-                    $limit--;
-                }
-                $news_item_displayed = true;
-            }
-        }
-        if (! $news_item_displayed) {
-            $return .= '<b>' . $Language->getText('news_utils', 'no_news_item_found') . '</b>';
-        }
-    }
-    $purifier = Codendi_HTMLPurifier::instance();
-    if ($group_id != $sys_news_group) {
-        $archive_url = '/news/?group_id=' . $purifier->purify(urlencode($group_id));
-    } else {
-        $archive_url = '/news/';
-    }
-
-    if ($tail_headlines) {
-        $return .= '</ul>' . "\n";
-    }
-
-    $return .= '<div align="center">
-                    <a href="' . $archive_url . '">[' . $Language->getText('news_utils', 'news_archive') . ']</a></div>';
-
-    if ($allow_submit && $group_id != $sys_news_group) {
-        //you can only submit news from a project now
-        //you used to be able to submit general news
-        $return .= '<div align="center">
-            <A HREF="/news/submit.php?group_id=' . $purifier->purify(urlencode($group_id)) . '">
-                <FONT SIZE="-1">[' . $Language->getText('news_utils', 'submit_news') . ']</FONT>
-            </A>
-        </div>';
-    }
-
-    return $return;
-}
-
-function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments)
-{
-    global $Language;
-    $purifier = Codendi_HTMLPurifier::instance();
-    $uh       = new UserHelper();
-    $html     = '';
-    $arr      = explode("\n", $data['details']);
-    if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1] . $arr[2]) < 300) && (strlen($arr[2]) > 5)) {
-        $details = $purifier->purify($arr[0] . "\n" . $arr[1] . "\n" . $arr[2], CODENDI_PURIFIER_BASIC, $group_id);
-    } else {
-        $details = $purifier->purify($arr[0], CODENDI_PURIFIER_BASIC, $group_id);
-    }
-
-    $user = UserManager::instance()->getCurrentUser();
-
-    $proj_name = '';
-    if ($show_projectname && $limit) {
-        //show the project name
-        $proj_name = ' &middot; <a href="/projects/' . $purifier->purify(urlencode(strtolower($data['unix_group_name']))) . '/">' . $purifier->purify($data['group_name']) . '</a>';
-    }
-
-    $forum_url = '/forum/forum.php?forum_id=' . $purifier->purify(urlencode($data['forum_id']));
-    if (! $limit) {
-        $html .= '<li><span class="news_summary"><a href="' . $purifier->purify($forum_url) . '">' . $purifier->purify($data['summary']) . '</a></span> ';
-        $html .= '<small><span class="news_date">' . DateHelper::relativeDateInlineContext((int) $data['date'], $user) . '</span></small></li>';
-    } else {
-        $comments_txt = '';
-        if (! $hide_nb_comments) {
-            $num_comments  = (int) $data['num_comments'];
-            $comments_txt .= ' <a href="' . $purifier->purify($forum_url) . '">(' . $purifier->purify($num_comments) . ' ';
-            if ($num_comments == 1) {
-                $comments_txt .= $Language->getText('news_utils', 'comment');
-            } else {
-                $comments_txt .= $Language->getText('news_utils', 'comments');
-            }
-            $comments_txt .= ')</a>';
-        }
-
-        $html .= '<div class="news">';
-        $html .= '<span class="news_summary"><a href="' . $purifier->purify($forum_url) . '"><h4>' . $purifier->purify($data['summary']) . '</h4></a></span>';
-
-        $html .= '<blockquote>';
-        $html .= '<div>' . $details . '</div>';
-        $html .= '<small>
-                    <span class="news_author">' . $uh->getLinkOnUserFromUserId($data['submitted_by']) . '</span>
-                    <span class="news_date">' . DateHelper::relativeDateInlineContext((int) $data['date'], $user) . '</span>' .
-                    $comments_txt .
-                    $proj_name .
-                    '</small>';
-        $html .= '</blockquote>';
-        $html .= '<hr width="100%" size="1" noshade>';
-        $html .= '</div>';
-    }
-    return $html;
-}
-
-function get_news_name($id)
-{
-    /*
-        Takes an ID and returns the corresponding forum name
-    */
-    $sql    = 'SELECT summary FROM news_bytes WHERE id=' . db_ei($id);
-    $result = db_query($sql);
-    if (! $result || db_numrows($result) < 1) {
-        return 'Not Found';
-    } else {
-        return db_result($result, 0, 'summary');
-    }
 }
 
 function get_news_name_from_forum_id($id)
