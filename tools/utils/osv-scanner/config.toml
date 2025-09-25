@@ -110,3 +110,9 @@ reason = "Fixed in 0.20.2 but scanner is not correctly resolving our current ver
 id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
 ignoreUntil = 2025-10-12
+
+# Go standard library
+[[IgnoredVulns]]
+id = "GO-2025-3955" # CVE-2025-47910
+reason = "No security impact for Tuleap, we do not use AddInsecureBypassPattern in http.CrossOriginProtection."
+ignoreUntil = 2025-10-22
