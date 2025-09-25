@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\Date;
 
 use DateTimeImmutable;
-use ForgeConfig;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
@@ -36,9 +35,7 @@ use Tracker_FormElement_DateFormatter;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_Report_Criteria;
 use Tracker_Report_REST;
-use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Date\TimezoneWrapper;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -49,7 +46,6 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
-use UserManager;
 use XMLImportHelper;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -57,24 +53,6 @@ final class DateFieldTest extends TestCase
 {
     use GlobalResponseMock;
     use GlobalLanguageMock;
-    use ForgeConfigSandbox;
-
-    #[\Override]
-    protected function setUp(): void
-    {
-        ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'UTC');
-        $user_manager = $this->createMock(UserManager::class);
-        UserManager::setInstance($user_manager);
-        $user = UserTestBuilder::anActiveUser()->withTimezone('UTC')->build();
-        $user_manager->method('getUserById')->with(105)->willReturn($user);
-        $user_manager->method('getCurrentUser')->willReturn($user);
-    }
-
-    #[\Override]
-    protected function tearDown(): void
-    {
-        UserManager::clearInstance();
-    }
 
     private function getDateField(): DateField&MockObject
     {
@@ -621,7 +599,7 @@ final class DateFieldTest extends TestCase
         $timeframe_helper->method('artifactHelpShouldBeShownToUser')->willReturn(false);
         $date->method('getArtifactTimeframeHelper')->willReturn($timeframe_helper);
 
-        $value = ChangesetValueDateTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(123)->submittedBy(105)->build(), $date)->withTimestamp(1322752769)->build();
+        $value = ChangesetValueDateTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(123)->build(), $date)->withTimestamp(1322752769)->build();
 
         self::assertEquals('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'text'));
         self::assertEquals('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'html'));
@@ -640,7 +618,7 @@ final class DateFieldTest extends TestCase
         $timeframe_helper->method('artifactHelpShouldBeShownToUser')->willReturn(false);
         $date->method('getArtifactTimeframeHelper')->willReturn($timeframe_helper);
 
-        $value = ChangesetValueDateTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(123)->submittedBy(105)->build(), $date)->withTimestamp(1322752769)->build();
+        $value = ChangesetValueDateTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(123)->build(), $date)->withTimestamp(1322752769)->build();
 
         self::assertEquals('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'text'));
         self::assertEquals('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'html'));
