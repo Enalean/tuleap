@@ -31,7 +31,7 @@ use Tuleap\Request\NotFoundException;
 
 class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
 {
-    private const GIT_LFS_MIME_TYPE = 'application/vnd.git-lfs+json';
+    private const string GIT_LFS_MIME_TYPE = 'application/vnd.git-lfs+json';
 
     /**
      * @var DispatchableWithRequestNoAuthz
