@@ -84205,6 +84205,402 @@
       <code><![CDATA[testTheSamePathIsAlwaysAllocatedForAGivenItemID]]></code>
     </MissingReturnType>
   </file>
+  <file src="tests/unit/common/User/AccessKey/AccessKeyVerifierTest.php">
+    <MissingParamType>
+      <code><![CDATA[$expect_to_log_access]]></code>
+      <code><![CDATA[$last_ip]]></code>
+      <code><![CDATA[$last_usage]]></code>
+    </MissingParamType>
+  </file>
+  <file src="tests/unit/common/User/AccessKey/LastAccessKeyIdentifierStoreTest.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getString]]></code>
+      <code><![CDATA[getString]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/unit/common/User/AccessKey/REST/UserAccessKeyRepresentationRetrieverTest.php">
+    <InvalidArgument>
+      <code><![CDATA[[]]]></code>
+      <code><![CDATA[[]]]></code>
+      <code><![CDATA[[]]]></code>
+      <code><![CDATA[[]]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/unit/common/User/AccessKey/Scope/AccessKeyScopeBuilderCollectorTest.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[class implements AuthenticationScopeBuilder]]></code>
+      <code><![CDATA[class implements AuthenticationScopeBuilder]]></code>
+      <code><![CDATA[class implements AuthenticationScopeBuilder]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="tests/unit/common/User/AccessKey/Scope/SVNAccessKeyScopeTest.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$scope]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="tests/unit/common/User/Account/Appearance/LanguagePresenterBuilderTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testGetLanguagePresenterCollectionForUser]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/User/Account/DisplayAccountInformationControllerTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$add_ldap_extra_info]]></code>
+      <code><![CDATA[$disable_email_change]]></code>
+      <code><![CDATA[$disable_real_name_change]]></code>
+    </MissingPropertyType>
+    <NoInterfaceProperties>
+      <code><![CDATA[$this->event_manager->add_ldap_extra_info]]></code>
+      <code><![CDATA[$this->event_manager->disable_email_change]]></code>
+      <code><![CDATA[$this->event_manager->disable_real_name_change]]></code>
+    </NoInterfaceProperties>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/unit/common/User/Account/DisplayAppearanceControllerTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$output]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/unit/common/User/Account/DisplayEditionControllerTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$output]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/unit/common/User/Account/DisplayKeysTokensControllerTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/unit/common/User/Account/DisplaySecurityControllerTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[new CSRFSynchronizerToken('some_url', 'token_name', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub())]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MissingPropertyType>
+      <code><![CDATA[$password_change]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[disablePasswordChange]]></code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+      <code><![CDATA[$output]]></code>
+    </PossiblyFalseArgument>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[disablePasswordChange]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="tests/unit/common/User/Account/Register/DisplayAdminRegisterFormControllerTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[[
+            [UserTestBuilder::anActiveUser()->build()],
+            [UserTestBuilder::anAnonymousUser()->build()],
+        ]]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[\PFUser[]]]></code>
+      <code><![CDATA[\PFUser[]]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="tests/unit/common/User/Account/Register/IValidateFormAndCreateUserStub.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>]]></code>
+    </ImplementedReturnTypeMismatch>
+    <UndefinedDocblockClass>
+      <code><![CDATA[Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>]]></code>
+    </UndefinedDocblockClass>
+    <UnusedProperty>
+      <code><![CDATA[$user]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="tests/unit/common/User/Account/Register/InvitationToEmailRequestExtractorTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testExceptionWhenInvitationIsNotFound]]></code>
+      <code><![CDATA[testExceptionWhenInvitationIsTargetToAnAlreadyRegisteredUser]]></code>
+      <code><![CDATA[testExceptionWhenInvitationTokenCannotBeVerified]]></code>
+      <code><![CDATA[testExceptionWhenTokenIsNotValid]]></code>
+      <code><![CDATA[testNullWhenTokenIsNotInTheRequest]]></code>
+      <code><![CDATA[testReturnInvitationToEmailObject]]></code>
+    </MissingReturnType>
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$invitation_to_email->to_email]]></code>
+    </PossiblyNullPropertyFetch>
+  </file>
+  <file src="tests/unit/common/User/Account/Register/ProcessAdminRegisterFormControllerTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[[
+            [UserTestBuilder::anActiveUser()->build()],
+            [UserTestBuilder::anAnonymousUser()->build()],
+        ]]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[\PFUser[]]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="tests/unit/common/User/Account/Register/ProcessRegisterFormControllerTest.php">
+    <TooManyArguments>
+      <code><![CDATA[new ProcessRegisterFormController(
+            $form_processor,
+            EventDispatcherStub::withIdentityCallback(),
+            IExtractInvitationToEmailStub::withoutInvitation(),
+            RetrieveUserByEmailStub::withNoUser(),
+        )]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="tests/unit/common/User/Account/UpdateAccountInformationControllerTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$disable_email_change]]></code>
+      <code><![CDATA[$disable_real_name_change]]></code>
+    </MissingPropertyType>
+    <NoInterfaceProperties>
+      <code><![CDATA[$this->event_manager->disable_email_change]]></code>
+      <code><![CDATA[$this->event_manager->disable_real_name_change]]></code>
+    </NoInterfaceProperties>
+  </file>
+  <file src="tests/unit/common/User/Account/UpdatePasswordControllerTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$old_password_required]]></code>
+      <code><![CDATA[$password_change]]></code>
+    </MissingPropertyType>
+    <PossiblyUndefinedMethod>
+      <code><![CDATA[oldPasswordIsNotRequiredToUpdatePassword]]></code>
+    </PossiblyUndefinedMethod>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[disablePasswordChange]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="tests/unit/common/User/Admin/RestrictedProjectsUserCounterTest.php">
+    <TooManyArguments>
+      <code><![CDATA[TestHelper::arrayToDar([1 => 'row1'])]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="tests/unit/common/User/ICreateAccountStub.php">
+    <InvalidReturnType>
+      <code><![CDATA[PFUser]]></code>
+    </InvalidReturnType>
+    <MissingParamType>
+      <code><![CDATA[$allowpending]]></code>
+    </MissingParamType>
+  </file>
+  <file src="tests/unit/common/User/OAuth2/AccessToken/OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$scope]]></code>
+    </ArgumentTypeCoercion>
+    <MissingImmutableAnnotation>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScope]]></code>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScope]]></code>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScope]]></code>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScope]]></code>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScope]]></code>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScope]]></code>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScopeDefinition]]></code>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScopeDefinition]]></code>
+      <code><![CDATA[class /** @psalm-immutable */ implements AuthenticationScopeDefinition]]></code>
+    </MissingImmutableAnnotation>
+    <MissingTemplateParam>
+      <code><![CDATA[AuthenticationScope]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="tests/unit/common/User/OAuth2/BearerTokenHeaderParserTest.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getString]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/unit/common/User/OAuth2/Scope/OAuth2ScopeBuilderCollectorTest.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[class implements AuthenticationScopeBuilder]]></code>
+      <code><![CDATA[class implements AuthenticationScopeBuilder]]></code>
+      <code><![CDATA[class implements AuthenticationScopeBuilder]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="tests/unit/common/User/Password/Reset/ResetTokenSerializerTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testCanSerializeAndUnserializeAToken]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/User/Password/Reset/VerifierTest.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA['Tuleap\\User\\Password\\Reset\\ExpiredTokenException']]></code>
+      <code><![CDATA['Tuleap\\User\\Password\\Reset\\InvalidTokenException']]></code>
+      <code><![CDATA['Tuleap\\User\\Password\\Reset\\InvalidTokenException']]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="tests/unit/common/User/RequestFromAutocompleterTest.php">
+    <MissingParamType>
+      <code><![CDATA[$data]]></code>
+    </MissingParamType>
+  </file>
+  <file src="tests/unit/common/User/SwitchToPresenterBuilderTest.php">
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$presenter->are_restricted_users_allowed]]></code>
+      <code><![CDATA[$presenter->is_search_available]]></code>
+      <code><![CDATA[$presenter->is_search_available]]></code>
+      <code><![CDATA[$presenter->is_search_available]]></code>
+      <code><![CDATA[$presenter->is_trove_cat_enabled]]></code>
+      <code><![CDATA[$presenter->projects]]></code>
+      <code><![CDATA[$presenter->search_form]]></code>
+    </PossiblyNullPropertyFetch>
+  </file>
+  <file src="tests/unit/common/User/UserHelperTest.php">
+    <DirectConstructorCall>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+      <code><![CDATA[$user_helper->__construct()]]></code>
+    </DirectConstructorCall>
+  </file>
+  <file src="tests/unit/common/User/UserSuspensionManagerTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
+    <MissingReturnType>
+      <code><![CDATA[testSendNotificationMailToIdleAccountsIsCalled]]></code>
+      <code><![CDATA[testSendNotificationMailToInactiveAccountsIsCalled]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/User/User_ForgeUserGroupManagerTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->createMock(\UserGroupDao::class)]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="tests/unit/common/User/User_LoginManagerTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$after_called]]></code>
+      <code><![CDATA[$after_called]]></code>
+      <code><![CDATA[$after_called]]></code>
+      <code><![CDATA[$after_called]]></code>
+      <code><![CDATA[$auth_succeded_called]]></code>
+      <code><![CDATA[$auth_succeded_called]]></code>
+      <code><![CDATA[$auth_succeded_called]]></code>
+      <code><![CDATA[$auth_succeded_called]]></code>
+      <code><![CDATA[$before_called]]></code>
+      <code><![CDATA[$before_called]]></code>
+      <code><![CDATA[$before_called]]></code>
+      <code><![CDATA[$before_called]]></code>
+      <code><![CDATA[$user]]></code>
+    </MissingPropertyType>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$plugin->after_called]]></code>
+      <code><![CDATA[$plugin->auth_succeded_called]]></code>
+      <code><![CDATA[$plugin->before_called]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+  <file src="tests/unit/common/User/XML/Import/MappingFileOptimusPrimeTransformerTest.php">
+    <MissingParamType>
+      <code><![CDATA[$action]]></code>
+      <code><![CDATA[$action]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$name]]></code>
+    </MissingParamType>
+    <TooManyArguments>
+      <code><![CDATA[addToBeActivatedUserToCollection]]></code>
+    </TooManyArguments>
+    <UndefinedDocblockClass>
+      <code><![CDATA[$user]]></code>
+      <code><![CDATA[$user]]></code>
+      <code><![CDATA[$user]]></code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="tests/unit/common/User/XML/Import/MappingTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$xml]]></code>
+      <code><![CDATA[$xml]]></code>
+      <code><![CDATA[$xml]]></code>
+      <code><![CDATA[$xml]]></code>
+      <code><![CDATA[$xml]]></code>
+      <code><![CDATA[$xml]]></code>
+      <code><![CDATA[$xml]]></code>
+      <code><![CDATA[$xml]]></code>
+      <code><![CDATA[$xml]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/unit/common/User/XML/Import/UsersToBeImportedCollectionBuilderTest.php">
+    <ForbiddenCode>
+      <code><![CDATA[var_dump($email)]]></code>
+    </ForbiddenCode>
+    <MissingReturnType>
+      <code><![CDATA[cleanUp]]></code>
+      <code><![CDATA[extractFiles]]></code>
+      <code><![CDATA[getExtractionPath]]></code>
+      <code><![CDATA[getProjectXML]]></code>
+      <code><![CDATA[getUsersXML]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/User/XML/Import/UsersToBeImportedCollectionTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$csv]]></code>
+      <code><![CDATA[$csv]]></code>
+      <code><![CDATA[$csv]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/unit/common/User/XML/UserXMLExportedCollectionTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$xml_object->user]]></code>
+      <code><![CDATA[$xml_object->user]]></code>
+      <code><![CDATA[$xml_object->user]]></code>
+      <code><![CDATA[$xml_object->user]]></code>
+    </InvalidPropertyFetch>
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$xml_object->user[0]->email]]></code>
+      <code><![CDATA[$xml_object->user[0]->id]]></code>
+      <code><![CDATA[$xml_object->user[0]->ldapid]]></code>
+      <code><![CDATA[$xml_object->user[0]->ldapid]]></code>
+      <code><![CDATA[$xml_object->user[0]->realname]]></code>
+      <code><![CDATA[$xml_object->user[0]->username]]></code>
+    </PossiblyNullPropertyFetch>
+  </file>
+  <file src="tests/unit/common/User/XML/UserXMLExportedDevNullCollectionTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$xml_object->user]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="tests/unit/common/User/XML/UserXMLExporterTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$base_xml]]></code>
+      <code><![CDATA[$collection]]></code>
+      <code><![CDATA[$user_manager]]></code>
+      <code><![CDATA[$user_xml_exporter]]></code>
+    </MissingPropertyType>
+  </file>
   <file src="tests/unit/common/WebAssembly/WASMCallerStub.php">
     <ImplementedReturnTypeMismatch>
       <code><![CDATA[Option<Result<string, Fault>>]]></code>

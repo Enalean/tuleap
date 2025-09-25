@@ -60,7 +60,6 @@
             <directory name="tests/unit/common/SVNCore/"/>
             <directory name="tests/unit/common/SystemEvent/"/>
             <directory name="tests/unit/common/TreeNode/"/>
-            <directory name="tests/unit/common/User/"/>
             <directory name="tests/unit/common/language/"/>
             <directory name="tests/unit/common/permission/"/>
             <directory name="tests/unit/common/tracker/"/>
