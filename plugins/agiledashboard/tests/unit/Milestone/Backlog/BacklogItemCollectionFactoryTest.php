@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -27,6 +26,7 @@ use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
@@ -50,7 +50,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class BacklogItemCollectionFactoryTest extends TestCase
 {
     private PriorityDao&MockObject $artifact_priority_dao;
     private BacklogItemCollectionFactory&MockObject $collection_factory;
@@ -62,7 +62,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
     private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
     private BacklogItemDao&MockObject $dao;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         $this->dao                               = $this->createMock(BacklogItemDao::class);
@@ -407,17 +407,12 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
 
         $artifact_9  = ArtifactTestBuilder::anArtifact(9)->inTracker(TrackerTestBuilder::aTracker()->build())->build();
         $artifact_10 = ArtifactTestBuilder::anArtifact(10)->inTracker(TrackerTestBuilder::aTracker()->build())->build();
-        $matcher     = $this->exactly(2);
-        $this->artifact_factory->expects($matcher)->method('getArtifactById')->willReturnCallback(function (...$parameters) use ($matcher, $artifact_9, $artifact_10) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame(9, $parameters[0]);
-                return $artifact_9;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame(10, $parameters[0]);
-                return $artifact_10;
-            }
-        });
+
+        $this->artifact_factory->method('getArtifactById')
+            ->willReturnMap([
+                [9, $artifact_9],
+                [10, $artifact_10],
+            ]);
 
         $this->artifact_factory->expects($this->once())->method('getParents')->willReturn([]);
         $this->artifact_factory->expects($this->once())->method('getChildrenCount')->willReturn([]);
