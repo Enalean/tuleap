@@ -22,9 +22,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+use AgileDashboard_Milestone_Backlog_Backlog;
+use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
+use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
+use AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection;
+use AgileDashBoard_Semantic_InitialEffort;
+use PFUser;
+use Planning;
+use Planning_Milestone;
+use Planning_MilestoneFactory;
+use PlanningFactory;
+use Tracker_ArtifactFactory;
+use Tracker_FormElement_IComputeValues;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
-use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
@@ -39,85 +52,34 @@ use Tuleap\Tracker\Tracker;
 /**
  * I build collections of IBacklogItem
  */
-class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class BacklogItemCollectionFactory
 {
-    /** @var BacklogItemDao */
-    private $dao;
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection[] */
-    private $open_and_closed_collection;
-
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection[] */
-    private $todo_collection;
-
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection[] */
-    private $done_collection;
-
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection[] */
-    private $inconsistent_collection;
-
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection[] */
-    private $open_closed_and_inconsistent_collection;
-
-    /** @var Planning_MilestoneFactory */
-    private $milestone_factory;
-
-    /** @var PlanningFactory */
-    private $planning_factory;
+    /** @var bool[] */
+    private array $cache_read_title;
 
     /** @var bool[] */
-    private $cache_read_title;
+    private array $cache_read_status;
 
-    /** @var bool[] */
-    private $cache_read_status;
-
-    /** @var bool[] */
-    private $cache_initial_effort;
-
-    /** @var AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection */
-    private $backlog_item_builder;
-
-    /** @var RemainingEffortValueRetriever */
-    private $remaining_effort_value_retriever;
-
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-    /**
-     * @var PriorityDao
-     */
-    private $artifact_priority_dao;
-    /**
-     * @var array
-     */
-    private $cache_read_initial_effort = [];
+    private array $cache_read_initial_effort = [];
+    private array $open_and_closed_collection;
+    private array $open_closed_and_inconsistent_collection;
+    private array $todo_collection;
+    private array $done_collection;
+    private array $inconsistent_collection;
 
     public function __construct(
-        BacklogItemDao $dao,
-        Tracker_ArtifactFactory $artifact_factory,
-        Planning_MilestoneFactory $milestone_factory,
-        PlanningFactory $planning_factory,
-        AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
-        RemainingEffortValueRetriever $remaining_effort_value_retriever,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PriorityDao $artifact_priority_dao,
+        private readonly BacklogItemDao $dao,
+        private readonly Tracker_ArtifactFactory $artifact_factory,
+        private readonly Planning_MilestoneFactory $milestone_factory,
+        private readonly PlanningFactory $planning_factory,
+        private readonly AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
+        private readonly RemainingEffortValueRetriever $remaining_effort_value_retriever,
+        private readonly ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private readonly PriorityDao $artifact_priority_dao,
         private readonly RetrieveUserPermissionOnArtifacts $user_permission_on_artifacts_retriever,
         private readonly RetrieveSemanticTitleField $retrieve_semantic_title_field,
         private readonly RetrieveSemanticStatusField $retrieve_semantic_status_field,
     ) {
-        $this->dao                               = $dao;
-        $this->artifact_factory                  = $artifact_factory;
-        $this->milestone_factory                 = $milestone_factory;
-        $this->planning_factory                  = $planning_factory;
-        $this->backlog_item_builder              = $backlog_item_builder;
-        $this->remaining_effort_value_retriever  = $remaining_effort_value_retriever;
-        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
-        $this->artifact_priority_dao             = $artifact_priority_dao;
-
         $this->open_and_closed_collection              = [];
         $this->open_closed_and_inconsistent_collection = [];
         $this->todo_collection                         = [];
@@ -512,7 +474,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
      */
     protected function userCanReadInitialEffortField(PFUser $user, Tracker $tracker): bool
     {
-        if (! isset($this->cache_initial_effort[$tracker->getId()])) {
+        if (! isset($this->cache_read_initial_effort[$tracker->getId()])) {
             $this->cache_read_initial_effort[$tracker->getId()] = false;
             $field                                              = $this->getInitialEffortField($tracker);
             if ($field && $field->userCanRead($user)) {

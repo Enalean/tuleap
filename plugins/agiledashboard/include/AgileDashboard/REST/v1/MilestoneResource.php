@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use BacklogItemReference;
 use EventManager;
 use Luracast\Restler\RestException;
@@ -44,6 +43,7 @@ use TransitionFactory;
 use Tuleap\AgileDashboard\BacklogItem\AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\Request\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
@@ -147,9 +147,7 @@ class MilestoneResource extends AuthenticatedResource
 
     /** @var MilestoneContentUpdater */
     private $milestone_content_updater;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
-    private $backlog_item_collection_factory;
+    private BacklogItemCollectionFactory $backlog_item_collection_factory;
 
     /** @var EventManager */
     private $event_manager;
@@ -195,7 +193,7 @@ class MilestoneResource extends AuthenticatedResource
             new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
         );
 
-        $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+        $this->backlog_item_collection_factory = new BacklogItemCollectionFactory(
             new BacklogItemDao(),
             $this->tracker_artifact_factory,
             $this->milestone_factory,

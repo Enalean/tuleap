@@ -26,7 +26,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use PFUser;
 use Planning_Milestone;
@@ -34,6 +33,7 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use Project;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
@@ -42,33 +42,13 @@ use Tuleap\Tracker\REST\Helpers\OrderValidator;
 
 class MilestoneResourceValidator
 {
-    /** @var \Planning_MilestoneFactory */
-    private $milestone_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
-    private $backlog_item_collection_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
-    private $backlog_factory;
-
-    /** @var PlanningFactory */
-    private $planning_factory;
-
-    /** @var Tracker_ArtifactFactory */
-    private $tracker_artifact_factory;
-
     public function __construct(
-        PlanningFactory $planning_factory,
-        Tracker_ArtifactFactory $tracker_artifact_factory,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_row_collection_factory,
+        private readonly PlanningFactory $planning_factory,
+        private readonly Tracker_ArtifactFactory $tracker_artifact_factory,
+        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly Planning_MilestoneFactory $milestone_factory,
+        private readonly BacklogItemCollectionFactory $backlog_item_collection_factory,
     ) {
-        $this->planning_factory                = $planning_factory;
-        $this->tracker_artifact_factory        = $tracker_artifact_factory;
-        $this->backlog_factory                 = $backlog_factory;
-        $this->milestone_factory               = $milestone_factory;
-        $this->backlog_item_collection_factory = $backlog_row_collection_factory;
     }
 
     /**

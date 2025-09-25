@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -54,7 +53,7 @@ use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private PriorityDao&MockObject $artifact_priority_dao;
-    private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&MockObject $collection_factory;
+    private BacklogItemCollectionFactory&MockObject $collection_factory;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private Planning_MilestoneFactory&MockObject $milestone_factory;
     private PlanningFactory&MockObject $planning_factory;
@@ -76,7 +75,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
         $this->artifact_priority_dao             = $this->createMock(PriorityDao::class);
 
-        $this->collection_factory = $this->getMockBuilder(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class)
+        $this->collection_factory = $this->getMockBuilder(BacklogItemCollectionFactory::class)
             ->setConstructorArgs([
                 $this->dao,
                 $this->artifact_factory,

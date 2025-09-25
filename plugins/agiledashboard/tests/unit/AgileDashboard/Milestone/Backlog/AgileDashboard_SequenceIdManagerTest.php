@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Milestone\Backlog;
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use AgileDashboard_SequenceIdManager;
 use PFUser;
@@ -57,7 +56,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
     private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog_1;
     private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog_2;
     private PFUser $user;
-    private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&MockObject $backlog_item_collection_factory;
+    private BacklogItemCollectionFactory&MockObject $backlog_item_collection_factory;
     private BacklogItem $backlog_item_1;
     private BacklogItem $backlog_item_2;
     private BacklogItem $backlog_item_3;
@@ -80,7 +79,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
         $this->backlog_2       = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
         $this->backlog_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
 
-        $this->backlog_item_collection_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
+        $this->backlog_item_collection_factory = $this->createMock(BacklogItemCollectionFactory::class);
 
         $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
             $this->backlog_factory,

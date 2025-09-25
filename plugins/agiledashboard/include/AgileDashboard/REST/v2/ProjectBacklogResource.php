@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\REST\v2;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use Luracast\Restler\RestException;
 use PFUser;
 use Planning_MilestoneFactory;
@@ -35,6 +34,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
@@ -57,9 +57,7 @@ class ProjectBacklogResource
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
     private $backlog_factory;
-
-    /** @var \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
-    private $backlog_item_collection_factory;
+    private BacklogItemCollectionFactory $backlog_item_collection_factory;
 
     /** @var \PlanningFactory */
     private $planning_factory;
@@ -88,7 +86,7 @@ class ProjectBacklogResource
             new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
         );
 
-        $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+        $this->backlog_item_collection_factory = new BacklogItemCollectionFactory(
             new BacklogItemDao(),
             $tracker_artifact_factory,
             $this->milestone_factory,

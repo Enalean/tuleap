@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use Planning_MilestoneFactory;
 use PlanningFactory;
@@ -32,6 +31,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
@@ -39,21 +39,10 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 class ContentForMiletoneProvider
 {
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogFactory
-     */
-    private $backlog_factory;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
-     */
-    private $backlog_item_collection_factory;
-
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
+        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly BacklogItemCollectionFactory $backlog_item_collection_factory,
     ) {
-        $this->backlog_factory                 = $backlog_factory;
-        $this->backlog_item_collection_factory = $backlog_item_collection_factory;
     }
 
     public static function build(Planning_MilestoneFactory $milestone_factory): self
@@ -68,7 +57,7 @@ class ContentForMiletoneProvider
                 $planning_factory,
                 new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
             ),
-            new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new BacklogItemCollectionFactory(
                 new BacklogItemDao(),
                 $tracker_artifact_factory,
                 $milestone_factory,

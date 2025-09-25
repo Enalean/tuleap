@@ -24,7 +24,6 @@ namespace Tuleap\ProjectMilestones\Widget;
 
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboardPlugin;
 use HTTPRequest;
 use Planning;
@@ -45,6 +44,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Project\ProjectAccessChecker;
@@ -70,10 +70,7 @@ class ProjectMilestonesPresenterBuilder
      * @var AgileDashboard_Milestone_Backlog_BacklogFactory
      */
     private $agile_dashboard_milestone_backlog_backlog_factory;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
-     */
-    private $agile_dashboard_milestone_backlog_backlog_item_collection_factory;
+    private BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory;
     /**
      * @var Planning_MilestoneFactory
      */
@@ -122,7 +119,7 @@ class ProjectMilestonesPresenterBuilder
     public function __construct(
         HTTPRequest $request,
         AgileDashboard_Milestone_Backlog_BacklogFactory $agile_dashboard_milestone_backlog_backlog_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory,
+        BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory,
         Planning_MilestoneFactory $planning_milestone_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
@@ -164,7 +161,7 @@ class ProjectMilestonesPresenterBuilder
                 $planning_factory,
                 new \Tuleap\Tracker\Artifact\Dao\ArtifactDao(),
             ),
-            new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new BacklogItemCollectionFactory(
                 new BacklogItemDao(),
                 $artifact_factory,
                 $milestone_factory,
