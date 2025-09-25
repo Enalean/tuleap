@@ -720,28 +720,23 @@ class RouteCollector
         );
     }
 
-    public static function getUsersNameAvatar()
+    public static function getAvatarController(): AvatarController
     {
         $storage             = new AvatarHashDao();
         $compute_avatar_hash = new ComputeAvatarHash();
+        $response_factory    = HTTPFactoryBuilder::responseFactory();
 
         return new AvatarController(
+            new SapiEmitter(),
+            new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory()),
+            $response_factory,
+            new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
+            \UserManager::instance(),
             new AvatarGenerator($storage, $compute_avatar_hash),
             $storage,
             $compute_avatar_hash,
-        );
-    }
-
-    public static function getUsersNameAvatarHash()
-    {
-        $storage             = new AvatarHashDao();
-        $compute_avatar_hash = new ComputeAvatarHash();
-
-        return new AvatarController(
-            new AvatarGenerator($storage, $compute_avatar_hash),
-            $storage,
-            $compute_avatar_hash,
-            ['expires' => 'never'],
+            new SessionWriteCloseMiddleware(),
+            new TuleapRESTCORSMiddleware(),
         );
     }
 
@@ -1672,8 +1667,8 @@ class RouteCollector
 
         $r->addGroup('/users', function (FastRoute\RouteCollector $r) {
             $r->get('/{name}[/]', [self::class, 'getUsersName']);
-            $r->get('/{name}/avatar.png', [self::class, 'getUsersNameAvatar']);
-            $r->get('/{name}/avatar-{hash}.png', [self::class, 'getUsersNameAvatarHash']);
+            $r->get('/{name}/avatar.png', [self::class, 'getAvatarController']);
+            $r->get('/{name}/avatar-{hash}.png', [self::class, 'getAvatarController']);
         });
 
         $r->post('/join-private-project-mail/', [self::class, 'postJoinPrivateProjectMail']);

@@ -21,108 +21,112 @@
 namespace Tuleap\User\Profile;
 
 use ForgeConfig;
-use HTTPRequest;
-use Tuleap\Layout\BaseLayout;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Option\Option;
-use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\ServerHostname;
 use Tuleap\User\Avatar\AvatarHashStorage;
 use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\ProvideCurrentRequestUser;
 use UserManager;
 
-class AvatarController implements DispatchableWithRequest, DispatchableWithRequestNoAuthz
+final class AvatarController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    public const DEFAULT_AVATAR = __DIR__ . '/../../../www/themes/common/images/avatar_default.png';
-
-    private $never_expires = false;
-
-    public const ONE_YEAR_IN_SECONDS = 3600 * 24 * 365;
-    /**
-     * @var AvatarGenerator
-     */
-    private $avatar_generator;
+    private const string DEFAULT_AVATAR   = __DIR__ . '/../../../www/themes/common/images/avatar_default.png';
+    private const int ONE_YEAR_IN_SECONDS = 3600 * 24 * 365;
 
     public function __construct(
-        AvatarGenerator $avatar_generator,
-        private AvatarHashStorage $avatar_hash_storage,
-        private ComputeAvatarHash $compute_avatar_hash,
-        array $options = [],
+        EmitterInterface $emitter,
+        private readonly BinaryFileResponseBuilder $binary_file_response_builder,
+        private readonly ResponseFactoryInterface $response_factory,
+        private readonly ProvideCurrentRequestUser $current_request_user_provider,
+        private readonly UserManager $user_manager,
+        private readonly AvatarGenerator $avatar_generator,
+        private readonly AvatarHashStorage $avatar_hash_storage,
+        private readonly ComputeAvatarHash $compute_avatar_hash,
+        MiddlewareInterface ...$middleware_stack,
     ) {
-        if (isset($options['expires']) && $options['expires'] === 'never') {
-            $this->never_expires = true;
-        }
-        $this->avatar_generator = $avatar_generator;
+        parent::__construct($emitter, ...$middleware_stack);
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $current_user = $this->current_request_user_provider->getCurrentRequestUser($request);
         // Avatar is a public information for all authenticated users
-        if (! ForgeConfig::areAnonymousAllowed() && $request->getCurrentUser()->isAnonymous()) {
-            $this->displayDefaultAvatarAsError();
-        }
-        \session_write_close();
-
-        $user_manager = UserManager::instance();
-        $user         = $user_manager->getUserByUserName($variables['name']);
-        if ($user === null) {
-            $this->displayDefaultAvatarAsError();
+        if (! ForgeConfig::areAnonymousAllowed() && ($current_user === null || $current_user->isAnonymous())) {
+            return $this->getDefaultAvatarErrorResponse($request);
         }
 
-        if ($user->hasAvatar()) {
-            $user_avatar_path = $user->getAvatarFilePath();
-            if (! is_file($user_avatar_path)) {
-                $this->avatar_generator->generate($user, $user_avatar_path);
-                $user->setHasCustomAvatar(false);
-                $user_manager->updateDb($user);
-            }
+        $user_name = (string) $request->getAttribute('name');
+        $user      = $this->user_manager->getUserByUserName($user_name);
 
-            if (is_file($user_avatar_path)) {
-                if (isset($variables['hash'])) {
-                    $this->redirectIfStalled($layout, $user, $variables['hash'], $variables['name']);
-                }
-                $this->displayAvatar($user_avatar_path);
-                return;
-            }
+        if ($user === null || ! $user->hasAvatar()) {
+            return $this->getDefaultAvatarErrorResponse($request);
         }
 
-        $this->displayAvatar(self::DEFAULT_AVATAR);
-    }
+        $user_avatar_path = $user->getAvatarFilePath();
+        if (! is_file($user_avatar_path)) {
+            $this->avatar_generator->generate($user, $user_avatar_path);
+            $user->setHasCustomAvatar(false);
+            $this->user_manager->updateDb($user);
+        }
 
-    private function redirectIfStalled(BaseLayout $layout, \PFUser $user, $hash, $user_name)
-    {
-        $this->avatar_hash_storage
+        $hash = (string) $request->getAttribute('hash');
+
+        return $this->avatar_hash_storage
             ->retrieve($user)
-            ->orElse(function () use ($user) {
-                return Option::fromValue(
-                    $this->compute_avatar_hash->computeAvatarHash($user->getAvatarFilePath())
-                );
-            })->andThen(function (string $current_hash) use ($layout, $hash, $user_name) {
-                if ($current_hash !== $hash) {
-                    $layout->permanentRedirect('/users/' . $user_name . '/avatar-' . $current_hash . '.png');
-                }
+            ->orElse(
+                /** @return Option<string> */
+                fn(): Option => Option::fromValue($this->compute_avatar_hash->computeAvatarHash($user_avatar_path))
+            )->mapOr(
+                function (string $current_hash) use ($request, $hash, $user): ResponseInterface {
+                    if ($current_hash === $hash || $hash === '') {
+                        return $this->getUserAvatarResponse($request, $user, $hash);
+                    }
 
-                return Option::fromValue(null);
-            });
+                    return $this->response_factory
+                        ->createResponse(301)
+                        ->withHeader(
+                            'Location',
+                            ServerHostname::HTTPSUrl() . '/users/' . urlencode($user->getUserName()) . '/avatar-' . urlencode($current_hash) . '.png'
+                        );
+                },
+                $this->getDefaultAvatarErrorResponse($request)
+            );
     }
 
-    private function displayAvatar($path)
+    private function getDefaultAvatarErrorResponse(ServerRequestInterface $request): ResponseInterface
     {
-        header('Content-Type: image/png');
-        if ($this->never_expires) {
-            header('Cache-Control: max-age=' . self::ONE_YEAR_IN_SECONDS . ',immutable');
-        } else {
-            header('Cache-Control: max-age=60');
+        return $this->binary_file_response_builder->fromFilePath(
+            $request,
+            self::DEFAULT_AVATAR,
+            'default-avatar.png',
+            'image/png'
+        )
+            ->withStatus(404)
+            ->withHeader('Cache-Control', 'max-age=60');
+    }
+
+    private function getUserAvatarResponse(ServerRequestInterface $request, \PFUser $user, string $hash): ResponseInterface
+    {
+        $response = $this->binary_file_response_builder->fromFilePath(
+            $request,
+            $user->getAvatarFilePath(),
+            sprintf('avatar-%s-%s.png', $user->getUserName(), $hash),
+            'image/png'
+        );
+
+        if ($hash === '') {
+            return $response->withHeader('Cache-Control', 'max-age=60');
         }
-        readfile($path);
-    }
 
-    private function displayDefaultAvatarAsError(): void
-    {
-        http_response_code(404);
-        header('Content-Type: image/png');
-        header('Cache-Control: max-age=60');
-        readfile(self::DEFAULT_AVATAR);
-        exit;
+        return $response->withHeader('Cache-Control', 'max-age=' . self::ONE_YEAR_IN_SECONDS . ',immutable');
     }
 }
