@@ -44,9 +44,9 @@ use Tuleap\Project\Quota\ProjectQuotaChecker;
 
 class BatchSuccessfulResponseBuilder
 {
-    public const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC   = 900;
-    public const EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC   = 6 * 3600;
-    public const EXPIRATION_DELAY_DOWNLOAD_ACTION_IN_SEC = 3600;
+    public const int EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC   = 900;
+    public const int EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC   = 6 * 3600;
+    public const int EXPIRATION_DELAY_DOWNLOAD_ACTION_IN_SEC = 3600;
 
     /**
      * @var ActionAuthorizationTokenCreator

@@ -22,8 +22,8 @@ namespace Tuleap\GitLFS\GitPHPDisplay;
 
 class Detector
 {
-    public const LFS_CONTENT_REGEXP         = "/^version\s.*\noid\ssha256:(?P<oidsha256>[A-Fa-f0-9]{64})\nsize\s[0-9]+\n$/";
-    public const LFS_CONTENT_REGEXP_OID_KEY = 'oidsha256';
+    public const string LFS_CONTENT_REGEXP         = "/^version\s.*\noid\ssha256:(?P<oidsha256>[A-Fa-f0-9]{64})\nsize\s[0-9]+\n$/";
+    public const string LFS_CONTENT_REGEXP_OID_KEY = 'oidsha256';
 
     public function isFileALFSFile($file_content)
     {

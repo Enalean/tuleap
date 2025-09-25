@@ -18434,10 +18434,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/gitlfs/include/Batch/Request/BatchRequestOperation.php">
-    <MissingClassConstType>
-      <code><![CDATA[DOWNLOAD_OPERATION = 'download']]></code>
-      <code><![CDATA[UPLOAD_OPERATION   = 'upload']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$operation]]></code>
     </MissingParamType>
@@ -18473,11 +18469,6 @@
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/gitlfs/include/Batch/Response/BatchSuccessfulResponseBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[EXPIRATION_DELAY_DOWNLOAD_ACTION_IN_SEC = 3600]]></code>
-      <code><![CDATA[EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC   = 900]]></code>
-      <code><![CDATA[EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC   = 6 * 3600]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$expiration_delay]]></code>
       <code><![CDATA[$max_file_size]]></code>
@@ -18502,10 +18493,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/gitlfs/include/GitPHPDisplay/Detector.php">
-    <MissingClassConstType>
-      <code><![CDATA[LFS_CONTENT_REGEXP         = "/^version\s.*\noid\ssha256:(?P<oidsha256>[A-Fa-f0-9]{64})\nsize\s[0-9]+\n$/"]]></code>
-      <code><![CDATA[LFS_CONTENT_REGEXP_OID_KEY = 'oidsha256']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$file_content]]></code>
     </MissingParamType>
@@ -18522,11 +18509,6 @@
       <code><![CDATA[buildDownloadURL]]></code>
       <code><![CDATA[getOidSha256]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/gitlfs/include/LFSJSONHTTPDispatchable.php">
-    <MissingClassConstType>
-      <code><![CDATA[GIT_LFS_MIME_TYPE = 'application/vnd.git-lfs+json']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/gitlfs/include/LFSObject/LFSObject.php">
     <MissingParamType>
@@ -18631,9 +18613,6 @@
     </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="plugins/gitlfs/include/SSHAuthenticate/SSHAuthenticateResponseBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[EXPIRES_IN_SECONDS = 600]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getResponse]]></code>
     </MissingReturnType>
@@ -18742,9 +18721,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/gitlfs/include/Transfer/Transfer.php">
-    <MissingClassConstType>
-      <code><![CDATA[BASIC_TRANSFER_IDENTIFIER = 'basic']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$identifier]]></code>
     </MissingParamType>
@@ -18764,12 +18740,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[DISPLAY_CONFIG_KEY = 'git_lfs_display_config']]></code>
-      <code><![CDATA[MAX_FILE_SIZE_KEY = 'git_lfs_max_file_size']]></code>
-      <code><![CDATA[SERVICE_LABEL = 'Git LFS']]></code>
-      <code><![CDATA[SERVICE_SHORTNAME = 'tuleap-gitlfs']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$params]]></code>
