@@ -40,6 +40,10 @@ msgstr ""
 "Une erreur est survenue lors de la création d'une section à partir de "
 "l'artifact existant %{ xref } : %{ details }"
 
+msgid "An error occurred while getting versions: %{ error }"
+msgstr ""
+"Une erreur est survenue lors de la récupération des versions : %{ error }"
+
 msgid "An error occurred while removing the freetext section."
 msgstr ""
 "Une erreur est survenue lors de la suppression de la section de texte libre."
@@ -113,6 +117,11 @@ msgstr "Configuration sauvegardée"
 
 msgid "Configure document"
 msgstr "Configurer le document"
+
+msgid "Data is fake in order to gather feedback about the feature."
+msgstr ""
+"Les données sont simulées afin de pouvoir obtenir des retours à propos de la "
+"fonctionnalité."
 
 msgid "Display"
 msgstr "Affichage"
@@ -237,6 +246,9 @@ msgstr ""
 "caractères), une sémantique description, et aucun champ requis autre que "
 "titre et description."
 
+msgid "Ok, got it"
+msgstr "Ok, j'ai compris"
+
 msgid "Open artifact"
 msgstr "Ouvrir l'artifact"
 
@@ -359,8 +371,8 @@ msgstr "Cette activation est personnelle et n'est pas sauvegardée."
 msgid "This document is empty"
 msgstr "Ce document est vide"
 
-msgid "This feature of artidoc is under construction"
-msgstr "Cette fonctionnalité d'artidoc est en cours de développement"
+msgid "This feature of artidoc is under construction."
+msgstr "Cette fonctionnalité d'artidoc est en cours de développement."
 
 msgid ""
 "This option is here to gather feedback about versions display, feel free to "
@@ -473,3 +485,6 @@ msgstr ""
 
 msgid "Your artidoc is currently set up on \"%{ tracker_name }\""
 msgstr "Votre artidoc est actuellement configuré sur \"%{ tracker_name }\""
+
+msgid "by:"
+msgstr "par :"

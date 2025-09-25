@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/core-constants':
     specifier: workspace:^
     version: link:../../../../lib/frontend/constants
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/date-helper':
     specifier: workspace:^
     version: link:../../../../lib/frontend/date-helper
