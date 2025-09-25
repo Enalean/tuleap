@@ -69,6 +69,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Numeric\NumericResult
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Unknown\UnknownTypeResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\ArtifactResultBuilder;
@@ -347,7 +348,8 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new StaticListResultBuilder(),
                 new UGroupListResultBuilder($tracker_artifact_factory, $user_group_manager),
                 new UserListResultBuilder($user_manager, $user_manager, $user_manager, $user_helper),
-                $field_retriever
+                new UnknownTypeResultBuilder(),
+                $field_retriever,
             ),
             new MetadataResultBuilder(
                 new TitleResultBuilder($tracker_artifact_factory, $text_value_interpreter, $semantic_title_retriever),

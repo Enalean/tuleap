@@ -37,11 +37,13 @@ import type {
     StaticListSelectableRepresentation,
     TextSelectableRepresentation,
     TrackerSelectableRepresentation,
+    UnknownSelectableRepresentation,
     UserGroupListSelectableRepresentation,
     UserListSelectableRepresentation,
     UserSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
 import {
+    UNKNOWN_SELECTABLE_TYPE,
     ARTIFACT_SELECTABLE_TYPE,
     DATE_SELECTABLE_TYPE,
     LINK_TYPE_SELECTABLE_TYPE,
@@ -63,6 +65,7 @@ import type {
     UserCellValue,
 } from "../domain/ArtifactsTable";
 import {
+    UNKNOWN_CELL,
     DATE_CELL,
     LINK_TYPE_CELL,
     NUMERIC_CELL,
@@ -146,6 +149,11 @@ const isLinkTypeSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is LinkTypeSelectableRepresentation =>
     "direction" in representation && typeof representation.direction === `string`;
+
+const isUnknownTypeSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is UnknownSelectableRepresentation =>
+    "value" in representation && typeof representation.value === `string`;
 
 /**
  * Throw instead of returning an err, because the format of the Selected representation
@@ -293,6 +301,14 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
             }
             return ok({
                 type: LINK_TYPE_CELL,
+                ...artifact_value,
+            });
+        case UNKNOWN_SELECTABLE_TYPE:
+            if (!isUnknownTypeSelectableRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
+            return ok({
+                type: UNKNOWN_CELL,
                 ...artifact_value,
             });
         default:

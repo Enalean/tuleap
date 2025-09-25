@@ -25,7 +25,9 @@ namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field;
 use Codendi_HTMLPurifier;
 use DateTime;
 use ForgeConfig;
+use Override;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use ProjectUGroup;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
@@ -35,6 +37,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Numeric\NumericResult
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Unknown\UnknownTypeResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
@@ -43,6 +46,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\StaticListV
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UGroupListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UGroupListValueRepresentation;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UnknownTypeResultRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
@@ -83,7 +87,7 @@ use Tuleap\Tracker\Tracker;
 use Tuleap\User\UserGroup\NameTranslator;
 use UserHelper;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class FieldResultBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
@@ -97,7 +101,7 @@ final class FieldResultBuilderTest extends TestCase
     private Tracker $first_tracker;
     private Tracker $second_tracker;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
@@ -149,7 +153,8 @@ final class FieldResultBuilderTest extends TestCase
                 ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults()),
                 $user_helper
             ),
-            $field_retriever
+            new UnknownTypeResultBuilder(),
+            $field_retriever,
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->isAnonymous() ? $user->getEmail() : $user->getRealName());
@@ -516,8 +521,16 @@ EOL
                 ],
             ],
         );
-
-        self::assertNull($result->selected);
-        self::assertEmpty($result->values);
+        $values = $result->values;
+        self::assertCount(1, $values);
+        self::assertEqualsCanonicalizing(
+            [
+                61 => new SelectedValue(
+                    self::FIELD_NAME,
+                    new UnknownTypeResultRepresentation()
+                ),
+            ],
+            $values
+        );
     }
 }

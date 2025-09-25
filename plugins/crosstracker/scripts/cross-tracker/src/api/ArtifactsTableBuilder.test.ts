@@ -28,6 +28,7 @@ import {
     STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
+    UNKNOWN_SELECTABLE_TYPE,
     USER_GROUP_LIST_SELECTABLE_TYPE,
     USER_LIST_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
@@ -45,6 +46,7 @@ import {
     STATIC_LIST_CELL,
     TEXT_CELL,
     TRACKER_CELL,
+    UNKNOWN_CELL,
     USER_CELL,
     USER_GROUP_LIST_CELL,
     USER_LIST_CELL,
@@ -261,6 +263,37 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(text_value_second_row.value).toBe("");
         });
 
+        it(`builds a table with "unknown" selectables`, () => {
+            const unknown_column = "details";
+
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
+                    [{ type: UNKNOWN_SELECTABLE_TYPE, name: unknown_column }],
+                    [
+                        ArtifactRepresentationStub.build({
+                            [unknown_column]: { value: "" },
+                        }),
+                        ArtifactRepresentationStub.build({ [unknown_column]: { value: "" } }),
+                    ],
+                ),
+                NO_DIRECTION,
+            );
+
+            expect(table.columns.has(unknown_column)).toBe(true);
+            expect(table.rows).toHaveLength(2);
+            const [first_row, second_row] = table.rows;
+            const unknown_value_first_row = first_row.cells.get(unknown_column);
+            if (unknown_value_first_row?.type !== UNKNOWN_CELL) {
+                throw Error("Expected to find first unknown value");
+            }
+            expect(unknown_value_first_row.value).toBe("");
+
+            const unknown_value_second_row = second_row.cells.get(unknown_column);
+            if (unknown_value_second_row?.type !== UNKNOWN_CELL) {
+                throw Error("Expected to find second unknown value");
+            }
+            expect(unknown_value_second_row.value).toBe("");
+        });
         it(`builds a table with "user" selectables`, () => {
             const first_user = {
                 display_name: "Paula Muhammed (pmuhammed)",
@@ -675,6 +708,7 @@ describe(`ArtifactsTableBuilder`, () => {
             yield [TRACKER_SELECTABLE_TYPE, { value: 12 }];
             yield [PRETTY_TITLE_SELECTABLE_TYPE, { value: 12 }];
             yield [LINK_TYPE_SELECTABLE_TYPE, { value: 12 }];
+            yield [UNKNOWN_SELECTABLE_TYPE, { value: 12 }];
         }
 
         it.each([...generateBrokenSelectedValues()])(
