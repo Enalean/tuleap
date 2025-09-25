@@ -43,6 +43,7 @@ final class RecipientFactoryTest extends TestCase
     private Artifact $artifact;
     private Tracker_Artifact_MailGateway_RecipientFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                = new PFUser(['user_id' => 123, 'language_id' => 'en']);

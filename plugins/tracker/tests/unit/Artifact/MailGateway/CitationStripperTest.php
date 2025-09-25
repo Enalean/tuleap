@@ -19,12 +19,13 @@
  */
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
+class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private $fixtures_dir;
     /** @var Tracker_Artifact_MailGateway_CitationStripper */
     private $citation_stripper;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

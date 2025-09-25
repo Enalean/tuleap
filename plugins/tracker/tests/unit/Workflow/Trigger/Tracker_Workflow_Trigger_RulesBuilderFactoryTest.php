@@ -30,6 +30,7 @@ final class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends \Tuleap\Tes
     private Tracker_Workflow_Trigger_RulesBuilderFactory $factory;
     private Tracker_FormElementFactory&MockObject $formelement_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);

@@ -38,6 +38,7 @@ final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.
     private Cardwall_OnTop_Config&MockObject $config;
     private Cardwall_SwimlineFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->config  = $this->createMock(Cardwall_OnTop_Config::class);

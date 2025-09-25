@@ -43,6 +43,7 @@ final class FineGrainedPermissionFactoryTest extends TestCase
     private FineGrainedPermissionFactory $factory;
     private GitRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $dao            = $this->createMock(FineGrainedDao::class);

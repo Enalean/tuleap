@@ -34,6 +34,7 @@ final class ChangesetValueComputedTest extends TestCase
     private Tracker_Artifact_Changeset $changeset;
     private ComputedField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field     = ComputedFieldBuilder::aComputedField(412)->build();

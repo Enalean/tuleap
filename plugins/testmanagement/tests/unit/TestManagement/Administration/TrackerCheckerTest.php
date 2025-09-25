@@ -43,6 +43,7 @@ final class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private HiddenFieldsetsDao&MockObject $hidden_fieldset_dao;
     private FieldUsageDetector&MockObject $ttm_field_usage_detector;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

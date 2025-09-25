@@ -38,6 +38,7 @@ final class ColumnFactoryTest extends TestCase
     private Cardwall_OnTop_ColumnDao&MockObject $dao;
     private ColumnFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(42)->build();

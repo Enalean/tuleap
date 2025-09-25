@@ -45,6 +45,7 @@ final class DocmanItemMoverTest extends TestCase
     private DocmanItemMover $item_mover;
     private EventManager&MockObject $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory        = $this->createMock(Docman_ItemFactory::class);

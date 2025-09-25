@@ -52,6 +52,7 @@ final class IncomingMessageInsecureBuilderTest extends TestCase
     private TrackerFactory&MockObject $tracker_factory;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager     = $this->createMock(UserManager::class);

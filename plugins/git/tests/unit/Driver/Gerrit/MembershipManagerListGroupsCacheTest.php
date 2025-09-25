@@ -60,6 +60,7 @@ final class MembershipManagerListGroupsCacheTest extends TestCase
     private ProjectUGroup $u_group2;
     private ProjectUGroup $u_group3;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('codendi_log', '/tmp/');

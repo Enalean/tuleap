@@ -33,6 +33,7 @@ final class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
 {
     private HardcodedMetdataObsolescenceDateChecker&MockObject $metadata_obsolescence_date_checker;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->metadata_obsolescence_date_checker = $this->createMock(HardcodedMetdataObsolescenceDateChecker::class);

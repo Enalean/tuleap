@@ -49,6 +49,7 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
     private ProjectAccessChecker&MockObject $project_access_checker;
     private ITellIfWritersAreAllowedToUpdatePropertiesOrDelete&MockObject $forbid_writers_settings;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->user                = UserTestBuilder::anActiveUser()->withId(1234)->build();

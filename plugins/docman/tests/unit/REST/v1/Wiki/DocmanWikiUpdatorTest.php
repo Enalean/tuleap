@@ -43,6 +43,7 @@ final class DocmanWikiUpdatorTest extends TestCase
     private EventManager&MockObject $event_manager;
     private DocmanItemUpdator&MockObject $updator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->version_factory     = $this->createMock(Docman_VersionFactory::class);

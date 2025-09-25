@@ -54,6 +54,7 @@ final class SubmissionPermissionVerifierTest extends TestCase
      */
     private $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user    = UserTestBuilder::buildWithDefaults();

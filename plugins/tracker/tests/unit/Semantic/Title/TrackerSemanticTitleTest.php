@@ -32,6 +32,7 @@ final class TrackerSemanticTitleTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerSemanticTitle $semantic_title;
     private SimpleXMLElement $root;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->xml = simplexml_load_string(

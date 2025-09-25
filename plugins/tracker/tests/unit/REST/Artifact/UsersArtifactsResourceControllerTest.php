@@ -44,6 +44,7 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
     private \PFUser $current_user;
     private int $current_user_id = 101;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user = UserTestBuilder::aUser()->withId($this->current_user_id)->build();
@@ -55,6 +56,7 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
         UserManager::setInstance($this->user_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

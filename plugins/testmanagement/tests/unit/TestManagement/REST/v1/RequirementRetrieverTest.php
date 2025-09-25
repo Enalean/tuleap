@@ -49,6 +49,7 @@ class RequirementRetrieverTest extends TestCase
                 /**
                  * @param int $id
                  */
+                #[\Override]
                 public function getArtifactByIdUserCanView(\PFUser $user, $id): ?Artifact
                 {
                     if ($id === 101 || $id === 103) {
@@ -67,6 +68,7 @@ class RequirementRetrieverTest extends TestCase
                 /**
                  * @return int|false
                  */
+                #[\Override]
                 public function getTestExecutionTrackerId(\Project $project)
                 {
                     return $this->execution_tracker_id;

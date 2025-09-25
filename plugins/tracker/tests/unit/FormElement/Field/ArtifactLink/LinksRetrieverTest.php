@@ -37,6 +37,7 @@ class LinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private LinksRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                      = $this->createMock(ArtifactLinkFieldValueDao::class);

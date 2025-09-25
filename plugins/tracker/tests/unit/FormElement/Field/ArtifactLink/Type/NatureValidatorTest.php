@@ -32,6 +32,7 @@ final class NatureValidatorTest extends TestCase
     private TypeValidator $validator;
     private TypeDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao       = $this->createMock(TypeDao::class);

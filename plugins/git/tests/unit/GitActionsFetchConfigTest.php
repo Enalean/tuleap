@@ -82,6 +82,7 @@ final class GitActionsFetchConfigTest extends TestCase
     private Git_Driver_Gerrit_ProjectCreator&MockObject $project_creator;
     private GitPermissionsManager&MockObject $git_permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_id = 458;

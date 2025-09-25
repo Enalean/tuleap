@@ -32,6 +32,7 @@ class QueryToCriterionOnlyAllStatusConverterTest extends \Tuleap\Test\PHPUnit\Te
      */
     private $converter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->converter = new QueryToCriterionOnlyAllStatusConverter();

@@ -52,6 +52,7 @@ class BackgroundColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $field;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

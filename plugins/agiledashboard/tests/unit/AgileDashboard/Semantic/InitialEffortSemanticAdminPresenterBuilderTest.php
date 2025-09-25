@@ -41,6 +41,7 @@ final class InitialEffortSemanticAdminPresenterBuilderTest extends TestCase
     private \Tuleap\Tracker\Tracker $tracker;
     private InitialEffortSemanticAdminPresenterBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->possible_fields_retriever = $this->createMock(SemanticInitialEffortPossibleFieldRetriever::class);

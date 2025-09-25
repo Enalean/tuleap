@@ -77,6 +77,7 @@ final class JiraClientMonoTrackerStub implements JiraClient
         return substr($file_contents, $marker_pos + strlen(ClientWrapper::DEBUG_MARKER_BODY));
     }
 
+    #[\Override]
     public function getUrl(string $url): ?array
     {
         if (isset($this->payloads[$url])) {
@@ -86,16 +87,19 @@ final class JiraClientMonoTrackerStub implements JiraClient
         throw new \RuntimeException('REST call not covered: ' . $url);
     }
 
+    #[\Override]
     public function isJiraCloud(): bool
     {
         return $this->is_cloud;
     }
 
+    #[\Override]
     public function getAttachmentContents(Attachment $attachment): string
     {
         return 'fake data';
     }
 
+    #[\Override]
     public function isJiraServer9(): bool
     {
         return $this->is_jira_server_9;

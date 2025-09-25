@@ -40,6 +40,7 @@ final class RestLockUpdaterTest extends TestCase
     private Docman_PermissionsManager&MockObject $permissions_manager;
     private Docman_LockFactory&MockObject $lock_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->lock_factory        = $this->createMock(Docman_LockFactory::class);

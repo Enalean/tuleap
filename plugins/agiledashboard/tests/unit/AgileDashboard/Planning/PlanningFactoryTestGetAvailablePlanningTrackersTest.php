@@ -37,6 +37,7 @@ final class PlanningFactoryTestGetAvailablePlanningTrackersTest extends TestCase
     private PlanningFactory&MockObject $partial_factory;
     private TrackerFactory&MockObject $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $planning_dao                 = $this->createMock(PlanningDao::class);

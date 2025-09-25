@@ -44,6 +44,7 @@ final class XMLExporterTest extends TestCase
     private array $plannings;
     private SimpleXMLElement $agiledasboard_node;
 
+    #[\Override]
     protected function setUp(): void
     {
         $planning = PlanningBuilder::aPlanning(101)

@@ -37,6 +37,7 @@ final class CSVFormatterTest extends TestCase
     private PFUser $user;
     private StoreUserPreferenceStub $user_preference_store;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->formatter             = new CSVFormatter();

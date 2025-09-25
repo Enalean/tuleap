@@ -42,6 +42,7 @@ final class Workflow_Transition_ConditionFactoryTest extends \Tuleap\Test\PHPUni
     private SimpleXMLElement $legacy_permissions_xml;
     private SimpleXMLElement $from_5_7_permissions_xml;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permissions_factory     = $this->createMock(\Workflow_Transition_Condition_Permissions_Factory::class);
@@ -93,6 +94,7 @@ final class Workflow_Transition_ConditionFactoryTest extends \Tuleap\Test\PHPUni
             );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         PermissionsManager::clearInstance();

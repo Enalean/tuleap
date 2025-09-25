@@ -48,6 +48,7 @@ final class NotificationsManagerTest extends TestCase
     private UsersRetriever&MockObject $users_retriever;
     private UGroupsRetriever&MockObject $ugroups_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->users_retriever      = $this->createMock(UsersRetriever::class);

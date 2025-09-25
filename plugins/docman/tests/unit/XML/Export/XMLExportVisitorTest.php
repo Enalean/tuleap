@@ -54,6 +54,7 @@ final class XMLExportVisitorTest extends TestCase
     private UserXMLExportedCollection&MockObject $user_collection;
     private PermissionsExporter&MockObject $perms_exporter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->version_factory = $this->createMock(Docman_VersionFactory::class);

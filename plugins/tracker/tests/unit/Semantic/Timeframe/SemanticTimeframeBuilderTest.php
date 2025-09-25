@@ -40,6 +40,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker $story_tracker;
     private MockObject|LinksRetriever $links_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                  = $this->createMock(SemanticTimeframeDao::class);

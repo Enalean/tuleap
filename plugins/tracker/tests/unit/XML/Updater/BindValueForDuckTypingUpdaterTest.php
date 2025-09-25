@@ -39,6 +39,7 @@ final class BindValueForDuckTypingUpdaterTest extends TestCase
     private \Tuleap\Tracker\FormElement\Field\List\SelectboxField $source_field;
     private \Tuleap\Tracker\FormElement\Field\List\SelectboxField $target_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->source_field = SelectboxFieldBuilder::aSelectboxField(1)->build();

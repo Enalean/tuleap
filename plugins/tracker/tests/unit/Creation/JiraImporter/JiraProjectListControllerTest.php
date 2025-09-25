@@ -44,6 +44,7 @@ final class JiraProjectListControllerTest extends TestCase
     private HTTPRequest $request;
     private JiraProjectListController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();

@@ -35,6 +35,7 @@ final class BurndownCalculatorTest extends TestCase
     private BurndownCalculator $burndown_calculator;
     private ComputedFieldDao&MockObject $computed_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->computed_dao        = $this->createMock(ComputedFieldDao::class);

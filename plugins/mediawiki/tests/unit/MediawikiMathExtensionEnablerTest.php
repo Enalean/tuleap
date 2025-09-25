@@ -33,6 +33,7 @@ final class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestC
     private MediawikiExtensionDAO&MockObject $dao;
     private Mediawiki_Migration_MediawikiMigrator&MockObject $migrator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mediawiki_installation_path = vfsStream::setup();

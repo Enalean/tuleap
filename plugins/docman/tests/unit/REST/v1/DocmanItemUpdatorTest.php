@@ -43,6 +43,7 @@ final class DocmanItemUpdatorTest extends TestCase
     private Docman_LockFactory&MockObject $lock_factory;
     private DocmanItemUpdator $updator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->approval_table_updater        = $this->createMock(ApprovalTableUpdater::class);

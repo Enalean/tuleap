@@ -32,6 +32,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \Tuleap\Test\PHPUni
     private Transition_PostAction_CIBuildDao&MockObject $dao;
     private Workflow&MockObject $workflow;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->transition_id  = 123;

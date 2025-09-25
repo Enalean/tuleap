@@ -35,6 +35,7 @@ final class Tracker_ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase /
     private int $artifact_id = 101;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);

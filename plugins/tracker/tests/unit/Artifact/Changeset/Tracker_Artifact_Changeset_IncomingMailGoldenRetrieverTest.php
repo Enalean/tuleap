@@ -33,9 +33,8 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TestCase
+final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private const RAW_MAIL_UPDATE   = 'raw mail content for update';
     private const RAW_MAIL_CREATION = 'raw mail content for creation';
@@ -48,6 +47,7 @@ final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends T
     private Tracker_Artifact_Changeset $changeset_by_web;
     private Tracker_Artifact_Changeset $other_changeset_by_mail;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(Tracker_Artifact_Changeset_IncomingMailDao::class);

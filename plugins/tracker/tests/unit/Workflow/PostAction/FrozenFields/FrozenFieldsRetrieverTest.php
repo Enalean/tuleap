@@ -37,6 +37,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $workflow_id = 112;
     private Workflow&MockObject $workflow;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->frozen_dao           = $this->createMock(FrozenFieldsDao::class);

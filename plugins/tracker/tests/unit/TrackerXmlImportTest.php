@@ -75,6 +75,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     private GetInstanceFromXml&MockObject $get_instance_from_xml;
     private InstantiateTrackerFromXml&MockObject $instantiate_tracker_from_xml;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory = $this->createMock(TrackerFactory::class);

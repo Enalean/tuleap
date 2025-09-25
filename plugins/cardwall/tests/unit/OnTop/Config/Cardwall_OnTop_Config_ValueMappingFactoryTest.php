@@ -49,6 +49,7 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
     private Tracker $tracker_10;
     private Tracker $tracker_20;
 
+    #[\Override]
     protected function setUp(): void
     {
         $element_factory  = $this->createMock(Tracker_FormElementFactory::class);

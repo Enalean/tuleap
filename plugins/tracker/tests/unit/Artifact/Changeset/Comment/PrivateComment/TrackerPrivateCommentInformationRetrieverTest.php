@@ -32,6 +32,7 @@ final class TrackerPrivateCommentInformationRetrieverTest extends TestCase
     private TrackerPrivateCommentUGroupEnabledDao&MockObject $tracker_private_comment_ugroup_enabled_dao;
     private TrackerPrivateCommentInformationRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_private_comment_ugroup_enabled_dao = $this->createMock(TrackerPrivateCommentUGroupEnabledDao::class);

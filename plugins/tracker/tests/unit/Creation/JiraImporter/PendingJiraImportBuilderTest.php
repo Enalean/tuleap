@@ -38,6 +38,7 @@ final class PendingJiraImportBuilderTest extends TestCase
     private ProjectManager&MockObject $project_manager;
     private PendingJiraImportBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager    = $this->createMock(UserManager::class);

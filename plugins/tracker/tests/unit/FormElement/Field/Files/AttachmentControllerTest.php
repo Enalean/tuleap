@@ -63,6 +63,7 @@ final class AttachmentControllerTest extends TestCase
     private FilesField $field;
     private Tracker_FileInfoFactory&MockObject $file_info_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_data_dir', $this->getTmpDir());

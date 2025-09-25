@@ -34,6 +34,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
     private LinkVersionDao|\PHPUnit\Framework\MockObject\MockObject $dao;
     private VersionRepresentationCollectionBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(LinkVersionDao::class);
@@ -49,6 +50,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
         \UserHelper::setInstance($user_helper);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \UserHelper::clearInstance();

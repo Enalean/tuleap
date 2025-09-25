@@ -53,6 +53,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
     private const CURRENT_TRACKER_ID = 160;
     private const ANOTHER_TRACKER_ID = 150;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);

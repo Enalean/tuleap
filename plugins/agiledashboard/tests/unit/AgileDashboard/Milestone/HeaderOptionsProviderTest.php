@@ -57,6 +57,7 @@ final class HeaderOptionsProviderTest extends TestCase
     private Tracker $task;
     private Tracker $top_requirement;
 
+    #[\Override]
     protected function setUp(): void
     {
         $backlog_factory        = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);

@@ -37,6 +37,7 @@ final class GitRepositoryUrlManagerTest extends TestCase
 
     private Git_GitRepositoryUrlManager $url_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->url_manager = new Git_GitRepositoryUrlManager($this->createMock(GitPlugin::class));

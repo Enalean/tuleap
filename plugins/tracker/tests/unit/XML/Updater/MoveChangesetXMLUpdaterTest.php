@@ -31,6 +31,7 @@ final class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MoveChangesetXMLUpdater $updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->updater = new MoveChangesetXMLUpdater();

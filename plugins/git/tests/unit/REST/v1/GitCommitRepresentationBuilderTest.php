@@ -51,6 +51,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
      */
     private GitCommitRepresentationBuilder $git_commit_representation_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata_retriever = $this->createMock(CommitMetadataRetriever::class);
@@ -69,6 +70,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         UserHelper::setInstance($user_helper_mock);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserHelper::clearInstance();

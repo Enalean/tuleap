@@ -52,6 +52,7 @@ final class TrackerRulesManagerForbiddenTest extends TestCase
 
     private TrackerRulesDateValidator&MockObject $tracker_rules_date_validator;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->build();

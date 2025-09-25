@@ -51,6 +51,7 @@ final class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PH
     private PFUser $user;
     private GetInstanceFromXml&MockObject $get_instance_from_xml;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->hierarchy_dao               = $this->createMock(HierarchyDAO::class);
@@ -69,6 +70,7 @@ final class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PH
                 $this->mapping = [];
             }
 
+            #[\Override]
             public function getInstanceFromXML(
                 Tracker $tracker,
                 $elem,

@@ -47,6 +47,7 @@ final class MembershipManagerProjectAdminOwnerOfEverythingTest extends TestCase
     private ProjectUGroup $ugroup;
     private Git_Driver_Gerrit_MembershipManager&MockObject $membership_manager;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->driver        = $this->createMock(Git_Driver_Gerrit::class);

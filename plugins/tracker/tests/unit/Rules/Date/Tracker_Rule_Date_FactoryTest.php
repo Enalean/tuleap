@@ -45,6 +45,7 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
     private DateField $source_field;
     private DateField $target_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();

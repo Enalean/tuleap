@@ -35,6 +35,7 @@ final class TaskboardCellTest extends \Tuleap\REST\RestBase
     /** @var array<string, int> */
     private static $column_ids;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -129,12 +129,14 @@ final class TooltipFetcherTest extends TestCase
         $tooltip = (new TooltipFetcher(
             $template_factory,
             new class implements OtherSemanticTooltipEntryFetcher {
+                #[\Override]
                 public function fetchTooltipEntry(Artifact $artifact, \PFUser $user): string
                 {
                     return 'Susan';
                 }
             },
             new class implements OtherSemanticTooltipEntryFetcher {
+                #[\Override]
                 public function fetchTooltipEntry(Artifact $artifact, \PFUser $user): string
                 {
                     return 'Dennis';

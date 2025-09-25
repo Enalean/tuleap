@@ -34,6 +34,7 @@ final class StaticListFieldVerifierTest extends TestCase
 {
     private StaticListFieldVerifier $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verifier = new StaticListFieldVerifier();

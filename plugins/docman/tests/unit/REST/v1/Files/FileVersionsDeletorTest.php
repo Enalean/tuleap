@@ -37,6 +37,7 @@ class FileVersionsDeletorTest extends TestCase
 {
     private const int PROJECT_ID = 102;
 
+    #[\Override]
     protected function tearDown(): void
     {
         \Docman_PermissionsManager::clearInstances();

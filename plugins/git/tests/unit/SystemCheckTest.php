@@ -38,6 +38,7 @@ final class SystemCheckTest extends TestCase
     private SystemCheck $system_check;
     private Plugin&MockObject $plugin;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->driver       = $this->createMock(Git_GitoliteDriver::class);

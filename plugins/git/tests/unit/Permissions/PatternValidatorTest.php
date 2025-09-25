@@ -37,6 +37,7 @@ final class PatternValidatorTest extends TestCase
     private FineGrainedRegexpValidator&MockObject $regexp_validator;
     private FineGrainedPatternValidator&MockObject $validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository       = GitRepositoryTestBuilder::aProjectRepository()->inProject(ProjectTestBuilder::aProject()->build())->build();

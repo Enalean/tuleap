@@ -51,6 +51,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
     private TypeDao&Stub $nature_dao;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field        = ArtifactLinkFieldBuilder::anArtifactLinkField(568)->build();

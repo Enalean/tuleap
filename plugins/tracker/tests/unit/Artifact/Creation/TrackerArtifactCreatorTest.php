@@ -75,6 +75,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $send_notification = true;
     private EventDispatcherInterface|MockObject $event_dispatcher;
 
+    #[\Override]
     public function setUp(): void
     {
         Tracker_ArtifactFactory::clearInstance();
@@ -109,6 +110,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();

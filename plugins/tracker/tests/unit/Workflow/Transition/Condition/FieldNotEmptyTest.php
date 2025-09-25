@@ -44,6 +44,7 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
     private \Tracker_Artifact_ChangesetValue $previous_value;
     private PFUser $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $factory = $this->createMock(\Tracker_FormElementFactory::class);
@@ -87,6 +88,7 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
         return $field;
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Tracker_FormElementFactory::clearInstance();

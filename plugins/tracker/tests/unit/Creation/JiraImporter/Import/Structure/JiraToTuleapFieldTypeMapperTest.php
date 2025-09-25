@@ -48,10 +48,12 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
     private FieldMappingCollection $field_mapping_collection;
     private IDGenerator $id_generator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger = new class extends AbstractLogger {
             public $messages = [];
+            #[\Override]
             public function log($level, string|\Stringable $message, array $context = []): void
             {
                 $this->messages[$level][] = $message;

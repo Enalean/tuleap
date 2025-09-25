@@ -25,6 +25,7 @@ final class Tracker_Permission_PermissionRequestTest extends \Tuleap\Test\PHPUni
 {
     private array $minimal_ugroup_list;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->minimal_ugroup_list = [

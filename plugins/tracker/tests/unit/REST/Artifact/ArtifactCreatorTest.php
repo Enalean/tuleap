@@ -486,6 +486,7 @@ final class ArtifactCreatorTest extends TestCase
         RetrieveTracker $tracker_factory,
     ): ArtifactCreator {
         $default_values_adder = new class implements AddDefaultValuesToFieldsData {
+            #[\Override]
             public function getUsedFieldsWithDefaultValue(\Tuleap\Tracker\Tracker $tracker, array $fields_data, \PFUser $user): array
             {
                 return $fields_data;

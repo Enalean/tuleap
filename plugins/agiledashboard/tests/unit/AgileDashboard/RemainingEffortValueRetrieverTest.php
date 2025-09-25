@@ -42,6 +42,7 @@ final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     private \Tuleap\Tracker\Tracker $tracker;
     private \Tuleap\Tracker\FormElement\Field\TrackerField $field;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->form_element_factory       = $this->createMock(Tracker_FormElementFactory::class);

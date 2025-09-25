@@ -44,6 +44,7 @@ final class WorkflowRestBuilderTest extends TestCase
      */
     private $global_rules_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->condition_permissions = $this->createMock(Workflow_Transition_Condition_Permissions::class);

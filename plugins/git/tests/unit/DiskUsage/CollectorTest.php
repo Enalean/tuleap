@@ -39,6 +39,7 @@ final class CollectorTest extends TestCase
     private Collector $collector;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->disk_usage_manager = $this->createMock(Statistics_DiskUsageManager::class);

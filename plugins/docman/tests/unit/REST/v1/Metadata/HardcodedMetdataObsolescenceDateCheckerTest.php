@@ -35,6 +35,7 @@ final class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
 {
     private Docman_SettingsBo&MockObject $docman_settings_bo;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->docman_settings_bo = $this->createMock(Docman_SettingsBo::class);

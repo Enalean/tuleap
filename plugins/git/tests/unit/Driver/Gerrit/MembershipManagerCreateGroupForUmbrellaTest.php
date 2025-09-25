@@ -49,6 +49,7 @@ final class MembershipManagerCreateGroupForUmbrellaTest extends TestCase
     private Git_Driver_Gerrit_MembershipManager&MockObject $membership_manager;
     private Git_RemoteServer_GerritServerFactory&MockObject $remote_server_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $driver              = $this->createMock(Git_Driver_Gerrit::class);

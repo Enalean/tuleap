@@ -43,6 +43,7 @@ final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:
     private Git_RemoteServer_GerritServerFactory&MockObject $gerrit_server_factory;
     private Git_Gitolite_SSHKeyDumper&MockObject $ssh_key_dumper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ssh_key_dumper        = $this->createMock(Git_Gitolite_SSHKeyDumper::class);

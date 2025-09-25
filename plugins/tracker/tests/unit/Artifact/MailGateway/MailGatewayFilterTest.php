@@ -29,6 +29,7 @@ final class MailGatewayFilterTest extends TestCase
 {
     private MailGatewayFilter $mail_filter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mail_filter = new MailGatewayFilter();

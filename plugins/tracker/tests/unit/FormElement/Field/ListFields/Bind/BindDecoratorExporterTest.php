@@ -32,6 +32,7 @@ final class BindDecoratorExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $decorator_exporter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->decorator_exporter = new BindDecoratorExporter();

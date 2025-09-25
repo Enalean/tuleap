@@ -27,11 +27,13 @@ final class CodeBlockFeaturesOnArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     private CodeBlockFeaturesOnArtifact $code_block_features;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->code_block_features = CodeBlockFeaturesOnArtifact::getInstance();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         CodeBlockFeaturesOnArtifact::clearInstance();

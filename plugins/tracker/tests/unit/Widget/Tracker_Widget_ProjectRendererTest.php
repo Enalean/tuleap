@@ -28,9 +28,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Widget_ProjectRendererTest extends TestCase
+final class Tracker_Widget_ProjectRendererTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private const CURRENT_PROJECT_ID = 1001;
     private const ANOTHER_PROJECT_ID = 1002;
@@ -41,6 +40,7 @@ final class Tracker_Widget_ProjectRendererTest extends TestCase
      */
     private $renderer_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         \HTTPRequest::setInstance(
@@ -51,6 +51,7 @@ final class Tracker_Widget_ProjectRendererTest extends TestCase
         $this->widget           = new \Tracker_Widget_ProjectRenderer($this->renderer_factory);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \HTTPRequest::clearInstance();

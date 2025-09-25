@@ -41,6 +41,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
     private Docman_ItemFactory&MockObject $item_factory;
     private DocmanFileDownloadResponseGenerator&MockObject $response_generator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory       = $this->createMock(Docman_ItemFactory::class);

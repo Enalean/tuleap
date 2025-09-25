@@ -64,6 +64,7 @@ final class ArtifactReverseLinksUpdaterTest extends TestCase
     /** @var Option<NewArtifactLinkChangesetValue> */
     private Option $link_value;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset_creator       = CreateNewChangesetStub::withNullReturnChangeset();

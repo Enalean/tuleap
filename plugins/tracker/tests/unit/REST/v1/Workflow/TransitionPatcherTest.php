@@ -38,6 +38,7 @@ final class TransitionPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private StateFactory&MockObject $state_factory;
     private TransitionUpdater&MockObject $transition_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->updater            = $this->createMock(ConditionsUpdater::class);

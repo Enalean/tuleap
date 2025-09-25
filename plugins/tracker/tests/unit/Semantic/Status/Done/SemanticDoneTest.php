@@ -38,6 +38,7 @@ final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_FormElement_Field_List_Bind_StaticValue $on_going_value;
     private Tracker_FormElement_Field_List_Bind_StaticValue $to_do_value;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->to_do_value    = ListStaticValueBuilder::aStaticValue('todo')->withId(1)->build();

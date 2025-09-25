@@ -61,6 +61,7 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends T
 
     private MockObject&WorkflowUpdateChecker $workflow_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory                 = $this->createMock(Tracker_FormElementFactory::class);

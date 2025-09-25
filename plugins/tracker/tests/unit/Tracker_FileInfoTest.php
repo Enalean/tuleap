@@ -37,6 +37,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
     private Tracker_FileInfo $file_info_2;
     private string $thumbnails_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $field_id                = 123;
@@ -60,6 +61,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
         $this->file_info_2 = new Tracker_FileInfo($id, $this->field, $submitted_by, $description, $filename, $filesize, $filetype);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Backend::clearInstances();

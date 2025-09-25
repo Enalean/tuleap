@@ -39,6 +39,7 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
     private Project&MockObject $project;
     private Response&MockObject $response;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tv3_migration_manager   = $this->createMock(Tracker_Migration_MigrationManager::class);

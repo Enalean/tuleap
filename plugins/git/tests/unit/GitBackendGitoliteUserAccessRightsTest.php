@@ -44,6 +44,7 @@ final class GitBackendGitoliteUserAccessRightsTest extends TestCase
     private PFUser&MockObject $user;
     private GitRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $driver        = $this->createMock(Git_GitoliteDriver::class);

@@ -53,6 +53,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Tracker_FormElementFactory&MockObject $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['HTML'] = $this->createMock(Layout::class);
@@ -77,6 +78,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['HTML']);

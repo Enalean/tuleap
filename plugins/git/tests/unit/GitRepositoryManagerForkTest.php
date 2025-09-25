@@ -62,6 +62,7 @@ final class GitRepositoryManagerForkTest extends TestCase
     private ProjectHistoryDao&MockObject $project_history_dao;
     private EventManager&MockObject $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->backend    = $this->createMock(Git_Backend_Gitolite::class);

@@ -50,6 +50,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_FormElement_Interface&MockObject $formElement;
     private \TrackerManager&MockObject $tm;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['HTML'] = $this->createMock(BaseLayout::class);
@@ -102,6 +103,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tm->method('checkServiceEnabled')->willReturn(true);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['group_id'], $GLOBALS['HTML']);

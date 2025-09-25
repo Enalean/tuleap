@@ -35,6 +35,7 @@ final class TimeframeNotConfiguredTest extends TestCase
 {
     private TimeframeNotConfigured $timeframe;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->timeframe = new TimeframeNotConfigured();

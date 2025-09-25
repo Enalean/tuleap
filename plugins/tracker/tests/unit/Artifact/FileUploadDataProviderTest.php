@@ -44,6 +44,7 @@ final class FileUploadDataProviderTest extends TestCase
     private Artifact $artifact;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory  = $this->createMock(Tracker_FormElementFactory::class);

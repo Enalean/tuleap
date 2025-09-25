@@ -44,6 +44,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
     private int $trigger_field_id = 369;
     private int $trigger_value_id = 852;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();

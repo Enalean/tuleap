@@ -30,6 +30,7 @@ final class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TransitionExtractor $extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -44,6 +44,7 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
     private Stub|ListField $field;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::anActiveUser()->withId(114)->build();

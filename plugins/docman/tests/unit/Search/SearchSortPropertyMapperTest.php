@@ -30,6 +30,7 @@ final class SearchSortPropertyMapperTest extends TestCase
 {
     private SearchSortPropertyMapper $sort_property_mapper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->sort_property_mapper = new SearchSortPropertyMapper();

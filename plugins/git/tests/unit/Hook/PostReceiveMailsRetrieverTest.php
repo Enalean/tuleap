@@ -39,6 +39,7 @@ final class PostReceiveMailsRetrieverTest extends TestCase
     private GitRepository&MockObject $repository;
     private PostReceiveMailsRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(42)->withAccessPrivate()->build();

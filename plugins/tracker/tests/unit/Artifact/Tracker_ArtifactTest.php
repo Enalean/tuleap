@@ -94,6 +94,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 {
     use GlobalResponseMock;
 
+    #[\Override]
     protected function tearDown(): void
     {
         Tracker_FormElementFactory::clearInstance();

@@ -48,6 +48,7 @@ final class PlanningFactoryTestGetVirtualTopPlanningTest extends TestCase
     private PlanningDao&MockObject $planning_dao;
     private PlanningPermissionsManager&MockObject $planning_permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_dao                 = $this->createMock(PlanningDao::class);

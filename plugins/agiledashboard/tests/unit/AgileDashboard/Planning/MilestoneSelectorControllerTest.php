@@ -45,6 +45,7 @@ final class MilestoneSelectorControllerTest extends TestCase
     private Planning_MilestoneFactory&MockObject $milestone_factory;
     private Codendi_Request $request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $planning_id   = '321';
@@ -65,6 +66,7 @@ final class MilestoneSelectorControllerTest extends TestCase
             ->with($user, $planning_id)->willReturn($milestone);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         EventManager::clearInstance();

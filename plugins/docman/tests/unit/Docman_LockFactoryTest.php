@@ -40,6 +40,7 @@ final class Docman_LockFactoryTest extends TestCase // phpcs:ignore Squiz.Classe
     private Docman_Item $item;
     private Docman_LockFactory $lock_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao          = $this->createMock(Docman_LockDao::class);

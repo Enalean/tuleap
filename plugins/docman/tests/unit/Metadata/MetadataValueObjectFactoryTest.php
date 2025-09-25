@@ -30,6 +30,7 @@ final class MetadataValueObjectFactoryTest extends TestCase
 {
     private MetadataValueObjectFactory $metadata_object_value_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata_object_value_factory = new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory());

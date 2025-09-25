@@ -42,6 +42,7 @@ final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     private Docman_PermissionsManager&MockObject $permission_manager;
     private DocumentBeforeModificationValidatorVisitor $validator_visitor;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->permission_manager = $this->createMock(Docman_PermissionsManager::class);

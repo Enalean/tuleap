@@ -29,6 +29,7 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitRepositoryAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
+    #[\Override]
     public function getAuthenticationScopeClassname(): string
     {
         return GitRepositoryAccessKeyScope::class;

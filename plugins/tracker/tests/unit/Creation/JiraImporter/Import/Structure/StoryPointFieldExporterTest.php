@@ -45,6 +45,7 @@ final class StoryPointFieldExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private IDGenerator $id_generator;
     private FieldMappingCollection $field_mapping_collection;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

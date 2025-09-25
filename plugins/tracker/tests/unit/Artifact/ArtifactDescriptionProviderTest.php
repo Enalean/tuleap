@@ -39,6 +39,7 @@ final class ArtifactDescriptionProviderTest extends TestCase
     private TrackerSemanticDescription&MockObject $semantic_description;
     private ArtifactDescriptionProvider $provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->semantic_description = $this->createMock(TrackerSemanticDescription::class);

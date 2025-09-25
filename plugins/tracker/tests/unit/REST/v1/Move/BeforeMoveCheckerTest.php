@@ -45,6 +45,7 @@ final class BeforeMoveCheckerTest extends TestCase
     private \PFUser $user;
     private MoveActionAllowedDAO&\PHPUnit\Framework\MockObject\MockObject $move_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_status_verificator = $this->createMock(ProjectStatusVerificator::class);

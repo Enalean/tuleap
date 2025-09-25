@@ -58,6 +58,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
     private PlanningFactory&MockObject $planning_factory;
     private Planning_MilestoneFactory $milestone_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user             = UserTestBuilder::anActiveUser()->build();

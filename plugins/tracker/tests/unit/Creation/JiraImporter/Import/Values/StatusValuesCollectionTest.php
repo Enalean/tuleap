@@ -80,6 +80,7 @@ class StatusValuesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         return new class extends JiraCloudClientStub {
             public string $url = '';
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->url = $url;

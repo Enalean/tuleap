@@ -35,6 +35,7 @@ final class Tracker_URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
     private PFUser $user;
     private Tracker_URL&MockObject $url;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(666)->build();

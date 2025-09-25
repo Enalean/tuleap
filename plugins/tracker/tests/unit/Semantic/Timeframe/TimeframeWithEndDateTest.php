@@ -44,6 +44,7 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
     private $end_date_field;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->start_date_field = $this->getMockedDateField(1001);

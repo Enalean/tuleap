@@ -41,6 +41,7 @@ class ArtifactTest extends TrackerBase
     protected $release_status_field_id;
     protected $release_status_current_value_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

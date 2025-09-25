@@ -63,6 +63,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
     private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
     private BacklogItemDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                               = $this->createMock(BacklogItemDao::class);

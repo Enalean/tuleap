@@ -34,6 +34,7 @@ final class FilteringQueryParserTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $parser;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->parser = new FilteringQueryParser();

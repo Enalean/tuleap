@@ -46,6 +46,7 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
     private CustomMetadataRepresentationRetriever $checker;
     private Docman_MetadataFactory&MockObject $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory             = $this->createMock(Docman_MetadataFactory::class);

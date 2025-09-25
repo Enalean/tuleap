@@ -76,6 +76,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
     private Planning $sub_planning;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_factory = $this->createMock(PlanningFactory::class);

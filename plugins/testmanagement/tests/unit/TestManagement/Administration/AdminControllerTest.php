@@ -53,6 +53,7 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public const NEW_EXECUTION_TRACKER_ID       = 537;
     public const NEW_ISSUE_TRACKER_ID           = 538;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->config               = $this->createMock(Config::class);

@@ -40,6 +40,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private MockObject|Tracker_ArtifactFactory $factory;
     private MockObject|ExecutionDao $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao          = $this->createMock(ExecutionDao::class);

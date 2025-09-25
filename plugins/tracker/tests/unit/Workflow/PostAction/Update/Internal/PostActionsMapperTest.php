@@ -36,6 +36,7 @@ final class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private PostActionsMapper $mapper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mapper = new PostActionsMapper();

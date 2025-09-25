@@ -58,6 +58,7 @@ final class MilestoneFactoryGetTopMilestonesTest extends TestCase
     private PFUser $user;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $planning_factory       = $this->createMock(PlanningFactory::class);

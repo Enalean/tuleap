@@ -28,6 +28,7 @@ final class OpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private OpenListFieldVerifier $open_list_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->open_list_verifier = new OpenListFieldVerifier();

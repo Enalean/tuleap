@@ -40,6 +40,7 @@ final class PostActionCheckerTest extends TestCase
     private PostActionChecker $checker;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->config               = $this->createMock(Config::class);

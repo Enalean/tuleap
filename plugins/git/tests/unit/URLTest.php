@@ -43,6 +43,7 @@ final class URLTest extends TestCase
     private int $gpig_project_id      = 111;
     private int $repository_id        = 43;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager    = $this->createMock(ProjectManager::class);

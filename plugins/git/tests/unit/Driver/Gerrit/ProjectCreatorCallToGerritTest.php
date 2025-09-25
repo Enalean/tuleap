@@ -99,6 +99,7 @@ final class ProjectCreatorCallToGerritTest extends TestCase
     private Git_Driver_Gerrit&MockObject $driver;
     private Git_Driver_Gerrit_ProjectCreator $project_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_default_domain', $this->tuleap_instance);
@@ -223,6 +224,7 @@ final class ProjectCreatorCallToGerritTest extends TestCase
         return $git_exec;
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->recurseDeleteInDir($this->tmpdir);

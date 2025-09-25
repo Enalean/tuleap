@@ -43,6 +43,7 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
     private XML_SimpleXMLCDATAFactory $cdata_factory;
     private MoveChangesetXMLUpdater $move_changeset_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project             = ProjectTestBuilder::aProject()->build();

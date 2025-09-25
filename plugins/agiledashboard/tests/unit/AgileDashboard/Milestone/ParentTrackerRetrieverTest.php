@@ -38,6 +38,7 @@ final class ParentTrackerRetrieverTest extends TestCase
     private ParentTrackerRetriever $retriever;
     private PlanningFactory&MockObject $planning_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_factory = $this->createMock(PlanningFactory::class);

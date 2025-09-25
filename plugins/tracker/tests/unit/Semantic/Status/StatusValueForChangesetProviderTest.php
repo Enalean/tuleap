@@ -37,6 +37,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     private Tracker_Artifact_Changeset $changeset;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(101)->build();

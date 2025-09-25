@@ -34,6 +34,7 @@ final class LinkToGitFileBlobFinderTest extends TestCase
     private readonly MockObject&Commit $current_commit;
     private readonly MockObject&Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_commit = $this->createMock(Commit::class);

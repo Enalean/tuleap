@@ -42,6 +42,7 @@ final class FileInfoForTusUploadedFileReadyToBeAttachedProviderTest extends Test
     private FilesField $field;
     private FileInfoForTusUploadedFileReadyToBeAttachedProvider|AttachmentForTusUploadCreator $provider;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->current_user              = UserTestBuilder::buildWithId(101);

@@ -29,6 +29,7 @@ final class ArtifactLinksUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCa
     private ArtifactLinksUsageDao&MockObject $dao;
     private ArtifactLinksUsageDuplicator $duplicator;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

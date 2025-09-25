@@ -49,6 +49,7 @@ final class HistoryValueFormatterTest extends TestCase
     private FineGrainedPermissionFactory&MockObject $factory;
     private HistoryValueFormatter $formatter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ugroup_01 = ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('Contributors')->build();

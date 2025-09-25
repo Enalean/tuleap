@@ -39,6 +39,7 @@ final class AccessControlVerifierTest extends TestCase
     private PFUser&MockObject $user;
     private GitRepository $repository;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->fine_grained_permissions = $this->createMock(FineGrainedRetriever::class);

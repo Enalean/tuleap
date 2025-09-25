@@ -36,6 +36,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
 
     private PFUser $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language']->method('getText')->with('system', 'datefmt_short')->willReturn(Tracker_FormElement_DateFormatter::DATE_FORMAT);

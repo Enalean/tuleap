@@ -40,6 +40,7 @@ final class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private EventManager&MockObject $event_manager;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->event_manager = $this->createMock(EventManager::class);

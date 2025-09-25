@@ -53,6 +53,7 @@ final class ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_Artifact_Changeset $last_changeset_1;
     private Tracker_Artifact_Changeset $last_changeset_2;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

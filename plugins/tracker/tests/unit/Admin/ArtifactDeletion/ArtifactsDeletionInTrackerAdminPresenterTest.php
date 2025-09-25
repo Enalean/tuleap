@@ -33,6 +33,7 @@ final class ArtifactsDeletionInTrackerAdminPresenterTest extends TestCase
 {
     private string $url;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->url = ArtifactsDeletionInTrackerAdminUrlBuilder::fromTracker(

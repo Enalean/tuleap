@@ -36,6 +36,7 @@ final class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Workflow_Transition_Condition_CommentNotEmpty_Dao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

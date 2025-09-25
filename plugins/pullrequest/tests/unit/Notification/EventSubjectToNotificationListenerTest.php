@@ -30,6 +30,7 @@ final class EventSubjectToNotificationListenerTest extends \Tuleap\Test\PHPUnit\
     public function testBuildsEventSubjectToNotificationListener(): void
     {
         $strategy = new class implements PullRequestNotificationStrategy {
+            #[\Override]
             public function execute(NotificationToProcess $notification): void
             {
                 return;
@@ -37,6 +38,7 @@ final class EventSubjectToNotificationListenerTest extends \Tuleap\Test\PHPUnit\
         };
 
         $builder = new class implements NotificationToProcessBuilder {
+            #[\Override]
             public function getNotificationsToProcess(EventSubjectToNotification $event): array
             {
                 return [];

@@ -44,6 +44,7 @@ final class DryRunMoverTest extends TestCase
     private Artifact $artifact;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->source_tracker = TrackerTestBuilder::aTracker()->withName('Source tracker')->build();

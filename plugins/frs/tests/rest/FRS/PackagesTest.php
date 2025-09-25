@@ -33,6 +33,7 @@ final class PackagesTest extends RestBase
 
     private int $project_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

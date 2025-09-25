@@ -38,6 +38,7 @@ final class PendingJiraImportCleanerTest extends TestCase
     private PendingJiraImportDao&MockObject $dao;
     private PendingJiraImportCleaner $cleaner;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->notifier = $this->createMock(CancellationOfJiraImportNotifier::class);

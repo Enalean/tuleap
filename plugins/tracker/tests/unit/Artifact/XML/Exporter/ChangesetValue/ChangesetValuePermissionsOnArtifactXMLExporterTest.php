@@ -36,6 +36,7 @@ final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\T
 
     private \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField $field;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

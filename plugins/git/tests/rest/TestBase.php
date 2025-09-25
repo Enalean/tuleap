@@ -27,6 +27,7 @@ class TestBase extends RestBase
 {
     protected $git_project_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -37,6 +37,7 @@ final class CachingTrackerPrivateCommentInformationRetrieverTest extends \Tuleap
              */
             private $nb_calls = 0;
 
+            #[\Override]
             public function doesTrackerAllowPrivateComments(Tracker $tracker): bool
             {
                 $this->nb_calls++;

@@ -34,6 +34,7 @@ final class Tracker_Artifact_ChangesetValue_DateTest extends \Tuleap\Test\PHPUni
     private Tracker_Artifact_Changeset $changeset;
     private DateField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field     = DateFieldBuilder::aDateField(541)->build();

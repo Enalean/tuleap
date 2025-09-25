@@ -36,6 +36,7 @@ final class ServiceTest extends RestBase
 
     private int $project_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

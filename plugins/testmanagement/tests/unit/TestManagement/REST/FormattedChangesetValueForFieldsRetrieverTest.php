@@ -41,6 +41,7 @@ final class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\P
     private Artifact $artifact;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();

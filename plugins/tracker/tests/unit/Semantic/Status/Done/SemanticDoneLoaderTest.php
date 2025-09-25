@@ -38,6 +38,7 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker $tracker;
     private TrackerSemanticStatus&MockObject $semantic_status;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->build();
@@ -50,6 +51,7 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->loader = new SemanticDoneLoader($this->dao, $this->value_checker);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

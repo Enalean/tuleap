@@ -31,6 +31,7 @@ final class FieldChangeFloatBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FieldChangeFloatBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

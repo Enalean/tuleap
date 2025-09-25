@@ -37,6 +37,7 @@ final class DiffProcessorTest extends TestCase
     private Tracker_Artifact_Changeset $changeset;
     private TrackerField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field     = TextFieldBuilder::aTextField(145)->build();

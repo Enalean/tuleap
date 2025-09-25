@@ -49,6 +49,7 @@ final class ModeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private StateFactory&MockObject $state_factory;
     private TransitionExtractor $reference_transition_extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->workflow_dao                   = $this->createMock(Workflow_Dao::class);

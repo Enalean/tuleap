@@ -38,6 +38,7 @@ final class AsynchronousJiraRunnerTest extends TestCase
     private AsynchronousJiraRunner $async_runner;
     private TestLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->jira_runner = $this->createMock(JiraRunner::class);

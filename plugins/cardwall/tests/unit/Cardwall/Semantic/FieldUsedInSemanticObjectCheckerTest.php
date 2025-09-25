@@ -34,6 +34,7 @@ final class FieldUsedInSemanticObjectCheckerTest extends TestCase
     private FieldUsedInSemanticObjectChecker $checker;
     private BackgroundColorDao&MockObject $background_dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->background_dao = $this->createMock(BackgroundColorDao::class);

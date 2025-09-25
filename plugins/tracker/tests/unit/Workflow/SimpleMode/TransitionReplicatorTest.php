@@ -53,6 +53,7 @@ final class TransitionReplicatorTest extends TestCase
     private PostActionCollectionUpdater&MockObject $post_actions_updater;
     private PostActionsMapper $post_actions_mapper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->condition_factory      = $this->createMock(Workflow_Transition_ConditionFactory::class);

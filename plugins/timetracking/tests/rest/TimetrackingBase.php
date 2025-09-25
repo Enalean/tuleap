@@ -32,6 +32,7 @@ class TimetrackingBase extends RestBase
     protected $timetracking_artifact_ids;
     protected $timetracking_user_test;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

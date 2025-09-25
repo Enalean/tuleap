@@ -40,6 +40,7 @@ final class ChangesetsForDiffRetrieverTest extends TestCase
     private Tracker_Artifact_ChangesetFactory&MockObject $changeset_factory;
     private ChangesetsForDiffRetriever $changeset_for_diff_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset_factory = $this->createMock(Tracker_Artifact_ChangesetFactory::class);

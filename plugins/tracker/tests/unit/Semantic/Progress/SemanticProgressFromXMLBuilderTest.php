@@ -29,6 +29,7 @@ final class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Test
 {
     private SemanticProgressFromXMLBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->builder = new SemanticProgressFromXMLBuilder(

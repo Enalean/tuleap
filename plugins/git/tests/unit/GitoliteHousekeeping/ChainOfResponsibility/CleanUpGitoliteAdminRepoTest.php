@@ -42,6 +42,7 @@ final class CleanUpGitoliteAdminRepoTest extends TestCase
     private string $remote_admin_repository;
     private string $expected_file_in_old_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->response = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
@@ -69,6 +70,7 @@ final class CleanUpGitoliteAdminRepoTest extends TestCase
         $this->command->clearExecuteAs();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         (new Process([Git_Exec::getGitCommand(), 'config', '--global', '--unset', 'safe.directory']))->mustRun();

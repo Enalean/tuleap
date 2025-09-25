@@ -30,6 +30,7 @@ final class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TrackerSemanticContributor $semantic;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

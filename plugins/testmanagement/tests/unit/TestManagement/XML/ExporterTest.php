@@ -35,6 +35,7 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private Config&MockObject $config;
     private Project $project;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

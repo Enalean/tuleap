@@ -51,6 +51,7 @@ final class MilestoneParentLinkerTest extends TestCase
     private PFUser $user;
     private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog;
 
+    #[\Override]
     protected function setUp(): void
     {
         $milestone_factory             = $this->createMock(Planning_MilestoneFactory::class);

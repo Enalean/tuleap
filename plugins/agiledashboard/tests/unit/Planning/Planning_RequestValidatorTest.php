@@ -25,9 +25,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\GlobalLanguageMock;
 
@@ -65,6 +64,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private EnsureThatTrackerIsReadableByUser $tracker_access_during_import_strategy;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();
@@ -200,6 +200,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->validator->isValid(
                 $request,
                 new class implements VerifyTrackerAccessDuringImportStrategy {
+                    #[\Override]
                     public function canUserViewTracker(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): bool
                     {
                         return true;

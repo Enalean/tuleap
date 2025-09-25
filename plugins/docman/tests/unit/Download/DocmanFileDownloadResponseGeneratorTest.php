@@ -47,6 +47,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
     private Docman_File $docman_file;
     private Docman_PermissionsManager&MockObject $permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->binary_file_response_factory = new BinaryFileResponseBuilder(
@@ -60,6 +61,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         Docman_PermissionsManager::setInstance(self::TEST_PROJECT_ID, $this->permissions_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Docman_PermissionsManager::clearInstances();

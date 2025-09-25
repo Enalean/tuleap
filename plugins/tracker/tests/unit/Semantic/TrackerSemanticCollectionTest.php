@@ -29,6 +29,7 @@ final class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerSemantic&MockObject $title;
     private TrackerSemantic&MockObject $done;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

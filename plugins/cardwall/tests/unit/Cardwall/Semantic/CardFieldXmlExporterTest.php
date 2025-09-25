@@ -38,6 +38,7 @@ final class CardFieldXmlExporterTest extends TestCase
     private CardFieldXmlExporter $exporter;
     private BackgroundColorDao&MockObject $color_dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->color_dao = $this->createMock(BackgroundColorDao::class);

@@ -40,6 +40,7 @@ final class ChangesetFromXmlDisplayerTest extends TestCase
     private UserManager&MockObject $user_manager;
     private ChangesetFromXmlDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao          = $this->createMock(ChangesetFromXmlDao::class);

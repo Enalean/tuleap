@@ -41,6 +41,7 @@ final class UpdateIsAllowedCheckerTest extends TestCase
     private BacklogTrackerRemovalChecker&MockObject $backlog_tracker_removal_checker;
     private TrackerFactory&MockObject $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_factory                = $this->createMock(PlanningFactory::class);

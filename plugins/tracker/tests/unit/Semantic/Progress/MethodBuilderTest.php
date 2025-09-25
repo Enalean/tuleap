@@ -42,6 +42,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private Project $project;
     private TypePresenterFactory&MockObject $natures_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                  = $this->createMock(SemanticProgressDao::class);

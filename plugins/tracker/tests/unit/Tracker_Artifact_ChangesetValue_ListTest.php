@@ -39,6 +39,7 @@ final class Tracker_Artifact_ChangesetValue_ListTest extends TestCase // phpcs:i
     private ListField $field;
     private Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(12)->build();

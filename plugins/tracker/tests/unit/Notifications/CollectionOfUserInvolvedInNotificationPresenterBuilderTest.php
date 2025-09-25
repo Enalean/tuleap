@@ -25,6 +25,7 @@ use UserManager;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         \UserHelper::clearInstance();

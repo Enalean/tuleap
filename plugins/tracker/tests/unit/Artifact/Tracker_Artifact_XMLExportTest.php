@@ -49,6 +49,7 @@ final class Tracker_Artifact_XMLExportTest extends TestCase // phpcs:ignore Squi
     private UserManager&MockObject $user_manager;
     private Tracker_FormElementFactory&MockObject $formelement_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(UserManager::class);
@@ -58,6 +59,7 @@ final class Tracker_Artifact_XMLExportTest extends TestCase // phpcs:ignore Squi
         Tracker_FormElementFactory::setInstance($this->formelement_factory);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

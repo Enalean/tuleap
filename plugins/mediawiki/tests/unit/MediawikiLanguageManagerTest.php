@@ -37,6 +37,7 @@ final class MediawikiLanguageManagerTest extends TestCase
 
     private MediawikiLanguageDao&MockObject $dao;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
@@ -47,6 +48,7 @@ final class MediawikiLanguageManagerTest extends TestCase
         ForgeConfig::store();
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         ForgeConfig::restore();

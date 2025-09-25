@@ -65,6 +65,7 @@ final class ArtifactLinkValidatorTest extends TestCase
     private ArtifactLinksUsageDao&MockObject $dao;
     private EventDispatcherInterface&MockObject $event_dispatcher;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->artifact_factory       = $this->createMock(Tracker_ArtifactFactory::class);

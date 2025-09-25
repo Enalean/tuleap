@@ -39,6 +39,7 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
     private PermissionsManager&MockObject $permissions_manager;
     private int $some_ugroupid = 369;
 
+    #[\Override]
     protected function setUp(): void
     {
         $permissions = [
@@ -83,6 +84,7 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         TrackerSemanticContributor::clearInstances();

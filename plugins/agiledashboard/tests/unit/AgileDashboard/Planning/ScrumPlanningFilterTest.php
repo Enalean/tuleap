@@ -35,6 +35,7 @@ final class ScrumPlanningFilterTest extends TestCase
     private PlanningFactory&MockObject $planning_factory;
     private ScrumPlanningFilter $scrum_planning_filter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_factory      = $this->createMock(PlanningFactory::class);

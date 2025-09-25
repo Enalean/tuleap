@@ -56,6 +56,7 @@ final class NewChangesetPostProcessorTest extends TestCase
     private PFUser $user;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager           = EventDispatcherStub::withIdentityCallback();

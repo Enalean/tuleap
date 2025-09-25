@@ -42,6 +42,7 @@ final class PermissionsImporterTest extends TestCase
     private Docman_Item $parent_item;
     private Docman_Item $item;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permission_manager           = $this->createMock(PermissionsManager::class);

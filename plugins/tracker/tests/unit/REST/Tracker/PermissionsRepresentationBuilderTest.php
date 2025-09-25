@@ -45,6 +45,7 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
     private Project $project;
     private Tracker&MockObject $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_admin_user = UserTestBuilder::buildWithDefaults();

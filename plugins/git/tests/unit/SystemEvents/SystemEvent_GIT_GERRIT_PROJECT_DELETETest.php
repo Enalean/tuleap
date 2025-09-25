@@ -43,6 +43,7 @@ final class SystemEvent_GIT_GERRIT_PROJECT_DELETETest extends TestCase // phpcs:
     private GitRepositoryFactory&MockObject $repository_factory;
     private SystemEvent_GIT_GERRIT_PROJECT_DELETE $event;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->repository_factory = $this->createMock(GitRepositoryFactory::class);

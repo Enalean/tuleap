@@ -69,6 +69,7 @@ final class GitActionsTest extends TestCase
 
     private GitActions&MockObject $gitAction;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language']->method('getText')->willReturnMap(

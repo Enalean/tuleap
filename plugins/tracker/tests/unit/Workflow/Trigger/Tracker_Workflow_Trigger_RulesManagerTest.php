@@ -65,6 +65,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
     private array $xmlFieldMapping;
     private Tracker_Workflow_Trigger_RulesBuilderFactory|MockObject $trigger_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $workflow_logger       = new WorkflowBackendLogger($this->createMock(LoggerInterface::class), LogLevel::DEBUG);

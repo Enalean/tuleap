@@ -39,6 +39,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends TestCase
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private BackgroundColorPresenterBuilder $builder;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);

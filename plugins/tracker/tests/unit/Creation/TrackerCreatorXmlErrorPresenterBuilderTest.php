@@ -32,6 +32,7 @@ final class TrackerCreatorXmlErrorPresenterBuilderTest extends TestCase
 {
     private TrackerCreatorXmlErrorPresenterBuilder $displayer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->displayer = new TrackerCreatorXmlErrorPresenterBuilder();

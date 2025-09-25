@@ -38,6 +38,7 @@ final class Docman_NotificationsManager_SubscribersTest extends TestCase //phpcs
 {
     private Docman_NotificationsManager_Subscribers&MockObject $notification_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->notification_manager = $this->createPartialMock(Docman_NotificationsManager_Subscribers::class, [

@@ -29,6 +29,7 @@ final class StatusValuesCollectionTest extends TestCase
 {
     private StatusValuesCollection $status_values_collection;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->status_values_collection = new StatusValuesCollection([111, 112, 113, 114]);

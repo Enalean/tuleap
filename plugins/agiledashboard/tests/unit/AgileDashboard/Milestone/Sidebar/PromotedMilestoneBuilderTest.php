@@ -61,6 +61,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
     private PlanningFactory|\PHPUnit\Framework\MockObject\MockObject $planning_factory;
     private RetrieveSemanticTitleField $retrieve_semantic_title_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset   = ChangesetTestBuilder::aChangeset(501)->build();

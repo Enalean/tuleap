@@ -55,6 +55,7 @@ final class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCa
     private FineGrainedPermission $permission_03;
     private RegexpFineGrainedRetriever&MockObject $regexp_retriever;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->retriever        = $this->createMock(FineGrainedRetriever::class);
@@ -115,6 +116,7 @@ final class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCa
         PermissionsManager::setInstance($permissions_manager);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();

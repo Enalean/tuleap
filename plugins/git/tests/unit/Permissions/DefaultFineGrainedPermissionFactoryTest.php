@@ -41,6 +41,7 @@ final class DefaultFineGrainedPermissionFactoryTest extends TestCase
     private ProjectManager&MockObject $project_manager;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $dao            = $this->createMock(FineGrainedDao::class);

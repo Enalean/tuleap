@@ -50,6 +50,7 @@ final class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private \EventManager&MockObject $event_manager;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->tracker1 = $this->createMock(Tracker::class);

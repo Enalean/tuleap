@@ -35,6 +35,7 @@ final class FilenameBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $docman_settings_bo;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->docman_settings_bo = $this->createMock(Docman_SettingsBo::class);

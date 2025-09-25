@@ -58,6 +58,7 @@ final class RecipientsManagerTest extends TestCase
     private UnsubscribersNotificationDAO&MockObject $unsubscribers_notification_dao;
     private UserNotificationSettings&MockObject $user_notification_settings;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager                   = $this->createMock(UserManager::class);

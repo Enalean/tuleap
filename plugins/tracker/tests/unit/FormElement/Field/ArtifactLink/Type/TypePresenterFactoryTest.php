@@ -37,6 +37,7 @@ final class TypePresenterFactoryTest extends TestCase
     private ArtifactLinksUsageDao&MockObject $artifact_link_usage_dao;
     private TypePresenterFactory $type_presenter_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->type_dao                = $this->createMock(TypeDao::class);

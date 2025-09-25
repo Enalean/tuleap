@@ -33,6 +33,7 @@ final class CanSubmitNewArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                = UserTestBuilder::aUser()->build();

@@ -50,6 +50,7 @@ final class MembershipManagerBindedUGroupsTest extends TestCase
     private ProjectUGroup $ugroup;
     private ProjectUGroup $source;
 
+    #[\Override]
     protected function setUp(): void
     {
         $remote_server_factory     = $this->createMock(Git_RemoteServer_GerritServerFactory::class);

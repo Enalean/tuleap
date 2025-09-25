@@ -38,6 +38,7 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
     private PFUser $current_user;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);

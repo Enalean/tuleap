@@ -57,6 +57,7 @@ final class UmbrellaProjectManagerTest extends TestCase
     private ProjectUGroup $parent_project_admins;
     private ProjectUGroup $project_admins;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->server  = $this->createMock(Git_RemoteServer_GerritServer::class);

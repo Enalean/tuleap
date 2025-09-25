@@ -41,6 +41,7 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
     private readonly PFUser $recipient;
     private readonly TestLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(1001)->build();

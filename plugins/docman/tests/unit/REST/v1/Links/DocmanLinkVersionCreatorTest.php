@@ -45,6 +45,7 @@ final class DocmanLinkVersionCreatorTest extends TestCase
     private DBTransactionExecutor&MockObject $transaction_executor;
     private DocmanLinkVersionCreator $version_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->transaction_executor = $this->createMock(DBTransactionExecutor::class);

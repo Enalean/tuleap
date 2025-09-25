@@ -54,6 +54,7 @@ final class RestArtifactMoverTest extends TestCase
     private MoveArtifact $move_action;
     private CollectDryRunTypingField $dry_run_collector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->post_move_action = AddPostMoveArtifactFeedbackStub::build();

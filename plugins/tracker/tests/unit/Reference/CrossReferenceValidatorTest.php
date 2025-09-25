@@ -33,6 +33,7 @@ final class CrossReferenceValidatorTest extends TestCase
     private CrossReferenceValidator $cross_ref_validator;
     private Stub|\Tracker_ArtifactFactory $artifact_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->artifact_factory    = $this->createStub(\Tracker_ArtifactFactory::class);

@@ -48,6 +48,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     private PermissionsFunctionsWrapper&MockObject $permissions_functions;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_admin_user = UserTestBuilder::buildWithDefaults();

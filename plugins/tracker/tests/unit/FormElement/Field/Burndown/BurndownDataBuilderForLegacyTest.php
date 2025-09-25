@@ -53,6 +53,7 @@ final class BurndownDataBuilderForLegacyTest extends TestCase
     private Artifact $artifact;
     private BurndownDataBuilderForLegacy $burndown_data_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
@@ -82,6 +83,7 @@ final class BurndownDataBuilderForLegacyTest extends TestCase
         $this->user     = UserTestBuilder::anActiveUser()->build();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         date_default_timezone_set($this->original_timezone);

@@ -34,6 +34,7 @@ final class CommitStatusRetrieverTest extends TestCase
     private readonly CommitStatusRetriever $commit_status_retriever;
     private readonly GitRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(CommitStatusDAO::class);

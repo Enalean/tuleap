@@ -84,6 +84,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
      */
     private $attachment_downloader;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -136,6 +137,7 @@ final class ArtifactsInDedicatedTrackerXMLExporterTest extends \Tuleap\Test\PHPU
                         ),
                         new ArtifactLinkTypeConverter(
                             new class implements AllTypesRetriever {
+                                #[\Override]
                                 public function getAllTypes(): array
                                 {
                                     return [];

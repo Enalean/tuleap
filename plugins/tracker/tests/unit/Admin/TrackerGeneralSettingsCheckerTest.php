@@ -35,6 +35,7 @@ final class TrackerGeneralSettingsCheckerTest extends \Tuleap\Test\PHPUnit\TestC
     private ReferenceManager&MockObject $reference_manager;
     private TrackerFactory&MockObject $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory   = $this->createMock(\TrackerFactory::class);

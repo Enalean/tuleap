@@ -38,6 +38,7 @@ final class Planning_TrackerPresenterTest extends TestCase //phpcs:ignore Squiz.
     private Tracker $tracker;
     private Planning&MockObject $planning;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning         = $this->createMock(Planning::class);

@@ -47,6 +47,7 @@ final class PossibleParentsRetrieverTest extends TestCase
     private \Tracker_ArtifactFactory&MockObject $artifact_factory;
     private SearchParentTrackerStub $search_parent_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->limit      = 0;

@@ -40,6 +40,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private TransitionExtractor $transition_extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->state_factory        = $this->createMock(StateFactory::class);

@@ -32,6 +32,7 @@ final class Transition_PostAction_Field_IntTest extends \Tuleap\Test\PHPUnit\Tes
 
     private Transition_PostAction_Field_Int&MockObject $post_action;
 
+    #[\Override]
     protected function setUp(): void
     {
         $value          = 0;

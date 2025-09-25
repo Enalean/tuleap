@@ -45,6 +45,7 @@ final class TrackerBlockingErrorTest extends TestCase
     private Tracker_FormElementFactory&MockObject $formelement_factory;
     private Workflow&MockObject $workflow;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->workflow = $this->createMock(Workflow::class);

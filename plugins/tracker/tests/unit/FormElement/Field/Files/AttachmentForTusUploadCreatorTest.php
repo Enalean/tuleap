@@ -42,6 +42,7 @@ final class AttachmentForTusUploadCreatorTest extends TestCase
     private AttachmentForTusUploadCreator $creator;
     private CreatedFileURLMapping $url_mapping;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->next_creator_in_chain = $this->createMock(AttachmentCreator::class);

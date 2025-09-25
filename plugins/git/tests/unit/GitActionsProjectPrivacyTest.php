@@ -36,6 +36,7 @@ final class GitActionsProjectPrivacyTest extends TestCase
     private GitDao&MockObject $dao;
     private GitRepositoryFactory&MockObject $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao     = $this->createMock(GitDao::class);

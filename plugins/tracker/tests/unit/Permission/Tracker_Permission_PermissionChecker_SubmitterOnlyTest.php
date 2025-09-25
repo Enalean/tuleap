@@ -39,6 +39,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \Tule
     protected ProjectAccessChecker&MockObject $project_access_checker;
     protected Tracker_Permission_PermissionChecker $permission_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(222)->withAccessPublic()->build();

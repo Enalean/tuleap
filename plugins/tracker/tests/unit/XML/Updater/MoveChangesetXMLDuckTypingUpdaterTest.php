@@ -74,6 +74,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
     private \Tuleap\Tracker\Tracker $source_tracker;
     private \Tuleap\Tracker\Tracker $destination_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user       = UserTestBuilder::anActiveUser()->withId(self::CURRENT_USER_ID)->build();

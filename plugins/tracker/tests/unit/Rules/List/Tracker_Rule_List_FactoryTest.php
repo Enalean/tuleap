@@ -28,6 +28,7 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
     private Tracker_Rule_List_Dao&MockObject $list_rule_dao;
     private Tracker_Rule_List_Factory $list_rule_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->list_rule_dao     = $this->createMock(\Tracker_Rule_List_Dao::class);

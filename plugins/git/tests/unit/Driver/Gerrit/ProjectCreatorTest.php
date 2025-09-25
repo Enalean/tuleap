@@ -115,6 +115,7 @@ final class ProjectCreatorTest extends TestCase
         return $git_exec;
     }
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_default_domain', $this->tuleap_instance);
@@ -252,6 +253,7 @@ final class ProjectCreatorTest extends TestCase
         $this->membership_manager->method('createArrayOfGroupsForServer')->willReturn([$project_members, $another_ugroup, $project_admins]);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->recurseDeleteInDir($this->tmpdir);

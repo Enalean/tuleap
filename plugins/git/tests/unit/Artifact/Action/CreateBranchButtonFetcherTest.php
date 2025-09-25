@@ -53,6 +53,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
      */
     private $include_asset;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

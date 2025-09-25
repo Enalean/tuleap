@@ -46,6 +46,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
     private Campaign&MockObject $campaign;
     private RetrieveSemanticStatusFieldStub $status_field_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->formelement_factory    = $this->createMock(Tracker_FormElementFactory::class);

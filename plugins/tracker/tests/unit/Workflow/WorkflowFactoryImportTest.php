@@ -49,6 +49,7 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,6 +60,7 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project = ProjectTestBuilder::aProject()->build();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         PermissionsManager::clearInstance();

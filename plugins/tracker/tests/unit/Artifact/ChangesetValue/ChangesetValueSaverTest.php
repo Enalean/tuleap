@@ -44,6 +44,7 @@ final class ChangesetValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $workflow;
     private array $fields_data;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);

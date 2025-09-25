@@ -35,6 +35,7 @@ class ConfigNotificationEmailCustomSenderFormatterTest extends \Tuleap\Test\PHPU
      * */
     private $formatter;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

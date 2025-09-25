@@ -42,6 +42,7 @@ final class RemoveRecipientThatDoesntWantMailForTheirOwnActionsTest extends Test
     private PFUser $jane;
     private StoreUserPreferenceStub $user_preference_store;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_preference_store = new StoreUserPreferenceStub();
@@ -65,6 +66,7 @@ final class RemoveRecipientThatDoesntWantMailForTheirOwnActionsTest extends Test
         \UserManager::setInstance($user_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \UserManager::clearInstance();

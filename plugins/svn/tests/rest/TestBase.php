@@ -66,6 +66,7 @@ class TestBase extends RestBase
      */
     protected $svn_project_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

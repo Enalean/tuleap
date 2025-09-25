@@ -53,6 +53,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
     private Tracker_FormElement_Field_List_Bind_StaticValue $open_value;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->transition_factory_instance = $this->createMock(TransitionFactory::class);
@@ -159,6 +160,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         EventManager::setInstance($this->event_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->transition_factory_test->clearInstance();
@@ -293,6 +295,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $uuid_factory = new DatabaseUUIDV7Factory();
         return new class ($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $id) extends \Tracker_FormElement_Field_List_Value
         {
+            #[\Override]
             public function getJsonId(): string
             {
                 return 'test';
@@ -303,6 +306,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
                 return 'test';
             }
 
+            #[\Override]
             public function getLabel(): string
             {
                 return 'test';

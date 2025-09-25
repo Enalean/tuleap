@@ -40,6 +40,7 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_Workflow_Trigger_RulesManager&MockObject $trigger_rules_manager;
     private \Tracker_FormElementFactory&MockObject $formelement_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->hierarchy_factory             = $this->createMock(\Tracker_HierarchyFactory::class);

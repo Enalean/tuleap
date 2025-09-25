@@ -36,6 +36,7 @@ final class DocumentMetadataCreatorTest extends TestCase
     private DocumentMetadataCreator $creator;
     private Docman_MetadataDao&MockObject $metadata_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->value_creator = $this->createMock(MetadataValueCreator::class);

@@ -32,6 +32,7 @@ final class TrackerFormElementJsonTest extends TestCase
 {
     private StringField $form_element;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element = StringFieldBuilder::aStringField(300)->withLabel('My field')->withName('my_field')->build();

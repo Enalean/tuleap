@@ -54,6 +54,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
 
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker_factory = $this->createMock(\TrackerFactory::class);
@@ -89,6 +90,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
         $this->changeset = ChangesetTestBuilder::aChangeset(101)->build();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         TrackerFactory::clearInstance();

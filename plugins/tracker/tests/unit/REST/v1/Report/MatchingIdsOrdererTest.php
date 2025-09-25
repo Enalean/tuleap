@@ -31,6 +31,7 @@ final class MatchingIdsOrdererTest extends TestCase
     private MatchingIdsOrderer $orderer;
     private PriorityDao&\PHPUnit\Framework\MockObject\MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(PriorityDao::class);

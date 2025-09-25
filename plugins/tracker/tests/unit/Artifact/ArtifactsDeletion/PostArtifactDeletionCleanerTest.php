@@ -36,6 +36,7 @@ final class PostArtifactDeletionCleanerTest extends TestCase
     private \Tracker_ArtifactDao|\PHPUnit\Framework\MockObject\MockObject $artifact_dao;
     private PostArtifactDeletionCleaner $cleaner;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reference_manager = $this->createMock(CrossReferenceManager::class);

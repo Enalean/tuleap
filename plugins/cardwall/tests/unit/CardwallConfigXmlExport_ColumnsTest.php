@@ -45,6 +45,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends TestCase // phpcs:ignore
     private CardwallConfigXmlExport $xml_exporter;
     private SimpleXMLElement $root;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project    = ProjectTestBuilder::aProject()->withId(140)->build();

@@ -36,6 +36,7 @@ final class NewChangesetFieldValueSaverTest extends \Tuleap\Test\PHPUnit\TestCas
     private NewChangeset $new_changeset;
     private FieldsToBeSavedInSpecificOrderRetriever&\PHPUnit\Framework\MockObject\Stub $fields_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user             = UserTestBuilder::anActiveUser()->build();

@@ -31,6 +31,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private WorkflowUpdateChecker $workflow_update_checker;
     private FrozenFieldDetector&MockObject $frozen_field_detector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->frozen_field_detector   = $this->createMock(FrozenFieldDetector::class);

@@ -56,6 +56,7 @@ final class MilestoneFactoryGetAllMilestonesTest extends TestCase
     private Planning $planning;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user       = UserTestBuilder::buildWithDefaults();

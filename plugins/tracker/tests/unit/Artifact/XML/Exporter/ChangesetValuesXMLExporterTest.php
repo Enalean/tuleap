@@ -47,6 +47,7 @@ final class ChangesetValuesXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private Artifact $artifact;
     private array $values;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

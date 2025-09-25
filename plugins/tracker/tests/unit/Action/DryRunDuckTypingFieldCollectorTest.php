@@ -82,6 +82,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     private VerifyIsExternalFieldStub $verify_external_field;
     private VerifyExternalFieldsHaveSameTypeStub $verify_external_fields_have_same_type;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->source_tracker      = TrackerTestBuilder::aTracker()->withId(self::SOURCE_TRACKER_ID)->build();

@@ -37,6 +37,7 @@ final class AllOwnerRetrieverTest extends TestCase
     {
         $owner_retriever = new AllOwnerRetriever(
             new class implements OwnerData {
+                #[\Override]
                 public function getDocumentOwnerOfProjectForAutocomplete(Project $project, string $name_to_search): ?array
                 {
                     return [];
@@ -54,6 +55,7 @@ final class AllOwnerRetrieverTest extends TestCase
     {
         $owner_retriever = new AllOwnerRetriever(
             new class implements OwnerData {
+                #[\Override]
                 public function getDocumentOwnerOfProjectForAutocomplete(Project $project, string $name_to_search): ?array
                 {
                     return [

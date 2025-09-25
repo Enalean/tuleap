@@ -59,6 +59,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     private $condition_factory;
     private ValidValuesAccordingToTransitionsRetriever $first_valid_value_according_to_dependencies_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::anActiveUser()->withId(114)->build();

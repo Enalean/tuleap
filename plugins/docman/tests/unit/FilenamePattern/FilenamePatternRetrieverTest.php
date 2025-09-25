@@ -31,6 +31,7 @@ class FilenamePatternRetrieverTest extends TestCase
     public function testGetPattern(): void
     {
         $retriever = new FilenamePatternRetriever(new class implements SearchFilenamePatternInSettings {
+            #[\Override]
             public function searchFileNamePatternFromProjectId(int $project_id): ?array
             {
                 return ['filename_pattern' => 'stuff', 'is_filename_pattern_enforced' => true];
@@ -45,6 +46,7 @@ class FilenamePatternRetrieverTest extends TestCase
     public function testGetPatternWhenNoEntriesInDb(): void
     {
         $retriever = new FilenamePatternRetriever(new class implements SearchFilenamePatternInSettings {
+            #[\Override]
             public function searchFileNamePatternFromProjectId(int $project_id): ?array
             {
                 return null;

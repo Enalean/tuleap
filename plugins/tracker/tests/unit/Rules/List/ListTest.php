@@ -24,15 +24,15 @@ namespace Tuleap\Tracker\Rule\List;
 
 use Tracker_Rule_List;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Rule_List_ListTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Rule_List_ListTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker_Rule_List
      */
     private $list_rule;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->list_rule = new Tracker_Rule_List();

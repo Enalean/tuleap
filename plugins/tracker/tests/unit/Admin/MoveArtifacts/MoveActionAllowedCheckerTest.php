@@ -33,6 +33,7 @@ final class MoveActionAllowedCheckerTest extends TestCase
     {
         $checker = new MoveActionAllowedChecker(
             new class extends MoveActionAllowedDAO {
+                #[\Override]
                 public function isMoveActionAllowedInTracker(int $tracker_id): bool
                 {
                     return true;
@@ -49,6 +50,7 @@ final class MoveActionAllowedCheckerTest extends TestCase
     {
         $checker = new MoveActionAllowedChecker(
             new class extends MoveActionAllowedDAO {
+                #[\Override]
                 public function isMoveActionAllowedInTracker(int $tracker_id): bool
                 {
                     return false;

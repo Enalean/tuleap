@@ -43,6 +43,7 @@ final class ArtifactMilestoneTest extends TestCase
     private Artifact&MockObject $artifact;
     private Planning_ArtifactMilestone $milestone;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project  = ProjectTestBuilder::aProject()->withId(123)->build();

@@ -47,6 +47,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private PermissionChecker&MockObject $comment_permission_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager               = $this->createMock(\UserManager::class);
@@ -68,6 +69,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         \UserHelper::setInstance($user_helper);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \UserHelper::clearInstance();

@@ -46,6 +46,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
     private PFUser $tracker_admin;
     private PFUser $project_admin;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(222)->build();

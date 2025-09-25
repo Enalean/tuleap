@@ -28,6 +28,7 @@ class TestBase extends RestBase
     protected int $gitlab_repository_id;
     protected int $gitlab_group_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -30,6 +30,7 @@ final class CommentCriterionValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     private CommentDao&MockObject $dao;
     private CommentCriterionValueSaver $saver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao   = $this->createMock(CommentDao::class);

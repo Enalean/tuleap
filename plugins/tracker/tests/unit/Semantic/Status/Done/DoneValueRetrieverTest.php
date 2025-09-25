@@ -48,6 +48,7 @@ final class DoneValueRetrieverTest extends TestCase
     private PFUser $user;
     private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

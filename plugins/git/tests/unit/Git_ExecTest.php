@@ -41,6 +41,7 @@ final class Git_ExecTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClas
     private Git_Exec $git_exec;
     private string $symlink_repo;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->symlink_repo = $this->getTmpDir() . '/tuleap-git-exec-test_' . random_int(0, 99999999);
@@ -53,6 +54,7 @@ final class Git_ExecTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClas
         $this->git_exec->setLocalCommiter('test', 'test@example.com');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         system("rm -rf $this->fixture_dir");

@@ -47,6 +47,7 @@ final class VersionImporterTest extends TestCase
     private Docman_Item $item;
     private DateTimeImmutable $current_date;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->version_factory     = $this->createMock(Docman_VersionFactory::class);

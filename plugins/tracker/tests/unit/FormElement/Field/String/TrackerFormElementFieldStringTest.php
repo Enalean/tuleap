@@ -41,6 +41,7 @@ final class TrackerFormElementFieldStringTest extends TestCase
     private Rule_NoCr&MockObject $rule_nocr;
     private StringField&MockObject $string;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->string = $this->createPartialMock(

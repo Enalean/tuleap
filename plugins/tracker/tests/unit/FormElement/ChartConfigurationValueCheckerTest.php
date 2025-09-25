@@ -63,6 +63,7 @@ final class ChartConfigurationValueCheckerTest extends TestCase
     private DateField $end_date_field;
     private Tracker_Artifact_ChangesetValue_Date $end_date_changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->configuration_field_retriever     = $this->createMock(ChartConfigurationFieldRetriever::class);

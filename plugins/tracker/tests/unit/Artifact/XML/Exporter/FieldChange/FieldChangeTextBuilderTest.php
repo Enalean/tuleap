@@ -31,6 +31,7 @@ final class FieldChangeTextBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FieldChangeTextBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

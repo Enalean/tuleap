@@ -63,6 +63,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
     private BacklogItem $backlog_item_3;
     private AgileDashboard_Milestone_Backlog_BacklogItemCollection $items_collection;
 
+    #[\Override]
     protected function setUp(): void
     {
         $milestone_1_id    = 132;

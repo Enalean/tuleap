@@ -32,6 +32,7 @@ final class ItemStatusMapperTest extends TestCase
 {
     private Docman_SettingsBo&MockObject $docman_setting_bo;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->docman_setting_bo = $this->createMock(Docman_SettingsBo::class);

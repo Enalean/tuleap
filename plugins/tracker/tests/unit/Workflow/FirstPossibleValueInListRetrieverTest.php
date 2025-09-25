@@ -76,6 +76,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
     private Workflow_Transition_ConditionFactory|Stub $condition_factory;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                                      = UserTestBuilder::anActiveUser()->withId(114)->build();

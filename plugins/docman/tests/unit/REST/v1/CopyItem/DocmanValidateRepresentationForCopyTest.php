@@ -39,6 +39,7 @@ final class DocmanValidateRepresentationForCopyTest extends \Tuleap\Test\PHPUnit
                 $this->copy = new stdClass();
             }
 
+            #[\Override]
             public static function getNonCopyRequiredObjectProperties(): array
             {
                 return [];
@@ -59,6 +60,7 @@ final class DocmanValidateRepresentationForCopyTest extends \Tuleap\Test\PHPUnit
             public $description;
             public $copy;
 
+            #[\Override]
             public static function getNonCopyRequiredObjectProperties(): array
             {
                 return ['title'];
@@ -78,6 +80,7 @@ final class DocmanValidateRepresentationForCopyTest extends \Tuleap\Test\PHPUnit
             public $title;
             public $copy;
 
+            #[\Override]
             public static function getNonCopyRequiredObjectProperties(): array
             {
                 return ['title'];
@@ -97,6 +100,7 @@ final class DocmanValidateRepresentationForCopyTest extends \Tuleap\Test\PHPUnit
             public $title = '';
             public $copy;
 
+            #[\Override]
             public static function getNonCopyRequiredObjectProperties(): array
             {
                 return ['title'];

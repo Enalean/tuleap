@@ -50,6 +50,7 @@ final class SystemEventManagerTest extends TestCase
     private Git_SystemEventManager $git_system_event_manager;
     private GitRepository $gitolite_repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->system_event_manager     = $this->createMock(SystemEventManager::class);

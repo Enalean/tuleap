@@ -56,6 +56,7 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $project_id          = 101;
     private int $campaign_tracker_id = 444;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

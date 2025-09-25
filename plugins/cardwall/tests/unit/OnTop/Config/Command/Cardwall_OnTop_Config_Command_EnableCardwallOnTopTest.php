@@ -41,6 +41,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends TestCa
     private Cardwall_OnTop_Dao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_EnableCardwallOnTop $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_id = 666;

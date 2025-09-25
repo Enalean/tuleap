@@ -38,6 +38,7 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker $tracker;
     private MethodBuilder&MockObject $method_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao              = $this->createMock(SemanticProgressDao::class);

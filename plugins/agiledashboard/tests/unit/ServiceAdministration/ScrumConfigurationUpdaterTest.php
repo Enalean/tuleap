@@ -51,6 +51,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private UpdateMilestonesInSidebarConfig&MockObject $update_sidebar_config;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project  = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();

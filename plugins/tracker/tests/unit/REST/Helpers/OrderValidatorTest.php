@@ -27,6 +27,7 @@ final class OrderValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private OrderValidator $order_validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->order_validator = new OrderValidator(

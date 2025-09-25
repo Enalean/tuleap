@@ -37,6 +37,7 @@ class TaskboardTest extends RestBase
      */
     private static $planning_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -47,6 +47,7 @@ final class CrossReferencesExtractorTest extends TestCase
     private ReferenceManager&MockObject $reference_manager;
     private PushDetails $push_details;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();

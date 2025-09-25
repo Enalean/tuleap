@@ -36,6 +36,7 @@ final class ArtifactFilesDeletorVisitorTest extends TestCase
     private Artifact $artifact;
     private ArtifactFilesDeletorVisitor $visitor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();

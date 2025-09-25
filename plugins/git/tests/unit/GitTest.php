@@ -41,6 +41,7 @@ final class GitTest extends TestCase
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setup(): void
     {
         $system_event_manager = $this->createMock(SystemEventManager::class);
@@ -51,6 +52,7 @@ final class GitTest extends TestCase
         SystemEventManager::setInstance($system_event_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         SystemEventManager::clearInstance();

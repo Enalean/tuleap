@@ -46,6 +46,7 @@ final class GitRepositoryManagerRepositoryNameTest extends TestCase
     private GitRepositoryManager $manager;
     private string $project_name;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project_id         = 12;

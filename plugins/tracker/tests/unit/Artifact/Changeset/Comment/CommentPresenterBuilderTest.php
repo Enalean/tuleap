@@ -45,6 +45,7 @@ final class CommentPresenterBuilderTest extends TestCase
     private PFUser $user;
     private Tracker_Artifact_Changeset_Comment $comment;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permission_checker = $this->createMock(PermissionChecker::class);

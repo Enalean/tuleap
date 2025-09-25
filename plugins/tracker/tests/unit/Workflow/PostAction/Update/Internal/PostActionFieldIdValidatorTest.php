@@ -27,6 +27,7 @@ final class PostActionFieldIdValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private PostActionFieldIdValidator $field_ids_validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field_ids_validator = new PostActionFieldIdValidator();

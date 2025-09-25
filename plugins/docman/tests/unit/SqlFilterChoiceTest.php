@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SqlFilterChoiceTest extends TestCase
 {
+    #[\Override]
     public function setUp(): void
     {
         $data_access = $this->createMock(LegacyDataAccessInterface::class);
@@ -45,6 +46,7 @@ final class SqlFilterChoiceTest extends TestCase
         CodendiDataAccess::setInstance($data_access);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         CodendiDataAccess::clearInstance();

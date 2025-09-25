@@ -36,6 +36,7 @@ final class RegexpPermissionFilterTest extends TestCase
     private GitRepository $repository;
     private FineGrainedPermissionDestructor&MockObject $permission_destructor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId(1)->build();

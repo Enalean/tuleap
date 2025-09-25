@@ -40,6 +40,7 @@ final class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tuleap\Tracker\Tracker $test_definition_tracker;
     private \Tuleap\Tracker\Tracker $another_tracker;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->test_definition_tracker = TrackerTestBuilder::aTracker()->withId($this->test_definition_tracker_id)->build();

@@ -41,6 +41,7 @@ final class TrackerCreationBreadCrumbsBuilderTest extends TestCase
     private Project $project;
     private TrackerCreationBreadCrumbsBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->builder = new TrackerCreationBreadCrumbsBuilder();

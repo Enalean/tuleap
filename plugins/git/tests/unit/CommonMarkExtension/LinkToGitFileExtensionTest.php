@@ -33,6 +33,7 @@ final class LinkToGitFileExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
     private readonly MockObject&LinkToGitFileBlobFinder $blob_finder;
     private readonly MarkdownConverter $converter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $environment = new Environment();

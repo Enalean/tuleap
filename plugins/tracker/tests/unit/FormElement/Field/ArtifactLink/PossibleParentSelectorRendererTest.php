@@ -43,6 +43,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
     private \Tuleap\Tracker\Tracker $user_story_tracker;
     private PossibleParentSelectorRenderer $renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user               = UserTestBuilder::aUser()->build();
@@ -53,6 +54,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
         $this->renderer = PossibleParentSelectorRenderer::buildWithDefaultTemplateRenderer();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['HTML']);

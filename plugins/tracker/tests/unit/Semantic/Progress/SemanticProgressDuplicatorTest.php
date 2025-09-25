@@ -30,6 +30,7 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private SemanticProgressDao&MockObject $dao;
     private SemanticProgressDuplicator $duplicator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao        = $this->createMock(SemanticProgressDao::class);

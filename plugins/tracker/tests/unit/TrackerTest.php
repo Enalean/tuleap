@@ -40,6 +40,7 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PS
     private int $tracker_id = 12;
     private TrackerFactory&MockObject $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $methods       = [
@@ -209,6 +210,7 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PS
         ];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $GLOBALS['UGROUPS'] = $this->initial_global_ugroups;

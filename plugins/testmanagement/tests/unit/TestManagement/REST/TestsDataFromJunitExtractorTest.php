@@ -36,6 +36,7 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private TemplateRenderer&MockObject $template_renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->template_renderer               = $this->createMock(TemplateRenderer::class);

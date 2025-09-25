@@ -73,6 +73,7 @@ final class GitXMLExporterTest extends TestCase
     private ZipArchive $zip;
     private GitPermissionsManager&MockObject $permission_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $export_folder = $this->getTmpDir();
@@ -164,6 +165,7 @@ final class GitXMLExporterTest extends TestCase
         ForgeConfig::set('tmp_dir', $export_folder);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         try {

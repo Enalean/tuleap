@@ -34,6 +34,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private \Tracker_RuleFactory&MockObject $tracker_rule_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);

@@ -40,6 +40,7 @@ final class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extend
     private UserManager&MockObject $user_manager;
     private OrganizeableGitCrossReferencesAndTheContributorsCollector $collector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();

@@ -26,6 +26,7 @@ final class Tracker_Chart_Data_BurndownTest extends \Tuleap\Test\PHPUnit\TestCas
     private $start_date;
     private $date_period;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);

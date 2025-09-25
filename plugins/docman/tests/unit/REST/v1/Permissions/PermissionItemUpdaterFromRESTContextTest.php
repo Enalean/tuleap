@@ -39,6 +39,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
     private DocmanItemPermissionsForGroupsSetFactory&MockObject $permissions_for_groups_set_factory;
     private PermissionItemUpdaterFromRESTContext $permissions_item_updater_rest;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permissions_item_updater           = $this->createMock(PermissionItemUpdater::class);

@@ -42,6 +42,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
     private TrackerFactory&MockObject $tracker_factory;
     private Tracker_FormElementFactory&MockObject $form_element_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->campaign = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);

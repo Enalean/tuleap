@@ -48,6 +48,7 @@ final class Docman_NotificationsManager_MoveTest extends TestCase //phpcs:ignore
     private Docman_Folder $folder;
     private Docman_NotificationsManager_Move&MockObject $notification_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->notification_manager = $this->createPartialMock(Docman_NotificationsManager_Move::class, [

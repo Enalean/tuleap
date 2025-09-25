@@ -33,6 +33,7 @@ final class GitProjectRenamerTest extends TestCase
     private Git_Backend_Interface|\PHPUnit\Framework\MockObject\Stub $git_backend;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project             = ProjectTestBuilder::aProject()->build();

@@ -34,6 +34,7 @@ final class MetadataRecursiveUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \ReferenceManager|MockObject $reference_manager;
     private MetadataRecursiveUpdator $updator;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

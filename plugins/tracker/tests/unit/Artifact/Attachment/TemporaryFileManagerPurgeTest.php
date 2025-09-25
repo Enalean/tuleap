@@ -44,6 +44,7 @@ final class TemporaryFileManagerPurgeTest extends TestCase
     private string $cache_dir;
     private Tracker_Artifact_Attachment_TemporaryFileManagerDao&MockObject $dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
@@ -64,6 +65,7 @@ final class TemporaryFileManagerPurgeTest extends TestCase
         touch($this->file_to_delete);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         exec('rm -rf ' . escapeshellarg($this->cache_dir));

@@ -57,6 +57,7 @@ final class NotifierCustomSenderTest extends TestCase
     private string $default_format_var;
     private string $default_format_value;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->recipients_manager = $this->createMock(RecipientsManager::class);

@@ -36,6 +36,7 @@ class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPU
     private FormattedChangesetValueForListFieldRetriever $formatted_changeset_value_for_list_field_retriever;
     private Tracker_FormElementFactory&MockObject $tracker_formelement_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_formelement_factory                        = $this->createMock(Tracker_FormElementFactory::class);

@@ -60,6 +60,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
     private ItemRepresentationCollectionBuilder $item_representation_collection_builder;
     private Docman_VersionFactory&MockObject $item_version_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory                = $this->createMock(Docman_ItemFactory::class);

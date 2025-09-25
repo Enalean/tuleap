@@ -51,6 +51,7 @@ final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
 
     private DateField $source_field_date;
 
+    #[\Override]
     public function setUp(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(110)->build();

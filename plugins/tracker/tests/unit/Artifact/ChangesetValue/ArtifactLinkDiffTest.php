@@ -44,6 +44,7 @@ final class ArtifactLinkDiffTest extends TestCase
     private TypePresenterFactory&MockObject $factory;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = $this->createMock(Tracker::class);

@@ -33,6 +33,7 @@ final class RepositoryTest extends TestBase
     private string $artifact_reference;
     private string $artifact_url;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

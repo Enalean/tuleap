@@ -41,6 +41,7 @@ final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
     private Stub&ListField $destination_list_field;
     private MockObject&ListField $source_list_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->source_list_field = $this->createMock(ListField::class);

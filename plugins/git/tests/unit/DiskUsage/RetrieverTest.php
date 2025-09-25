@@ -31,6 +31,7 @@ final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private readonly Statistics_DiskUsageDao $dao;
     private readonly Retriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao       = $this->createMock(Statistics_DiskUsageDao::class);

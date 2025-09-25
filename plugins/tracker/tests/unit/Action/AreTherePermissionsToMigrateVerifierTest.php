@@ -31,6 +31,7 @@ final class AreTherePermissionsToMigrateVerifierTest extends \Tuleap\Test\PHPUni
     private Artifact $artifact;
     private AreTherePermissionsToMigrateVerifier $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();

@@ -48,6 +48,7 @@ final class DocmanItemCopierTest extends TestCase
     private EventManager&MockObject $event_manager;
     private DocmanItemCopier $item_copier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory       = $this->createMock(Docman_ItemFactory::class);

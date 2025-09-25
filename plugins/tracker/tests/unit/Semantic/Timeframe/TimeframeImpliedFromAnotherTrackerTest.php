@@ -48,6 +48,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
 
     private const RELEASE_TRACKER_ID = 150;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker              = TrackerTestBuilder::aTracker()->withId(10)->build();

@@ -37,6 +37,7 @@ final class ParseLogTest extends TestCase
     private LogPushes&MockObject $log_pushes;
     private TestLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->extract_cross_ref = $this->createMock(CrossReferencesExtractor::class);

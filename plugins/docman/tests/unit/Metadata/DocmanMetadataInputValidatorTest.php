@@ -31,6 +31,7 @@ final class DocmanMetadataInputValidatorTest extends TestCase
 {
     private DocmanMetadataInputValidator $validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = new DocmanMetadataInputValidator();

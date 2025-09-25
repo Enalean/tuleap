@@ -33,6 +33,7 @@ final class TrackerSemanticStatusTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker $tracker;
     private ListField $field;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->build();

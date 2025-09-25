@@ -71,6 +71,7 @@ final class RepositoryFineGrainedRepresentationBuilderTest extends \Tuleap\Test\
      */
     private $representation_builder;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -37,6 +37,7 @@ final class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPU
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private ExecutionWithAutomatedTestDataProvider $execution_with_automated_test_data_provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->execution_dao                               = $this->createMock(ExecutionDao::class);

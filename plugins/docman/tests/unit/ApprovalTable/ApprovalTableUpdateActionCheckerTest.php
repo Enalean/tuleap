@@ -33,6 +33,7 @@ final class ApprovalTableUpdateActionCheckerTest extends TestCase
 {
     private ApprovalTableRetriever&MockObject $approval_table_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->approval_table_retriever = $this->createMock(ApprovalTableRetriever::class);

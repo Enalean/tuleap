@@ -34,6 +34,7 @@ final class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\T
 
     private GlobalNotificationsEmailRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -103,6 +104,7 @@ final class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\T
         return $notifcation;
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         TrackerFactory::clearInstance();

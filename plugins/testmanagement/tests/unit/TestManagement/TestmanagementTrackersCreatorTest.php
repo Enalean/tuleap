@@ -40,6 +40,7 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private TestLogger $logger;
 
 
+    #[\Override]
     protected function setup(): void
     {
         parent::setUp();

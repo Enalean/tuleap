@@ -33,6 +33,7 @@ final class AreListFieldsCompatibleVerifierTest extends TestCase
 {
     private AreListFieldsCompatibleVerifier $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verifier = new AreListFieldsCompatibleVerifier();

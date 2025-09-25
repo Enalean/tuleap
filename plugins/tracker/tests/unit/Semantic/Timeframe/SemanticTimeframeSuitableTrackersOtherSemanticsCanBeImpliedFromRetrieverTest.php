@@ -39,6 +39,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
 
     private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                  = $this->createMock(SemanticTimeframeDao::class);

@@ -42,6 +42,7 @@ final class ParentLinkActionTest extends TestCase
     private Artifact&MockObject $another_parent_artifact;
     private ArtifactLinkField $artifact_link_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);

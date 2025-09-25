@@ -41,6 +41,7 @@ final class NotificationsForProjectMemberCleanerTest extends TestCase
     private GitRepository&MockObject $unreadable_repository;
     private NotificationsForProjectMemberCleaner $cleaner;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(101)->withAccessPrivate()->build();

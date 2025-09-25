@@ -44,6 +44,7 @@ class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase //ph
      */
     private $reminder;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->field    = $this->createMock(DateField::class);

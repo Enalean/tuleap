@@ -41,6 +41,7 @@ final class PlanningTrackerBacklogCheckerTest extends TestCase
     private Tracker $tracker;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_factory = $this->createMock(PlanningFactory::class);

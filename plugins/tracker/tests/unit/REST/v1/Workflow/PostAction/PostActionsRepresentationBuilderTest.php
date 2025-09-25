@@ -40,6 +40,7 @@ final class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
 {
     private EventManager&MockObject $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -151,31 +152,37 @@ final class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
     {
         $transition = $this->createMock(Transition::class);
         return new class ($transition, 1) extends Transition_PostAction {
+            #[\Override]
             public function getShortName()
             {
                 return '';
             }
 
+            #[\Override]
             public static function getLabel()
             {
                 return '';
             }
 
+            #[\Override]
             public function isDefined()
             {
                 return true;
             }
 
+            #[\Override]
             public function exportToXml(SimpleXMLElement $root, $xmlMapping)
             {
                 return;
             }
 
+            #[\Override]
             public function bypassPermissions(TrackerField $field)
             {
                 return false;
             }
 
+            #[\Override]
             public function accept(Visitor $visitor)
             {
                 $visitor->visitExternalActions($this);

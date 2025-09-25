@@ -49,6 +49,7 @@ final class Tracker_Artifact_ChangesetTest extends TestCase //phpcs:ignore Squiz
     private PFUser $user;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset = $this->createPartialMock(Tracker_Artifact_Changeset::class, [

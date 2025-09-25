@@ -41,6 +41,7 @@ final class GitPermissionsManagerTest extends TestCase
     private Git_SystemEventManager&MockObject $git_system_event_manager;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->git_permissions_dao      = $this->createMock(Git_PermissionsDao::class);

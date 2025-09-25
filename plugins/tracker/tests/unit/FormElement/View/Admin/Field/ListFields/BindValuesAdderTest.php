@@ -38,6 +38,7 @@ final class BindValuesAdderTest extends TestCase
     private ListField $field;
     private BindValuesAdder $adder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->adder = new BindValuesAdder();

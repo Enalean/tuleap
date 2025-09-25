@@ -47,6 +47,7 @@ final class FieldValueMatcherTest extends TestCase
     private SimpleXMLElement $xml;
     private IFindUserFromXMLReference&MockObject $user_finder;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->source_field           = SelectboxFieldBuilder::aSelectboxField(154)->build();

@@ -52,6 +52,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
     private Docman_PermissionsManager&MockObject $permission_manager;
     private DocumentBeforeVersionCreationValidatorVisitor $validator_visitor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->approval_checker   = $this->createMock(ApprovalTableUpdateActionChecker::class);

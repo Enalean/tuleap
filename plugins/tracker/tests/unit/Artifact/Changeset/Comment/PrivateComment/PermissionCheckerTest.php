@@ -43,6 +43,7 @@ final class PermissionCheckerTest extends TestCase
     private Tracker&MockObject $tracker;
     private RetrieveTrackerPrivateCommentInformation&MockObject $tracker_private_comment_information_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = $this->createMock(PFUser::class);

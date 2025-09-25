@@ -44,6 +44,7 @@ final class ArtifactAttachmentExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private string $extraction_path;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->archive_path    = $this->getTmpDir() . '/test.zip';

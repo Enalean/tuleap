@@ -56,6 +56,7 @@ final class ItemRepresentationBuilderTest extends TestCase
     private DocmanItemPermissionsForGroupsBuilder&MockObject $item_permissions_for_groups_builder;
     private Codendi_HTMLPurifier&MockObject $html_purifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager                        = $this->createMock(UserManager::class);
@@ -85,6 +86,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         UserManager::setInstance($this->user_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

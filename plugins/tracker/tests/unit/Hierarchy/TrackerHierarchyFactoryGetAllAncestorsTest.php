@@ -35,6 +35,7 @@ final class TrackerHierarchyFactoryGetAllAncestorsTest extends \Tuleap\Test\PHPU
     private PFUser $user;
     private Artifact $sprint;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user              = new PFUser(['language_id' => 'en']);

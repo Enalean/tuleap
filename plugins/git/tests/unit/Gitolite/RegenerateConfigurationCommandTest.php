@@ -37,6 +37,7 @@ final class RegenerateConfigurationCommandTest extends TestCase
     private ProjectManager&MockObject $project_manager;
     private Git_SystemEventManager&MockObject $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager = $this->createMock(ProjectManager::class);

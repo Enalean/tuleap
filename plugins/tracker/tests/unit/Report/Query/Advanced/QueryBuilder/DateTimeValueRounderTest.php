@@ -25,6 +25,7 @@ final class DateTimeValueRounderTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $previous_timezone;
     private DateTimeValueRounder $date_time_value_rounder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->previous_timezone = date_default_timezone_get();
@@ -32,6 +33,7 @@ final class DateTimeValueRounderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->date_time_value_rounder = new DateTimeValueRounder();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         date_default_timezone_set($this->previous_timezone);

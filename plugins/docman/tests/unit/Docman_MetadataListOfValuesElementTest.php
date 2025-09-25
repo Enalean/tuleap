@@ -31,6 +31,7 @@ final class Docman_MetadataListOfValuesElementTest extends TestCase // phpcs:ign
 {
     private Docman_MetadataListOfValuesElement $metadata_list_values;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata_list_values = new Docman_MetadataListOfValuesElement();

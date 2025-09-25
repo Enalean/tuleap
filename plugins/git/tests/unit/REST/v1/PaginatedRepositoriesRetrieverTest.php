@@ -35,6 +35,7 @@ final class PaginatedRepositoriesRetrieverTest extends TestCase
     private \Tuleap\Git\Permissions\AccessControlVerifier|\PHPUnit\Framework\MockObject\MockObject $access_control_verifier;
     private PaginatedRepositoriesRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

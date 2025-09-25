@@ -39,6 +39,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
     private CrossReferenceArtifactOrganizer $organizer;
     private RetrieveViewableArtifact&MockObject $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createMock(RetrieveViewableArtifact::class);

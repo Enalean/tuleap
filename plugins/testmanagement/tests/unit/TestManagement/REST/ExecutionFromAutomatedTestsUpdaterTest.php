@@ -46,6 +46,7 @@ final class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\
     private TestsDataFromJunitExtractor&MockObject $tests_data_extractor;
     private ListOfExecutionsWithAutomatedTestDataRetriever&MockObject $list_of_executions_with_automated_test_data_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(102)->build();

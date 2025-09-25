@@ -32,6 +32,7 @@ class CreationStateListValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $formatter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

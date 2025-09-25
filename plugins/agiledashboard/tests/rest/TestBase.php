@@ -34,6 +34,7 @@ class TestBase extends RestBase
     protected $explicit_backlog_artifact_story_ids   = [];
     protected $explicit_backlog_artifact_release_ids = [];
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

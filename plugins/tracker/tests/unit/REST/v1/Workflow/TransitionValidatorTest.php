@@ -33,6 +33,7 @@ final class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FROM_ID = 516;
     private const TO_ID   = 137;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = new TransitionValidator();

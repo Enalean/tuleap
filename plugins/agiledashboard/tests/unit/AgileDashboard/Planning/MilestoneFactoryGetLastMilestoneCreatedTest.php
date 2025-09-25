@@ -55,6 +55,7 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends TestCase
     private Planning_ArtifactMilestone&MockObject $sprint_1_milestone;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user      = UserTestBuilder::buildWithDefaults();

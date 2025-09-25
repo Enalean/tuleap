@@ -36,6 +36,7 @@ final class TrackerCreationPermissionCheckerTest extends TestCase
 {
     private GlobalAdminPermissionsChecker&MockObject $permissions_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permissions_checker = $this->createMock(GlobalAdminPermissionsChecker::class);

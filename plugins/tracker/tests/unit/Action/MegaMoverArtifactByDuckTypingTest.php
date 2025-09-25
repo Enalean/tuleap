@@ -56,6 +56,7 @@ final class MegaMoverArtifactByDuckTypingTest extends TestCase
     private \Project $project;
     private \Tracker_XML_Importer_ArtifactImportedMapping $artifacts_mapping;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifacts_deletion_manager = $this->createMock(ArtifactsDeletionManager::class);

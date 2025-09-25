@@ -41,6 +41,7 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PH
     private int $artifact_id;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker = $this->createMock(Tracker::class);

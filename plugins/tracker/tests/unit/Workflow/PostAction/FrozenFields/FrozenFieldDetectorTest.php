@@ -37,6 +37,7 @@ final class FrozenFieldDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private FrozenFieldDetector $frozen_field_detector;
     private FrozenFieldsRetriever&MockObject $frozen_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->transition_retriever  = $this->createMock(TransitionRetriever::class);

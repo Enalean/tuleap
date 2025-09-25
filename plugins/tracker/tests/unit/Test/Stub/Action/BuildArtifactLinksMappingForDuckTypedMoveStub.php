@@ -46,6 +46,7 @@ final class BuildArtifactLinksMappingForDuckTypedMoveStub implements BuildArtifa
         return new self($mapping);
     }
 
+    #[\Override]
     public function buildMapping(Tracker $source_tracker, Artifact $artifact, PFUser $user,): Tracker_XML_Importer_ArtifactImportedMapping
     {
         return ArtifactImportedMappingBuilder::fromSourcesAndDestinations($this->mapping);

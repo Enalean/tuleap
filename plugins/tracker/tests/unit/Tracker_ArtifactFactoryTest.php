@@ -35,6 +35,7 @@ final class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //
     /** @var Tracker_ArtifactFactory */
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

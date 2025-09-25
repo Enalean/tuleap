@@ -40,6 +40,7 @@ final class ListFieldChangeInitialValueRetrieverTest extends TestCase
     private ListFieldChangeInitialValueRetriever $list_field_change_initial_value_retriever;
     private PFUser $forge_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->forge_user          = UserTestBuilder::buildWithId(TrackerImporterUser::ID);

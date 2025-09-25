@@ -38,6 +38,7 @@ class Docman_NotificationsManager_AddTest extends TestCase //phpcs:ignore Squiz.
 {
     private Docman_NotificationsManager_Add&MockObject $notification_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->notification_manager = $this->createPartialMock(Docman_NotificationsManager_Add::class, [

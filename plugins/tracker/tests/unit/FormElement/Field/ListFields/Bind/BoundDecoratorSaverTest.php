@@ -37,6 +37,7 @@ final class BoundDecoratorSaverTest extends TestCase
     private BoundDecoratorSaver $bound_decorator_saver;
     private BindDecoratorDao&MockObject $bind_decorator_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->bind_decorator_dao    = $this->createMock(BindDecoratorDao::class);

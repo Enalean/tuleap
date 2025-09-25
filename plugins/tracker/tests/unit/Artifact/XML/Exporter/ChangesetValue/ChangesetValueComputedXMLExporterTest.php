@@ -45,6 +45,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
     private Tracker_Artifact_Changeset&MockObject $changeset;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

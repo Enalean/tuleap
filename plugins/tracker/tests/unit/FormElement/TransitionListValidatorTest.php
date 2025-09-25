@@ -38,6 +38,7 @@ final class TransitionListValidatorTest extends TestCase
     private TransitionListValidator $transition_validator;
     private TransitionFactory&MockObject $transition_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->transition_factory   = $this->createMock(TransitionFactory::class);

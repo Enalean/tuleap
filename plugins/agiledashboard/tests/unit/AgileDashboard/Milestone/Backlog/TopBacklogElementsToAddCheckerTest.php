@@ -47,6 +47,7 @@ final class TopBacklogElementsToAddCheckerTest extends TestCase
     private readonly Planning $root_planning;
     private readonly Artifact $artifact_201;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker_104        = TrackerTestBuilder::aTracker()->withId(104)->build();

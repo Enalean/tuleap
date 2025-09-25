@@ -37,6 +37,7 @@ final class ClientWrapperTest extends TestCase
     private RequestFactoryInterface&MockObject $factory;
     private ClientInterface&MockObject $client;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->client  = $this->createMock(ClientInterface::class);

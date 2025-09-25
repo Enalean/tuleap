@@ -34,6 +34,7 @@ final class DocmanValidateUploadTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    #[\Override]
     protected function tearDown(): void
     {
         $_FILES = [];

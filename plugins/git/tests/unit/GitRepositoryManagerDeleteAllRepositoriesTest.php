@@ -47,6 +47,7 @@ final class GitRepositoryManagerDeleteAllRepositoriesTest extends TestCase
     private Git_SystemEventManager&MockObject $git_system_event_manager;
     private GitRepositoryFactory&MockObject $repository_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project                  = ProjectTestBuilder::aProject()->withId(42)->build();

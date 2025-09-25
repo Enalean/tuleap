@@ -34,6 +34,7 @@ final class FieldCalculatorTest extends TestCase
     private FieldCalculator $field_calculator;
     private ComputedFieldCalculator&MockObject $provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->provider         = $this->createMock(ComputedFieldCalculator::class);

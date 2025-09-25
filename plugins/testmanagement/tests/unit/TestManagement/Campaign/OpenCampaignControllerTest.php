@@ -38,6 +38,7 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private CampaignRetriever&MockObject $campaign_retriever;
     private StatusUpdater&MockObject $status_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,6 +52,7 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

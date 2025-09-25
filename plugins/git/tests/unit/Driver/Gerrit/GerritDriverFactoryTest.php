@@ -39,6 +39,7 @@ class GerritDriverFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $gerrit_driver_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

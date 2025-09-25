@@ -30,6 +30,7 @@ final class SizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SizeValidatorVisitor $validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = new SizeValidatorVisitor(2);

@@ -38,6 +38,7 @@ final class GitRepositoryFactoryTest extends TestCase
     private GitDao&MockObject $dao;
     private GitRepositoryFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao       = $this->createMock(GitDao::class);

@@ -29,6 +29,7 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \Tuleap\Test\P
     private Tracker_Workflow_Trigger_TriggerValidator $validator;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $rules_manager = $this->createMock(\Tracker_Workflow_Trigger_RulesManager::class);

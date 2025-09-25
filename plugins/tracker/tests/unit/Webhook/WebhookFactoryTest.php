@@ -28,6 +28,7 @@ final class WebhookFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $factory;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

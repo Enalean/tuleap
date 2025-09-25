@@ -38,6 +38,7 @@ final class MetadataValueStoreTest extends TestCase
     private ReferenceManager&MockObject $reference_manager;
     private Docman_MetadataValueDao&MockObject $metadata_value_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata_value_dao = $this->createMock(Docman_MetadataValueDao::class);

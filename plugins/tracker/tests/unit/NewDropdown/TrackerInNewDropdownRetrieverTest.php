@@ -36,6 +36,7 @@ final class TrackerInNewDropdownRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     private TrackerFactory&MockObject $tracker_factory;
     private PromotedTrackersRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao             = $this->createMock(PromotedTrackerDao::class);

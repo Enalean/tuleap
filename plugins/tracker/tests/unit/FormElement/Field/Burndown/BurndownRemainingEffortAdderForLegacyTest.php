@@ -44,6 +44,7 @@ final class BurndownRemainingEffortAdderForLegacyTest extends TestCase
     private ChartConfigurationFieldRetriever&MockObject $field_retriever;
     private UserWithReadAllPermissionBuilder&MockObject $user_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field_retriever = $this->createMock(ChartConfigurationFieldRetriever::class);

@@ -30,6 +30,7 @@ class IsUserGroupListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private IsUserGroupListFieldVerifier $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verifier = new IsUserGroupListFieldVerifier();
