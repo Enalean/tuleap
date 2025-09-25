@@ -221,7 +221,7 @@ class hudson_gitPlugin extends Plugin
             new JenkinsServerAdder(
                 new JenkinsServerDao(),
                 new Valid_HTTPURI(),
-                (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
+                (new \Tuleap\Cryptography\KeyFactory())->getLegacy2025EncryptionKey()
             ),
             new CSRFSynchronizerToken(URLBuilder::buildAddUrl())
         );
@@ -310,7 +310,7 @@ class hudson_gitPlugin extends Plugin
             $http_client     = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
             $request_factory = HTTPFactoryBuilder::requestFactory();
             $stream_factory  = HTTPFactoryBuilder::streamFactory();
-            $encryption_key  = (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey();
+            $encryption_key  = (new \Tuleap\Cryptography\KeyFactory())->getLegacy2025EncryptionKey();
             $controller      = new Hook\HookTriggerController(
                 new Hook\HookDao(),
                 new Hook\JenkinsClient(
@@ -364,7 +364,7 @@ class hudson_gitPlugin extends Plugin
             new Hook\HookDao(),
             $this->getCSRF(),
             new Valid_HTTPURI(),
-            (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
+            (new \Tuleap\Cryptography\KeyFactory())->getLegacy2025EncryptionKey()
         );
     }
 
@@ -412,7 +412,7 @@ class hudson_gitPlugin extends Plugin
             new JenkinsServerAdder(
                 new JenkinsServerDao(),
                 new Valid_HTTPURI(),
-                (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
+                (new \Tuleap\Cryptography\KeyFactory())->getLegacy2025EncryptionKey()
             ),
             $event->getLogger()
         );
@@ -433,7 +433,7 @@ class hudson_gitPlugin extends Plugin
         $xml_importer = new XMLExporter(
             self::getJenkinsServerFactory(),
             $event->getLogger(),
-            (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
+            (new \Tuleap\Cryptography\KeyFactory())->getLegacy2025EncryptionKey()
         );
 
         $xml_importer->export(

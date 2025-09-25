@@ -25,7 +25,7 @@ namespace Tuleap\OAuth2Server\App;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -42,7 +42,7 @@ final class LastGeneratedClientSecretStoreTest extends \Tuleap\Test\PHPUnit\Test
         $storage     = [];
         $this->store = new LastGeneratedClientSecretStore(
             new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
-            new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES))),
+            new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES))),
             $storage
         );
     }

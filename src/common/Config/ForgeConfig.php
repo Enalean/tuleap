@@ -360,7 +360,7 @@ class ForgeConfig
     public static function encryptValue(ConcealedString $value): string
     {
         return \sodium_bin2base64(
-            SymmetricCrypto::encrypt($value, (new KeyFactory())->getEncryptionKey()),
+            SymmetricCrypto::encrypt($value, (new KeyFactory())->getLegacy2025EncryptionKey()),
             SODIUM_BASE64_VARIANT_ORIGINAL
         );
     }
@@ -369,7 +369,7 @@ class ForgeConfig
     {
         return SymmetricCrypto::decrypt(
             \sodium_base642bin($value, SODIUM_BASE64_VARIANT_ORIGINAL),
-            (new KeyFactory())->getEncryptionKey(),
+            (new KeyFactory())->getLegacy2025EncryptionKey(),
         );
     }
 }

@@ -36,7 +36,7 @@ class DocumentServerKeyEncryption
     public function encryptValue(ConcealedString $value): string
     {
         return \sodium_bin2base64(
-            SymmetricCrypto::encrypt($value, $this->key_factory->getEncryptionKey()),
+            SymmetricCrypto::encrypt($value, $this->key_factory->getLegacy2025EncryptionKey()),
             SODIUM_BASE64_VARIANT_ORIGINAL
         );
     }
@@ -45,7 +45,7 @@ class DocumentServerKeyEncryption
     {
         return SymmetricCrypto::decrypt(
             \sodium_base642bin($value, SODIUM_BASE64_VARIANT_ORIGINAL),
-            $this->key_factory->getEncryptionKey(),
+            $this->key_factory->getLegacy2025EncryptionKey(),
         );
     }
 }

@@ -38,7 +38,7 @@ final class GroupLinkTokenRetriever
 
         $concealed_secret = SymmetricCrypto::decrypt(
             $token,
-            $this->key_factory->getEncryptionKey()
+            $this->key_factory->getLegacy2025EncryptionKey()
         );
 
         return GroupLinkApiToken::buildNewGroupToken($concealed_secret);

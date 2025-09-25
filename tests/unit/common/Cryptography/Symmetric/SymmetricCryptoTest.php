@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,81 +20,99 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Cryptography\SymmetricLegacy2025;
+namespace Tuleap\Cryptography\Symmetric;
 
+use PHPUnit\Framework\Attributes\TestWith;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItCannotBeInstantiated(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        new SymmetricCrypto();
-    }
-
     public function testNoncesAreNotReused(): void
     {
-        $key       = new EncryptionKey(
-            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
-        );
+        $key       = $this->getRandomEncryptionKey();
+        $ad        = new EncryptionAdditionalData('table_name', 'field_name', 'id');
         $plaintext = new ConcealedString('plaintext');
 
-        $ciphertext_1 = SymmetricCrypto::encrypt($plaintext, $key);
-        $ciphertext_2 = SymmetricCrypto::encrypt($plaintext, $key);
 
-        $this->assertNotEquals($ciphertext_1, $ciphertext_2);
+        $ciphertext_1 = SymmetricCrypto::encrypt($plaintext, $ad, $key);
+        $ciphertext_2 = SymmetricCrypto::encrypt($plaintext, $ad, $key);
+
+        self::assertNotEquals($ciphertext_1, $ciphertext_2);
     }
 
     public function testCiphertextCanBeDecrypted(): void
     {
-        $key       = new EncryptionKey(
-            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
-        );
+        $key       = $this->getRandomEncryptionKey();
+        $ad        = new EncryptionAdditionalData('table_name', 'field_name', 'id');
         $plaintext = new ConcealedString('The quick brown fox jumps over the lazy dog');
 
-        $ciphertext           = SymmetricCrypto::encrypt($plaintext, $key);
-        $decrypted_ciphertext = SymmetricCrypto::decrypt($ciphertext, $key);
+        $ciphertext           = SymmetricCrypto::encrypt($plaintext, $ad, $key);
+        $decrypted_ciphertext = SymmetricCrypto::decrypt($ciphertext, $ad, $key);
 
-        $this->assertEquals($plaintext->getString(), $decrypted_ciphertext->getString());
+        self::assertEquals($plaintext->getString(), $decrypted_ciphertext->getString());
     }
 
     public function testACiphertextEncryptedWithADifferentKeyCannotBeDecrypted(): void
     {
-        $key_1     = new EncryptionKey(
-            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
-        );
-        $key_2     = new EncryptionKey(
-            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
-        );
+        $key_1     = $this->getRandomEncryptionKey();
+        $key_2     = $this->getRandomEncryptionKey();
+        $ad        = new EncryptionAdditionalData('table_name', 'field_name', 'id');
         $plaintext = new ConcealedString('The quick brown fox jumps over the lazy dog');
 
-        $ciphertext = SymmetricCrypto::encrypt($plaintext, $key_1);
+        $ciphertext = SymmetricCrypto::encrypt($plaintext, $ad, $key_1);
 
         $this->expectException(InvalidCiphertextException::class);
-        SymmetricCrypto::decrypt($ciphertext, $key_2);
+        SymmetricCrypto::decrypt($ciphertext, $ad, $key_2);
     }
 
-    public function testAWronglyFormattedCiphertextCannotBeDecrypted(): void
+    public function testACiphertextEncryptedWithDifferentAdditionalDataCannotBeDecrypted(): void
     {
-        $key = new EncryptionKey(
-            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
-        );
+        $key       = $this->getRandomEncryptionKey();
+        $ad_1      = new EncryptionAdditionalData('table_name', 'field_name', 'id');
+        $ad_2      = new EncryptionAdditionalData('table_name', 'field_name', 'another_id');
+        $plaintext = new ConcealedString('The quick brown fox jumps over the lazy dog');
+
+        $ciphertext = SymmetricCrypto::encrypt($plaintext, $ad_1, $key);
 
         $this->expectException(InvalidCiphertextException::class);
-        SymmetricCrypto::decrypt('wrongly_formatted_exception', $key);
+        SymmetricCrypto::decrypt($ciphertext, $ad_2, $key);
+    }
+
+    #[TestWith(['wrongly_formatted_exception'])]
+    #[TestWith(['small'])]
+    public function testAWronglyFormattedCiphertextCannotBeDecrypted(string $wrong_ciphertext): void
+    {
+        $key = $this->getRandomEncryptionKey();
+
+        $this->expectException(InvalidCiphertextException::class);
+        SymmetricCrypto::decrypt(
+            $wrong_ciphertext,
+            new EncryptionAdditionalData('table_name', 'field_name', 'id'),
+            $key
+        );
     }
 
     public function testAPreviouslyEncryptedValueCanBeDecrypted(): void
     {
-        $key = new EncryptionKey(new ConcealedString(base64_decode('8sgzyjKu2S90GmxShUuWcFOpum6nIZzlCAoxn3MZdwU=')));
+        $key = new EncryptionKey(new ConcealedString(str_repeat('A', SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES)));
+
+        $ad = new EncryptionAdditionalData('table_name', 'field_name', 'id');
 
         $plaintext = SymmetricCrypto::decrypt(
-            base64_decode('MVlvotdhkOe0SkdxOqbpcCD0iB/o224T1REmpcm4sS7VRklvXL0z0HPHt90TNg=='),
+            base64_decode('npm3s3ZiXqW0RhXTsVXDZa0cTOPBX49KHcYfqBULtUEALJpXeFJt0jk2Vlt5c9OpvdyjafmhL34Oi8DzcXRQxD4qBIaSKPxLMWweekj2'),
+            $ad,
             $key
         );
 
-        $this->assertEquals('Tuleap', $plaintext);
+        self::assertEquals('Tuleap', $plaintext);
+    }
+
+    public static function getRandomEncryptionKey(): EncryptionKey
+    {
+        return new EncryptionKey(
+            new ConcealedString(random_bytes(SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES))
+        );
     }
 }

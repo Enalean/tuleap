@@ -79,7 +79,7 @@ class AsyncJiraScheduler
         string $tracker_description,
     ): void {
         try {
-            $encryption_key = $this->key_factory->getEncryptionKey();
+            $encryption_key = $this->key_factory->getLegacy2025EncryptionKey();
         } catch (CannotPerformIOOperationException $exception) {
             $this->logger->error('Unable to schedule the import of Jira: ' . $exception->getMessage());
             throw new TrackerCreationHasFailedException('Unable to schedule the import of Jira');

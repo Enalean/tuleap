@@ -85,7 +85,7 @@ class JiraRunner
 
             $token = SymmetricCrypto::decrypt(
                 $pending_import->getEncryptedJiraToken(),
-                $this->key_factory->getEncryptionKey()
+                $this->key_factory->getLegacy2025EncryptionKey()
             );
 
             $jira_credentials = new JiraCredentials(

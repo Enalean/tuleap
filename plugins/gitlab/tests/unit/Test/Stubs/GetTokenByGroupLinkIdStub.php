@@ -40,7 +40,7 @@ final class GetTokenByGroupLinkIdStub implements GetTokenByGroupLinkId
     #[\Override]
     public function getTokenByGroupId(int $group_id): string
     {
-        return SymmetricCrypto::encrypt($this->token, $this->key_factory->getEncryptionKey());
+        return SymmetricCrypto::encrypt($this->token, $this->key_factory->getLegacy2025EncryptionKey());
     }
 
     /**

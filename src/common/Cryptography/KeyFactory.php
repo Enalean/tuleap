@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Cryptography;
 
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey as Legacy2025EncryptionKey;
 
 class KeyFactory
 {
@@ -31,6 +32,19 @@ class KeyFactory
      * @throws CannotPerformIOOperationException
      */
     public function getEncryptionKey(): EncryptionKey
+    {
+        return new EncryptionKey($this->getKeyMaterial());
+    }
+
+    /**
+     * @throws CannotPerformIOOperationException
+     */
+    public function getLegacy2025EncryptionKey(): Legacy2025EncryptionKey
+    {
+        return new Legacy2025EncryptionKey($this->getKeyMaterial());
+    }
+
+    private function getKeyMaterial(): ConcealedString
     {
         $encryption_key_file_path = (new SecretKeyFileOnFileSystem())->initAndGetEncryptionKeyPath();
         $file_data                = \file_get_contents($encryption_key_file_path);
@@ -41,12 +55,10 @@ class KeyFactory
         $file_data_hex = sodium_hex2bin($file_data);
         \sodium_memzero($file_data);
 
-        $encryption_key = new EncryptionKey(
-            new ConcealedString($file_data_hex)
-        );
+        $key_material = new ConcealedString($file_data_hex);
 
         \sodium_memzero($file_data_hex);
 
-        return $encryption_key;
+        return $key_material;
     }
 }

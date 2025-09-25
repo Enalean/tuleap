@@ -91,7 +91,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
     {
         $encryption_key_factory = $this->createMock(KeyFactory::class);
         $this->encryption_key   = new EncryptionKey(new ConcealedString(\random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-        $encryption_key_factory->method('getEncryptionKey')->willReturn($this->encryption_key);
+        $encryption_key_factory->method('getLegacy2025EncryptionKey')->willReturn($this->encryption_key);
 
         $this->dao                 = $this->createMock(OpenIDConnectSigningKeyDAO::class);
         $this->signing_key_factory = new OpenIDConnectSigningKeyFactoryDBPersistent(

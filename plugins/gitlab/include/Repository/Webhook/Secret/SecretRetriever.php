@@ -57,7 +57,7 @@ class SecretRetriever
 
         return SymmetricCrypto::decrypt(
             $row['webhook_secret'],
-            $this->key_factory->getEncryptionKey()
+            $this->key_factory->getLegacy2025EncryptionKey()
         );
     }
 }

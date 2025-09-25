@@ -38,7 +38,7 @@ final class GroupLinkTokenInserter implements InsertGroupLinkToken
     {
         $encrypted_secret = SymmetricCrypto::encrypt(
             $token,
-            $this->key_factory->getEncryptionKey()
+            $this->key_factory->getLegacy2025EncryptionKey()
         );
 
         $this->group_api_token_DAO->storeToken(

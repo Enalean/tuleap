@@ -25,8 +25,9 @@ namespace Tuleap\User\AccessKey;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
 class LastAccessKeyIdentifierStore
 {
@@ -51,10 +52,11 @@ class LastAccessKeyIdentifierStore
         $this->storage               =& $storage;
     }
 
-    public function storeLastGeneratedAccessKeyIdentifier(SplitToken $key): void
+    public function storeLastGeneratedAccessKeyIdentifier(SplitToken $key, \PFUser $current_user): void
     {
         $this->storage[self::STORAGE_NAME] = SymmetricCrypto::encrypt(
             $this->split_token_formatter->getIdentifier($key),
+            $this->buildEncryptionAdditionalData($current_user),
             $this->encryption_key
         );
     }
@@ -62,14 +64,23 @@ class LastAccessKeyIdentifierStore
     /**
      * @throws \Tuleap\Cryptography\Exception\InvalidCiphertextException
      */
-    public function getLastGeneratedAccessKeyIdentifier(): ?ConcealedString
+    public function getLastGeneratedAccessKeyIdentifier(\PFUser $current_user): ?ConcealedString
     {
         if (! isset($this->storage[self::STORAGE_NAME])) {
             return null;
         }
 
-        $identifier = SymmetricCrypto::decrypt($this->storage[self::STORAGE_NAME], $this->encryption_key);
+        $identifier = SymmetricCrypto::decrypt(
+            $this->storage[self::STORAGE_NAME],
+            $this->buildEncryptionAdditionalData($current_user),
+            $this->encryption_key
+        );
         unset($this->storage[self::STORAGE_NAME]);
         return $identifier;
+    }
+
+    private function buildEncryptionAdditionalData(\PFUser $user): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData(self::STORAGE_NAME, 'user_access_key', (string) $user->getId());
     }
 }

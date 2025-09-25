@@ -25,13 +25,14 @@ namespace Tuleap\OAuth2Server\App;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
+use Tuleap\Cryptography\Symmetric\EncryptionAdditionalData;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
 
 class LastGeneratedClientSecretStore
 {
-    private const STORAGE_NAME = 'oauth2_last_generated_client_secret';
+    private const string STORAGE_NAME = 'oauth2_last_generated_client_secret';
 
     /**
      * @var EncryptionKey
@@ -60,7 +61,11 @@ class LastGeneratedClientSecretStore
     {
         $this->storage[self::STORAGE_NAME] = [
             'app_id'   => $app_id,
-            'verifier' => SymmetricCrypto::encrypt($secret->getString(), $this->encryption_key),
+            'verifier' => SymmetricCrypto::encrypt(
+                $secret->getString(),
+                $this->buildEncryptionAdditionalData($app_id),
+                $this->encryption_key
+            ),
         ];
     }
 
@@ -79,10 +84,19 @@ class LastGeneratedClientSecretStore
                 new SplitToken(
                     $app_id,
                     new SplitTokenVerificationString(
-                        SymmetricCrypto::decrypt($storage_value['verifier'], $this->encryption_key)
+                        SymmetricCrypto::decrypt(
+                            $storage_value['verifier'],
+                            $this->buildEncryptionAdditionalData($app_id),
+                            $this->encryption_key,
+                        )
                     )
                 )
             )
         );
+    }
+
+    private function buildEncryptionAdditionalData(int $app_id): EncryptionAdditionalData
+    {
+        return new EncryptionAdditionalData(self::STORAGE_NAME, 'verifier', (string) $app_id);
     }
 }

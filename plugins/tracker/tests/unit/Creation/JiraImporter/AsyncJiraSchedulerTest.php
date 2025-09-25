@@ -42,7 +42,7 @@ final class AsyncJiraSchedulerTest extends TestCase
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
         $key_factory = $this->createMock(KeyFactory::class);
-        $key_factory->method('getEncryptionKey')->willReturn($encryption_key);
+        $key_factory->method('getLegacy2025EncryptionKey')->willReturn($encryption_key);
 
         $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
         $pending_jira_import_dao->expects($this->once())->method('create')
@@ -92,7 +92,7 @@ final class AsyncJiraSchedulerTest extends TestCase
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
         $key_factory = $this->createMock(KeyFactory::class);
-        $key_factory->method('getEncryptionKey')->willReturn($encryption_key);
+        $key_factory->method('getLegacy2025EncryptionKey')->willReturn($encryption_key);
 
         $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
         $pending_jira_import_dao->expects($this->once())->method('create')
@@ -141,7 +141,7 @@ final class AsyncJiraSchedulerTest extends TestCase
     public function testItThrowsExceptionIfTokenCannotBeEncrypted(): void
     {
         $key_factory = $this->createMock(KeyFactory::class);
-        $key_factory->method('getEncryptionKey')->willThrowException(new CannotPerformIOOperationException('Cannot read encryption key'));
+        $key_factory->method('getLegacy2025EncryptionKey')->willThrowException(new CannotPerformIOOperationException('Cannot read encryption key'));
 
         $pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
         $pending_jira_import_dao->expects($this->never())->method('create');

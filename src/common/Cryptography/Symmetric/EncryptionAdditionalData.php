@@ -22,22 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography\Symmetric;
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Exception\InvalidKeyException;
-
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class EncryptionKeyTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * @psalm-immutable
+ */
+final readonly class EncryptionAdditionalData
 {
-    public function testEncryptionKeyConstruction(): void
-    {
-        $key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES)));
-
-        self::assertEquals(SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES, mb_strlen($key->getRawKeyMaterial()));
+    /**
+     * @param non-empty-string $table_name
+     * @param non-empty-string $field_name
+     * @param non-empty-string $id
+     * @param list<non-empty-string> $additional_data
+     */
+    public function __construct(
+        private string $table_name,
+        private string $field_name,
+        private string $id,
+        private array $additional_data = [],
+    ) {
     }
 
-    public function testEncryptionKeyIsNotConstructedWhenTheKeyMaterialIsWronglySized(): void
+    /**
+     * @return non-empty-string
+     */
+    public function canonicalize(): string
     {
-        $this->expectException(InvalidKeyException::class);
-        new EncryptionKey(new ConcealedString('wrongly_sized_key_material'));
+        $canonicalized_representation = \bin2hex($this->table_name) . '_' . \bin2hex($this->field_name) . '_' . \bin2hex($this->id) . '_';
+
+        return $canonicalized_representation . \implode('_', array_map(fn(string $value): string => \bin2hex($value), $this->additional_data));
     }
 }

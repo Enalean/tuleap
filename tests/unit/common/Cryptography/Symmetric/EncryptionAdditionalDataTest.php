@@ -22,22 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography\Symmetric;
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Exception\InvalidKeyException;
+use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class EncryptionKeyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EncryptionAdditionalDataTest extends TestCase
 {
-    public function testEncryptionKeyConstruction(): void
+    public function testCanonicalizesValues(): void
     {
-        $key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES)));
+        $ad = new EncryptionAdditionalData('table_name', 'field_name', 'id');
 
-        self::assertEquals(SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES, mb_strlen($key->getRawKeyMaterial()));
+        self::assertSame('7461626c655f6e616d65_6669656c645f6e616d65_6964_', $ad->canonicalize());
     }
 
-    public function testEncryptionKeyIsNotConstructedWhenTheKeyMaterialIsWronglySized(): void
+    public function testCanonicalizesWithExtraValues(): void
     {
-        $this->expectException(InvalidKeyException::class);
-        new EncryptionKey(new ConcealedString('wrongly_sized_key_material'));
+        $ad = new EncryptionAdditionalData('t1', 'f1', 'id', ['extra1', 'extra2']);
+
+        self::assertSame('7431_6631_6964_657874726131_657874726132', $ad->canonicalize());
     }
 }
