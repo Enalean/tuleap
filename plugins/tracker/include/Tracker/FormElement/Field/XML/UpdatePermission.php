@@ -27,6 +27,6 @@ final class UpdatePermission extends GroupPermission
 {
     public function __construct(string $ugroup_name)
     {
-        parent::__construct($ugroup_name, \Tracker_FormElement::PERMISSION_UPDATE);
+        parent::__construct($ugroup_name, \Tuleap\Tracker\FormElement\TrackerFormElement::PERMISSION_UPDATE);
     }
 }

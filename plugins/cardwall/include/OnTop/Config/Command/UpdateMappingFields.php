@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 
 /**
  * Update a column for a cardwall on top of a tracker
  */
-class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_Config_Command
+class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_Config_Command // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Cardwall_OnTop_ColumnMappingFieldDao
@@ -103,7 +104,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     /**
      * @return void
      */
-    private function save(array $mapping_tracker_info, array $mapping_fields, ?Tracker $mapping_tracker = null, ?Tracker_FormElement $field = null)
+    private function save(array $mapping_tracker_info, array $mapping_fields, ?Tracker $mapping_tracker = null, ?TrackerFormElement $field = null)
     {
         if ($this->canSaveNewField($mapping_fields, $mapping_tracker, $field)) {
             if ($this->fieldHasChanged($mapping_fields, $mapping_tracker, $field)) {
@@ -114,7 +115,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
         }
     }
 
-    private function saveFieldMapping(Tracker $mapping_tracker, Tracker_FormElement $field)
+    private function saveFieldMapping(Tracker $mapping_tracker, TrackerFormElement $field)
     {
         if ($this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
             $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
@@ -122,7 +123,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
         }
     }
 
-    private function saveValuesMapping(array $mapping_tracker_info, Tracker $mapping_tracker, Tracker_FormElement $field)
+    private function saveValuesMapping(array $mapping_tracker_info, Tracker $mapping_tracker, TrackerFormElement $field)
     {
         if (empty($mapping_tracker_info['values']) || ! is_array($mapping_tracker_info['values'])) {
             return;
@@ -187,7 +188,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     /**
      * @return bool
      */
-    private function canSaveNewField(array $mapping_fields, ?Tracker $mapping_tracker = null, ?Tracker_FormElement $field = null)
+    private function canSaveNewField(array $mapping_fields, ?Tracker $mapping_tracker = null, ?TrackerFormElement $field = null)
     {
         return $mapping_tracker && $field && $field->getTracker() == $mapping_tracker;
     }
@@ -195,7 +196,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     /**
      * @return bool
      */
-    private function fieldHasChanged(array $mapping_fields, ?Tracker $mapping_tracker = null, ?Tracker_FormElement $field = null)
+    private function fieldHasChanged(array $mapping_fields, ?Tracker $mapping_tracker = null, ?TrackerFormElement $field = null)
     {
         return ! isset($mapping_fields[$mapping_tracker->getId()]) || ($field !== null && $mapping_fields[$mapping_tracker->getId()] != $field->getId());
     }

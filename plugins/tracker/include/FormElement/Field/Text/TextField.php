@@ -58,6 +58,7 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperti
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\TextFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
@@ -368,7 +369,7 @@ class TextField extends AlphaNumericField
     }
 
     /**
-     * @see Tracker_FormElement::fetchArtifactCopyMode
+     * @see TrackerFormElement::fetchArtifactCopyMode
      */
     #[\Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)

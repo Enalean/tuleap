@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement;
 use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
 final class FieldsetContainerBuilder
 {
-    /** @var Tracker_FormElement[]|null */
+    /** @var TrackerFormElement[]|null */
     private ?array $form_elements = null;
     private string $name          = 'Fieldset';
     private string $label         = 'label';
@@ -77,7 +77,7 @@ final class FieldsetContainerBuilder
         return $this;
     }
 
-    public function containsFormElements(Tracker_FormElement ...$elements): self
+    public function containsFormElements(TrackerFormElement ...$elements): self
     {
         $this->form_elements = $elements;
 

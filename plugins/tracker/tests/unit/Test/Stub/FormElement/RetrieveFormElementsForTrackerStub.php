@@ -35,7 +35,7 @@ final class RetrieveFormElementsForTrackerStub implements \Tuleap\Tracker\FormEl
         return new self([]);
     }
 
-    public static function with(\Tracker_FormElement $form_element, \Tracker_FormElement ...$other_elements): self
+    public static function with(\Tuleap\Tracker\FormElement\TrackerFormElement $form_element, \Tuleap\Tracker\FormElement\TrackerFormElement ...$other_elements): self
     {
         return new self([$form_element, ...$other_elements]);
     }

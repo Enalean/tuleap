@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -32,11 +33,11 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    private Tracker_FormElement $field_status;
+    private TrackerFormElement $field_status;
 
-    private Tracker_FormElement $field_start_date;
+    private TrackerFormElement $field_start_date;
 
-    private Tracker_FormElement $field_close_date;
+    private TrackerFormElement $field_close_date;
 
     private WorkflowFactory&MockObject $workflow_factory;
 

@@ -38,6 +38,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Masschange\MasschangeDataValueExtractor;
 use Tuleap\Tracker\Masschange\MasschangeUpdater;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
@@ -246,7 +247,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         return new Tracker_Report_CriteriaDao();
     }
 
-    private function getCriteriaValueForFormElement(Tracker_FormElement $form_element, $raw_value)
+    private function getCriteriaValueForFormElement(TrackerFormElement $form_element, $raw_value)
     {
         $form_element_factory = $this->getFormElementFactory();
         $zero_float_pattern   = '/^0{1,}(\.0*)?$/';

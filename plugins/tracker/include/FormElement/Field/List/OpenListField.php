@@ -59,6 +59,7 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\OpenListSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Report\Criteria\CriteriaOpenListValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
@@ -1162,7 +1163,7 @@ class OpenListField extends ListField implements BindVisitor
     }
 
     /**
-     * @see Tracker_FormElement::process()
+     * @see TrackerFormElement::process()
      */
     #[Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)

@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\REST;
 
-use Tracker_FormElement;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 /**
  * @psalm-immutable
@@ -43,7 +43,7 @@ class MinimalFieldRepresentation
      */
     public $name;
 
-    public function __construct(Tracker_FormElement $field)
+    public function __construct(TrackerFormElement $field)
     {
         $this->field_id = JsonCast::toInt($field->getId());
         $this->name     = $field->getName();

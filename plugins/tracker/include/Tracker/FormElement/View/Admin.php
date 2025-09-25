@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 
 /**
@@ -29,7 +30,7 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 class Tracker_FormElement_View_Admin
 {
     /**
-     * @var Tracker_FormElement
+     * @var TrackerFormElement
      */
     protected $formElement;
 
@@ -38,7 +39,7 @@ class Tracker_FormElement_View_Admin
      */
     protected $allUsedElements;
 
-    public function __construct(Tracker_FormElement $formElement, $allUsedElements)
+    public function __construct(TrackerFormElement $formElement, $allUsedElements)
     {
         $this->formElement     = $formElement;
         $this->allUsedElements = $allUsedElements;

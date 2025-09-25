@@ -64,7 +64,6 @@ use Tracker_ArtifactFactory;
 use Tracker_ArtifactNotificationSubscriber;
 use Tracker_Dispatchable_Interface;
 use Tracker_Exception;
-use Tracker_FormElement;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
@@ -153,6 +152,7 @@ use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -463,7 +463,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $output;
     }
 
-    /** @param Tracker_FormElement[] $toplevel_form_elements */
+    /** @param TrackerFormElement[] $toplevel_form_elements */
     private function prepareElementsForDisplay($toplevel_form_elements)
     {
         foreach ($toplevel_form_elements as $formElement) {

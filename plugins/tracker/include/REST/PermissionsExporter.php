@@ -23,16 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST;
 
 use PFUser;
-use Tracker_FormElement;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class PermissionsExporter
 {
     public const READ_ONLY_PRESERVED_PERMISSIONS = [
-        Tracker_FormElement::REST_PERMISSION_READ,
-        Tracker_FormElement::REST_PERMISSION_SUBMIT,
+        TrackerFormElement::REST_PERMISSION_READ,
+        TrackerFormElement::REST_PERMISSION_SUBMIT,
     ];
 
     /**
@@ -47,14 +47,14 @@ class PermissionsExporter
 
     public function exportUserPermissionsForFieldWithoutWorkflowComputedPermissions(
         PFUser $user,
-        Tracker_FormElement $field,
+        TrackerFormElement $field,
     ): array {
         return $field->exportCurrentUserPermissionsToREST($user);
     }
 
     public function exportUserPermissionsForFieldWithWorkflowComputedPermissions(
         PFUser $user,
-        Tracker_FormElement $field,
+        TrackerFormElement $field,
         Artifact $artifact,
     ): array {
         $permissions = $this->exportUserPermissionsForFieldWithoutWorkflowComputedPermissions($user, $field);

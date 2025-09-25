@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 
 class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
@@ -29,7 +30,7 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
     /** @var Artifact | null */
     private $artifact_to_link;
 
-    /** @var Tracker_FormElement[] */
+    /** @var TrackerFormElement[] */
     public $form_elements;
 
     /** @var bool */

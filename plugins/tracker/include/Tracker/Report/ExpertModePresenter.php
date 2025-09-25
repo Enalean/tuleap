@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\Report;
 
-use Tracker_FormElement;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 class ExpertModePresenter
 {
@@ -84,7 +84,7 @@ class ExpertModePresenter
         });
 
         $allowed_fields_names = array_map(
-            function (Tracker_FormElement $field) {
+            function (TrackerFormElement $field) {
                 return $field->getName();
             },
             $this->allowed_fields

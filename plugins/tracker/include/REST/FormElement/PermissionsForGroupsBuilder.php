@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\FormElement;
 
-use Tracker_FormElement;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\UGroupRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
@@ -39,7 +39,7 @@ class PermissionsForGroupsBuilder
     ) {
     }
 
-    public function getPermissionsForGroups(Tracker_FormElement $form_element, ?Artifact $artifact, \PFUser $user): ?PermissionsForGroupsRepresentation
+    public function getPermissionsForGroups(TrackerFormElement $form_element, ?Artifact $artifact, \PFUser $user): ?PermissionsForGroupsRepresentation
     {
         $tracker = $form_element->getTracker();
         if (! $tracker) {
@@ -58,13 +58,13 @@ class PermissionsForGroupsBuilder
         $can_submit = [];
         $can_update = [];
         foreach ($perm_by_group[$form_element->getId()]['ugroups'] as $ugroup) {
-            if (isset($ugroup['permissions'][Tracker_FormElement::PERMISSION_READ])) {
+            if (isset($ugroup['permissions'][TrackerFormElement::PERMISSION_READ])) {
                 $this->addUserGroupRepresentationToArray($can_read, $tracker, $ugroup);
             }
-            if (isset($ugroup['permissions'][Tracker_FormElement::PERMISSION_SUBMIT])) {
+            if (isset($ugroup['permissions'][TrackerFormElement::PERMISSION_SUBMIT])) {
                 $this->addUserGroupRepresentationToArray($can_submit, $tracker, $ugroup);
             }
-            if (isset($ugroup['permissions'][Tracker_FormElement::PERMISSION_UPDATE])) {
+            if (isset($ugroup['permissions'][TrackerFormElement::PERMISSION_UPDATE])) {
                 if ($artifact === null || ($form_element instanceof \Tuleap\Tracker\FormElement\Field\TrackerField && ! $this->read_only_field_detector->isFieldFrozen($artifact, $form_element))) {
                     $this->addUserGroupRepresentationToArray($can_update, $tracker, $ugroup);
                 }
@@ -73,7 +73,7 @@ class PermissionsForGroupsBuilder
         return new PermissionsForGroupsRepresentation($can_read, $can_submit, $can_update);
     }
 
-    private function getPermissions(Tracker_FormElement $form_element): array
+    private function getPermissions(TrackerFormElement $form_element): array
     {
         if ($form_element instanceof \Tuleap\Tracker\FormElement\Container\TrackerFormElementContainer) {
             return [];

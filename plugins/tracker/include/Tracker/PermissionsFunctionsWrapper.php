@@ -25,7 +25,7 @@ namespace Tuleap\Tracker;
 
 class PermissionsFunctionsWrapper
 {
-    public function getFieldUGroupsPermissions(\Tracker_FormElement $form_element)
+    public function getFieldUGroupsPermissions(FormElement\TrackerFormElement $form_element)
     {
         $tracker = $form_element->getTracker();
         if (! $tracker) {

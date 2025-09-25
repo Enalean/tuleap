@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 
-abstract class Cardwall_OnTop_Config_TrackerMapping
+abstract class Cardwall_OnTop_Config_TrackerMapping // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker
@@ -69,7 +70,7 @@ abstract class Cardwall_OnTop_Config_TrackerMapping
     }
 
     /**
-     * @return Tracker_FormElement|null
+     * @return TrackerFormElement|null
      */
     abstract public function getField();
 

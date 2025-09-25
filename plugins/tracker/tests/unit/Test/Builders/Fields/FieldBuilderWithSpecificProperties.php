@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 trait FieldBuilderWithSpecificProperties
 {
@@ -35,7 +35,7 @@ trait FieldBuilderWithSpecificProperties
         return $this;
     }
 
-    private function setSpecificProperties(Tracker_FormElement $field): void
+    private function setSpecificProperties(TrackerFormElement $field): void
     {
         $field->setCacheSpecificProperties($this->properties);
     }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub\Permission;
 
 use PFUser;
-use Tracker_FormElement;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
 use Tuleap\Tracker\Permission\UserPermissionsOnItems;
@@ -61,8 +61,8 @@ final class RetrieveUserPermissionOnFieldsStub implements RetrieveUserPermission
             return new UserPermissionsOnItems(
                 $user,
                 $permission,
-                array_filter($fields, fn(Tracker_FormElement $field) => in_array($field->getId(), $this->has_permission_on[$permission->value])),
-                array_filter($fields, fn(Tracker_FormElement $field) => ! in_array($field->getId(), $this->has_permission_on[$permission->value])),
+                array_filter($fields, fn(TrackerFormElement $field) => in_array($field->getId(), $this->has_permission_on[$permission->value])),
+                array_filter($fields, fn(TrackerFormElement $field) => ! in_array($field->getId(), $this->has_permission_on[$permission->value])),
             );
         }
 

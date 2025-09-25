@@ -20,9 +20,10 @@
 
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Permission_PermissionsSerializer
+class Tracker_Permission_PermissionsSerializer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker_Permission_PermissionRetrieveAssignee
@@ -141,8 +142,8 @@ class Tracker_Permission_PermissionsSerializer
 
         foreach ($fields_permissions as $key => $field_permissions) {
             $authorized_ugroups[$key] = [];
-            $this->appendAllUGroups($authorized_ugroups[$key], $field_permissions, Tracker_FormElement::PERMISSION_READ);
-            $this->appendAllUGroups($authorized_ugroups[$key], $field_permissions, Tracker_FormElement::PERMISSION_UPDATE);
+            $this->appendAllUGroups($authorized_ugroups[$key], $field_permissions, TrackerFormElement::PERMISSION_READ);
+            $this->appendAllUGroups($authorized_ugroups[$key], $field_permissions, TrackerFormElement::PERMISSION_UPDATE);
         }
 
         return $authorized_ugroups;

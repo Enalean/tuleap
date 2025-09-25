@@ -20,7 +20,7 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-use Tracker_FormElement;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 /**
  * @psalm-immutable
@@ -28,7 +28,7 @@ use Tracker_FormElement;
 final class BackgroundColorSelectorPresenter
 {
     /**
-     * @var Tracker_FormElement[]
+     * @var TrackerFormElement[]
      */
     public array $form_elements;
     public bool $has_background_field_defined;

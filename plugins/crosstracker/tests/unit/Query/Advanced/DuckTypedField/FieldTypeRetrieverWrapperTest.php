@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField;
 
-use Tracker_FormElement;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
@@ -92,7 +92,7 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('notHandledTypeProvider')]
-    public function testItNotHandleFormElement(Tracker_FormElement $form_element): void
+    public function testItNotHandleFormElement(TrackerFormElement $form_element): void
     {
         $retriever = new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withType('not-handled-type'));
 

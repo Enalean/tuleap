@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use TemplateRenderer;
-use Tracker_FormElement;
 use Tracker_FormElement_View_Admin_Field;
+use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 final class ArtifactLinkFieldAdmin extends Tracker_FormElement_View_Admin_Field
 {
     public function __construct(
         private readonly TemplateRenderer $renderer,
-        Tracker_FormElement $formElement,
+        TrackerFormElement $formElement,
         array $allUsedElements,
     ) {
         parent::__construct($formElement, $allUsedElements);

@@ -96,7 +96,7 @@ abstract class XMLFormElement
     public function __construct(string|IDGenerator $id, string $type, string $name)
     {
         if ($id instanceof IDGenerator) {
-            $this->id = sprintf('%s%d', \Tracker_FormElement::XML_ID_PREFIX, $id->getNextId());
+            $this->id = sprintf('%s%d', \Tuleap\Tracker\FormElement\TrackerFormElement::XML_ID_PREFIX, $id->getNextId());
         } else {
             $this->id = $id;
         }
@@ -108,7 +108,7 @@ abstract class XMLFormElement
      * @return static
      * @psalm-mutation-free
      */
-    public function fromFormElement(\Tracker_FormElement $form_element): self
+    public function fromFormElement(\Tuleap\Tracker\FormElement\TrackerFormElement $form_element): self
     {
         $new = clone $this;
         if ($form_element->rank !== null) {
@@ -252,7 +252,7 @@ abstract class XMLFormElement
 
     protected function getXMLTagName(): string
     {
-        return \Tracker_FormElement::XML_TAG;
+        return \Tuleap\Tracker\FormElement\TrackerFormElement::XML_TAG;
     }
 
     abstract public function exportPermissions(\SimpleXMLElement $form_elements): void;
