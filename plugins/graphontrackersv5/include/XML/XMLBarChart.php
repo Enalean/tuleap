@@ -28,7 +28,7 @@ use Tuleap\Tracker\FormElement\XML\XMLReference;
 
 final class XMLBarChart extends XMLChart
 {
-    private const TYPE = 'bar';
+    private const string TYPE = 'bar';
 
     /**
      * @readonly

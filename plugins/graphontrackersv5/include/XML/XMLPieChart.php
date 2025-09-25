@@ -28,7 +28,7 @@ use Tuleap\Tracker\FormElement\XML\XMLReference;
 
 final class XMLPieChart extends XMLChart
 {
-    private const TYPE = 'pie';
+    private const string TYPE = 'pie';
 
     /**
      * @readonly

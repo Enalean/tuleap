@@ -63,7 +63,7 @@ use XML_SimpleXMLCDATAFactory;
  */
 abstract class GraphOnTrackersV5_Chart implements Visitable //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const MARKER_BEGINNING_OUTPUT_FETCH = '🥀';
+    public const string MARKER_BEGINNING_OUTPUT_FETCH = '🥀';
 
     public $id;
     protected $rank;

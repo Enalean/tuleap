@@ -29,10 +29,10 @@ use Tracker_Report_Session;
 use Tuleap\GraphOnTrackersV5\GraphOnTrackersV5_Renderer;
 use Tuleap\Project\MappingRegistry;
 
-class GraphOnTrackersV5_ChartFactory
+class GraphOnTrackersV5_ChartFactory //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const CHART_REMOVED = 'removed';
-    public const MAPPING_KEY   = 'plugin_graphontrackers_chart_mapping';
+    public const string CHART_REMOVED = 'removed';
+    public const string MAPPING_KEY   = 'plugin_graphontrackers_chart_mapping';
 
     protected $charts;
     protected $chart_factories;
@@ -49,7 +49,7 @@ class GraphOnTrackersV5_ChartFactory
      * Hold an instance of the class
      * @var self|null
      */
-    protected static $_instance;
+    protected static $_instance; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * @return GraphOnTrackersV5_ChartFactory
