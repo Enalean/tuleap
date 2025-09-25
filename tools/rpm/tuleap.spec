@@ -69,9 +69,9 @@ Requires: libxml2
 # Unit file
 Requires: systemd
 
-# ForgeUpgrade is now provided by Tuleap
-Obsoletes: forgeupgrade <= 999
-Provides: forgeupgrade
+# ForgeUpgrade and EnaleanLicenceManager is now provided by Tuleap
+Obsoletes: forgeupgrade <= 999, plugin-enalean-licensemanager <= 999
+Provides: forgeupgrade, plugin-enalean-licensemanager
 
 
 %description
@@ -485,13 +485,6 @@ Provides: tuleap-plugin-textualreport
 %description plugin-document_generation
 %{summary}.
 
-%package plugin-enalean-licensemanager
-Summary: Manage usage of license for Tuleap
-Group: Development/Tools
-Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
-%description plugin-enalean-licensemanager
-%{summary}.
-
 %package plugin-webauthn
 Summary: WebAuthn plugin
 Group: Development/Tools
@@ -609,7 +602,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_functions
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artidoc
@@ -1415,10 +1407,6 @@ fi
 %files plugin-document_generation
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/document_generation
-
-%files plugin-enalean-licensemanager
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/enalean_licensemanager
 
 %files plugin-webauthn
 %defattr(-,root,root,-)

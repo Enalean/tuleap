@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,33 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Enalean\LicenseManager;
+declare(strict_types=1);
 
-use Tuleap\Instrument\Prometheus\Prometheus;
-
-class LicenseManagerComputedMetricsCollector
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202509261002_clear_data_plugin_enalean_licensemanager extends \Tuleap\ForgeUpgrade\Bucket
 {
-    /**
-     * @var Prometheus
-     */
-    private $prometheus;
-    /**
-     * @var int
-     */
-    private $max_users;
-
-    public function __construct(Prometheus $prometheus, $max_users)
+    #[Override]
+    public function description(): string
     {
-        $this->prometheus = $prometheus;
-        $this->max_users  = $max_users;
+        return 'Remove licensemanager from plugin table';
     }
 
-    public function collect()
+    #[Override]
+    public function up(): void
     {
-        $this->prometheus->gaugeSet(
-            'licence_max_users',
-            'Maximum number of users allowed on the instance',
-            $this->max_users
-        );
+        $this->api->dbh->exec("DELETE FROM plugin WHERE name = 'enalean_licensemanager'");
     }
 }
