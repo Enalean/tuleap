@@ -24,7 +24,7 @@ use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
 class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const DATE_FORMAT = 'Y-m-d';
+    public const string DATE_FORMAT = 'Y-m-d';
 
     /** @var DateField */
     protected $field;
@@ -115,12 +115,12 @@ class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclar
     /**
      * Format a timestamp into Y-m-d format
      */
-    public function formatDate($timestamp)
+    public function formatDate($timestamp): string
     {
         return format_date(self::DATE_FORMAT, (float) $timestamp, '');
     }
 
-    public function formatDateForDisplay($timestamp)
+    public function formatDateForDisplay($timestamp): string
     {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, '');
     }

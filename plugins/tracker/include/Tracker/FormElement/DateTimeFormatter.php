@@ -76,13 +76,13 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
     }
 
     #[\Override]
-    public function formatDate($timestamp)
+    public function formatDate($timestamp): string
     {
         return format_date(self::DATE_TIME_FORMAT, (float) $timestamp, '');
     }
 
     #[\Override]
-    public function formatDateForDisplay($timestamp)
+    public function formatDateForDisplay($timestamp): string
     {
         return self::format($timestamp);
     }

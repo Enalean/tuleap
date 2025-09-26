@@ -1056,10 +1056,10 @@ class DateField extends TrackerField
      *
      * @param string $value
      *
-     * @return String the field data corresponding to the value for artifact submision, or null if date format is wrong
+     * @return ?string the field data corresponding to the value for artifact submision, or null if date format is wrong
      */
     #[Override]
-    public function getFieldData($value)
+    public function getFieldData($value): ?string
     {
         if (strpos($value, '/') !== false) {
             // Assume the format is either dd/mm/YYYY or mm/dd/YYYY depending on the user preferences.
