@@ -38,9 +38,9 @@ use Tuleap\Widget\XML\XMLWidget;
  */
 final class CompleteIssuesTemplate
 {
-    private const ALL_ISSUES_PRIORITY_CHART_RENDERER_ID = 'All_Issues_Priority_Chart_to_be_used_in_remaining_XML_dashboard_definition';
-    private const OPEN_ISSUES_CHART_RENDERER_ID         = 'Open_Issues_Charts_to_be_used_in_remaining_XML_dashboard_definition';
-    private const ALL_ISSUES_CHART_RENDERER_ID          = 'All_Issues_Charts_to_be_used_in_remaining_XML_dashboard_definition';
+    private const string ALL_ISSUES_PRIORITY_CHART_RENDERER_ID = 'All_Issues_Priority_Chart_to_be_used_in_remaining_XML_dashboard_definition';
+    private const string OPEN_ISSUES_CHART_RENDERER_ID         = 'Open_Issues_Charts_to_be_used_in_remaining_XML_dashboard_definition';
+    private const string ALL_ISSUES_CHART_RENDERER_ID          = 'All_Issues_Charts_to_be_used_in_remaining_XML_dashboard_definition';
 
     /**
      * @return XMLRenderer[]

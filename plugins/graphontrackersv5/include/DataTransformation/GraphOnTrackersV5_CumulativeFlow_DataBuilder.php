@@ -29,9 +29,9 @@ use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_CumulativeFlow;
 use UserManager;
 
-class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
+class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const MAX_STEPS = 75;
+    public const int MAX_STEPS = 75;
     protected $timeFiller;
     /**
      * @var int

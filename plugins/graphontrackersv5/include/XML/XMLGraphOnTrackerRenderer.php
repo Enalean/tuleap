@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 
 final class XMLGraphOnTrackerRenderer extends \Tuleap\Tracker\Report\Renderer\XML\XMLRenderer
 {
-    private const TYPE = 'plugin_graphontrackersv5';
+    private const string TYPE = 'plugin_graphontrackersv5';
 
     /**
      * @var XMLChart[]

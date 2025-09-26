@@ -50,7 +50,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 final class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const RENDERER_TYPE = 'plugin_graphontrackersv5';
+    public const string RENDERER_TYPE = 'plugin_graphontrackersv5';
 
     public $report_id;
     public $chunksz;

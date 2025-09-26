@@ -37,11 +37,11 @@ use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_CumulativeF
 /**
  * Base class to provide a cumulative flow Chart
  */
-class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
+class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const SCALE_DAY   = 0;
-    public const SCALE_WEEK  = 1;
-    public const SCALE_MONTH = 2;
+    public const int SCALE_DAY   = 0;
+    public const int SCALE_WEEK  = 1;
+    public const int SCALE_MONTH = 2;
     /**
      * The date (timestamp) the sprint start
      */
