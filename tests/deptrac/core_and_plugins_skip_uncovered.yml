@@ -16,7 +16,7 @@ deptrac:
     - name: Plugins
       collectors:
         - type: directory
-          value: plugins/api_explorer|plugins/archivedeleteditems|plugins/bugzilla_reference|plugins/captcha|plugins/dynamic_credentials|plugins/embed|plugins/enalean_licensemanager|plugins/fts_common|plugins/fts_db|plugins/fts_meilisearch|plugins/label|plugins/ldap|plugins/mediawiki|plugins/mediawiki_standalone|plugins/oauth2_server|plugins/openidconnectclient|plugins/pdftemplate|plugins/pluginsadministration|plugins/projectlinks|plugins/project_ownership|plugins/prometheus_metrics|plugins/securitytxt|plugins/statistics|plugins/tee_container|plugins/template|plugins/userlog|plugins/webauthn
+          value: plugins/api_explorer|plugins/archivedeleteditems|plugins/bugzilla_reference|plugins/captcha|plugins/dynamic_credentials|plugins/embed|plugins/fts_common|plugins/fts_db|plugins/fts_meilisearch|plugins/label|plugins/ldap|plugins/mediawiki|plugins/mediawiki_standalone|plugins/oauth2_server|plugins/openidconnectclient|plugins/pdftemplate|plugins/pluginsadministration|plugins/projectlinks|plugins/project_ownership|plugins/prometheus_metrics|plugins/securitytxt|plugins/statistics|plugins/tee_container|plugins/template|plugins/userlog|plugins/webauthn
     - name: AgileDashboard
       collectors:
         - type: directory

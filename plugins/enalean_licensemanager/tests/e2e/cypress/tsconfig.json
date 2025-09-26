@@ -1,4 +1,0 @@
-{
-    "extends": "@tuleap/cypress-configurator/tsc/tsconfig.json",
-    "include": ["**/*.ts"]
-}
