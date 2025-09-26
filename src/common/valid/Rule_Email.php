@@ -35,7 +35,6 @@ class Rule_Email extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     public $separator;
     public function __construct($separator = \null)
     {
-        parent::__construct();
         $this->separator = $separator;
     }
 

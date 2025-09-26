@@ -19,44 +19,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Rule_ProjectFullNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalLanguageMock;
-
     public function testIsValid(): void
     {
-        $GLOBALS['Language']->method('getText')->willReturnCallback(
-            static function (string $page_name, string $category, $args): string {
-                if ($page_name === 'include_account' && $category === 'name_too_short') {
-                    return 'name_too_short';
-                }
-
-                throw new LogicException(sprintf('Unexpected call to getText(%s, %s, %d)', $page_name, $category, $args));
-            }
-        );
-
         $rule = new Rule_ProjectFullName();
         $this->assertTrue($rule->isValid('prj'));
-        $this->assertNull($rule->getErrorMessage());
+        $this->assertEmpty($rule->getErrorMessage());
         $this->assertTrue($rule->isValid('       project name long by spaces       '));
-        $this->assertNull($rule->getErrorMessage());
+        $this->assertEmpty($rule->getErrorMessage());
 
         $this->assertFalse($rule->isValid(''));
-        $this->assertEquals('name_too_short', $rule->getErrorMessage());
+        $this->assertStringContainsString('Name is too short', $rule->getErrorMessage());
         $this->assertFalse($rule->isValid(' '));
-        $this->assertEquals('name_too_short', $rule->getErrorMessage());
+        $this->assertStringContainsString('Name is too short', $rule->getErrorMessage());
         $this->assertFalse($rule->isValid('   '));
-        $this->assertEquals('name_too_short', $rule->getErrorMessage());
+        $this->assertStringContainsString('Name is too short', $rule->getErrorMessage());
         $this->assertFalse($rule->isValid('p'));
-        $this->assertEquals('name_too_short', $rule->getErrorMessage());
+        $this->assertStringContainsString('Name is too short', $rule->getErrorMessage());
         $this->assertFalse($rule->isValid('p   '));
-        $this->assertEquals('name_too_short', $rule->getErrorMessage());
+        $this->assertStringContainsString('Name is too short', $rule->getErrorMessage());
         $this->assertFalse($rule->isValid('pr'));
-        $this->assertEquals('name_too_short', $rule->getErrorMessage());
+        $this->assertStringContainsString('Name is too short', $rule->getErrorMessage());
 
         $this->assertTrue($rule->isValid('It accepts long string with accents éééé'));
 

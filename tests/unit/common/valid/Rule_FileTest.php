@@ -20,14 +20,12 @@
  */
 
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\TemporaryTestDirectory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use TemporaryTestDirectory;
-    use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
     private array $file;
@@ -58,65 +56,45 @@ final class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore P
     public function testErrorIniSize(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1000);
-        $r = new Rule_File();
-        $GLOBALS['Language']
-            ->method('getText')
-            ->with('rule_file', 'error_upload_size', UPLOAD_ERR_INI_SIZE)
-            ->willReturn(UPLOAD_ERR_INI_SIZE);
+        $r                   = new Rule_File();
         $this->file['error'] = UPLOAD_ERR_INI_SIZE;
         self::assertFalse($r->isValid($this->file));
-        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
+        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_INI_SIZE . '/', $r->getErrorMessage());
     }
 
     public function testErrorFormSize(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1000);
-        $r = new Rule_File();
-        $GLOBALS['Language']
-            ->method('getText')
-            ->with('rule_file', 'error_upload_size', UPLOAD_ERR_FORM_SIZE)
-            ->willReturn(UPLOAD_ERR_FORM_SIZE);
+        $r                   = new Rule_File();
         $this->file['error'] = UPLOAD_ERR_FORM_SIZE;
         self::assertFalse($r->isValid($this->file));
-        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_FORM_SIZE . '/', $r->error);
+        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_FORM_SIZE . '/', $r->getErrorMessage());
     }
 
     public function testErrorPartial(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1000);
-        $r = new Rule_File();
-        $GLOBALS['Language']
-            ->method('getText')
-            ->with('rule_file', 'error_upload_partial', UPLOAD_ERR_PARTIAL)
-            ->willReturn(UPLOAD_ERR_PARTIAL);
+        $r                   = new Rule_File();
         $this->file['error'] = UPLOAD_ERR_PARTIAL;
         self::assertFalse($r->isValid($this->file));
-        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_PARTIAL . '/', $r->error);
+        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_PARTIAL . '/', $r->getErrorMessage());
     }
 
     public function testErrorNoFile(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1000);
-        $r = new Rule_File();
-        $GLOBALS['Language']
-            ->method('getText')
-            ->with('rule_file', 'error_upload_nofile', UPLOAD_ERR_NO_FILE)
-            ->willReturn(UPLOAD_ERR_NO_FILE);
+        $r                   = new Rule_File();
         $this->file['error'] = UPLOAD_ERR_NO_FILE;
         self::assertFalse($r->isValid($this->file));
-        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_NO_FILE . '/', $r->error);
+        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_NO_FILE . '/', $r->getErrorMessage());
     }
 
     public function testErrorMaxSize(): void
     {
         ForgeConfig::set('sys_max_size_upload', 5);
         $r = new Rule_File();
-        $GLOBALS['Language']
-            ->method('getText')
-            ->with('rule_file', 'error_upload_size', UPLOAD_ERR_INI_SIZE)
-            ->willReturn(UPLOAD_ERR_INI_SIZE);
         self::assertFalse($r->isValid($this->file));
-        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
+        self::assertMatchesRegularExpression('/' . UPLOAD_ERR_INI_SIZE . '/', $r->getErrorMessage());
     }
 
     public function testNoName(): void

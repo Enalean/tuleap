@@ -83,7 +83,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function atLeastOneChar(string $val): bool
     {
         if (is_numeric($val)) {
-            $this->error = $GLOBALS['Language']->getText('include_account', 'char_err');
+            $this->error = _('The name must start with a letter.');
             return \false;
         }
         return \true;
@@ -99,7 +99,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function containsIllegalChars($val)
     {
         if (\strspn($val, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.') != \strlen($val)) {
-            $this->error = $GLOBALS['Language']->getText('include_account', 'illegal_char');
+            $this->error = _('Illegal character in name.');
             return \true;
         }
         return \false;
@@ -117,7 +117,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $is_reserved_name   = \preg_match('/^(' . '(www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)' . '|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)' . '|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(monitor)|(mirrors?)' . '|(root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)' . '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)' . '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)' . '|(git)|(gitolite)' . ')$/i', $val);
         $is_reserved_prefix = $this->isReservedPrefix($val);
         if ($is_reserved_name || $is_reserved_prefix) {
-            $this->error = $GLOBALS['Language']->getText('include_account', 'reserved');
+            $this->error = _('Name is reserved.');
             return \true;
         }
         return \false;
@@ -148,7 +148,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function lessThanMin($val)
     {
         if (\strlen($val) < 3) {
-            $this->error = $GLOBALS['Language']->getText('include_account', 'name_too_short');
+            $this->error = _('Name is too short. It must be at least 3 characters.');
             return \true;
         }
         return \false;
@@ -184,7 +184,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $sm = $this->_getSystemEventManager();
         if (! $sm->isUserNameAvailable($val)) {
-            $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', [$val]);
+            $this->error = sprintf(_('%s is already reserved for another rename operation. Please check System Event Monitor'), $val);
             return \false;
         }
         return \true;
@@ -209,38 +209,23 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     }
 
     /**
-     * Error message
-     *
-     * @return string
-     */
-    #[\Override]
-    public function getErrorMessage($key = '')
-    {
-        return $this->error;
-    }
-
-    /**
      * Returns error message when the username already exists
      *
      * Dedicate a method to be able to override it in descendent classes
-     *
-     * @return bool
      */
-    protected function _getErrorExists() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    protected function _getErrorExists(): string // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        return $GLOBALS['Language']->getText('rule_user_name', 'error_exists');
+        return _('Login name already exists.');
     }
 
     /**
      * Returns error message when name contains a space
      *
      * Dedicate a method to be able to override it in descendent classes
-     *
-     * @return bool
      */
-    protected function _getErrorNoSpaces() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    protected function _getErrorNoSpaces(): string // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        return $GLOBALS['Language']->getText('include_account', 'login_err');
+        return _('There cannot be any spaces in the login name.');
     }
 
     /**

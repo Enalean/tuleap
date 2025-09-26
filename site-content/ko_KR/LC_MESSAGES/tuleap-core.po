@@ -154,6 +154,12 @@ msgid "%s invited you, so you’re now a fresh member of this project."
 msgstr "%s님이 사용자님을 초대해 이 프로젝트의 새로운 멤버가 되었습니다."
 
 #, php-format
+msgid ""
+"%s is already reserved for another rename operation. Please check System "
+"Event Monitor"
+msgstr ""
+
+#, php-format
 msgid "%s new projects"
 msgstr "%s개의 새 프로젝트"
 
@@ -1359,6 +1365,24 @@ msgid "Fields"
 msgstr "필드"
 
 #, php-format
+msgid "File upload error (%d). No file was uploaded."
+msgstr ""
+
+#, php-format
+msgid ""
+"File upload error (%d). The uploaded file exceeds the maximum allowed file "
+"size."
+msgstr ""
+
+#, php-format
+msgid "File upload error (%d). The uploaded file was only partially uploaded."
+msgstr ""
+
+#, php-format
+msgid "File upload error (%d). Unknown error code."
+msgstr ""
+
+#, php-format
 msgid "File upload error (error code: %1$s)"
 msgstr "파일 업로드 오류 (오류 코드: %1$s)"
 
@@ -1586,6 +1610,9 @@ msgstr ""
 "프로젝트의 엄격한 개인 정보를 '설계'에 따라 보호해야 하는 경우 프로젝트 관리"
 "자가 기밀 리소스를 다른 플랫폼 사용자에게 공개할 수 없도록 이 옵션을 선택하"
 "지 않아야 합니다."
+
+msgid "Illegal character in name."
+msgstr ""
 
 msgid "Image"
 msgstr "이미지"
@@ -1820,6 +1847,9 @@ msgstr "로그인 이름"
 msgid "Login name"
 msgstr "로그인 이름"
 
+msgid "Login name already exists."
+msgstr ""
+
 msgid "Logout"
 msgstr "로그아웃"
 
@@ -1970,8 +2000,14 @@ msgstr "내 대시보드"
 msgid "Name"
 msgstr "이름"
 
+msgid "Name is reserved."
+msgstr ""
+
 #, php-format
 msgid "Name is too long. It must be less than %s characters."
+msgstr ""
+
+msgid "Name is too short. It must be at least 3 characters."
 msgstr ""
 
 msgid "Name of passkey can contain up to 250 characters maximum"
@@ -3013,6 +3049,12 @@ msgstr "간단한 설명"
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "간단한 설명은 255자를 초과할 수 없습니다."
 
+msgid "Short name already exists"
+msgstr ""
+
+msgid "Short name cannot contain underscore or dot."
+msgstr ""
+
 msgid "Short name must start with an alphanumeric character."
 msgstr "약식 이름은 영숫자로 시작해야 합니다."
 
@@ -3365,6 +3407,9 @@ msgstr "대시보드 생성을 위한 이름이 누락되었습니다."
 msgid "The name is missing for editing the dashboard."
 msgstr "대시보드 편집을 위한 이름이 누락되었습니다."
 
+msgid "The name must start with a letter."
+msgstr ""
+
 msgid "The page you are looking for does not exist"
 msgstr "원하는 페이지가 존재하지 않습니다."
 
@@ -3468,6 +3513,12 @@ msgstr "이 카테고리에 해당하는 프로젝트가 없습니다."
 
 msgid "There are no widgets here"
 msgstr "위젯이 없습니다"
+
+msgid "There cannot be any spaces in the login name."
+msgstr ""
+
+msgid "There cannot be any spaces in the short name."
+msgstr ""
 
 msgid ""
 "There is already an event scheduled to rename this project. Please check <a "

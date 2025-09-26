@@ -41,7 +41,7 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
         if (\strpos($val, '_') === \false && \strpos($val, '.') === \false) {
             return \true;
         }
-        $this->error = $GLOBALS['Language']->getText('include_account', 'dns_error');
+        $this->error = _('Short name cannot contain underscore or dot.');
         return \false;
     }
 
@@ -75,7 +75,7 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
     {
         $sm = $this->_getSystemEventManager();
         if (! $sm->isProjectNameAvailable($val)) {
-            $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', [$val]);
+            $this->error = sprintf(_('%s is already reserved for another rename operation. Please check System Event Monitor'), $val);
             return \false;
         }
         return \true;
@@ -105,15 +105,15 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
     }
 
     #[\Override]
-    protected function _getErrorExists() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    protected function _getErrorExists(): string // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        return $GLOBALS['Language']->getText('rule_group_name', 'error_exists');
+        return _('Short name already exists');
     }
 
     #[\Override]
-    protected function _getErrorNoSpaces() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    protected function _getErrorNoSpaces(): string // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        return $GLOBALS['Language']->getText('include_account', 'project_spaces');
+        return _('There cannot be any spaces in the short name.');
     }
 
     private function isStartingWithAlphanumericCharacter(string $val): bool

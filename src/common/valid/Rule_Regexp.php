@@ -29,7 +29,6 @@ class Rule_Regexp extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     protected $pattern;
     public function __construct($pattern)
     {
-        parent::__construct();
         $this->pattern = $pattern;
     }
 
