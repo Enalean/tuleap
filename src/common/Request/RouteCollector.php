@@ -726,17 +726,20 @@ class RouteCollector
         $compute_avatar_hash = new ComputeAvatarHash();
         $response_factory    = HTTPFactoryBuilder::responseFactory();
 
+        $current_user_middleware = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
+
         return new AvatarController(
             new SapiEmitter(),
             new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory()),
             $response_factory,
-            new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
+            $current_user_middleware,
             \UserManager::instance(),
             new AvatarGenerator($storage, $compute_avatar_hash),
             $storage,
             $compute_avatar_hash,
             new SessionWriteCloseMiddleware(),
             new TuleapRESTCORSMiddleware(),
+            $current_user_middleware,
         );
     }
 
