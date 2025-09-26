@@ -57,7 +57,7 @@ use User\XML\Import\IFindUserFromXMLReference;
 
 final class ReplayImportCommand extends Command
 {
-    public const NAME = 'import-project:replay-jira';
+    public const string NAME = 'import-project:replay-jira';
 
     public function __construct(private IFindUserFromXMLReference $user_finder)
     {

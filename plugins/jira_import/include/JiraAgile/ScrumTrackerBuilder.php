@@ -59,17 +59,17 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 final class ScrumTrackerBuilder
 {
-    public const DETAILS_RIGHT_COLUMN_NAME    = 'details2';
-    public const NAME_FIELD_NAME              = 'name';
-    public const START_DATE_FIELD_NAME        = 'start_date';
-    public const END_DATE_FIELD_NAME          = 'end_date';
-    public const COMPLETED_DATE_FIELD_NAME    = 'completed_date';
-    public const STATUS_FIELD_NAME            = 'status';
-    public const ARTIFACT_LINK_FIELD_NAME     = 'links';
-    private const CAPACITY_FIELD_NAME         = 'capacity';
-    private const CROSS_REFERENCES_FIELD_NAME = 'references';
-    private const BURNDOWN_FIELD_NAME         = 'burndown';
-    private const BURNUP_FIELD_NAME           = 'burnup';
+    public const string DETAILS_RIGHT_COLUMN_NAME    = 'details2';
+    public const string NAME_FIELD_NAME              = 'name';
+    public const string START_DATE_FIELD_NAME        = 'start_date';
+    public const string END_DATE_FIELD_NAME          = 'end_date';
+    public const string COMPLETED_DATE_FIELD_NAME    = 'completed_date';
+    public const string STATUS_FIELD_NAME            = 'status';
+    public const string ARTIFACT_LINK_FIELD_NAME     = 'links';
+    private const string CAPACITY_FIELD_NAME         = 'capacity';
+    private const string CROSS_REFERENCES_FIELD_NAME = 'references';
+    private const string BURNDOWN_FIELD_NAME         = 'burndown';
+    private const string BURNUP_FIELD_NAME           = 'burnup';
 
     /**
      * @var EventDispatcherInterface

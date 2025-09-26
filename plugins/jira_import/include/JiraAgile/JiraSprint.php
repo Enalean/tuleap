@@ -31,9 +31,9 @@ use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
  */
 final class JiraSprint
 {
-    public const STATE_FUTURE = 'future';
-    public const STATE_ACTIVE = 'active';
-    public const STATE_CLOSED = 'closed';
+    public const string STATE_FUTURE = 'future';
+    public const string STATE_ACTIVE = 'active';
+    public const string STATE_CLOSED = 'closed';
 
     /**
      * @var int

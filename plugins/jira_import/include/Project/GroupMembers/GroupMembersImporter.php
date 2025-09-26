@@ -32,9 +32,9 @@ use Tuleap\Tracker\XML\XMLUser;
 
 final class GroupMembersImporter
 {
-    private const PROJECT_ROLE_URL = '/rest/api/2/project/%s/role';
+    private const string PROJECT_ROLE_URL = '/rest/api/2/project/%s/role';
 
-    private const ADMINISTRATOR_ROLE = 'Administrators';
+    private const string ADMINISTRATOR_ROLE = 'Administrators';
 
     public function __construct(private JiraClient $client, private LoggerInterface $logger, private GetTuleapUserFromJiraUser $tuleap_user_from_jira_user, private \PFUser $default_user)
     {

@@ -29,7 +29,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraAllIssuesMonoTrackersInXmlEx
 
 final class JiraKanbanActivator
 {
-    private const DEFAULT_XML_KANBAN_ID = 'K01';
+    private const string DEFAULT_XML_KANBAN_ID = 'K01';
 
     public function __construct(private readonly LoggerInterface $logger)
     {

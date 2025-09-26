@@ -29,7 +29,7 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 final class ScrumTrackerStructureEvent implements Dispatchable
 {
-    public const NAME = 'scrumTrackerStructureEvent';
+    public const string NAME = 'scrumTrackerStructureEvent';
 
     /**
      * @var XMLTracker
