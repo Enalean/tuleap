@@ -36,11 +36,11 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 class JenkinsClient
 {
-    private const NOTIFY_URL       = '/git/notifyCommit';
-    private const NOTIFY_HOOK_TYPE = 'pushGitNotifications';
+    private const string NOTIFY_URL       = '/git/notifyCommit';
+    private const string NOTIFY_HOOK_TYPE = 'pushGitNotifications';
 
-    private const TULEAP_HOOK_URL  = '/tuleap-hook/';
-    private const TULEAP_HOOK_TYPE = 'pushJenkinsTuleapPluginNotification';
+    private const string TULEAP_HOOK_URL  = '/tuleap-hook/';
+    private const string TULEAP_HOOK_TYPE = 'pushJenkinsTuleapPluginNotification';
 
     /**
      * @var ClientInterface

@@ -39,9 +39,9 @@ use UserManager;
 
 final class GitJenkinsServersResource extends AuthenticatedResource
 {
-    private const DEFAULT_LIMIT  = 10;
-    private const MAX_LIMIT      = 50;
-    private const DEFAULT_OFFSET = 0;
+    private const int DEFAULT_LIMIT  = 10;
+    private const int MAX_LIMIT      = 50;
+    private const int DEFAULT_OFFSET = 0;
 
     /**
      * @var UserManager

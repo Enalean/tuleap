@@ -26,7 +26,7 @@ use Tuleap\REST\RESTTestDataBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JenkinsServersTest extends RestBase
 {
-    public const TEST_JENKINS_SERVERS_SHORTNAME = 'test-jenkins-servers';
+    public const string TEST_JENKINS_SERVERS_SHORTNAME = 'test-jenkins-servers';
 
     public function testGetJenkinsServers()
     {

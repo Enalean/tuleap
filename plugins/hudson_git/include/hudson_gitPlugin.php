@@ -75,7 +75,7 @@ use Tuleap\Request\CollectRoutesEvent;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class hudson_gitPlugin extends Plugin
 {
-    public const DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
+    public const string DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
 
     public function __construct($id)
     {

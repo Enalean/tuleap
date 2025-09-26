@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface;
 
 class Launcher
 {
-    public const ROOT_DIRECTORY = '/';
+    public const string ROOT_DIRECTORY = '/';
 
     /**
      * @var LoggerInterface
