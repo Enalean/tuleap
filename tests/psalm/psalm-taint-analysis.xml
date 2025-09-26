@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<psalm
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config file:///../../../src/vendor/vimeo/psalm/config.xsd"
+    autoloader="tests/lib/bootstrap.php"
+    resolveFromConfigFile="false"
+>
+    <projectFiles>
+        <directory name="plugins/*/bin/"/>
+        <directory name="plugins/*/include/"/>
+        <directory name="src/common/"/>
+        <directory name="src/tuleap-cfg/"/>
+        <directory name="src/utils/"/>
+        <directory name="src/www/"/>
+        <ignoreFiles>
+            <directory name="src/common/tracker/"/>
+            <directory name="src/common/wiki/phpwiki/"/>
+            <directory name="src/embedded_vendor/jpgraph/"/>
+            <directory name="src/themes/BurningParrot/vendor/"/>
+            <directory name="src/themes/FlamingParrot/vendor/"/>
+            <directory name="src/www/tracker/"/>
+            <directory name="tools/utils/xml-templates-to-php/vendor/"/>
+            <!-- Avoid issues when executed inside the dev container since it will want to scan MW code -->
+            <file name="plugins/mediawiki/www/LocalSettings.php"/>
+            <file name="plugins/mediawiki/www/upgrade_sample.php"/>
+            <file name="plugins/mediawiki/www/setenv.php"/>
+            <file name="plugins/mediawiki/www/setpath.php"/>
+            <file name="plugins/mediawiki/bin/migrate_to_123.php"/>
+            <file name="plugins/mediawiki/bin/mw-maintenance-wrapper.php"/>
+        </ignoreFiles>
+    </projectFiles>
+</psalm>
