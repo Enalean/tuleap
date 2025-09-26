@@ -41,9 +41,9 @@ require_once __DIR__ . '/constants.php';
 
 class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Project\Service\PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const ICONS_PATH          = '/plugins/hudson/themes/default/images/ic/';
-    public const HUDSON_JOB_NATURE   = 'hudson_job';
-    public const HUDSON_BUILD_NATURE = 'hudson_build';
+    public const string ICONS_PATH          = '/plugins/hudson/themes/default/images/ic/';
+    public const string HUDSON_JOB_NATURE   = 'hudson_job';
+    public const string HUDSON_BUILD_NATURE = 'hudson_build';
 
     public function __construct($id)
     {
