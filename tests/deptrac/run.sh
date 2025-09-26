@@ -44,8 +44,10 @@ function execDeptrac() {
     local config_file_name
     config_file_name="$(basename "$config_file_path")"
     local args=()
+    local output_file
+    output_file="${config_file_name%.*}_$(date +%s).xml"
     if [[ -n "${CI_REPORT_OUTPUT_PATH:-}" ]]; then
-        args+=(--no-progress --no-interaction --formatter=junit --output="$CI_REPORT_OUTPUT_PATH/${config_file_name%.*}_$(date +%s).xml")
+        args+=(--no-progress --no-interaction --formatter=junit --output="$CI_REPORT_OUTPUT_PATH/${output_file}")
     fi
     if ! [[ "${config_file_name%.*}" == *"skip_uncovered" ]]; then
         args+=(--fail-on-uncovered --report-uncovered)
@@ -53,6 +55,11 @@ function execDeptrac() {
 
     echo "Processing $config_file_path"
     "${PHP:-php}" -d opcache.preload="" "$root_path"/src/vendor/bin/deptrac analyse --config-file="$config_file_path" "${args[@]}"
+
+    if [[ -n "${CI_REPORT_OUTPUT_PATH:-}" ]]; then
+        sed -i '1a\<testsuites>' "$CI_REPORT_OUTPUT_PATH/${output_file}"
+        echo '</testsuites>' >> "$CI_REPORT_OUTPUT_PATH/${output_file}"
+    fi
 }
 
 pushd "$root_path" > /dev/null
