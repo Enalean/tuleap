@@ -15,6 +15,9 @@ msgstr ""
 msgid "Actions in Artidoc document"
 msgstr "Actions dans le document Artidoc"
 
+msgid "Activate and display versions (experimental)"
+msgstr "Activer et afficher les versions (expérimental)"
+
 msgid "Add freetext"
 msgstr "Ajouter du texte libre"
 
@@ -263,6 +266,13 @@ msgstr "Succès"
 
 msgid "Please log in in order to be able to export as PDF"
 msgstr "Veuillez vous connecter afin de pouvoir exporter en PDF"
+
+msgid ""
+"Please note that you can display directly the versions with the following "
+"shortcut:"
+msgstr ""
+"Veuillez noter que vous pouvez afficher les versions directement en "
+"utilisant le raccourci clavier suivant :"
 
 msgid "Please select a tracker first"
 msgstr "Veuillez sélectionner un tracker au préalable"
