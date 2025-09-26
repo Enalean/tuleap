@@ -47,19 +47,10 @@ news_admin_index	promoted_row_label	Affichées
 news_admin_index	update_news_list	Afficher les annonces sélectionnées dans le widget
 news_admin_index	info_text	Seulement les dix premières annonces seront affichées
 news_admin_index	no_news_items	Veuillez ajouter des annonces pour pouvoir choisir lesquelles seront affichées
-news_admin_index	waiting_publication_tab_name	Annonces en attente de publication
-news_admin_index	rejected_news_tab_name	Annonces rejetées
-news_admin_index	published_news_tab_name	Annonces publiées
 news_admin_index	waiting_publication_pane_name	Annonces en attente de publication sur la page d'accueil
 news_admin_index	rejected_news_pane_name	Annonces rejetées de la page d'accueil la semaine dernière
 news_admin_index	published_news_pane_name	Annonces publiées sur la page d'accueil la semaine dernière
-news_admin_index	requested_name	Demandée ?
-news_admin_index	requested_tooltip	Demandée à être publiée sur la page d'accueil
-news_admin_index	table_title_name	Titre
-news_admin_index	table_content_name	Contenu
-news_admin_index	table_details_name	Détails
 news_admin_index	table_review_name	Revoir
-news_admin_index	no_news	Il n'y a aucune annonce
 news_admin_index	waiting_publication_no_news	Il n'y a aucune annonce en attente de publication
 news_admin_index	published_news_no_news	Aucune annonce n'a été publiée la semaine dernière
 news_admin_index	rejected_news_no_news	Aucune annonce n'a été rejetée la semaine dernière
