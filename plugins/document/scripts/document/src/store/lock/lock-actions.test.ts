@@ -22,96 +22,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as lock_rest_querier from "../../api/lock-rest-querier";
 import * as rest_querier from "../../api/rest-querier";
 import { TYPE_EMBEDDED, TYPE_FILE } from "../../constants";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { lockDocument, unlockDocument } from "./lock-actions";
+import { unlockDocument } from "./lock-actions";
 import type { ActionContext } from "vuex";
 import type { Embedded, ItemFile, State } from "../../type";
-
-describe("lock", () => {
-    let postLockFile: MockInstance;
-    let getItem: MockInstance;
-    let context: ActionContext<State, State>;
-
-    beforeEach(() => {
-        context = { commit: vi.fn(), dispatch: vi.fn() } as unknown as ActionContext<State, State>;
-
-        postLockFile = vi.spyOn(lock_rest_querier, "postLockFile").mockResolvedValue();
-        vi.spyOn(lock_rest_querier, "postLockEmbedded").mockResolvedValue();
-        getItem = vi.spyOn(rest_querier, "getItem");
-    });
-
-    it("should lock a file and then update its information", async () => {
-        const item_to_lock = {
-            id: 123,
-            title: "My file",
-            type: TYPE_FILE,
-        } as ItemFile;
-
-        const updated_item = {
-            id: 123,
-            title: "My file",
-            type: TYPE_FILE,
-            lock_info: {
-                user_id: 123,
-            },
-        };
-        getItem.mockReturnValue(Promise.resolve(updated_item));
-
-        await lockDocument(context, item_to_lock);
-
-        expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", updated_item, {
-            root: true,
-        });
-    });
-
-    it("should raise a translated exception when user can't lock a document", async () => {
-        const item_to_lock = {
-            id: 123,
-            title: "My file",
-            type: TYPE_FILE,
-        } as ItemFile;
-
-        mockFetchError(postLockFile, {
-            status: 400,
-            error_json: {
-                error: {
-                    i18n_error_message: "Item is already locked",
-                },
-            },
-        });
-
-        await lockDocument(context, item_to_lock);
-        expect(context.dispatch).toHaveBeenCalledWith(
-            "error/handleErrorsForLock",
-            expect.any(Object),
-            { root: true },
-        );
-    });
-
-    it("should lock an embedded file and then update its information", async () => {
-        const item_to_lock = {
-            id: 123,
-            title: "My file",
-            type: TYPE_EMBEDDED,
-        } as Embedded;
-
-        const updated_item = {
-            id: 123,
-            title: "My embedded",
-            type: TYPE_EMBEDDED,
-            lock_info: {
-                user_id: 123,
-            },
-        };
-        getItem.mockReturnValue(Promise.resolve(updated_item));
-
-        await lockDocument(context, item_to_lock);
-
-        expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", updated_item, {
-            root: true,
-        });
-    });
-});
 
 describe("unlock", () => {
     let getItem: MockInstance;

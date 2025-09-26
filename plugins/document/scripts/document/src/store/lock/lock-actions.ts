@@ -24,45 +24,14 @@ import {
     deleteLockFile,
     deleteLockLink,
     deleteLockWiki,
-    postLockEmbedded,
-    postLockEmpty,
-    postLockFile,
-    postLockLink,
-    postLockWiki,
 } from "../../api/lock-rest-querier";
 import type { ActionContext, ActionTree } from "vuex";
 import type { Item, State, RootState } from "../../type";
 import { isEmbedded, isEmpty, isFile, isLink, isWiki } from "../../helpers/type-check-helper";
 
 export interface LockActions extends ActionTree<State, RootState> {
-    readonly lockDocument: typeof lockDocument;
     readonly unlockDocument: typeof unlockDocument;
 }
-
-export const lockDocument = async (
-    context: ActionContext<State, State>,
-    item: Item,
-): Promise<void> => {
-    try {
-        if (isFile(item)) {
-            await postLockFile(item);
-        } else if (isEmbedded(item)) {
-            await postLockEmbedded(item);
-        } else if (isWiki(item)) {
-            await postLockWiki(item);
-        } else if (isLink(item)) {
-            await postLockLink(item);
-        } else if (isEmpty(item)) {
-            await postLockEmpty(item);
-        }
-
-        const updated_item = await getItem(item.id);
-        item.lock_info = updated_item.lock_info;
-        context.commit("replaceFolderContentByItem", updated_item, { root: true });
-    } catch (exception) {
-        await context.dispatch("error/handleErrorsForLock", exception, { root: true });
-    }
-};
 
 export const unlockDocument = async (
     context: ActionContext<State, State>,

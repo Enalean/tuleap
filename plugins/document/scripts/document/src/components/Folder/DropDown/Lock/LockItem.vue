@@ -34,12 +34,15 @@
 <script setup lang="ts">
 import type { Item } from "../../../../type";
 import { computed } from "vue";
-import { useNamespacedActions } from "vuex-composition-helpers";
-import type { LockActions } from "../../../../store/lock/lock-actions";
+import { useStore } from "vuex-composition-helpers";
+import type { DocumentLock } from "../../../../helpers/lock/document-lock";
 
-const props = defineProps<{ item: Item }>();
+const $store = useStore();
 
-const { lockDocument } = useNamespacedActions<LockActions>("lock", ["lockDocument"]);
+const props = defineProps<{
+    item: Item;
+    document_lock: DocumentLock;
+}>();
 
 const can_lock_document = computed((): boolean => {
     if (props.item.lock_info !== null) {
@@ -50,6 +53,6 @@ const can_lock_document = computed((): boolean => {
 });
 
 async function lockDocumentItem(): Promise<void> {
-    await lockDocument(props.item);
+    await props.document_lock.lockDocument($store, props.item);
 }
 </script>
