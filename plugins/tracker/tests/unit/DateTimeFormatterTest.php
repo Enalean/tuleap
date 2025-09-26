@@ -32,6 +32,7 @@ final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUn
     private DateField&MockObject $field;
     private Tracker_FormElement_DateTimeFormatter $date_formatter;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
