@@ -31,6 +31,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Numeric\NumericResult
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\Unknown\UnknownTypeResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
@@ -47,6 +48,7 @@ final readonly class FieldResultBuilder
         private StaticListResultBuilder $static_list_builder,
         private UGroupListResultBuilder $user_group_list_builder,
         private UserListResultBuilder $user_list_builder,
+        private UnknownTypeResultBuilder $unknown_type_result_builder,
         private ReadableFieldRetriever $fields_retriever,
     ) {
     }
@@ -84,7 +86,7 @@ final readonly class FieldResultBuilder
             DuckTypedFieldTypeSelect::STATIC_LIST => $this->static_list_builder->getResult($field, $select_results),
             DuckTypedFieldTypeSelect::UGROUP_LIST => $this->user_group_list_builder->getResult($field, $select_results),
             DuckTypedFieldTypeSelect::USER_LIST   => $this->user_list_builder->getResult($field, $select_results),
-            DuckTypedFieldTypeSelect::UNKNOWN => new SelectedValuesCollection(null, []),
+            DuckTypedFieldTypeSelect::UNKNOWN     => $this->unknown_type_result_builder->getResult($field, $select_results),
         };
     }
 }

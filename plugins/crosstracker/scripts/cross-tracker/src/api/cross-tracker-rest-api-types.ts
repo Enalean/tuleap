@@ -65,8 +65,13 @@ export const TRACKER_SELECTABLE_TYPE = "tracker";
 export const PRETTY_TITLE_SELECTABLE_TYPE = "pretty_title";
 export const ARTIFACT_SELECTABLE_TYPE = "artifact";
 export const LINK_TYPE_SELECTABLE_TYPE = "link_type";
+export const UNKNOWN_SELECTABLE_TYPE = "unknown";
 
 type UnsupportedSelectableRepresentation = Record<string, unknown>;
+
+export type UnknownSelectableRepresentation = {
+    readonly value: "";
+};
 
 export type DateSelectableRepresentation = {
     readonly value: string | null;
@@ -141,6 +146,7 @@ export type SelectableRepresentation =
     | PrettyTitleSelectableRepresentation
     | ArtifactSelectableRepresentation
     | LinkTypeSelectableRepresentation
+    | UnknownSelectableRepresentation
     | UnsupportedSelectableRepresentation;
 
 export type ArtifactRepresentation = Record<string, SelectableRepresentation>;

@@ -20,7 +20,7 @@
 <template>
     <template v-if="props.cell !== undefined">
         <text-cell
-            v-if="props.cell.type === TEXT_CELL"
+            v-if="props.cell.type === TEXT_CELL || props.cell.type === UNKNOWN_CELL"
             class="cell"
             v-bind:text="props.cell.value"
             data-test="cell"
@@ -104,6 +104,7 @@ import {
     STATIC_LIST_CELL,
     TEXT_CELL,
     TRACKER_CELL,
+    UNKNOWN_CELL,
     USER_CELL,
     USER_GROUP_LIST_CELL,
     USER_LIST_CELL,

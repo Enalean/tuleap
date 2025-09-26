@@ -32,6 +32,7 @@ export const PROJECT_CELL = "project";
 export const TRACKER_CELL = "tracker";
 export const PRETTY_TITLE_CELL = "pretty_title";
 export const LINK_TYPE_CELL = "link_type";
+export const UNKNOWN_CELL = "unknown";
 export const FORWARD_DIRECTION = "forward";
 export const REVERSE_DIRECTION = "reverse";
 export const NO_DIRECTION = "no-direction";
@@ -108,6 +109,11 @@ export type LinkTypeCell = {
     readonly direction: ArtifactLinkDirection;
 };
 
+export type UnknownCell = {
+    readonly type: typeof UNKNOWN_CELL;
+    readonly value: "";
+};
+
 export type Cell =
     | DateCell
     | NumericCell
@@ -119,6 +125,7 @@ export type Cell =
     | ProjectCell
     | TrackerCell
     | PrettyTitleCell
+    | UnknownCell
     | LinkTypeCell;
 
 export type ArtifactRow = {
