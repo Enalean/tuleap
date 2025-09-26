@@ -19,9 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
+
 class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const DATE_TIME_FORMAT = 'Y-m-d H:i';
+
+    public function __construct(DateField $field)
+    {
+        parent::__construct($field);
+    }
 
     #[\Override]
     public function validate($value)
@@ -69,13 +76,13 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
     }
 
     #[\Override]
-    public function formatDate($timestamp, ?string $timezone): string
+    public function formatDate($timestamp)
     {
         return format_date(self::DATE_TIME_FORMAT, (float) $timestamp, '');
     }
 
     #[\Override]
-    public function formatDateForDisplay($timestamp, ?string $timezone): string
+    public function formatDateForDisplay($timestamp)
     {
         return self::format($timestamp);
     }

@@ -21,7 +21,6 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -33,13 +32,12 @@ final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUn
     private DateField&MockObject $field;
     private Tracker_FormElement_DateTimeFormatter $date_formatter;
 
-    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->field          = $this->createMock(DateField::class);
-        $this->date_formatter = new Tracker_FormElement_DateTimeFormatter($this->field, ProvideCurrentUserStub::buildCurrentUserByDefault());
+        $this->date_formatter = new Tracker_FormElement_DateTimeFormatter($this->field);
     }
 
     public function testItFormatsTimestampInRightFormat(): void
@@ -47,7 +45,7 @@ final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUn
         $timestamp = 1409752174;
         $expected  = '2014-09-03 15:49';
 
-        $this->assertEquals($expected, $this->date_formatter->formatDate($timestamp, null));
+        $this->assertEquals($expected, $this->date_formatter->formatDate($timestamp));
     }
 
     public function testItFormatsTimestampInRightFormatForHoursBeforeNoon(): void
@@ -55,7 +53,7 @@ final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUn
         $timestamp = 1409708974;
         $expected  = '2014-09-03 03:49';
 
-        $this->assertEquals($expected, $this->date_formatter->formatDate($timestamp, null));
+        $this->assertEquals($expected, $this->date_formatter->formatDate($timestamp));
     }
 
     public function testItValidatesWellFormedValue(): void
