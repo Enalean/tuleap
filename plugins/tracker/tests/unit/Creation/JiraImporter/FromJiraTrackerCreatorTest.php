@@ -53,6 +53,7 @@ final class FromJiraTrackerCreatorTest extends TestCase
     private JiraUserOnTuleapCache $jira_user_on_tuleap_cache;
     private PlatformConfigurationRetriever&MockObject $platform_configuration_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_xml_import               = $this->createMock(TrackerXmlImport::class);

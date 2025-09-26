@@ -41,6 +41,7 @@ final class BacklogTrackersUpdateCheckerTest extends TestCase
      */
     private $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->hierarchy_factory = $this->createMock(Tracker_HierarchyFactory::class);

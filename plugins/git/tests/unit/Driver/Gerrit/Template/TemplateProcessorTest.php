@@ -37,6 +37,7 @@ final class TemplateProcessorTest extends TestCase
     private Git_Driver_Gerrit_Template_Template $template;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

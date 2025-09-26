@@ -40,6 +40,7 @@ final class JiraAuthorRetrieverTest extends TestCase
     private JiraUserRetriever $retriever;
     private PFUser $forge_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->forge_user = UserTestBuilder::aUser()->withRealName('Tracker Importer (forge__tracker_importer_user)')->build();
@@ -55,6 +56,7 @@ final class JiraAuthorRetrieverTest extends TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         self::assertTrue($this->logger->hasDebugRecords());

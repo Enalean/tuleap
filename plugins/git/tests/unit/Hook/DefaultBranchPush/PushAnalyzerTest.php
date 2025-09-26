@@ -40,6 +40,7 @@ final class PushAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $repository;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_branch_verifier = VerifyIsDefaultBranchStub::withAlwaysDefaultBranch();

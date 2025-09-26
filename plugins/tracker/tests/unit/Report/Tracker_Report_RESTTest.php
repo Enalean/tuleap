@@ -34,6 +34,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
     private Tracker_FormElementFactory&\PHPUnit\Framework\MockObject\MockObject $formelement_factory;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $current_user              = UserTestBuilder::aUser()->build();

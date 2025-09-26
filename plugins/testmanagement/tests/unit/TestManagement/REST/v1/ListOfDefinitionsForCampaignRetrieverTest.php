@@ -46,6 +46,7 @@ final class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUn
     private Artifact $def2;
     private Artifact $campaign_artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();

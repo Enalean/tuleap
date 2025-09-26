@@ -62,6 +62,7 @@ final class PostReceiveTest extends TestCase
     private VerifyIsDefaultBranchStub $default_branch_verifier;
     private EnqueueTaskStub $enqueuer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                                = UserTestBuilder::aUser()->withUserName('john_doe')->build();

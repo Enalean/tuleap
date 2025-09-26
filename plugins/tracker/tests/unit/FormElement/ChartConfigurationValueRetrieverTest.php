@@ -50,6 +50,7 @@ final class ChartConfigurationValueRetrieverTest extends TestCase
     private IntegerField&MockObject $capacity_field;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field_retriever = $this->createMock(ChartConfigurationFieldRetriever::class);

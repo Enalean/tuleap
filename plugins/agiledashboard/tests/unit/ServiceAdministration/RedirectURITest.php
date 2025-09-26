@@ -31,6 +31,7 @@ final class RedirectURITest extends TestCase
     private const PROJECT_ID = 163;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();

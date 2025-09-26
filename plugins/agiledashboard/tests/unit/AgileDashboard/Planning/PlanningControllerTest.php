@@ -71,6 +71,7 @@ final class PlanningControllerTest extends TestCase
     private \ProjectHistoryDao&MockObject $project_history_dao;
     private \TrackerFactory&MockObject $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(101)->build();

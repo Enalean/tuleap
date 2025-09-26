@@ -63,6 +63,7 @@ final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $new_issue_tracker_id      = 667;
     private array $tracker_mapping;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

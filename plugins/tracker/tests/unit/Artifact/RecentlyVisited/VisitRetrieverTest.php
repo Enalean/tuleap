@@ -69,6 +69,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $recently_visited_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user         = UserTestBuilder::buildWithId(self::USER_ID);

@@ -51,6 +51,7 @@ final class ConfigConformanceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $another_execution_tracker_id = 666;
     private \PFUser $user;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

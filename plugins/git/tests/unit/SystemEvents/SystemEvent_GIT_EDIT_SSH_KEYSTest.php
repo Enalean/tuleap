@@ -40,7 +40,7 @@ use UserManager;
 use UserNotExistException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase
+final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use GlobalLanguageMock;
 
@@ -49,6 +49,7 @@ final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase
     private PFUser&MockObject $user;
     private UserManager&MockObject $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                 = $this->createMock(PFUser::class);

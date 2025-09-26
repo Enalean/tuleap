@@ -37,6 +37,7 @@ final class PermissionsManagerLockTest extends TestCase
     private PFUser $user;
     private Docman_PermissionsManager&MockObject $permissions_manager;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->user                = UserTestBuilder::anActiveUser()->withoutSiteAdministrator()->withId(1234)->build();

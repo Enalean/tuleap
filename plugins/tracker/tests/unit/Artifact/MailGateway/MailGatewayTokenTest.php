@@ -57,6 +57,7 @@ final class MailGatewayTokenTest extends TestCase
     private IncomingMail&MockObject $incoming_mail;
     private TrackerArtifactCreator&MockObject $artifact_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact           = $this->createMock(Artifact::class);

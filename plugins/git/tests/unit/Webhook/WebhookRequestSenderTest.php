@@ -33,11 +33,13 @@ use UserHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebhookRequestSenderTest extends TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         UserHelper::setInstance($this->createMock(UserHelper::class));
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserHelper::clearInstance();

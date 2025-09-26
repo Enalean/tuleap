@@ -66,6 +66,7 @@ final class CardwallConfigXmlImportTest extends TestCase
     private LoggerInterface $logger;
     private Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>

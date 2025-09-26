@@ -54,6 +54,7 @@ final class POSTOtherTypeHandlerTest extends TestCase
     private \PFUser $user;
     private \Project $project;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->event_adder  = $this->createMock(DocmanItemsEventAdder::class);
@@ -66,6 +67,7 @@ final class POSTOtherTypeHandlerTest extends TestCase
         \Docman_PermissionsManager::setInstance((int) $this->project->getID(), $this->permissions_manager);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         \Docman_PermissionsManager::clearInstances();

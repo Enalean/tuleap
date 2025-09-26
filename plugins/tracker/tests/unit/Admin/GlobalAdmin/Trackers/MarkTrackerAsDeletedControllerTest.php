@@ -71,6 +71,7 @@ final class MarkTrackerAsDeletedControllerTest extends TestCase
     private SearchWidgetsByTrackerId&MockObject $widgets_retriever;
     private DashboardWidgetDao&MockObject $dashboard_widget_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $token_provider             = $this->createMock(CSRFSynchronizerTokenProvider::class);

@@ -38,6 +38,7 @@ final class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private StringField $field_string;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->builder      = new MovedArtifactValueBuilder();

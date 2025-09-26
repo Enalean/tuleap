@@ -45,6 +45,7 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
     private Project $project;
     private Tracker_Permission_PermissionRetrieveAssignee&MockObject $assignee_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId($this->project_id)->withUnixName('acme')->build();

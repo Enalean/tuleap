@@ -436,6 +436,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->urls = $payloads;
             }
 
+            #[\Override]
             public function isJiraServer9(): bool
             {
                 return false;

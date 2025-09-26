@@ -39,6 +39,7 @@ final class PermissionChangesDetectorForProjectTest extends TestCase
     private DefaultFineGrainedPermission $default_branch_fine_grained_permission;
     private DefaultFineGrainedPermission $default_tag_fine_grained_permission;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->git_permission_manager = $this->createMock(GitPermissionsManager::class);

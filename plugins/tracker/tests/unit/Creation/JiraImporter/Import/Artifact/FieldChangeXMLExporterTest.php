@@ -63,6 +63,7 @@ final class FieldChangeXMLExporterTest extends TestCase
     private UserManager&MockObject $user_manager;
     private GetExistingArtifactLinkTypes $type_converter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager   = $this->createMock(UserManager::class);

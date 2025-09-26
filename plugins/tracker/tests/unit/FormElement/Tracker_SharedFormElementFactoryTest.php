@@ -47,6 +47,7 @@ final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignor
     private Project&MockObject $project;
     private Tracker&MockObject $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = $this->createMock(Project::class);

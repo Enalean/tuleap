@@ -36,6 +36,7 @@ final class ImportPropertiesExtractorTest extends TestCase
     private ImportPropertiesExtractor $properties_extractor;
     private PFUser $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_date = new DateTimeImmutable();

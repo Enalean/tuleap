@@ -36,6 +36,7 @@ final class UserFinderGetUgroupsTest extends TestCase
     private PermissionsManager&MockObject $permissions_manager;
     private Git_Driver_Gerrit_UserFinder $user_finder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permissions_manager = $this->createMock(PermissionsManager::class);

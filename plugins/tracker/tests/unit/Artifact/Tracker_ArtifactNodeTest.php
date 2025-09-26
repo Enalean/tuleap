@@ -26,14 +26,14 @@ use ArtifactNode;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_ArtifactNodeTest extends TestCase
+final class Tracker_ArtifactNodeTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Artifact $artifact;
     private array $data;
     private ArtifactNode $node;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(9787)->build();

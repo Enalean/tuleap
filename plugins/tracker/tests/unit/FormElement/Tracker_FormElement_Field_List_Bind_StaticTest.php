@@ -47,6 +47,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
     private Tracker_FormElement_Field_List_Bind_StaticValue $second_value;
     private ListField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->first_value  = ListStaticValueBuilder::aStaticValue('10')->withId(431)->withDescription('int value')->build();

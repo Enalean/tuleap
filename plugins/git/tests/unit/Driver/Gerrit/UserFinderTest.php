@@ -39,6 +39,7 @@ final class UserFinderTest extends TestCase
     private PermissionsManager&MockObject $permissions_manager;
     private GitRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permissions_manager = $this->createMock(PermissionsManager::class);

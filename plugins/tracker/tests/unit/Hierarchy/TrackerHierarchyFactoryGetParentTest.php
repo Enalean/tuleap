@@ -36,6 +36,7 @@ final class TrackerHierarchyFactoryGetParentTest extends \Tuleap\Test\PHPUnit\Te
     private Tracker $story_tracker;
     private Tracker $epic_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

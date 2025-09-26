@@ -49,6 +49,7 @@ final class ReferenceManagerTest extends TestCase
     private Git_ReferenceManager $git_reference_manager;
     private ReferenceDaoAlias&MockObject $reference_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project               = ProjectTestBuilder::aProject()->withId(101)->withUnixName('gpig')->build();

@@ -39,6 +39,7 @@ final class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     private Artifact $artifact;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();

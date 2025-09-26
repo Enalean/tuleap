@@ -33,6 +33,7 @@ final class Tracker_Report_Renderer_TableTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $renderer_table;
 
+    #[\Override]
     protected function setUp(): void
     {
         $report     = $this->createMock(\Tracker_Report::class);

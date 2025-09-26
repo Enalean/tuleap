@@ -30,6 +30,7 @@ class TestmanagementTrackersConfiguratorTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $tracker_configurator;
 
+    #[\Override]
     protected function setup(): void
     {
         parent::setUp();

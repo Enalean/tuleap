@@ -44,6 +44,7 @@ final class CommitDetailsCrossReferenceInformationBuilderTest extends TestCase
     private Project $project;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user    = UserTestBuilder::buildWithDefaults();

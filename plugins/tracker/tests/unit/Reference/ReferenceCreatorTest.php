@@ -33,6 +33,7 @@ final class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \TrackerV3&MockObject $tv3;
     private \ReferenceDao&MockObject $reference_dao;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -34,6 +34,7 @@ final class UserRolesCheckerTest extends TestCase
         $checker = new UserRolesChecker();
 
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -61,6 +62,7 @@ final class UserRolesCheckerTest extends TestCase
         $checker = new UserRolesChecker();
 
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -91,6 +93,7 @@ final class UserRolesCheckerTest extends TestCase
         $this->expectExceptionMessage('User is not project administrator.');
 
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -116,6 +119,7 @@ final class UserRolesCheckerTest extends TestCase
         $this->expectExceptionMessage('User roles key `name` not found');
 
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -141,6 +145,7 @@ final class UserRolesCheckerTest extends TestCase
         $this->expectExceptionMessage('User roles data is null');
 
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return null;

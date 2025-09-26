@@ -37,6 +37,7 @@ final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \Tul
     private StringField $field_string_f15;
     private array $xml_mapping;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,6 +61,7 @@ final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \Tul
         ];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Tracker_FormElementFactory::clearInstance();

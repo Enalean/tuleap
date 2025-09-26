@@ -28,9 +28,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use ZipArchive;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TestCase
+final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use TemporaryTestDirectory;
 
@@ -40,6 +39,7 @@ final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TestCase
     private string $tmp_dir;
     private Tracker_Artifact_XMLImport_XMLImportZipArchive $archive;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tmp_dir      = $this->getTmpDir();
@@ -57,6 +57,7 @@ final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->zip->close();

@@ -33,6 +33,7 @@ class DocmanLinksValidityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

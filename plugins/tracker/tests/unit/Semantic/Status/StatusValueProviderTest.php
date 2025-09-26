@@ -36,6 +36,7 @@ final class StatusValueProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     private StatusValueForChangesetProvider&MockObject $for_changeset_provider;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();

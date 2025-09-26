@@ -37,6 +37,7 @@ final class TransitionUpdaterTest extends TestCase
 
     private TransitionUpdater $transition_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

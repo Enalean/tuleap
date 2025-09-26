@@ -28,6 +28,7 @@ final class MigrationLoggerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ig
     private TestLogger $mail_logger;
     private TestLogger $backend_logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->backend_logger   = new TestLogger();

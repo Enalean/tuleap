@@ -44,6 +44,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
     private ChartConfigurationFieldRetriever&MockObject $field_retriever;
     private ComputedFieldDao&MockObject $computed_cache;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field_retriever = $this->createMock(ChartConfigurationFieldRetriever::class);

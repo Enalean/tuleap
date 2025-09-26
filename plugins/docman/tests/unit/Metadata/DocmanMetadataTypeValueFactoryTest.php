@@ -32,6 +32,7 @@ final class DocmanMetadataTypeValueFactoryTest extends TestCase
 {
     private DocmanMetadataTypeValueFactory $type_value_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->type_value_factory = new DocmanMetadataTypeValueFactory();

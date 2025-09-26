@@ -40,6 +40,7 @@ final class PermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
     private Transition&MockObject $transition;
     private Tracker&MockObject $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,6 +69,7 @@ final class PermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->condition = new Workflow_Transition_Condition_Permissions($this->transition);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         PermissionsManager::clearInstance();

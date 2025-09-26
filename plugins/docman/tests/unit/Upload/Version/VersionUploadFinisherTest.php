@@ -64,6 +64,7 @@ final class VersionUploadFinisherTest extends TestCase
     private ApprovalTableUpdateActionChecker&MockObject $approval_table_update_checker;
     private Docman_LockFactory&MockObject $lock_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory                  = $this->createMock(Docman_ItemFactory::class);

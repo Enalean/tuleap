@@ -41,6 +41,7 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
     private $a_field_used_in_post_actions;
     private $a_field_used_in_conditions;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

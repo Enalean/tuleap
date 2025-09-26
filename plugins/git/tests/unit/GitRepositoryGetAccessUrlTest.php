@@ -33,6 +33,7 @@ final class GitRepositoryGetAccessUrlTest extends TestCase
     private Git_Backend_Interface&MockObject $backend;
     private GitRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->backend = $this->createMock(Git_Backend_Interface::class);

@@ -34,6 +34,7 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Planning $original_planning;
     private ?ModificationBan $modification_ban;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->unavailable_planning_tracker_ids = [];
@@ -102,6 +103,7 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
         $this->modification_ban = new class implements ModificationBan {
+            #[\Override]
             public function getMessage(): string
             {
                 return 'Cannot modify planning tracker';

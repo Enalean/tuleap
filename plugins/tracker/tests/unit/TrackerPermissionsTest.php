@@ -73,6 +73,7 @@ final class TrackerPermissionsTest extends TestCase
     private Tracker_Permission_PermissionController&MockObject $permission_controller1;
     private Tracker_Permission_PermissionController&MockObject $permission_controller2;
 
+    #[\Override]
     protected function setUp(): void
     {
         $public_project        = ProjectTestBuilder::aProject()->withAccess(Project::ACCESS_PUBLIC)->withId(self::PUBLIC_PROJECT_ID)->build();
@@ -202,6 +203,7 @@ final class TrackerPermissionsTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_METHOD']);

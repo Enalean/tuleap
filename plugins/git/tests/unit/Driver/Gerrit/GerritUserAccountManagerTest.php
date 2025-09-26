@@ -54,6 +54,7 @@ final class GerritUserAccountManagerTest extends TestCase
      */
     private array $new_keys;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                  = new PFUser([

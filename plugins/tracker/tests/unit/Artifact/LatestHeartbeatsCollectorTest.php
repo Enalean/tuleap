@@ -46,6 +46,7 @@ final class LatestHeartbeatsCollectorTest extends TestCase
     private Project $project;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(101)->build();

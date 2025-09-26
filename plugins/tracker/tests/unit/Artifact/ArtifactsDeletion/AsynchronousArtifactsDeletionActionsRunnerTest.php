@@ -36,11 +36,13 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\
     private ArchiveAndDeleteArtifactTaskBuilder&\PHPUnit\Framework\MockObject\MockObject $task_builder;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->queue_factory = $this->createMock(QueueFactory::class);
         $this->task_builder  = $this->createMock(ArchiveAndDeleteArtifactTaskBuilder::class);
         $worker_availability = new class implements IsAsyncTaskProcessingAvailable {
+            #[\Override]
             public function canProcessAsyncTasks(): bool
             {
                 return false;

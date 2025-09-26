@@ -30,6 +30,7 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
     private MockObject&SemanticTimeframeDao $dao;
     private SemanticTimeframeDuplicator $duplicator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao        = $this->createMock(SemanticTimeframeDao::class);

@@ -59,6 +59,7 @@ final class DocumentUploadFinisherTest extends TestCase
     private Docman_FileStorage&MockObject $file_storage;
     private UserManager&MockObject $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory        = $this->createMock(Docman_ItemFactory::class);

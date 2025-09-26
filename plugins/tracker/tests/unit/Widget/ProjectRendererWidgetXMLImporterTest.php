@@ -43,6 +43,7 @@ final class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\Te
 
     private Tracker_Report_Renderer&MockObject $renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

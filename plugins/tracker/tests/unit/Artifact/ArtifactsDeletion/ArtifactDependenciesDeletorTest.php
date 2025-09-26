@@ -43,6 +43,7 @@ final class ArtifactDependenciesDeletorTest extends TestCase
     private \PHPUnit\Framework\MockObject\MockObject&PostArtifactMoveReferencesCleaner $post_move_deletor;
     private PostArtifactDeletionCleaner&\PHPUnit\Framework\MockObject\MockObject $artifact_deletor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $permissions_manager               = $this->createMock(PermissionsManager::class);

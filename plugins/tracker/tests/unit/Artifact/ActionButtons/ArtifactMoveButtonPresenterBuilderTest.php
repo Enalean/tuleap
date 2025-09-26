@@ -39,6 +39,7 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
     private Artifact&\PHPUnit\Framework\MockObject\MockObject $artifact;
     private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->event_manager = $this->createMock(EventManager::class);
@@ -76,6 +77,7 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
             $this->event_manager,
             new MoveActionAllowedChecker(
                 new class extends MoveActionAllowedDAO {
+                    #[\Override]
                     public function isMoveActionAllowedInTracker(int $tracker_id): bool
                     {
                         return false;
@@ -105,6 +107,7 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
             $this->event_manager,
             new MoveActionAllowedChecker(
                 new class extends MoveActionAllowedDAO {
+                    #[\Override]
                     public function isMoveActionAllowedInTracker(int $tracker_id): bool
                     {
                         return true;
@@ -136,6 +139,7 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
             $this->event_manager,
             new MoveActionAllowedChecker(
                 new class extends MoveActionAllowedDAO {
+                    #[\Override]
                     public function isMoveActionAllowedInTracker(int $tracker_id): bool
                     {
                         return true;

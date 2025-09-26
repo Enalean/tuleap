@@ -43,6 +43,7 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
     private Planning_MilestoneFactory&MockObject $milestone_factory;
     private PFUser $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user      = UserTestBuilder::buildWithDefaults();

@@ -36,6 +36,7 @@ final class EnableGitGcTest extends TestCase
     private Git_GitoliteHousekeeping_GitoliteHousekeepingDao&MockObject $dao;
     private Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->response = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);

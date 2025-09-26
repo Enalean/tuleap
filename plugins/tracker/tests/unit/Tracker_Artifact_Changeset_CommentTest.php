@@ -34,6 +34,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
     private Tracker_Artifact_Changeset $changeset;
     private UserManager&MockObject $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $user = UserTestBuilder::aUser()
@@ -53,6 +54,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
         UserManager::setInstance($this->user_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

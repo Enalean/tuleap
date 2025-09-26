@@ -31,6 +31,7 @@ final class CommitStatusWithKnownStatusTest extends TestCase
 {
     private readonly DateTimeImmutable $date;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->date = new DateTimeImmutable();

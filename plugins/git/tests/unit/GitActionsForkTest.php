@@ -67,6 +67,7 @@ final class GitActionsForkTest extends TestCase
     private GitActions $actions;
     private GitRepositoryManager&MockObject $manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->manager = $this->createMock(GitRepositoryManager::class);

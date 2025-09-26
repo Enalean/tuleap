@@ -37,6 +37,7 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends Te
     private Tracker_Artifact_Changeset_ChangesetDataInitializator $initializator;
     private MockObject&Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker  = TrackerTestBuilder::aTracker()->build();

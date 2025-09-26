@@ -61,6 +61,7 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
     private TextField $text_value_4;
     private TextField $text_value_5;
 
+    #[\Override]
     public function setUp(): void
     {
         $xml_field_mapping = file_get_contents(dirname(__FILE__) . '/_fixtures/TestFieldMapping.xml');

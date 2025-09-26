@@ -44,6 +44,7 @@ final class ServiceActivatorTest extends TestCase
     private ServiceCreator&MockObject $service_creator;
     private array $params;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

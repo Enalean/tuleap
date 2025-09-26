@@ -32,6 +32,7 @@ final class DefaultCloneURLSelectorTest extends TestCase
     private DefaultCloneURLSelector $selector;
     private CloneURLs&MockObject $clone_urls;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->selector   = new DefaultCloneURLSelector();

@@ -56,6 +56,7 @@ final class ChartConfigurationFieldRetrieverTest extends TestCase
     private SemanticTimeframeBuilder&MockObject $semantic_timeframe_builder;
     private DateField $field_start_date;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_field_factoy = $this->createPartialMock(

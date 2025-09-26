@@ -39,6 +39,7 @@ final class XmlUgroupRetrieverTest extends TestCase
     private ProjectUGroup $ugroup_01;
     private ProjectUGroup $ugroup_02;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger    = new TestLogger();

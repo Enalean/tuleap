@@ -46,6 +46,7 @@ final class TrackerCreationSettingsBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private Tracker $tracker;
     private MoveActionAllowedDAO&\PHPUnit\Framework\MockObject\MockObject $move_action_allowed_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->in_new_dropdown_dao     = $this->createMock(PromotedTrackerDao::class);

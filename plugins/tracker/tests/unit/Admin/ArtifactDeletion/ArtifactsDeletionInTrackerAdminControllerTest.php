@@ -41,6 +41,7 @@ final class ArtifactsDeletionInTrackerAdminControllerTest extends TestCase
 {
     private const TRACKER_ID = 10;
 
+    #[\Override]
     public function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

@@ -39,6 +39,7 @@ final class GitBackendGitoliteDisconnectGerritTest extends TestCase
     private Git_Backend_Gitolite&MockObject $backend;
     private GitDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository = GitRepositoryTestBuilder::aProjectRepository()->withId($this->repo_id)->build();

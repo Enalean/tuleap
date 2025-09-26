@@ -32,6 +32,7 @@ final class SubmittedValueEmptyCheckerTest extends TestCase
 {
     private SubmittedValueEmptyChecker $empty_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

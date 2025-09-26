@@ -49,6 +49,7 @@ final class AdminGerritControllerTest extends TestCase
     private Git_RemoteServer_GerritServer $a_brand_new_server;
     private Git_RemoteServer_GerritServer $an_existing_server;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->csrf = CSRFSynchronizerTokenStub::buildSelf();

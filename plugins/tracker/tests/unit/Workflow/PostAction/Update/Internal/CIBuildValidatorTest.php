@@ -27,6 +27,7 @@ final class CIBuildValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CIBuildValueValidator $ci_build_validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ci_build_validator = new CIBuildValueValidator();

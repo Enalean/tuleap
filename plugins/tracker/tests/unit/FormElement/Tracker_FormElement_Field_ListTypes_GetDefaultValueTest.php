@@ -40,6 +40,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
 {
     private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);

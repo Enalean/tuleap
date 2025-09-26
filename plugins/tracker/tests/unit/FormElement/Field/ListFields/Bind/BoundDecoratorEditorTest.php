@@ -37,6 +37,7 @@ final class BoundDecoratorEditorTest extends TestCase
     private BoundDecoratorEditor $bound_decorator_editor;
     private BindDecoratorDao&MockObject $bind_decorator_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->bind_decorator_dao     = $this->createMock(BindDecoratorDao::class);

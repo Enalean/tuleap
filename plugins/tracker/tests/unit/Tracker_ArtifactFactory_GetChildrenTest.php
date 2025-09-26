@@ -42,6 +42,7 @@ final class Tracker_ArtifactFactory_GetChildrenTest extends \Tuleap\Test\PHPUnit
 
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao              = $this->createMock(\Tracker_ArtifactDao::class);

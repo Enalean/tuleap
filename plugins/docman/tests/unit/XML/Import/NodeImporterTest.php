@@ -47,6 +47,7 @@ final class NodeImporterTest extends TestCase
     private PFUser $user;
     private ImportPropertiesExtractor&MockObject $properties_extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger               = $this->createMock(LoggerInterface::class);

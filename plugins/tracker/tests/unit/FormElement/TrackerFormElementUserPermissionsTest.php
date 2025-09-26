@@ -32,6 +32,7 @@ final class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\T
     private $form_element;
     private $workflow_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element = $this->createPartialMock(StringField::class, ['getId', 'getLabel', 'getName']);

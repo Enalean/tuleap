@@ -37,6 +37,7 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
     private Tracker_Artifact_Changeset $changeset;
     private TrackerField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field     = FloatFieldBuilder::aFloatField(45)->withName('field_float')->build();

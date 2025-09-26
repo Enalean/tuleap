@@ -41,6 +41,7 @@ final class TemporaryFileManagerGetDiskUsageTest extends TestCase
     private string $cache_dir;
     private PFUser $user;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
@@ -59,6 +60,7 @@ final class TemporaryFileManagerGetDiskUsageTest extends TestCase
         );
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         exec('rm -rf ' . escapeshellarg($this->cache_dir));

@@ -42,6 +42,7 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
     private IPermissionsManagerNG&MockObject $permissions_manager;
     private UGroupManager&MockObject $ugroup_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->docman_permissions_manager = $this->createMock(Docman_PermissionsManager::class);

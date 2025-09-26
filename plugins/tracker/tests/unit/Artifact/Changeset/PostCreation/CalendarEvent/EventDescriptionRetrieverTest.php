@@ -52,6 +52,7 @@ final class EventDescriptionRetrieverTest extends TestCase
     private readonly PFUser $recipient;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker   = TrackerTestBuilder::aTracker()

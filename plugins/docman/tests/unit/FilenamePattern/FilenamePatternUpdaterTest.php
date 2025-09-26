@@ -31,6 +31,7 @@ final class FilenamePatternUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private FilenamePatternUpdater $filename_pattern_updater;
     private SettingsDAOStub $save_filename_counter;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->save_filename_counter = SettingsDAOStub::buildSaveFilenamePatternMethodCounter();

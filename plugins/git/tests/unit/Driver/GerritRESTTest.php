@@ -51,6 +51,7 @@ final class GerritRESTTest extends TestCase
     private Git_RemoteServer_GerritServer $gerrit_server;
     private Git_Driver_GerritREST $driver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger      = new TestLogger();

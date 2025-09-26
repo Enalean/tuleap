@@ -47,6 +47,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     private Artifact $artifact;
     private \Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker_id  = 1;

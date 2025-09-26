@@ -29,6 +29,7 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
     private readonly RepositoryHeaderTabsURLBuilder $builder;
     private readonly \PHPUnit\Framework\MockObject\MockObject&Git_GitRepositoryUrlManager $url_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->url_manager = $this->createMock(Git_GitRepositoryUrlManager::class);

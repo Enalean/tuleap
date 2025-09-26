@@ -38,9 +38,8 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
+final class SystemEvent_GIT_REPO_UPDATETest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private int $repository_id = 115;
     private DefaultBranchUpdateExecutorStub $default_branch_update_executor;
@@ -49,6 +48,7 @@ final class SystemEvent_GIT_REPO_UPDATETest extends TestCase
     private GitRepositoryFactory&MockObject $repository_factory;
     private SystemEvent_GIT_REPO_UPDATE&MockObject $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->backend = $this->createMock(Git_Backend_Gitolite::class);

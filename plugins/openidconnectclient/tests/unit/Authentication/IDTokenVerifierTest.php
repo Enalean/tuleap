@@ -43,6 +43,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private \PHPUnit\Framework\MockObject\MockObject&JWKSKeyFetcher $jwks_key_fetcher;
 
+    #[\Override]
     public static function setUpBeforeClass(): void
     {
         self::$rsa_key = openssl_pkey_new(
@@ -54,6 +55,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->jwks_key_fetcher  = $this->createMock(JWKSKeyFetcher::class);
@@ -248,6 +250,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new class implements IssuerClaimValidator
         {
+            #[\Override]
             public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token): bool
             {
                 return true;
@@ -259,6 +262,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new class implements IssuerClaimValidator
         {
+            #[\Override]
             public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token): bool
             {
                 return false;

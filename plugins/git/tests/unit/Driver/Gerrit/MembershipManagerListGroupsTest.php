@@ -54,6 +54,7 @@ final class MembershipManagerListGroupsTest extends TestCase
     private ProjectUGroup $u_group2;
     private Git_RemoteServer_GerritServer&MockObject $remote_server;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('codendi_log', vfsStream::setup()->url());

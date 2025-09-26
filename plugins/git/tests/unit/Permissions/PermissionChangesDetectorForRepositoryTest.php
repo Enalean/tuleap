@@ -39,6 +39,7 @@ final class PermissionChangesDetectorForRepositoryTest extends TestCase
     private FineGrainedPermission $tag_fine_grained_permission;
     private GitRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->git_permission_manager = $this->createMock(GitPermissionsManager::class);

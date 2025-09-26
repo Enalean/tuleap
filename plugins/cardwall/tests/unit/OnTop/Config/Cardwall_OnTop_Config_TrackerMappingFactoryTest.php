@@ -56,6 +56,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // 
     private ColumnCollection $columns;
     private Cardwall_OnTop_Config_TrackerMappingFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field_122    = SelectboxFieldBuilder::aSelectboxField(122)->build();

@@ -41,6 +41,7 @@ final class Tracker_Artifact_ChangesetValue_OpenListTest extends TestCase // php
     private Tracker_Artifact_Changeset $changeset;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field     = OpenListFieldBuilder::anOpenListField()->build();

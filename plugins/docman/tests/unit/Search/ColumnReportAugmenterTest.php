@@ -38,6 +38,7 @@ final class ColumnReportAugmenterTest extends TestCase
     private ColumnReportAugmenter $builder;
     private \Codendi_Request $request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->column_factory = $this->createMock(\Docman_ReportColumnFactory::class);

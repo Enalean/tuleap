@@ -54,6 +54,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
     private Project&MockObject $project_private;
     private GlobalAdminPermissionsChecker&MockObject $global_admin_permissions_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = $this->createMock(\Project::class);

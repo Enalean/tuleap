@@ -39,6 +39,7 @@ final class UserAccountManagerGetGerritUserTest extends TestCase
     private string $ldap_login;
     private LDAPResult&MockObject $ldap_result;
 
+    #[\Override]
     protected function setUp(): void
     {
         $event_manager = new EventManager();
@@ -50,6 +51,7 @@ final class UserAccountManagerGetGerritUserTest extends TestCase
         $this->ldap_result->method('getLogin')->willReturn($this->ldap_login);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         EventManager::clearInstance();

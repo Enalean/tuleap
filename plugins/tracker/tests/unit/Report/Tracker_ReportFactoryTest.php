@@ -38,6 +38,7 @@ final class Tracker_ReportFactoryTest extends TestCase //phpcs:ignore Squiz.Clas
 
     private Tracker_Report_RendererFactory&MockObject $renderer_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +51,7 @@ final class Tracker_ReportFactoryTest extends TestCase //phpcs:ignore Squiz.Clas
         $this->report_factory->method('getRendererFactory')->willReturn($this->renderer_factory);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         if (isset($GLOBALS['_SESSION'])) {

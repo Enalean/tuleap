@@ -43,6 +43,7 @@ final class TrackerPrivateCommentUGroupExtractorTest extends TestCase
     private Artifact $artifact;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao            = $this->createMock(TrackerPrivateCommentUGroupEnabledDao::class);

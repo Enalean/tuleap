@@ -34,6 +34,7 @@ final class GitRepositoryCanDeletedTest extends TestCase
     private Git_Backend_Interface&MockObject $backend;
     private GitRepository $repo;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->backend = $this->createMock(Git_Backend_Interface::class);

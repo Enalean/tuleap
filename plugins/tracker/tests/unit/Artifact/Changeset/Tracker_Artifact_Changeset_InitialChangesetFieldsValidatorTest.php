@@ -48,6 +48,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
 
     private MockObject&Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory                 = $this->createMock(Tracker_FormElementFactory::class);

@@ -35,6 +35,7 @@ final class RequestDataAugmentorTest extends TestCase
     private ArtifactLinkField $field;
     private RequestDataAugmentor $augmentor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker = $this->createMock(Tracker::class);

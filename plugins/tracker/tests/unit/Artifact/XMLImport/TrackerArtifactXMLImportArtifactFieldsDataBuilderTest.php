@@ -53,6 +53,7 @@ final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCa
     private Tracker $tracker;
     private PostCreationContext $context;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                = UserTestBuilder::anActiveUser()->build();

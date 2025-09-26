@@ -57,6 +57,7 @@ final class TransitionFactoryImportTest extends TestCase
 
     private Workflow_TransitionDao&MockObject $transition_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

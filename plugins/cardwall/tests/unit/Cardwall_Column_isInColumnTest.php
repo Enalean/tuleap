@@ -45,6 +45,7 @@ final class Cardwall_Column_isInColumnTest extends TestCase // phpcs:ignore Squi
     private Cardwall_FieldProviders_IProvideFieldGivenAnArtifact&MockObject $field_provider;
     private Cardwall_OnTop_Config $config;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker        = TrackerTestBuilder::aTracker()->withId(33)->build();

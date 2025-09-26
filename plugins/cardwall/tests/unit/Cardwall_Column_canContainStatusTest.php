@@ -30,6 +30,7 @@ class Cardwall_Column_canContainStatusTest extends TestCase // phpcs:ignore Squi
 {
     private Cardwall_Column $column;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->column = new Cardwall_Column(100, 'whatever', 'whatever');

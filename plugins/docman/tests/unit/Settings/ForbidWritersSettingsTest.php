@@ -37,6 +37,7 @@ final class ForbidWritersSettingsTest extends TestCase
             {
             }
 
+            #[\Override]
             public function searchByProjectId(int $project_id): ?array
             {
                 return $this->settings;
@@ -59,6 +60,7 @@ final class ForbidWritersSettingsTest extends TestCase
             {
             }
 
+            #[\Override]
             public function searchByProjectId(int $project_id): ?array
             {
                 return $this->settings;

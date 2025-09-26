@@ -49,6 +49,7 @@ final class FileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private FilePOSTRepresentation $post_payload;
     private int $max_size_upload;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ongoing_dao         = $this->createMock(FileOngoingUploadDao::class);

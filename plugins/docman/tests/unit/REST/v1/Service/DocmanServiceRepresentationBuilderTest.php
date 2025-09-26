@@ -38,6 +38,7 @@ final class DocmanServiceRepresentationBuilderTest extends TestCase
     private DocmanServicePermissionsForGroupsBuilder&MockObject $service_permissions_for_group_builder;
     private DocmanServiceRepresentationBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_representation_builder           = $this->createMock(ItemRepresentationBuilder::class);

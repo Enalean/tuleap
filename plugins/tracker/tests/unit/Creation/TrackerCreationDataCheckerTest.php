@@ -46,6 +46,7 @@ final class TrackerCreationDataCheckerTest extends TestCase
     private ReferenceManager&MockObject $reference_manager;
     private PendingJiraImportDao&MockObject $pending_jira_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reference_manager = $this->createMock(ReferenceManager::class);

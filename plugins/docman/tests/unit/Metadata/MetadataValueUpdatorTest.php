@@ -38,6 +38,7 @@ final class MetadataValueUpdatorTest extends TestCase
     private MetadataValueObjectFactory&MockObject $metadata_value_object_factory;
     private DocmanMetadataInputValidator&MockObject $validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator                     = $this->createMock(DocmanMetadataInputValidator::class);

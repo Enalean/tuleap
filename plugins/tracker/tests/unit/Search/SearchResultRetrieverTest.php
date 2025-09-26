@@ -54,6 +54,7 @@ final class SearchResultRetrieverTest extends TestCase
     private $form_element_factory;
     private SearchResultRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory     = $this->createStub(\Tracker_ArtifactFactory::class);

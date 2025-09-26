@@ -34,6 +34,7 @@ final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\T
 
     private Transition_PostAction_Field_Float&MockObject $post_action;
 
+    #[\Override]
     protected function setUp(): void
     {
         $value          = 1.5;

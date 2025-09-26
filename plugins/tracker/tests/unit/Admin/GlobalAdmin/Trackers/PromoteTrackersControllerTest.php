@@ -50,6 +50,7 @@ final class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private GlobalAdminPermissionsChecker&MockObject $perms_checker;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project_manager           = $this->createMock(ProjectManager::class);

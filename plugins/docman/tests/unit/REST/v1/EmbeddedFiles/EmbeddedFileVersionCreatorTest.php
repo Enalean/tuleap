@@ -42,6 +42,7 @@ final class EmbeddedFileVersionCreatorTest extends TestCase
     private EmbeddedFileVersionCreator $embedded_updator;
     private DBTransactionExecutor $transaction_executor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->transaction_executor = $this->createMock(DBTransactionExecutor::class);

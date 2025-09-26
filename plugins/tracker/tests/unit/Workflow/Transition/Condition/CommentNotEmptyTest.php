@@ -44,6 +44,7 @@ final class CommentNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
     private Transition $transition;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

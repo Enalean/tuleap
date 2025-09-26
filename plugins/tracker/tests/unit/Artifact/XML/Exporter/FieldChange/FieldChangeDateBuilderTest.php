@@ -32,6 +32,7 @@ final class FieldChangeDateBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FieldChangeDateBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

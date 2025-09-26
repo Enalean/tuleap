@@ -63,6 +63,7 @@ final class MailGatewayInsecureTest extends TestCase
     private Tracker_Artifact_Changeset $changeset;
     private TrackerArtifactCreator&MockObject $artifact_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact            = $this->createMock(Artifact::class);

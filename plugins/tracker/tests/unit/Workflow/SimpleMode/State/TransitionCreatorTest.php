@@ -39,6 +39,7 @@ final class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private TransitionCreator $creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

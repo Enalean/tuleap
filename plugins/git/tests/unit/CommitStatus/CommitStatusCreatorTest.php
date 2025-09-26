@@ -36,6 +36,7 @@ final class CommitStatusCreatorTest extends TestCase
     private readonly GitRepository $repository;
     private readonly Git_Exec&MockObject $git_exec;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(CommitStatusDAO::class);

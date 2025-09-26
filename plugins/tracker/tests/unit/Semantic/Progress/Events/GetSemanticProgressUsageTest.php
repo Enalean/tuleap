@@ -29,6 +29,7 @@ final class GetSemanticProgressUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private GetSemanticProgressUsageEvent $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event = new GetSemanticProgressUsageEvent(

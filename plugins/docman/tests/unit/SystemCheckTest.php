@@ -44,6 +44,7 @@ final class SystemCheckTest extends TestCase
     private BackendSystem&MockObject $backend;
     private string $root_dir_path;
 
+    #[\Override]
     public function setUp(): void
     {
         ForgeConfig::set('sys_http_user', 'codendiadm');

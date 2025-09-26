@@ -33,6 +33,7 @@ final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $xml_validator;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->xml_validator = new ImportXMLFromTracker(new XML_RNGValidator());

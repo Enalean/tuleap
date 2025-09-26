@@ -82,6 +82,7 @@ final class DocmanItemCreatorTest extends TestCase
     private HardcodedMetadataObsolescenceDateRetriever&MockObject $metadata_obsolesence_date_retriever;
     private DocmanItemPermissionsForGroupsSetFactory&MockObject $permissions_for_groups_set_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->creator_visitor                     = $this->createMock(AfterItemCreationVisitor::class);

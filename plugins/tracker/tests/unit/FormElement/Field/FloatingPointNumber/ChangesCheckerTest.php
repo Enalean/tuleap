@@ -33,6 +33,7 @@ final class ChangesCheckerTest extends TestCase
     private Tracker_Artifact_ChangesetValue_Float&MockObject $old_value;
     private ChangesChecker $checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->old_value = $this->createMock(Tracker_Artifact_ChangesetValue_Float::class);

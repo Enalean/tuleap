@@ -35,6 +35,7 @@ final class GitoliteHousekeepingGitGcTest extends TestCase
     private TestLogger $logger;
     private Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc&MockObject $gitgc;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao    = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);

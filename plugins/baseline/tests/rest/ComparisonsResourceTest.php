@@ -33,6 +33,7 @@ class ComparisonsResourceTest extends RestBase
     /** @var int */
     private $an_artifact_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

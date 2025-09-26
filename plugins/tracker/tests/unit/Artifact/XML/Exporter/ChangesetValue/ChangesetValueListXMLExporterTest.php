@@ -47,6 +47,7 @@ final class ChangesetValueListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
 
     private TrackerField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -41,6 +41,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     private \Tuleap\Tracker\Tracker $tracker;
     private RetrieveSemanticTitleFieldStub $title_field_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker                      = TrackerTestBuilder::aTracker()->withId(3000)->build();

@@ -33,6 +33,7 @@ final class AlwaysThereColumnRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $docman_settings;
     private AlwaysThereColumnRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->docman_settings = $this->createMock(\Docman_SettingsBo::class);

@@ -49,6 +49,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
     private UGroupManager&MockObject $ugroup_manager;
     private ListField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ugroup_manager    = $this->createMock(UGroupManager::class);

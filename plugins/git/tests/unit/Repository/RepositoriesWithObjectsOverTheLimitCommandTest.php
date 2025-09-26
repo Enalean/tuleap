@@ -36,6 +36,7 @@ final class RepositoriesWithObjectsOverTheLimitCommandTest extends TestCase
     private GitRepositoryFactory&MockObject $repository_factory;
     private GitRepositoryObjectsSizeRetriever&MockObject $repository_objects_size_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository_factory                = $this->createMock(GitRepositoryFactory::class);

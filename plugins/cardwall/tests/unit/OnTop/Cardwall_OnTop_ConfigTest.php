@@ -41,6 +41,7 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase // p
     private $config;
     private Cardwall_OnTop_Config_TrackerMappingStatus $mapping;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

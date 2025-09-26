@@ -30,6 +30,7 @@ final class SortWithIntegrityCheckedTest extends TestCase
     private array $sort_columns_array;
     private array $sort_with_unused_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $renderer_id                  = 10;

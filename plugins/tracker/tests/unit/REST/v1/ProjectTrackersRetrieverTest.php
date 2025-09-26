@@ -44,6 +44,7 @@ final class ProjectTrackersRetrieverTest extends TestCase
 
     private ProjectTrackersRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_trackers = [

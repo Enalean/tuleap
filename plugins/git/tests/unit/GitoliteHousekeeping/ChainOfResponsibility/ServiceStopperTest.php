@@ -36,6 +36,7 @@ final class ServiceStopperTest extends TestCase
     private BackendService&MockObject $backend_service;
     private Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->response        = $this->createMock(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);

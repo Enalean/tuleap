@@ -41,6 +41,7 @@ final class GetFieldDataTest extends TestCase
     private ArtifactLinkField&MockObject $field;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field = $this->createPartialMock(ArtifactLinkField::class, ['getChangesetValues']);

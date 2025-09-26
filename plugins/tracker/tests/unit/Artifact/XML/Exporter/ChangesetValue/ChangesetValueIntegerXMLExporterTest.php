@@ -44,6 +44,7 @@ final class ChangesetValueIntegerXMLExporterTest extends \Tuleap\Test\PHPUnit\Te
 
     private TrackerField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field         = IntegerFieldBuilder::anIntField(1001)->withName('story_points')->build();

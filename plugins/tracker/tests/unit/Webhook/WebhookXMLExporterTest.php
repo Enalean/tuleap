@@ -31,6 +31,7 @@ final class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private WebhookFactory&MockObject $webhook_factory;
     private Tracker $tracker;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

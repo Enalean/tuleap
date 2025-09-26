@@ -47,6 +47,7 @@ final class FieldChangeArtifactLinksUpdaterTest extends TestCase
     private TypePresenter $system_type_1;
     private TypePresenter $custom_type_1;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->system_type_1 = TypePresenterBuilder::aSystemType()->withShortname('system_1')->build();

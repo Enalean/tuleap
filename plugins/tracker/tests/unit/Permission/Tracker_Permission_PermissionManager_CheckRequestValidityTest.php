@@ -37,6 +37,7 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
     private Tracker&MockObject $tracker;
     private array $permissions;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker_id    = 112;

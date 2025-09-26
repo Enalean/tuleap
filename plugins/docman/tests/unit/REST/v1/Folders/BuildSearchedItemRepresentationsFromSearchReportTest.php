@@ -56,6 +56,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
     private ItemStatusMapper $status_mapper;
     private \PHPUnit\Framework\MockObject\MockObject|\Docman_VersionFactory $version_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $docman_settings = $this->createMock(\Docman_SettingsBo::class);
@@ -87,6 +88,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         \UserManager::setInstance($this->user_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \UserManager::clearInstance();

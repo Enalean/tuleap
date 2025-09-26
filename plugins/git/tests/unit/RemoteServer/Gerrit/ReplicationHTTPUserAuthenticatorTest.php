@@ -41,6 +41,7 @@ final class ReplicationHTTPUserAuthenticatorTest extends TestCase
     private Git_RemoteServer_GerritServerFactory&MockObject $server_factory;
     private HttpUserValidator&MockObject $user_validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->password_handler = $this->createMock(PasswordHandler::class);

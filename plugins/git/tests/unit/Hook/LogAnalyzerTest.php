@@ -41,6 +41,7 @@ final class LogAnalyzerTest extends TestCase
     private TestLogger $logger;
     private LogAnalyzer $log_analyzer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->git_exec   = $this->createMock(Git_Exec::class);

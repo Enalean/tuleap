@@ -51,6 +51,7 @@ final class GitRepositoryManagerCreateTest extends TestCase
     private GitRepository $repository;
     private OngoingDeletionDAO&MockObject $ongoing_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->creator    = $this->createMock(GitRepositoryCreator::class);

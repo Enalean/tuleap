@@ -37,6 +37,7 @@ final class GitTreeRepresentationFactoryTest extends TestCase
 {
     private GitTreeRepresentationFactory $git_tree_representation_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->git_tree_representation_factory = new GitTreeRepresentationFactory();
@@ -71,14 +72,14 @@ final class GitTreeRepresentationFactoryTest extends TestCase
                 $this->commit = $commit;
             }
 
-            // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function GetCommit($hash): Commit
+            #[\Override]
+            public function GetCommit($hash): Commit // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
             {
                 return $this->commit;
             }
 
-            // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function GetObject($hash, &$type = 0): void
+            #[\Override]
+            public function GetObject($hash, &$type = 0): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
             {
                 $type = Pack::OBJ_BLOB;
             }
@@ -105,14 +106,14 @@ final class GitTreeRepresentationFactoryTest extends TestCase
                 $this->commit = $commit;
             }
 
-            // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function GetCommit($hash): Commit
+            #[\Override]
+            public function GetCommit($hash): Commit // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
             {
                 return $this->commit;
             }
 
-            // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function GetObject($hash, &$type = 0): void
+            #[\Override]
+            public function GetObject($hash, &$type = 0): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
             {
             }
         };
@@ -149,14 +150,14 @@ final class GitTreeRepresentationFactoryTest extends TestCase
                 $this->main_tree = $main_tree;
             }
 
-            // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function GetCommit($hash): Commit
+            #[\Override]
+            public function GetCommit($hash): Commit // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
             {
                 return $this->commit;
             }
 
-            // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function GetObject($hash, &$type = 0): void
+            #[\Override]
+            public function GetObject($hash, &$type = 0): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
             {
                 switch ($hash) {
                     case $this->dir_hash:
@@ -170,8 +171,8 @@ final class GitTreeRepresentationFactoryTest extends TestCase
                 }
             }
 
-            // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function GetTree($hash): Tree
+            #[\Override]
+            public function GetTree($hash): Tree // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
             {
                 return $this->main_tree;
             }

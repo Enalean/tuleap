@@ -27,6 +27,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2TrackerReadScopeTest extends AuthenticationScopeTestCase
 {
+    #[\Override]
     public function getAuthenticationScopeClassname(): string
     {
         return OAuth2TrackerReadScope::class;

@@ -35,6 +35,7 @@ final class ClientWrapperBuilderTest extends TestCase
 {
     private ClientWrapperBuilder $wrapper_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->wrapper_builder = new ClientWrapperBuilder(static fn() => JiraClientStub::aJiraClient());

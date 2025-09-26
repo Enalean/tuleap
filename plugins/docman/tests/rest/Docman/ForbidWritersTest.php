@@ -35,6 +35,7 @@ class ForbidWritersTest extends \Tuleap\REST\RestBase
     private int $writer_user_id;
     private string $item_title;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

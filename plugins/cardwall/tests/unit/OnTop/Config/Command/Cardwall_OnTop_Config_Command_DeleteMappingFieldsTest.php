@@ -43,6 +43,7 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends TestCa
     private Cardwall_OnTop_ColumnMappingFieldValueDao&MockObject $value_dao;
     private Cardwall_OnTop_Config_Command_DeleteMappingFields $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_id = 666;

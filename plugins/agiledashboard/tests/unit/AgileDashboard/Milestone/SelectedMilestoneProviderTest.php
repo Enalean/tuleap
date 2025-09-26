@@ -46,6 +46,7 @@ final class SelectedMilestoneProviderTest extends TestCase
     private Project $project;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $artifact_id   = 123;

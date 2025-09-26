@@ -67,6 +67,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
     private Artifact $another_artifact;
     private Tracker_Workflow_Trigger_RulesManager&MockObject $rules_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reference_manager = $this->createMock(Tracker_ReferenceManager::class);
@@ -135,6 +136,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();

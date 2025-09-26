@@ -43,11 +43,13 @@ final class GitForkCrossProjectTest extends TestCase
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['HTML'] = $GLOBALS['Response'];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['HTML'], $_SESSION);

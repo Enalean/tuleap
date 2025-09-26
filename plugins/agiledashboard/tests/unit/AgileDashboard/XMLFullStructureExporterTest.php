@@ -28,6 +28,7 @@ class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs
     private EventManager|\PHPUnit\Framework\MockObject\MockObject $event_manager;
     private AgileDashboardRouter|\PHPUnit\Framework\MockObject\MockObject $router;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->router = $this->createMock(\AgileDashboardRouter::class);

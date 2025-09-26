@@ -40,6 +40,7 @@ final class VersionFactoryTest extends TestCase
 {
     private string $tmp_tuleap_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tmp_tuleap_dir = vfsStream::setup()->url();

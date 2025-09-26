@@ -55,6 +55,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_factory = $this->createMock(PlanningFactory::class);

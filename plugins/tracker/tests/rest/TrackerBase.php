@@ -128,6 +128,7 @@ class TrackerBase extends RestBase
     protected $tracker_file_and_title_fields_artifact_id;
     protected int $open_list_artifact_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

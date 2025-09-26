@@ -31,6 +31,7 @@ final class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private NullLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger = new NullLogger();

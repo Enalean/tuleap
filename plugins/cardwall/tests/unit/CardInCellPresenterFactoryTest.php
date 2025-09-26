@@ -44,6 +44,7 @@ final class CardInCellPresenterFactoryTest extends TestCase
     private Cardwall_CardPresenter&MockObject $card_presenter;
     private Cardwall_FieldProviders_IProvideFieldGivenAnArtifact&MockObject $field_provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker        = TrackerTestBuilder::aTracker()->build();
@@ -58,6 +59,7 @@ final class CardInCellPresenterFactoryTest extends TestCase
         $this->field_provider->method('getField')->with($tracker)->willReturn($field);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

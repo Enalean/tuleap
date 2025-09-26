@@ -42,6 +42,7 @@ final class MilestoneStatusCounterTest extends TestCase
     private ArtifactDao&MockObject $artifact_dao;
     private BacklogItemDao&MockObject $backlog_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->backlog_dao      = $this->createMock(BacklogItemDao::class);

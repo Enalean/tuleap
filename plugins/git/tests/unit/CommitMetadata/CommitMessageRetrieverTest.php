@@ -40,6 +40,7 @@ final class CommitMessageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     . "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"
     . 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->git_folder = $this->getTmpDir();

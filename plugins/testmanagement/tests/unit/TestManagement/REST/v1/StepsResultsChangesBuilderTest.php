@@ -56,6 +56,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private $test_status_builder;
     private $execution_status_field;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->user               = $this->createMock(PFUser::class);

@@ -43,6 +43,7 @@ final class ArtifactNotificationSubscriberTest extends \Tuleap\Test\PHPUnit\Test
     /** @var Tracker_ArtifactDao */
     private Tracker_ArtifactDao&MockObject $artifact_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

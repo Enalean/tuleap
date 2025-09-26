@@ -51,6 +51,7 @@ final class CardwallConfigXmlExportTest extends TestCase
     private SimpleXMLElement $root;
     private Cardwall_OnTop_ConfigFactory&MockObject $config_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project  = ProjectTestBuilder::aProject()->withId(140)->build();

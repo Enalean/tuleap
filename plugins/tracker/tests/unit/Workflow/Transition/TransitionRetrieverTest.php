@@ -37,6 +37,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

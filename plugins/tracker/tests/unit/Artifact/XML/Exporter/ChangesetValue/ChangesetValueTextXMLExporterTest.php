@@ -46,6 +46,7 @@ final class ChangesetValueTextXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
 
     private TrackerField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field    = TextFieldBuilder::aTextField(1001)->withName('textarea')->build();

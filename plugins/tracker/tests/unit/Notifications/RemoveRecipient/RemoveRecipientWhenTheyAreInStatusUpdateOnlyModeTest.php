@@ -46,6 +46,7 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest extends TestCas
                 {
                 }
 
+                #[\Override]
                 public function doesUserIdHaveSubscribeOnlyForStatusChangeNotification(
                     int $user_id,
                     int $tracker_id,
@@ -58,6 +59,7 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest extends TestCas
                 {
                 }
 
+                #[\Override]
                 public function hasChanged(Tracker_Artifact_Changeset $changeset): bool
                 {
                     return $this->has_changed;

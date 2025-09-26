@@ -20,9 +20,8 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Updater_TemporaryFileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_XML_Updater_TemporaryFileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\TemporaryTestDirectory;
@@ -34,6 +33,7 @@ final class Tracker_XML_Updater_TemporaryFileCreatorTest extends \Tuleap\Test\PH
      */
     private $initial;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('tmp_dir', $this->getTmpDir());
@@ -42,6 +42,7 @@ final class Tracker_XML_Updater_TemporaryFileCreatorTest extends \Tuleap\Test\PH
         $this->initial = __DIR__ . '/_fixtures/toto.txt';
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         // This is needed to trigger Tracker_XML_Updater_TemporaryFileCreator destructor before the clean up

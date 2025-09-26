@@ -52,6 +52,7 @@ final class TextDiffRetrieverTest extends TestCase
     private ChangesetsForDiffRetriever&MockObject $changesets_for_diff_retriever;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory              = $this->createMock(Tracker_ArtifactFactory::class);

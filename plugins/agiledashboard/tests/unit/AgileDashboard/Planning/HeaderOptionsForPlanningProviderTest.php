@@ -45,6 +45,7 @@ final class HeaderOptionsForPlanningProviderTest extends TestCase
     private VerifySubmissionPermissions&MockObject $submission_permissions_verifier;
     private HeaderOptionsForPlanningProvider $provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->submilestone_finder             = $this->createMock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);

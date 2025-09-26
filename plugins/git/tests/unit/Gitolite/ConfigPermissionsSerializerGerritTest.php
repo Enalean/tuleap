@@ -44,6 +44,7 @@ final class ConfigPermissionsSerializerGerritTest extends TestCase
     private GitRepository $repository;
     private Git_Driver_Gerrit_ProjectCreatorStatus&MockObject $gerrit_status;
 
+    #[\Override]
     public function setUp(): void
     {
         $project          = ProjectTestBuilder::aProject()->withId(102)->withUnixName('gpig')->build();
@@ -74,6 +75,7 @@ final class ConfigPermissionsSerializerGerritTest extends TestCase
         $event_manager->method('processEvent');
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();

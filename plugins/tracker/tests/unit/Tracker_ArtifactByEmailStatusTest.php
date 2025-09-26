@@ -38,6 +38,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
     private MailGatewayConfig&MockObject $tracker_plugin_conf;
     private RetrieveSemanticDescriptionFieldStub $retrieve_description_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker                    = $this->createMock(Tracker::class);

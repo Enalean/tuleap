@@ -47,6 +47,7 @@ final class TemporaryFileManagerAppendChunkTest extends TestCase
     private string $cache_dir;
     private Tracker_Artifact_Attachment_TemporaryFileManagerDao&MockObject $dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->cache_dir = $this->getTmpDir();

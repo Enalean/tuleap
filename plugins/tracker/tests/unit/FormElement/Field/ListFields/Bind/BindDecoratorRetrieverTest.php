@@ -47,6 +47,7 @@ final class BindDecoratorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var Tracker_FormElement_Field_List_Bind_Static */
     private $bind_static;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

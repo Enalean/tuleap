@@ -60,6 +60,7 @@ final class MilestoneFactoryTest extends TestCase
     private Artifact $artifact_open_future_without_start_date;
     private Artifact $artifact_open_future_with_start_date;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project        = ProjectTestBuilder::aProject()->build();

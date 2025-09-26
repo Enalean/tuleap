@@ -41,6 +41,7 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
 
     private Tracker_Permission_PermissionSetter $permission_setter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project       = ProjectTestBuilder::aProject()->withId(34)->build();
@@ -78,6 +79,7 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         TrackerSemanticContributor::clearInstances();

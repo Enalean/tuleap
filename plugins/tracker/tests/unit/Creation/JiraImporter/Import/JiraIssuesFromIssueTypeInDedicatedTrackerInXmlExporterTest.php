@@ -254,6 +254,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
         $attachment_name_generator = new class implements AttachmentNameGenerator {
             private int $i = 0;
 
+            #[\Override]
             public function getName(): string
             {
                 return 'file_' . $this->i++;
@@ -311,6 +312,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
                             ),
                             new ArtifactLinkTypeConverter(
                                 new class implements AllTypesRetriever {
+                                    #[\Override]
                                     public function getAllTypes(): array
                                     {
                                         return [];
@@ -358,6 +360,7 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
             new SemanticsXMLExporter(
                 new class implements EventDispatcherInterface
                 {
+                    #[\Override]
                     public function dispatch(object $event)
                     {
                         return;

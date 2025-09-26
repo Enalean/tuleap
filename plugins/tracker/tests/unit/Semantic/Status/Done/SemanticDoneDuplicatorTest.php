@@ -35,6 +35,7 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private StatusSemanticDAO&MockObject $status_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

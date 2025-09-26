@@ -45,6 +45,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
 
     private SiblingsRetriever&MockObject $siblings_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $story_tracker      = $this->buildTracker(888);

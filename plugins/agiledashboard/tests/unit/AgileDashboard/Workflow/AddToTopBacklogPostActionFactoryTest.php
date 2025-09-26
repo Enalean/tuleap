@@ -42,6 +42,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
     private Workflow&MockObject $workflow;
     private int $transition_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->add_to_top_backlog_post_action_dao = $this->createMock(AddToTopBacklogPostActionDao::class);

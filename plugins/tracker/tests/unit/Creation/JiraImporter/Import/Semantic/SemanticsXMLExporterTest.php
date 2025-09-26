@@ -107,6 +107,7 @@ final class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $exporter = new SemanticsXMLExporter(
             new class implements EventDispatcherInterface
             {
+                #[\Override]
                 public function dispatch(object $event)
                 {
                     return;
@@ -152,6 +153,7 @@ final class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $exporter = new SemanticsXMLExporter(
             new class implements EventDispatcherInterface
             {
+                #[\Override]
                 public function dispatch(object $event)
                 {
                     return;

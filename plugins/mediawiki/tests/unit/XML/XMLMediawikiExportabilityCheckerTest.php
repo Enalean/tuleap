@@ -45,6 +45,7 @@ final class XMLMediawikiExportabilityCheckerTest extends TestCase
     private \Project $project;
     private \PFUser $user;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withUsedService(\MediaWikiPlugin::SERVICE_SHORTNAME)->build();

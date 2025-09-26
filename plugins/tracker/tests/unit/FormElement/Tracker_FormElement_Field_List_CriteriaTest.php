@@ -41,6 +41,7 @@ final class Tracker_FormElement_Field_List_CriteriaTest extends TestCase // phpc
     private ListField $field;
     private Tracker_Report_Criteria&MockObject $criteria;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->field    = SelectboxFieldBuilder::aSelectboxField(456)->build();

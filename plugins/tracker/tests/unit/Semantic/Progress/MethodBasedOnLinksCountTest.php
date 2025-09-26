@@ -36,6 +36,7 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
     private MethodBasedOnLinksCount $method;
     private SemanticProgressDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao         = $this->createMock(SemanticProgressDao::class);

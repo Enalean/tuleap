@@ -66,6 +66,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     private ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->date_factory = $this->createMock(\Tracker_Rule_Date_Factory::class);

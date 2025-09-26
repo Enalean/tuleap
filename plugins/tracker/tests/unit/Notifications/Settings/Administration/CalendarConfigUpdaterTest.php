@@ -38,6 +38,7 @@ final class CalendarConfigUpdaterTest extends TestCase
 {
     private readonly \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(83)->build();

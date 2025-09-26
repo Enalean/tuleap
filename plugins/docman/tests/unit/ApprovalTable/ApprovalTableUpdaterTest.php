@@ -36,6 +36,7 @@ final class ApprovalTableUpdaterTest extends TestCase
     private Docman_ApprovalTableFactoriesFactory&MockObject $approval_table_factory;
     private ApprovalTableRetriever&MockObject $approval_table_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->approval_table_factory   = $this->createMock(Docman_ApprovalTableFactoriesFactory::class);

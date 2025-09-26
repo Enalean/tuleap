@@ -38,6 +38,7 @@ final class Docman_NotificationsManager_DeleteTest extends TestCase //phpcs:igno
 {
     private Docman_NotificationsManager_Delete&MockObject $notification_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->notification_manager = $this->createPartialMock(Docman_NotificationsManager_Delete::class, [

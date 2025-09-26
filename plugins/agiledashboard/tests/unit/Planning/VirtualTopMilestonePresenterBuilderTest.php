@@ -46,6 +46,7 @@ final class VirtualTopMilestonePresenterBuilderTest extends TestCase
     private \PFUser $user;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_dispatcher          = EventDispatcherStub::withIdentityCallback();

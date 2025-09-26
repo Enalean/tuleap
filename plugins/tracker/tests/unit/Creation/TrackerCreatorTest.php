@@ -43,6 +43,7 @@ final class TrackerCreatorTest extends TestCase
     private TrackerXmlImport&MockObject $tracker_xml_import;
     private SemanticTimeframeDuplicator&MockObject $semantic_timeframe_duplicator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_xml_import            = $this->createMock(TrackerXmlImport::class);

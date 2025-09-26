@@ -32,6 +32,7 @@ final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestC
 
     private \Tracker_FormElementFactory&MockObject $form_element_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);

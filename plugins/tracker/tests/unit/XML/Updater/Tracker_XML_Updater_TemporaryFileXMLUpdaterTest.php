@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Tracker_XML_Updater_TemporaryFileXMLUpdater $updater;
 
     private SimpleXMLElement $artifact_xml;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'

@@ -42,6 +42,7 @@ final class VersionToUploadCreatorTest extends TestCase
 
     private DocumentOnGoingVersionToUploadDAO&MockObject $dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao = $this->createMock(DocumentOnGoingVersionToUploadDAO::class);

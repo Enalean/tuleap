@@ -51,6 +51,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
     private DefaultTemplatesCollectionBuilder&MockObject $default_templates_collection_builder;
     private PendingJiraImportDao&MockObject $pending_jira_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_templates_collection_builder = $this->createMock(DefaultTemplatesCollectionBuilder::class);

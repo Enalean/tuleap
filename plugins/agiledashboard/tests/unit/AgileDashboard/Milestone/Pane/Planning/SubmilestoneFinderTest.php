@@ -67,6 +67,7 @@ final class SubmilestoneFinderTest extends TestCase
     private int $requirement_tracker_id = 7;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_story_tracker  = TrackerTestBuilder::aTracker()->withId($this->user_story_tracker_id)->build();

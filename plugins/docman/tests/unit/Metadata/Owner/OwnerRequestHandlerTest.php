@@ -51,12 +51,14 @@ final class OwnerRequestHandlerTest extends TestCase
 
         $owner_sender = new OwnerRequestHandler(
             new class implements RetrieveAllOwner {
+                #[\Override]
                 public function retrieveProjectDocumentOwnersForAutocomplete(Project $project, string $name_to_search): array
                 {
                     return [];
                 }
             },
             new class implements CheckProjectAccess {
+                #[\Override]
                 public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
                 {
                     throw new Project_AccessRestrictedException();
@@ -64,6 +66,7 @@ final class OwnerRequestHandlerTest extends TestCase
             },
             ProvideCurrentUserStub::buildCurrentUserByDefault(),
             new class implements IExtractProjectFromVariables {
+                #[\Override]
                 public function getProject(array $variables): \Project
                 {
                     return ProjectTestBuilder::aProject()->build();
@@ -92,12 +95,14 @@ final class OwnerRequestHandlerTest extends TestCase
 
         $owner_sender = new OwnerRequestHandler(
             new class implements RetrieveAllOwner {
+                #[\Override]
                 public function retrieveProjectDocumentOwnersForAutocomplete(Project $project, string $name_to_search): array
                 {
                     return [];
                 }
             },
             new class implements CheckProjectAccess {
+                #[\Override]
                 public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
                 {
                     //do nothing
@@ -105,6 +110,7 @@ final class OwnerRequestHandlerTest extends TestCase
             },
             ProvideCurrentUserStub::buildCurrentUserByDefault(),
             new class implements IExtractProjectFromVariables {
+                #[\Override]
                 public function getProject(array $variables): \Project
                 {
                     return ProjectTestBuilder::aProject()->build();
@@ -130,12 +136,14 @@ final class OwnerRequestHandlerTest extends TestCase
 
         $owner_sender = new OwnerRequestHandler(
             new class implements RetrieveAllOwner {
+                #[\Override]
                 public function retrieveProjectDocumentOwnersForAutocomplete(Project $project, string $name_to_search): array
                 {
                     return [];
                 }
             },
             new class implements CheckProjectAccess {
+                #[\Override]
                 public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
                 {
                     //do nothing
@@ -143,6 +151,7 @@ final class OwnerRequestHandlerTest extends TestCase
             },
             ProvideCurrentUserStub::buildCurrentUserByDefault(),
             new class implements IExtractProjectFromVariables {
+                #[\Override]
                 public function getProject(array $variables): \Project
                 {
                     return ProjectTestBuilder::aProject()->build();
@@ -172,6 +181,7 @@ final class OwnerRequestHandlerTest extends TestCase
 
         $owner_sender = new OwnerRequestHandler(
             new class implements RetrieveAllOwner {
+                #[\Override]
                 public function retrieveProjectDocumentOwnersForAutocomplete(Project $project, string $name_to_search): array
                 {
                     return [
@@ -197,6 +207,7 @@ final class OwnerRequestHandlerTest extends TestCase
                 }
             },
             new class implements CheckProjectAccess {
+                #[\Override]
                 public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
                 {
                     //do nothing
@@ -204,6 +215,7 @@ final class OwnerRequestHandlerTest extends TestCase
             },
             ProvideCurrentUserStub::buildCurrentUserByDefault(),
             new class implements IExtractProjectFromVariables {
+                #[\Override]
                 public function getProject(array $variables): \Project
                 {
                     return ProjectTestBuilder::aProject()->build();

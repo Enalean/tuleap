@@ -20,9 +20,8 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater */
     private $updater;
@@ -30,6 +29,7 @@ final class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extend
     /** @var SimpleXMLElement */
     private $field_change_xml;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->updater          = new Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater();

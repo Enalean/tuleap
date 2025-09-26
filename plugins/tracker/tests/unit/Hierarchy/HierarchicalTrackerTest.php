@@ -29,6 +29,7 @@ final class Tracker_Hierarchy_HierarchicalTrackerTest extends \Tuleap\Test\PHPUn
     private Tracker $child;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project_id = 110;

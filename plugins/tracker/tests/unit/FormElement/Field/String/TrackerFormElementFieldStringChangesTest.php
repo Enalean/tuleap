@@ -36,6 +36,7 @@ final class TrackerFormElementFieldStringChangesTest extends TestCase
     private Tracker_Artifact_ChangesetValue_Text $previous_value;
     private StringField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field          = StringFieldBuilder::aStringField(1456)->build();

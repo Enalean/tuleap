@@ -36,6 +36,7 @@ final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TestCase // 
     private Cardwall_OnTop_ColumnDao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_UpdateColumns $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_id = 666;

@@ -38,6 +38,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
     private BindStaticValueDao&MockObject $value_dao;
     private TrackerField&MockObject $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field = $this->createMock(TrackerField::class);

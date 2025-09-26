@@ -33,6 +33,7 @@ final class FieldsExtractorTest extends TestCase
 {
     private FieldsExtractor $extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->extractor = new FieldsExtractor();

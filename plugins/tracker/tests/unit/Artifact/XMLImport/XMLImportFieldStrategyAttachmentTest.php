@@ -56,6 +56,7 @@ final class XMLImportFieldStrategyAttachmentTest extends TestCase
     private Artifact $artifact;
     private string $extraction_path;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->extraction_path = vfsStream::setup()->url() . '/tmp';

@@ -41,6 +41,7 @@ final class BindStaticXmlExporterTest extends TestCase
     private array $default_values;
     private SimpleXMLElement $xml;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->xml            = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');

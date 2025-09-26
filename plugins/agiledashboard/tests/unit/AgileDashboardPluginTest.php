@@ -28,6 +28,7 @@ class AgileDashboardPluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ig
 {
     private $parameters;
 
+    #[\Override]
     protected function setUp(): void
     {
         $xml = new SimpleXMLElement(

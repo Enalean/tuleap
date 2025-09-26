@@ -32,6 +32,7 @@ class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Project $project;
     private \Git_RemoteServer_GerritServerFactory&\PHPUnit\Framework\MockObject\MockObject $gerrit_server_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

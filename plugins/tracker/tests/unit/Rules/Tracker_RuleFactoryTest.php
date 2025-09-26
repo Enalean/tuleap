@@ -47,6 +47,7 @@ final class Tracker_RuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
     private ListField $f4;
     private ListField $f5;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->xmlstr  = <<<XML

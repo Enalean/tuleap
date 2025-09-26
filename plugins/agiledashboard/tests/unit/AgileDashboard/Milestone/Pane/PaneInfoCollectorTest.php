@@ -36,6 +36,7 @@ final class PaneInfoCollectorTest extends TestCase
 {
     private PaneInfoCollector $collector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->collector = new PaneInfoCollector(

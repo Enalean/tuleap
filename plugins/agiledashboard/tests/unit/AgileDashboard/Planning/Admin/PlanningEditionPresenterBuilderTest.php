@@ -56,6 +56,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
     private Tracker_FormElementFactory&MockObject $tracker_form_element_factory;
     private Planning $planning;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager                = new EventManager();
@@ -107,6 +108,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
             function (RootPlanningEditionEvent $event) {
                 $event->prohibitMilestoneTrackerModification(
                     new class implements ModificationBan {
+                        #[\Override]
                         public function getMessage(): string
                         {
                             return 'Cannot update milestone';

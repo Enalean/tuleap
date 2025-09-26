@@ -41,6 +41,7 @@ final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Tracker_FormElementFactory&MockObject $form_element_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->transition_retriever      = $this->createMock(TransitionRetriever::class);

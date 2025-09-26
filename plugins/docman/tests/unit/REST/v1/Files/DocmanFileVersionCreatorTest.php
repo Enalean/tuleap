@@ -44,6 +44,7 @@ final class DocmanFileVersionCreatorTest extends TestCase
     private DocmanFileVersionCreator $version_creator;
     private Docman_LockFactory&MockObject $lock_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->creator         = $this->createMock(VersionToUploadCreator::class);

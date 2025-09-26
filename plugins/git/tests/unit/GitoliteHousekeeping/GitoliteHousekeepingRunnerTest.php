@@ -35,6 +35,7 @@ final class GitoliteHousekeepingRunnerTest extends TestCase
 {
     private Git_GitoliteHousekeeping_GitoliteHousekeepingRunner $runner;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->runner = new Git_GitoliteHousekeeping_GitoliteHousekeepingRunner(

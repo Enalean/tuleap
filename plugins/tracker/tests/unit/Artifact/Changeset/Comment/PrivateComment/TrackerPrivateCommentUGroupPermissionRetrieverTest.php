@@ -38,6 +38,7 @@ final class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
     private TrackerPrivateCommentUGroupPermissionRetriever $retriever;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permission_dao = $this->createMock(TrackerPrivateCommentUGroupPermissionDao::class);

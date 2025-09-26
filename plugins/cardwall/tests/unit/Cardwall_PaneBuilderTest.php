@@ -52,6 +52,7 @@ final class Cardwall_PaneBuilderTest extends TestCase // phpcs:ignore Squiz.Clas
     private Cardwall_MappingCollection&MockObject $mapping_collection;
     private ColumnCollection $columns;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->card_in_cell_presenter_builder = $this->createMock(Cardwall_CardInCellPresenterBuilder::class);

@@ -50,6 +50,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
     private PFUser $submitter;
     private Artifact $artifact;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->submitter          = UserTestBuilder::buildWithDefaults();

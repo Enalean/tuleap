@@ -27,6 +27,7 @@ final class Tracker_XML_Exporter_ChildrenCollectorTest extends \Tuleap\Test\PHPU
     /** @var Tracker_XML_Exporter_ChildrenCollectorTest */
     private $collector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->collector = new Tracker_XML_ChildrenCollector();

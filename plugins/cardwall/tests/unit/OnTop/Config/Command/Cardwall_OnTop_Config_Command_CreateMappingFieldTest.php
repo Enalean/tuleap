@@ -37,6 +37,7 @@ final class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends TestCas
     private Cardwall_OnTop_ColumnMappingFieldDao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_CreateMappingField $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_id = 666;

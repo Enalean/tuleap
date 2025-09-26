@@ -39,6 +39,7 @@ final class ArtifactLinkTypeConverterTest extends TestCase
             {
             }
 
+            #[\Override]
             public function getAllTypes(): array
             {
                 return $this->types;
@@ -108,6 +109,7 @@ final class ArtifactLinkTypeConverterTest extends TestCase
             {
             }
 
+            #[\Override]
             public function getAllTypes(): array
             {
                 return $this->types;

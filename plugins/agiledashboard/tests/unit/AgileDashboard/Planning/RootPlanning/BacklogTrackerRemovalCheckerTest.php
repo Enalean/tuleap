@@ -35,6 +35,7 @@ final class BacklogTrackerRemovalCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
     /** @var int[] */
     private array $backlog_tracker_ids;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->add_to_top_backlog_post_action_dao = $this->createMock(AddToTopBacklogPostActionDao::class);

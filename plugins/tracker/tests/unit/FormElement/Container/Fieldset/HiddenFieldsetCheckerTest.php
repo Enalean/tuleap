@@ -44,6 +44,7 @@ final class HiddenFieldsetCheckerTest extends TestCase
     private FieldsetContainer $fieldset;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->detector         = $this->createMock(HiddenFieldsetsDetector::class);

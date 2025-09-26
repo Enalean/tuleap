@@ -44,6 +44,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

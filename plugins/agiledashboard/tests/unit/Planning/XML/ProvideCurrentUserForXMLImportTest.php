@@ -77,6 +77,7 @@ final class ProvideCurrentUserForXMLImportTest extends TestCase
                 $this->user = $user;
             }
 
+            #[\Override]
             public function getCurrentUser(): \PFUser
             {
                 return $this->user;

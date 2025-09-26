@@ -57,6 +57,7 @@ final class MembershipManagerCreateGroupTest extends TestCase
     private PFUser $user1;
     private PFUser $user2;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->driver        = $this->createMock(Git_Driver_Gerrit::class);

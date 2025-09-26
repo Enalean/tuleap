@@ -43,6 +43,7 @@ final class PlanningUpdaterTest extends TestCase
     private PlanningDao&MockObject $planning_dao;
     private PlanningPermissionsManager&MockObject $permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_factory                  = $this->createMock(PlanningFactory::class);

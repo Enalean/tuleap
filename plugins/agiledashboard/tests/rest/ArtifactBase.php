@@ -31,6 +31,7 @@ class ArtifactBase extends Base
     protected $burnup_artifact_ids = [];
     private $burnup_tracker_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

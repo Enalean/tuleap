@@ -50,6 +50,7 @@ final class MovePatchActionTest extends TestCase
     private ArtifactPatchRepresentation $patch_representation;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker_id     = 1234;

@@ -56,6 +56,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user;
     private Artifact&MockObject $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user     = UserTestBuilder::aUser()->build();
@@ -144,6 +145,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new class extends Constraint
         {
+            #[\Override]
             public function matches(mixed $other): bool
             {
                 return $other instanceof PostCreationContext &&
@@ -151,6 +153,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                     $other->shouldSendNotifications();
             }
 
+            #[\Override]
             public function toString(): string
             {
                 return 'is expected context';
@@ -181,6 +184,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ) {
             }
 
+            #[\Override]
             public function evaluate(mixed $other, string $description = '', bool $return_result = false): ?bool
             {
                 if (! $other instanceof NewChangeset) {
@@ -261,6 +265,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 return null;
             }
 
+            #[\Override]
             public function toString(): string
             {
                 return 'is expected new changeset';

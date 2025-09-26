@@ -43,6 +43,7 @@ final class ArtifactsRankOrdererTest extends TestCase
     private PriorityManager&MockObject $priority_manager;
     private EventManager $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project          = ProjectTestBuilder::aProject()->build();

@@ -30,6 +30,7 @@ class DocmanWithMetadataActivatedBase extends RestBase
     public const string PROJECT_NAME = 'docmanprojectmetadata';
     protected $project_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

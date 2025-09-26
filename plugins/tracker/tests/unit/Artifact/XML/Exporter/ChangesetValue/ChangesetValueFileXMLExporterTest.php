@@ -48,6 +48,7 @@ final class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
 
     private Tracker_Artifact_ChangesetValue_File&MockObject $changeset_value;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');

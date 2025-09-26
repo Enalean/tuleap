@@ -30,6 +30,7 @@ final class ArtifactsDeletionConfigTest extends TestCase
     private ArtifactsDeletionConfigDAO|\PHPUnit\Framework\MockObject\MockObject $dao;
     private ArtifactsDeletionConfig $config;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao    = $this->createMock(ArtifactsDeletionConfigDAO::class);

@@ -30,6 +30,7 @@ final class FieldChangeFileBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private FieldChangeFileBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

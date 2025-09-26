@@ -43,6 +43,7 @@ final class NearestPlanningTrackerProviderTest extends TestCase
     private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
     private AgileDashboard_Planning_NearestPlanningTrackerProvider $provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->epic_tracker   = TrackerTestBuilder::aTracker()->withParent(null)->build();

@@ -42,6 +42,7 @@ final class UserAccountManagerTest extends TestCase
     /** @var string[] */
     private array $new_keys;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                        = new PFUser(['ldap_id' => 'testUser', 'language_id' => 'en']);

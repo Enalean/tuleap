@@ -34,6 +34,7 @@ final class OwnerRetrieverTest extends TestCase
     private UserManager&MockObject $user_manager;
     private OwnerRetriever $owner_check;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(UserManager::class);

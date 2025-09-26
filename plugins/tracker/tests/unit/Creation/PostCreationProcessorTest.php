@@ -54,6 +54,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private MoveActionAllowedDAO&\PHPUnit\Framework\MockObject\MockObject $move_action_allowed_dao;
     private PostCreationProcessor $processor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reference_manager       = $this->createMock(\ReferenceManager::class);

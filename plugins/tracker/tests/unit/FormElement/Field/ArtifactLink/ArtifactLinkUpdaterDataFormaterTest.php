@@ -34,6 +34,7 @@ final class ArtifactLinkUpdaterDataFormaterTest extends TestCase
     private Tracker&MockObject $tracker;
     private ArtifactLinkField $artifact_link_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = $this->createMock(Tracker::class);

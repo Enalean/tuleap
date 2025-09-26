@@ -48,6 +48,7 @@ final class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends \Tuleap\T
     private ListOfExecutionsWithAutomatedTestDataRetriever $list_of_executions_with_automated_test_data_retriever;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();

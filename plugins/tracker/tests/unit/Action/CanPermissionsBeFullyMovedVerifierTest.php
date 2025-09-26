@@ -33,6 +33,7 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     private Artifact $artifact;
     private CanPermissionsBeFullyMovedVerifier $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();

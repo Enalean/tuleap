@@ -38,6 +38,7 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $workflow_id = 112;
     private \Workflow&MockObject $workflow;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->hidden_dao           = $this->createMock(HiddenFieldsetsDao::class);

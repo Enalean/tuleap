@@ -38,6 +38,7 @@ final class CommitMetadataRetrieverTest extends TestCase
     private readonly MockObject&CommitStatusRetriever $status_retriever;
     private readonly MockObject&UserManager $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->status_retriever = $this->createMock(CommitStatusRetriever::class);

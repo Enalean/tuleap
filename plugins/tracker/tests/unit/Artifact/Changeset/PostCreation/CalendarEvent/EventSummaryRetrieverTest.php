@@ -48,6 +48,7 @@ final class EventSummaryRetrieverTest extends TestCase
     private readonly PFUser $recipient;
     private RetrieveSemanticTitleField $title_field_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker   = TrackerTestBuilder::aTracker()->withId(852)->build();

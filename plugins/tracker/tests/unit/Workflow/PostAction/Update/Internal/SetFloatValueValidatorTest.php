@@ -32,6 +32,7 @@ final class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private PostActionFieldIdValidator&MockObject $field_id_validator;
     private \Tracker_FormElementFactory&MockObject $form_element_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field_id_validator = $this->createMock(PostActionFieldIdValidator::class);

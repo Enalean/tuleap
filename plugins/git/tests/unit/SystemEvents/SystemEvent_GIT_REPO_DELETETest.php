@@ -44,6 +44,7 @@ final class SystemEvent_GIT_REPO_DELETETest extends TestCase // phpcs:ignore Squ
     private SystemEvent_GIT_REPO_DELETE&MockObject $event;
     private EventManager&MockObject $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project_id    = 101;

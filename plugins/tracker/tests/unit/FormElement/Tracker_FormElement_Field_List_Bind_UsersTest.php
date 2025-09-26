@@ -38,6 +38,7 @@ use UserManager;
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_Bind_UsersTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Spotter::clearInstance();

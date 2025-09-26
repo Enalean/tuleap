@@ -35,6 +35,7 @@ final class LinkVersionDataUpdatorTest extends TestCase
     private Docman_ItemFactory&MockObject $item_factory;
     private LinkVersionDataUpdator $link_data_updator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory      = $this->createMock(Docman_ItemFactory::class);

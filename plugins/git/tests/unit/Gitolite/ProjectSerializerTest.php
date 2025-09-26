@@ -54,6 +54,7 @@ final class ProjectSerializerTest extends TestCase
     private Git_Driver_Gerrit_ProjectCreatorStatus&MockObject $gerrit_project_status;
     private BigObjectAuthorizationManager&MockObject $big_object_authorization_manager;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->fix_dir = __DIR__ . '/_fixtures';
@@ -96,6 +97,7 @@ final class ProjectSerializerTest extends TestCase
         );
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();

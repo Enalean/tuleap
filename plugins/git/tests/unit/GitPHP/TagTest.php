@@ -34,6 +34,7 @@ final class TagTest extends TestCase
     private string $fixture_dir;
     private Git_Exec $git_exec;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,6 +47,7 @@ final class TagTest extends TestCase
         $this->git_exec->setLocalCommiter('test', 'test@example.com');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         system("rm -rf $this->fixture_dir");

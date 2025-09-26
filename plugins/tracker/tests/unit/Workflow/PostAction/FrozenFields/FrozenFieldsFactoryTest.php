@@ -37,6 +37,7 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private FrozenFieldsRetriever&MockObject $frozen_fields_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->frozen_dao              = $this->createMock(FrozenFieldsDao::class);

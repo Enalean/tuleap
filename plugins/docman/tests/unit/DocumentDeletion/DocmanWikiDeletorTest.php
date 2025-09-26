@@ -44,6 +44,7 @@ final class DocmanWikiDeletorTest extends TestCase
     private DocmanWikiDeletor $wiki_deletor;
     private DocmanReferencedWikiPageRetriever&MockObject $wiki_page_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permissions_manager = $this->createMock(Docman_PermissionsManager::class);

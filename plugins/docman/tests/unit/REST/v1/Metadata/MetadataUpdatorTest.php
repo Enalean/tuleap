@@ -61,6 +61,7 @@ final class MetadataUpdatorTest extends TestCase
     private UserManager&MockObject $user_manager;
     private Docman_SettingsBo&MockObject $docman_settings_bo;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory                = $this->createMock(Docman_ItemFactory::class);

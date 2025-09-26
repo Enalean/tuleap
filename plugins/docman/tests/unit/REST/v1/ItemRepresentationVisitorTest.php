@@ -49,6 +49,7 @@ final class ItemRepresentationVisitorTest extends TestCase
     private ItemRepresentationBuilder&MockObject $item_representation_builder;
     private ItemRepresentationVisitor $item_visitor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_representation_builder = $this->createMock(ItemRepresentationBuilder::class);

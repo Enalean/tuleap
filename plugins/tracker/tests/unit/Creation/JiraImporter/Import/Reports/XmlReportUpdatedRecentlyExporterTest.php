@@ -47,6 +47,7 @@ final class XmlReportUpdatedRecentlyExporterTest extends TestCase
     private FieldMapping $jira_issue_url_field_mapping;
     private FieldMapping $updated_field_mapping;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->summary_field_mapping = new ScalarFieldMapping(

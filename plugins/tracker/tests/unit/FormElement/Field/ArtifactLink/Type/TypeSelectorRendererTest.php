@@ -40,6 +40,7 @@ class TypeSelectorRendererTest extends TestCase
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
                 /** @return TypePresenter[] */
+                #[\Override]
                 public function getAllUsableTypesInProject(\Project $project): array
                 {
                     return [
@@ -77,6 +78,7 @@ class TypeSelectorRendererTest extends TestCase
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
                 /** @return TypePresenter[] */
+                #[\Override]
                 public function getAllUsableTypesInProject(\Project $project): array
                 {
                     return [
@@ -120,6 +122,7 @@ class TypeSelectorRendererTest extends TestCase
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
                 /** @return TypePresenter[] */
+                #[\Override]
                 public function getAllUsableTypesInProject(\Project $project): array
                 {
                     return [
@@ -162,6 +165,7 @@ class TypeSelectorRendererTest extends TestCase
         $renderer = new TypeSelectorRenderer(
             new class implements IRetrieveAllUsableTypesInProject {
                 /** @return TypePresenter[] */
+                #[\Override]
                 public function getAllUsableTypesInProject(\Project $project): array
                 {
                     return [

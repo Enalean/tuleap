@@ -52,6 +52,7 @@ final class MembershipManagerProjectAdminTest extends TestCase
     private Git_RemoteServer_GerritServerFactory&MockObject $remote_server_factory;
     private ProjectUGroup $admin_ugroup;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                  = $this->createMock(PFUser::class);

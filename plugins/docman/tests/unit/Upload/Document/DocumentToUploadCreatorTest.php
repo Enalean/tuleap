@@ -52,6 +52,7 @@ final class DocumentToUploadCreatorTest extends TestCase
     private PermissionItemUpdater&MockObject $permissions_item_updater;
     private FilenameBuilder $filename_builder;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao                      = $this->createMock(DocumentOngoingUploadDAO::class);

@@ -40,6 +40,7 @@ final class PlanningFactoryDuplicationTest extends TestCase
     private PlanningDao&MockObject $planning_dao;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_dao                 = $this->createMock(PlanningDao::class);

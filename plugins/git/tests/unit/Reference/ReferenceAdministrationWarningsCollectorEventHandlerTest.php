@@ -33,6 +33,7 @@ class ReferenceAdministrationWarningsCollectorEventHandlerTest extends TestCase
      */
     private $handler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->handler = new ReferenceAdministrationWarningsCollectorEventHandler();

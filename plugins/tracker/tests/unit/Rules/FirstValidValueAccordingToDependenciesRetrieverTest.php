@@ -52,6 +52,7 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
     private FirstValidValueAccordingToDependenciesRetriever $first_valid_value_according_to_dependencies_retriever;
     private BindValueIdCollectionStub $value_collection;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory = $this->createStub(Tracker_FormElementFactory::class);

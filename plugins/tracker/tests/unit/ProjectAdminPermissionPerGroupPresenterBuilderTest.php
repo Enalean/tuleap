@@ -34,6 +34,7 @@ final class ProjectAdminPermissionPerGroupPresenterBuilderTest extends \Tuleap\T
 {
     private ProjectAdminPermissionPerGroupPresenterBuilder $presenter_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

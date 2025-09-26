@@ -24,12 +24,12 @@ use Tuleap\Docman\Search\FilenameColumnReport;
 use Tuleap\Docman\Search\IdColumnReport;
 use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Docman_ReportColumnFactoryTest extends TestCase
+final class Docman_ReportColumnFactoryTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Docman_ReportColumnFactory $report_column_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->report_column_factory = new Docman_ReportColumnFactory(101);

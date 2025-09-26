@@ -40,6 +40,7 @@ final class ChangesetValueSaverIgnoringPermissionsTest extends \Tuleap\Test\PHPU
     private $field;
     private array $fields_data;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);

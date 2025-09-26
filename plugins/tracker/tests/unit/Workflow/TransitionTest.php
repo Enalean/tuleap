@@ -35,6 +35,7 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
     private $date_post_action;
     private $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->from = ListStaticValueBuilder::aStaticValue('value')->withId(123)->build();
@@ -48,6 +49,7 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
         $this->current_user = $this->createMock(\PFUser::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         PermissionsManager::clearInstance();

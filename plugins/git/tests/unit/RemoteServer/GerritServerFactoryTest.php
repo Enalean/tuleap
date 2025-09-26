@@ -60,6 +60,7 @@ final class GerritServerFactoryTest extends TestCase
     private Git_RemoteServer_Dao&MockObject $dao;
     private Git_RemoteServer_GerritServer $alternate_gerrit_server;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dar_1 = [

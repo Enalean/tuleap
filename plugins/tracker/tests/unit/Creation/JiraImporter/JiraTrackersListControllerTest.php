@@ -43,6 +43,7 @@ final class JiraTrackersListControllerTest extends TestCase
     private HTTPRequest $request;
     private JiraTrackersListController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();

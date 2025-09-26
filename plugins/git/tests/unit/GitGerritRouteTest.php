@@ -100,6 +100,7 @@ final class GitGerritRouteTest extends TestCase
     private Git_Driver_Gerrit_Template_TemplateFactory&MockObject $template_factory;
     private GitPermissionsManager&MockObject $git_permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                    = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
@@ -130,6 +131,7 @@ final class GitGerritRouteTest extends TestCase
         SystemEventManager::setInstance($system_event_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         SystemEventManager::clearInstance();

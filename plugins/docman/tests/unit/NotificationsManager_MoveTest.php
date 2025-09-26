@@ -61,6 +61,7 @@ final class NotificationsManager_MoveTest extends TestCase //phpcs:ignore Squiz.
 
     private MailFilter&MockObject $mail_filter;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_noreply', 'norelpy@example.com');

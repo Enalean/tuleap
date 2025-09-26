@@ -58,11 +58,13 @@ final class EventSubjectToNotificationListenerProviderTest extends \Tuleap\Test\
         $listener_provider = new EventSubjectToNotificationListenerProvider([]);
 
         $event_subject_to_notification = new class implements EventSubjectToNotification {
+            #[\Override]
             public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
             {
                 return new self();
             }
 
+            #[\Override]
             public function toWorkerEventPayload(): array
             {
                 return [];

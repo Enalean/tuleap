@@ -31,6 +31,7 @@ class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $burndown_cache_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->burndown_cache_retriever = new BurndownCacheDateRetriever();

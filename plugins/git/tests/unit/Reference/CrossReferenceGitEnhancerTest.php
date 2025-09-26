@@ -43,6 +43,7 @@ final class CrossReferenceGitEnhancerTest extends TestCase
     private PFUser $user;
     private Commit&MockObject $commit;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_helper = $this->createMock(UserHelper::class);

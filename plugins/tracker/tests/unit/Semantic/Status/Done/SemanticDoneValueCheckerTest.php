@@ -41,6 +41,7 @@ final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private SemanticDoneValueChecker $value_checker;
     private TrackerSemanticStatus&MockObject $semantic_status;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

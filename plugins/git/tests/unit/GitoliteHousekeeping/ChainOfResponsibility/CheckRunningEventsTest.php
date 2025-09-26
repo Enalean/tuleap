@@ -39,6 +39,7 @@ final class CheckRunningEventsTest extends TestCase
     private Git_GitoliteHousekeeping_ChainOfResponsibility_Command&MockObject $next;
     private Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->process_manager = $this->createMock(SystemEventProcessManager::class);

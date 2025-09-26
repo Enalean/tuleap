@@ -40,6 +40,7 @@ final class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker $tracker_2;
     private Tracker $tracker_1;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_1 = TrackerTestBuilder::aTracker()->withId(13)->withName('tracker_1')->build();

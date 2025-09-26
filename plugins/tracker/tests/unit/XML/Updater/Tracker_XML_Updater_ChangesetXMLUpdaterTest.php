@@ -54,6 +54,7 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
 
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

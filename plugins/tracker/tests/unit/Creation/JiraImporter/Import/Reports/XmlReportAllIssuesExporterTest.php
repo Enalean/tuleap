@@ -45,6 +45,7 @@ final class XmlReportAllIssuesExporterTest extends TestCase
     private FieldMapping $priority_field_mapping;
     private FieldMapping $jira_issue_url_field_mapping;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->summary_field_mapping = new ScalarFieldMapping(

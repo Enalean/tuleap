@@ -30,6 +30,7 @@ final class ReferenceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private CrossReferenceFactory $cross_reference_factory;
     private ReferenceRepresentationBuilder $reference_representation_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->cross_reference_factory = $this->createMock(CrossReferenceFactory::class);

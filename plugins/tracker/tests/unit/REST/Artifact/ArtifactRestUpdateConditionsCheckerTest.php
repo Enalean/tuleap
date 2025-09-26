@@ -30,6 +30,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactRestUpdateConditionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);

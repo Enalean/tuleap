@@ -43,6 +43,7 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private SimpleXMLElement $xml;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

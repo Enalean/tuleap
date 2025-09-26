@@ -110,6 +110,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     private int $summary_field_id;
     private DBConnection&MockObject $db_connection;
 
+    #[\Override]
     protected function setUp(): void
     {
         $workflow = $this->createStub(Workflow::class);

@@ -46,6 +46,7 @@ final class ListFieldCheckerWithBindUgroupsTest extends TestCase
     private const FIELD_NAME = 'a_field';
     private Comparison $comparison;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language']

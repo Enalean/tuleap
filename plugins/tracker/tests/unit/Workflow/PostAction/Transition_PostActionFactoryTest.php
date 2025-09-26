@@ -42,6 +42,7 @@ final class Transition_PostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
     private Transition_PostAction&MockObject $post_action_2;
     private Transition_PostAction&MockObject $post_action_3;
 
+    #[\Override]
     protected function setUp(): void
     {
         $transition_id    = 123;

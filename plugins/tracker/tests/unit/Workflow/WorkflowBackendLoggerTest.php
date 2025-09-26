@@ -30,6 +30,7 @@ final class WorkflowBackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LoggerInterface&MockObject $backend_logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->backend_logger = $this->createMock(\Psr\Log\LoggerInterface::class);

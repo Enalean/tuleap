@@ -31,6 +31,7 @@ final class ProjectTrackerReferenceRepresentationTest extends \Tuleap\Test\PHPUn
 {
     private ProjectBackgroundConfiguration&MockObject $project_background_configuration;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_background_configuration = $this->createMock(ProjectBackgroundConfiguration::class);

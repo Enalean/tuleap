@@ -34,6 +34,7 @@ final class PermissionsOnArtifactValidatorTest extends TestCase
     private PermissionsOnArtifactField&MockObject $field;
     private PermissionsOnArtifactValidator $validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field     = $this->createMock(PermissionsOnArtifactField::class);

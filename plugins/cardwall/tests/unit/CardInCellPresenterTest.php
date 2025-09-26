@@ -39,6 +39,7 @@ final class CardInCellPresenterTest extends TestCase
     private Cardwall_CardInCellPresenter $presenter;
     private Cardwall_CardPresenter&MockObject $card_presenter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $swimline_field_values = [100, 221];
@@ -50,6 +51,7 @@ final class CardInCellPresenterTest extends TestCase
         $this->presenter = new Cardwall_CardInCellPresenter($this->card_presenter, self::CARD_FIELD_ID, $swimline_id, $swimline_field_values);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

@@ -29,6 +29,7 @@ final class FieldChangeArtifactLinksBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 {
     private FieldChangeArtifactLinksBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

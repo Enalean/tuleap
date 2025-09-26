@@ -37,6 +37,7 @@ final class AddToTopBacklogJsonParserTest extends TestCase
     private AddToTopBacklogJsonParser $parser;
     private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->explicit_backlog_dao = $this->createMock(ExplicitBacklogDao::class);

@@ -51,6 +51,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     private QueryBuilderVisitor $query_builder;
     private QueryBuilderParameters $parameters;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker          = TrackerTestBuilder::aTracker()->withId(101)->build();

@@ -50,6 +50,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
     private Transition_PostAction_Field_DateDao&MockObject $date_dao;
     private Workflow&MockObject $workflow;
 
+    #[\Override]
     protected function setUp(): void
     {
         $workflow_id    = '1112';

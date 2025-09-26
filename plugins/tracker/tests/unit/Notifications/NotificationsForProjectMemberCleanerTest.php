@@ -37,6 +37,7 @@ final class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUni
     /** @var NotificationsForProjectMemberCleaner */
     private $cleaner;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

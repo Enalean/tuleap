@@ -46,6 +46,7 @@ final class UserAccountManagerPushSSHKeysTest extends TestCase
     private Git_RemoteServer_GerritServer&MockObject $remote_server1;
     private Git_RemoteServer_GerritServer&MockObject $remote_server2;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = new PFUser([

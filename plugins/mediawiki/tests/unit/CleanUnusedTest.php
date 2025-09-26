@@ -44,6 +44,7 @@ final class CleanUnusedTest extends \Tuleap\Test\PHPUnit\TestCase
     private TestLogger $logger;
     private MediawikiDataDir&MockObject $data_dir;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->logger = new TestLogger();

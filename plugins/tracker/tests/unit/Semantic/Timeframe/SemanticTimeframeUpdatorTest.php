@@ -53,6 +53,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $tracker_id;
     private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever&MockObject $suitable_trackers_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->semantic_timeframe_dao      = $this->createMock(SemanticTimeframeDao::class);

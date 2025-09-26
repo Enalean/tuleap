@@ -33,6 +33,7 @@ final class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private PermissionsExporter $permissions_exporter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->frozen_field_detector = $this->createMock(FrozenFieldDetector::class);

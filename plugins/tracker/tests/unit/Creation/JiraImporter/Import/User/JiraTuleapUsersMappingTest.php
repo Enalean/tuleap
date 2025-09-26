@@ -34,6 +34,7 @@ final class JiraTuleapUsersMappingTest extends TestCase
     private JiraTuleapUsersMapping $mapping;
     private PFUser $tuleap_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mapping     = new JiraTuleapUsersMapping();

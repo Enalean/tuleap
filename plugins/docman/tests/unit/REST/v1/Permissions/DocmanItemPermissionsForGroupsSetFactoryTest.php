@@ -41,6 +41,7 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
     private ProjectManager&MockObject $project_manager;
     private DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ugroup_manager   = $this->createMock(UGroupManager::class);

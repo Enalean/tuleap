@@ -38,6 +38,7 @@ final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tulea
     private UGroupManager&MockObject $ugroup_manager;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -56,6 +57,7 @@ final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tulea
         $this->permissions_factory = new Workflow_Transition_Condition_Permissions_Factory($this->ugroup_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         PermissionsManager::clearInstance();

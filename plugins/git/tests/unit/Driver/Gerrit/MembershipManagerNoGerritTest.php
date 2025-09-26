@@ -50,6 +50,7 @@ final class MembershipManagerNoGerritTest extends TestCase
     private ProjectUGroup $u_group;
     private Git_RemoteServer_GerritServerFactory&MockObject $remote_server_factory_without_gerrit;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user          = UserTestBuilder::aUser()->withLdapId('whatever')->build();

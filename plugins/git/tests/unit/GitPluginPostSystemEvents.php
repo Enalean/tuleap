@@ -34,6 +34,7 @@ final class GitPluginPostSystemEvents extends TestCase
     private GitPlugin&MockObject $plugin;
     private Git_GitoliteDriver&MockObject $gitolite_driver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->plugin          = $this->createPartialMock(GitPlugin::class, [

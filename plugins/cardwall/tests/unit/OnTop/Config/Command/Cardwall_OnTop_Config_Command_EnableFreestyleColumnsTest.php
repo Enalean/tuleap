@@ -36,6 +36,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends Tes
     private Cardwall_OnTop_Dao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_EnableFreestyleColumns $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_id = 666;

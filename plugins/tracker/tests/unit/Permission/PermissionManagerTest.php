@@ -37,6 +37,7 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
     private int $tracker_id = 112;
     private array $permissions;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project           = ProjectTestBuilder::aProject()->withId(34)->build();

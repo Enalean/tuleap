@@ -52,6 +52,7 @@ final class TrackersPermissionsRetrieverTest extends TestCase
     private CheckProjectAccessStub $project_access;
     private EventDispatcherStub $event_dispatcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fields_dao       = SearchUserGroupsPermissionOnFieldsStub::buildEmpty();

@@ -50,6 +50,7 @@ class AccentColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $decorator;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

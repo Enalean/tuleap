@@ -35,6 +35,7 @@ final class AdminPresenterBuilderTest extends TestCase
     private AdminPresenterBuilder $presenter_builder;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker              = TrackerTestBuilder::aTracker()->withId(20)->build();

@@ -55,6 +55,7 @@ final class FieldDataFromRESTBuilderTest extends TestCase
     private Tracker $tracker;
     private FileInfoForTusUploadedFileReadyToBeAttachedProvider&MockObject $tus_uploaded_file_provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager               = $this->createMock(UserManager::class);

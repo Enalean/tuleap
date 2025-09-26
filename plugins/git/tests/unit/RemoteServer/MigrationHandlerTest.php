@@ -59,6 +59,7 @@ final class MigrationHandlerTest extends TestCase
     private PFUser $user;
     private GitRepository $repository;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->git_system_event_manager = $this->createMock(Git_SystemEventManager::class);

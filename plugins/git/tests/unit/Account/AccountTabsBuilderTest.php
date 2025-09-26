@@ -35,6 +35,7 @@ class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private readonly AccountTabsBuilder $builder;
     private readonly MockObject&AccountTabPresenterCollection $collection;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory = $this->createMock(Git_RemoteServer_GerritServerFactory::class);

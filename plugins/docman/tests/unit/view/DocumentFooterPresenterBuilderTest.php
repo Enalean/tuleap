@@ -35,6 +35,7 @@ final class DocumentFooterPresenterBuilderTest extends TestCase
     private int $project_id;
     private DocumentFooterPresenterBuilder $builder;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->user = UserTestBuilder::anActiveUser()->build();

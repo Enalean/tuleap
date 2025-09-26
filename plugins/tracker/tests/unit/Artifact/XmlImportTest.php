@@ -85,6 +85,7 @@ final class XmlImportTest extends TestCase
     private ExternalFieldsExtractor&MockObject $external_field_extractor;
     private TrackerPrivateCommentUGroupExtractor&MockObject $private_comment_extractor;
 
+    #[\Override]
     public function setUp(): void
     {
         $workflow = $this->createStub(Workflow::class);

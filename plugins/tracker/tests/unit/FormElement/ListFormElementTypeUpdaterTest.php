@@ -45,6 +45,7 @@ final class ListFormElementTypeUpdaterTest extends TestCase
     private FieldDao&MockObject $field_dao;
     private BindDefaultValueDao&MockObject $bind_default_value_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory   = $this->createMock(Tracker_FormElementFactory::class);

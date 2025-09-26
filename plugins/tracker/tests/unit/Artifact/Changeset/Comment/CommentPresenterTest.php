@@ -40,6 +40,7 @@ final class CommentPresenterTest extends TestCase
 
     private MockObject&UserHelper $user_helper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_helper = $this->createMock(UserHelper::class);

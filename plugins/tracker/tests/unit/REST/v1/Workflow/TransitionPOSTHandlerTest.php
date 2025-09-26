@@ -52,6 +52,7 @@ final class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FROM_ID    = 134;
     private const TO_ID      = 279;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager               = $this->createMock(UserManager::class);

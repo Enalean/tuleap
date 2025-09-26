@@ -51,6 +51,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
         private Planning_MilestoneFactory&MockObject $milestone_factory;
         private MilestoneRepresentationBuilder&MockObject $milestone_representation_builder;
 
+        #[\Override]
         protected function setUp(): void
         {
             $this->milestone_factory                = $this->createMock(Planning_MilestoneFactory::class);
@@ -62,6 +63,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
             );
         }
 
+        #[\Override]
         protected function tearDown(): void
         {
             HTTPHeaderStack::clear();

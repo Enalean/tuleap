@@ -62,6 +62,7 @@ final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:
     private TestLogger $logger;
     private GitDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');

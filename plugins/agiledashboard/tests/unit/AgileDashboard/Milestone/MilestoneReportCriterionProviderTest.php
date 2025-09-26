@@ -49,6 +49,7 @@ final class MilestoneReportCriterionProviderTest extends TestCase
     private PFUser $user;
     private Tracker $task_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->options_provider            = $this->createMock(AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::class);

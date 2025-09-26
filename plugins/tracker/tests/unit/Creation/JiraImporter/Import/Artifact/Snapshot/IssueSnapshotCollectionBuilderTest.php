@@ -60,6 +60,7 @@ final class IssueSnapshotCollectionBuilderTest extends TestCase
     private AttachmentCollection $attachment_collection;
     private JiraUserRetriever&MockObject $jira_user_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changelog_entries_builder  = $this->createMock(ChangelogEntriesBuilder::class);

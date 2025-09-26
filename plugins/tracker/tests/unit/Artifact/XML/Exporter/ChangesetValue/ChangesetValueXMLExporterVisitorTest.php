@@ -61,6 +61,7 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
 
     private ChangesetValueArtifactLinkXMLExporter $artlink_exporter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->int_exporter     = $this->createMock(
@@ -218,27 +219,33 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
     private function getExternalChangeset($changeset, $field)
     {
         return new class (1, $changeset, $field, false) extends Tracker_Artifact_ChangesetValue {
+            #[\Override]
             public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
             {
                 return $visitor->visitExternalField($this);
             }
 
+            #[\Override]
             public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
             {
             }
 
+            #[\Override]
             public function nodiff($format = 'html')
             {
             }
 
+            #[\Override]
             public function getRESTValue(PFUser $user)
             {
             }
 
+            #[\Override]
             public function getFullRESTValue(PFUser $user)
             {
             }
 
+            #[\Override]
             public function getValue()
             {
             }
@@ -248,10 +255,12 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
     private function getExternalExporter(): ChangesetValueXMLExporter
     {
         return new class extends ChangesetValueXMLExporter {
+            #[\Override]
             protected function getFieldChangeType()
             {
             }
 
+            #[\Override]
             public function export(
                 SimpleXMLElement $artifact_xml,
                 SimpleXMLElement $changeset_xml,

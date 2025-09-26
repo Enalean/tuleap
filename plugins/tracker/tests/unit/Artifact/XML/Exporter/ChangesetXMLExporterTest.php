@@ -59,6 +59,7 @@ final class ChangesetXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_Artifact_Changeset&MockObject $changeset;
     private Tracker_Artifact_Changeset_Comment&MockObject $comment;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager      = $this->createMock(\UserManager::class);

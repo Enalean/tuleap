@@ -54,6 +54,7 @@ final class ArtifactLinkerTest extends TestCase
     private int $theme_id   = 750;
     private int $epic_id    = 2;
 
+    #[\Override]
     protected function setUp(): void
     {
         // group

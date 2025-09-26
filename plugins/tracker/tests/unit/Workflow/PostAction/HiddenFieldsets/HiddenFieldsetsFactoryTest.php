@@ -35,6 +35,7 @@ final class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private HiddenFieldsetsRetriever&MockObject $hidden_fieldsets_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->hidden_fieldsets_dao       = $this->createMock(HiddenFieldsetsDao::class);

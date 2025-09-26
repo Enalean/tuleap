@@ -79,6 +79,7 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
             [$field],
             new class implements FlatArtifactListValueLabelTransformer
             {
+                #[\Override]
                 public function transformListValueLabels(
                     int $artifact_id,
                     int $field_id,

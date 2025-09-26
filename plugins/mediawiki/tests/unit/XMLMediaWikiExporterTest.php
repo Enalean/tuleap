@@ -55,6 +55,7 @@ final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private vfsStreamDirectory $fixtures_dir;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -85,6 +86,7 @@ final class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('codendi_cache_dir', $this->fixtures_dir->url());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ForgeConfig::restore();

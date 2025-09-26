@@ -40,6 +40,7 @@ final class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
     private SemanticProgressAdminPresenterBuilder $builder;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker              = TrackerTestBuilder::aTracker()->build();

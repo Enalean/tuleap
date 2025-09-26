@@ -34,6 +34,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowRulesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();

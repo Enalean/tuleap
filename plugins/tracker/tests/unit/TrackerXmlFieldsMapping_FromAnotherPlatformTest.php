@@ -43,6 +43,7 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends TestCase //p
 
     private TrackerXmlFieldsMapping_FromAnotherPlatform $xml_static_fields_mapping;
 
+    #[\Override]
     protected function setUp(): void
     {
         $static_value_01 = $this->getBindValueWithId(24076);

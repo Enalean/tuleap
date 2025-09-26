@@ -37,6 +37,7 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
     private Artifact $artifact;
     private SemanticProgressDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao      = $this->createMock(SemanticProgressDao::class);

@@ -40,6 +40,7 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
      */
     private $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);

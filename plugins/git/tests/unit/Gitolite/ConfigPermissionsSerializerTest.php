@@ -49,6 +49,7 @@ final class ConfigPermissionsSerializerTest extends TestCase
     private int $repository_id = 200;
     private PermissionsManager&MockObject $permissions_manager;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->project_id++;
@@ -70,6 +71,7 @@ final class ConfigPermissionsSerializerTest extends TestCase
         );
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         PermissionsManager::clearInstance();

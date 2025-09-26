@@ -61,6 +61,7 @@ final class InitialChangesetCreatorTest extends TestCase
     private MockObject&Workflow $workflow;
     private SaveArtifactStub $artifact_saver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory = $this->createMock(Tracker_FormElementFactory::class);

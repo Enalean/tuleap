@@ -66,6 +66,7 @@ final class MilestoneControllerTest extends TestCase
     private BreadCrumb $service_breadcrumb;
     private BreadCrumb $top_backlog_breadcrumb;
 
+    #[\Override]
     public function setUp(): void
     {
         $GLOBALS['Language']->method('getText')->willReturnCallback(static fn(string $domain, string $text) => $text);

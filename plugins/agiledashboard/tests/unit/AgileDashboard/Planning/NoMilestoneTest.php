@@ -37,6 +37,7 @@ final class NoMilestoneTest extends TestCase
     private Planning $planning;
     private Planning_NoMilestone $milestone;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project   = ProjectTestBuilder::aProject()->withId(123)->build();

@@ -47,6 +47,7 @@ final class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTes
     private Project $project;
     private ProjectUGroup $ugroup;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao       = $this->createMock(GitDao::class);

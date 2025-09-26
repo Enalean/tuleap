@@ -58,6 +58,7 @@ final class HTTPAccessControlTest extends TestCase
     private GitHTTPOperation&MockObject $git_operation;
     private GitHTTPAskBasicAuthenticationChallenge&MockObject $ask_basic_authentication_challenge;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                              = new TestLogger();
@@ -85,6 +86,7 @@ final class HTTPAccessControlTest extends TestCase
         $this->git_operation  = $this->createMock(GitHTTPOperation::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_SERVER['REMOTE_ADDR']);

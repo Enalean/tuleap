@@ -47,6 +47,7 @@ final class ArtifactChangesetSaverTest extends TestCase
     private Tracker_ArtifactDao&MockObject $tracker_artifact_dao;
     private Tracker_Artifact_ChangesetDao&MockObject $changeset_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset_dao          = $this->createMock(Tracker_Artifact_ChangesetDao::class);

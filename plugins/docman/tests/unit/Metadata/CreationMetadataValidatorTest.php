@@ -34,6 +34,7 @@ final class CreationMetadataValidatorTest extends TestCase
     private $factory;
     private CreationMetadataValidator $validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory   = $this->createMock(\Docman_MetadataFactory::class);

@@ -49,6 +49,7 @@ final class EventDatesRetrieverTest extends TestCase
     private \Tuleap\Tracker\FormElement\Field\Date\DateField $end_field;
     private NullLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(1001)->build();

@@ -37,6 +37,7 @@ final class FieldChangeComputedXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field_change = new \SimpleXMLElement('<?xml version="1.0"?>

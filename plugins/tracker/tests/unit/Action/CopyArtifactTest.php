@@ -90,6 +90,7 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
     private TrackerFactory&MockObject $tracker_factory;
     private EventManager&MockObject $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

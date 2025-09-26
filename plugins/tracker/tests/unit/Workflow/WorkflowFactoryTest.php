@@ -43,6 +43,7 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:i
 
     private TransitionFactory&MockObject $transition_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

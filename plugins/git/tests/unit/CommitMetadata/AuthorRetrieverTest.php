@@ -45,6 +45,7 @@ final class AuthorRetrieverTest extends TestCase
     private const string AUTHOR_NAME    = 'test';
     private AuthorRetriever $author_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->git_folder = $this->getTmpDir();

@@ -44,6 +44,7 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private FileUploadDataProvider&Stub $first_usable_field_data_getter;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->first_usable_field_data_getter = $this->createStub(FileUploadDataProvider::class);

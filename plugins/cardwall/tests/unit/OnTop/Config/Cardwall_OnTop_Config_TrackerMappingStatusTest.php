@@ -38,6 +38,7 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TestCase // p
      */
     private array $value_mappings;
 
+    #[\Override]
     protected function setUp(): void
     {
         $value_none       = ListStaticValueBuilder::noneStaticValue()->build();

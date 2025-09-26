@@ -41,6 +41,7 @@ final class PermissionsManagerPerfTest extends TestCase
     private ProjectAccessChecker&MockObject $project_access_checker;
     private Project $project;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->permissions_manager    = $this->createPartialMock(Docman_PermissionsManager::class, [

@@ -43,6 +43,7 @@ final class MailGatewayBuilderTest extends TestCase
     private IncomingMail $insecure_mail;
     private IncomingMail $token_mail;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

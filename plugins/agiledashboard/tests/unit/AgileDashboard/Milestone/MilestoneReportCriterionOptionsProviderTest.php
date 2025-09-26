@@ -50,6 +50,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
     private AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider $provider;
     private AgileDashboard_Planning_NearestPlanningTrackerProvider&MockObject $nearest_planning_tracker_provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         /*

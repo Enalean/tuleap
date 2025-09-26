@@ -40,6 +40,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         'T13' => 113,
     ];
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory             = $this->createMock(\TrackerFactory::class);

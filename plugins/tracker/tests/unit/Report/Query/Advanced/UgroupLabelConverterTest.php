@@ -36,6 +36,7 @@ final class UgroupLabelConverterTest extends \Tuleap\Test\PHPUnit\TestCase
     private BaseLanguage&MockObject $english_base_language;
     private BaseLanguage&MockObject $french_base_language;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->english_base_language = $this->createMock(\BaseLanguage::class);
@@ -68,6 +69,7 @@ final class UgroupLabelConverterTest extends \Tuleap\Test\PHPUnit\TestCase
             });
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ForgeConfig::restore();

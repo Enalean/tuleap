@@ -55,6 +55,7 @@ final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
     private Project $project;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project          = ProjectTestBuilder::aProject()->build();

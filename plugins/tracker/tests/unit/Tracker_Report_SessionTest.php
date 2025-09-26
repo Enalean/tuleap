@@ -25,6 +25,7 @@ final class Tracker_Report_SessionTest extends \Tuleap\Test\PHPUnit\TestCase // 
 {
     private $tracker_report_session;
 
+    #[\Override]
     protected function setUp(): void
     {
         $report_id                              = 111;
@@ -33,6 +34,7 @@ final class Tracker_Report_SessionTest extends \Tuleap\Test\PHPUnit\TestCase // 
         $this->tracker_report_session->setSessionNamespace($_SESSION['Tracker_Report_SessionTest']);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

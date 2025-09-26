@@ -47,6 +47,7 @@ final class Gitolite3LogParserTest extends TestCase
     private GitRepository $repository;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory       = $this->createMock(GitRepositoryFactory::class);

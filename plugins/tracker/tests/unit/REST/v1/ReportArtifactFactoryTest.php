@@ -34,6 +34,7 @@ final class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\MockObject $tracker_artifact_factory;
     private PriorityDao&\PHPUnit\Framework\MockObject\MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);

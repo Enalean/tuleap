@@ -49,6 +49,7 @@ final class TrackerFormElementFactoryTest extends TestCase
     private Tracker $tracker;
     private TrackerXmlImportFeedbackCollector $feedback_collector;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->form_element_factory = Tracker_FormElementFactory::instance();
@@ -64,6 +65,7 @@ final class TrackerFormElementFactoryTest extends TestCase
         $this->form_element->setTracker($this->tracker);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         EventManager::clearInstance();

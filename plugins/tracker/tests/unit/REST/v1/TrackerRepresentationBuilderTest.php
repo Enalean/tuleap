@@ -54,6 +54,7 @@ final class TrackerRepresentationBuilderTest extends TestCase
     private int $offset = 0;
     private int $limit  = 50;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project                =   ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withPublicName('Sibérie')->build();

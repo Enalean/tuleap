@@ -54,6 +54,7 @@ final class ScrumPresenterBuilderTest extends TestCase
     private PlanningFactory&MockObject $planning_factory;
     private ConfigurationDao&MockObject $configuration_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->configuration_dao            = $this->createMock(ConfigurationDao::class);

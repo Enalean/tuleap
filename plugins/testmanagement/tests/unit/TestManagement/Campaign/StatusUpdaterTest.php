@@ -38,6 +38,7 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private StatusUpdater $updater;
     private StatusValueRetriever&MockObject $status_value_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->status_value_retriever = $this->createMock(StatusValueRetriever::class);

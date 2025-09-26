@@ -45,6 +45,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
     private Tracker_FormElement_Field_List_Bind&MockObject $bind;
     private ListField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $decorator   = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 0, 0, 0, 'inca-silver');

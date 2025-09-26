@@ -34,6 +34,7 @@ final class TrackerArtifactChangesetValueFileTest extends TestCase
 {
     private Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->changeset           = ChangesetTestBuilder::aChangeset(15)->build();

@@ -57,6 +57,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private array $list_rules;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
@@ -167,6 +168,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule_date_factory->method('searchByTrackerId')->willReturn([]);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         unset($GLOBALS['Response']);

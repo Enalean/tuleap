@@ -48,6 +48,7 @@ final class NotifiedPeopleRetrieverTest extends TestCase
     private int $parent_item_id;
     private ProjectUGroup $custom_ugroup;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->build();

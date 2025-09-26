@@ -39,6 +39,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
     private Transition_PostAction_CIBuild $post_action_ci_build;
     private string $job_url;
 
+    #[\Override]
     protected function setUp(): void
     {
         $build_user             = 101;

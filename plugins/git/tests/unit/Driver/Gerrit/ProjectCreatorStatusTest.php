@@ -36,6 +36,7 @@ final class ProjectCreatorStatusTest extends TestCase
     private GitRepository&MockObject $repository;
     private Git_Driver_Gerrit_ProjectCreatorStatus $gerrit_status;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao        = $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatusDao::class);

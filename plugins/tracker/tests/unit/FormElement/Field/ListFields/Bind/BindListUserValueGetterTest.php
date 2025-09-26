@@ -41,6 +41,7 @@ final class BindListUserValueGetterTest extends TestCase
     private BindDefaultValueDao&MockObject $default_dao;
     private UserHelper&MockObject $user_helper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_dao     = $this->createMock(BindDefaultValueDao::class);

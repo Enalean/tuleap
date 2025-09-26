@@ -39,6 +39,7 @@ final class BuildStatusChangePermissionManagerTest extends TestCase
     private readonly PFUser $user;
     private readonly Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project    = ProjectTestBuilder::aProject()->withId(140)->build();

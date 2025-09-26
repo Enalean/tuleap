@@ -48,6 +48,7 @@ final class Git_Backend_GitoliteTest extends TestCase //phpcs:ignore Squiz.Class
     private string $fixtureRenamePath;
     private array $forkPermissions;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->fixtureRenamePath = $this->getTmpDir() . '/rename';

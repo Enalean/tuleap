@@ -48,6 +48,7 @@ final class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends 
     private PFUser $user;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao       = $this->createMock(GitDao::class);

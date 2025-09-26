@@ -37,6 +37,7 @@ final class AddToTopBacklogValueUpdaterTest extends TestCase
     private PostActionCollection&MockObject $collection;
     private Transition $transition;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->value_repository = $this->createMock(AddToTopBacklogValueRepository::class);

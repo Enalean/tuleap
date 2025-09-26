@@ -33,6 +33,7 @@ final class GitoliteAccessURLGeneratorTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_default_domain', 'example.com');

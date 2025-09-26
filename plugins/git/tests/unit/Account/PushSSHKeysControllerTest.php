@@ -49,6 +49,7 @@ final class PushSSHKeysControllerTest extends TestCase
     private readonly PFUser $user;
     private readonly PushSSHKeysController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_account_manager = $this->createMock(Git_UserAccountManager::class);

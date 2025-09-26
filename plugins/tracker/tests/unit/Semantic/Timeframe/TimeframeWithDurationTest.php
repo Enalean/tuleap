@@ -46,6 +46,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->start_date_field = $this->getMockedDateField(1001);

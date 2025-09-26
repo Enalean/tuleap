@@ -36,6 +36,7 @@ final class CustomMetadataCollectionBuilderTest extends TestCase
     private Docman_MetadataFactory&MockObject $metadata_factory;
     private MetadataListOfValuesElementListBuilder&MockObject $list_of_value_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata_factory      = $this->createMock(Docman_MetadataFactory::class);

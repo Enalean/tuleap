@@ -47,6 +47,7 @@ final class ProcessChildrenTriggersCommandTest extends TestCase
     private Tracker_Workflow_Trigger_RulesManager&MockObject $trigger_rules_manager;
     private TypePresenterFactory&MockObject $nature_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->trigger_rules_manager = $this->createMock(Tracker_Workflow_Trigger_RulesManager::class);

@@ -42,6 +42,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
     private Planning_Controller|\PHPUnit\Framework\MockObject\MockObject $planning_controller;
     private Planning_MilestoneFactory|\PHPUnit\Framework\MockObject\MockObject $planning_milestone_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

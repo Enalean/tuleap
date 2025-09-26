@@ -39,6 +39,7 @@ final class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
+    #[\Override]
     public function setUp(): void
     {
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());

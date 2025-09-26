@@ -57,6 +57,7 @@ final class EmailNotificationTaskTest extends TestCase
     private Artifact&MockObject $artifact;
     private Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger              = new NullLogger();

@@ -35,6 +35,7 @@ final class CommentFromWhereBuilderFactoryTest extends \Tuleap\Test\PHPUnit\Test
 
     private PermissionChecker&MockObject $permission_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

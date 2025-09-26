@@ -36,7 +36,7 @@ use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_GIT_REPO_FORKTest extends TestCase
+final class SystemEvent_GIT_REPO_FORKTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private GitRepository&MockObject $old_repository;
     private GitRepository $new_repository;
@@ -46,6 +46,7 @@ final class SystemEvent_GIT_REPO_FORKTest extends TestCase
     private SystemEvent_GIT_REPO_FORK&MockObject $event;
     private GitRepositoryFactory&MockObject $repository_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->backend = $this->createMock(Git_Backend_Gitolite::class);

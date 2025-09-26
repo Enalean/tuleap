@@ -48,6 +48,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
     private GitPHPProjectRetriever&MockObject $gitphp_project_retriever;
     private Project&MockObject $gitphp_project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->request                  = new HTTPRequest();
@@ -74,6 +75,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         HTTPRequest::clearInstance();

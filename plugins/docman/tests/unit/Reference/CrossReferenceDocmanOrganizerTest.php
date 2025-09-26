@@ -39,6 +39,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
     private CrossReferenceDocmanOrganizer $organizer;
     private DocumentFromReferenceValueFinder&MockObject $finder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager = $this->createMock(ProjectManager::class);

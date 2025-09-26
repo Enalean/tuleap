@@ -33,6 +33,7 @@ final class ExternalLinkRedirectorTest extends TestCase
 {
     private HTTPRequest&MockObject $request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->request = $this->createMock(HTTPRequest::class);

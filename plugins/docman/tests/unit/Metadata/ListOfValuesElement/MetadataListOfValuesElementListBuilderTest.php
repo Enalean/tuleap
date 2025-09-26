@@ -31,6 +31,7 @@ final class MetadataListOfValuesElementListBuilderTest extends TestCase
 {
     private Docman_MetadataListOfValuesElementDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(Docman_MetadataListOfValuesElementDao::class);

@@ -42,6 +42,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactPayloadBuilder $builder;
     private ChangesetRepresentationBuilder&MockObject $changeset_representation_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $user_helper = $this->createMock(\UserHelper::class);
@@ -55,6 +56,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ProvideUserAvatarUrlStub::build(),
             new class implements ProjectUserUGroupMembershipsRetriever
             {
+                #[\Override]
                 public function getMembershipsInAProject(\Project $project, \PFUser $user): array
                 {
                     return [new \ProjectUGroup(['group_id' => $project->getID(), 'ugroup_id' => 104])];
@@ -63,6 +65,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \UserHelper::clearInstance();

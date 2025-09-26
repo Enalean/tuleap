@@ -61,6 +61,7 @@ final class JiraRunnerTest extends TestCase
     private PFUser $anonymous_user;
     private JiraUserOnTuleapCache $jira_user_on_tuleap_cache;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                    = new TestLogger();

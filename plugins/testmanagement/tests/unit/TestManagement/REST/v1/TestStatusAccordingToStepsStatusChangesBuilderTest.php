@@ -45,6 +45,7 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
      */
     private $status_field;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->builder      = new TestStatusAccordingToStepsStatusChangesBuilder();

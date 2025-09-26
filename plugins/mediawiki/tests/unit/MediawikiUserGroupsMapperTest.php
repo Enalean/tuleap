@@ -42,6 +42,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
 
     private MediawikiUserGroupsMapper $mapper;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

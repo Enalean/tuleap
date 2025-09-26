@@ -48,6 +48,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser $user;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = $this->buildTracker();

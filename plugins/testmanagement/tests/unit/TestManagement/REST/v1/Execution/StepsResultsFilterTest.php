@@ -41,6 +41,7 @@ class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $execution_value;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

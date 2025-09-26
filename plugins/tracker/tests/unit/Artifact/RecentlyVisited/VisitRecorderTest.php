@@ -33,6 +33,7 @@ final class VisitRecorderTest extends TestCase
     private RecentlyVisitedDao&MockObject $dao;
     private VisitRecorder $visit_recorder;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao            = $this->createMock(RecentlyVisitedDao::class);

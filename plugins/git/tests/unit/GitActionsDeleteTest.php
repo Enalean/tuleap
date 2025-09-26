@@ -69,6 +69,7 @@ final class GitActionsDeleteTest extends TestCase
     private Git_SystemEventManager&MockObject $git_system_event_manager;
     private Git&MockObject $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_id    = 101;

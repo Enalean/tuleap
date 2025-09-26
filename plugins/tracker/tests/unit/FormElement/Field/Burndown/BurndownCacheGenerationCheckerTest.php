@@ -54,6 +54,7 @@ final class BurndownCacheGenerationCheckerTest extends TestCase
     private BurndownCacheGenerationChecker $cache_checker;
     private BurndownCacheDateRetriever $date_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->cache_generator        = $this->createMock(BurndownCacheGenerator::class);

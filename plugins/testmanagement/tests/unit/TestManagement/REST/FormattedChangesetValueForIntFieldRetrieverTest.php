@@ -34,6 +34,7 @@ final class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test
     private FormattedChangesetValueForIntFieldRetriever $formatted_changeset_value_for_int_field_retriever;
     private Tracker_FormElementFactory&MockObject $tracker_formelement_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_formelement_factory                       = $this->createMock(Tracker_FormElementFactory::class);

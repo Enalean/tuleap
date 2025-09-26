@@ -133,6 +133,7 @@ class XMLSelectBoxFieldTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $id_generator = new class implements IDGenerator
         {
+            #[\Override]
             public function getNextId(): int
             {
                 return 58;

@@ -44,6 +44,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \Tuleap\
     private SelectboxField&MockObject $target_field;
     private Tracker_FormElement_Field_List_BindValue&MockObject $target_value;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->parent = $this->createMock(Artifact::class);

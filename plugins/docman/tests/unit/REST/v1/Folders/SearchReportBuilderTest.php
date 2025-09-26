@@ -56,6 +56,7 @@ final class SearchReportBuilderTest extends TestCase
     private Docman_MetadataFactory|\PHPUnit\Framework\MockObject\MockObject $metadata_factory;
     private SearchColumnCollection $custom_properties;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata_factory = $this->getMockBuilder(Docman_MetadataFactory::class)
