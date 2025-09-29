@@ -42,12 +42,13 @@
             <template v-if="should_display_lock_unlock">
                 <lock-item
                     v-bind:item="item"
-                    v-bind:document_lock="getDocumentLock()"
+                    v-bind:document_lock="document_lock"
                     data-test="document-dropdown-menu-lock-item"
                     slot="lock-item"
                 />
                 <unlock-item
                     v-bind:item="item"
+                    v-bind:document_lock="document_lock"
                     data-test="document-dropdown-menu-unlock-item"
                     slot="unlock-item"
                 />
@@ -104,6 +105,8 @@ const props = defineProps<{ item: Item }>();
 const is_deletion_allowed = strictInject(IS_DELETION_ALLOWED);
 const forbid_writers_to_update = strictInject(FORBID_WRITERS_TO_UPDATE);
 const forbid_writers_to_delete = strictInject(FORBID_WRITERS_TO_DELETE);
+
+const document_lock = getDocumentLock();
 
 const is_item_a_wiki_with_approval_table = computed((): boolean => {
     return isWiki(props.item) && props.item.approval_table !== null;

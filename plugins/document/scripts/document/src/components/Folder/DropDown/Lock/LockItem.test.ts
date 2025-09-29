@@ -31,13 +31,14 @@ describe("LockItem", () => {
     beforeEach(() => {
         document_lock = {
             lockDocument: vi.fn(),
+            unlockDocument: vi.fn(),
         };
     });
 
     function createWrapper(item: ItemFile): VueWrapper<InstanceType<typeof LockItem>> {
         return shallowMount(LockItem, {
             props: { item, document_lock },
-            global: getGlobalTestOptions({}),
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 

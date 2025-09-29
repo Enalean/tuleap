@@ -23,27 +23,22 @@ import { shallowMount } from "@vue/test-utils";
 import UnlockItem from "./UnlockItem.vue";
 import type { ItemFile, LockInfo } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import type { DocumentLock } from "../../../../helpers/lock/document-lock";
 
 describe("UnlockItem", () => {
-    let unlock_document: vi.Mock;
+    let document_lock: DocumentLock;
 
     beforeEach(() => {
-        unlock_document = vi.fn();
+        document_lock = {
+            lockDocument: vi.fn(),
+            unlockDocument: vi.fn(),
+        };
     });
 
     function createWrapper(item: ItemFile): VueWrapper<InstanceType<typeof UnlockItem>> {
         return shallowMount(UnlockItem, {
-            props: { item },
-            global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        lock: {
-                            actions: { unlockDocument: unlock_document },
-                            namespaced: true,
-                        },
-                    },
-                }),
-            },
+            props: { item, document_lock },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 
@@ -120,6 +115,6 @@ describe("UnlockItem", () => {
 
         wrapper.get("[data-test=document-dropdown-menu-unlock-item]").trigger("click");
 
-        expect(unlock_document).toHaveBeenCalledWith(expect.any(Object), item);
+        expect(document_lock.unlockDocument).toHaveBeenCalledWith(expect.any(Object), item);
     });
 });

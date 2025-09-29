@@ -22,12 +22,13 @@
         <template v-if="currently_previewed_item.user_can_write">
             <lock-item
                 v-bind:item="currently_previewed_item"
-                v-bind:document_lock="getDocumentLock()"
+                v-bind:document_lock="document_lock"
                 data-test="document-dropdown-menu-lock-item"
                 slot="lock-item"
             />
             <unlock-item
                 v-bind:item="currently_previewed_item"
+                v-bind:document_lock="document_lock"
                 data-test="document-dropdown-menu-unlock-item"
                 slot="unlock-item"
             />
@@ -78,6 +79,8 @@ const { currently_previewed_item } = useState<Pick<State, "currently_previewed_i
 ]);
 const forbid_writers_to_update = strictInject(FORBID_WRITERS_TO_UPDATE);
 const forbid_writers_to_delete = strictInject(FORBID_WRITERS_TO_DELETE);
+
+const document_lock = getDocumentLock();
 
 const can_user_delete_item = computed((): boolean => {
     return (
