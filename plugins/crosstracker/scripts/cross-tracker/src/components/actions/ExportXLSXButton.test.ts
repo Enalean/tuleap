@@ -1,49 +1,49 @@
-/**
+/*
  * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
- *  Tuleap is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  Tuleap is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
-import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../injection-symbols";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
+import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
 import ExportXLSXButton from "./ExportXLSXButton.vue";
-import { RetrieveArtifactsTableStub } from "../../tests/stubs/RetrieveArtifactsTableStub";
-import { Fault } from "@tuleap/fault";
+import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
 import { errAsync, okAsync } from "neverthrow";
-import { ColumnNameGetter } from "../domain/ColumnNameGetter";
-import { createVueGettextProviderPassThrough } from "../helpers/vue-gettext-provider-for-test";
-import type { Events, NotifyFaultEvent } from "../helpers/widget-events";
-import { NOTIFY_FAULT_EVENT } from "../helpers/widget-events";
+import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
+import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
+import type { Events, NotifyFaultEvent } from "../../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
+import { Fault } from "@tuleap/fault";
 
 vi.useFakeTimers();
 
 const downloadXLSXDocument = vi.fn();
-vi.mock("../helpers/exporter/export-document", () => {
+vi.mock("../../helpers/exporter/export-document", () => {
     return {
         downloadXLSXDocument: downloadXLSXDocument,
     };
 });
 
 const downloadXLSX = vi.fn();
-vi.mock("../helpers/exporter/xlsx/download-xlsx", () => {
+vi.mock("../../helpers/exporter/xlsx/download-xlsx", () => {
     return {
         downloadXLSX: downloadXLSX,
     };
@@ -94,7 +94,7 @@ describe("ExportXLSXButton", () => {
         });
     }
 
-    describe("exportCSV()", () => {
+    describe("exportXLSX()", () => {
         it(`When the server responds,
             then it will hide feedbacks,
             show a spinner and offer to download a XLSX file with the results`, async () => {

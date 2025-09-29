@@ -31,7 +31,7 @@
         class="tlp-button-primary tlp-button-outline tlp-button-mini query-details-button"
         data-test="toggle-query-details-button"
     >
-        {{ $gettext("Query details & tools") }}
+        {{ $gettext("Query details") }}
     </label>
 </template>
 

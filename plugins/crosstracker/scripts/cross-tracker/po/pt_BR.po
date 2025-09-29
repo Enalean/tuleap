@@ -169,7 +169,7 @@ msgstr ""
 msgid "Query creation is under implementation"
 msgstr ""
 
-msgid "Query details & tools"
+msgid "Query details"
 msgstr ""
 
 msgid "Query is empty"

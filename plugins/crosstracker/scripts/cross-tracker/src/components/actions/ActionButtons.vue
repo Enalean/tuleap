@@ -20,13 +20,18 @@
 <template>
     <choose-query-button v-bind:backend_query="backend_query" v-bind:queries="queries" />
     <query-details-button v-bind:are_query_details_toggled="are_query_details_toggled" />
+    <export-x-l-s-x-button v-if="is_xlsx_export_allowed" v-bind:current_query="backend_query" />
 </template>
 
 <script setup lang="ts">
 import ChooseQueryButton from "./ChooseQueryButton.vue";
 import type { Query } from "../../type";
 import QueryDetailsButton from "./QueryDetailsButton.vue";
+import ExportXLSXButton from "./ExportXLSXButton.vue";
+import { IS_EXPORT_ALLOWED } from "../../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
+const is_xlsx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 defineProps<{
     backend_query: Query;
     queries: ReadonlyArray<Query>;
