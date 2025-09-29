@@ -33,9 +33,9 @@ use Tuleap\Project\Service\ServiceForCreation;
 
 final class KanbanService extends \Service implements ServiceForCreation
 {
-    private const ICON_NAME           = 'fa-solid fa-tlp-kanban-boards';
-    public const SERVICE_SHORTNAME    = 'plugin_kanban';
-    public const INSTRUMENTATION_NAME = 'kanban';
+    private const string ICON_NAME           = 'fa-solid fa-tlp-kanban-boards';
+    public const string SERVICE_SHORTNAME    = 'plugin_kanban';
+    public const string INSTRUMENTATION_NAME = 'kanban';
 
 
     #[\Override]

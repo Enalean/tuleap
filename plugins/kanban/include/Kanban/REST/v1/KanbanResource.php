@@ -152,8 +152,8 @@ use Workflow_Transition_ConditionFactory;
 
 final class KanbanResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT        = 100;
-    public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    public const int MAX_LIMIT           = 100;
+    public const string HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     private KanbanFactory $kanban_factory;
     private KanbanItemDao $kanban_item_dao;

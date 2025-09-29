@@ -28,7 +28,7 @@ use Tuleap\Tracker\TrackerCrumbLinkInContext;
 
 final class BreadCrumbBuilder
 {
-    private const CRUMB_IDENTIFIER = 'kanban';
+    private const string CRUMB_IDENTIFIER = 'kanban';
 
     public function __construct(
         private readonly TrackerFactory $tracker_factory,

@@ -27,7 +27,7 @@ use Tuleap\User\History\HistoryEntryCollection;
 
 final class VisitRetriever
 {
-    public const TYPE = 'kanban';
+    public const string TYPE = 'kanban';
 
     public function __construct(
         private RecentlyVisitedKanbanDao $dao,

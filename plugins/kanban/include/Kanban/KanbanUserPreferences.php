@@ -25,12 +25,12 @@ use PFUser;
 
 final class KanbanUserPreferences
 {
-    public const COLLAPSE_COLUMN_PREFERENCE_PREFIX  = 'kanban_collapse_column_';
-    public const COLLAPSE_BACKLOG_PREFERENCE_PREFIX = 'kanban_collapse_backlog_';
-    public const COLLAPSE_ARCHIVE_PREFERENCE_PREFIX = 'kanban_collapse_archive_';
+    public const string COLLAPSE_COLUMN_PREFERENCE_PREFIX  = 'kanban_collapse_column_';
+    public const string COLLAPSE_BACKLOG_PREFERENCE_PREFIX = 'kanban_collapse_backlog_';
+    public const string COLLAPSE_ARCHIVE_PREFERENCE_PREFIX = 'kanban_collapse_archive_';
 
-    public const EXPAND   = '0';
-    public const COLLAPSE = '1';
+    public const string EXPAND   = '0';
+    public const string COLLAPSE = '1';
 
     public function isColumnOpen(Kanban $kanban, int $column_id, PFUser $user): bool
     {

@@ -24,7 +24,7 @@ namespace Tuleap\Kanban\REST\v1;
  */
 final class KanbanItemPOSTRepresentation
 {
-    public const ROUTE = 'kanban_items';
+    public const string ROUTE = 'kanban_items';
 
     /**
      * @var int {@type int}
