@@ -33,7 +33,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\UnableToCreateTypeExcepti
 
 final class ArtifactLinkTypeImporter
 {
-    private const ISSUE_LINK_TYPE_URL = 'issueLinkType';
+    private const string ISSUE_LINK_TYPE_URL = 'issueLinkType';
 
     public function __construct(private GetMissingArtifactLinkTypes $link_type_converter, private TypeCreatorInterface $creator)
     {

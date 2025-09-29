@@ -47,24 +47,24 @@ use UserManager;
 
 final class CreateProjectFromJiraCommand extends Command
 {
-    public const NAME = 'import-project:from-jira';
+    public const string NAME = 'import-project:from-jira';
 
-    private const OPT_JIRA_HOST            = 'jira-host';
-    private const OPT_JIRA_USER            = 'jira-user';
-    private const OPT_JIRA_TOKEN           = 'jira-token';
-    private const OPT_JIRA_PROJECT         = 'jira-project-id';
-    private const OPT_JIRA_EPIC_ISSUE_TYPE = 'jira-epic-issue-type';
-    private const OPT_JIRA_BOARD           = 'jira-board-id';
-    private const OPT_TULEAP_USER          = 'tuleap-user';
-    private const OPT_SHORTNAME            = 'shortname';
-    private const OPT_FULLNAME             = 'fullname';
-    private const OPT_VISIBILITY           = 'visibility';
-    private const OPT_OUTPUT               = 'output';
-    private const OPT_DEBUG                = 'debug';
-    private const OPT_IMPORT_MODE          = 'import-mode';
+    private const string OPT_JIRA_HOST            = 'jira-host';
+    private const string OPT_JIRA_USER            = 'jira-user';
+    private const string OPT_JIRA_TOKEN           = 'jira-token';
+    private const string OPT_JIRA_PROJECT         = 'jira-project-id';
+    private const string OPT_JIRA_EPIC_ISSUE_TYPE = 'jira-epic-issue-type';
+    private const string OPT_JIRA_BOARD           = 'jira-board-id';
+    private const string OPT_TULEAP_USER          = 'tuleap-user';
+    private const string OPT_SHORTNAME            = 'shortname';
+    private const string OPT_FULLNAME             = 'fullname';
+    private const string OPT_VISIBILITY           = 'visibility';
+    private const string OPT_OUTPUT               = 'output';
+    private const string OPT_DEBUG                = 'debug';
+    private const string OPT_IMPORT_MODE          = 'import-mode';
 
-    public const OPT_IMPORT_MODE_MONO_TRACKER_VALUE   = 'mono-tracker';
-    public const OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE = 'multi-trackers';
+    public const string OPT_IMPORT_MODE_MONO_TRACKER_VALUE   = 'mono-tracker';
+    public const string OPT_IMPORT_MODE_MULTI_TRACKERS_VALUE = 'multi-trackers';
 
     public function __construct(
         private readonly UserManager $user_manager,

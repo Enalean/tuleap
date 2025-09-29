@@ -38,7 +38,7 @@ use UserManager;
 
 final class ReplayCreateProjectFromJiraCommand extends Command
 {
-    public const NAME = 'import-project:replay-from-jira';
+    public const string NAME = 'import-project:replay-from-jira';
 
     public function __construct(
         private UserManager $user_manager,
