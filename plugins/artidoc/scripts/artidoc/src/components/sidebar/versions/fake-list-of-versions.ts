@@ -38,8 +38,9 @@ const minutes_in_ms = 60 * 1000;
 const minutes_offset_in_ms = (3 * 60 + 37) * minutes_in_ms; // in order to not have always the same current time in fake data
 
 export function getVersions(project_id: number): ResultAsync<ReadonlyArray<Version>, Fault> {
-    return getJSON<ReadonlyArray<User>>(uri`/api/v1/user_groups/${project_id}_3/users`).andThen(
-        (project_members): ResultAsync<ReadonlyArray<Version>, Fault> => {
+    return getJSON<ReadonlyArray<User>>(uri`/api/v1/user_groups/${project_id}_3/users`)
+        .orElse(() => getJSON<User>(uri`/api/v1/users/self`).map((user) => [user]))
+        .andThen((project_members): ResultAsync<ReadonlyArray<Version>, Fault> => {
             if (project_members.length === 0) {
                 return errAsync(Fault.fromMessage("No project members found"));
             }
@@ -81,8 +82,7 @@ export function getVersions(project_id: number): ResultAsync<ReadonlyArray<Versi
                     };
                 }),
             );
-        },
-    );
+        });
 }
 
 function generateRandomDescription(): string | null {
