@@ -48,7 +48,7 @@ use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
 use Tuleap\Timetracking\Widget\FeatureFlagTimetrackingManagementWidget;
-use Tuleap\Timetracking\Widget\TimetrackingManagementWidget;
+use Tuleap\Timetracking\Widget\PeopleTimetrackingWidget;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLExport;
@@ -316,8 +316,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
                 )
             );
         }
-        if ($get_widget_event->getName() === TimetrackingManagementWidget::NAME && FeatureFlagTimetrackingManagementWidget::isActive()) {
-            $get_widget_event->setWidget(new TimetrackingManagementWidget(new \Tuleap\Timetracking\Widget\Management\ManagementDao()));
+        if ($get_widget_event->getName() === PeopleTimetrackingWidget::NAME && FeatureFlagTimetrackingManagementWidget::isActive()) {
+            $get_widget_event->setWidget(new PeopleTimetrackingWidget(new \Tuleap\Timetracking\Widget\People\PeopleDao()));
         }
     }
 
@@ -326,7 +326,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
     {
         $event->addWidget(UserWidget::NAME);
         $event->addWidget(TimeTrackingOverview::NAME);
-        $event->addWidget(TimetrackingManagementWidget::NAME);
+        $event->addWidget(PeopleTimetrackingWidget::NAME);
     }
 
     #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]

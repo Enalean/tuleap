@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Tests\Stub;
 
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetQueryUsers;
+use Tuleap\Timetracking\REST\v1\PeopleTimetracking\GetQueryUsers;
 
 final readonly class GetQueryUsersStub implements GetQueryUsers
 {

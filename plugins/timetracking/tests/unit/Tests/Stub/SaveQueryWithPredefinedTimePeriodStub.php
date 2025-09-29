@@ -21,9 +21,9 @@
 namespace Tuleap\Timetracking\Tests\Stub;
 
 use Error;
-use Tuleap\Timetracking\Widget\Management\PredefinedTimePeriod;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithPredefinedTimePeriod;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\UserList;
+use Tuleap\Timetracking\Widget\People\PredefinedTimePeriod;
+use Tuleap\Timetracking\REST\v1\PeopleTimetracking\SaveQueryWithPredefinedTimePeriod;
+use Tuleap\Timetracking\REST\v1\PeopleTimetracking\UserList;
 
 final class SaveQueryWithPredefinedTimePeriodStub implements SaveQueryWithPredefinedTimePeriod
 {
