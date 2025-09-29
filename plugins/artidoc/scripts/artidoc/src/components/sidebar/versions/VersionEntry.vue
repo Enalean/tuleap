@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div class="version">
         {{ title }}
         <div class="metadata">
             <tlp-relative-date
@@ -37,12 +37,12 @@
                     ><img
                         loading="lazy"
                         v-bind:src="version.created_by.avatar_url"
-                        data-test="user-list-item-avatar"
                         v-bind:alt="$gettext('User avatar')"
                 /></span>
                 {{ version.created_by.display_name }}
             </span>
         </div>
+        <version-description v-bind:version="version" />
     </div>
 </template>
 
@@ -55,6 +55,7 @@ import { USER_PREFERENCES } from "@/user-preferences-injection-key";
 import { IntlFormatter } from "@tuleap/date-helper";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import VersionDescription from "@/components/sidebar/versions/VersionDescription.vue";
 
 const props = defineProps<{ version: Version }>();
 
@@ -78,11 +79,19 @@ const formatted_date = computed((): string =>
     formatter.format(props.version.created_on.toISOString()),
 );
 
-const title = computed(() => props.version.title ?? formatted_date.value);
+const title = computed(() => props.version.title.unwrapOr(formatted_date.value));
 </script>
 
 <style scoped lang="scss">
+.version {
+    width: calc(100% - var(--tlp-medium-spacing));
+}
+
 .metadata {
     font-size: 0.75rem;
+
+    &:not(:last-child) {
+        margin: 0 0 var(--tlp-small-spacing);
+    }
 }
 </style>
