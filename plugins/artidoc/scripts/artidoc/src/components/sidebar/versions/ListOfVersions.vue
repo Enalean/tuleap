@@ -31,7 +31,11 @@
     </div>
     <ul v-if="!error">
         <li v-for="version in versions" v-bind:key="version.id">
-            <i class="fa-solid fa-circle disc" aria-hidden="true"></i>
+            <i
+                class="fa-solid fa-circle disc"
+                v-bind:class="{ 'disc-for-version-with-title': version.title.isValue() }"
+                aria-hidden="true"
+            ></i>
             <version-entry v-bind:version="version" />
         </li>
     </ul>
@@ -87,6 +91,7 @@ $timeline-offset-left: calc($timeline-whitespace + 0.5 * $disc-width - 0.5 * $ti
 
 ul {
     --timeline-color: var(--tlp-main-color-lighter-80);
+    --timeline-color-for-version-with-title: var(--tlp-main-color-lighter-50);
 
     position: relative;
     height: var(--artidoc-sidebar-content-height);
@@ -141,12 +146,12 @@ li {
     }
 
     &:first-child::before {
-        top: var(--tlp-medium-spacing);
+        top: var(--tlp-large-spacing);
         height: calc(100% - var(--tlp-medium-spacing));
     }
 
     &:last-child::before {
-        height: var(--tlp-medium-spacing);
+        height: var(--tlp-large-spacing);
     }
 }
 
@@ -155,5 +160,9 @@ li {
     z-index: 1;
     color: var(--timeline-color);
     font-size: #{$disc-width};
+
+    &.disc-for-version-with-title {
+        color: var(--timeline-color-for-version-with-title);
+    }
 }
 </style>
