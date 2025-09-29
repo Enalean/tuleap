@@ -149,7 +149,7 @@ describe("Time tracking", function () {
         cy.get("[data-test=dashboard-configuration-button]").click();
 
         cy.get("[data-test=dashboard-add-widget-button]").click({ force: true });
-        cy.get("[data-test=timetracking-overview]").click();
+        cy.get("[data-test=project-timetracking]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
         // select some trackers
@@ -157,21 +157,21 @@ describe("Time tracking", function () {
             "loadTrackers",
         );
 
-        cy.get("[data-test=overview-toggle-reading-mode]").click();
+        cy.get("[data-test=project-timetracking-toggle-reading-mode]").click();
         // select project
-        cy.get("[data-test=overview-project-list]").select("timetracking");
+        cy.get("[data-test=project-timetracking-project-list]").select("timetracking");
         cy.wait("@loadTrackers", { timeout: 3000 });
 
         //select tracker
-        cy.get("[data-test=overview-tracker-selector]").select("Issues");
+        cy.get("[data-test=project-timetracking-tracker-selector]").select("Issues");
         cy.get("[data-test=add-tracker-button]").click();
 
-        cy.get("[data-test=overview-search-times]").click();
+        cy.get("[data-test=project-timetracking-search-times]").click();
         //check that at least one time correspond to query
-        cy.get("[data-test=overview-table]").find("tr").should("have.length", 3);
+        cy.get("[data-test=project-timetracking-table]").find("tr").should("have.length", 3);
 
         //check that user can save report
-        cy.get("[data-test=save-overview-report]").click();
+        cy.get("[data-test=save-project-timetracking-report]").click();
         cy.get("[data-test=report-success]").contains("successfully saved");
     });
 });

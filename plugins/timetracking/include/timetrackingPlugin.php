@@ -49,7 +49,7 @@ use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
 use Tuleap\Timetracking\Widget\FeatureFlagTimetrackingManagementWidget;
 use Tuleap\Timetracking\Widget\PeopleTimetrackingWidget;
-use Tuleap\Timetracking\Widget\TimeTrackingOverview;
+use Tuleap\Timetracking\Widget\ProjectTimetracking;
 use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLExport;
 use Tuleap\Timetracking\XML\XMLImport;
@@ -308,9 +308,9 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
         if ($get_widget_event->getName() === UserWidget::NAME) {
             $get_widget_event->setWidget(new UserWidget());
         }
-        if ($get_widget_event->getName() === TimeTrackingOverview::NAME) {
+        if ($get_widget_event->getName() === ProjectTimetracking::NAME) {
             $get_widget_event->setWidget(
-                new TimeTrackingOverview(
+                new ProjectTimetracking(
                     new TimetrackingReportDao(),
                     TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR)
                 )
@@ -325,7 +325,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
     public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event): void
     {
         $event->addWidget(UserWidget::NAME);
-        $event->addWidget(TimeTrackingOverview::NAME);
+        $event->addWidget(ProjectTimetracking::NAME);
         $event->addWidget(PeopleTimetrackingWidget::NAME);
     }
 

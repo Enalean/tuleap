@@ -60,7 +60,7 @@ class TimetrackingDataBuilder extends RESTTestDataBuilder
         $this->createUser();
         $this->addTimeOnLastMonthPeriod($project);
 
-        $this->initTimetrackingOverviewWidget();
+        $this->initProjectTimetrackingWidget();
     }
 
     private function createUser()
@@ -92,7 +92,7 @@ class TimetrackingDataBuilder extends RESTTestDataBuilder
         }
     }
 
-    private function initTimetrackingOverviewWidget()
+    private function initProjectTimetrackingWidget(): void
     {
         $report_dao = new TimetrackingReportDao();
         $widget_dao = new DashboardWidgetDao(
@@ -109,6 +109,6 @@ class TimetrackingDataBuilder extends RESTTestDataBuilder
         $dashboard_ids       = $dashboard_retriever->getAllUserDashboards($user);
 
         $user_report_id = $report_dao->create();
-        $widget_dao->create($user->getId(), 'u', $dashboard_ids[0]->getId(), 'timetracking-overview', $user_report_id);
+        $widget_dao->create($user->getId(), 'u', $dashboard_ids[0]->getId(), 'project-timetracking', $user_report_id);
     }
 }
