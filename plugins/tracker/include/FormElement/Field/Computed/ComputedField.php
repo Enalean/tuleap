@@ -484,7 +484,7 @@ class ComputedField extends FloatField
         $user              = $this->getCurrentUser();
         $time_frame_helper = $this->getArtifactTimeframeHelper();
 
-        if ($time_frame_helper->artifactHelpShouldBeShownToUser($user, $this)) {
+        if ($changeset_value !== null && $time_frame_helper->artifactHelpShouldBeShownToUser($user, $this, $artifact, $changeset_value->getChangeset())) {
             $value = $value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getEndDateArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
         }
 
