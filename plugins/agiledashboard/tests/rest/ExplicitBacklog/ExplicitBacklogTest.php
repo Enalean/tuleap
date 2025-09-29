@@ -42,6 +42,9 @@ class ExplicitBacklogTest extends TestBase
                 ['id' => $artifact_id_to_add],
             ],
         ]);
+        if ($patch_body === false) {
+            $this->fail('Patch body is empty');
+        }
 
         $response_patch = $this->getResponseByName(
             RESTTestDataBuilder::TEST_USER_1_NAME,
@@ -85,7 +88,7 @@ class ExplicitBacklogTest extends TestBase
         $this->assertReleaseIsEmpty();
     }
 
-    private function moveStoryToRelease()
+    private function moveStoryToRelease(): void
     {
         $artifact_id_to_add  = $this->getFirstStoryArtifactId();
         $release_artifact_id = $this->getFirstReleaseArtifactId();
@@ -94,6 +97,9 @@ class ExplicitBacklogTest extends TestBase
                 ['id' => $artifact_id_to_add],
             ],
         ]);
+        if ($patch_body === false) {
+            $this->fail('Patch body is empty');
+        }
 
         $response_patch = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'milestones/' . urlencode((string) $release_artifact_id) . '/content')->withBody($this->stream_factory->createStream($patch_body))
@@ -102,7 +108,7 @@ class ExplicitBacklogTest extends TestBase
         $this->assertEquals(200, $response_patch->getStatusCode());
     }
 
-    private function moveStoryFromReleaseToTopBacklog()
+    private function moveStoryFromReleaseToTopBacklog(): void
     {
         $artifact_id_to_add  = $this->getFirstStoryArtifactId();
         $release_artifact_id = $this->getFirstReleaseArtifactId();
@@ -114,6 +120,9 @@ class ExplicitBacklogTest extends TestBase
                 ],
             ],
         ]);
+        if ($patch_body === false) {
+            $this->fail('Patch body is empty');
+        }
 
         $response_patch = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog')->withBody($this->stream_factory->createStream($patch_body))
@@ -122,7 +131,7 @@ class ExplicitBacklogTest extends TestBase
         $this->assertEquals(200, $response_patch->getStatusCode());
     }
 
-    private function removeStoryFromTopBacklog()
+    private function removeStoryFromTopBacklog(): void
     {
         $artifact_id_to_add = $this->getFirstStoryArtifactId();
         $patch_body         = json_encode([
@@ -132,6 +141,10 @@ class ExplicitBacklogTest extends TestBase
                 ],
             ],
         ]);
+
+        if ($patch_body === false) {
+            $this->fail('Patch body is empty');
+        }
 
         $response_patch = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog')->withBody($this->stream_factory->createStream($patch_body))
@@ -158,6 +171,13 @@ class ExplicitBacklogTest extends TestBase
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertCount(1, $top_backlog_items);
+        if (! is_array($top_backlog_items)) {
+            $this->fail('Top backlog is not an array');
+        }
+        if (! isset($top_backlog_items[0])) {
+            $this->fail('Top backlog is empty');
+        }
+
         self::assertSame($top_backlog_items[0]['id'], $this->getFirstStoryArtifactId());
     }
 
@@ -181,6 +201,12 @@ class ExplicitBacklogTest extends TestBase
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertCount(1, $release_items);
+        if (! is_array($release_items)) {
+            $this->fail('Release items is not an array');
+        }
+        if (! isset($release_items[0])) {
+            $this->fail('Release items is empty');
+        }
         self::assertSame($release_items[0]['id'], $this->getFirstStoryArtifactId());
     }
 

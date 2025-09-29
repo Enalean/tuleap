@@ -47,8 +47,18 @@ final class MilestonesTest extends TestBase
 
         $this->assertCount(2, $top_milestones);
 
+        if (! is_array($top_milestones)) {
+            $this->fail('Top milestone is not an array');
+        }
+        if (! isset($top_milestones[0])) {
+            $this->fail('Top milestone 0 is empty');
+        }
         $first_open_release = $top_milestones[0];
         $this->assertEquals('Release 02', $first_open_release['label']);
+
+        if (! isset($top_milestones[1])) {
+            $this->fail('Top milestone 1 is empty');
+        }
         $second_open_release = $top_milestones[1];
         $this->assertEquals('Release 01', $second_open_release['label']);
     }
@@ -75,9 +85,17 @@ final class MilestonesTest extends TestBase
         $sub_milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $sub_milestones);
-
+        if (! is_array($sub_milestones)) {
+            $this->fail('Sub Milestone is not an array');
+        }
+        if (! isset($sub_milestones[0])) {
+            $this->fail('Sub Milestone is empty');
+        }
         $first_open_sprint = $sub_milestones[0];
         $this->assertEquals('Week 37', $first_open_sprint['label']);
+        if (! isset($sub_milestones[0])) {
+            $this->fail('Sub Milestone is empty');
+        }
         $second_open_sprint = $sub_milestones[1];
         $this->assertEquals('Week 36', $second_open_sprint['label']);
     }

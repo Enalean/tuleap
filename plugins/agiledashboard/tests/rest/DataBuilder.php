@@ -33,7 +33,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_
 use Tuleap\Project\SystemEventRunner;
 use Tuleap\REST\RESTTestDataBuilder;
 
-class DataBuilder extends RESTTestDataBuilder
+final class DataBuilder extends RESTTestDataBuilder
 {
     public const string RELEASE_TRACKER_SHORTNAME          = 'rel';
     public const string PROJECT_BURNUP_SHORTNAME           = 'burnup';
@@ -63,23 +63,25 @@ class DataBuilder extends RESTTestDataBuilder
         $this->system_event_runner = new SystemEventRunner($factory);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->generateBurnupCache();
     }
 
-    private function generateBurnupCache()
+    private function generateBurnupCache(): void
     {
         $tracker = $this->getTrackerInProject(self::RELEASE_TRACKER_SHORTNAME, self::PROJECT_BURNUP_SHORTNAME);
 
         $artifacts = $this->tracker_artifact_factory->getArtifactsByTrackerId($tracker->getId());
-        $this->system_event_manager->createEvent(
-            SystemEvent_BURNUP_GENERATE::class,
-            reset($artifacts)->getId(),
-            SystemEvent::PRIORITY_MEDIUM,
-            SystemEvent::OWNER_APP
-        );
+        if (! empty($artifacts)) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_BURNUP_GENERATE::class,
+                reset($artifacts)->getId(),
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
+            );
 
-        $this->system_event_runner->runSystemEvents();
+            $this->system_event_runner->runSystemEvents();
+        }
     }
 }
