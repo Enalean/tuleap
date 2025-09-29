@@ -52,6 +52,14 @@
                 $gettext("As soon as you reload the page, the feature will no longer be displayed.")
             }}
         </p>
+        <p>
+            {{
+                $gettext(
+                    "Please note that you can display directly the versions with the following shortcut:",
+                )
+            }}
+            <kbd>v</kbd>
+        </p>
     </div>
     <div class="tlp-modal-footer">
         <button

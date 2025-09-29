@@ -49,6 +49,13 @@ import { buildSectionsBelowArtifactsDetector } from "@/sections/levels/SectionsB
 import { SECTIONS_BELOW_ARTIFACTS } from "@/sections-below-artifacts-injection-key";
 import { watchUpdateSectionsReadonlyFields } from "@/sections/readonly-fields/ReadonlyFieldsWatcher";
 import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
+import { addShortcutsGroup } from "@tuleap/keyboard-shortcuts";
+import { useGettext } from "vue3-gettext";
+import {
+    REGISTER_FULLSCREEN_SHORTCUT_HANDLER,
+    REGISTER_VERSIONS_SHORTCUT_HANDLER,
+} from "@/register-shortcut-handler-injection-keys";
+import { CAN_USER_DISPLAY_VERSIONS } from "@/can-user-display-versions-injection-key";
 
 const { scrollToAnchor } = useScrollToAnchor();
 
@@ -70,6 +77,38 @@ provide(
     (message: GlobalErrorMessage | null) => (error_message.value = message),
 );
 provide(SECTIONS_BELOW_ARTIFACTS, bad_sections);
+
+let fullscreen_handler: () => void = () => {};
+let versions_handler: () => void = () => {};
+
+provide(REGISTER_FULLSCREEN_SHORTCUT_HANDLER, (handler) => {
+    fullscreen_handler = handler;
+});
+provide(REGISTER_VERSIONS_SHORTCUT_HANDLER, (handler) => {
+    versions_handler = handler;
+});
+
+const { $gettext } = useGettext();
+const shortcuts = [
+    {
+        keyboard_inputs: "f",
+        displayed_inputs: "f",
+        description: $gettext("Toggle fullscreen"),
+        handle: (): void => fullscreen_handler(),
+    },
+];
+if (strictInject(CAN_USER_DISPLAY_VERSIONS)) {
+    shortcuts.push({
+        keyboard_inputs: "v",
+        displayed_inputs: "v",
+        description: $gettext("Activate and display versions (experimental)"),
+        handle: (): void => versions_handler(),
+    });
+}
+addShortcutsGroup(document, {
+    title: $gettext("Actions in Artidoc document"),
+    shortcuts,
+});
 
 getSectionsLoader(document_id)
     .loadSections()

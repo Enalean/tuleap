@@ -35,7 +35,8 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import screenfull from "screenfull";
-import { addShortcutsGroup } from "@tuleap/keyboard-shortcuts";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { REGISTER_FULLSCREEN_SHORTCUT_HANDLER } from "@/register-shortcut-handler-injection-keys";
 
 const { $gettext } = useGettext();
 
@@ -48,17 +49,7 @@ function fullscreen(): void {
     screenfull.toggle();
 }
 
-addShortcutsGroup(document, {
-    title: $gettext("Actions in Artidoc document"),
-    shortcuts: [
-        {
-            keyboard_inputs: "f",
-            displayed_inputs: "f",
-            description: hint,
-            handle: fullscreen,
-        },
-    ],
-});
+strictInject(REGISTER_FULLSCREEN_SHORTCUT_HANDLER)(fullscreen);
 </script>
 
 <style lang="scss">

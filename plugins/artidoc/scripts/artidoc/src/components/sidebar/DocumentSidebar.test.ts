@@ -30,6 +30,8 @@ import ListOfVersions from "@/components/sidebar/versions/ListOfVersions.vue";
 import DocumentSidebarHeader from "@/components/sidebar/DocumentSidebarHeader.vue";
 import { TOC_TAB, VERSIONS_TAB } from "@/components/sidebar/document-sidebar";
 import process from "node:process";
+import { REGISTER_VERSIONS_SHORTCUT_HANDLER } from "@/register-shortcut-handler-injection-keys";
+import { noop } from "@/helpers/noop";
 
 describe("DocumentSidebar", () => {
     function getWrapper(are_versions_displayed: Ref<boolean>): VueWrapper {
@@ -38,6 +40,7 @@ describe("DocumentSidebar", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [ARE_VERSIONS_DISPLAYED.valueOf()]: are_versions_displayed,
+                    [REGISTER_VERSIONS_SHORTCUT_HANDLER.valueOf()]: noop,
                 },
             },
         });
