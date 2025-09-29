@@ -19,8 +19,10 @@
   -->
 
 <template>
-    <div class="version">
-        {{ title }}
+    <section>
+        <h1 v-bind:class="{ 'version-with-title': version.title.isValue() }">
+            {{ title }}
+        </h1>
         <div class="metadata">
             <tlp-relative-date
                 v-bind:date="version.created_on.toISOString()"
@@ -43,7 +45,7 @@
             </span>
         </div>
         <version-description v-bind:version="version" />
-    </div>
+    </section>
 </template>
 
 <script setup lang="ts">
@@ -83,8 +85,19 @@ const title = computed(() => props.version.title.unwrapOr(formatted_date.value))
 </script>
 
 <style scoped lang="scss">
-.version {
+section {
     width: calc(100% - var(--tlp-medium-spacing));
+}
+
+h1 {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+    font-weight: normal;
+}
+
+.version-with-title {
+    font-weight: 500;
 }
 
 .metadata {
