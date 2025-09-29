@@ -19,8 +19,7 @@
 <template>
     <span
         v-bind:class="{
-            'tlp-badge-firemist-silver tlp-badge-outline': cell.direction === FORWARD_DIRECTION,
-            'tlp-badge-inca-silver tlp-badge-outline': cell.direction === REVERSE_DIRECTION,
+            'tlp-badge-firemist-silver tlp-badge-outline': cell.label !== '',
         }"
         data-test="link-type-cell-label"
         >{{ cell.label }}</span
@@ -29,7 +28,6 @@
 
 <script setup lang="ts">
 import type { LinkTypeCell } from "../../domain/ArtifactsTable";
-import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
 
 defineProps<{
     cell: LinkTypeCell;

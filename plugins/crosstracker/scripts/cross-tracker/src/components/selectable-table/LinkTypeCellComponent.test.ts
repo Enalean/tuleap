@@ -18,8 +18,8 @@
  */
 
 import { describe, expect, it } from "vitest";
-import type { ArtifactLinkDirection, LinkTypeCell } from "../../domain/ArtifactsTable";
-import { FORWARD_DIRECTION, REVERSE_DIRECTION, LINK_TYPE_CELL } from "../../domain/ArtifactsTable";
+import type { LinkTypeCell } from "../../domain/ArtifactsTable";
+import { FORWARD_DIRECTION, LINK_TYPE_CELL } from "../../domain/ArtifactsTable";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
@@ -34,21 +34,26 @@ describe("LinkTypeCellComponent", () => {
             props: { cell },
         });
     };
-    it.each<[ArtifactLinkDirection, string]>([
-        [FORWARD_DIRECTION, "tlp-badge-firemist-silver"],
-        [REVERSE_DIRECTION, "tlp-badge-inca-silver"],
-    ])(
-        "When the link is in %s direction, it displays the %s outlined color badge",
-        (link_type: ArtifactLinkDirection, badge_color: string) => {
-            const wrapper = getWrapper({
-                type: LINK_TYPE_CELL,
-                direction: link_type,
-                label: "Covered By",
-            });
+    it("When the link has a label, it displays the %s outlined color badge", () => {
+        const wrapper = getWrapper({
+            type: LINK_TYPE_CELL,
+            direction: FORWARD_DIRECTION,
+            label: "Covered By",
+        });
 
-            expect(wrapper.find("[data-test=link-type-cell-label]").classes()).toContain(
-                badge_color,
-            );
-        },
-    );
+        expect(wrapper.find("[data-test=link-type-cell-label]").classes()).toContain(
+            "tlp-badge-firemist-silver",
+        );
+    });
+    it("When the link does not have label, it does not displays the badge ", () => {
+        const wrapper = getWrapper({
+            type: LINK_TYPE_CELL,
+            direction: FORWARD_DIRECTION,
+            label: "",
+        });
+
+        expect(wrapper.find("[data-test=link-type-cell-label]").classes()).not.toContain(
+            "tlp-badge-firemist-silver",
+        );
+    });
 });
