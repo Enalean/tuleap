@@ -70,8 +70,8 @@ Requires: libxml2
 Requires: systemd
 
 # ForgeUpgrade and EnaleanLicenceManager is now provided by Tuleap
-Obsoletes: forgeupgrade <= 999, plugin-enalean-licensemanager <= 999
-Provides: forgeupgrade, plugin-enalean-licensemanager
+Obsoletes: forgeupgrade <= 999, tuleap-plugin-enalean-licensemanager <= 16.13
+Provides: forgeupgrade, tuleap-plugin-enalean-licensemanager
 
 
 %description
