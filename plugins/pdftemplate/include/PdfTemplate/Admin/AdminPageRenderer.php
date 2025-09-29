@@ -25,12 +25,13 @@ namespace Tuleap\PdfTemplate\Admin;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Admin\AdminSidebarPresenterBuilder;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 
 final class AdminPageRenderer implements RenderAPresenter
 {
@@ -60,7 +61,7 @@ final class AdminPageRenderer implements RenderAPresenter
                 new SidebarPresenter(
                     'siteadmin-sidebar',
                     $this->renderSideBar(),
-                    VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())
+                    VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()))
                 )
             );
         } else {

@@ -21,11 +21,12 @@
 namespace Tuleap\Admin;
 
 use TemplateRendererFactory;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 
 class AdminPageRenderer
 {
@@ -42,7 +43,7 @@ class AdminPageRenderer
                 'sidebar'      => new SidebarPresenter(
                     'siteadmin-sidebar',
                     $this->renderSideBar(),
-                    VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())
+                    VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()))
                 ),
             ]
         );

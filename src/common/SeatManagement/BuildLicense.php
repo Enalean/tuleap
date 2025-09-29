@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\BuildVersion;
+namespace Tuleap\SeatManagement;
 
-final class FlavorFinderFromFilePresence implements FlavorFinder
+interface BuildLicense
 {
-    private const ENTERPRISE_BUILD_FILE_NAME = 'ENTERPRISE_BUILD';
-
-    /**
-     * @var string
-     */
-    private $sources_root;
-
-    public function __construct(string $sources_root = __DIR__ . '/../../../')
-    {
-        $this->sources_root = $sources_root;
-    }
-
-    #[\Override]
-    public function isEnterprise(): bool
-    {
-        return \file_exists($this->sources_root . self::ENTERPRISE_BUILD_FILE_NAME);
-    }
+    public function build(): License;
 }

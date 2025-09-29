@@ -24,24 +24,31 @@ namespace Tuleap\SeatManagement;
 
 use Override;
 
-final readonly class LicenseBuilder implements BuildLicense
+final class CachedLicenseBuilder implements BuildLicense
 {
-    private const string PUBLIC_KEY_DIRECTORY = __DIR__ . '/keys';
+    private static ?self $instance   = null;
+    private ?License $license_cached = null;
 
-    public function __construct(
-        private CheckPublicKeyPresence $public_key_retriever,
-    ) {
+    public function __construct(private readonly BuildLicense $license_builder)
+    {
+    }
+
+    public static function instance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self(new LicenseBuilder(new PublicKeyPresenceChecker()));
+        }
+
+        return self::$instance;
     }
 
     #[Override]
     public function build(): License
     {
-        $is_public_key_present = $this->public_key_retriever->checkPresence(self::PUBLIC_KEY_DIRECTORY);
-
-        if (! $is_public_key_present) {
-            return License::buildCommunityEdition();
+        if ($this->license_cached === null) {
+            $this->license_cached = $this->license_builder->build();
         }
 
-        return License::buildEnterpriseEdition();
+        return $this->license_cached;
     }
 }

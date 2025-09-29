@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\APIExplorer\Specification\Swagger\SwaggerJsonController;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -31,6 +31,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
 use Tuleap\REST\ResourcesInjector;
 use Tuleap\REST\RestlerFactory;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -98,7 +99,7 @@ final class api_explorerPlugin extends Plugin
                 new ResourcesInjector(),
                 $event_manager,
             ),
-            VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())->version_identifier,
+            VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()))->version_identifier,
             $event_manager,
             Codendi_HTMLPurifier::instance(),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),

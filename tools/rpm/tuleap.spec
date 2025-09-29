@@ -606,6 +606,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_functions
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artidoc
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pdftemplate
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/common/SeatManagement/keys
 %endif
 
 %if %{with experimental}

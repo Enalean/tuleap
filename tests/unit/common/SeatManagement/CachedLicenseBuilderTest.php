@@ -24,35 +24,22 @@ namespace Tuleap\SeatManagement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\SeatManagement\BuildLicenseStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class PublicKeyPresenceCheckerTest extends TestCase
+final class CachedLicenseBuilderTest extends TestCase
 {
-    public function testItReturnsFalseWhenNoPublicKeyIsPresent(): void
+    public function testItUsesCache(): void
     {
-        $checker = new PublicKeyPresenceChecker();
+        $license         = License::buildEnterpriseEdition();
+        $license_builder = BuildLicenseStub::buildWithLicense($license);
 
-        self::assertFalse($checker->checkPresence(__DIR__ . '/_fixtures/empty'));
-    }
+        $cache = new CachedLicenseBuilder($license_builder);
 
-    public function testItReturnsTrueWhenAtLeastOnePublicKeyIsPresent(): void
-    {
-        $checker = new PublicKeyPresenceChecker();
+        $cache->build();
+        $cache->build();
 
-        self::assertTrue($checker->checkPresence(__DIR__ . '/_fixtures/keys'));
-    }
-
-    public function testItReturnsFalseWhenKeysDirectoryDoesNotExist(): void
-    {
-        $checker = new PublicKeyPresenceChecker();
-
-        self::assertFalse($checker->checkPresence(__DIR__ . 'abc'));
-    }
-
-    public function testItReturnsFalseWhenKeysDirectoryIsAFile(): void
-    {
-        $checker = new PublicKeyPresenceChecker();
-
-        self::assertFalse($checker->checkPresence(__FILE__));
+        self::assertSame(1, $license_builder->getCallCount());
+        self::assertSame($license, $cache->build());
     }
 }

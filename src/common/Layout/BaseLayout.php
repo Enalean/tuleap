@@ -28,7 +28,7 @@ use PFUser;
 use Project;
 use ProjectManager;
 use Response;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\ContentSecurityPolicy\CSPNonce;
 use Tuleap\Glyph\GlyphFinder;
@@ -53,6 +53,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\Project\REST\v1\ProjectSidebarDataRepresentation;
 use Tuleap\Sanitizer\URISanitizer;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 use Valid_FTPURI;
@@ -363,7 +364,7 @@ abstract class BaseLayout extends Response
                 new ProjectFlagsBuilder(new ProjectFlagsDao()),
                 EventManager::instance(),
                 new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
-                new FlavorFinderFromFilePresence(),
+                new FlavorFinderFromLicense(CachedLicenseBuilder::instance()),
                 new \Tuleap\Layout\Logo\CachedCustomizedLogoDetector(
                     new CustomizedLogoDetector(new LogoRetriever(), new FileContentComparator()),
                     BackendLogger::getDefaultLogger(),

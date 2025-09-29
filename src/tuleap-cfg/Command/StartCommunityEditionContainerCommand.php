@@ -33,9 +33,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Option\Option;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 use TuleapCfg\Command\Docker\DataPersistence;
 use TuleapCfg\Command\Docker\PluginsInstallClosureBuilder;
 use TuleapCfg\Command\Docker\Postfix;
@@ -95,7 +96,7 @@ final class StartCommunityEditionContainerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
+            $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()));
             $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
 
             $post_install = $this->plugins_install_closure_builder->buildClosureToInstallPlugins();

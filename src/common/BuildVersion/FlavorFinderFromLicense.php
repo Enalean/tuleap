@@ -20,28 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SeatManagement;
+namespace Tuleap\BuildVersion;
 
 use Override;
+use Tuleap\SeatManagement\BuildLicense;
 
-final readonly class LicenseBuilder implements BuildLicense
+final readonly class FlavorFinderFromLicense implements FlavorFinder
 {
-    private const string PUBLIC_KEY_DIRECTORY = __DIR__ . '/keys';
-
-    public function __construct(
-        private CheckPublicKeyPresence $public_key_retriever,
-    ) {
+    public function __construct(private BuildLicense $license_builder)
+    {
     }
 
     #[Override]
-    public function build(): License
+    public function isEnterprise(): bool
     {
-        $is_public_key_present = $this->public_key_retriever->checkPresence(self::PUBLIC_KEY_DIRECTORY);
-
-        if (! $is_public_key_present) {
-            return License::buildCommunityEdition();
-        }
-
-        return License::buildEnterpriseEdition();
+        return $this->license_builder->build()->is_enterprise_edition;
     }
 }

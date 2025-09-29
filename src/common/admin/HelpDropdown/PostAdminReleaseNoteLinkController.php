@@ -27,7 +27,7 @@ use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use PFUser;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -37,6 +37,7 @@ use Tuleap\HelpDropdown\VersionNumberExtractor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 use UserPreferencesDao;
 use Valid_HTTPURI;
 
@@ -79,7 +80,7 @@ class PostAdminReleaseNoteLinkController implements DispatchableWithRequest
                 )
             ),
             new CSRFSynchronizerToken('/admin/release-note/'),
-            VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())->version_number
+            VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()))->version_number
         );
     }
 

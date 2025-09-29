@@ -25,12 +25,18 @@ namespace Tuleap\SeatManagement;
 use Override;
 use function Psl\Filesystem\is_file;
 use function Psl\Filesystem\read_directory;
+use function Psl\Filesystem\exists;
+use function Psl\Filesystem\is_directory;
 
 final class PublicKeyPresenceChecker implements CheckPublicKeyPresence
 {
     #[Override]
     public function checkPresence(string $public_key_directory): bool
     {
+        if (! exists($public_key_directory) || ! is_directory($public_key_directory)) {
+            return false;
+        }
+
         $files = read_directory($public_key_directory);
 
         return array_any($files, static fn (string $filename) => str_ends_with($filename, '.key') && is_file($filename));
