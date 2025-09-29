@@ -25,7 +25,6 @@ import * as actions from "./actions";
 import { state } from "./state";
 import error from "./error/module";
 import properties from "./properties/module";
-import lock from "./lock/module";
 import preferencies from "./preferencies/module";
 import permissions from "./permissions/module";
 import type { RootState, State } from "../type";
@@ -41,7 +40,6 @@ export function createInitializedStore(): Store<RootState> {
         modules: {
             error,
             properties,
-            lock,
             preferencies,
             permissions,
         },

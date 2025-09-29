@@ -125,4 +125,76 @@ describe("document-lock", () => {
             );
         });
     });
+
+    describe("unlockDocument", () => {
+        let getItem: MockInstance;
+        let context: ActionContext<State, State>;
+
+        beforeEach(() => {
+            context = { commit: vi.fn(), dispatch: vi.fn() } as unknown as ActionContext<
+                State,
+                State
+            >;
+
+            vi.spyOn(lock_rest_querier, "deleteLockFile").mockResolvedValue();
+            vi.spyOn(lock_rest_querier, "deleteLockEmbedded").mockResolvedValue();
+            getItem = vi.spyOn(rest_querier, "getItem");
+        });
+
+        it("should unlock a file and then update its information", async () => {
+            const item_to_lock = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE,
+            } as ItemFile;
+
+            const updated_item = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE,
+                lock_info: {
+                    user_id: 123,
+                },
+            };
+            getItem.mockReturnValue(Promise.resolve(updated_item));
+
+            await document_lock.unlockDocument(context, item_to_lock);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "replaceFolderContentByItem",
+                updated_item,
+                {
+                    root: true,
+                },
+            );
+        });
+
+        it("should unlock an embedded file and then update its information", async () => {
+            const item_to_lock = {
+                id: 123,
+                title: "My file",
+                type: TYPE_EMBEDDED,
+            } as Embedded;
+
+            const updated_item = {
+                id: 123,
+                title: "My embedded",
+                type: TYPE_EMBEDDED,
+                lock_info: {
+                    user_id: 123,
+                },
+            };
+            getItem.mockReturnValue(Promise.resolve(updated_item));
+
+            await document_lock.unlockDocument(context, item_to_lock);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "replaceFolderContentByItem",
+                updated_item,
+                {
+                    root: true,
+                },
+            );
+        });
+    });
 });

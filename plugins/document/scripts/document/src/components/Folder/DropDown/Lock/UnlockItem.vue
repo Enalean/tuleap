@@ -34,13 +34,16 @@
 
 <script setup lang="ts">
 import type { Item } from "../../../../type";
-import { useNamespacedActions } from "vuex-composition-helpers";
-import type { LockActions } from "../../../../store/lock/lock-actions";
+import { useStore } from "vuex-composition-helpers";
 import { computed } from "vue";
+import type { DocumentLock } from "../../../../helpers/lock/document-lock";
 
-const props = defineProps<{ item: Item }>();
+const $store = useStore();
 
-const { unlockDocument } = useNamespacedActions<LockActions>("lock", ["unlockDocument"]);
+const props = defineProps<{
+    item: Item;
+    document_lock: DocumentLock;
+}>();
 
 const can_unlock_document = computed((): boolean => {
     if (props.item.lock_info === null) {
@@ -51,6 +54,6 @@ const can_unlock_document = computed((): boolean => {
 });
 
 async function unlockDocumentItem(): Promise<void> {
-    await unlockDocument(props.item);
+    await props.document_lock.unlockDocument($store, props.item);
 }
 </script>

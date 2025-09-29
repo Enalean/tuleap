@@ -20,6 +20,11 @@ import type { Item, State } from "../../type";
 import type { ActionContext } from "vuex";
 import { isEmbedded, isEmpty, isFile, isLink, isWiki } from "../type-check-helper";
 import {
+    deleteLockEmbedded,
+    deleteLockEmpty,
+    deleteLockFile,
+    deleteLockLink,
+    deleteLockWiki,
     postLockEmbedded,
     postLockEmpty,
     postLockFile,
@@ -30,6 +35,7 @@ import { getItem } from "../../api/rest-querier";
 
 export type DocumentLock = {
     lockDocument(context: ActionContext<State, State>, item: Item): Promise<void>;
+    unlockDocument(context: ActionContext<State, State>, item: Item): Promise<void>;
 };
 
 export const getDocumentLock = (): DocumentLock => ({
@@ -45,6 +51,27 @@ export const getDocumentLock = (): DocumentLock => ({
                 await postLockLink(item);
             } else if (isEmpty(item)) {
                 await postLockEmpty(item);
+            }
+
+            const updated_item = await getItem(item.id);
+            item.lock_info = updated_item.lock_info;
+            context.commit("replaceFolderContentByItem", updated_item, { root: true });
+        } catch (exception) {
+            await context.dispatch("error/handleErrorsForLock", exception, { root: true });
+        }
+    },
+    async unlockDocument(context: ActionContext<State, State>, item: Item): Promise<void> {
+        try {
+            if (isFile(item)) {
+                await deleteLockFile(item);
+            } else if (isEmbedded(item)) {
+                await deleteLockEmbedded(item);
+            } else if (isWiki(item)) {
+                await deleteLockWiki(item);
+            } else if (isLink(item)) {
+                await deleteLockLink(item);
+            } else if (isEmpty(item)) {
+                await deleteLockEmpty(item);
             }
 
             const updated_item = await getItem(item.id);
