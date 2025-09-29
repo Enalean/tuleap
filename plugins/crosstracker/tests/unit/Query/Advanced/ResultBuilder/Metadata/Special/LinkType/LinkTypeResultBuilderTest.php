@@ -21,11 +21,13 @@
 
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\LinkType;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\ArtifactLinkTypeRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\v1\TrackerFieldRepresentations\LinkTypeRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -42,7 +44,7 @@ final class LinkTypeResultBuilderTest extends TestCase
         $this->artifact = ArtifactTestBuilder::anArtifact(223)->withTitle('My artifact')->build();
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderReverseAndForwardDirection')]
+    #[DataProvider('dataProviderReverseAndForwardDirection')]
     public function testItBuildALinkedTypeRepresentationBasedArtifactLinkRepresentation(
         string $direction,
         string $label,
@@ -74,9 +76,17 @@ final class LinkTypeResultBuilderTest extends TestCase
         ];
     }
 
-    public function testItBuildALinkedTypeRepresentationWhenLinkIsNotTyped(): void
+    public static function dataProviderReverseAndForwardForNoType(): array
     {
-        $direction      = LinkDirection::REVERSE->value;
+        return [
+            'forward' => [LinkDirection::FORWARD->value, 'is Linked to'],
+            'reverse' => [LinkDirection::REVERSE->value, 'is Linked from'],
+        ];
+    }
+
+    #[DataProvider('dataProviderReverseAndForwardForNoType')]
+    public function testItBuildALinkedTypeRepresentationWhenLinkIsNotTyped(string $direction, string $expected_label): void
+    {
         $select_results = [
             ['id' => $this->artifact->getId(), '@link_type' => '', $direction => ''],
         ];
@@ -87,7 +97,7 @@ final class LinkTypeResultBuilderTest extends TestCase
             Option::fromValue($direction)
         );
 
-        $link_type_representation = new LinkTypeRepresentation('', '', '', '');
+        $link_type_representation = new LinkTypeRepresentation(ArtifactLinkField::DEFAULT_LINK_TYPE, $direction, $expected_label, '');
 
         $expected = new SelectedValue('@link_type', ArtifactLinkTypeRepresentation::build($link_type_representation));
         self::assertEqualsCanonicalizing($expected, $result->values[$this->artifact->getId()]);

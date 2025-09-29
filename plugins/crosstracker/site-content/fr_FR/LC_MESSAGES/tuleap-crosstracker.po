@@ -310,5 +310,11 @@ msgstr "fin du texte"
 msgid "integer"
 msgstr "nombre entier"
 
+msgid "is Linked from"
+msgstr "est Lié depuis"
+
+msgid "is Linked to"
+msgstr "est Lié à"
+
 msgid "whitespace"
 msgstr "espace"

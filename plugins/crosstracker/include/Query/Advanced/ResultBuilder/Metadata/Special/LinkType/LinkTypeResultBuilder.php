@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\LinkType;
 
+use Tuleap\CrossTracker\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\ArtifactLinkTypeRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveSystemTypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\v1\TrackerFieldRepresentations\LinkTypeRepresentation;
@@ -58,9 +60,9 @@ final readonly class LinkTypeResultBuilder
 
     private function createSelectedValueWithLinkType(int $id, array $result, string $link_direction): SelectedValue
     {
-        $shortname = $result['@link_type'] ?? '';
-        if ($shortname === '') {
-            return $this->createEmptySelectedValue();
+        $shortname = $result['@link_type'] ?? ArtifactLinkField::DEFAULT_LINK_TYPE;
+        if ($shortname === ArtifactLinkField::DEFAULT_LINK_TYPE) {
+            return $this->getShortnameWhenNoLinkType($link_direction);
         }
         $uri = 'artifacts/' . urlencode((string) $id) . '/linked_artifacts?nature=' . urlencode($shortname) .
             '&direction=' . urlencode($link_direction);
@@ -76,6 +78,13 @@ final readonly class LinkTypeResultBuilder
         return $this->buildRepresentationWithLabel($shortname, $link_direction, $label, $uri);
     }
 
+    private function getShortnameWhenNoLinkType(string $direction): SelectedValue
+    {
+        $label                    = $direction === LinkDirection::FORWARD->value ?  dgettext('tuleap-crosstracker', 'is Linked to') :  dgettext('tuleap-crosstracker', 'is Linked from');
+        $link_type_representation = new LinkTypeRepresentation(ArtifactLinkField::DEFAULT_LINK_TYPE, $direction, $label, '');
+        return new SelectedValue(AllowedMetadata::LINK_TYPE, ArtifactLinkTypeRepresentation::build($link_type_representation));
+    }
+
     private function createEmptySelectedValue(): SelectedValue
     {
         return $this->buildRepresentationWithLabel('', '', '', '');
@@ -84,6 +93,6 @@ final readonly class LinkTypeResultBuilder
     private function buildRepresentationWithLabel(string $shortname, string $link_direction, mixed $label, string $uri): SelectedValue
     {
         $link_type_representation = new LinkTypeRepresentation($shortname, $link_direction, $label, $uri);
-        return new SelectedValue('@link_type', ArtifactLinkTypeRepresentation::build($link_type_representation));
+        return new SelectedValue(AllowedMetadata::LINK_TYPE, ArtifactLinkTypeRepresentation::build($link_type_representation));
     }
 }
