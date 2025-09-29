@@ -30,7 +30,7 @@ use Tuleap\RealTimeMercure\MercureClient;
 
 class KanbanRealtimeStructureMessageSender
 {
-    public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    public const string HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
     public function __construct(
         private readonly TrackerFactory $tracker_factory,
         private readonly KanbanStructureRealTimeMercure $structure_realtime_kanban,

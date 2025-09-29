@@ -29,7 +29,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 class ProjectKanban extends KanbanWidget
 {
-    public const NAME = 'plugin_agiledashboard_projects_kanban';
+    public const string NAME = 'plugin_agiledashboard_projects_kanban';
 
     public function __construct(
         WidgetKanbanCreator $widget_kanban_creator,

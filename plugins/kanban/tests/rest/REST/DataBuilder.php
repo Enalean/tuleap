@@ -27,9 +27,9 @@ use Tuleap\REST\RESTTestDataBuilder;
 
 class DataBuilder extends RESTTestDataBuilder
 {
-    public const PROJECT_KANBAN_CUMULATIVE_FLOW_SHORTNAME = 'kanban-cumulative-flow';
-    public const KANBAN_CUMULATIVE_FLOW_NAME              = 'kanban_cumulative_flow_test';
-    public const KANBAN_CUMULATIVE_FLOW_ID                = 2;
+    public const string PROJECT_KANBAN_CUMULATIVE_FLOW_SHORTNAME = 'kanban-cumulative-flow';
+    public const string KANBAN_CUMULATIVE_FLOW_NAME              = 'kanban_cumulative_flow_test';
+    public const int KANBAN_CUMULATIVE_FLOW_ID                   = 2;
 
     private KanbanManager $kanban_manager;
 

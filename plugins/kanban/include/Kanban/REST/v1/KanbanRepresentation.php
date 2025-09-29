@@ -33,9 +33,9 @@ use Tuleap\REST\JsonCast;
  */
 final class KanbanRepresentation
 {
-    public const ROUTE         = 'kanban';
-    public const BACKLOG_ROUTE = 'backlog';
-    public const ITEMS_ROUTE   = 'items';
+    public const string ROUTE         = 'kanban';
+    public const string BACKLOG_ROUTE = 'backlog';
+    public const string ITEMS_ROUTE   = 'items';
 
     /**
      * @var int

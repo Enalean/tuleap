@@ -66,8 +66,8 @@ use Tracker_Permission_PermissionRetrieveAssignee;
 
 class KanbanColumnsResource
 {
-    public const MAX_LIMIT        = 100;
-    public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    public const int MAX_LIMIT           = 100;
+    public const string HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var KanbanFactory */
     private $kanban_factory;

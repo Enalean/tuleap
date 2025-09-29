@@ -28,7 +28,7 @@ use UserManager;
 
 class MyKanban extends KanbanWidget
 {
-    public const NAME = 'plugin_agiledashboard_my_kanban';
+    public const string NAME = 'plugin_agiledashboard_my_kanban';
 
     public function __construct(
         WidgetKanbanCreator $widget_kanban_creator,

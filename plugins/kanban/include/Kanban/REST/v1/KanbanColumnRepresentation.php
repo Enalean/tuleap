@@ -28,7 +28,7 @@ use Tuleap\REST\JsonCast;
  */
 final class KanbanColumnRepresentation
 {
-    public const ROUTE = 'kanban_columns';
+    public const string ROUTE = 'kanban_columns';
 
     /**
      * @var int {@type int}

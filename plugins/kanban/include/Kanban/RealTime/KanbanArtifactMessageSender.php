@@ -28,9 +28,9 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 
 final class KanbanArtifactMessageSender
 {
-    public const EVENT_NAME_ARTIFACT_CREATED = 'kanban_item:create';
-    public const EVENT_NAME_ARTIFACT_UPDATED = 'kanban_item:update';
-    public const EVENT_NAME_ARTIFACT_MOVED   = 'kanban_item:move';
+    public const string EVENT_NAME_ARTIFACT_CREATED = 'kanban_item:create';
+    public const string EVENT_NAME_ARTIFACT_UPDATED = 'kanban_item:update';
+    public const string EVENT_NAME_ARTIFACT_MOVED   = 'kanban_item:move';
 
     public function __construct(
         private readonly RealTimeArtifactMessageSender $artifact_message_sender,

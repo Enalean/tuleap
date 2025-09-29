@@ -23,7 +23,7 @@ namespace Tuleap\Kanban\REST\v1;
  */
 final class KanbanColumnPATCHRepresentation
 {
-    public const ROUTE = 'kanban_columns';
+    public const string ROUTE = 'kanban_columns';
 
     /**
      * @var string {@type string} {@required false} {@min 1}

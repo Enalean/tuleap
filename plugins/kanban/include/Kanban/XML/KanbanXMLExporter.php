@@ -37,13 +37,13 @@ use XML_RNGValidator;
 
 final readonly class KanbanXMLExporter
 {
-    private const NODE_KANBAN_LIST     = 'kanban_list';
-    private const NODE_KANBAN          = 'kanban';
-    private const NODE_TRACKER_REPORTS = 'tracker-reports';
-    private const NODE_TRACKER_REPORT  = 'tracker-report';
+    private const string NODE_KANBAN_LIST     = 'kanban_list';
+    private const string NODE_KANBAN          = 'kanban';
+    private const string NODE_TRACKER_REPORTS = 'tracker-reports';
+    private const string NODE_TRACKER_REPORT  = 'tracker-report';
 
-    public const TRACKER_ID_PREFIX = 'T';
-    public const KANBAN_ID_PREFIX  = 'K';
+    public const string TRACKER_ID_PREFIX = 'T';
+    public const string KANBAN_ID_PREFIX  = 'K';
 
     public function __construct(
         private KanbanFactory $kanban_factory,

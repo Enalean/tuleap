@@ -32,21 +32,21 @@ use Tuleap\User\History\HistoryEntryCollection;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID    = 101;
-    private const MAX_LENGTH = 10;
-    private const PROJECT_ID = 345;
+    private const int USER_ID    = 101;
+    private const int MAX_LENGTH = 10;
+    private const int PROJECT_ID = 345;
 
-    private const FIRST_KANBAN_ID              = 1;
-    private const FIRST_KANBAN_NAME            = 'Kanban Tasks';
-    private const FIRST_KANBAN_VISIT_TIMESTAMP = 1491246376;
-    private const FIRST_TRACKER_ID             = 12;
-    private const FIRST_TRACKER_COLOR          = ColorName::CHROME_SILVER;
+    private const int FIRST_KANBAN_ID              = 1;
+    private const string FIRST_KANBAN_NAME         = 'Kanban Tasks';
+    private const int FIRST_KANBAN_VISIT_TIMESTAMP = 1491246376;
+    private const int FIRST_TRACKER_ID             = 12;
+    private const ColorName FIRST_TRACKER_COLOR    = ColorName::CHROME_SILVER;
 
-    private const SECOND_KANBAN_ID              = 2;
-    private const SECOND_KANBAN_NAME            = 'Another Kanban';
-    private const SECOND_KANBAN_VISIT_TIMESTAMP = 1522959274;
-    private const SECOND_TRACKER_ID             = 24;
-    private const SECOND_TRACKER_COLOR          = ColorName::RED_WINE;
+    private const int SECOND_KANBAN_ID              = 2;
+    private const string SECOND_KANBAN_NAME         = 'Another Kanban';
+    private const int SECOND_KANBAN_VISIT_TIMESTAMP = 1522959274;
+    private const int SECOND_TRACKER_ID             = 24;
+    private const ColorName SECOND_TRACKER_COLOR    = ColorName::RED_WINE;
 
     /**
      * @var \Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao&MockObject

@@ -24,8 +24,8 @@ namespace Tuleap\Kanban;
 
 final class ColumnIdentifier
 {
-    public const BACKLOG_COLUMN = 'backlog';
-    public const ARCHIVE_COLUMN = 'archive';
+    public const string BACKLOG_COLUMN = 'backlog';
+    public const string ARCHIVE_COLUMN = 'archive';
 
     public function __construct(private readonly string|int $column_id)
     {

@@ -26,9 +26,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class RealTimeArtifactMessageController
 {
-    public const EVENT_NAME_ARTIFACT_CREATED   = 'created';
-    public const EVENT_NAME_ARTIFACT_UPDATED   = 'updated';
-    public const EVENT_NAME_ARTIFACT_REORDERED = 'reordered';
+    public const string EVENT_NAME_ARTIFACT_CREATED   = 'created';
+    public const string EVENT_NAME_ARTIFACT_UPDATED   = 'updated';
+    public const string EVENT_NAME_ARTIFACT_REORDERED = 'reordered';
 
     public function __construct(
         private readonly KanbanFactory $kanban_factory,

@@ -23,7 +23,7 @@ namespace Tuleap\Kanban\REST\v1;
  */
 class KanbanColumnPOSTRepresentation
 {
-    public const ROUTE = 'kanban';
+    public const string ROUTE = 'kanban';
 
     /**
      * @var string {@type string}

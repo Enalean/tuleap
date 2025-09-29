@@ -27,7 +27,7 @@ use Tuleap\Tracker\Tracker;
 
 class Kanban
 {
-    private const PROMOTED_ITEM_PREFIX = 'kanban-';
+    private const string PROMOTED_ITEM_PREFIX = 'kanban-';
 
     public function __construct(
         private readonly int $id,
