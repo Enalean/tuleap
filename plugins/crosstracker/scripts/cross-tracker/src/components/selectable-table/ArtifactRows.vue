@@ -19,9 +19,9 @@
   -->
 
 <template>
-    <artifact-row
+    <row-artifact
         v-for="(row, index) of rows"
-        v-bind:key="row.id + level"
+        v-bind:key="row.artifact_id + level"
         v-bind:row="row"
         v-bind:columns="columns"
         v-bind:level="level"
@@ -31,12 +31,13 @@
         v-bind:parent_caret="parent_caret"
         v-bind:reverse_links_count="reverse_links_count"
         v-bind:ancestors="ancestors"
+        v-bind:parent_row="parent_row"
     />
 </template>
 
 <script setup lang="ts">
-import ArtifactRow from "./ArtifactRow.vue";
-import type { ArtifactsTable } from "../../domain/ArtifactsTable";
+import RowArtifact from "./RowArtifact.vue";
+import type { ArtifactsTable, ArtifactRow } from "../../domain/ArtifactsTable";
 
 defineProps<{
     rows: ArtifactsTable["rows"];
@@ -47,5 +48,6 @@ defineProps<{
     parent_caret?: HTMLElement;
     reverse_links_count?: number;
     ancestors: number[];
+    parent_row: ArtifactRow | null;
 }>();
 </script>

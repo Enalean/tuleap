@@ -112,7 +112,7 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(table.rows).toHaveLength(2);
             const [first_row, second_row] = table.rows;
 
-            expect(first_row.uri).toBe(first_artifact_uri);
+            expect(first_row.artifact_uri).toBe(first_artifact_uri);
 
             const date_value_first_row = first_row.cells.get(date_column);
             if (date_value_first_row?.type !== DATE_CELL) {
@@ -126,7 +126,7 @@ describe(`ArtifactsTableBuilder`, () => {
             }
             expect(numeric_value_first_row.value.unwrapOr(null)).toBe(float_value);
 
-            expect(second_row.uri).toBe(second_artifact_uri);
+            expect(second_row.artifact_uri).toBe(second_artifact_uri);
 
             const date_value_second_row = second_row.cells.get(date_column);
             if (date_value_second_row?.type !== DATE_CELL) {
@@ -692,7 +692,7 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(table.columns.has(ARTIFACT_COLUMN_NAME)).toBe(true);
             expect(table.columns.has("wacken")).toBe(false);
             expect(table.rows).toHaveLength(1);
-            expect(table.rows[0].uri).toBeDefined();
+            expect(table.rows[0].artifact_uri).toBeDefined();
             expect(table.rows[0].cells).toHaveLength(0);
         });
 

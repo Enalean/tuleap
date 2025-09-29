@@ -30,7 +30,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { RETRIEVE_ARTIFACT_LINKS } from "../../injection-symbols";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
 import ArtifactRows from "./ArtifactRows.vue";
-import ArtifactRow from "./ArtifactRow.vue";
+import RowArtifact from "./RowArtifact.vue";
 
 const DATE_COLUMN_NAME = "start_date";
 const NUMERIC_COLUMN_NAME = "remaining_effort";
@@ -98,6 +98,7 @@ describe("ArtifactRows", () => {
                 tql_query: "SELECT @id FROM @project='self' WHERE @id>1",
                 level: 0,
                 ancestors,
+                parent_row: null,
             },
         });
     };
@@ -105,13 +106,13 @@ describe("ArtifactRows", () => {
     it(`will show a table-like grid with the selected columns and artifact values`, () => {
         const wrapper = getWrapper(table);
 
-        expect(wrapper.findAllComponents(ArtifactRow)).toHaveLength(2);
+        expect(wrapper.findAllComponents(RowArtifact)).toHaveLength(2);
     });
 
-    it("should propagate its own level to each ArtifactRow", () => {
+    it("should propagate its own level to each RowArtifact", () => {
         const wrapper = getWrapper(table);
 
-        const artifact_rows = wrapper.findAllComponents(ArtifactRow);
+        const artifact_rows = wrapper.findAllComponents(RowArtifact);
 
         expect(artifact_rows).not.toHaveLength(0);
         artifact_rows.forEach((artifact_row) => {
@@ -123,7 +124,7 @@ describe("ArtifactRows", () => {
         it("should propagate ancestors to its rows", () => {
             const wrapper = getWrapper(table);
 
-            const artifact_rows = wrapper.findAllComponents(ArtifactRow);
+            const artifact_rows = wrapper.findAllComponents(RowArtifact);
 
             expect(artifact_rows).not.toHaveLength(0);
             artifact_rows.forEach((artifact_row) => {
@@ -135,7 +136,7 @@ describe("ArtifactRows", () => {
             ancestors = [];
             const wrapper = getWrapper(table);
 
-            const artifact_rows = wrapper.findAllComponents(ArtifactRow);
+            const artifact_rows = wrapper.findAllComponents(RowArtifact);
 
             expect(artifact_rows).not.toHaveLength(0);
             artifact_rows.forEach((artifact_row) => {

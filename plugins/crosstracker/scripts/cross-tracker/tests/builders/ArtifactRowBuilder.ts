@@ -26,7 +26,7 @@ export class ArtifactRowBuilder {
     #row = {
         expected_number_of_forward_links: 2,
         expected_number_of_reverse_links: 1,
-        uri: "/plugins/tracker/?aid=698",
+        artifact_uri: "/plugins/tracker/?aid=698",
         cells: new Map(),
     };
 
@@ -45,11 +45,11 @@ export class ArtifactRowBuilder {
         expected_number_of_reverse_links: number,
     ): ArtifactRow {
         return {
-            uuid: uuidv4(),
-            id: this.#id,
+            row_uuid: uuidv4(),
+            artifact_id: this.#id,
             expected_number_of_forward_links,
             expected_number_of_reverse_links,
-            uri: "/plugins/tracker/?aid=698",
+            artifact_uri: "/plugins/tracker/?aid=698",
             cells: new Map(),
             direction: NO_DIRECTION,
         };
@@ -57,8 +57,8 @@ export class ArtifactRowBuilder {
 
     public build(): ArtifactRow {
         return {
-            uuid: uuidv4(),
-            id: this.#id,
+            row_uuid: uuidv4(),
+            artifact_id: this.#id,
             ...this.#row,
             direction: NO_DIRECTION,
         };

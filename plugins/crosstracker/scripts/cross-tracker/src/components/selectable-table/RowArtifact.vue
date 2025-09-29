@@ -19,12 +19,12 @@
 
 <template>
     <div class="artifact-row" data-test="artifact-row">
-        <edit-cell v-bind:uri="row.uri" />
+        <edit-cell v-bind:uri="row.artifact_uri" />
         <selectable-cell
             v-for="column_name of columns"
-            v-bind:key="column_name + '_' + level + '_' + row.id"
+            v-bind:key="column_name + '_' + level + '_' + row.artifact_id"
             v-bind:cell="row.cells.get(column_name)"
-            v-bind:artifact_uri="row.uri"
+            v-bind:artifact_uri="row.artifact_uri"
             v-bind:expected_number_of_forward_link="row.expected_number_of_forward_links"
             v-bind:expected_number_of_reverse_link="row.expected_number_of_reverse_links"
             v-on:toggle-links="toggleLinks"
@@ -50,14 +50,14 @@
             v-bind:parent_element="current_element_ref"
             v-bind:parent_caret="current_caret_ref"
             v-bind:reverse_links_count="reverse.artifact_links.length"
-            v-bind:ancestors="[...ancestors, row.id]"
+            v-bind:ancestors="[...ancestors, row.artifact_id]"
         />
         <row-error-message v-if="error_message !== ''" v-bind:error_message="error_message" />
         <load-all-button v-if="display_a_load_all_button" v-on:load-all="loadAllArtifactLinks" />
     </template>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
@@ -65,10 +65,13 @@ import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../api/ArtifactLinks
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import LoadAllButton from "../feedback/LoadAllButton.vue";
-import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
+import { EMITTER, RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import SelectableCell from "./SelectableCell.vue";
 import EditCell from "./EditCell.vue";
+import { REMOVED_ROW_EVENT, INSERTED_ROW_EVENT } from "../../helpers/widget-events";
+
+const emitter = strictInject(EMITTER);
 
 interface ArtifactLinksFetchStatus {
     is_loading: boolean;
@@ -86,6 +89,7 @@ const props = defineProps<{
     parent_caret: HTMLElement | undefined;
     reverse_links_count: number | undefined;
     ancestors: number[];
+    parent_row: ArtifactRow | null;
 }>();
 
 const DIRECT_PARENT = 1;
@@ -124,6 +128,19 @@ const display_a_load_all_button = computed((): boolean => {
     return totalNumberOfLinksIsGreaterThanMaximalLimit() && linksAreNotAllLoaded();
 });
 
+onMounted((): void => {
+    emitter.emit(INSERTED_ROW_EVENT, {
+        row: props.row,
+        parent_row: props.parent_row,
+    });
+});
+
+onBeforeUnmount((): void => {
+    emitter.emit(REMOVED_ROW_EVENT, {
+        row: props.row,
+    });
+});
+
 function totalNumberOfLinksIsGreaterThanMaximalLimit(): boolean {
     return (
         total_number_of_forward_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED ||
@@ -147,7 +164,7 @@ function linksAreNotAllLoaded(): boolean {
 }
 
 function filterAlreadySeenArtifact(rows: ReadonlyArray<ArtifactRow>): ArtifactRow[] {
-    return rows.filter((row) => row.id !== props.ancestors.slice(-1)[0]);
+    return rows.filter((row) => row.artifact_id !== props.ancestors.slice(-1)[0]);
 }
 
 function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): void {
@@ -165,7 +182,7 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
     }
 
     artifact_links_retriever
-        .getForwardLinks(widget_id, props.row.id, props.tql_query)
+        .getForwardLinks(widget_id, props.row.artifact_id, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 total_number_of_forward_links.value = artifacts.total;
@@ -180,7 +197,7 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
         });
 
     artifact_links_retriever
-        .getReverseLinks(widget_id, props.row.id, props.tql_query)
+        .getReverseLinks(widget_id, props.row.artifact_id, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 total_number_of_reverse_links.value = artifacts.total;
@@ -198,7 +215,7 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
 function loadAllArtifactLinks(): void {
     if (total_number_of_forward_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED) {
         artifact_links_retriever
-            .getAllForwardLinks(widget_id, props.row.id, props.tql_query)
+            .getAllForwardLinks(widget_id, props.row.artifact_id, props.tql_query)
             .match(
                 (artifacts: ArtifactsTable[]) => {
                     if (artifacts.length === 0) {
@@ -223,7 +240,7 @@ function loadAllArtifactLinks(): void {
 
     if (total_number_of_reverse_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED) {
         artifact_links_retriever
-            .getAllReverseLinks(widget_id, props.row.id, props.tql_query)
+            .getAllReverseLinks(widget_id, props.row.artifact_id, props.tql_query)
             .match(
                 (artifacts: ArtifactsTable[]) => {
                     if (artifacts.length === 0) {

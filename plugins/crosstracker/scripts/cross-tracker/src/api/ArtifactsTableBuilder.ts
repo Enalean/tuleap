@@ -340,12 +340,13 @@ export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
                         artifact,
                     );
 
+                    const row_uuid = uuidv4();
                     const row: ArtifactRow = {
-                        uuid: uuidv4(),
-                        id: artifact_id,
+                        row_uuid: row_uuid,
+                        artifact_id: artifact_id,
                         expected_number_of_forward_links: number_of_forward_link,
                         expected_number_of_reverse_links: number_of_reverse_link,
-                        uri: artifact_uri,
+                        artifact_uri: artifact_uri,
                         cells: new Map<string, Cell>(),
                         direction,
                     };
