@@ -218,6 +218,9 @@ msgstr ""
 "Afin d'être en mesure d'ajouter de nouvelles sections à votre document, nous "
 "avons besoin de savoir dans quel tracker les sections vont être créées."
 
+msgid "Load more versions"
+msgstr "Charger plus de versions"
+
 msgid "Load new section"
 msgstr "Charger la nouvelle section"
 
