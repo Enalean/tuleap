@@ -18,9 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Priority;
+
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
+use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
+use PFUser;
+use Planning_Milestone;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 
-class AgileDashboard_SequenceIdManager
+class SequenceIdManager
 {
     /** @var array<int, array<int, int>> */
     private array $backlog_item_ids;
@@ -48,11 +55,11 @@ class AgileDashboard_SequenceIdManager
         return $this->backlog_item_ids[$milestone_id][$artifact_id];
     }
 
-    private function loadBacklogForMilestoneIfNeeded(PFUser $user, Planning_Milestone $milestone)
+    private function loadBacklogForMilestoneIfNeeded(PFUser $user, Planning_Milestone $milestone): void
     {
         if (! $milestone->getArtifactId()) {
-                $this->loadTopBacklog($user, $milestone);
-                return;
+            $this->loadTopBacklog($user, $milestone);
+            return;
         }
 
         if (! isset($this->backlog_item_ids[$milestone->getArtifactId()])) {
@@ -64,7 +71,7 @@ class AgileDashboard_SequenceIdManager
         }
     }
 
-    private function loadTopBacklog(PFUser $user, Planning_Milestone $milestone)
+    private function loadTopBacklog(PFUser $user, Planning_Milestone $milestone): void
     {
         if (! isset($this->backlog_item_ids[(int) $milestone->getArtifactId()])) {
             $this->backlog_item_ids[(int) $milestone->getArtifactId()] = [];
@@ -76,7 +83,7 @@ class AgileDashboard_SequenceIdManager
         }
     }
 
-    private function storeTopBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $backlog_items)
+    private function storeTopBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $backlog_items): void
     {
         $artifact_position = 1;
         foreach ($backlog_items as $backlog_item) {
@@ -85,7 +92,7 @@ class AgileDashboard_SequenceIdManager
         }
     }
 
-    private function storeBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_DescendantItemsCollection $backlog_artifacts)
+    private function storeBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_DescendantItemsCollection $backlog_artifacts): void
     {
         $artifact_position = 1;
         foreach ($backlog_artifacts as $backlog_artifact) {

@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Milestone\Backlog;
+namespace Tuleap\AgileDashboard\Priority;
 
 use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
-use AgileDashboard_SequenceIdManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_VirtualTopMilestone;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class SequenceIdManagerTest extends TestCase
 {
     private Planning_VirtualTopMilestone&MockObject $virtual_top_milestone;
     private int $artifact_id_1;
@@ -49,7 +50,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
     private Artifact $artifact_4;
     private Artifact $artifact_5;
     private Artifact $artifact_6;
-    private AgileDashboard_SequenceIdManager $sequence_id_manager;
+    private SequenceIdManager $sequence_id_manager;
     private Planning_ArtifactMilestone&MockObject $milestone_1;
     private Planning_ArtifactMilestone&MockObject $milestone_2;
     private AgileDashboard_Milestone_Backlog_BacklogFactory&MockObject $backlog_factory;
@@ -82,7 +83,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
 
         $this->backlog_item_collection_factory = $this->createMock(BacklogItemCollectionFactory::class);
 
-        $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
+        $this->sequence_id_manager = new SequenceIdManager(
             $this->backlog_factory,
             $this->backlog_item_collection_factory
         );
