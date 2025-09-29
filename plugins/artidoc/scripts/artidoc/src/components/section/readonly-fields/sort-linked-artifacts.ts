@@ -23,7 +23,7 @@ import type {
     ReadonlyFieldLinkedArtifact,
 } from "@/sections/readonly-fields/ReadonlyFields";
 
-const isReverseChild = (link_type: LinkType): boolean =>
+export const isReverseChild = (link_type: LinkType): boolean =>
     link_type.shortname === IS_CHILD_LINK_TYPE && link_type.direction === REVERSE_DIRECTION;
 
 export const sortLinkedArtifacts = (

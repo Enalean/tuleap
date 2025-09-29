@@ -425,6 +425,7 @@ table {
 td, th {
     border-right: 1pt solid black;
     border-bottom: 1pt solid black;
+    padding: 2px 4px;
 }
 
 th {
@@ -555,11 +556,16 @@ tlp-relative-date {
     overflow: hidden;
 }
 
+.document-artifact-link-table-status-cell {
+    text-align: right;
+}
+
 .document-artifact-link-row {
-    display: flex;
-    align-items: center;
-    padding: var(--small-spacing) 0;
-    gap: var(--small-spacing);
+    border: 1pt solid var(--dimmed-color);
+}
+
+.parent-artifact-link:has(+ :not(.parent-artifact-link)) {
+    border-bottom-width: 3pt;
 }
 
 .document-link-type {

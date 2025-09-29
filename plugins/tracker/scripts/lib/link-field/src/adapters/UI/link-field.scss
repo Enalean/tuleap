@@ -40,8 +40,7 @@ $link-type-width: 150px;
     display: flex;
     align-items: center;
     padding: variables.$link-row-padding;
-    border: 0 solid $link-rows-border-color;
-    border-bottom-width: 1px;
+    border-bottom: 1px solid $link-rows-border-color;
     gap: variables.$link-row-padding;
 
     &:hover {
@@ -49,8 +48,8 @@ $link-type-width: 150px;
     }
 }
 
-.link-field-parent-row + .link-field-row:not(.link-field-parent-row) {
-    border-top-width: 3px;
+.link-field-parent-row:has(+ :not(.link-field-parent-row)) {
+    border-bottom-width: 3px;
 }
 
 .link-field-add-link-section {
