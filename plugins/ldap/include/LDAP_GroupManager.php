@@ -41,10 +41,10 @@ use Tuleap\LDAP\GroupSyncNotificationsManager;
  */
 abstract class LDAP_GroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NO_SYNCHRONIZATION      = 'never';
-    public const AUTO_SYNCHRONIZATION    = 'auto';
-    public const BIND_OPTION             = 'bind';
-    public const PRESERVE_MEMBERS_OPTION = 'preserve_members';
+    public const string NO_SYNCHRONIZATION      = 'never';
+    public const string AUTO_SYNCHRONIZATION    = 'auto';
+    public const string BIND_OPTION             = 'bind';
+    public const string PRESERVE_MEMBERS_OPTION = 'preserve_members';
 
     protected $groupName;
     protected $groupDn;

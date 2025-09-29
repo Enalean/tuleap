@@ -31,7 +31,7 @@ use Tuleap\User\UserNameNormalizer;
 
 class LDAP_UserManager implements LdapLoginFromTuleapUserIdProvider //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
+    public const string EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
 
     /**
      * @var array<string, LDAPResult|false>

@@ -29,7 +29,7 @@ final class LdapLogger implements LoggerInterface
 {
     use LogForwarderTrait;
 
-    private const LOGGER_NAME = 'ldap_syslog';
+    private const string LOGGER_NAME = 'ldap_syslog';
 
     public function __construct()
     {
