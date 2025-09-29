@@ -1008,6 +1008,9 @@ msgstr "Personnalisation de la page d'accueil"
 msgid "DELETE FAILED!"
 msgstr "Échec de la destruction !"
 
+msgid "Dark mode"
+msgstr "Mode sombre"
+
 msgid "Dashboard creation failed."
 msgstr "La création du tableau de bord a échouée."
 
@@ -1808,6 +1811,9 @@ msgstr "Licences"
 
 msgid "License Approval:"
 msgstr "Approbation licence :"
+
+msgid "Light mode"
+msgstr "Mode clair"
 
 msgid "Link"
 msgstr "Lien"
@@ -3193,6 +3199,9 @@ msgstr "Gestion synchronisée de l'appartenance au projet"
 
 msgid "System"
 msgstr "Système"
+
+msgid "System default mode"
+msgstr "Mode par défaut du système"
 
 msgid "System events"
 msgstr "Évènements système"

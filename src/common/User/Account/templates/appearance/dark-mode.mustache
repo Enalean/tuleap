@@ -1,0 +1,32 @@
+{{# can_user_use_dark_mode}}
+<div class="tlp-form-element">
+    <label class="tlp-label">{{# gettext }}Dark mode{{/ gettext }}</label>
+    <label class="tlp-label tlp-radio">
+        <input
+            type="radio"
+            name="display_dark_mode"
+            value="{{system_value}}"
+            {{# is_system_mode }}checked{{/ is_system_mode }}
+        >
+        {{# gettext }}System default mode{{/ gettext }}
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input
+            type="radio"
+            name="display_dark_mode"
+            value="{{light_value}}"
+            {{# is_light_mode }}checked{{/ is_light_mode }}
+        >
+        {{# gettext }}Light mode{{/ gettext }}
+    </label>
+    <label class="tlp-label tlp-radio">
+        <input
+            type="radio"
+            name="display_dark_mode"
+            value="{{dark_value}}"
+            {{# is_dark_mode }}checked{{/ is_dark_mode}}
+        >
+        {{# gettext }}Dark mode{{/ gettext }}
+    </label>
+</div>
+{{/ can_user_use_dark_mode}}

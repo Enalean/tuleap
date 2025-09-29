@@ -28,6 +28,7 @@ use PFUser;
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
+use Tuleap\User\Account\DarkMode;
 use UserHelper;
 
 class AppearancePresenterBuilder
@@ -54,6 +55,11 @@ class AppearancePresenterBuilder
         AccountTabPresenterCollection $tabs,
         \PFUser $user,
     ): AppearancePresenter {
+        $dark_mod_pref  = DarkModeValue::fromUser($user);
+        $is_system_mode = $dark_mod_pref === DarkModeValue::System;
+        $is_light_mode  = $dark_mod_pref === DarkModeValue::Light;
+        $is_dark_mode   = $dark_mod_pref === DarkModeValue::Dark;
+
         $is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
 
         $is_accessibility_enabled = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
@@ -64,6 +70,8 @@ class AppearancePresenterBuilder
         $is_login          = $preference === UserHelper::PREFERENCES_LOGIN;
         $is_realname       = $preference === UserHelper::PREFERENCES_REAL_NAME;
 
+        $can_user_use_dark_mode = DarkMode::isFeatureFlagActive();
+
         $display_relative_dates_preference = $user->getPreference(DateHelper::PREFERENCE_NAME);
 
         return new AppearancePresenter(
@@ -71,12 +79,16 @@ class AppearancePresenterBuilder
             $tabs,
             $this->language_presenter_builder->getLanguagePresenterCollectionForUser($user),
             $this->color_presenter_builder->getColorPresenterCollection($user),
+            $is_system_mode,
+            $is_light_mode,
+            $is_dark_mode,
             $is_condensed,
             $is_accessibility_enabled,
             $is_realname_login,
             $is_login_realname,
             $is_login,
             $is_realname,
+            $can_user_use_dark_mode,
             $display_relative_dates_preference ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue(),
             FaviconVariant::isFeatureFlagEnabled(),
             FaviconVariant::shouldDisplayFaviconVariant($user),

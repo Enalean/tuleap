@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\User\Account\Appearance\FaviconVariant;
+use Tuleap\User\Account\Appearance\DarkModeValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -105,6 +106,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -149,6 +151,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -200,6 +203,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -247,6 +251,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -291,6 +296,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -346,6 +352,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->expects($this->never())->method('setLanguageID');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -461,6 +468,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -508,6 +516,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', 'condensed'],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -555,6 +564,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', 'condensed'],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -595,6 +605,120 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertEquals('/account/appearance', $redirect_url);
     }
 
+    #[TestWith(['dark', 'dark'])]
+    #[TestWith(['light', 'light'])]
+    #[TestWith(['system', 'system'])]
+    #[TestWith(['', 'light'])]
+    #[TestWith([false, 'light'])]
+    public function testItDoesNothingIfUserKeepTheSameDarkMode(
+        false|string $current_dark_mode,
+        string $http_value,
+    ): void {
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['display_dark_mode', $current_dark_mode],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
+
+        $this->csrf_token->expects($this->once())->method('check');
+
+        $this->user_manager->expects($this->never())->method('updateDB');
+        $user->expects($this->never())->method('setPreference');
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('display_dark_mode', $http_value)
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
+
+        self::assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed',
+                ],
+            ],
+            $layout_inspector->getFeedback()
+        );
+        self::assertEquals('/account/appearance', $redirect_url);
+    }
+
+    #[TestWith(['dark', 'system'])]
+    #[TestWith(['dark', 'light'])]
+    #[TestWith(['light', 'dark'])]
+    #[TestWith(['light', 'system'])]
+    #[TestWith(['system', 'dark'])]
+    #[TestWith(['system', 'light'])]
+    #[TestWith([false, 'dark'])]
+    #[TestWith([false, 'system'])]
+    public function testItChangesIfUserWantAnotherDarkMode(
+        false|string $current_dark_mode,
+        string $want_dark_mode,
+    ): void {
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isAnonymous')->willReturn(false);
+        $user->method('getLanguageID')->willReturn('fr_FR');
+        $user->method('getPreference')->willReturnMap([
+            ['display_density', false],
+            ['display_dark_mode', $current_dark_mode],
+            ['accessibility_mode', false],
+            ['username_display', false],
+            ['relative_dates_display', false],
+        ]);
+
+        $this->csrf_token->expects($this->once())->method('check');
+
+        $user->expects($this->once())
+            ->method('setPreference')
+            ->with('display_dark_mode', $want_dark_mode);
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('display_dark_mode', $want_dark_mode)
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
+
+        self::assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'User preferences successfully updated',
+                ],
+            ],
+            $layout_inspector->getFeedback()
+        );
+        self::assertEquals('/account/appearance', $redirect_url);
+    }
+
     public function testItDoesNothingIfUserKeepsTheSameUsernameDisplay(): void
     {
         $user = $this->createMock(\PFUser::class);
@@ -602,6 +726,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', '2'],
             ['relative_dates_display', false],
@@ -649,6 +774,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', '2'],
             ['relative_dates_display', false],
@@ -700,6 +826,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -751,6 +878,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', 'absolute_first-relative_shown'],
@@ -798,6 +926,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -845,6 +974,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', '1'],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -892,6 +1022,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->method('getLanguageID')->willReturn('fr_FR');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', '1'],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -940,6 +1071,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $user->expects($this->once())->method('setLanguageID')->with('en_US');
         $user->method('getPreference')->willReturnMap([
             ['display_density', false],
+            ['display_dark_mode', DarkModeValue::default()->value],
             ['accessibility_mode', false],
             ['username_display', false],
             ['relative_dates_display', false],
@@ -956,6 +1088,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->willReturnMap([
                 ['relative_dates_display', 'absolute_first-relative_shown', true],
                 ['username_display', '2', true],
+                ['display_dark_mode', 'dark', true],
                 ['accessibility_mode', '1', true],
                 ['display_density', 'condensed', true],
                 ['theme_variant', 'green', true],
@@ -965,6 +1098,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->withUser($user)
             ->withParam('language_id', 'en_US')
             ->withParam('display_density', 'condensed')
+            ->withParam('display_dark_mode', 'dark')
             ->withParam('accessibility_mode', '1')
             ->withParam('color', 'green')
             ->withParam('username_display', '2')
