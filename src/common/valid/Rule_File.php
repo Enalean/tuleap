@@ -48,26 +48,26 @@ class Rule_File extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     break;
                 case \UPLOAD_ERR_INI_SIZE:
                 case \UPLOAD_ERR_FORM_SIZE:
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_size', $val['error']);
+                    $this->error = sprintf(_('File upload error (%d). The uploaded file exceeds the maximum allowed file size.'), $val['error']);
                     break;
                 case \UPLOAD_ERR_PARTIAL:
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_partial', $val['error']);
+                    $this->error = sprintf(_('File upload error (%d). The uploaded file was only partially uploaded.'), $val['error']);
                     break;
                 case \UPLOAD_ERR_NO_FILE:
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_nofile', $val['error']);
+                    $this->error = sprintf(_('File upload error (%d). No file was uploaded.'), $val['error']);
                     break;
                 default:
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_unknown', $val['error']);
+                    $this->error = sprintf(_('File upload error (%d). Unknown error code.'), $val['error']);
             }
             if ($ok && $val['name'] == '') {
                 $ok          = \false;
-                $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload');
+                $this->error = 'File upload error.';
             }
             if ($ok) {
                 // Re-check filesize (do not trust uploaded MAX_FILE_SIZE)
                 if (\filesize($val['tmp_name']) > $this->maxSize) {
                     $ok          = \false;
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_size', 1);
+                    $this->error = sprintf(_('File upload error (%d). The uploaded file exceeds the maximum allowed file size.'), 1);
                 }
             }
         }

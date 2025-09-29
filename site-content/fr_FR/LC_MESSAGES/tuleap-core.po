@@ -164,6 +164,14 @@ msgstr ""
 "projet."
 
 #, php-format
+msgid ""
+"%s is already reserved for another rename operation. Please check System "
+"Event Monitor"
+msgstr ""
+"%s est déjà réservé pour un autre renommage d'utilisateur. Merci de "
+"consulter les Événements Système."
+
+#, php-format
 msgid "%s new projects"
 msgstr "Annonces %s"
 
@@ -1420,6 +1428,26 @@ msgid "Fields"
 msgstr "Champs personnalisés"
 
 #, php-format
+msgid "File upload error (%d). No file was uploaded."
+msgstr "Erreur de chargement de fichier (%d). Aucun fichier chargé."
+
+#, php-format
+msgid ""
+"File upload error (%d). The uploaded file exceeds the maximum allowed file "
+"size."
+msgstr "Erreur de chargement de fichier (%d). Le fichier est trop gros."
+
+#, php-format
+msgid "File upload error (%d). The uploaded file was only partially uploaded."
+msgstr ""
+"Erreur de chargement de fichier (%d). Le fichier n'a été que partiellement "
+"chargé."
+
+#, php-format
+msgid "File upload error (%d). Unknown error code."
+msgstr "Erreur de chargement de fichier (%d). Code d'erreur inconnu."
+
+#, php-format
 msgid "File upload error (error code: %1$s)"
 msgstr "Erreur lors de l'upload du fichier (erreur %1$s)"
 
@@ -1658,6 +1686,9 @@ msgstr ""
 "impérativement préservée, alors vous pouvez décocher cette option afin que "
 "les administrateurs projets ne puissent pas divulguer par mégarde des "
 "ressources confidentielles aux autres utilisateurs de la plateforme."
+
+msgid "Illegal character in name."
+msgstr "Caractère non autorisé dans le nom."
 
 msgid "Image"
 msgstr "Image"
@@ -1898,6 +1929,9 @@ msgstr "Nom de login"
 msgid "Login name"
 msgstr "Nom de login"
 
+msgid "Login name already exists."
+msgstr "Ce nom d'utilisateur existe déjà."
+
 msgid "Logout"
 msgstr "Se déconnecter"
 
@@ -2052,9 +2086,15 @@ msgstr "Mon tableau de bord"
 msgid "Name"
 msgstr "Nom"
 
+msgid "Name is reserved."
+msgstr "Le nom est réservé."
+
 #, php-format
 msgid "Name is too long. It must be less than %s characters."
 msgstr "Le nom est trop long. Il doit comporter au plus %s caractères."
+
+msgid "Name is too short. It must be at least 3 characters."
+msgstr "Le nom est trop court. Il doit comporter au moins 3 caractères."
 
 msgid "Name of passkey can contain up to 250 characters maximum"
 msgstr ""
@@ -3129,6 +3169,13 @@ msgstr "Description courte"
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "La description courte ne doit pas dépasser 255 caractères."
 
+msgid "Short name already exists"
+msgstr "Ce nom court est déjà utilisé"
+
+msgid "Short name cannot contain underscore or dot."
+msgstr ""
+"Les noms de projet ne peuvent comporter de caractères soulignés ou de points."
+
 msgid "Short name must start with an alphanumeric character."
 msgstr ""
 "Le nom court doit obligatoirement commencer par un caractère alphanumérique."
@@ -3505,6 +3552,9 @@ msgstr "Il manque le nom pour créer un tableau de bord."
 msgid "The name is missing for editing the dashboard."
 msgstr "Il manque le nom pour éditer le tableau de bord."
 
+msgid "The name must start with a letter."
+msgstr "Le nom doit commencer par une lettre."
+
 msgid "The page you are looking for does not exist"
 msgstr "La page demandée n'existe pas"
 
@@ -3610,6 +3660,12 @@ msgstr "Aucun projet dans cette catégorie"
 
 msgid "There are no widgets here"
 msgstr "Il n’y a aucun widget"
+
+msgid "There cannot be any spaces in the login name."
+msgstr "Les espaces sont interdits dans le nom de login."
+
+msgid "There cannot be any spaces in the short name."
+msgstr "Les espaces sont interdits dans le nom court."
 
 msgid ""
 "There is already an event scheduled to rename this project. Please check <a "

@@ -23,16 +23,7 @@
 
 abstract class Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    /**
-     * @access private
-     */
-    public $error;
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-    }
+    protected string $error = '';
 
     /**
      * Check if $val is a valid not.
@@ -42,13 +33,7 @@ abstract class Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     abstract public function isValid($val);
 
-    /**
-     * Default error message if rule is not apply on value.
-     *
-     * @param string $key
-     * @return string
-     */
-    public function getErrorMessage($key = '')
+    public function getErrorMessage(): string
     {
         return $this->error;
     }
