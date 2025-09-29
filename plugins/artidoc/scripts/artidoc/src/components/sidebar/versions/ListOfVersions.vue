@@ -39,6 +39,22 @@
             <version-entry v-bind:version="version" />
         </li>
     </ul>
+    <button
+        class="tlp-button-mini tlp-button-primary load-more-versions"
+        v-on:click="more"
+        v-if="has_more_versions"
+    >
+        <i
+            class="tlp-button-icon"
+            v-bind:class="
+                is_loading_more_versions
+                    ? 'fa-solid fa-circle-notch fa-spin'
+                    : 'fa-solid fa-arrow-down'
+            "
+            aria-hidden="true"
+        ></i>
+        {{ $gettext("Load more versions") }}
+    </button>
 </template>
 
 <script setup lang="ts">
@@ -55,11 +71,15 @@ const versions = ref<ReadonlyArray<Version>>([]);
 const project_id = strictInject(PROJECT_ID);
 const error = ref("");
 const should_display_under_construction_message = ref(true);
+let next: ReadonlyArray<Version> = [];
+const has_more_versions = ref(true);
+const is_loading_more_versions = ref(false);
 
 onMounted(() => {
     getVersions(project_id).match(
         (fetched_versions: ReadonlyArray<Version>) => {
-            versions.value = fetched_versions;
+            versions.value = fetched_versions.slice(0, 100);
+            next = fetched_versions.slice(100);
         },
         (fault) => {
             error.value = $gettext("An error occurred while getting versions: %{ error }", {
@@ -68,6 +88,15 @@ onMounted(() => {
         },
     );
 });
+
+function more(): void {
+    is_loading_more_versions.value = true;
+    setTimeout(() => {
+        versions.value = [...versions.value, ...next];
+        has_more_versions.value = false;
+        is_loading_more_versions.value = false;
+    }, 1000);
+}
 
 function gotit(): void {
     should_display_under_construction_message.value = false;
@@ -115,6 +144,14 @@ ul {
         font-weight: 600;
         pointer-events: none;
     }
+
+    &:has(+ .load-more-versions) {
+        padding: 0;
+    }
+}
+
+.load-more-versions {
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 
 li {

@@ -45,7 +45,7 @@ export function getVersions(project_id: number): ResultAsync<ReadonlyArray<Versi
             }
 
             return okAsync(
-                [...Array(100).keys()].map((index: number): Version => {
+                [...Array(220).keys()].map((index: number): Version => {
                     const created_on = new Date(current_date);
 
                     const nb_days_ago = Math.floor(Math.random() * 3);
