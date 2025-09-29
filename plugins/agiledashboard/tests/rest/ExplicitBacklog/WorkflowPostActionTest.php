@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class WorkflowPostActionTest extends TestBase
 {
-    public function testGetBasePostAction()
+    public function testGetBasePostAction(): void
     {
         $transition_id = $this->getTransitionId();
 
@@ -37,13 +37,16 @@ class WorkflowPostActionTest extends TestBase
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testGetBasePostAction')]
-    public function testRemoveThePostAction()
+    public function testRemoveThePostAction(): void
     {
         $transition_id = $this->getTransitionId();
 
         $body = json_encode([
             'post_actions' => [],
         ]);
+        if ($body === false) {
+            $this->fail('Body is empty');
+        }
 
         $response = $this->getResponseByName(
             RESTTestDataBuilder::TEST_USER_1_NAME,
@@ -76,6 +79,9 @@ class WorkflowPostActionTest extends TestBase
                 ],
             ],
         ]);
+        if ($body === false) {
+            $this->fail('Body is empty');
+        }
 
         $response = $this->getResponseByName(
             RESTTestDataBuilder::TEST_USER_1_NAME,
@@ -98,6 +104,12 @@ class WorkflowPostActionTest extends TestBase
 
         $post_actions = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $post_actions);
+        if (! is_array($post_actions)) {
+            $this->fail('Post action is not an array');
+        }
+        if (! isset($post_actions[0])) {
+            $this->fail('Post action is empty');
+        }
         $this->assertEquals('add_to_top_backlog', $post_actions[0]['type']);
     }
 

@@ -28,8 +28,8 @@ class ArtifactBase extends Base
 {
     public const string BURNUP_FIELD_SHORTNAME = 'burnup_field';
 
-    protected $burnup_artifact_ids = [];
-    private $burnup_tracker_id;
+    protected array $burnup_artifact_ids = [];
+    private int $burnup_tracker_id;
 
     #[\Override]
     public function setUp(): void
@@ -42,7 +42,7 @@ class ArtifactBase extends Base
         $this->getBurnupArtifactIds();
     }
 
-    protected function getBurnupArtifactIds()
+    protected function getBurnupArtifactIds(): void
     {
         $this->getArtifactIds(
             $this->burnup_tracker_id,
