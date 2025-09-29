@@ -161,8 +161,8 @@ class MyProjects extends \Widget
                 if (! $user->isAdmin((int) $project->getID())) {
                     $link       = '/account/remove_from_project/' . urlencode((string) $project->getID());
                     $csrf_token = new CSRFSynchronizerToken(RemoveFromProjectController::CSRF_TOKEN_NAME);
-                    $warn       = $GLOBALS['Language']->getText('my_index', 'quit_proj');
-                    $html      .= '<form method="post" action="' . $hp->purify($link) . '" onclick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">';
+                    $warn       = _('Quit this project?');
+                    $html      .= '<form method="post" action="' . $hp->purify($link) . '" class="form-leave-project" data-confirmation-text="' . $hp->purify($warn) . '">';
                     $html      .= $csrf_token->fetchHTMLInput();
                     $html      .= '<button type="submit" data-test="leave-project-button" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"><i class="tlp-button-icon far fa-trash-alt" aria-hidden="true"></i>' . _('Leave project') . '</button>';
                     $html      .= '</form>';
@@ -297,6 +297,7 @@ class MyProjects extends \Widget
             ['file' => $assets->getFileURL('ckeditor.js')],
             ['file' => '/scripts/tuleap/tuleap-ckeditor-toolbar.js'],
             ['file' => $assets->getFileURL('dashboards/widget-contact-modal.js')],
+            ['file' => $assets->getFileURL('dashboards/widget-my-projects-leave-project.js')],
         ];
     }
 

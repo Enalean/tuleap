@@ -26,6 +26,9 @@ dependencies:
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../../lib/frontend/date-helper
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/dom
   '@tuleap/filter-inline-table':
     specifier: workspace:*
     version: link:../../../lib/frontend/filter-table

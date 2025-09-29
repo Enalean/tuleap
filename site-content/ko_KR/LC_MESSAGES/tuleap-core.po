@@ -2697,6 +2697,9 @@ msgstr "보라색"
 msgid "Purpose"
 msgstr "목적"
 
+msgid "Quit this project?"
+msgstr ""
+
 msgid "REST"
 msgstr "REST"
 

@@ -38,7 +38,6 @@ my_index	add_bookmark	Add a bookmark
 my_index	my_projects	My Projects
 my_index	not_member	You're not a member of any project
 my_index	admin_link	Admin
-my_index	quit_proj	Quit this project?
 my_index	priv_proj	<em>Private project</em>
 my_index	my_projects_legend	Legend:
 #my_index	a	A
