@@ -80,9 +80,17 @@ h1 {
 
 .tlp-tabs {
     margin: 0;
+    padding: 0;
 
     // force border to be aligned with the one of the toolbar.
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
     box-shadow: none;
+}
+
+button {
+    justify-content: center;
+    width: 50%;
+    padding: 0 var(--tlp-medium-spacing);
+    text-align: center; // when the button content wraps
 }
 </style>
