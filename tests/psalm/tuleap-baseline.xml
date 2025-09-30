@@ -26373,8 +26373,6 @@
       <code><![CDATA[$ldapParams]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_initErrorHandler]]></code>
-      <code><![CDATA[_restoreErrorHandler]]></code>
       <code><![CDATA[getDefaultAttributes]]></code>
       <code><![CDATA[getScopeFromConf]]></code>
       <code><![CDATA[getSearchGroupScope]]></code>
@@ -37700,11 +37698,6 @@
       <code><![CDATA[updatePreferences]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/timetracking/include/Timetracking/Widget/TimetrackingManagementWidget.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timetracking-management-widget']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/timetracking/include/Timetracking/Widget/UserWidget.php">
     <MissingClassConstType>
       <code><![CDATA[NAME = 'timetracking']]></code>
@@ -38513,6 +38506,442 @@
     <UndefinedVariable>
       <code><![CDATA[$value]]></code>
     </UndefinedVariable>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ArtifactLinkFieldValueDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[FieldValueDao]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+    </DeprecatedMethod>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->retrieve($sql)]]></code>
+    </LessSpecificReturnStatement>
+    <MissingParamType>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$changeset_value_id]]></code>
+      <code><![CDATA[$changeset_value_id]]></code>
+      <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$from]]></code>
+      <code><![CDATA[$to]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[create]]></code>
+      <code><![CDATA[createNoneValue]]></code>
+      <code><![CDATA[deleteReference]]></code>
+      <code><![CDATA[keep]]></code>
+      <code><![CDATA[searchById]]></code>
+      <code><![CDATA[searchIsChildReverseLinksById]]></code>
+      <code><![CDATA[searchReverseLinksById]]></code>
+    </MissingReturnType>
+    <MoreSpecificReturnType>
+      <code><![CDATA[\DataAccessResult|false]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ArtifactLinkUpdater.php">
+    <DeprecatedMethod>
+      <code><![CDATA[createNewChangeset]]></code>
+      <code><![CDATA[createNewChangeset]]></code>
+      <code><![CDATA[getAnArtifactLinkField]]></code>
+      <code><![CDATA[getAnArtifactLinkField]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ArtifactLinkValueSaver.php">
+    <MissingClassConstType>
+      <code><![CDATA[TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED = 'tracker_event_artifact_link_type_requested']]></code>
+    </MissingClassConstType>
+    <MissingParamType>
+      <code><![CDATA[$existing_type]]></code>
+      <code><![CDATA[$existing_type]]></code>
+      <code><![CDATA[$target_artifact_id]]></code>
+      <code><![CDATA[$target_artifact_id]]></code>
+      <code><![CDATA[$type_by_plugin]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[canLinkArtifacts]]></code>
+      <code><![CDATA[getAddedArtifactIds]]></code>
+      <code><![CDATA[getRemovedArtifactIds]]></code>
+      <code><![CDATA[getType]]></code>
+      <code><![CDATA[getTypeDefinedByPlugin]]></code>
+      <code><![CDATA[insertCrossReference]]></code>
+      <code><![CDATA[removeCrossReference]]></code>
+      <code><![CDATA[saveValue]]></code>
+      <code><![CDATA[warnOverrideOfExistingType]]></code>
+    </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->artifact_factory->getArtifactById($target_artifact_id)]]></code>
+      <code><![CDATA[$this->artifact_factory->getArtifactById($target_artifact_id)]]></code>
+    </PossiblyNullArgument>
+    <RedundantCast>
+      <code><![CDATA[(int) $child_tracker->getId()]]></code>
+      <code><![CDATA[(int) $to_tracker->getId()]]></code>
+    </RedundantCast>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($existing_type)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ArtifactLinksToRender.php">
+    <MissingParamType>
+      <code><![CDATA[$shortname]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$can_user_artifact_link_cache]]></code>
+      <code><![CDATA[$grouped_by_project_then_tracker]]></code>
+      <code><![CDATA[$grouped_by_type_with_presenter]]></code>
+      <code><![CDATA[$has_artifact_to_display]]></code>
+      <code><![CDATA[$this->type_presenter_cache]]></code>
+      <code><![CDATA[$type_presenter_cache]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[getArtifactLinksForPerTrackerDisplay]]></code>
+      <code><![CDATA[getArtifactLinksForPerTypeDisplay]]></code>
+      <code><![CDATA[getMatchingIDs]]></code>
+      <code><![CDATA[groupAndEnhanceMatchingIDsPerProject]]></code>
+      <code><![CDATA[groupPerTypeWithPresenter]]></code>
+      <code><![CDATA[hasArtifactLinksToDisplay]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/DisplayArtifactLinkEvent.php">
+    <MissingClassConstType>
+      <code><![CDATA[NAME = 'displayArtifactLinkEvent']]></code>
+    </MissingClassConstType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/FieldDataBuilder.php">
+    <MissingParamType>
+      <code><![CDATA[$new_value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[buildFieldDataFromREST]]></code>
+      <code><![CDATA[formatNewValuesLikeWebUI]]></code>
+      <code><![CDATA[formatRemovedValuesLikeWebUI]]></code>
+      <code><![CDATA[formatTypesLikeWebUI]]></code>
+      <code><![CDATA[getArrayOfIdsFromString]]></code>
+      <code><![CDATA[getDataLikeWebUI]]></code>
+    </MissingReturnType>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$id]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/LinksRetriever.php">
+    <DeprecatedMethod>
+      <code><![CDATA[$dar]]></code>
+      <code><![CDATA[$dar]]></code>
+      <code><![CDATA[getAnArtifactLinkField]]></code>
+      <code><![CDATA[getAnArtifactLinkField]]></code>
+      <code><![CDATA[getAnArtifactLinkField]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ParentLinkAction.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAnArtifactLinkField]]></code>
+      <code><![CDATA[linkArtifact]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/ArtifactInTypeTablePresenter.php">
+    <MissingParamType>
+      <code><![CDATA[$html_classes]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$artifact_assignees]]></code>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$artifact_last_update_date]]></code>
+      <code><![CDATA[$artifact_status]]></code>
+      <code><![CDATA[$artifact_submitter]]></code>
+      <code><![CDATA[$artifact_title]]></code>
+      <code><![CDATA[$artifactlink_field_id]]></code>
+      <code><![CDATA[$direct_link_to_artifact]]></code>
+      <code><![CDATA[$html_classes]]></code>
+      <code><![CDATA[$project_public_name]]></code>
+      <code><![CDATA[$tracker_name]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[emptyStringIfNull]]></code>
+      <code><![CDATA[userCanReadSubmitter]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/CustomColumn/CSVOutputStrategy.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$artifact_link_info->getArtifactId()]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+    <MissingParamType>
+      <code><![CDATA[$formatted_value]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/CustomColumn/HTMLOutputStrategy.php">
+    <MissingParamType>
+      <code><![CDATA[$formatted_value]]></code>
+      <code><![CDATA[$warning]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[getDefaultFormatWithWarning]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/CustomColumn/OutputStrategy.php">
+    <MissingParamType>
+      <code><![CDATA[$formatted_value]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/CustomColumn/ReplaceValueVisitor.php">
+    <MissingReturnType>
+      <code><![CDATA[getReplacement]]></code>
+      <code><![CDATA[visitArtifactId]]></code>
+      <code><![CDATA[visitArtifactLink]]></code>
+      <code><![CDATA[visitBurndown]]></code>
+      <code><![CDATA[visitCheckbox]]></code>
+      <code><![CDATA[visitComputed]]></code>
+      <code><![CDATA[visitCrossReferences]]></code>
+      <code><![CDATA[visitDate]]></code>
+      <code><![CDATA[visitExternalField]]></code>
+      <code><![CDATA[visitFile]]></code>
+      <code><![CDATA[visitFloat]]></code>
+      <code><![CDATA[visitInteger]]></code>
+      <code><![CDATA[visitLastModifiedBy]]></code>
+      <code><![CDATA[visitLastUpdateDate]]></code>
+      <code><![CDATA[visitMultiSelectbox]]></code>
+      <code><![CDATA[visitOpenList]]></code>
+      <code><![CDATA[visitPerTrackerArtifactId]]></code>
+      <code><![CDATA[visitPermissionsOnArtifact]]></code>
+      <code><![CDATA[visitPriority]]></code>
+      <code><![CDATA[visitRadiobutton]]></code>
+      <code><![CDATA[visitSelectbox]]></code>
+      <code><![CDATA[visitString]]></code>
+      <code><![CDATA[visitSubmittedBy]]></code>
+      <code><![CDATA[visitSubmittedOn]]></code>
+      <code><![CDATA[visitText]]></code>
+    </MissingReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[getFloat]]></code>
+      <code><![CDATA[getInteger]]></code>
+      <code><![CDATA[getListValues]]></code>
+      <code><![CDATA[getText]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/CustomColumn/ValueFormatter.php">
+    <MissingParamType>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$format]]></code>
+      <code><![CDATA[$matching_field_names]]></code>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[fillSearchAndReplace]]></code>
+      <code><![CDATA[getFormattedValue]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[getLastChangeset]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/ParentOfArtifactCollection.php">
+    <MissingParamType>
+      <code><![CDATA[$artifacts]]></code>
+      <code><![CDATA[$is_graph]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$artifacts]]></code>
+      <code><![CDATA[$is_graph]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[addArtifacts]]></code>
+      <code><![CDATA[getArtifacts]]></code>
+      <code><![CDATA[isGraph]]></code>
+      <code><![CDATA[setIsGraph]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeConfigPresenter.php">
+    <MissingParamType>
+      <code><![CDATA[$title]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$btn_close]]></code>
+      <code><![CDATA[$btn_submit]]></code>
+      <code><![CDATA[$create_new_type]]></code>
+      <code><![CDATA[$delete_modal_content]]></code>
+      <code><![CDATA[$delete_modal_submit]]></code>
+      <code><![CDATA[$delete_modal_title]]></code>
+      <code><![CDATA[$desc]]></code>
+      <code><![CDATA[$edit_icon_label]]></code>
+      <code><![CDATA[$edit_system_type_title]]></code>
+      <code><![CDATA[$edit_type]]></code>
+      <code><![CDATA[$forward_label_help]]></code>
+      <code><![CDATA[$forward_label_label]]></code>
+      <code><![CDATA[$forward_label_placeholder]]></code>
+      <code><![CDATA[$has_types]]></code>
+      <code><![CDATA[$reverse_label_help]]></code>
+      <code><![CDATA[$reverse_label_label]]></code>
+      <code><![CDATA[$reverse_label_placeholder]]></code>
+      <code><![CDATA[$shortname_help]]></code>
+      <code><![CDATA[$shortname_label]]></code>
+      <code><![CDATA[$shortname_pattern]]></code>
+      <code><![CDATA[$shortname_placeholder]]></code>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$types_usage]]></code>
+    </MissingPropertyType>
+    <UndefinedThisPropertyAssignment>
+      <code><![CDATA[$this->cannot_delete_title]]></code>
+      <code><![CDATA[$this->delete_icon_label]]></code>
+      <code><![CDATA[$this->no_types]]></code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeDao.php">
+    <MissingParamType>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$forward_label]]></code>
+      <code><![CDATA[$forward_label]]></code>
+      <code><![CDATA[$limit]]></code>
+      <code><![CDATA[$limit]]></code>
+      <code><![CDATA[$offset]]></code>
+      <code><![CDATA[$offset]]></code>
+      <code><![CDATA[$project_id]]></code>
+      <code><![CDATA[$reverse_label]]></code>
+      <code><![CDATA[$reverse_label]]></code>
+      <code><![CDATA[$shortname]]></code>
+      <code><![CDATA[$shortname]]></code>
+      <code><![CDATA[$shortname]]></code>
+      <code><![CDATA[$shortname]]></code>
+      <code><![CDATA[$shortname]]></code>
+      <code><![CDATA[$shortname]]></code>
+      <code><![CDATA[$shortname]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type_shortname]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeDeletor.php">
+    <MissingParamType>
+      <code><![CDATA[$shortname]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[delete]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeEditor.php">
+    <MissingParamType>
+      <code><![CDATA[$forward_label]]></code>
+      <code><![CDATA[$reverse_label]]></code>
+      <code><![CDATA[$shortname]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[edit]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeIsChildLinkRetriever.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$parents]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Artifact[]]]></code>
+    </InvalidReturnType>
+    <MissingReturnType>
+      <code><![CDATA[addParentsOfArtifactToCollection]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypePresenterFactory.php">
+    <MissingClassConstType>
+      <code><![CDATA[EVENT_GET_ARTIFACTLINK_TYPES = 'event_get_artifactlink_types']]></code>
+      <code><![CDATA[EVENT_GET_TYPE_PRESENTER = 'event_get_type_presenter']]></code>
+    </MissingClassConstType>
+    <MissingParamType>
+      <code><![CDATA[$row]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[getCustomTypes]]></code>
+      <code><![CDATA[getPluginsTypes]]></code>
+      <code><![CDATA[getPluginsTypesEditableInProject]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeSelectorPresenter.php">
+    <MissingParamType>
+      <code><![CDATA[$select_classes]]></code>
+      <code><![CDATA[$select_name]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$select_classes]]></code>
+      <code><![CDATA[$select_name]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeTablePresenter.php">
+    <MissingClassConstType>
+      <code><![CDATA[TABLE_ID_PREFIX = 'tracker_report_table_type_']]></code>
+    </MissingClassConstType>
+    <MissingParamType>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$artifact_links]]></code>
+      <code><![CDATA[$assigned_to_label]]></code>
+      <code><![CDATA[$id_label]]></code>
+      <code><![CDATA[$last_update_label]]></code>
+      <code><![CDATA[$mass_unlink_title]]></code>
+      <code><![CDATA[$project_label]]></code>
+      <code><![CDATA[$status_label]]></code>
+      <code><![CDATA[$submitted_by_label]]></code>
+      <code><![CDATA[$summary_label]]></code>
+      <code><![CDATA[$table_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_label]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type_label]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeUsagePresenter.php">
+    <MissingParamType>
+      <code><![CDATA[$is_or_has_been_used]]></code>
+      <code><![CDATA[$is_used]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[computeCanBeDeleted]]></code>
+      <code><![CDATA[setIsUsed]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeValidator.php">
+    <MissingClassConstType>
+      <code><![CDATA[SHORTNAME_PATTERN = '[a-zA-Z][a-zA-Z_]*']]></code>
+    </MissingClassConstType>
+    <MissingParamType>
+      <code><![CDATA[$forward_label]]></code>
+      <code><![CDATA[$reverse_label]]></code>
+      <code><![CDATA[$shortname]]></code>
+      <code><![CDATA[$shortname]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[checkForwardLabel]]></code>
+      <code><![CDATA[checkIsNotOrHasNotBeenUsed]]></code>
+      <code><![CDATA[checkReverseLabel]]></code>
+      <code><![CDATA[checkShortname]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ValidateArtifactLinkValueEvent.php">
+    <MissingClassConstType>
+      <code><![CDATA[NAME = 'validateArtifactLinkValueEvent']]></code>
+    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownField.php">
     <InvalidReturnType>
@@ -45201,155 +45630,6 @@
       <code><![CDATA[validate]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ArtifactLinkFieldValueDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[FieldValueDao]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-    </LessSpecificReturnStatement>
-    <MissingParamType>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$changeset_value_id]]></code>
-      <code><![CDATA[$changeset_value_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$from]]></code>
-      <code><![CDATA[$to]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[create]]></code>
-      <code><![CDATA[createNoneValue]]></code>
-      <code><![CDATA[deleteReference]]></code>
-      <code><![CDATA[keep]]></code>
-      <code><![CDATA[searchById]]></code>
-      <code><![CDATA[searchIsChildReverseLinksById]]></code>
-      <code><![CDATA[searchReverseLinksById]]></code>
-    </MissingReturnType>
-    <MoreSpecificReturnType>
-      <code><![CDATA[\DataAccessResult|false]]></code>
-    </MoreSpecificReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ArtifactLinkUpdater.php">
-    <DeprecatedMethod>
-      <code><![CDATA[createNewChangeset]]></code>
-      <code><![CDATA[createNewChangeset]]></code>
-      <code><![CDATA[getAnArtifactLinkField]]></code>
-      <code><![CDATA[getAnArtifactLinkField]]></code>
-    </DeprecatedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ArtifactLinkValueSaver.php">
-    <MissingClassConstType>
-      <code><![CDATA[TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED = 'tracker_event_artifact_link_type_requested']]></code>
-    </MissingClassConstType>
-    <MissingParamType>
-      <code><![CDATA[$existing_type]]></code>
-      <code><![CDATA[$existing_type]]></code>
-      <code><![CDATA[$target_artifact_id]]></code>
-      <code><![CDATA[$target_artifact_id]]></code>
-      <code><![CDATA[$type_by_plugin]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[canLinkArtifacts]]></code>
-      <code><![CDATA[getAddedArtifactIds]]></code>
-      <code><![CDATA[getRemovedArtifactIds]]></code>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[getTypeDefinedByPlugin]]></code>
-      <code><![CDATA[insertCrossReference]]></code>
-      <code><![CDATA[removeCrossReference]]></code>
-      <code><![CDATA[saveValue]]></code>
-      <code><![CDATA[warnOverrideOfExistingType]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->artifact_factory->getArtifactById($target_artifact_id)]]></code>
-      <code><![CDATA[$this->artifact_factory->getArtifactById($target_artifact_id)]]></code>
-    </PossiblyNullArgument>
-    <RedundantCast>
-      <code><![CDATA[(int) $child_tracker->getId()]]></code>
-      <code><![CDATA[(int) $to_tracker->getId()]]></code>
-    </RedundantCast>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($existing_type)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ArtifactLinksToRender.php">
-    <MissingParamType>
-      <code><![CDATA[$shortname]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$can_user_artifact_link_cache]]></code>
-      <code><![CDATA[$grouped_by_project_then_tracker]]></code>
-      <code><![CDATA[$grouped_by_type_with_presenter]]></code>
-      <code><![CDATA[$has_artifact_to_display]]></code>
-      <code><![CDATA[$this->type_presenter_cache]]></code>
-      <code><![CDATA[$type_presenter_cache]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getArtifactLinksForPerTrackerDisplay]]></code>
-      <code><![CDATA[getArtifactLinksForPerTypeDisplay]]></code>
-      <code><![CDATA[getMatchingIDs]]></code>
-      <code><![CDATA[groupAndEnhanceMatchingIDsPerProject]]></code>
-      <code><![CDATA[groupPerTypeWithPresenter]]></code>
-      <code><![CDATA[hasArtifactLinksToDisplay]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/DisplayArtifactLinkEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'displayArtifactLinkEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/FieldDataBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$new_value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[buildFieldDataFromREST]]></code>
-      <code><![CDATA[formatNewValuesLikeWebUI]]></code>
-      <code><![CDATA[formatRemovedValuesLikeWebUI]]></code>
-      <code><![CDATA[formatTypesLikeWebUI]]></code>
-      <code><![CDATA[getArrayOfIdsFromString]]></code>
-      <code><![CDATA[getDataLikeWebUI]]></code>
-    </MissingReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$id]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/LinksRetriever.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$dar]]></code>
-      <code><![CDATA[$dar]]></code>
-      <code><![CDATA[getAnArtifactLinkField]]></code>
-      <code><![CDATA[getAnArtifactLinkField]]></code>
-      <code><![CDATA[getAnArtifactLinkField]]></code>
-    </DeprecatedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ParentLinkAction.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getAnArtifactLinkField]]></code>
-      <code><![CDATA[linkArtifact]]></code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetCommand.php">
     <MissingReturnType>
       <code><![CDATA[execute]]></code>
@@ -45372,293 +45652,6 @@
     <UndefinedMethod>
       <code><![CDATA[getArtifactLinkInfoDiff]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ArtifactInTypeTablePresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$html_classes]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$artifact_assignees]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_last_update_date]]></code>
-      <code><![CDATA[$artifact_status]]></code>
-      <code><![CDATA[$artifact_submitter]]></code>
-      <code><![CDATA[$artifact_title]]></code>
-      <code><![CDATA[$artifactlink_field_id]]></code>
-      <code><![CDATA[$direct_link_to_artifact]]></code>
-      <code><![CDATA[$html_classes]]></code>
-      <code><![CDATA[$project_public_name]]></code>
-      <code><![CDATA[$tracker_name]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[emptyStringIfNull]]></code>
-      <code><![CDATA[userCanReadSubmitter]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/CSVOutputStrategy.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$artifact_link_info->getArtifactId()]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$formatted_value]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/HTMLOutputStrategy.php">
-    <MissingParamType>
-      <code><![CDATA[$formatted_value]]></code>
-      <code><![CDATA[$warning]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getDefaultFormatWithWarning]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/OutputStrategy.php">
-    <MissingParamType>
-      <code><![CDATA[$formatted_value]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/ReplaceValueVisitor.php">
-    <MissingReturnType>
-      <code><![CDATA[getReplacement]]></code>
-      <code><![CDATA[visitArtifactId]]></code>
-      <code><![CDATA[visitArtifactLink]]></code>
-      <code><![CDATA[visitBurndown]]></code>
-      <code><![CDATA[visitCheckbox]]></code>
-      <code><![CDATA[visitComputed]]></code>
-      <code><![CDATA[visitCrossReferences]]></code>
-      <code><![CDATA[visitDate]]></code>
-      <code><![CDATA[visitExternalField]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFloat]]></code>
-      <code><![CDATA[visitInteger]]></code>
-      <code><![CDATA[visitLastModifiedBy]]></code>
-      <code><![CDATA[visitLastUpdateDate]]></code>
-      <code><![CDATA[visitMultiSelectbox]]></code>
-      <code><![CDATA[visitOpenList]]></code>
-      <code><![CDATA[visitPerTrackerArtifactId]]></code>
-      <code><![CDATA[visitPermissionsOnArtifact]]></code>
-      <code><![CDATA[visitPriority]]></code>
-      <code><![CDATA[visitRadiobutton]]></code>
-      <code><![CDATA[visitSelectbox]]></code>
-      <code><![CDATA[visitString]]></code>
-      <code><![CDATA[visitSubmittedBy]]></code>
-      <code><![CDATA[visitSubmittedOn]]></code>
-      <code><![CDATA[visitText]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[getFloat]]></code>
-      <code><![CDATA[getInteger]]></code>
-      <code><![CDATA[getListValues]]></code>
-      <code><![CDATA[getText]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/CustomColumn/ValueFormatter.php">
-    <MissingParamType>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$format]]></code>
-      <code><![CDATA[$matching_field_names]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[fillSearchAndReplace]]></code>
-      <code><![CDATA[getFormattedValue]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[getLastChangeset]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/ParentOfArtifactCollection.php">
-    <MissingParamType>
-      <code><![CDATA[$artifacts]]></code>
-      <code><![CDATA[$is_graph]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$artifacts]]></code>
-      <code><![CDATA[$is_graph]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[addArtifacts]]></code>
-      <code><![CDATA[getArtifacts]]></code>
-      <code><![CDATA[isGraph]]></code>
-      <code><![CDATA[setIsGraph]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeConfigPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$title]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$btn_close]]></code>
-      <code><![CDATA[$btn_submit]]></code>
-      <code><![CDATA[$create_new_type]]></code>
-      <code><![CDATA[$delete_modal_content]]></code>
-      <code><![CDATA[$delete_modal_submit]]></code>
-      <code><![CDATA[$delete_modal_title]]></code>
-      <code><![CDATA[$desc]]></code>
-      <code><![CDATA[$edit_icon_label]]></code>
-      <code><![CDATA[$edit_system_type_title]]></code>
-      <code><![CDATA[$edit_type]]></code>
-      <code><![CDATA[$forward_label_help]]></code>
-      <code><![CDATA[$forward_label_label]]></code>
-      <code><![CDATA[$forward_label_placeholder]]></code>
-      <code><![CDATA[$has_types]]></code>
-      <code><![CDATA[$reverse_label_help]]></code>
-      <code><![CDATA[$reverse_label_label]]></code>
-      <code><![CDATA[$reverse_label_placeholder]]></code>
-      <code><![CDATA[$shortname_help]]></code>
-      <code><![CDATA[$shortname_label]]></code>
-      <code><![CDATA[$shortname_pattern]]></code>
-      <code><![CDATA[$shortname_placeholder]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$types_usage]]></code>
-    </MissingPropertyType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->cannot_delete_title]]></code>
-      <code><![CDATA[$this->delete_icon_label]]></code>
-      <code><![CDATA[$this->no_types]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeDao.php">
-    <MissingParamType>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$forward_label]]></code>
-      <code><![CDATA[$forward_label]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$reverse_label]]></code>
-      <code><![CDATA[$reverse_label]]></code>
-      <code><![CDATA[$shortname]]></code>
-      <code><![CDATA[$shortname]]></code>
-      <code><![CDATA[$shortname]]></code>
-      <code><![CDATA[$shortname]]></code>
-      <code><![CDATA[$shortname]]></code>
-      <code><![CDATA[$shortname]]></code>
-      <code><![CDATA[$shortname]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type_shortname]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeDeletor.php">
-    <MissingParamType>
-      <code><![CDATA[$shortname]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeEditor.php">
-    <MissingParamType>
-      <code><![CDATA[$forward_label]]></code>
-      <code><![CDATA[$reverse_label]]></code>
-      <code><![CDATA[$shortname]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[edit]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeIsChildLinkRetriever.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$parents]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Artifact[]]]></code>
-    </InvalidReturnType>
-    <MissingReturnType>
-      <code><![CDATA[addParentsOfArtifactToCollection]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypePresenterFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[EVENT_GET_ARTIFACTLINK_TYPES = 'event_get_artifactlink_types']]></code>
-      <code><![CDATA[EVENT_GET_TYPE_PRESENTER = 'event_get_type_presenter']]></code>
-    </MissingClassConstType>
-    <MissingParamType>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getCustomTypes]]></code>
-      <code><![CDATA[getPluginsTypes]]></code>
-      <code><![CDATA[getPluginsTypesEditableInProject]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeSelectorPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$select_classes]]></code>
-      <code><![CDATA[$select_name]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$select_classes]]></code>
-      <code><![CDATA[$select_name]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeTablePresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[TABLE_ID_PREFIX = 'tracker_report_table_type_']]></code>
-    </MissingClassConstType>
-    <MissingParamType>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$artifact_links]]></code>
-      <code><![CDATA[$assigned_to_label]]></code>
-      <code><![CDATA[$id_label]]></code>
-      <code><![CDATA[$last_update_label]]></code>
-      <code><![CDATA[$mass_unlink_title]]></code>
-      <code><![CDATA[$project_label]]></code>
-      <code><![CDATA[$status_label]]></code>
-      <code><![CDATA[$submitted_by_label]]></code>
-      <code><![CDATA[$summary_label]]></code>
-      <code><![CDATA[$table_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_label]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type_label]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeUsagePresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$is_or_has_been_used]]></code>
-      <code><![CDATA[$is_used]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[computeCanBeDeleted]]></code>
-      <code><![CDATA[setIsUsed]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypeValidator.php">
-    <MissingClassConstType>
-      <code><![CDATA[SHORTNAME_PATTERN = '[a-zA-Z][a-zA-Z_]*']]></code>
-    </MissingClassConstType>
-    <MissingParamType>
-      <code><![CDATA[$forward_label]]></code>
-      <code><![CDATA[$reverse_label]]></code>
-      <code><![CDATA[$shortname]]></code>
-      <code><![CDATA[$shortname]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[checkForwardLabel]]></code>
-      <code><![CDATA[checkIsNotOrHasNotBeenUsed]]></code>
-      <code><![CDATA[checkReverseLabel]]></code>
-      <code><![CDATA[checkShortname]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ValidateArtifactLinkValueEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'validateArtifactLinkValueEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownCacheGenerationChecker.php">
     <MissingParamType>
