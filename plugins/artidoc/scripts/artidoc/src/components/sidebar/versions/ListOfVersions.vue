@@ -29,32 +29,40 @@
     <div class="tlp-alert-danger" v-if="error">
         {{ error }}
     </div>
-    <ul v-if="!error">
-        <li v-for="version in versions" v-bind:key="version.id">
-            <i
-                class="fa-solid fa-circle disc"
-                v-bind:class="{ 'disc-for-version-with-title': version.title.isValue() }"
-                aria-hidden="true"
-            ></i>
-            <version-entry v-bind:version="version" />
+    <ul v-if="is_loading_versions">
+        <li v-for="n in 100" v-bind:key="n">
+            <i class="fa-solid fa-circle disc" aria-hidden="true"></i>
+            <version-entry-skeleton />
         </li>
     </ul>
-    <button
-        class="tlp-button-mini tlp-button-primary load-more-versions"
-        v-on:click="more"
-        v-if="has_more_versions"
-    >
-        <i
-            class="tlp-button-icon"
-            v-bind:class="
-                is_loading_more_versions
-                    ? 'fa-solid fa-circle-notch fa-spin'
-                    : 'fa-solid fa-arrow-down'
-            "
-            aria-hidden="true"
-        ></i>
-        {{ $gettext("Load more versions") }}
-    </button>
+    <template v-else>
+        <ul v-if="!error">
+            <li v-for="version in versions" v-bind:key="version.id">
+                <i
+                    class="fa-solid fa-circle disc"
+                    v-bind:class="{ 'disc-for-version-with-title': version.title.isValue() }"
+                    aria-hidden="true"
+                ></i>
+                <version-entry v-bind:version="version" />
+            </li>
+        </ul>
+        <button
+            class="tlp-button-mini tlp-button-primary load-more-versions"
+            v-on:click="more"
+            v-if="has_more_versions && !error"
+        >
+            <i
+                class="tlp-button-icon"
+                v-bind:class="
+                    is_loading_more_versions
+                        ? 'fa-solid fa-circle-notch fa-spin'
+                        : 'fa-solid fa-arrow-down'
+                "
+                aria-hidden="true"
+            ></i>
+            {{ $gettext("Load more versions") }}
+        </button>
+    </template>
 </template>
 
 <script setup lang="ts">
@@ -65,6 +73,7 @@ import { getVersions } from "./fake-list-of-versions";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT_ID } from "@/project-id-injection-key";
 import VersionEntry from "./VersionEntry.vue";
+import VersionEntrySkeleton from "@/components/sidebar/versions/VersionEntrySkeleton.vue";
 
 const { $gettext } = useGettext();
 const versions = ref<ReadonlyArray<Version>>([]);
@@ -74,19 +83,24 @@ const should_display_under_construction_message = ref(true);
 let next: ReadonlyArray<Version> = [];
 const has_more_versions = ref(true);
 const is_loading_more_versions = ref(false);
+const is_loading_versions = ref(true);
 
 onMounted(() => {
-    getVersions(project_id).match(
-        (fetched_versions: ReadonlyArray<Version>) => {
-            versions.value = fetched_versions.slice(0, 100);
-            next = fetched_versions.slice(100);
-        },
-        (fault) => {
-            error.value = $gettext("An error occurred while getting versions: %{ error }", {
-                error: String(fault),
-            });
-        },
-    );
+    setTimeout(() => {
+        getVersions(project_id).match(
+            (fetched_versions: ReadonlyArray<Version>) => {
+                is_loading_versions.value = false;
+                versions.value = fetched_versions.slice(0, 100);
+                next = fetched_versions.slice(100);
+            },
+            (fault) => {
+                is_loading_versions.value = false;
+                error.value = $gettext("An error occurred while getting versions: %{ error }", {
+                    error: String(fault),
+                });
+            },
+        );
+    }, 1000);
 });
 
 function more(): void {
