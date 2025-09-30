@@ -147,8 +147,3 @@ export type ArtifactLinkDirection =
     | typeof FORWARD_DIRECTION
     | typeof REVERSE_DIRECTION
     | typeof NO_DIRECTION;
-
-export type RowEntry = {
-    readonly parent_row: ArtifactRow | null;
-    readonly row: ArtifactRow;
-};

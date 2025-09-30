@@ -34,6 +34,7 @@ import {
     WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
     ARROW_REDRAW_TRIGGERER,
+    ROW_COLLECTION_STORE,
 } from "../../injection-symbols";
 import { DATE_CELL, NUMERIC_CELL, PRETTY_TITLE_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
@@ -53,6 +54,7 @@ import SelectablePagination from "./SelectablePagination.vue";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { ArrowRedrawTriggerer } from "../../ArrowRedrawTriggerer";
 import ArtifactRows from "./ArtifactRows.vue";
+import { RowCollectionStore } from "../../domain/RowCollectionStore";
 
 vi.useFakeTimers();
 
@@ -107,6 +109,7 @@ describe(`SelectableTable`, () => {
                     ),
                     [EMITTER.valueOf()]: emitter,
                     [ARROW_REDRAW_TRIGGERER.valueOf()]: stub_arrow_redrawer_triggerer,
+                    [ROW_COLLECTION_STORE.valueOf()]: RowCollectionStore(emitter),
                 },
             },
             props: {
