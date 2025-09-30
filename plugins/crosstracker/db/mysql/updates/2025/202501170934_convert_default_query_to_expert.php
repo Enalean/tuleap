@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 use Tuleap\ForgeUpgrade\Bucket;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202501170934_convert_default_query_to_expert extends Bucket
 {
     public function description(): string

@@ -24,7 +24,7 @@
 /**
  * Check that given value is a valid signed 32 bits decimal integer.
  */
-class Rule_Int extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_Int extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Check the format according to PHP definition of a decimal integer.

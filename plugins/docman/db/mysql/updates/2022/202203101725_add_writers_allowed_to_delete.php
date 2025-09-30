@@ -19,7 +19,7 @@
  *
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202203101725_add_writers_allowed_to_delete extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

@@ -22,7 +22,7 @@
 /**
  * Base class for field post action DAOs.
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Transition_PostAction_CIBuildDao extends DataAccessObject
 {
     /**

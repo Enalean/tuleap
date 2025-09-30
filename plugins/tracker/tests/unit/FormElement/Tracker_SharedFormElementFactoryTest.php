@@ -42,7 +42,7 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Project&MockObject $project;
     private Tracker&MockObject $tracker;

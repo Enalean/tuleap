@@ -23,7 +23,7 @@
 /**
  * HTML rendering for 'List' metadata
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_MetadataHtmlList extends \Docman_MetadataHtml
 {
     // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore

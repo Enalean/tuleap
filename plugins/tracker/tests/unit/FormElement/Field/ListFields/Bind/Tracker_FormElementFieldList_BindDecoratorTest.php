@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List_BindDecorator;
 
-final class Tracker_FormElementFieldList_BindDecoratorTest extends TestCase // @codingStandardsIgnoreLine
+final class Tracker_FormElementFieldList_BindDecoratorTest extends TestCase // phpcs:ignore
 {
     public function testIsUsingOldPaletteWithLegacyColorComingFromXMLImport(): void
     {

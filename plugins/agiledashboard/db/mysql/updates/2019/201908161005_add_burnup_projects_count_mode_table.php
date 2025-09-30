@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201908161005_add_burnup_projects_count_mode_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201908161005_add_burnup_projects_count_mode_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

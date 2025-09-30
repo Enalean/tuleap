@@ -23,7 +23,7 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
 {
     private function displayEvolutionData(array $row): void

@@ -79,7 +79,7 @@ class Tree extends FilesystemObject
      * @param mixed $commit commit object
      */
     #[\Override]
-    public function SetCommit($commit) // @codingStandardsIgnoreLine
+    public function SetCommit($commit) // phpcs:ignore
     {
         parent::SetCommit($commit);
 
@@ -100,7 +100,7 @@ class Tree extends FilesystemObject
      * @access public
      * @return array array of objects for contents
      */
-    public function GetContents() // @codingStandardsIgnoreLine
+    public function GetContents() // phpcs:ignore
     {
         if (! $this->contentsRead) {
             $this->ReadContents();
@@ -120,7 +120,7 @@ class Tree extends FilesystemObject
      *
      * @access protected
      */
-    protected function ReadContents() // @codingStandardsIgnoreLine
+    protected function ReadContents() // phpcs:ignore
     {
         $this->contentsRead = true;
         $this->ReadContentsRaw();
@@ -133,7 +133,7 @@ class Tree extends FilesystemObject
      *
      * @access private
      */
-    private function ReadContentsRaw() // @codingStandardsIgnoreLine
+    private function ReadContentsRaw() // phpcs:ignore
     {
         $treeData = $this->GetProject()->GetObject($this->hash);
 
@@ -187,7 +187,7 @@ class Tree extends FilesystemObject
      *
      * @access private
      */
-    private function DereferenceContents() // @codingStandardsIgnoreLine
+    private function DereferenceContents() // phpcs:ignore
     {
         if (! $this->contentsReferenced) {
             return;

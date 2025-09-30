@@ -43,7 +43,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class NotificationsManager_DeleteTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class NotificationsManager_DeleteTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     /*
      * Test the case when deleting a docman item the notification mail

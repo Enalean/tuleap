@@ -35,7 +35,7 @@ use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private TrackerXmlFieldsMapping_FromAnotherPlatform $xml_open_fields_mapping;
 

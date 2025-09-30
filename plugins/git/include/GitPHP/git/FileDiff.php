@@ -259,7 +259,7 @@ class FileDiff
      * @param string $diffTreeLine line from difftree
      * @return bool true if data was read from line
      */
-    private function ParseDiffTreeLine($diffTreeLine) // @codingStandardsIgnoreLine
+    private function ParseDiffTreeLine($diffTreeLine) // phpcs:ignore
     {
         if (preg_match('/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/', $diffTreeLine, $regs)) {
             $this->diffInfoRead = true;
@@ -290,7 +290,7 @@ class FileDiff
      *
      * @access protected
      */
-    protected function ReadDiffInfo() // @codingStandardsIgnoreLine
+    protected function ReadDiffInfo() // phpcs:ignore
     {
         $this->diffInfoRead = true;
 
@@ -306,7 +306,7 @@ class FileDiff
      * @access public
      * @return string from file mode
      */
-    public function GetFromMode() // @codingStandardsIgnoreLine
+    public function GetFromMode() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -324,7 +324,7 @@ class FileDiff
      * @access public
      * @return string short from file mode
      */
-    public function GetFromModeShort() // @codingStandardsIgnoreLine
+    public function GetFromModeShort() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -342,7 +342,7 @@ class FileDiff
      * @access public
      * @return string to file mode
      */
-    public function GetToMode() // @codingStandardsIgnoreLine
+    public function GetToMode() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -360,7 +360,7 @@ class FileDiff
      * @access public
      * @return string short to file mode
      */
-    public function GetToModeShort() // @codingStandardsIgnoreLine
+    public function GetToModeShort() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -377,7 +377,7 @@ class FileDiff
      * @access public
      * @return string from hash
      */
-    public function GetFromHash() // @codingStandardsIgnoreLine
+    public function GetFromHash() // phpcs:ignore
     {
         return $this->fromHash;
     }
@@ -390,7 +390,7 @@ class FileDiff
      * @access public
      * @return string to hash
      */
-    public function GetToHash() // @codingStandardsIgnoreLine
+    public function GetToHash() // phpcs:ignore
     {
         return $this->toHash;
     }
@@ -403,7 +403,7 @@ class FileDiff
      * @access public
      * @return mixed blob object
      */
-    public function GetFromBlob() // @codingStandardsIgnoreLine
+    public function GetFromBlob() // phpcs:ignore
     {
         if (empty($this->fromHash)) {
             return null;
@@ -420,7 +420,7 @@ class FileDiff
      * @access public
      * @return null|Blob
      */
-    public function GetToBlob() // @codingStandardsIgnoreLine
+    public function GetToBlob() // phpcs:ignore
     {
         if (empty($this->toHash)) {
             return null;
@@ -437,7 +437,7 @@ class FileDiff
      * @access public
      * @return string status
      */
-    public function GetStatus() // @codingStandardsIgnoreLine
+    public function GetStatus() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -454,7 +454,7 @@ class FileDiff
      * @access public
      * @return string similarity
      */
-    public function GetSimilarity() // @codingStandardsIgnoreLine
+    public function GetSimilarity() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -471,7 +471,7 @@ class FileDiff
      * @access public
      * @return string from file
      */
-    public function GetFromFile() // @codingStandardsIgnoreLine
+    public function GetFromFile() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -488,7 +488,7 @@ class FileDiff
      * @access public
      * @return string to file
      */
-    public function GetToFile() // @codingStandardsIgnoreLine
+    public function GetToFile() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -506,7 +506,7 @@ class FileDiff
      * @param bool $local true if caller wants localized type
      * @return string from file type
      */
-    public function GetFromFileType($local = false) // @codingStandardsIgnoreLine
+    public function GetFromFileType($local = false) // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -524,7 +524,7 @@ class FileDiff
      * @param bool $local true if caller wants localized type
      * @return string to file type
      */
-    public function GetToFileType($local = false) // @codingStandardsIgnoreLine
+    public function GetToFileType($local = false) // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -541,7 +541,7 @@ class FileDiff
      * @access public
      * @return bool true if file type changed
      */
-    public function FileTypeChanged() // @codingStandardsIgnoreLine
+    public function FileTypeChanged() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -558,7 +558,7 @@ class FileDiff
      * @access public
      * @return bool true if file mode changed
      */
-    public function FileModeChanged() // @codingStandardsIgnoreLine
+    public function FileModeChanged() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -575,7 +575,7 @@ class FileDiff
      * @access public
      * @return bool true if from file is regular
      */
-    public function FromFileIsRegular() // @codingStandardsIgnoreLine
+    public function FromFileIsRegular() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -592,7 +592,7 @@ class FileDiff
      * @access public
      * @return bool true if to file is regular
      */
-    public function ToFileIsRegular() // @codingStandardsIgnoreLine
+    public function ToFileIsRegular() // phpcs:ignore
     {
         if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
@@ -610,7 +610,7 @@ class FileDiff
      * @param string $file override the filename on the diff
      * @return string diff output
      */
-    public function GetDiff($file = '', $readFileData = true, $explode = false) // @codingStandardsIgnoreLine
+    public function GetDiff($file = '', $readFileData = true, $explode = false) // phpcs:ignore
     {
         if ($this->diffDataRead && ($file == $this->diffDataName)) {
             if ($explode) {
@@ -704,7 +704,7 @@ class FileDiff
      * @access public
      * @return an array of line elements (see above)
      */
-    public function GetDiffSplit() // @codingStandardsIgnoreLine
+    public function GetDiffSplit() // phpcs:ignore
     {
         if ($this->diffDataSplitRead) {
             return $this->diffDataSplit;
@@ -828,7 +828,7 @@ class FileDiff
      * @param string $file override the file name
      * @return string diff content
      */
-    private function GetXDiff($context = 3, $header = true, $file = null) // @codingStandardsIgnoreLine
+    private function GetXDiff($context = 3, $header = true, $file = null) // phpcs:ignore
     {
         if (! function_exists('xdiff_string_diff')) {
             return '';
@@ -885,7 +885,7 @@ class FileDiff
      * @access public
      * @return Commit object
      */
-    public function GetCommit() // @codingStandardsIgnoreLine
+    public function GetCommit() // phpcs:ignore
     {
         return $this->commit;
     }
@@ -898,7 +898,7 @@ class FileDiff
      * @access public
      * @param mixed $commit commit object
      */
-    public function SetCommit($commit) // @codingStandardsIgnoreLine
+    public function SetCommit($commit) // phpcs:ignore
     {
         $this->commit = $commit;
     }

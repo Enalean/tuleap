@@ -30,7 +30,7 @@ use Tuleap\Layout\IncludeAssets;
 /**
  * Display links from and to a project on the summary page.
  */
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class ProjectLinks_Widget_HomePageLinks extends Widget
 {
     protected $pluginPath;

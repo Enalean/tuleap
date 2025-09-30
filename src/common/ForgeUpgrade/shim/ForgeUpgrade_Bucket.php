@@ -23,6 +23,6 @@
  * Shim to keep compat with legacy code without namespace
  * @deprecated
  */
-abstract class ForgeUpgrade_Bucket extends \Tuleap\ForgeUpgrade\Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class ForgeUpgrade_Bucket extends \Tuleap\ForgeUpgrade\Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
 }

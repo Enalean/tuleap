@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\VariableInteger;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202502121650_import_statistics_configuration_variables extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

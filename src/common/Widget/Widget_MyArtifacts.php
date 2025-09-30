@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../www/my/my_utils.php';
 *
 * Artifact assigned to or submitted by this person
 */
-class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private bool|string $artifact_show;
 

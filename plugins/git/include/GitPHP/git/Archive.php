@@ -137,7 +137,7 @@ class Archive
      * @access public
      * @return int archive format
      */
-    public function GetFormat() // @codingStandardsIgnoreLine
+    public function GetFormat() // phpcs:ignore
     {
         return $this->format;
     }
@@ -150,7 +150,7 @@ class Archive
      * @access public
      * @param int $format archive format
      */
-    public function SetFormat($format) // @codingStandardsIgnoreLine
+    public function SetFormat($format) // phpcs:ignore
     {
         if (
             (($format == self::COMPRESS_BZ2) && (! function_exists('bzcompress'))) ||
@@ -174,7 +174,7 @@ class Archive
      * @access public
      * @return mixed the git object
      */
-    public function GetObject() // @codingStandardsIgnoreLine
+    public function GetObject() // phpcs:ignore
     {
         return $this->gitObject;
     }
@@ -187,7 +187,7 @@ class Archive
      * @access public
      * @param mixed $object the git object
      */
-    public function SetObject($object) // @codingStandardsIgnoreLine
+    public function SetObject($object) // phpcs:ignore
     {
         // Archive only works for commits and trees
         if (($object != null) && (! (($object instanceof Commit) || ($object instanceof Tree)))) {
@@ -205,7 +205,7 @@ class Archive
      * @access public
      * @return mixed the project
      */
-    public function GetProject() // @codingStandardsIgnoreLine
+    public function GetProject() // phpcs:ignore
     {
         if ($this->project) {
             return $this->project;
@@ -226,7 +226,7 @@ class Archive
      * @access public
      * @param mixed $project the project
      */
-    public function SetProject($project) // @codingStandardsIgnoreLine
+    public function SetProject($project) // phpcs:ignore
     {
         $this->project = $project;
     }
@@ -239,7 +239,7 @@ class Archive
      * @access public
      * @return string extension for the archive
      */
-    public function GetExtension() // @codingStandardsIgnoreLine
+    public function GetExtension() // phpcs:ignore
     {
         return self::FormatToExtension($this->format);
     }
@@ -254,7 +254,7 @@ class Archive
      *
      * @psalm-taint-escape header
      */
-    public function GetFilename() // @codingStandardsIgnoreLine
+    public function GetFilename() // phpcs:ignore
     {
         if (! empty($this->fileName)) {
             return $this->fileName;
@@ -279,7 +279,7 @@ class Archive
      * @access public
      * @param string $name filename
      */
-    public function SetFilename($name = '') // @codingStandardsIgnoreLine
+    public function SetFilename($name = '') // phpcs:ignore
     {
         $this->fileName = $name;
     }
@@ -292,7 +292,7 @@ class Archive
      * @access public
      * @return string path
      */
-    public function GetPath() // @codingStandardsIgnoreLine
+    public function GetPath() // phpcs:ignore
     {
         return $this->path;
     }
@@ -305,7 +305,7 @@ class Archive
      * @access public
      * @param string $path path to restrict
      */
-    public function SetPath($path = '') // @codingStandardsIgnoreLine
+    public function SetPath($path = '') // phpcs:ignore
     {
         $this->path = $path;
     }
@@ -318,7 +318,7 @@ class Archive
      * @access public
      * @return string prefix
      */
-    public function GetPrefix() // @codingStandardsIgnoreLine
+    public function GetPrefix() // phpcs:ignore
     {
         if (! empty($this->prefix)) {
             return $this->prefix;
@@ -341,7 +341,7 @@ class Archive
      * @access public
      * @param string $prefix prefix to use
      */
-    public function SetPrefix($prefix = '') // @codingStandardsIgnoreLine
+    public function SetPrefix($prefix = '') // phpcs:ignore
     {
         if (empty($prefix)) {
             $this->prefix = $prefix;
@@ -363,7 +363,7 @@ class Archive
      * @access public
      * @return bool true on success
      */
-    public function Open() // @codingStandardsIgnoreLine
+    public function Open() // phpcs:ignore
     {
         if (! $this->gitObject) {
             throw new \Exception('Invalid object for archive');
@@ -436,7 +436,7 @@ class Archive
      * @access public
      * @return bool true on success
      */
-    public function Close() // @codingStandardsIgnoreLine
+    public function Close() // phpcs:ignore
     {
         if (! $this->handle) {
             return true;
@@ -466,7 +466,7 @@ class Archive
      * @param int $size size of data to read
      * @return string archive data
      */
-    public function Read($size = 1048576) // @codingStandardsIgnoreLine
+    public function Read($size = 1048576) // phpcs:ignore
     {
         if (! $this->handle) {
             return false;
@@ -495,7 +495,7 @@ class Archive
      * @param string $format format to get extension for
      * @return string file extension
      */
-    public static function FormatToExtension($format) // @codingStandardsIgnoreLine
+    public static function FormatToExtension($format) // phpcs:ignore
     {
         switch ($format) {
             case self::COMPRESS_TAR:
@@ -518,7 +518,7 @@ class Archive
      * @static
      * @return array array of formats mapped to extensions
      */
-    public static function SupportedFormats() // @codingStandardsIgnoreLine
+    public static function SupportedFormats() // phpcs:ignore
     {
         $formats = [];
 

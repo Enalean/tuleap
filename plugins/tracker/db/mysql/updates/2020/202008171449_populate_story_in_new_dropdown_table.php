@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202008171449_populate_story_in_new_dropdown_table extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class b202008171449_populate_story_in_new_dropdown_table extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function description(): string
     {

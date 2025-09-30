@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202011141431_create_legacy_tracker_migration_table extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class b202011141431_create_legacy_tracker_migration_table extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function description()
     {

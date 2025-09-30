@@ -26,7 +26,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 /**
  * I validate fields
  */
-abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var Tracker_FormElementFactory */
     protected $formelement_factory;

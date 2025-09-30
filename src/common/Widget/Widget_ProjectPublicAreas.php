@@ -24,7 +24,7 @@ use Tuleap\Widget\Event\GetPublicAreas;
 /**
 * Widget_ProjectPublicAreas
 */
-class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201909131116_add_inactive_acounts_notification_delay extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201909131116_add_inactive_acounts_notification_delay extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -25,7 +25,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase,PSR1.Classes.ClassDeclaration.MissingNamespace
 class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFactory
 {
     /**

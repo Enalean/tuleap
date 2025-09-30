@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\ChangesetValueComputed;
  *
  * @see http://en.wikipedia.org/wiki/Visitor_pattern
  */
-interface Tracker_Artifact_ChangesetValueVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+interface Tracker_Artifact_ChangesetValueVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function visitArtifactLink(ArtifactLinkChangesetValue $changeset_value);
 

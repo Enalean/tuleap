@@ -26,7 +26,7 @@
  *
  * This extends the user name validation
  */
-class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const PATTERN_PROJECT_NAME = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
     /**

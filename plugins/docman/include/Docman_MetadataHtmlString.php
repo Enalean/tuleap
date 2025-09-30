@@ -23,7 +23,7 @@
 /**
  * HTML rendering for 'String' metadata
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_MetadataHtmlString extends \Docman_MetadataHtml
 {
     #[\Override]

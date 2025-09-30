@@ -22,7 +22,7 @@
 /**
 * Docman_Widget_MyDocmanSearch
 */
-class Docman_Widget_MyDocmanSearch extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_Widget_MyDocmanSearch extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $pluginPath;
 

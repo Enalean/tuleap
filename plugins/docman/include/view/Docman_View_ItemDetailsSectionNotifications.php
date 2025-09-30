@@ -29,7 +29,7 @@ use Tuleap\Docman\Notifications\NotificationListPresenter;
 /**
  * @template-implements ItemVisitor<string>
  */
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection implements ItemVisitor
 {
     /**

@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../www/my/my_utils.php';
 *
 * Filemodules that are actively monitored
 */
-class Widget_MyMonitoredFp extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Widget_MyMonitoredFp extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {

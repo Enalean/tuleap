@@ -23,7 +23,7 @@ use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 
-class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const THUMBNAILS_MAX_WIDTH  = 150;
     public const THUMBNAILS_MAX_HEIGHT = 112;

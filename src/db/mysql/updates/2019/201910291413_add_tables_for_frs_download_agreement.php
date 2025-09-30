@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-class b201910291413_add_tables_for_frs_download_agreement extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201910291413_add_tables_for_frs_download_agreement extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description(): string
     {

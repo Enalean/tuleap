@@ -28,7 +28,7 @@ require_once __DIR__ . '/../../../src/www/my/my_utils.php';
 /**
  * Docman_Widget_MyDocman
  */
-class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $pluginPath;
 

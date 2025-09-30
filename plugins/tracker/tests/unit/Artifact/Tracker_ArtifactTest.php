@@ -90,7 +90,7 @@ use UserXMLExporter;
 use Workflow;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     use GlobalResponseMock;
 

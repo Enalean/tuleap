@@ -23,7 +23,7 @@ use Tuleap\Tracker\FormElement\Field\ListField;
 /**
  * Build all the data needed to create Trigger rules in workflow administration
  */
-class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonFormatOfMyself // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonFormatOfMyself // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const CONDITION_AT_LEAST_ONE = 'at_least_one';
     public const CONDITION_ALL_OFF      = 'all_of';

@@ -27,7 +27,7 @@ use Tuleap\Project\MappingRegistry;
 * Display an image
 *
 */
-class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public ?string $image_title = null;
     public ?string $image_url   = null;

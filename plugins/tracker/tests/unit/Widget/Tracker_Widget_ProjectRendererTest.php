@@ -29,7 +29,7 @@ use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Widget_ProjectRendererTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Widget_ProjectRendererTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private const CURRENT_PROJECT_ID = 1001;
     private const ANOTHER_PROJECT_ID = 1002;

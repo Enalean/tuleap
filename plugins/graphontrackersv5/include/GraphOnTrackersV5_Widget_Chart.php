@@ -35,7 +35,7 @@ use Valid_String;
 use Valid_UInt;
 use Widget;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 abstract class GraphOnTrackersV5_Widget_Chart extends Widget
 {
     public $chart_title;

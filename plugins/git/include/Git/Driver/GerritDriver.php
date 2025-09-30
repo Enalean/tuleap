@@ -21,7 +21,7 @@
 /**
  * I know how to speak to a Gerrit remote server
  */
-interface Git_Driver_Gerrit //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+interface Git_Driver_Gerrit //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string CACHE_ACCOUNTS        = 'accounts';
     public const string CACHE_GROUPS_INCLUDES = 'groups_byinclude';

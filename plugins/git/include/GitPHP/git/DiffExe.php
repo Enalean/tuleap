@@ -70,7 +70,7 @@ class DiffExe
      * @return string binary
      * @access public
      */
-    public function GetBinary() // @codingStandardsIgnoreLine
+    public function GetBinary() // phpcs:ignore
     {
         return $this->binary;
     }
@@ -83,7 +83,7 @@ class DiffExe
      * @access public
      * @return mixed boolean or number of context lines
      */
-    public function GetUnified() // @codingStandardsIgnoreLine
+    public function GetUnified() // phpcs:ignore
     {
         return $this->unified;
     }
@@ -96,7 +96,7 @@ class DiffExe
      * @access public
      * @param mixed $unified true or false, or number of context lines
      */
-    public function SetUnified($unified) // @codingStandardsIgnoreLine
+    public function SetUnified($unified) // phpcs:ignore
     {
         $this->unified = $unified;
     }
@@ -109,7 +109,7 @@ class DiffExe
      * @access public
      * @return bool true if showing function
      */
-    public function GetShowFunction() // @codingStandardsIgnoreLine
+    public function GetShowFunction() // phpcs:ignore
     {
         return $this->showFunction;
     }
@@ -122,7 +122,7 @@ class DiffExe
      * @access public
      * @param bool $show true to show
      */
-    public function SetShowFunction($show) // @codingStandardsIgnoreLine
+    public function SetShowFunction($show) // phpcs:ignore
     {
         $this->showFunction = $show;
     }
@@ -139,7 +139,7 @@ class DiffExe
      * @param string $toName destination file display name
      * @return string diff output
      */
-    public function Execute($fromFile = null, $fromName = null, $toFile = null, $toName = null) // @codingStandardsIgnoreLine
+    public function Execute($fromFile = null, $fromName = null, $toFile = null, $toName = null) // phpcs:ignore
     {
         if (empty($fromFile) && empty($toFile)) {
             return '';
@@ -200,7 +200,7 @@ class DiffExe
      * @param string $toName destination file display name
      * @return string diff output
      */
-    public static function Diff($fromFile = null, $fromName = null, $toFile = null, $toName = null) // @codingStandardsIgnoreLine
+    public static function Diff($fromFile = null, $fromName = null, $toFile = null, $toName = null) // phpcs:ignore
     {
         $obj = new DiffExe();
         $ret = $obj->Execute($fromFile, $fromName, $toFile, $toName);

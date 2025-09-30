@@ -27,7 +27,7 @@
  * Note: this date format is more restrictive than php check date because in
  * this case, 2007-01-01 format (with zero in month or day) is not allowed.
  */
-class Rule_Date extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_Date extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const DAY_REGEX = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?)$/';
     #[\Override]

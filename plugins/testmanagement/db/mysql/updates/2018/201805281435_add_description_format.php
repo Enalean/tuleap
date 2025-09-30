@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201805281435_add_description_format extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201805281435_add_description_format extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

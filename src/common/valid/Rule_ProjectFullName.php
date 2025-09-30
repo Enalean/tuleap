@@ -26,7 +26,7 @@
  *
  * This extends the user name validation
  */
-class Rule_ProjectFullName extends \Rule_UserName // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_ProjectFullName extends \Rule_UserName // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Check validity

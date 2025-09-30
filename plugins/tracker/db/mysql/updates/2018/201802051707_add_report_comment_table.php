@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201802051707_add_report_comment_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201802051707_add_report_comment_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

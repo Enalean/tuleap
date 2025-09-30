@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202003021509_add_and_populate_polling_url_tables extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b202003021509_add_and_populate_polling_url_tables extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

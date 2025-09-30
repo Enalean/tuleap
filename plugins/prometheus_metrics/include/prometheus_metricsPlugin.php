@@ -36,7 +36,7 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
+class prometheus_metricsPlugin extends Plugin  // phpcs:ignore
 {
     public const NAME = 'prometheus_metrics';
 

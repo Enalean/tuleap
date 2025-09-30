@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201801181115_remove_invalid_tuleap_timezones extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201801181115_remove_invalid_tuleap_timezones extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

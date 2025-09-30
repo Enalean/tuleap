@@ -29,7 +29,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use ZipArchive;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     use TemporaryTestDirectory;
 

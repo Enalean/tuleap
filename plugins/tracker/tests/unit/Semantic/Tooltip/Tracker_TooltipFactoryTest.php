@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_TooltipFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {

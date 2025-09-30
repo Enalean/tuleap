@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201804161530_tracker_global_notification_unsubscribers  extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201804161530_tracker_global_notification_unsubscribers  extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -23,7 +23,7 @@
  *
  */
 
-class b201905061046_change_timetracking_overview_report_name extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201905061046_change_timetracking_overview_report_name extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

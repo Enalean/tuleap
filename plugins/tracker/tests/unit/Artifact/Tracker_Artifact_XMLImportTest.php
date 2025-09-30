@@ -82,7 +82,7 @@ use XML_RNGValidator;
 use XMLImportHelper;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     use GlobalLanguageMock;
     use TemporaryTestDirectory;

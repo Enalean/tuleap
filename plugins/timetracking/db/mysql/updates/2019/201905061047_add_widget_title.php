@@ -23,7 +23,7 @@
  *
  */
 
-class b201905061047_add_widget_title extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201905061047_add_widget_title extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

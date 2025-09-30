@@ -20,7 +20,7 @@
  */
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Report_ResultJoinerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps, PSR1.Classes.ClassDeclaration.MissingNamespace
+final class Tracker_Report_ResultJoinerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase, PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testItRemovesEntriesWhoseKeysAreNotPresentInOtherResult(): void
     {

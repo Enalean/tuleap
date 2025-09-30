@@ -25,7 +25,7 @@ require_once __DIR__ . '/../../../www/project/admin/project_admin_utils.php';
  * Change project short name (unix_group_name)
  *
  */
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class SystemEvent_PROJECT_RENAME extends SystemEvent
 {
     #[\Override]

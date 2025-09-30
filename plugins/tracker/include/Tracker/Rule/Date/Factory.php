@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
  * Factory of rules
  * Base class to create, retrieve, update or delete rules
  */
-class Tracker_Rule_Date_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Rule_Date_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      *

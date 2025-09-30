@@ -25,7 +25,7 @@ use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
  * Condition on a transition
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 abstract class Workflow_Transition_Condition
 {
     /** @var string */

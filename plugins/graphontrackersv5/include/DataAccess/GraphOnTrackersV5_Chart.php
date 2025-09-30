@@ -61,7 +61,7 @@ use XML_SimpleXMLCDATAFactory;
  *
  * This class must be overriden to provide your own concrete chart (Pie, Bar, ..)
  */
-abstract class GraphOnTrackersV5_Chart implements Visitable //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class GraphOnTrackersV5_Chart implements Visitable //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string MARKER_BEGINNING_OUTPUT_FETCH = '🥀';
 

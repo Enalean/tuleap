@@ -30,7 +30,7 @@
  *
  * The faulty email address is available with $this->getErrorMessage();
  */
-class Rule_Email extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_Email extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $separator;
     public function __construct($separator = \null)

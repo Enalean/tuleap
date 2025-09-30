@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-class b201904181357_add_upload_file_status_and_obsolescence_date_columns extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201904181357_add_upload_file_status_and_obsolescence_date_columns extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

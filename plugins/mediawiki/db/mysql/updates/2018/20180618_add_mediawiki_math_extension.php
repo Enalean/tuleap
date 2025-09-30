@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20180618_add_mediawiki_math_extension extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b20180618_add_mediawiki_math_extension extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

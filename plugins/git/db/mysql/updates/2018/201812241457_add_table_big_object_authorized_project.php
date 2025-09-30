@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201812241457_add_table_big_object_authorized_project extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201812241457_add_table_big_object_authorized_project extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201806251409_create_tracker_webhook_url_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201806251409_create_tracker_webhook_url_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

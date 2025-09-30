@@ -24,7 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 /**
  * A planning milestone (e.g.: Sprint, Release...)
  */
-class Planning_ArtifactMilestone implements Planning_Milestone //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Planning_ArtifactMilestone implements Planning_Milestone //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private const string PROMOTED_ITEM_PREFIX = 'milestone-';
 

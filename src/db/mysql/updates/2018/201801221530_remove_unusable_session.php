@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201801221530_remove_unusable_session extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201801221530_remove_unusable_session extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

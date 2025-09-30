@@ -28,7 +28,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Date\DatePeriodWithWeekEnd;
 use UserManager;
 
-class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * build burndown chart properties

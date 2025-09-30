@@ -39,7 +39,7 @@ use Tuleap\Git\Tests\Stub\DefaultBranch\DefaultBranchUpdateExecutorStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_GIT_REPO_UPDATETest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class SystemEvent_GIT_REPO_UPDATETest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private int $repository_id = 115;
     private DefaultBranchUpdateExecutorStub $default_branch_update_executor;

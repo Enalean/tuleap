@@ -20,7 +20,7 @@
 /**
  * @psalm-immutable
  */
-class AgileDashboard_MilestonesCardwallRepresentation //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashboard_MilestonesCardwallRepresentation //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string ROUTE = 'cardwall';
 

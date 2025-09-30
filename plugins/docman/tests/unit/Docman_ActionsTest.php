@@ -42,7 +42,7 @@ use UserManager;
 
 // Make easier the navigation in IDE between the main class and this class
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testCannotDeleteVersionOnNonFile(): void
     {

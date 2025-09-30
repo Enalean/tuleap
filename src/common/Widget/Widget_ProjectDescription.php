@@ -23,7 +23,7 @@
 * Widget_ProjectDescription
 *
 */
-class Widget_ProjectDescription extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Widget_ProjectDescription extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {

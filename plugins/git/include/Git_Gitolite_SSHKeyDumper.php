@@ -22,7 +22,7 @@
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
-class Git_Gitolite_SSHKeyDumper implements Dumper //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_Gitolite_SSHKeyDumper implements Dumper //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string KEYDIR    = 'keydir';
     public const int FIRST_KEY_ID = 0;

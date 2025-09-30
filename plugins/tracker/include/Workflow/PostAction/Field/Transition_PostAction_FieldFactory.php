@@ -23,7 +23,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 /**
  * Loads and saves Field post actions
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Transition_PostAction_FieldFactory implements Transition_PostActionSubFactory
 {
     /** @psalm-var array<string, class-string<Transition_PostAction_Field>> available post actions classes */

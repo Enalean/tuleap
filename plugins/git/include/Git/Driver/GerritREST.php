@@ -28,7 +28,7 @@ use Tuleap\Git\Driver\GerritHTTPClientFactory;
 /**
  * I know how to speak to a Gerrit 2.8+ remote server
  */
-class Git_Driver_GerritREST implements Git_Driver_Gerrit //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_Driver_GerritREST implements Git_Driver_Gerrit //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * When one create a group when no owners, set Administrators as default

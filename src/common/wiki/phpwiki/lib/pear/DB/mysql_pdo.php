@@ -25,7 +25,7 @@ require_once __DIR__ . '/../DB/common.php';
 /**
  * @deprecated
  */
-class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
+class DB_mysql_pdo extends DB_common // phpcs:ignore
 {
     /**
      * @var \ParagonIE\EasyDB\EasyDB

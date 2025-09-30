@@ -24,7 +24,7 @@
 /**
  * Wrapper for 'WhiteList' rule
  */
-class Valid_WhiteList extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Valid_WhiteList extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($key, $whitelist)
     {

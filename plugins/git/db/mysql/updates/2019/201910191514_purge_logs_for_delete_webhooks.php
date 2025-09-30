@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201910191514_purge_logs_for_delete_webhooks extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201910191514_purge_logs_for_delete_webhooks extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description(): string
     {

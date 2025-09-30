@@ -27,7 +27,7 @@ use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
 /**
  * Manage interaction between an LDAP group and Project members
  */
-class LDAP_ProjectGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class LDAP_ProjectGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         readonly LDAP $ldap,

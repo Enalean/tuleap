@@ -29,7 +29,7 @@
  * rendering of some fields (eg. obsolescence_date is stored as a date but it's
  * more convenient for final user to display it as a select box with duration).
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_MetadataHtml
 {
     public $md;

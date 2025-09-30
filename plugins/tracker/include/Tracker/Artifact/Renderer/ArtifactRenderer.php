@@ -29,7 +29,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * I'm responsible of rendering artifact to user (creation, update, view...)
  */
-abstract class Tracker_Artifact_ArtifactRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Tracker_Artifact_ArtifactRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Tracker

@@ -35,7 +35,7 @@
  *   real metadata all parameters may change. But for HardCoded metadata, only
  *   some parmaeters of some metadata may change (eg. 'use_it' for 'status').
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_Metadata
 {
     public $id;

@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use UserXMLExporter;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Tracker_FormElement_Field_List_Bind_Static $bind;
     private Tracker_FormElement_Field_List_Bind_Static $bind_without_values;

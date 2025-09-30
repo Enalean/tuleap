@@ -19,7 +19,7 @@
  *
  */
 
-class b201809250859_create_log_tables extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201809250859_create_log_tables extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 
-class b202008211454_remove_new_layout_modal_table extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class b202008211454_remove_new_layout_modal_table extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function description(): string
     {

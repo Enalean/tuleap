@@ -37,7 +37,7 @@ use Tuleap\SVNCore\AccessControl\BeforeSVNLogin;
 use Tuleap\User\AfterLocalStandardLogin;
 use Tuleap\User\BeforeStandardLogin;
 
-class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys // @codingStandardsIgnoreLine
+class dynamic_credentialsPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignore
 {
     public const string NAME = 'dynamic_credentials';
 

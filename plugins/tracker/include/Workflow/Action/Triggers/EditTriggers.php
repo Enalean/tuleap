@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\Action\Triggers\TriggersPresenter;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Action
 {
     private $template_renderer;

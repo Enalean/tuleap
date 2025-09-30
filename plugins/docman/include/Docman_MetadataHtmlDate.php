@@ -23,7 +23,7 @@
 /**
  * HTML rendering for 'Date' metadata
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_MetadataHtmlDate extends \Docman_MetadataHtml
 {
     public function _getField()

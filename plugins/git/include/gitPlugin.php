@@ -231,7 +231,7 @@ use Tuleap\WebAssembly\WasmtimeCacheConfigurationBuilder;
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string LOG_IDENTIFIER = 'git_syslog';
 

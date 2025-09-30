@@ -30,7 +30,7 @@ use Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent;
  * So we need to propagate LDAP login change to SVNAccessFile only (the Tuleap
  * user name is not changed).
  */
-class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     private UserManager $user_manager;
 

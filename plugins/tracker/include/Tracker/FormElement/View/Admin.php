@@ -26,7 +26,7 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
  * This is the top most element of the hierarchy and correspond to Tracker_FormElement
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_View_Admin
 {
     /**

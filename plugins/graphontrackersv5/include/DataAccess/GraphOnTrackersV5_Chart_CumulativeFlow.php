@@ -37,7 +37,7 @@ use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_CumulativeF
 /**
  * Base class to provide a cumulative flow Chart
  */
-class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const int SCALE_DAY   = 0;
     public const int SCALE_WEEK  = 1;

@@ -24,7 +24,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
  * Base class for field post actions.
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 abstract class Transition_PostAction_Field extends Transition_PostAction
 {
     /**

@@ -21,7 +21,7 @@
 
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class HudsonJobFactoryTest extends TestCase // @codingStandardsIgnoreLine
+final class HudsonJobFactoryTest extends TestCase // phpcs:ignore
 {
     use \Tuleap\GlobalLanguageMock;
 

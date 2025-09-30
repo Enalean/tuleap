@@ -34,7 +34,7 @@ use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
 use User_ForgeUserGroupPermission_UserManagement;
 use User_ForgeUserGroupPermissionsDao;
 
-class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
+class User_ForgeUserGroupPermissionsFactory // phpcs:ignore
 {
     public const GET_PERMISSION_DELEGATION = 'get_permission_delegation';
 

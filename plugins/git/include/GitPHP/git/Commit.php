@@ -234,7 +234,7 @@ class Commit extends GitObject
      * @access public
      * @return mixed commit object for parent
      */
-    public function GetParent() // @codingStandardsIgnoreLine
+    public function GetParent() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -258,7 +258,7 @@ class Commit extends GitObject
      * @access public
      * @return mixed array of commit objects
      */
-    public function GetParents() // @codingStandardsIgnoreLine
+    public function GetParents() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -279,7 +279,7 @@ class Commit extends GitObject
      * @access public
      * @return mixed tree object
      */
-    public function GetTree() // @codingStandardsIgnoreLine
+    public function GetTree() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -300,7 +300,7 @@ class Commit extends GitObject
      * @access public
      * @return string author
      */
-    public function GetAuthor() // @codingStandardsIgnoreLine
+    public function GetAuthor() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -317,7 +317,7 @@ class Commit extends GitObject
      * @access public
      * @return string author name
      */
-    public function GetAuthorName() // @codingStandardsIgnoreLine
+    public function GetAuthorName() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -344,7 +344,7 @@ class Commit extends GitObject
      * @access public
      * @return string author epoch
      */
-    public function GetAuthorEpoch() // @codingStandardsIgnoreLine
+    public function GetAuthorEpoch() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -361,7 +361,7 @@ class Commit extends GitObject
      * @access public
      * @return string author local epoch
      */
-    public function GetAuthorLocalEpoch() // @codingStandardsIgnoreLine
+    public function GetAuthorLocalEpoch() // phpcs:ignore
     {
         $epoch = $this->GetAuthorEpoch();
         $tz    = $this->GetAuthorTimezone();
@@ -380,7 +380,7 @@ class Commit extends GitObject
      * @access public
      * @return string author timezone
      */
-    public function GetAuthorTimezone() // @codingStandardsIgnoreLine
+    public function GetAuthorTimezone() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -397,7 +397,7 @@ class Commit extends GitObject
      * @access public
      * @return string author
      */
-    public function GetCommitter() // @codingStandardsIgnoreLine
+    public function GetCommitter() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -424,7 +424,7 @@ class Commit extends GitObject
      * @access public
      * @return string author name
      */
-    public function GetCommitterName() // @codingStandardsIgnoreLine
+    public function GetCommitterName() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -441,7 +441,7 @@ class Commit extends GitObject
      * @access public
      * @return string committer epoch
      */
-    public function GetCommitterEpoch() // @codingStandardsIgnoreLine
+    public function GetCommitterEpoch() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -458,7 +458,7 @@ class Commit extends GitObject
      * @access public
      * @return string committer local epoch
      */
-    public function GetCommitterLocalEpoch() // @codingStandardsIgnoreLine
+    public function GetCommitterLocalEpoch() // phpcs:ignore
     {
         $epoch = $this->GetCommitterEpoch();
         $tz    = $this->GetCommitterTimezone();
@@ -477,7 +477,7 @@ class Commit extends GitObject
      * @access public
      * @return string author timezone
      */
-    public function GetCommitterTimezone() // @codingStandardsIgnoreLine
+    public function GetCommitterTimezone() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -495,7 +495,7 @@ class Commit extends GitObject
      * @param int $trim length to trim to (0 for no trim)
      * @return string | null
      */
-    public function GetTitle($trim = 0) // @codingStandardsIgnoreLine
+    public function GetTitle($trim = 0) // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -516,7 +516,7 @@ class Commit extends GitObject
      * @access public
      * @return array lines of comment
      */
-    public function GetComment() // @codingStandardsIgnoreLine
+    public function GetComment() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -542,7 +542,7 @@ class Commit extends GitObject
      * @param string $pattern pattern to find
      * @return array matching lines of comment
      */
-    public function SearchComment($pattern) // @codingStandardsIgnoreLine
+    public function SearchComment($pattern) // phpcs:ignore
     {
         if (empty($pattern)) {
             return $this->GetComment();
@@ -595,7 +595,7 @@ class Commit extends GitObject
      * @access public
      * @return string age
      */
-    public function GetAge() // @codingStandardsIgnoreLine
+    public function GetAge() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -616,7 +616,7 @@ class Commit extends GitObject
      * @access pubilc
      * @return bool true if merge commit
      */
-    public function IsMergeCommit() // @codingStandardsIgnoreLine
+    public function IsMergeCommit() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -632,7 +632,7 @@ class Commit extends GitObject
      *
      * @access protected
      */
-    protected function ReadData() // @codingStandardsIgnoreLine
+    protected function ReadData() // phpcs:ignore
     {
         $this->dataRead = true;
 
@@ -709,7 +709,7 @@ class Commit extends GitObject
      * @access public
      * @return array array of heads
      */
-    public function GetHeads() // @codingStandardsIgnoreLine
+    public function GetHeads() // phpcs:ignore
     {
         $heads = [];
 
@@ -732,7 +732,7 @@ class Commit extends GitObject
      * @access public
      * @return array array of tags
      */
-    public function GetTags() // @codingStandardsIgnoreLine
+    public function GetTags() // phpcs:ignore
     {
         $tags = [];
 
@@ -757,7 +757,7 @@ class Commit extends GitObject
      * @access public
      * @return Tag object
      */
-    public function GetContainingTag() // @codingStandardsIgnoreLine
+    public function GetContainingTag() // phpcs:ignore
     {
         if (! $this->containingTagRead) {
             $this->ReadContainingTag();
@@ -773,7 +773,7 @@ class Commit extends GitObject
      *
      * @access private
      */
-    public function ReadContainingTag() // @codingStandardsIgnoreLine
+    public function ReadContainingTag() // phpcs:ignore
     {
         $this->containingTagRead = true;
 
@@ -802,7 +802,7 @@ class Commit extends GitObject
      * @access public
      * @return mixed Tree diff
      */
-    public function DiffToParent() // @codingStandardsIgnoreLine
+    public function DiffToParent() // phpcs:ignore
     {
         return new TreeDiff($this->data_reader, $this->GetProject(), $this->hash);
     }
@@ -816,7 +816,7 @@ class Commit extends GitObject
      * @param string $path path
      * @return string hash
      */
-    public function PathToHash($path) // @codingStandardsIgnoreLine
+    public function PathToHash($path) // phpcs:ignore
     {
         if ($path === '') {
             return '';
@@ -848,7 +848,7 @@ class Commit extends GitObject
      *
      * @access private
      */
-    private function ReadHashPaths() // @codingStandardsIgnoreLine
+    private function ReadHashPaths() // phpcs:ignore
     {
         $this->hashPathsRead = true;
         $this->ReadHashPathsRaw($this->GetTree());
@@ -861,7 +861,7 @@ class Commit extends GitObject
      *
      * @access private
      */
-    private function ReadHashPathsRaw($tree) // @codingStandardsIgnoreLine
+    private function ReadHashPathsRaw($tree) // phpcs:ignore
     {
         if (! $tree) {
             return;
@@ -896,7 +896,7 @@ class Commit extends GitObject
      * @param string $pattern pattern to find
      * @return array array of objects
      */
-    public function SearchFilenames($pattern) // @codingStandardsIgnoreLine
+    public function SearchFilenames($pattern) // phpcs:ignore
     {
         if (empty($pattern)) {
             return;
@@ -938,7 +938,7 @@ class Commit extends GitObject
      * @param string $pattern pattern to search for
      * @return array multidimensional array of results
      */
-    public function SearchFileContents($pattern) // @codingStandardsIgnoreLine
+    public function SearchFileContents($pattern) // phpcs:ignore
     {
         if (empty($pattern)) {
             return;
@@ -987,7 +987,7 @@ class Commit extends GitObject
      * @param int $skip number of results to skip
      * @return array array of results
      */
-    public function SearchFiles($pattern, $count = 100, $skip = 0) // @codingStandardsIgnoreLine
+    public function SearchFiles($pattern, $count = 100, $skip = 0) // phpcs:ignore
     {
         if (empty($pattern)) {
             return;
@@ -1016,7 +1016,7 @@ class Commit extends GitObject
      *
      * @access private
      */
-    private function ReferenceParents() // @codingStandardsIgnoreLine
+    private function ReferenceParents() // phpcs:ignore
     {
         if ($this->parentsReferenced) {
             return;
@@ -1040,7 +1040,7 @@ class Commit extends GitObject
      *
      * @access private
      */
-    private function DereferenceParents() // @codingStandardsIgnoreLine
+    private function DereferenceParents() // phpcs:ignore
     {
         if (! $this->parentsReferenced) {
             return;
@@ -1064,7 +1064,7 @@ class Commit extends GitObject
      *
      * @access private
      */
-    private function ReferenceTree() // @codingStandardsIgnoreLine
+    private function ReferenceTree() // phpcs:ignore
     {
         if ($this->treeReferenced) {
             return;
@@ -1086,7 +1086,7 @@ class Commit extends GitObject
      *
      * @access private
      */
-    private function DereferenceTree() // @codingStandardsIgnoreLine
+    private function DereferenceTree() // phpcs:ignore
     {
         if (! $this->treeReferenced) {
             return;
@@ -1116,7 +1116,7 @@ class Commit extends GitObject
      * @param mixed $b second commit
      * @return int comparison result
      */
-    public static function CompareAge($a, $b) // @codingStandardsIgnoreLine
+    public static function CompareAge($a, $b) // phpcs:ignore
     {
         if ($a->GetAge() === $b->GetAge()) {
             return 0;

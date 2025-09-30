@@ -24,6 +24,6 @@
  *
  * @deprecated
  */
-class ForgeUpgrade_Bucket_Db_Exception extends \Tuleap\ForgeUpgrade\Bucket\BucketDbException // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class ForgeUpgrade_Bucket_Db_Exception extends \Tuleap\ForgeUpgrade\Bucket\BucketDbException // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
 }

@@ -37,7 +37,7 @@ use Tuleap\Date\TimezoneWrapper;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
+final class SystemEvent_BURNUP_GENERATE extends SystemEvent // phpcs:ignore
 {
     public BurnupCalculator $burnup_calculator;
     private BurnupDataDAO $burnup_dao;

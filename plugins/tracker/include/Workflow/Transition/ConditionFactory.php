@@ -22,7 +22,7 @@ use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Workflow_Transition_ConditionFactory
 {
     /** @var Workflow_Transition_Condition_CommentNotEmpty_Factory */

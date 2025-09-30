@@ -61,7 +61,7 @@ use Tuleap\Request\CollectRoutesEvent;
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
 {
     public const string SERVICE_SHORTNAME = 'tuleap-gitlfs';

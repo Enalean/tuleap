@@ -25,7 +25,7 @@ use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\View\Admin\AdminView;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_View_Admin_FilenamePattern extends AdminView
 {
     public const string IDENTIFIER = 'admin_filename_pattern';

@@ -24,7 +24,7 @@ declare(strict_types=1);
 use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\VariableBoolean;
 use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\VariableString;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202501161544_import_docman_configuration_variables extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()

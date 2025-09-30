@@ -29,7 +29,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPresenterBuilder;
 /**
  * Like RepRap, I build builders
  */
-class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,

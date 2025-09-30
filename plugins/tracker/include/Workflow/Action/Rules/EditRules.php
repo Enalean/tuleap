@@ -23,7 +23,7 @@ use Tuleap\Tracker\Tracker;
 
 require_once __DIR__ . '/../../../../../../src/www/include/html.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 {
     public const PARAMETER_ADD_RULE     = 'add_rule';

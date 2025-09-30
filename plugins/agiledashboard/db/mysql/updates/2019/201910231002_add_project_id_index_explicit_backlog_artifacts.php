@@ -19,7 +19,7 @@
  *
  */
 
-class b201910231002_add_project_id_index_explicit_backlog_artifacts extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201910231002_add_project_id_index_explicit_backlog_artifacts extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description(): string
     {

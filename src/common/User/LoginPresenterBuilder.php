@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 use Tuleap\User\Account\RegistrationGuardEvent;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class User_LoginPresenterBuilder
 {
     public function __construct(

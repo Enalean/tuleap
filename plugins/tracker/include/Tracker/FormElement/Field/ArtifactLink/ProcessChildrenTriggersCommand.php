@@ -26,7 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
  * association definition.
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand implements
     Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
 {

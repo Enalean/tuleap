@@ -27,7 +27,7 @@ use Docman_MetadataListOfValuesElement;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Docman_MetadataListOfValuesElementTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Docman_MetadataListOfValuesElementTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Docman_MetadataListOfValuesElement $metadata_list_values;
 

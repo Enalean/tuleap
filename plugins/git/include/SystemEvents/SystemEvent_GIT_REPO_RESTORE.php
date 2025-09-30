@@ -21,7 +21,7 @@
 /**
  * Description of SystemEvent_GIT_REPO_DELETE
  */
-class SystemEvent_GIT_REPO_RESTORE extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_GIT_REPO_RESTORE extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string NAME = 'GIT_REPO_RESTORE';
 

@@ -25,7 +25,7 @@ use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 /**
  * Statisitics_Widget_ProjectStatistics
  */
-class Statistics_Widget_ProjectStatistics extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Statistics_Widget_ProjectStatistics extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Constructor

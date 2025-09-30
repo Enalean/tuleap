@@ -22,7 +22,7 @@
 use Tuleap\Chart\Chart;
 use Tuleap\Chart\ColorsForCharts;
 
-class Git_LastPushesGraph //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_LastPushesGraph //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const int MAX_WEEKSNUMBER  = 25;
     public const int WEEKS_IN_SECONDS = 604800;

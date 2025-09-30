@@ -28,7 +28,7 @@ use Tuleap\Tracker\Tracker;
  * I find the suitable submilestone for planning
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
 {
     /** @var PlanningFactory */

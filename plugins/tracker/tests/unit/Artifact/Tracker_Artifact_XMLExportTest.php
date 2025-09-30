@@ -44,7 +44,7 @@ use UserXMLExporter;
 use XML_RNGValidator;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_XMLExportTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_XMLExportTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private UserManager&MockObject $user_manager;
     private Tracker_FormElementFactory&MockObject $formelement_factory;

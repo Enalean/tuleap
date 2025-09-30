@@ -21,7 +21,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-final class HudsonJobTest extends TestCase // @codingStandardsIgnoreLine
+final class HudsonJobTest extends TestCase // phpcs:ignore
 {
     public function testSimpleJob(): void
     {

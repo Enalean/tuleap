@@ -47,7 +47,7 @@ require_once __DIR__ . '/../../projectmilestones/vendor/autoload.php';
 
 define('TULEAP_PLUGIN_JIRA_IMPORT', '1');
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class jira_importPlugin extends Plugin
 {
     public function __construct(?int $id)

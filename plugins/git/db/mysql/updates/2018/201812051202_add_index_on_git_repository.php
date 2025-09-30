@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201812051202_add_index_on_git_repository extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201812051202_add_index_on_git_repository extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

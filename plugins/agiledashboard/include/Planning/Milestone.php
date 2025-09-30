@@ -24,7 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 /**
  * Describe what a Milestone business object should present.
  */
-interface Planning_Milestone // @codingStandardsIgnoreLine
+interface Planning_Milestone // phpcs:ignore
 {
     public const string REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
     public const string CAPACITY_FIELD_NAME         = 'capacity';

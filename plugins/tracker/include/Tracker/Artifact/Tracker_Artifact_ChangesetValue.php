@@ -28,7 +28,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentationData;
  * Manage values in changeset for fields
  * @abstract
  */
-abstract class Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var int

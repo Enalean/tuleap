@@ -24,7 +24,7 @@ namespace Tuleap\GraphOnTrackersV5;
 use Tuleap\Dashboard\User\UserDashboardController;
 use UserManager;
 
-class GraphOnTrackersV5_Widget_MyChart extends GraphOnTrackersV5_Widget_Chart //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class GraphOnTrackersV5_Widget_MyChart extends GraphOnTrackersV5_Widget_Chart //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {

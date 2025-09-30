@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 final class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     use \Tuleap\GlobalResponseMock;

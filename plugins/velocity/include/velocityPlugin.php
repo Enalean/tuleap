@@ -50,7 +50,7 @@ require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
-class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
+class velocityPlugin extends Plugin // phpcs:ignore
 {
     /**
      * @var bool[]
@@ -82,7 +82,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     }
 
     #[\Tuleap\Plugin\ListeningToEventName(TrackerSemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS)]
-    public function trackerEventManageSemantics($parameters): void // @codingStandardsIgnoreLine
+    public function trackerEventManageSemantics($parameters): void // phpcs:ignore
     {
         $user      = $parameters['user'];
         $tracker   = $parameters['tracker'];
@@ -220,7 +220,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     }
 
     #[\Tuleap\Plugin\ListeningToEventName(TrackerSemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML)]
-    public function trackerEventSemanticFromXml(&$parameters): void // @codingStandardsIgnoreLine
+    public function trackerEventSemanticFromXml(&$parameters): void // phpcs:ignore
     {
         $tracker = $parameters['tracker'];
         $type    = $parameters['type'];

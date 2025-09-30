@@ -29,7 +29,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
  * without having to heavily modify the PostActionFactory.
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Transition_PostActionSubFactories
 {
     /** @var Transition_PostActionSubFactory[] */

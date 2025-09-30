@@ -25,7 +25,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueDateFullRepresentation;
 /**
  * Manage values in changeset for date fields
  */
-class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var int

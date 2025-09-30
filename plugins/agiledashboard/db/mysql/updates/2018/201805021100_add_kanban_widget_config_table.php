@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201805021100_add_kanban_widget_config_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201805021100_add_kanban_widget_config_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

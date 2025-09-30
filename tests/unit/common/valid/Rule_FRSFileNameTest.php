@@ -23,7 +23,7 @@
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Rule_FRSFileNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {

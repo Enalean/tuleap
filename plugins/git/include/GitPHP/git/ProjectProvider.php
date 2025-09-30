@@ -46,7 +46,7 @@ class ProjectProvider
     /**
      * @return Project
      */
-    public function GetProject() // @codingStandardsIgnoreLine
+    public function GetProject() // phpcs:ignore
     {
         return $this->project;
     }

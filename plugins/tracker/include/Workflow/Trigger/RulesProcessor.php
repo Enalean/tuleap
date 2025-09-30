@@ -26,7 +26,7 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 /**
  * Apply the Rule target if all rules conditions are met after artifact change
  */
-class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var Tracker_Workflow_WorkflowUser */
     private $workflow_user;

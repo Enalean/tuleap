@@ -98,7 +98,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @return string name
      */
     #[\Override]
-    public function GetName() // @codingStandardsIgnoreLine
+    public function GetName() // phpcs:ignore
     {
         if (! empty($this->path)) {
             return basename($this->path);
@@ -115,7 +115,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @return string path
      */
-    public function GetPath() // @codingStandardsIgnoreLine
+    public function GetPath() // phpcs:ignore
     {
         if (! empty($this->path)) {
             return $this->path;
@@ -125,7 +125,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
     }
 
 
-    public function GetFullPath() // @codingStandardsIgnoreLine
+    public function GetFullPath() // phpcs:ignore
     {
         if (! (isset($_GET['f']))) {
             return $this->path;
@@ -142,7 +142,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @param string $path object path
      */
-    public function SetPath($path) // @codingStandardsIgnoreLine
+    public function SetPath($path) // phpcs:ignore
     {
         $this->path = $path;
     }
@@ -155,7 +155,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @return string mode
      */
-    public function GetMode() // @codingStandardsIgnoreLine
+    public function GetMode() // phpcs:ignore
     {
         return $this->mode;
     }
@@ -168,7 +168,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @return string mode string
      */
-    public function GetModeString() // @codingStandardsIgnoreLine
+    public function GetModeString() // phpcs:ignore
     {
         if (empty($this->mode)) {
             return '';
@@ -203,7 +203,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @param string $mode tree mode
      */
-    public function SetMode($mode) // @codingStandardsIgnoreLine
+    public function SetMode($mode) // phpcs:ignore
     {
         $this->mode = $mode;
     }
@@ -216,7 +216,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @return mixed commit object
      */
-    public function GetCommit() // @codingStandardsIgnoreLine
+    public function GetCommit() // phpcs:ignore
     {
         return $this->commit;
     }
@@ -229,7 +229,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @param mixed $commit commit object
      */
-    public function SetCommit($commit) // @codingStandardsIgnoreLine
+    public function SetCommit($commit) // phpcs:ignore
     {
         $this->commit = $commit;
     }
@@ -242,7 +242,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @access public
      * @return array array of tree objects
      */
-    public function GetPathTree() // @codingStandardsIgnoreLine
+    public function GetPathTree() // phpcs:ignore
     {
         if (! $this->pathTreeRead) {
             $this->ReadPathTree();
@@ -258,7 +258,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      *
      * @access private
      */
-    private function ReadPathTree() // @codingStandardsIgnoreLine
+    private function ReadPathTree() // phpcs:ignore
     {
         $this->pathTreeRead = true;
 
@@ -295,7 +295,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @param mixed $b second object
      * @return int comparison result
      */
-    public static function ComparePath($a, $b) // @codingStandardsIgnoreLine
+    public static function ComparePath($a, $b) // phpcs:ignore
     {
         return strcmp($a->GetPath(), $b->GetPath());
     }

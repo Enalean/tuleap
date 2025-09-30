@@ -19,7 +19,7 @@
  *
  */
 
-class b201806202247_remove_dark_variants extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201806202247_remove_dark_variants extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

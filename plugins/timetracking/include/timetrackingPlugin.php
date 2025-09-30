@@ -66,7 +66,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class timetrackingPlugin extends PluginWithLegacyInternalRouting implements PluginWithConfigKeys// @codingStandardsIgnoreLine
+class timetrackingPlugin extends PluginWithLegacyInternalRouting implements PluginWithConfigKeys// phpcs:ignore
 {
     public function __construct($id)
     {
@@ -191,7 +191,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
     }
 
     #[\Tuleap\Plugin\ListeningToEventName(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION)]
-    public function trackerArtifactEditrendererAddViewInCollection(array $params): void // @codingStandardsIgnoreLine
+    public function trackerArtifactEditrendererAddViewInCollection(array $params): void // phpcs:ignore
     {
         $user     = $params['user'];
         $request  = $params['request'];
@@ -226,7 +226,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
     }
 
     #[\Tuleap\Plugin\ListeningToEventName('permission_get_name')]
-    public function permissionGetName(array $params): void // @codingStandardsIgnoreLine
+    public function permissionGetName(array $params): void // phpcs:ignore
     {
         if (! $params['name']) {
             switch ($params['permission_type']) {
@@ -294,7 +294,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
     }
 
     #[\Tuleap\Plugin\ListeningToEventName('project_admin_ugroup_deletion')]
-    public function projectAdminUgroupDeletion(array $params): void // @codingStandardsIgnoreLine
+    public function projectAdminUgroupDeletion(array $params): void // phpcs:ignore
     {
         $ugroup = $params['ugroup'];
 
@@ -330,7 +330,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
     }
 
     #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]
-    public function fillProjectHistorySubEvents($params): void // @codingStandardsIgnoreLine
+    public function fillProjectHistorySubEvents($params): void // phpcs:ignore
     {
         array_push(
             $params['subEvents']['event_others'],

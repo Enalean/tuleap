@@ -23,7 +23,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 /**
  * Base class for field post action DAOs.
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 abstract class Transition_PostAction_FieldDao extends DataAccessObject
 {
     /**

@@ -69,7 +69,6 @@ final class EventDescriptionRetrieverTest extends TestCase
         \ForgeConfig::set('sys_default_domain', 'example.com');
     }
 
-
     #[TestWith([true])]
     #[TestWith([false])]
     public function testDescriptionContainsOnlyLinkToArtifactWhenTrackerDoesNotHaveDescriptionSemantic(bool $should_check_permissions): void

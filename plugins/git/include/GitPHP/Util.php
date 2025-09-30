@@ -42,7 +42,7 @@ class Util
      * @param string $path path to add slash to
      * @return string $path with a trailing slash
      */
-    public static function AddSlash($path) // @codingStandardsIgnoreLine
+    public static function AddSlash($path) // phpcs:ignore
     {
         if (empty($path)) {
             return $path;
@@ -67,7 +67,7 @@ class Util
      * @static
      * @return string slug
      */
-    public static function MakeSlug($str) // @codingStandardsIgnoreLine
+    public static function MakeSlug($str) // phpcs:ignore
     {
         $from = [
             '/',

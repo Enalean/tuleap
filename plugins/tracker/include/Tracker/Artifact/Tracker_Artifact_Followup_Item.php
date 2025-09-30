@@ -19,7 +19,7 @@
 use Tuleap\Date\DateHelper;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-abstract class Tracker_Artifact_Followup_Item // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Tracker_Artifact_Followup_Item // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     abstract public function getId();
 

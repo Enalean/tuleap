@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201712131015_remove_kanban_widget_of_non_existing_kanban extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201712131015_remove_kanban_widget_of_non_existing_kanban extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

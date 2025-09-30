@@ -27,7 +27,7 @@ use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 
 #[ConfigKeyCategory('Git')]
-class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
+class Controller_Snapshot extends ControllerBase // phpcs:ignore
 {
     #[ConfigKey('Allow anonymous users to download snapshot archives of public Git repositories')]
     #[ConfigKeyLegacyBool(true)]
@@ -58,7 +58,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
      * @return string template filename
      */
     #[\Override]
-    protected function GetTemplate() // @codingStandardsIgnoreLine
+    protected function GetTemplate() // phpcs:ignore
     {
     }
 
@@ -72,7 +72,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
      * @return string action name
      */
     #[\Override]
-    public function GetName($local = false) // @codingStandardsIgnoreLine
+    public function GetName($local = false) // phpcs:ignore
     {
         if ($local) {
             return dgettext('gitphp', 'snapshot');
@@ -88,7 +88,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery() // @codingStandardsIgnoreLine
+    protected function ReadQuery() // phpcs:ignore
     {
         if (isset($_GET['h'])) {
             $this->params['hash'] = $_GET['h'];
@@ -114,7 +114,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadHeaders() // @codingStandardsIgnoreLine
+    protected function LoadHeaders() // phpcs:ignore
     {
         $this->archive = new Archive($this->project, null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 
@@ -147,7 +147,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadData() // @codingStandardsIgnoreLine
+    protected function LoadData() // phpcs:ignore
     {
         $commit = null;
 
@@ -172,7 +172,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
      * @access public
      */
     #[\Override]
-    public function Render() // @codingStandardsIgnoreLine
+    public function Render() // phpcs:ignore
     {
         $this->LoadData();
 

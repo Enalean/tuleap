@@ -25,7 +25,7 @@ use SystemEvent;
 use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
 use Exception;
 
-// @codingStandardsIgnoreLine
+// phpcs:ignore
 class SystemEvent_MEDIAWIKI_TO_CENTRAL_DB extends SystemEvent
 {
     public const string NAME = 'MEDIAWIKI_TO_CENTRAL_DB';

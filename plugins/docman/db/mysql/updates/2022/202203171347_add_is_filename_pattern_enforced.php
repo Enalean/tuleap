@@ -19,7 +19,7 @@
  *
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202203171347_add_is_filename_pattern_enforced extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

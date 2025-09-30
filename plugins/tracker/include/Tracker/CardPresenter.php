@@ -24,7 +24,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * A presenter of card linked to card.mustache
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 interface Tracker_CardPresenter
 {
     /**

@@ -28,7 +28,7 @@ use Tuleap\Layout\IncludeViteAssets;
 /**
  * Widget displaying last git pushes for the user
  */
-class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $offset   = 5;
     public $pastDays = 30;

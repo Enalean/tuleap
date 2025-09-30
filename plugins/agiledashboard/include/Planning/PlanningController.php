@@ -53,7 +53,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * Handles the HTTP actions related to a planning.
  */
-class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Fetch the cardwall configuration html

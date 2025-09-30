@@ -45,7 +45,7 @@ class Controller
      * @param string $action action
      * @return mixed controller object
      */
-    public static function GetController($action, ProvideCurrentUserWithLoggedInInformation $current_user_provider) // @codingStandardsIgnoreLine
+    public static function GetController($action, ProvideCurrentUserWithLoggedInInformation $current_user_provider) // phpcs:ignore
     {
         $controller = null;
 

@@ -27,7 +27,7 @@ use Tuleap\Docman\Item\ItemVisitor;
  * Item is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_Item //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_Item //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $id          = null;
     public $title       = null;

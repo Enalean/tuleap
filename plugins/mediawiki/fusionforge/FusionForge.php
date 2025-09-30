@@ -96,21 +96,21 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
         <script type="<?php $this->text('jsmimetype') ?>" src="<?php $this->text('stylepath') ?>/common/wikibits.js?<?php echo $GLOBALS['wgStyleVersion'] ?>"><!-- wikibits js --></script>
         <!-- Head Scripts -->
         <?php $this->html('headscripts') ?>
-        <?php	if ($this->data['jsvarurl']) { ?>
+        <?php   if ($this->data['jsvarurl']) { ?>
         <script type="<?php $this->text('jsmimetype') ?>" src="<?php $this->text('jsvarurl') ?>"><!-- site js --></script>
-        <?php	} ?>
-        <?php	if ($this->data['pagecss']) { ?>
+        <?php   } ?>
+        <?php   if ($this->data['pagecss']) { ?>
         <style type="text/css"><?php $this->html('pagecss') ?></style>
-        <?php	}
+        <?php   }
         if ($this->data['usercss']) { ?>
         <style type="text/css"><?php $this->html('usercss') ?></style>
-        <?php	}
+        <?php   }
         if ($this->data['userjs']) { ?>
         <script type="<?php $this->text('jsmimetype') ?>" src="<?php $this->text('userjs') ?>"></script>
-        <?php	}
+        <?php   }
         if ($this->data['userjsprev']) { ?>
         <script type="<?php $this->text('jsmimetype') ?>"><?php $this->html('userjsprev') ?></script>
-        <?php	}
+        <?php   }
         if ($this->data['trackbackhtml']) {
             print $this->data['trackbackhtml'];
         }
@@ -179,7 +179,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
         <h5><?php $this->msg('views') ?></h5>
         <div class="pBody">
             <ul>
-        <?php	    foreach ($this->data['content_actions'] as $key => $tab) {
+        <?php       foreach ($this->data['content_actions'] as $key => $tab) {
             echo '
 				 <li id="' . Sanitizer::escapeId("ca-$key") . '"';
             if ($tab['class']) {
@@ -221,7 +221,7 @@ if (! empty($item['class'])) {
 echo htmlspecialchars($item['class']) ?>"
 <?php } ?>><?php
                 echo htmlspecialchars($item['text']) ?></a></li>
-        <?php	        } ?>
+        <?php           } ?>
             </ul>
         </div>
     </div>
@@ -263,7 +263,7 @@ echo htmlspecialchars($item['class']) ?>"
         <?php     }
         if ($this->data['copyrightico']) { ?>
                 <div id="f-copyrightico"><?php $this->html('copyrightico') ?></div>
-        <?php	}
+        <?php   }
 
      // Generate additional footer links
         $footerlinks      = [
@@ -286,7 +286,7 @@ echo htmlspecialchars($item['class']) ?>"
             }
             ?>
             </ul>
-        <?php	}
+        <?php   }
         ?>
         </div>
 </div>
@@ -299,11 +299,11 @@ echo htmlspecialchars($item['class']) ?>"
 -->
         <?php endif; ?>
         <!-- FUSIONFORGE Footer BEGIN -->
-        <?php	if (! ForgeConfig::get('sys_use_mwframe')) {
+        <?php   if (! ForgeConfig::get('sys_use_mwframe')) {
             $GLOBALS['HTML']->footer($params);
         } else { ?>
 </body></html>
-        <?php	} ?>
+        <?php   } ?>
         <?php
         wfRestoreWarnings();
     }
@@ -368,7 +368,7 @@ echo htmlspecialchars($item['class']) ?>"
             if ($this->data['nav_urls'][$special]) {
                 ?><li id="t-<?php echo $special ?>"><a href="<?php echo htmlspecialchars($this->data['nav_urls'][$special]['href'])
 ?>"<?php echo $this->skin->tooltipAndAccesskey('t-' . $special) ?>><?php $this->msg($special) ?></a></li>
-            <?php	    }
+            <?php       }
         }
 
         if (! empty($this->data['nav_urls']['print']['href'])) { ?>
@@ -400,10 +400,10 @@ echo htmlspecialchars($item['class']) ?>"
         <h5><?php $this->msg('otherlanguages') ?></h5>
         <div class="pBody">
             <ul>
-            <?php	    foreach ($this->data['language_urls'] as $langlink) { ?>
+            <?php       foreach ($this->data['language_urls'] as $langlink) { ?>
                 <li class="<?php echo htmlspecialchars($langlink['class'])?>"><?php
                 ?><a href="<?php echo htmlspecialchars($langlink['href']) ?>"><?php echo $langlink['text'] ?></a></li>
-            <?php	    } ?>
+            <?php       } ?>
             </ul>
         </div>
     </div>
@@ -434,7 +434,7 @@ echo htmlspecialchars($item['class']) ?>"
                     ?> class="active"
                 <?php }
                 ?>><a href="<?php echo htmlspecialchars($val['href']) ?>"<?php echo $this->skin->tooltipAndAccesskey($val['id']) ?>><?php echo htmlspecialchars($val['text']) ?></a></li>
-            <?php	        } ?>
+            <?php           } ?>
             </ul>
         <?php   } else {
            // allow raw HTML block to be defined by extensions

@@ -32,7 +32,7 @@ use Tracker_ReportFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_ReportFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_ReportFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Tracker_ReportFactory&MockObject $report_factory;
 

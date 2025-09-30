@@ -33,7 +33,7 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 * This is only a proxy to access the factory.
 * Maybe there is no need to have this intermediary?
 */
-class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var array

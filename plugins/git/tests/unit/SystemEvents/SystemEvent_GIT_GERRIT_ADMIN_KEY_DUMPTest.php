@@ -37,7 +37,7 @@ use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP&MockObject $event;
     private Git_RemoteServer_GerritServerFactory&MockObject $gerrit_server_factory;

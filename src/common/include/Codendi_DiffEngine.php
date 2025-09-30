@@ -40,7 +40,7 @@
  *
  * @access private
  */
-class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     private $xv;
     private $yv;

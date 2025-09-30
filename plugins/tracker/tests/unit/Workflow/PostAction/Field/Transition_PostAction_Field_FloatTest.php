@@ -26,7 +26,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     use GlobalResponseMock;
 

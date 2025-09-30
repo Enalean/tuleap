@@ -24,7 +24,7 @@ use Tuleap\Statistics\Events\StatisticsRefreshDiskUsage;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 
 #[\Tuleap\Config\ConfigKeyCategory('Statistics')]
-class Statistics_DiskUsageManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Statistics_DiskUsageManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private array $services = [];
 

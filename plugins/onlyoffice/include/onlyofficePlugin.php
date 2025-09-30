@@ -83,7 +83,7 @@ use Tuleap\Request\CollectRoutesEvent;
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class onlyofficePlugin extends Plugin
 {
     private const LOG_IDENTIFIER              = 'onlyoffice_syslog';

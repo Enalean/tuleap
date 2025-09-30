@@ -27,7 +27,7 @@ use Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler;
 * System Event classes
 *
 */
-class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Verbalize the parameters so they are readable and much user friendly in

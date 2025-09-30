@@ -21,7 +21,7 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
-class Statistics_ServicesUsageDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Statistics_ServicesUsageDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private $end_date;
     private $start_date;

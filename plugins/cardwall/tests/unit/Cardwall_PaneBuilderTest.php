@@ -41,7 +41,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Cardwall_PaneBuilderTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Cardwall_PaneBuilderTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Cardwall_CardInCellPresenterBuilder&MockObject $card_in_cell_presenter_builder;
     private Tracker_ArtifactFactory&MockObject $artifact_factory;

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b201902211515_insert_default_docman_settings_values extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201902211515_insert_default_docman_settings_values extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

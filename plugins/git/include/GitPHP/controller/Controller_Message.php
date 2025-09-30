@@ -25,7 +25,7 @@ namespace Tuleap\Git\GitPHP;
  * Message controller class
  *
  */
-class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
+class Controller_Message extends ControllerBase // phpcs:ignore
 {
     public function __construct()
     {
@@ -44,7 +44,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * @return string template filename
      */
     #[\Override]
-    protected function GetTemplate() // @codingStandardsIgnoreLine
+    protected function GetTemplate() // phpcs:ignore
     {
         return 'tuleap/message.tpl';
     }
@@ -59,7 +59,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * @return string action name
      */
     #[\Override]
-    public function GetName($local = false) // @codingStandardsIgnoreLine
+    public function GetName($local = false) // phpcs:ignore
     {
         // This isn't a real controller
         return '';
@@ -73,7 +73,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery() // @codingStandardsIgnoreLine
+    protected function ReadQuery() // phpcs:ignore
     {
     }
 
@@ -85,7 +85,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadHeaders() // @codingStandardsIgnoreLine
+    protected function LoadHeaders() // phpcs:ignore
     {
         if (isset($this->params['statuscode']) && ! empty($this->params['statuscode'])) {
             http_response_code((int) $this->params['statuscode']);
@@ -100,7 +100,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadData() // @codingStandardsIgnoreLine
+    protected function LoadData() // phpcs:ignore
     {
         $this->tpl->assign('message', $this->params['message']);
         if (isset($this->params['error']) && ($this->params['error'])) {
@@ -117,7 +117,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * @param int $code status code
      * @return string header
      */
-    private function StatusCodeHeader($code) // @codingStandardsIgnoreLine
+    private function StatusCodeHeader($code) // phpcs:ignore
     {
         switch ($code) {
             case 500:

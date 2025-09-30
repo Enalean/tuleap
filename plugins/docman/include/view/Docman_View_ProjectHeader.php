@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+/* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /* protected */ #[Override]
     public function _scripts($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore

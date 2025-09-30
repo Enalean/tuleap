@@ -87,7 +87,7 @@ abstract class GitObject
      * @access public
      * @return Project
      */
-    public function GetProject() // @codingStandardsIgnoreLine
+    public function GetProject() // phpcs:ignore
     {
         if ($this->projectReferenced) {
             $this->DereferenceProject();
@@ -104,7 +104,7 @@ abstract class GitObject
      * @access public
      * @return string object hash
      */
-    public function GetHash() // @codingStandardsIgnoreLine
+    public function GetHash() // phpcs:ignore
     {
         return $this->hash;
     }
@@ -118,7 +118,7 @@ abstract class GitObject
      * @throws \Exception on invalid hash
      * @access protected
      */
-    protected function SetHash($hash) // @codingStandardsIgnoreLine
+    protected function SetHash($hash) // phpcs:ignore
     {
         if (! (preg_match('/[0-9a-f]{40}/i', $hash))) {
             throw new \Exception(sprintf(dgettext('gitphp', 'Invalid hash %1$s'), $hash));
@@ -133,7 +133,7 @@ abstract class GitObject
      *
      * @access private
      */
-    private function ReferenceProject() // @codingStandardsIgnoreLine
+    private function ReferenceProject() // phpcs:ignore
     {
         if ($this->projectReferenced) {
             return;
@@ -151,7 +151,7 @@ abstract class GitObject
      *
      * @access private
      */
-    private function DereferenceProject() // @codingStandardsIgnoreLine
+    private function DereferenceProject() // phpcs:ignore
     {
         if (! $this->projectReferenced) {
             return;

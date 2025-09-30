@@ -34,7 +34,7 @@ use Tuleap\Docman\Metadata\CustomMetadataException;
  * * HardCoded metadata: stored as columns of docman tables.
  * * Real metadata: stored as entry of docman_field table.
  */
-class Docman_MetadataFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_MetadataFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string HARDCODED_METADATA_TITLE_LABEL        = 'title';
     public const string HARDCODED_METADATA_DESCRIPTION_LABEL  = 'description';

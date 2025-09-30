@@ -31,7 +31,7 @@ use Tracker_FormElementFactory;
 /**
  * Define an html selectbox field for selectbox fields and text fields provided by the tracker
  */
-final class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_Element_Selectbox // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_Element_Selectbox // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = '', $with_user = true, $desc = '')
     {

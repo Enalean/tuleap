@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201905091615_add_auth_type_on_gerrit_server_when_their_are_void extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201905091615_add_auth_type_on_gerrit_server_when_their_are_void extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

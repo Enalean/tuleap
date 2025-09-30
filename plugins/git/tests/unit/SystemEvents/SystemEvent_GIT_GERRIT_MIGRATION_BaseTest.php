@@ -45,7 +45,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;

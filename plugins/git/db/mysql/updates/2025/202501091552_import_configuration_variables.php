@@ -25,7 +25,7 @@ use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\VariableInteger;
 use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\VariableString;
 use Tuleap\ForgeUpgrade\Bucket\ConfigVariableImportToDb\ImportConfigVariablesToDb;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202501091552_import_configuration_variables extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()

@@ -175,10 +175,10 @@ class Tuleap123Template extends BaseTemplate
         <h3><?php $this->msg('personaltools') ?></h3>
         <div class="pBody">
             <ul<?php $this->html('userlangattributes') ?>>
-        <?php	    foreach ($this->getPersonalTools() as $key => $item) { ?>
+        <?php       foreach ($this->getPersonalTools() as $key => $item) { ?>
             <?php echo $this->makeListItem($key, $item); ?>
 
-        <?php	    } ?>
+        <?php       } ?>
             </ul>
         </div>
     </div>
@@ -227,7 +227,7 @@ class Tuleap123Template extends BaseTemplate
             }
             ?>
     </ul>
-        <?php	}
+        <?php   }
         echo $footerEnd;
         ?>
 
@@ -383,7 +383,7 @@ class Tuleap123Template extends BaseTemplate
             } ?>
 
             </ul>
-        <?php	    $this->renderAfterPortlet('cactions'); ?>
+        <?php       $this->renderAfterPortlet('cactions'); ?>
         </div>
     </div>
         <?php
@@ -406,7 +406,7 @@ class Tuleap123Template extends BaseTemplate
         wfRunHooks('SkinTemplateToolboxEnd', [&$this, true]);
         ?>
             </ul>
-        <?php	    $this->renderAfterPortlet('tb'); ?>
+        <?php       $this->renderAfterPortlet('tb'); ?>
         </div>
     </div>
         <?php
@@ -420,12 +420,12 @@ class Tuleap123Template extends BaseTemplate
         <h5<?php $this->html('userlangattributes') ?>><?php $this->msg('otherlanguages') ?></h5>
         <div class="pBody">
             <ul>
-            <?php	    foreach ($this->data['language_urls'] as $key => $langlink) { ?>
+            <?php       foreach ($this->data['language_urls'] as $key => $langlink) { ?>
                 <?php echo $this->makeListItem($key, $langlink); ?>
 
-            <?php	    } ?>
+            <?php       } ?>
             </ul>
-            <?php	    $this->renderAfterPortlet('lang'); ?>
+            <?php       $this->renderAfterPortlet('lang'); ?>
         </div>
     </div>
             <?php
@@ -454,7 +454,7 @@ class Tuleap123Template extends BaseTemplate
             <?php             foreach ($cont as $key => $val) { ?>
                 <?php echo $this->makeListItem($key, $val); ?>
 
-            <?php	        } ?>
+            <?php           } ?>
             </ul>
         <?php   } else {
             // allow raw HTML block to be defined by extensions

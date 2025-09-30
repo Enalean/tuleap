@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-class b201903121003_add_upload_version_table_approval_column extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201903121003_add_upload_version_table_approval_column extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

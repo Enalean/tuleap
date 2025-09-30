@@ -36,7 +36,7 @@ use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_GIT_REPO_DELETETest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class SystemEvent_GIT_REPO_DELETETest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private GitRepository&MockObject $repository;
     private UgroupsToNotifyDao&MockObject $ugroups_to_notify_dao;

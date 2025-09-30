@@ -25,7 +25,7 @@ use Tuleap\Date\DateHelper;
 /**
  * HTML rendering for special 'obsolescence_date' metadata
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_MetadataHtmlObsolescence extends \Docman_MetadataHtml
 {
     #[\Override]

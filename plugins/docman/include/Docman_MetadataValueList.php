@@ -27,7 +27,7 @@
  *
  * Docman_MetadataValueList may have serveral values.
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_MetadataValueList extends \Docman_MetadataValue
 {
     public $listOfValues;

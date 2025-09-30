@@ -25,7 +25,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SVN_TokenHandlerTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class SVN_TokenHandlerTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private const VALID_TOKEN = 'valid_token';
     // crypt(self::VALID_TOKEN, '$6$rounds=20000$16$')

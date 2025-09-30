@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202011161327_add_is_commit_reference_needded_column extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b202011161327_add_is_commit_reference_needded_column extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description(): string
     {

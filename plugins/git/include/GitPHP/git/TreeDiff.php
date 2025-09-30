@@ -124,7 +124,7 @@ class TreeDiff implements \Iterator, \Countable
      *
      * @access private
      */
-    private function ReadData() // @codingStandardsIgnoreLine
+    private function ReadData() // phpcs:ignore
     {
         $this->dataRead = true;
 
@@ -173,7 +173,7 @@ class TreeDiff implements \Iterator, \Countable
      * @access public
      * @return string from hash
      */
-    public function GetFromHash() // @codingStandardsIgnoreLine
+    public function GetFromHash() // phpcs:ignore
     {
         return $this->fromHash;
     }
@@ -186,7 +186,7 @@ class TreeDiff implements \Iterator, \Countable
      * @access public
      * @return string to hash
      */
-    public function GetToHash() // @codingStandardsIgnoreLine
+    public function GetToHash() // phpcs:ignore
     {
         return $this->toHash;
     }
@@ -199,7 +199,7 @@ class TreeDiff implements \Iterator, \Countable
      * @access public
      * @return bool true if renames will be detected
      */
-    public function GetRenames() // @codingStandardsIgnoreLine
+    public function GetRenames() // phpcs:ignore
     {
         return $this->renames;
     }
@@ -212,7 +212,7 @@ class TreeDiff implements \Iterator, \Countable
      * @access public
      * @param bool $renames whether to detect renames
      */
-    public function SetRenames($renames) // @codingStandardsIgnoreLine
+    public function SetRenames($renames) // phpcs:ignore
     {
         if ($renames == $this->renames) {
             return;

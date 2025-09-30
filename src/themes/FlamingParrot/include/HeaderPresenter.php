@@ -20,7 +20,7 @@
 
 use Tuleap\OpenGraph\OpenGraphPresenter;
 
-class FlamingParrot_HeaderPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class FlamingParrot_HeaderPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var string */
     private $title;

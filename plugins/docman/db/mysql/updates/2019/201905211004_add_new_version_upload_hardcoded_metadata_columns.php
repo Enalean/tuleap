@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-class b201905211004_add_new_version_upload_hardcoded_metadata_columns extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201905211004_add_new_version_upload_hardcoded_metadata_columns extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

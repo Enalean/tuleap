@@ -19,7 +19,7 @@
  *
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202202211726_add_filename_index extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

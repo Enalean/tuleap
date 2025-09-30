@@ -28,7 +28,7 @@ use Tuleap\Project\Label\RemoveLabel;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class labelPlugin extends Plugin
 {
     public function __construct($id)

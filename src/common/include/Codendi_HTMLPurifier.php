@@ -36,7 +36,7 @@
  * </pre>
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Codendi_HTMLPurifier
 {
     public const CONFIG_CONVERT_HTML                  = 0;

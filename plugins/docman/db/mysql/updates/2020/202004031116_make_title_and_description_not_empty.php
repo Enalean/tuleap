@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202004031116_make_title_and_description_not_empty extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b202004031116_make_title_and_description_not_empty extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description(): string
     {

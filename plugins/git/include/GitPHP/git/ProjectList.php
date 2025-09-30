@@ -54,7 +54,7 @@ class ProjectList
      * @return mixed instance of projectlist
      * @throws \Exception if projectlist has not been instantiated yet
      */
-    public static function GetInstance() // @codingStandardsIgnoreLine
+    public static function GetInstance() // phpcs:ignore
     {
         return self::$instance;
     }
@@ -67,7 +67,7 @@ class ProjectList
      * @static
      * @throws \Exception
      */
-    public static function Instantiate(\GitRepository $repository) // @codingStandardsIgnoreLine
+    public static function Instantiate(\GitRepository $repository) // phpcs:ignore
     {
         if (self::$instance !== null) {
             return;

@@ -19,7 +19,7 @@
  *
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202202141115_add_writers_allowed_to_update extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
