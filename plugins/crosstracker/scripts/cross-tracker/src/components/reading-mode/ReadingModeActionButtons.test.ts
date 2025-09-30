@@ -18,11 +18,10 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import ExportXLSXButton from "../ExportXLSXButton.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { EMITTER, IS_EXPORT_ALLOWED, IS_USER_ADMIN } from "../../injection-symbols";
+import { EMITTER, IS_USER_ADMIN } from "../../injection-symbols";
 import type { Query } from "../../type";
 import ReadingModeActionButtons from "./ReadingModeActionButtons.vue";
 import type { Emitter } from "mitt";
@@ -32,8 +31,7 @@ import { EDIT_QUERY_EVENT } from "../../helpers/widget-events";
 import DeleteQueryButton from "./DeleteQueryButton.vue";
 
 describe("ReadingModeActionButtons", () => {
-    let is_xlsx_export_allowed: boolean,
-        current_query: Query,
+    let current_query: Query,
         emitter: Emitter<Events>,
         is_user_admin: boolean,
         dispatched_edit_query_events: EditQueryEvent[];
@@ -47,7 +45,6 @@ describe("ReadingModeActionButtons", () => {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
-                    [IS_EXPORT_ALLOWED.valueOf()]: is_xlsx_export_allowed,
                     [EMITTER.valueOf()]: emitter,
                     [IS_USER_ADMIN.valueOf()]: is_user_admin,
                 },
@@ -76,32 +73,19 @@ describe("ReadingModeActionButtons", () => {
         emitter.off(EDIT_QUERY_EVENT, registerEditQueryEvent);
     });
 
-    describe(`render XLSX button`, () => {
-        it(`does not show the XLSX export button when told not to`, () => {
-            is_xlsx_export_allowed = false;
+    describe("Render 'Edit' button", () => {
+        it(`shows the 'Edit' button if the user is admin`, () => {
+            is_user_admin = true;
             const wrapper = getWrapper();
-            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(false);
+            expect(wrapper.find('[data-test="reading-mode-action-edit-button"]').exists()).toBe(
+                true,
+            );
         });
-
-        it(`shows the XLSX export button otherwise`, () => {
-            is_xlsx_export_allowed = true;
+        it(`does not show the 'Edit' button if the user is not admin`, () => {
             const wrapper = getWrapper();
-            expect(wrapper.findComponent(ExportXLSXButton).exists()).toBe(true);
-        });
-        describe("Render 'Edit' button", () => {
-            it(`shows the 'Edit' button if the user is admin`, () => {
-                is_user_admin = true;
-                const wrapper = getWrapper();
-                expect(wrapper.find('[data-test="reading-mode-action-edit-button"]').exists()).toBe(
-                    true,
-                );
-            });
-            it(`does not show the 'Edit' button if the user is not admin`, () => {
-                const wrapper = getWrapper();
-                expect(wrapper.find('[data-test="reading-mode-action-edit-button"]').exists()).toBe(
-                    false,
-                );
-            });
+            expect(wrapper.find('[data-test="reading-mode-action-edit-button"]').exists()).toBe(
+                false,
+            );
         });
     });
     describe("render delete button", () => {

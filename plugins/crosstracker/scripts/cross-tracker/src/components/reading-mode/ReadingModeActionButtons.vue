@@ -31,15 +31,11 @@
             </button>
         </div>
         <delete-query-button v-if="is_user_admin" v-bind:current_query="current_query" />
-        <div v-if="is_xlsx_export_allowed" class="export-button">
-            <export-x-l-s-x-button v-bind:current_query="current_query" />
-        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import ExportXLSXButton from "../ExportXLSXButton.vue";
-import { EMITTER, IS_EXPORT_ALLOWED, IS_USER_ADMIN } from "../../injection-symbols";
+import { EMITTER, IS_USER_ADMIN } from "../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Query } from "../../type";
 import { EDIT_QUERY_EVENT } from "../../helpers/widget-events";
@@ -49,7 +45,6 @@ defineProps<{
     current_query: Query;
 }>();
 
-const is_xlsx_export_allowed = strictInject(IS_EXPORT_ALLOWED);
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
 </script>
