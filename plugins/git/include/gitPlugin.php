@@ -21,6 +21,7 @@
  */
 
 use Cocur\Slugify\Slugify;
+use Lcobucci\Clock\SystemClock;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
@@ -2479,7 +2480,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 new UserDao(),
                 \UserManager::instance(),
                 new PasswordVerifier($password_handler),
-                new PasswordExpirationChecker(),
+                new PasswordExpirationChecker(SystemClock::fromSystemTimezone()),
                 $password_handler
             ),
             new ReplicationHTTPUserAuthenticator(

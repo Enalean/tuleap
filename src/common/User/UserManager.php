@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Lcobucci\Clock\SystemClock;
 use Tuleap\Config\ConfigKey;
 use Tuleap\CookieManager;
 use Tuleap\Cryptography\ConcealedString;
@@ -606,7 +607,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     public function login(string $name, ConcealedString $pwd): PFUser
     {
         try {
-            $password_expiration_checker = new PasswordExpirationChecker();
+            $password_expiration_checker = new PasswordExpirationChecker(SystemClock::fromSystemTimezone());
             $password_handler            = PasswordHandlerFactory::getPasswordHandler();
             $login_manager               = new User_LoginManager(
                 EventManager::instance(),
@@ -624,7 +625,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
 
             $this->openWebSession($user);
             $password_expiration_checker->checkPasswordLifetime($user);
-            $password_expiration_checker->warnUserAboutPasswordExpiration($user);
+            $password_expiration_checker->warnUserAboutPasswordExpiration($GLOBALS['Response'], $user);
             $this->warnUserAboutAuthenticationAttempts($user);
             $this->warnUserAboutAdminReadOnlyPermission($user);
 

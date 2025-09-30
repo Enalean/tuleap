@@ -19,6 +19,7 @@
 
 namespace Tuleap\REST;
 
+use Lcobucci\Clock\SystemClock;
 use Luracast\Restler\Data\ApiMethodInfo;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
@@ -139,7 +140,7 @@ class UserManager
                 new \UserDao(),
                 $user_manager,
                 new PasswordVerifier($password_handler),
-                new PasswordExpirationChecker(),
+                new PasswordExpirationChecker(SystemClock::fromSystemTimezone()),
                 $password_handler
             ),
             new AccessKeyHeaderExtractor(new PrefixedSplitTokenSerializer(new PrefixAccessKey()), $_SERVER),
@@ -218,7 +219,7 @@ class UserManager
     {
         $current_user = $this->user_manager->getCurrentUser();
         if (! $current_user->isAnonymous()) {
-            $password_expiration_checker = new PasswordExpirationChecker();
+            $password_expiration_checker = new PasswordExpirationChecker(SystemClock::fromSystemTimezone());
             $password_expiration_checker->checkPasswordLifetime($current_user);
         }
         return $current_user;

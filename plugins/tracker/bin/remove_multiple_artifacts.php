@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Lcobucci\Clock\SystemClock;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionContext;
 use Tuleap\User\Password\PasswordExpirationChecker;
@@ -64,7 +65,7 @@ $login_manager = new User_LoginManager(
     new UserDao(),
     UserManager::instance(),
     new PasswordVerifier($password_handler),
-    new PasswordExpirationChecker(),
+    new PasswordExpirationChecker(SystemClock::fromSystemTimezone()),
     PasswordHandlerFactory::getPasswordHandler()
 );
 

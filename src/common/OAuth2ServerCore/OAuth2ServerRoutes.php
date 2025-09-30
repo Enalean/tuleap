@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2ServerCore;
 use DateInterval;
 use EventManager;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
@@ -130,7 +131,7 @@ final class OAuth2ServerRoutes
                     new \UserDao(),
                     $user_manager,
                     new \Tuleap\User\PasswordVerifier($password_handler),
-                    new PasswordExpirationChecker(),
+                    new PasswordExpirationChecker(SystemClock::fromSystemTimezone()),
                     $password_handler
                 )
             )

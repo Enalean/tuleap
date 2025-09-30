@@ -19,6 +19,7 @@
 
 namespace Tuleap\Token\REST\v1;
 
+use Lcobucci\Clock\SystemClock;
 use Luracast\Restler\RestException;
 use Rest_Exception_InvalidTokenException;
 use Tuleap\Cryptography\ConcealedString;
@@ -75,7 +76,7 @@ class TokenResource
                 new \UserDao(),
                 $this->user_manager,
                 new PasswordVerifier($password_handler),
-                new PasswordExpirationChecker(),
+                new PasswordExpirationChecker(SystemClock::fromSystemTimezone()),
                 $password_handler
             );
 

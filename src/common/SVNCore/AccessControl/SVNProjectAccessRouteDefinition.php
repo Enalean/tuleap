@@ -25,6 +25,7 @@ namespace Tuleap\SVNCore\AccessControl;
 
 use FastRoute\RouteCollector;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Lcobucci\Clock\SystemClock;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -101,7 +102,7 @@ final class SVNProjectAccessRouteDefinition
                         new \UserDao(),
                         $user_manager,
                         new PasswordVerifier($password_handler),
-                        new PasswordExpirationChecker(),
+                        new PasswordExpirationChecker(SystemClock::fromSystemTimezone()),
                         $password_handler
                     ),
                     $logger

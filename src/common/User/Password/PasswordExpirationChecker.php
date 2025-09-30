@@ -21,13 +21,19 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Password;
 
+use DateTimeImmutable;
 use Feedback;
 use ForgeConfig;
 use PFUser;
+use Psr\Clock\ClockInterface;
+use Tuleap\Config\ConfigDateValueValidator;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyHelp;
 use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Date\DateHelper;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\ConfigKeyValueValidator;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Option\Option;
 
 readonly class PasswordExpirationChecker
 {
@@ -36,7 +42,17 @@ readonly class PasswordExpirationChecker
     #[ConfigKeyInt(0)]
     public const string PASSWORD_LIFETIME = 'sys_password_lifetime';
 
+    #[ConfigKey('Password expiration date')]
+    #[ConfigKeyHelp('Password not changed after this date are considered expired; no restriction by default')]
+    #[ConfigKeyString('')]
+    #[ConfigKeyValueValidator(ConfigDateValueValidator::class)]
+    public const string PASSWORD_EXPIRATION_DATE = 'sys_password_expiration_date';
+
     private const int DAYS_FOR_EXPIRATION_WARN = 10;
+
+    public function __construct(private ClockInterface $clock)
+    {
+    }
 
     /**
      *
@@ -49,55 +65,88 @@ readonly class PasswordExpirationChecker
         }
     }
 
-    public function warnUserAboutPasswordExpiration(PFUser $user): void
+    public function warnUserAboutPasswordExpiration(BaseLayout $layout, PFUser $user): void
     {
-        $password_lifetime_in_seconds = $this->getPasswordLifetimeInSeconds();
-        if ($password_lifetime_in_seconds > 0) {
-            $expiration_date = $this->getPasswordExpirationDate();
-            if ($expiration_date === false || $expiration_date <= 0) {
-                return;
-            }
-            $warning_date = $expiration_date + DateHelper::SECONDS_IN_A_DAY * self::DAYS_FOR_EXPIRATION_WARN;
-            if ($user->getLastPwdUpdate() < $warning_date) {
-                $expiration_delay = (int) ceil(($user->getLastPwdUpdate() - $expiration_date) / ( DateHelper::SECONDS_IN_A_DAY ));
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::WARN,
-                    sprintf(
-                        ngettext('Your password will expire in %d day.', 'Your password will expire in %d days.', $expiration_delay),
-                        $expiration_delay
-                    )
-                );
-            }
-        }
+        $this->getPasswordExpirationDate($user)
+            ->apply(
+                function (DateTimeImmutable $expiration_date) use ($layout, $user): void {
+                    $remaining_time = (int) $this->clock->now()->diff($expiration_date)->days;
+                    if ($remaining_time <= self::DAYS_FOR_EXPIRATION_WARN) {
+                        $layout->addFeedback(
+                            Feedback::WARN,
+                            sprintf(
+                                ngettext('Your password will expire in %d day.', 'Your password will expire in %d days.', $remaining_time),
+                                $remaining_time
+                            )
+                        );
+                    }
+                }
+            );
     }
 
     private function userPasswordHasExpired(PFUser $user): bool
     {
-        $expiration_date = $this->getPasswordExpirationDate();
-        if ($expiration_date !== false && $expiration_date > 0 && $user->getLastPwdUpdate() < $expiration_date) {
-            return true;
-        }
-        return false;
-    }
-
-    private function getPasswordExpirationDate(): int|false
-    {
-        $password_lifetime = $this->getPasswordLifetimeInSeconds();
-        if ($password_lifetime > 0) {
-            return $_SERVER['REQUEST_TIME'] - $password_lifetime;
-        }
-        return false;
+        return $this->getPasswordExpirationDate($user)
+            ->mapOr(
+                fn (DateTimeImmutable $expiration_date): bool => $this->clock->now() > $expiration_date,
+                false
+            );
     }
 
     /**
-     * @return int<0,max>
+     * @return Option<DateTimeImmutable>
      */
-    private function getPasswordLifetimeInSeconds(): int
+    private function getPasswordExpirationDate(PFUser $user): Option
+    {
+        return $this->getPasswordLifetimeExpirationDate($user)
+            ->mapOr(
+                /**
+                 * @param DateTimeImmutable $lifetime_expiration_date
+                 * @return Option<DateTimeImmutable>
+                 */
+                function (DateTimeImmutable $lifetime_expiration_date): Option {
+                    return $this->getPasswordHardExpirationDate()
+                        ->mapOr(
+                        /**
+                         * @return Option<DateTimeImmutable>
+                         */
+                            fn (DateTimeImmutable $hard_expiration_date): Option => Option::fromValue(min($lifetime_expiration_date, $hard_expiration_date)),
+                            Option::fromValue($lifetime_expiration_date)
+                        );
+                },
+                $this->getPasswordHardExpirationDate()
+            );
+    }
+
+    /**
+     * @return Option<DateTimeImmutable>
+     */
+    private function getPasswordLifetimeExpirationDate(PFUser $user): Option
     {
         $password_lifetime_in_days = ForgeConfig::getInt(self::PASSWORD_LIFETIME);
         if ($password_lifetime_in_days > 0) {
-            return DateHelper::SECONDS_IN_A_DAY * $password_lifetime_in_days;
+            $last_password_update_date = DateTimeImmutable::createFromTimestamp($user->getLastPwdUpdate());
+            $password_expiration_date  = $last_password_update_date->add(new \DateInterval('P' . $password_lifetime_in_days . 'D'));
+            assert($password_expiration_date instanceof DateTimeImmutable);
+            return Option::fromValue($password_expiration_date);
         }
-        return 0;
+
+        return Option::nothing(DateTimeImmutable::class);
+    }
+
+    /**
+     * @return Option<DateTimeImmutable>
+     */
+    private function getPasswordHardExpirationDate(): Option
+    {
+        $hard_expiration_date = DateTimeImmutable::createFromFormat(
+            DateTimeImmutable::ATOM,
+            ForgeConfig::get(self::PASSWORD_EXPIRATION_DATE, '')
+        );
+        if ($hard_expiration_date !== false) {
+            return Option::fromValue($hard_expiration_date);
+        }
+
+        return Option::nothing(DateTimeImmutable::class);
     }
 }
