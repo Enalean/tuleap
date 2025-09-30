@@ -25,7 +25,7 @@
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\SystemEvent\RootPostEventsActionsEvent;
 
-class SystemEventProcessor_Root extends SystemEventProcessor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEventProcessor_Root extends SystemEventProcessor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         SystemEventProcess $process,

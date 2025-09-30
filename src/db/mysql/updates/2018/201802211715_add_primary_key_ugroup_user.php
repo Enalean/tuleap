@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201802211715_add_primary_key_ugroup_user extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201802211715_add_primary_key_ugroup_user extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

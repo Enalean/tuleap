@@ -26,7 +26,7 @@
  *
  * There is no type check.
  */
-class Rule_WhiteList extends \Rule_Comparator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_WhiteList extends \Rule_Comparator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function isValid($val)

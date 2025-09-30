@@ -24,7 +24,7 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
  * Set the date of a field
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Numeric
 {
     public const XML_TAG_NAME = 'postaction_field_float';

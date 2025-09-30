@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202202091517_forgeconfig_value_as_text extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

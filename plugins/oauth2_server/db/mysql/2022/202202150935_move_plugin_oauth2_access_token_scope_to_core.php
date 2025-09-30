@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202202150935_move_plugin_oauth2_access_token_scope_to_core extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

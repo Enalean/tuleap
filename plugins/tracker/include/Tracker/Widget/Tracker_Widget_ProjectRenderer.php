@@ -29,7 +29,7 @@ use Tuleap\Tracker\Widget\WidgetRendererDao;
  *
  * Personal tracker renderer
  */
-class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const ID = 'plugin_tracker_projectrenderer';
     private Tracker_Report_RendererFactory $renderer_factory;

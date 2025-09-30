@@ -31,7 +31,7 @@ use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_CriteriaTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_Field_CriteriaTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testItSetsCriteriaValueFromXML(): void
     {

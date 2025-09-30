@@ -24,7 +24,7 @@
 /**
  * Check that value is a possible FTP(S) URI
  */
-class Valid_FTPURI extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Valid_FTPURI extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const URI_REGEXP = '/^ftps?:\/\/.+/i';
     #[\Override]

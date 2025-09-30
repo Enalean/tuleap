@@ -28,7 +28,7 @@ use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
-class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string NAME = 'initial_effort';
 

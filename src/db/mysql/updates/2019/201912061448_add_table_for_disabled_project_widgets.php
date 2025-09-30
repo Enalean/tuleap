@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-class b201912061448_add_table_for_disabled_project_widgets extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201912061448_add_table_for_disabled_project_widgets extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description(): string
     {

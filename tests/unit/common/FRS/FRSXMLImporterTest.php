@@ -39,7 +39,7 @@ class FRSPackageFactoryMock extends FRSPackageFactory // phpcs:ignore PSR1.Class
 }
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses,Squiz.Classes.ValidClassName.NotCamelCaps
+class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {

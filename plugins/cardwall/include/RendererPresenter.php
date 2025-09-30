@@ -24,7 +24,7 @@ use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 /**
  * The content of the renderer
  */
-class Cardwall_RendererPresenter extends Cardwall_BoardPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Cardwall_RendererPresenter extends Cardwall_BoardPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var SelectboxField

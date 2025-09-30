@@ -23,7 +23,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * Base class to manage action that can be done on a workflow
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 abstract class Tracker_Workflow_Action
 {
     /** @var Tracker */

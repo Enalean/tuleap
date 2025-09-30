@@ -30,7 +30,7 @@ use Tuleap\Docman\Item\OtherDocument;
 /**
  * @implements ItemVisitor<bool>
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_ActionsDeleteVisitor implements ItemVisitor
 {
     protected $user;

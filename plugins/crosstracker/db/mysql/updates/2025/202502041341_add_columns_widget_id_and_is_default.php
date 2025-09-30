@@ -24,7 +24,7 @@ use Tuleap\ForgeUpgrade\Bucket;
 use Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException;
 use function Psl\Str\replace;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202502041341_add_columns_widget_id_and_is_default extends Bucket
 {
     public function description(): string

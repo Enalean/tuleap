@@ -24,7 +24,7 @@ require_once('HTML_Element_Option.php');
 /**
  * Define a html selectbox
  */
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class HTML_Element_Selectbox extends HTML_Element
 {
     /**

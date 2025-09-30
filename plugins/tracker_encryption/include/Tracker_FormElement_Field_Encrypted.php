@@ -29,7 +29,7 @@ use Tuleap\TrackerEncryption\ChangesetValue;
 use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
-class Tracker_FormElement_Field_Encrypted extends TrackerField implements TrackerFormElementExternalField // @codingStandardsIgnoreLine
+class Tracker_FormElement_Field_Encrypted extends TrackerField implements TrackerFormElementExternalField // phpcs:ignore
 {
     public const TYPE = 'Encrypted';
 

@@ -24,7 +24,7 @@
 /**
  * Check that value is a decimal integer.
  */
-class Valid_Int extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Valid_Int extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function validate($value)

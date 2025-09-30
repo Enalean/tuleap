@@ -26,7 +26,7 @@ use Tuleap\Git\GitPHP\MessageException;
 use Tuleap\Git\GitPHP\ProjectList;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 
-class GitViews_GitPhpViewer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class GitViews_GitPhpViewer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const array GLOSSIFIED_GITPHP_ACTIONS = [
         'blob',

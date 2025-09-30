@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201804051645_add_missing_index_in_table_ugroup extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201804051645_add_missing_index_in_table_ugroup extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202505021720_add_document_index_expiration_date extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

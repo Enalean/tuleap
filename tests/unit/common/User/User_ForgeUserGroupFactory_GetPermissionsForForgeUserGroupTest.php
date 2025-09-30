@@ -33,7 +33,7 @@ use User_ForgeUserGroupPermission_UserManagement;
 use User_ForgeUserGroupPermissionsDao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var User_ForgeUserGroupPermissionsDao&\PHPUnit\Framework\MockObject\MockObject

@@ -31,7 +31,7 @@ use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Artifact $artifact;
     private SelectboxField $trigger_field_task;

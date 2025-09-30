@@ -22,7 +22,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Layout\JavascriptAssetGeneric;
 
-class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string ACTION_UPDATE_CONFIG                      = 'update_config';
     public const string ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = 'update-big-objects-allowed-projects';

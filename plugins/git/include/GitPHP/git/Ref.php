@@ -87,7 +87,7 @@ abstract class Ref extends GitObject
      * @throws GitRepoRefNotFoundException
      */
     #[\Override]
-    public function GetHash() // @codingStandardsIgnoreLine
+    public function GetHash() // phpcs:ignore
     {
         if (empty($this->hash)) {
             $this->FindHash();
@@ -104,7 +104,7 @@ abstract class Ref extends GitObject
      * @access protected
      * @throws GitRepoRefNotFoundException if hash is not found
      */
-    protected function FindHash() // @codingStandardsIgnoreLine
+    protected function FindHash() // phpcs:ignore
     {
         $exe    = new GitExe($this->GetProject());
         $args   = [];
@@ -129,7 +129,7 @@ abstract class Ref extends GitObject
      * @access public
      * @return string ref name
      */
-    public function GetName() // @codingStandardsIgnoreLine
+    public function GetName() // phpcs:ignore
     {
         return $this->refName;
     }
@@ -142,7 +142,7 @@ abstract class Ref extends GitObject
      * @access public
      * @return string ref directory
      */
-    public function GetDirectory() // @codingStandardsIgnoreLine
+    public function GetDirectory() // phpcs:ignore
     {
         return $this->refDir;
     }
@@ -155,7 +155,7 @@ abstract class Ref extends GitObject
      * @access public
      * @return string ref path
      */
-    public function GetRefPath() // @codingStandardsIgnoreLine
+    public function GetRefPath() // phpcs:ignore
     {
         return 'refs/' . $this->refDir . '/' . $this->refName;
     }
@@ -168,7 +168,7 @@ abstract class Ref extends GitObject
      * @access public
      * @return string full ref path
      */
-    public function GetFullPath() // @codingStandardsIgnoreLine
+    public function GetFullPath() // phpcs:ignore
     {
         return $this->GetProject()->GetPath() . '/' . $this->GetRefPath();
     }

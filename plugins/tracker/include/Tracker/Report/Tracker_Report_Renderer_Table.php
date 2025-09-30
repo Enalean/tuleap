@@ -48,7 +48,7 @@ use Tuleap\Tracker\Report\Renderer\Table\Sort\SortWithIntegrityChecked;
 use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 use Tuleap\Tracker\Tracker;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable
 {
     public const EXPORT_LIGHT = 1;

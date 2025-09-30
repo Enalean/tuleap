@@ -20,7 +20,7 @@
 
 use Tuleap\User\UserGroup\NameTranslator;
 
-class User_ForgeUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class User_ForgeUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     private $id;
 

@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
  *
  * In other words it's what you need when you only want to have one single card
  */
-class Cardwall_SingleCard // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Cardwall_SingleCard // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var Cardwall_CardInCellPresenter */
     private $card_in_cell_presenter;

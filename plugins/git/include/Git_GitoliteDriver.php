@@ -37,7 +37,7 @@ use Tuleap\Git\PathJoinUtil;
  * And if you don't push, you will stay in Gitolite admin directory!
  *
  */
-class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_GitoliteDriver //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var \Psr\Log\LoggerInterface

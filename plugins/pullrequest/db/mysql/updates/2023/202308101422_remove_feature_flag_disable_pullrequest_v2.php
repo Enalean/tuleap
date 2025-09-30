@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202308101422_remove_feature_flag_disable_pullrequest_v2 extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

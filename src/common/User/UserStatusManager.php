@@ -19,7 +19,7 @@
 
 use Tuleap\Config\ConfigKey;
 
-class User_UserStatusManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class User_UserStatusManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[ConfigKey('Does the user registration needs to be approved by a site administrator (1) or not (0)')]
     public const CONFIG_USER_REGISTRATION_APPROVAL = 'sys_user_approval';

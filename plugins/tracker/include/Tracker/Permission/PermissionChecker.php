@@ -24,7 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Tracker;
 use Tuleap\User\RetrieveUserById;
 
-class Tracker_Permission_PermissionChecker // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Permission_PermissionChecker // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         private readonly RetrieveUserById $user_manager,

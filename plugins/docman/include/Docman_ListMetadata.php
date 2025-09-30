@@ -32,7 +32,7 @@
  * - a list of values the user selected, accessible by regular setValue() and
  *   getValue().
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_ListMetadata extends \Docman_Metadata
 {
     public $listOfValue;

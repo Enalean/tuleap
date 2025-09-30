@@ -37,7 +37,7 @@ use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
-abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     protected int $tracker_id;
     protected Tracker $tracker;

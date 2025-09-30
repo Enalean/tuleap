@@ -23,7 +23,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Tracker;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Cardwall_CardPresenter implements Tracker_CardPresenter
 {
     /**

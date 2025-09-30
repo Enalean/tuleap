@@ -28,7 +28,7 @@
  * It is intended that this class be customized via inheritance,
  * to obtain fancier outputs.
  */
-class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Number of leading context "lines" to preserve.

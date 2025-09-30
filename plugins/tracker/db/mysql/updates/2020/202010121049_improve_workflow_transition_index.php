@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202010121049_improve_workflow_transition_index extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class b202010121049_improve_workflow_transition_index extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function description(): string
     {

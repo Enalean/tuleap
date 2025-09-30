@@ -27,7 +27,7 @@ use Tuleap\Git\CommonMarkExtension\LinkToGitFileExtension;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 
-class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
+class Controller_Tree extends ControllerBase // phpcs:ignore
 {
     public const string README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
 
@@ -48,7 +48,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
      * @return string template filename
      */
     #[\Override]
-    protected function GetTemplate() // @codingStandardsIgnoreLine
+    protected function GetTemplate() // phpcs:ignore
     {
         return 'tuleap/tree.tpl';
     }
@@ -63,7 +63,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
      * @return string action name
      */
     #[\Override]
-    public function GetName($local = false) // @codingStandardsIgnoreLine
+    public function GetName($local = false) // phpcs:ignore
     {
         if ($local) {
             return dgettext('gitphp', 'tree');
@@ -79,7 +79,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery() // @codingStandardsIgnoreLine
+    protected function ReadQuery() // phpcs:ignore
     {
         if (isset($_GET['f'])) {
             $this->params['file'] = $_GET['f'];
@@ -104,7 +104,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadData() // @codingStandardsIgnoreLine
+    protected function LoadData() // phpcs:ignore
     {
         if (! isset($this->params['hashbase'])) {
             // TODO: write a lookup for hash (tree) -> hashbase (commithash) and remove this

@@ -31,7 +31,7 @@ use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
-class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const LOG_FILE = 'tv3_tv5_migration_syslog';
 

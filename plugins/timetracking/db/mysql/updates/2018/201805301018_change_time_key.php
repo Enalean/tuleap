@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class b201805301018_change_time_key extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201805301018_change_time_key extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

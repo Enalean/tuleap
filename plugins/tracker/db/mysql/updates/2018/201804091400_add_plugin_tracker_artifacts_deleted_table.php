@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201804091400_add_plugin_tracker_artifacts_deleted_table  extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201804091400_add_plugin_tracker_artifacts_deleted_table  extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

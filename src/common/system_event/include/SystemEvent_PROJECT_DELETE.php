@@ -21,7 +21,7 @@
  *
  */
 
-class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Verbalize the parameters so they are readable and much user friendly in

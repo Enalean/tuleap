@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../../constants.php';
  * Provides the Cardwall_OnTop configured field for an artifact, and fallbacks on the status field if
  * there is no mapping
  */
-class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever

@@ -109,7 +109,7 @@ use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class pullrequestPlugin extends Plugin
 {
     public const PR_REFERENCE_KEYWORD          = 'pr';

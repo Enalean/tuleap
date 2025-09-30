@@ -21,7 +21,7 @@
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
-class SystemEvent_GIT_USER_RENAME extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_GIT_USER_RENAME extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string NAME = 'GIT_USER_RENAME';
 

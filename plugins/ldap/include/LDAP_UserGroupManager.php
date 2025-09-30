@@ -25,7 +25,7 @@ use Tuleap\User\UserNameNormalizer;
 /**
  * Manage interaction between an LDAP group and Codendi user_group.
  */
-class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class LDAP_UserGroupManager extends LDAP_GroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     private $project_id;
 

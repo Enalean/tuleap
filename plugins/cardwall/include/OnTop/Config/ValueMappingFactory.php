@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
 
 require_once dirname(__FILE__) . '/../../constants.php';
 
-class Cardwall_OnTop_Config_ValueMappingFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Cardwall_OnTop_Config_ValueMappingFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         private readonly Tracker_FormElementFactory $element_factory,

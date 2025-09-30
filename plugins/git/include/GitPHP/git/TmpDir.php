@@ -73,7 +73,7 @@ class TmpDir
      * @static
      * @return mixed instance of tmpdir class
      */
-    public static function GetInstance() // @codingStandardsIgnoreLine
+    public static function GetInstance() // phpcs:ignore
     {
         if (! self::$instance) {
             self::$instance = new TmpDir();
@@ -90,7 +90,7 @@ class TmpDir
      * @static
      * @return string temp dir
      */
-    public static function SystemTmpDir() // @codingStandardsIgnoreLine
+    public static function SystemTmpDir() // phpcs:ignore
     {
         $tmpdir = sys_get_temp_dir();
 
@@ -148,7 +148,7 @@ class TmpDir
      *
      * @return string temp dir
      */
-    public function GetDir() // @codingStandardsIgnoreLine
+    public function GetDir() // phpcs:ignore
     {
         return $this->dir;
     }
@@ -160,7 +160,7 @@ class TmpDir
      *
      * @param string $dir new temp dir
      */
-    public function SetDir($dir) // @codingStandardsIgnoreLine
+    public function SetDir($dir) // phpcs:ignore
     {
         $this->Cleanup();
         $this->dir = $dir;
@@ -174,7 +174,7 @@ class TmpDir
      * @param string $filename file name
      * @param string $content file content
      */
-    public function AddFile($filename, $content) // @codingStandardsIgnoreLine
+    public function AddFile($filename, $content) // phpcs:ignore
     {
         if (empty($filename)) {
             return;
@@ -194,7 +194,7 @@ class TmpDir
      *
      * @param string $filename file name
      */
-    public function RemoveFile($filename) // @codingStandardsIgnoreLine
+    public function RemoveFile($filename) // phpcs:ignore
     {
         if (empty($filename)) {
             return;
@@ -213,7 +213,7 @@ class TmpDir
      *
      * Cleans up any temporary files
      */
-    public function Cleanup() // @codingStandardsIgnoreLine
+    public function Cleanup() // phpcs:ignore
     {
         if (! empty($this->dir) && (count($this->files) > 0)) {
             foreach ($this->files as $file) {

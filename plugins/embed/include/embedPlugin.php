@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class embedPlugin extends Plugin
 {
     public function __construct(?int $id)

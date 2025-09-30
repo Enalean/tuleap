@@ -30,7 +30,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * I convert the xml changeset data into data structure in order to create changeset in one artifact
  */
-class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const FIELDTYPE_STRING            = Tracker_FormElementFactory::FIELD_STRING_TYPE;
     public const FIELDTYPE_TEXT              = 'text';

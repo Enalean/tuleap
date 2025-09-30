@@ -34,7 +34,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_ChangesetValue_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_ChangesetValue_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private ListField $field;
     private Tracker_Artifact_Changeset $changeset;

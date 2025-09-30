@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201806111646_rename_stop_notification extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201806111646_rename_stop_notification extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

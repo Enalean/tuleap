@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * Represents the fields of a cardwall.
  */
-class Cardwall_CardFields // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Cardwall_CardFields // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @return TrackerField[]

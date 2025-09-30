@@ -18,7 +18,7 @@
  */
 
 
-class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View_Admin_Field  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View_Admin_Field  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Fetch additionnal stuff to display below the edit form

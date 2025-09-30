@@ -141,7 +141,7 @@ abstract class ControllerBase
      * @abstract
      * @return string template filename
      */
-    abstract protected function GetTemplate(); // @codingStandardsIgnoreLine
+    abstract protected function GetTemplate(); // phpcs:ignore
 
     /**
      * GetName
@@ -153,7 +153,7 @@ abstract class ControllerBase
      * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
-    abstract public function GetName($local = false); // @codingStandardsIgnoreLine
+    abstract public function GetName($local = false); // phpcs:ignore
 
     /**
      * ReadQuery
@@ -163,7 +163,7 @@ abstract class ControllerBase
      * @abstract
      * @access protected
      */
-    abstract protected function ReadQuery(); // @codingStandardsIgnoreLine
+    abstract protected function ReadQuery(); // phpcs:ignore
 
     /**
      * SetParam
@@ -174,7 +174,7 @@ abstract class ControllerBase
      * @param string $key key to set
      * @param mixed $value value to set
      */
-    public function SetParam($key, $value) // @codingStandardsIgnoreLine
+    public function SetParam($key, $value) // phpcs:ignore
     {
         if (empty($key)) {
             return;
@@ -194,7 +194,7 @@ abstract class ControllerBase
      *
      * @access protected
      */
-    protected function LoadHeaders() // @codingStandardsIgnoreLine
+    protected function LoadHeaders() // phpcs:ignore
     {
     }
 
@@ -206,7 +206,7 @@ abstract class ControllerBase
      * @access protected
      * @abstract
      */
-    abstract protected function LoadData(); // @codingStandardsIgnoreLine
+    abstract protected function LoadData(); // phpcs:ignore
 
     /**
      * LoadCommonData
@@ -215,7 +215,7 @@ abstract class ControllerBase
      *
      * @access private
      */
-    private function LoadCommonData() // @codingStandardsIgnoreLine
+    private function LoadCommonData() // phpcs:ignore
     {
         $this->tpl->assign('action', $this->GetName());
         $this->tpl->assign('actionlocal', $this->GetName(true));
@@ -242,7 +242,7 @@ abstract class ControllerBase
      *
      * @access public
      */
-    public function RenderHeaders() // @codingStandardsIgnoreLine
+    public function RenderHeaders() // phpcs:ignore
     {
         $this->LoadHeaders();
 
@@ -260,7 +260,7 @@ abstract class ControllerBase
      *
      * @access public
      */
-    public function Render() // @codingStandardsIgnoreLine
+    public function Render() // phpcs:ignore
     {
         $this->tpl->clearAllAssign();
         $this->LoadCommonData();

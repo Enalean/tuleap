@@ -24,7 +24,7 @@ namespace Tuleap\GraphOnTrackersV5;
 use HTTPRequest;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
-class GraphOnTrackersV5_Widget_ProjectChart extends GraphOnTrackersV5_Widget_Chart //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class GraphOnTrackersV5_Widget_ProjectChart extends GraphOnTrackersV5_Widget_Chart //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {

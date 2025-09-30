@@ -29,7 +29,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
  *
  * This class follow the Null Object Pattern
  */
-class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Constructor

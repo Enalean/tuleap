@@ -28,7 +28,7 @@ use Codendi_Request;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Cardwall_OnTop_Config_UpdaterTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Cardwall_OnTop_Config_UpdaterTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testItScheduleExecuteOnCommands(): void
     {

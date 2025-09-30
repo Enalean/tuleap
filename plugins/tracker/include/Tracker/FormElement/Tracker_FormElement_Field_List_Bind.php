@@ -34,7 +34,7 @@ use Tuleap\Tracker\REST\FieldValueRepresentation;
 /**
  * @template ListValueBinding of Tracker_FormElement_Field_List_Value
  */
-abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
     Tracker_FormElement_Field_Shareable,
     Tracker_IProvideJsonFormatOfMyself,
     BindVisitable

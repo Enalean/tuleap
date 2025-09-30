@@ -22,7 +22,7 @@ use Symfony\Component\Process\Process;
 /**
  * Ensure SSH key is valid
  */
-class User_SSHKeyValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class User_SSHKeyValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private const SSH_KEY_FORMAT_REGEX = '/^(?:(?:ssh-(?:rsa|dss|ed25519))|(?:ecdsa-sha2-nistp(?:256|384|521)))\s+[a-zA-Z0-9+\/]+={0,2}\s*/';
 

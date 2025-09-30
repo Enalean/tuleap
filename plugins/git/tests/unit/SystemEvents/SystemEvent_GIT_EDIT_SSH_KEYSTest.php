@@ -40,7 +40,7 @@ use UserManager;
 use UserNotExistException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     use GlobalLanguageMock;
 

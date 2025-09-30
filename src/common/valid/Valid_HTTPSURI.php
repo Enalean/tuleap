@@ -24,7 +24,7 @@
 /**
  * Check that value is a possible HTTPS URI
  */
-class Valid_HTTPSURI extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Valid_HTTPSURI extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function validate($value)

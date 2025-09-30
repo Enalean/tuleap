@@ -24,7 +24,7 @@
 
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Tracker_IDisplayTrackerLayout

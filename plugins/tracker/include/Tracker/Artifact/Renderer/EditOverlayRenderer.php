@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstractRenderer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstractRenderer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)

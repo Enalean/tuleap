@@ -31,7 +31,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 /**
  * Manage values in changeset for string fields
  */
-class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @const Changeset comment format is text.

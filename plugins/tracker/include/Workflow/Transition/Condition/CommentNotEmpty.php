@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_Condition
 {
     /** @var bool */

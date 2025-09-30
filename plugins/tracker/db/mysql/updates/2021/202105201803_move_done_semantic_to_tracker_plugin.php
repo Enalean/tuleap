@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class b202105201803_move_done_semantic_to_tracker_plugin extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

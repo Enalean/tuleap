@@ -33,7 +33,7 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const NAME = 'SystemEvent_BURNDOWN_GENERATE';
 

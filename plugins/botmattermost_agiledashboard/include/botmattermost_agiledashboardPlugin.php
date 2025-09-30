@@ -43,7 +43,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
-class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($id)
     {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201811211412_add_missing_indexes_for_workflow extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201811211412_add_missing_indexes_for_workflow extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

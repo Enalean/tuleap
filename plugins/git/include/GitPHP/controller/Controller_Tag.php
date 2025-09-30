@@ -33,7 +33,7 @@ use GitPHP\Commit\CommitUserPresenter;
  * Tag controller class
  *
  */
-class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
+class Controller_Tag extends ControllerBase // phpcs:ignore
 {
     public function __construct()
     {
@@ -52,7 +52,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
      * @return string template filename
      */
     #[\Override]
-    protected function GetTemplate() // @codingStandardsIgnoreLine
+    protected function GetTemplate() // phpcs:ignore
     {
         return 'tuleap/tag.tpl';
     }
@@ -67,7 +67,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
      * @return string action name
      */
     #[\Override]
-    public function GetName($local = false) // @codingStandardsIgnoreLine
+    public function GetName($local = false) // phpcs:ignore
     {
         if ($local) {
             return dgettext('gitphp', 'tag');
@@ -83,7 +83,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery(): void // @codingStandardsIgnoreLine
+    protected function ReadQuery(): void // phpcs:ignore
     {
         if (isset($_GET['h'])) {
             $this->params['hash'] = $_GET['h'];
@@ -98,7 +98,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadData(): void // @codingStandardsIgnoreLine
+    protected function LoadData(): void // phpcs:ignore
     {
         $head = $this->project->GetHeadCommit();
         if ($head === null) {

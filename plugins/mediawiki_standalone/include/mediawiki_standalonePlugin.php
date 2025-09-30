@@ -158,7 +158,7 @@ use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class mediawiki_standalonePlugin extends Plugin implements PluginWithService, PluginWithConfigKeys
 {
     use PluginAddMissingServiceTrait;

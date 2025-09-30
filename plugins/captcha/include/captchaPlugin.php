@@ -43,7 +43,7 @@ use Tuleap\User\Account\Register\RegisterFormValidationIssue;
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
+class captchaPlugin extends Plugin // phpcs:ignore
 {
     public function __construct($id)
     {

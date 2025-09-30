@@ -27,7 +27,7 @@ use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use UserManager;
 
-class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
+class Controller_Blobdiff extends Controller_DiffBase // phpcs:ignore
 {
     public function __construct()
     {
@@ -46,7 +46,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      * @return string template filename
      */
     #[\Override]
-    protected function GetTemplate() // @codingStandardsIgnoreLine
+    protected function GetTemplate() // phpcs:ignore
     {
         if (! isset($this->params['sidebyside'])) {
             return 'tuleap/blob-diff.tpl';
@@ -65,7 +65,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      * @return string action name
      */
     #[\Override]
-    public function GetName($local = false) // @codingStandardsIgnoreLine
+    public function GetName($local = false) // phpcs:ignore
     {
         if ($local) {
             return dgettext('gitphp', 'blobdiff');
@@ -81,7 +81,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery() // @codingStandardsIgnoreLine
+    protected function ReadQuery() // phpcs:ignore
     {
         parent::ReadQuery();
 
@@ -107,7 +107,7 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      * @access protected
      */
     #[\Override]
-    protected function LoadData() // @codingStandardsIgnoreLine
+    protected function LoadData() // phpcs:ignore
     {
         if (isset($this->params['file'])) {
             $this->tpl->assign('file', $this->params['file']);

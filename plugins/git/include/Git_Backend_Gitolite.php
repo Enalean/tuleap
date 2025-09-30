@@ -23,7 +23,7 @@ use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface
 {
     /**

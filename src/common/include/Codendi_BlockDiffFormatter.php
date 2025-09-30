@@ -32,7 +32,7 @@
  * suffixes (i.e. "=======" immediately followed by another prefix)
  * see class LoadFileConflictPageEditor
  */
-class Codendi_BlockDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_BlockDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($context_lines = 4)
     {

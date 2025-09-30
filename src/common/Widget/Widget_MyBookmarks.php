@@ -26,7 +26,7 @@ require_once('Widget.php');
 *
 * Personal bookmarks
 */
-class Widget_MyBookmarks extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Widget_MyBookmarks extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {

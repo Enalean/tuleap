@@ -25,7 +25,7 @@ use Tuleap\Hudson\MinimalHudsonJob;
 /**
  * Fetch and distribute HudsonJob (and keep them in cache).
  */
-class MinimalHudsonJobFactory // @codingStandardsIgnoreLine
+class MinimalHudsonJobFactory // phpcs:ignore
 {
     public const string API_XML = '/api/xml';
 

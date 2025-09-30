@@ -23,7 +23,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * PHP representation of a TriggerRule
  */
-class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var int */
     private $id;

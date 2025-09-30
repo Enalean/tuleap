@@ -31,7 +31,7 @@ use UserManager;
  * Search controller class
  *
  */
-class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
+class Controller_Search extends ControllerBase // phpcs:ignore
 {
     public const string SEARCH_COMMIT    = 'commit';
     public const string SEARCH_AUTHOR    = 'author';
@@ -59,7 +59,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      * @return string template filename
      */
     #[\Override]
-    protected function GetTemplate() // @codingStandardsIgnoreLine
+    protected function GetTemplate() // phpcs:ignore
     {
         return 'tuleap/shortlog.tpl';
     }
@@ -74,7 +74,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      * @return string action name
      */
     #[\Override]
-    public function GetName($local = false) // @codingStandardsIgnoreLine
+    public function GetName($local = false) // phpcs:ignore
     {
         if ($local) {
             return dgettext('gitphp', 'search');
@@ -90,7 +90,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery() // @codingStandardsIgnoreLine
+    protected function ReadQuery() // phpcs:ignore
     {
         if (! isset($this->params['searchtype'])) {
             $this->params['searchtype'] = self::SEARCH_COMMIT;
@@ -120,7 +120,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadData() // @codingStandardsIgnoreLine
+    protected function LoadData() // phpcs:ignore
     {
         $co = $this->project->GetCommit($this->params['hashbase']);
         if ($co === null) {

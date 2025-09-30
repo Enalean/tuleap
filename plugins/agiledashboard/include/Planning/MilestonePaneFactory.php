@@ -29,7 +29,7 @@ use Tuleap\Tracker\Milestone\PaneInfo;
 /**
  * I build panes for a Planning_Milestone
  */
-class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var array<int, array<PaneInfo>> */
     private $list_of_pane_info = [];

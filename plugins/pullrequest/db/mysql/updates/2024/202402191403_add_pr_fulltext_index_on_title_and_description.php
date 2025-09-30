@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 final class b202402191403_add_pr_fulltext_index_on_title_and_description extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()

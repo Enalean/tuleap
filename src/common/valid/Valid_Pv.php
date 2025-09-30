@@ -24,7 +24,7 @@
 /**
  * Check that 'pv' parameter is set to an acceptable value.
  */
-class Valid_Pv extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Valid_Pv extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct()
     {

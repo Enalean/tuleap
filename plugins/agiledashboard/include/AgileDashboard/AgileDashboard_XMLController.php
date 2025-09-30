@@ -52,7 +52,7 @@ use XML_RNGValidator;
  * Handles the HTTP actions related to  the agile dashborad as a whole.
  *
  */
-final class AgileDashboard_XMLController extends MVC2_PluginController //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class AgileDashboard_XMLController extends MVC2_PluginController //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         Codendi_Request $request,

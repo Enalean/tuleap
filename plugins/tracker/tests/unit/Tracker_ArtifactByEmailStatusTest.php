@@ -31,7 +31,7 @@ use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFie
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     private const int TRACKER_ID = 66;
     private Tracker&MockObject $tracker;

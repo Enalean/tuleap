@@ -31,7 +31,7 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\User\PasswordVerifier;
 
-class LDAP_DirectorySynchronization //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class LDAP_DirectorySynchronization //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     protected $ldapTime;
     protected $sync;

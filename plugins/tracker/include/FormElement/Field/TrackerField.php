@@ -81,7 +81,7 @@ use XML_SimpleXMLCDATAFactory;
  * The base class for fields in trackers. From int and string to selectboxes.
  * Composite fields are excluded.
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 abstract class TrackerField extends TrackerFormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor, FieldIsAlwaysInEditMode
 {
     private const string PREFIX_NAME_SQL_COLUMN = 'user_defined_';

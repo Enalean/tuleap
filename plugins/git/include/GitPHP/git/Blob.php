@@ -106,7 +106,7 @@ class Blob extends FilesystemObject
      *
      * Gets the blob data
      */
-    public function GetData(): string // @codingStandardsIgnoreLine
+    public function GetData(): string // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -132,7 +132,7 @@ class Blob extends FilesystemObject
      *
      * @access private
      */
-    private function ReadData() // @codingStandardsIgnoreLine
+    private function ReadData() // phpcs:ignore
     {
         $this->dataRead = true;
         $this->data     = $this->GetProject()->GetObject($this->hash);
@@ -149,7 +149,7 @@ class Blob extends FilesystemObject
      * @param bool $local true if caller wants localized type
      * @return string file type
      */
-    public static function FileType($octMode, $local = false) // @codingStandardsIgnoreLine
+    public static function FileType($octMode, $local = false) // phpcs:ignore
     {
         $mode = octdec($octMode);
         if ($mode === 57344) {
@@ -193,7 +193,7 @@ class Blob extends FilesystemObject
      * @access public
      * @return int size
      */
-    public function GetSize() // @codingStandardsIgnoreLine
+    public function GetSize() // phpcs:ignore
     {
         if ($this->size !== null) {
             return $this->size;
@@ -214,7 +214,7 @@ class Blob extends FilesystemObject
      * @access public
      * @param int $size size
      */
-    public function SetSize($size) // @codingStandardsIgnoreLine
+    public function SetSize($size) // phpcs:ignore
     {
         $this->size = $size;
     }
@@ -228,7 +228,7 @@ class Blob extends FilesystemObject
      * @param bool $short true to only the type group
      * @return string mime
      */
-    public function FileMime($short = false) // @codingStandardsIgnoreLine
+    public function FileMime($short = false) // phpcs:ignore
     {
         $mime = $this->FileMime_Fileinfo();
 
@@ -251,7 +251,7 @@ class Blob extends FilesystemObject
      * @access private
      * @return string mimetype
      */
-    private function FileMime_Fileinfo() // @codingStandardsIgnoreLine
+    private function FileMime_Fileinfo() // phpcs:ignore
     {
         if (! function_exists('finfo_buffer')) {
             return '';
@@ -289,7 +289,7 @@ class Blob extends FilesystemObject
      * @access private
      * @return string mimetype
      */
-    private function FileMime_Extension() // @codingStandardsIgnoreLine
+    private function FileMime_Extension() // phpcs:ignore
     {
         $file = $this->GetName();
 
@@ -325,7 +325,7 @@ class Blob extends FilesystemObject
      *
      * @return array array of filediff changes
      */
-    public function GetPaginatedHistory($count = PHP_INT_MAX, $skip = 0) // @codingStandardsIgnoreLine
+    public function GetPaginatedHistory($count = PHP_INT_MAX, $skip = 0) // phpcs:ignore
     {
         $this->history = [];
 
@@ -375,7 +375,7 @@ class Blob extends FilesystemObject
         return [$this->history, $hasmore];
     }
 
-    public function GetHistory() // @codingStandardsIgnoreLine
+    public function GetHistory() // phpcs:ignore
     {
         list($history,) = $this->GetPaginatedHistory(PHP_INT_MAX, 0);
 
@@ -390,7 +390,7 @@ class Blob extends FilesystemObject
      * @access public
      * @return array blame array (line to commit mapping)
      */
-    public function GetBlame() // @codingStandardsIgnoreLine
+    public function GetBlame() // phpcs:ignore
     {
         if (! $this->blameRead) {
             $this->ReadBlame();
@@ -406,7 +406,7 @@ class Blob extends FilesystemObject
      *
      * @access private
      */
-    private function ReadBlame() // @codingStandardsIgnoreLine
+    private function ReadBlame() // phpcs:ignore
     {
         $this->blameRead = true;
 

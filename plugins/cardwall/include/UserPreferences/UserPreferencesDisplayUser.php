@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_CardDisplayPreferences //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_CardDisplayPreferences //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_';
 

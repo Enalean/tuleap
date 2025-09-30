@@ -24,7 +24,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
  * Interface to define the factory for a dedicated type of PostAction.
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 interface Transition_PostActionSubFactory
 {
     /**

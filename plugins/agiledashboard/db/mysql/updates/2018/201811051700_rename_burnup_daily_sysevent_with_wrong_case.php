@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201811051700_rename_burnup_daily_sysevent_with_wrong_case extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201811051700_rename_burnup_daily_sysevent_with_wrong_case extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

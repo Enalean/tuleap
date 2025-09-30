@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_NotificationsManager_Delete extends Docman_NotificationsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_NotificationsManager_Delete extends Docman_NotificationsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
     public const string MESSAGE_REMOVED      = 'removed'; // X has been removed

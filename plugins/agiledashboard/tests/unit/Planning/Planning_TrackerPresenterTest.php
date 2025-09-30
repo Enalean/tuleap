@@ -30,7 +30,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Planning_TrackerPresenterTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Planning_TrackerPresenterTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Planning_TrackerPresenter $presenter;
     private int $other_tracker_id;

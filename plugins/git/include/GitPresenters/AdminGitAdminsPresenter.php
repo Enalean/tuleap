@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string GIT_ADMIN_SELECTBOX_NAME = 'git_admins';
 

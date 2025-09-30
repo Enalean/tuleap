@@ -35,7 +35,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testProtectedReferencesArePresentInTheSerialization(): void
     {

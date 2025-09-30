@@ -31,7 +31,7 @@ use Tuleap\Layout\JavascriptViteAsset;
  * Blame controller class
  *
  */
-class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
+class Controller_Blame extends ControllerBase // phpcs:ignore
 {
     public function __construct(private readonly BlobDataReader $data_reader)
     {
@@ -50,7 +50,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
      * @return string template filename
      */
     #[\Override]
-    protected function GetTemplate() // @codingStandardsIgnoreLine
+    protected function GetTemplate() // phpcs:ignore
     {
         return 'tuleap/blame.tpl';
     }
@@ -65,7 +65,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
      * @return string action name
      */
     #[\Override]
-    public function GetName($local = false) // @codingStandardsIgnoreLine
+    public function GetName($local = false) // phpcs:ignore
     {
         if ($local) {
             return dgettext('gitphp', 'blame');
@@ -81,7 +81,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery() // @codingStandardsIgnoreLine
+    protected function ReadQuery() // phpcs:ignore
     {
         if (isset($_GET['hb'])) {
             $this->params['hashbase'] = $_GET['hb'];
@@ -107,7 +107,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadData() // @codingStandardsIgnoreLine
+    protected function LoadData() // phpcs:ignore
     {
         $head = $this->project->GetHeadCommit();
         if ($head === null) {

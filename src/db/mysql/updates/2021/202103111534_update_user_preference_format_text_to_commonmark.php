@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202103111534_update_user_preference_format_text_to_commonmark extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

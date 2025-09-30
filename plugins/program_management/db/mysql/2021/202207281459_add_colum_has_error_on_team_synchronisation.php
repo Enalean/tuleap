@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202207281459_add_colum_has_error_on_team_synchronisation extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

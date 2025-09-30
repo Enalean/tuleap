@@ -38,7 +38,7 @@ use UGroupManager;
 use UserXMLExporter;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Tracker_FormElement_Field_List_Bind_UgroupsValue $customers_ugroup_value;
     private Tracker_FormElement_Field_List_Bind_UgroupsValue $project_members_ugroup_value;

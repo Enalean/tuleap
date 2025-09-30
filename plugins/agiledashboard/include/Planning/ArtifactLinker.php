@@ -37,7 +37,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
  * When I add a new Epic into "Release 1.0" backlog, it must be added into
  * "Product Toto" backlog as well
  */
-class Planning_ArtifactLinker // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Planning_ArtifactLinker // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string LINK_TO_MILESTONE_PARAMETER = 'link-to-milestone';
 

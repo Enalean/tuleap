@@ -24,7 +24,7 @@
 /**
  * Abstract class that define left-hand operand for a comparison.
  */
-abstract class Rule_Comparator extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Rule_Comparator extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @access private

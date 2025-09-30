@@ -23,7 +23,7 @@
 *
 * Base class to create, retrieve, update or delete rules
 */
-class Tracker_Rule_List_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Rule_List_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(private readonly Tracker_Rule_List_Dao $dao, private readonly Tracker_FormElement_Field_List_BindFactory $bind_factory)
     {

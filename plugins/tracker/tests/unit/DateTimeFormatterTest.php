@@ -24,7 +24,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;

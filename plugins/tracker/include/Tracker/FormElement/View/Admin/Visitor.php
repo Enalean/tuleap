@@ -55,7 +55,7 @@ use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 /**
  * Can visit a FormElement and provides the corresponding administration element
  */
-class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visitor, Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visitor, Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const SUBMIT_UPDATE = 'update-formElement';
     public const SUBMIT_CREATE = 'docreate-formElement';

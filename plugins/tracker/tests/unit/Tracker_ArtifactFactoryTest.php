@@ -28,7 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps, PSR1.Classes.ClassDeclaration.MissingNamespace
+final class Tracker_ArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase, PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private Tracker_ArtifactDao&MockObject $dao;
 

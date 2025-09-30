@@ -39,7 +39,7 @@ use Tuleap\Hudson\Reference\HudsonCrossReferenceOrganizer;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
-class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Project\Service\PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Project\Service\PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string ICONS_PATH          = '/plugins/hudson/themes/default/images/ic/';
     public const string HUDSON_JOB_NATURE   = 'hudson_job';

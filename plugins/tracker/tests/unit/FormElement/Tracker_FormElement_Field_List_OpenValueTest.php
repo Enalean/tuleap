@@ -29,7 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_OpenValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_Field_List_OpenValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testJSon(): void
     {

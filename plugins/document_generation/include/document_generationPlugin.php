@@ -33,7 +33,7 @@ use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class document_generationPlugin extends Plugin
 {
     public function __construct(?int $id)

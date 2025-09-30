@@ -34,7 +34,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Docman_NotificationsManager_AddTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_NotificationsManager_AddTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Docman_NotificationsManager_Add&MockObject $notification_manager;
 

@@ -324,7 +324,7 @@ require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../include/manual_autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
     public final const TRACKER_EVENT_INCLUDE_CSS_FILE = 'tracker_event_include_css_file';

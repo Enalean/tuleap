@@ -27,7 +27,7 @@ use Tuleap\User\RetrieveUserById;
 /**
  * Manage temporary uploaded files
  */
-class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_Attachment_TemporaryFileManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const TEMP_FILE_PREFIX = 'rest_attachement_temp_';
 

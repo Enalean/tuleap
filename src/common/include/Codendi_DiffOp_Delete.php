@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Codendi_DiffOp_Delete extends \Codendi_DiffOp // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_DiffOp_Delete extends \Codendi_DiffOp // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $type = 'delete';
     public function __construct($lines)

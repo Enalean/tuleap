@@ -32,7 +32,7 @@ use Laminas\Feed\Reader\Reader as FeedReader;
 *
 * Rss reader
 */
-abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public ?string $rss_title = null;
     public ?string $rss_url   = null;

@@ -24,7 +24,7 @@
 /**
  * Class representing a 'diff' between two sequences of strings.
  */
-class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $edits;
     /**

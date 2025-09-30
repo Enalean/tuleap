@@ -33,7 +33,7 @@ use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;
 use Tuleap\Tracker\REST\FieldListOpenValueRepresentation;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind
 {
     public const TYPE = 'static';

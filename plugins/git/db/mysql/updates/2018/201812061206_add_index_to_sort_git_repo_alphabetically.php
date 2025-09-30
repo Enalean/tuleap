@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201812061206_add_index_to_sort_git_repo_alphabetically extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201812061206_add_index_to_sort_git_repo_alphabetically extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -30,7 +30,7 @@ use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
 use Tuleap\Tracker\Widget\WidgetWithAssetDependencies;
 use Tuleap\Widget\WidgetFactory;
 
-abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const XML_ID_PREFIX = 'R';
 

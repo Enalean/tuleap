@@ -32,7 +32,7 @@ use UserManager;
  * History controller class
  *
  */
-class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
+class Controller_History extends ControllerBase // phpcs:ignore
 {
     public function __construct(private readonly ProvideCurrentUserWithLoggedInInformation $current_user_provider)
     {
@@ -51,7 +51,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      * @return string template filename
      */
     #[\Override]
-    protected function GetTemplate() // @codingStandardsIgnoreLine
+    protected function GetTemplate() // phpcs:ignore
     {
         return 'tuleap/history.tpl';
     }
@@ -66,7 +66,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      * @return string action name
      */
     #[\Override]
-    public function GetName($local = false) // @codingStandardsIgnoreLine
+    public function GetName($local = false) // phpcs:ignore
     {
         if ($local) {
             return dgettext('gitphp', 'history');
@@ -82,7 +82,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery() // @codingStandardsIgnoreLine
+    protected function ReadQuery() // phpcs:ignore
     {
         if (isset($_GET['hb'])) {
             $this->params['hashbase'] = $_GET['hb'];
@@ -110,7 +110,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      * @access protected
      */
     #[\Override]
-    protected function LoadData() // @codingStandardsIgnoreLine
+    protected function LoadData() // phpcs:ignore
     {
         $co = $this->project->GetCommit($this->params['hashbase']);
         if ($co === null) {

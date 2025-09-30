@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202009301445_add_index_for_email_on_invitations_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

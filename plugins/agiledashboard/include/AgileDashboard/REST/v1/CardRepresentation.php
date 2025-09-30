@@ -26,7 +26,7 @@ use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 /**
  * @psalm-immutable
  */
-class AgileDashboard_CardRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashboard_CardRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string ROUTE = 'cards';
 

@@ -80,7 +80,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class oauth2_serverPlugin extends Plugin
 {
     public const SERVICE_NAME_INSTRUMENTATION = 'oauth2_server';

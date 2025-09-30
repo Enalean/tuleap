@@ -24,7 +24,7 @@
 
 use Tuleap\Chart\Chart;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 {
     /**

@@ -68,7 +68,7 @@ class Head extends Ref
      * @access public
      * @return mixed commit object for this tag
      */
-    public function GetCommit() // @codingStandardsIgnoreLine
+    public function GetCommit() // phpcs:ignore
     {
         if (! $this->commit) {
             $this->commit = $this->project->GetCommit($this->GetHash());
@@ -88,7 +88,7 @@ class Head extends Ref
      * @param mixed $b second head
      * @return int comparison result
      */
-    public static function CompareAge($a, $b) // @codingStandardsIgnoreLine
+    public static function CompareAge($a, $b) // phpcs:ignore
     {
         $aObj = $a->GetCommit();
         $bObj = $b->GetCommit();

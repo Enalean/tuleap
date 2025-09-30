@@ -20,7 +20,7 @@
 
 use Tuleap\Notification\Notification;
 
-class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string NAME = 'GIT_GERRIT_MIGRATION';
 

@@ -30,7 +30,7 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 
-class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const NAME = 'SystemEvent_BURNDOWN_DAILY';
 

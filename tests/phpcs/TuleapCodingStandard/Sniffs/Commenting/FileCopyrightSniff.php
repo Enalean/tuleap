@@ -57,13 +57,13 @@ final class FileCopyrightSniff implements Sniff
         $open_tag_line                         = $tokens[$stackPtr]['line'];
 
         if (
-            $first_non_whitespace_instruction_pos === ($stackPtr + 1) &&
+            $first_non_whitespace_instruction_pos === ($stackPtr + 2) &&
             ($open_tag_line + 1) === $first_non_whitespace_instruction_line
         ) {
             return $phpcsFile->numTokens + 1;
         }
 
-        $nb_empty_lines = $first_non_whitespace_instruction_pos - $stackPtr - 1;
+        $nb_empty_lines = $first_non_whitespace_instruction_pos - $stackPtr - 2;
         if ($nb_empty_lines > 0) {
             $fix = $phpcsFile->addFixableError(
                 sprintf('Copyright block must be at the very beginning of the file, found %d empty lines', $nb_empty_lines),

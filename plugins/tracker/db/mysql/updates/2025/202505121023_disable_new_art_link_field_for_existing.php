@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 use Tuleap\ForgeUpgrade\Bucket;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202505121023_disable_new_art_link_field_for_existing extends Bucket
 {
     public function description(): string

@@ -31,7 +31,7 @@ namespace Tuleap\Git\GitPHP;
  * DiffBase controller class
  *
  */
-abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgnoreLine
+abstract class Controller_DiffBase extends ControllerBase // phpcs:ignore
 {
     public const int DIFF_UNIFIED    = 1;
     public const int DIFF_SIDEBYSIDE = 2;
@@ -44,7 +44,7 @@ abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgn
      * @access protected
      */
     #[\Override]
-    protected function ReadQuery() // @codingStandardsIgnoreLine
+    protected function ReadQuery() // phpcs:ignore
     {
         if (! isset($this->params['plain']) || $this->params['plain'] != true) {
             if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == self::DIFF_SIDEBYSIDE) {
@@ -61,7 +61,7 @@ abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgn
      * @param string $overrideMode mode overridden by the user
      * @access protected
      */
-    protected function DiffMode($overrideMode = '') // @codingStandardsIgnoreLine
+    protected function DiffMode($overrideMode = '') // phpcs:ignore
     {
         $mode = self::DIFF_UNIFIED; // default
 
@@ -87,7 +87,7 @@ abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgn
      * @access protected
      */
     #[\Override]
-    protected function LoadHeaders() // @codingStandardsIgnoreLine
+    protected function LoadHeaders() // phpcs:ignore
     {
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
             $this->headers[] = 'Content-type: text/plain; charset=UTF-8';

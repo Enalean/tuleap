@@ -23,7 +23,7 @@ use Tuleap\Plugin\ListeningToEventName;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 final class graphsPlugin extends Plugin
 {
     public const RENDERER_TYPE = 'plugin_graphs';

@@ -52,7 +52,7 @@ use Tuleap\Project\Service\UserCanAccessToServiceEvent;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
-class baselinePlugin extends Plugin implements PluginWithService // @codingStandardsIgnoreLine
+class baselinePlugin extends Plugin implements PluginWithService // phpcs:ignore
 {
     public const string NAME              = 'baseline';
     public const string SERVICE_SHORTNAME = 'plugin_baseline';

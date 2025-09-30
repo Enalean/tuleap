@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b201903111212_add_lock_information_for_new_file_version extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201903111212_add_lock_information_for_new_file_version extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

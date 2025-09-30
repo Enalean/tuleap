@@ -34,7 +34,7 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 
-final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         private BacklogItemRepresentationFactory $backlog_item_representation_factory,

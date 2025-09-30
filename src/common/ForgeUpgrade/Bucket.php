@@ -30,7 +30,7 @@ use Tuleap\ForgeUpgrade\Bucket\BucketDb;
 /**
  * A bucket is a migration scenario
  */
-abstract class Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     protected LoggerInterface $log;
 

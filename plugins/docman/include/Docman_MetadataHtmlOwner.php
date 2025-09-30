@@ -23,7 +23,7 @@
 /**
  * HTML rendering for special 'owner' metadata
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_MetadataHtmlOwner extends \Docman_MetadataHtmlString
 {
     #[\Override]

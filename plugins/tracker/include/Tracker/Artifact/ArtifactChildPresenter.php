@@ -25,7 +25,7 @@ use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 /**
  * Presenter of the child of an artifact
  */
-class Tracker_ArtifactChildPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_ArtifactChildPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var string */
     public $xref;

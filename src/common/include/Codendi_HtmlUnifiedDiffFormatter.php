@@ -36,7 +36,7 @@
  * Within groups of changed lines, diffs are highlit
  * at the character-diff level.
  */
-class Codendi_HtmlUnifiedDiffFormatter extends \Codendi_UnifiedDiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_HtmlUnifiedDiffFormatter extends \Codendi_UnifiedDiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     private string $_html;
 

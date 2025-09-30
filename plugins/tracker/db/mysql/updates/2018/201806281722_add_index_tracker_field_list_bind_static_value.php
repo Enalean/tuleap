@@ -19,7 +19,7 @@
  *
  */
 
-class b201806281722_add_index_tracker_field_list_bind_static_value extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201806281722_add_index_tracker_field_list_bind_static_value extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

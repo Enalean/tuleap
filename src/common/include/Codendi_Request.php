@@ -21,7 +21,7 @@
 
 use Tuleap\Project\ProjectByIDFactory;
 
-class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var array

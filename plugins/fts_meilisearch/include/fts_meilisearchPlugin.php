@@ -50,7 +50,7 @@ use Tuleap\Search\ProgressQueueIndexItemCategory;
 require_once __DIR__ . '/../../fts_common/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements PluginWithConfigKeys
 {
     private const MAX_ITEMS_PER_BATCH = 128;

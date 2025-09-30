@@ -23,7 +23,7 @@ use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
 use Tuleap\Queue\NbBackendWorkersConfigValidator;
 use Tuleap\Queue\WorkerAvailability;
 
-class SystemEvent_SYSTEM_CHECK extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_SYSTEM_CHECK extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Verbalize the parameters so they are readable and much user friendly in

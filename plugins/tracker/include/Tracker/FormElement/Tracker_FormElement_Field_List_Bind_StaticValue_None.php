@@ -20,7 +20,7 @@
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
 
-final class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormElement_Field_List_Bind_StaticValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormElement_Field_List_Bind_StaticValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const VALUE_ID     = 100;
     public const XML_VALUE_ID = '';

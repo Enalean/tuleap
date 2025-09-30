@@ -34,7 +34,7 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Date\TimezoneWrapper;
 use Tuleap\TimezoneRetriever;
 
-final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
+final class SystemEvent_BURNUP_DAILY extends SystemEvent // phpcs:ignore
 {
     private BurnupDataDAO $burnup_dao;
     private LoggerInterface $logger;

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 final class b202407121511_add_timetracking_management_query_users_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()

@@ -24,7 +24,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * I am a helper to build selectbox options of all milestones of a given tracker
  */
-class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string TOP_BACKLOG_IDENTIFIER   = '0';
     public const string TOP_BACKLOG_OPTION_ENTRY = 'Top Backlog';

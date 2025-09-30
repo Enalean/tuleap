@@ -26,7 +26,7 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
  * Post action occuring when transition is run
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 abstract class Transition_PostAction
 {
     /**

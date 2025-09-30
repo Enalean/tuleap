@@ -21,7 +21,7 @@
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\PathJoinUtil;
 
-class Git_Gitolite_ProjectSerializer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_Gitolite_ProjectSerializer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const int OBJECT_SIZE_LIMIT = 52428800;
 

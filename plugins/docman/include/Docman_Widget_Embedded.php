@@ -33,7 +33,7 @@ use Tuleap\Project\MappingRegistry;
  *
  * The display of a folder (its children) would be great
  */
-class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * The title given by the user to the widget

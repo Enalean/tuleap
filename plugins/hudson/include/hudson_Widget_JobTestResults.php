@@ -27,7 +27,7 @@ use Tuleap\Hudson\TestResultPieChart\TestResultsPieChartDisplayer;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class hudson_Widget_JobTestResults extends HudsonJobWidget
 {
     /**

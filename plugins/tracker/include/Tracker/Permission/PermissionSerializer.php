@@ -23,7 +23,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Permission_PermissionsSerializer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Permission_PermissionsSerializer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Tracker_Permission_PermissionRetrieveAssignee

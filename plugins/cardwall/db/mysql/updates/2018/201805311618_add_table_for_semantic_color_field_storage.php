@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201805311618_add_table_for_semantic_color_field_storage extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201805311618_add_table_for_semantic_color_field_storage extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

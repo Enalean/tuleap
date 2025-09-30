@@ -20,7 +20,7 @@
 
 use Tuleap\Layout\FooterConfiguration;
 
-class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const DEFAULT_SEARCH = Search_SearchProject::NAME;
 

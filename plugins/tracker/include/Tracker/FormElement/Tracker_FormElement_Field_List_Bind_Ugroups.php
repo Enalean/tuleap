@@ -32,7 +32,7 @@ use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 /**
  * @template-extends Tracker_FormElement_Field_List_Bind<Tracker_FormElement_Field_List_Bind_UgroupsValue>
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind
 {
     public const TYPE = 'ugroups';

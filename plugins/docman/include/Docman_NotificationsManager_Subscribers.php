@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string MESSAGE_ADDED   = 'added'; // X has been added to monitoring list
     public const string MESSAGE_REMOVED = 'removed'; // X has been removed from monitoring list

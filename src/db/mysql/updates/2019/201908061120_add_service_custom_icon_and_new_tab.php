@@ -19,7 +19,7 @@
  *
  */
 
-class b201908061120_add_service_custom_icon_and_new_tab extends \Tuleap\ForgeUpgrade\Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class b201908061120_add_service_custom_icon_and_new_tab extends \Tuleap\ForgeUpgrade\Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function description()
     {

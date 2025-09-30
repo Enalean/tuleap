@@ -142,7 +142,7 @@ class Tag extends Ref
      * @access public
      * @return mixed object for this tag
      */
-    public function GetObject() // @codingStandardsIgnoreLine
+    public function GetObject() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -163,7 +163,7 @@ class Tag extends Ref
      * @access public
      * @return mixed commit for this tag
      */
-    public function GetCommit() // @codingStandardsIgnoreLine
+    public function GetCommit() // phpcs:ignore
     {
         if ($this->commitReferenced) {
             $this->DereferenceCommit();
@@ -206,7 +206,7 @@ class Tag extends Ref
      * @access public
      * @param mixed $commit commit object
      */
-    public function SetCommit($commit) // @codingStandardsIgnoreLine
+    public function SetCommit($commit) // phpcs:ignore
     {
         if ($this->commitReferenced) {
             $this->DereferenceCommit();
@@ -225,7 +225,7 @@ class Tag extends Ref
      * @access public
      * @return string tag type
      */
-    public function GetType() // @codingStandardsIgnoreLine
+    public function GetType() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -242,7 +242,7 @@ class Tag extends Ref
      * @access public
      * @return string tagger
      */
-    public function GetTagger() // @codingStandardsIgnoreLine
+    public function GetTagger() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -259,7 +259,7 @@ class Tag extends Ref
      * @access public
      * @return string tagger epoch
      */
-    public function GetTaggerEpoch() // @codingStandardsIgnoreLine
+    public function GetTaggerEpoch() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -276,7 +276,7 @@ class Tag extends Ref
      * @access public
      * @return string tagger local epoch
      */
-    public function GetTaggerLocalEpoch() // @codingStandardsIgnoreLine
+    public function GetTaggerLocalEpoch() // phpcs:ignore
     {
         $epoch = $this->GetTaggerEpoch();
         $tz    = $this->GetTaggerTimezone();
@@ -295,7 +295,7 @@ class Tag extends Ref
      * @access public
      * @return string tagger timezone
      */
-    public function GetTaggerTimezone() // @codingStandardsIgnoreLine
+    public function GetTaggerTimezone() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -312,7 +312,7 @@ class Tag extends Ref
      * @access public
      * @return string age
      */
-    public function GetAge() // @codingStandardsIgnoreLine
+    public function GetAge() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -329,7 +329,7 @@ class Tag extends Ref
      * @access public
      * @return array comment lines
      */
-    public function GetComment() // @codingStandardsIgnoreLine
+    public function GetComment() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -346,7 +346,7 @@ class Tag extends Ref
      * @access public
      * @return bool true if tag is light (has no object)
      */
-    public function LightTag() // @codingStandardsIgnoreLine
+    public function LightTag() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -370,7 +370,7 @@ class Tag extends Ref
      *
      * @access protected
      */
-    protected function ReadData() // @codingStandardsIgnoreLine
+    protected function ReadData() // phpcs:ignore
     {
         $this->dataRead = true;
         $this->ReadDataRaw();
@@ -383,7 +383,7 @@ class Tag extends Ref
      *
      * @access private
      */
-    private function ReadDataRaw() // @codingStandardsIgnoreLine
+    private function ReadDataRaw() // phpcs:ignore
     {
         $type = 0;
         $data = $this->GetProject()->GetObject($this->GetHash(), $type);
@@ -464,7 +464,7 @@ class Tag extends Ref
      *
      * @access private
      */
-    private function ReferenceObject() // @codingStandardsIgnoreLine
+    private function ReferenceObject() // phpcs:ignore
     {
         if ($this->objectReferenced) {
             return;
@@ -492,7 +492,7 @@ class Tag extends Ref
      *
      * @access private
      */
-    private function DereferenceObject() // @codingStandardsIgnoreLine
+    private function DereferenceObject() // phpcs:ignore
     {
         if (! $this->objectReferenced) {
             return;
@@ -520,7 +520,7 @@ class Tag extends Ref
      *
      * @access private
      */
-    private function ReferenceCommit() // @codingStandardsIgnoreLine
+    private function ReferenceCommit() // phpcs:ignore
     {
         if ($this->commitReferenced) {
             return;
@@ -542,7 +542,7 @@ class Tag extends Ref
      *
      * @access private
      */
-    private function DereferenceCommit() // @codingStandardsIgnoreLine
+    private function DereferenceCommit() // phpcs:ignore
     {
         if (! $this->commitReferenced) {
             return;
@@ -580,7 +580,7 @@ class Tag extends Ref
      * @access public
      * @return string creation epoch
      */
-    public function GetCreationEpoch() // @codingStandardsIgnoreLine
+    public function GetCreationEpoch() // phpcs:ignore
     {
         if (! $this->dataRead) {
             $this->ReadData();
@@ -609,7 +609,7 @@ class Tag extends Ref
      * @param mixed $b second tag
      * @return int comparison result
      */
-    public static function CompareAge($a, $b) // @codingStandardsIgnoreLine
+    public static function CompareAge($a, $b) // phpcs:ignore
     {
         $aObj = $a->GetObject();
         $bObj = $b->GetObject();
@@ -639,7 +639,7 @@ class Tag extends Ref
      * @param mixed $b second tag
      * @return int comparison result
      */
-    public static function CompareCreationEpoch($a, $b) // @codingStandardsIgnoreLine
+    public static function CompareCreationEpoch($a, $b) // phpcs:ignore
     {
         $aEpoch = $a->GetCreationEpoch();
         $bEpoch = $b->GetCreationEpoch();

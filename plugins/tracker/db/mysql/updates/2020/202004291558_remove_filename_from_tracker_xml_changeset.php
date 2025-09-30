@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-class b202004291558_remove_filename_from_tracker_xml_changeset extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class b202004291558_remove_filename_from_tracker_xml_changeset extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function description(): string
     {

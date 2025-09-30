@@ -24,7 +24,7 @@
 *
 * Personal Admin
 */
-class Widget_MyAdmin extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Widget_MyAdmin extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private $user_is_super_admin;
 

@@ -24,7 +24,7 @@
 /**
  * FIXME: bad name.
  */
-class Codendi_MappedDiff extends \Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_MappedDiff extends \Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      *

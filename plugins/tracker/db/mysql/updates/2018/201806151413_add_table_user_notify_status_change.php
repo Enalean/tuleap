@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201806151413_add_table_user_notify_status_change extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201806151413_add_table_user_notify_status_change extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -28,7 +28,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * I retrieve the content of the backlog
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class AgileDashboard_Milestone_Backlog_Backlog
 {
     /** @var Tracker[] */

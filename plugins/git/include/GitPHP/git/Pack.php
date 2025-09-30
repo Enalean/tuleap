@@ -98,7 +98,7 @@ class Pack
      * @access public
      * @return string object hash
      */
-    public function GetHash() // @codingStandardsIgnoreLine
+    public function GetHash() // phpcs:ignore
     {
         return $this->hash;
     }
@@ -112,7 +112,7 @@ class Pack
      * @param string $hash object hash
      * @return bool true if object is in pack
      */
-    public function ContainsObject($hash) // @codingStandardsIgnoreLine
+    public function ContainsObject($hash) // phpcs:ignore
     {
         if (! preg_match('/[0-9a-fA-F]{40}/', $hash)) {
             return false;
@@ -130,7 +130,7 @@ class Pack
      * @param string $hash hash
      * @access private
      */
-    private function FindPackedObject($hash) // @codingStandardsIgnoreLine
+    private function FindPackedObject($hash) // phpcs:ignore
     {
         if (! preg_match('/[0-9a-fA-F]{40}/', $hash)) {
             return false;
@@ -177,7 +177,7 @@ class Pack
      * @param string $hash hash to find
      * @return int pack offset if found
      */
-    private function SearchIndexV1($index, $hash) // @codingStandardsIgnoreLine
+    private function SearchIndexV1($index, $hash) // phpcs:ignore
     {
         /*
          * index v1 structure:
@@ -237,7 +237,7 @@ class Pack
      * @param string $hash hash to find
      * @return int pack offset if found
      */
-    private function SearchIndexV2($index, $hash) // @codingStandardsIgnoreLine
+    private function SearchIndexV2($index, $hash) // phpcs:ignore
     {
         /*
          * index v2 structure:
@@ -320,7 +320,7 @@ class Pack
      * @param int $offset offset in the index file where the fanout table is located
      * @return array Range where object can be located
      */
-    private function ReadFanout($index, $binaryHash, $offset) // @codingStandardsIgnoreLine
+    private function ReadFanout($index, $binaryHash, $offset) // phpcs:ignore
     {
         /*
          * fanout table has 255 4-byte integers
@@ -351,7 +351,7 @@ class Pack
      * @param int $type output parameter, returns the type of the object
      * @return string object content, or false if not found
      */
-    public function GetObject($hash, &$type = 0) // @codingStandardsIgnoreLine
+    public function GetObject($hash, &$type = 0) // phpcs:ignore
     {
         $offset = $this->FindPackedObject($hash);
         if ($offset === false) {
@@ -388,7 +388,7 @@ class Pack
      *
      * @see https://git-scm.com/docs/pack-format#_pack_pack_files_have_the_following_format
      */
-    private function UnpackObject($pack, $offset) // @codingStandardsIgnoreLine
+    private function UnpackObject($pack, $offset) // phpcs:ignore
     {
         fseek($pack, $offset);
 
@@ -487,7 +487,7 @@ class Pack
      * @param string $base base object data
      * @return string patched content
      */
-    private static function ApplyDelta($delta, $base) // @codingStandardsIgnoreLine
+    private static function ApplyDelta($delta, $base) // phpcs:ignore
     {
         /*
          * algorithm from patch-delta.c
@@ -551,7 +551,7 @@ class Pack
      * @param int $pos position in string to read from
      * @return int parsed integer
      */
-    private static function ParseVarInt($str, &$pos = 0) // @codingStandardsIgnoreLine
+    private static function ParseVarInt($str, &$pos = 0) // phpcs:ignore
     {
         $ret  = 0;
         $byte = 0x80;

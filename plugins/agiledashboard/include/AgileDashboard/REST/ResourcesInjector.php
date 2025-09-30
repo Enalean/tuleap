@@ -27,7 +27,7 @@ use Tuleap\Project\REST\ProjectResourceReference;
 /**
  * Inject resource into restler
  */
-class AgileDashboard_REST_ResourcesInjector // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashboard_REST_ResourcesInjector // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function populate(Luracast\Restler\Restler $restler): void
     {

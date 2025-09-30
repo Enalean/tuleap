@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201908081533_add_burnup_subelements_cache_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201908081533_add_burnup_subelements_cache_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

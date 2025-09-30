@@ -71,11 +71,7 @@
   <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
 
   <!-- Force alignment of corresponding assignment statement tokens -->
-  <rule ref="Generic.Formatting.MultipleStatementAlignment">
-    <properties>
-      <property name="error" value="true"/>
-    </properties>
-  </rule>
+  <rule ref="Generic.Formatting.MultipleStatementAlignment"/>
   <!-- Force array element indentation with 4 spaces -->
   <rule ref="Generic.Arrays.ArrayIndent"/>
   <!-- Force level of indentation for each call in a method chain. Each call should be indented exactly once respective to the origin of the chain.

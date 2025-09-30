@@ -19,7 +19,7 @@
  */
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class b202006161036_add_reference_group_for_project extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string

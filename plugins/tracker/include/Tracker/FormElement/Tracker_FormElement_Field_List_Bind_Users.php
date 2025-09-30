@@ -34,7 +34,7 @@ use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
 
-class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const TYPE = 'users';
 

@@ -22,7 +22,7 @@
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field_List_Value
 {
     public const OPEN_PREFIX = 'o';

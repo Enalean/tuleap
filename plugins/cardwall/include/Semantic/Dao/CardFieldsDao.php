@@ -23,7 +23,7 @@
 
 use Tuleap\Tracker\Semantic\IRetrieveSemanticDARByTracker;
 
-class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements IRetrieveSemanticDARByTracker //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements IRetrieveSemanticDARByTracker //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @return mixed either false if error or object DataAccessResult

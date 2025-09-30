@@ -19,7 +19,7 @@
  */
 
 
-class b201806061545_add_tlp_color_name_cardwall_column extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201806061545_add_tlp_color_name_cardwall_column extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

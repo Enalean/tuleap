@@ -70,7 +70,7 @@ class Config
      * @static
      * @return self instance of config class
      */
-    public static function GetInstance() // @codingStandardsIgnoreLine
+    public static function GetInstance() // phpcs:ignore
     {
         if (! self::$instance) {
             self::$instance = new Config();
@@ -87,7 +87,7 @@ class Config
      * @param string $configFile config file to load
      * @throws \Exception on failure
      */
-    public function LoadConfig($configFile) // @codingStandardsIgnoreLine
+    public function LoadConfig($configFile) // phpcs:ignore
     {
         if (! is_file($configFile)) {
             throw new MessageException('Could not load config file ' . $configFile, true, 500);
@@ -111,7 +111,7 @@ class Config
      *
      * @access public
      */
-    public function ClearConfig() // @codingStandardsIgnoreLine
+    public function ClearConfig() // phpcs:ignore
     {
         $this->values  = [];
         $this->configs = [];
@@ -125,7 +125,7 @@ class Config
      * @access public
      * @return mixed config value
      */
-    public function GetValue($key, $default = null) // @codingStandardsIgnoreLine
+    public function GetValue($key, $default = null) // phpcs:ignore
     {
         if ($this->HasKey($key)) {
             return $this->values[$key];
@@ -142,7 +142,7 @@ class Config
      * @param string $key config key to set
      * @param mixed $value value to set
      */
-    public function SetValue($key, $value) // @codingStandardsIgnoreLine
+    public function SetValue($key, $value) // phpcs:ignore
     {
         if (empty($key)) {
             return;
@@ -163,7 +163,7 @@ class Config
      * @param string $key config key to find
      * @return bool true if key exists
      */
-    public function HasKey($key) // @codingStandardsIgnoreLine
+    public function HasKey($key) // phpcs:ignore
     {
         if (empty($key)) {
             return false;

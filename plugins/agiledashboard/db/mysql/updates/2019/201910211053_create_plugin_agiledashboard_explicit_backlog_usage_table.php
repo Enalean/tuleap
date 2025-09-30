@@ -19,7 +19,7 @@
  *
  */
 
-class b201910211053_create_plugin_agiledashboard_explicit_backlog_usage_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201910211053_create_plugin_agiledashboard_explicit_backlog_usage_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description(): string
     {

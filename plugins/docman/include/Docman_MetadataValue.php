@@ -24,7 +24,7 @@
 /**
  * Docman_MetadataValue is a container for User defined values of RealMedatada.
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Docman_MetadataValue
 {
     public $fieldId;

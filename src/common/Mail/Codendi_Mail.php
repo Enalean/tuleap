@@ -30,7 +30,7 @@ use Tuleap\Mail\MailLogger;
  *
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Codendi_Mail implements Codendi_Mail_Interface
 {
     /**

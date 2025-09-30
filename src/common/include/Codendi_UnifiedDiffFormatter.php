@@ -26,7 +26,7 @@
  *
  * This class formats the diff in classic "unified diff" format.
  */
-class Codendi_UnifiedDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Codendi_UnifiedDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($context_lines = 4)
     {

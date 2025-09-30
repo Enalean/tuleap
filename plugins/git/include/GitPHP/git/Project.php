@@ -304,7 +304,7 @@ class Project
      * @access public
      * @return string the project
      */
-    public function GetProject() // @codingStandardsIgnoreLine
+    public function GetProject() // phpcs:ignore
     {
         return $this->project;
     }
@@ -317,7 +317,7 @@ class Project
      * @access private
      * @throws \Exception if project is invalid or outside of projectroot
      */
-    private function SetProject($project) // @codingStandardsIgnoreLine
+    private function SetProject($project) // phpcs:ignore
     {
         $realProjectRoot = realpath($this->projectRoot);
         $path            = $this->projectRoot . $project;
@@ -354,7 +354,7 @@ class Project
      * @access public
      * @return string the slug
      */
-    public function GetSlug() // @codingStandardsIgnoreLine
+    public function GetSlug() // phpcs:ignore
     {
         $project = $this->project;
 
@@ -373,7 +373,7 @@ class Project
      * @access public
      * @return string project path
      */
-    public function GetPath() // @codingStandardsIgnoreLine
+    public function GetPath() // phpcs:ignore
     {
         return $this->projectRoot . $this->project;
     }
@@ -388,7 +388,7 @@ class Project
      * @access public
      * @return string the project root
      */
-    public function GetProjectRoot() // @codingStandardsIgnoreLine
+    public function GetProjectRoot() // phpcs:ignore
     {
         return $this->projectRoot;
     }
@@ -403,7 +403,7 @@ class Project
      * @access public
      * @return bool git-daemon-export-ok?
      */
-    public function GetDaemonEnabled() // @codingStandardsIgnoreLine
+    public function GetDaemonEnabled() // phpcs:ignore
     {
         return file_exists($this->GetPath() . '/git-daemon-export-ok');
     }
@@ -418,7 +418,7 @@ class Project
      * @access public
      * @return string clone url
      */
-    public function GetCloneUrl() // @codingStandardsIgnoreLine
+    public function GetCloneUrl() // phpcs:ignore
     {
         if ($this->cloneUrl !== null) {
             return $this->cloneUrl;
@@ -440,7 +440,7 @@ class Project
      * @access public
      * @param string $cUrl clone url
      */
-    public function SetCloneUrl($cUrl) // @codingStandardsIgnoreLine
+    public function SetCloneUrl($cUrl) // phpcs:ignore
     {
         $this->cloneUrl = $cUrl;
     }
@@ -457,7 +457,7 @@ class Project
      * @access public
      * @return string push url
      */
-    public function GetPushUrl() // @codingStandardsIgnoreLine
+    public function GetPushUrl() // phpcs:ignore
     {
         if ($this->pushUrl !== null) {
             return $this->pushUrl;
@@ -479,7 +479,7 @@ class Project
      * @access public
      * @param string $pUrl push url
      */
-    public function SetPushUrl($pUrl) // @codingStandardsIgnoreLine
+    public function SetPushUrl($pUrl) // phpcs:ignore
     {
         $this->pushUrl = $pUrl;
     }
@@ -496,7 +496,7 @@ class Project
      * @access public
      * @return string bug url
      */
-    public function GetBugUrl() // @codingStandardsIgnoreLine
+    public function GetBugUrl() // phpcs:ignore
     {
         if ($this->bugUrl != null) {
             return $this->bugUrl;
@@ -513,7 +513,7 @@ class Project
      * @access public
      * @param string $bUrl bug url
      */
-    public function SetBugUrl($bUrl) // @codingStandardsIgnoreLine
+    public function SetBugUrl($bUrl) // phpcs:ignore
     {
         $this->bugUrl = $bUrl;
     }
@@ -526,7 +526,7 @@ class Project
      * @access public
      * @return string bug pattern
      */
-    public function GetBugPattern() // @codingStandardsIgnoreLine
+    public function GetBugPattern() // phpcs:ignore
     {
         if ($this->bugPattern != null) {
             return $this->bugPattern;
@@ -543,7 +543,7 @@ class Project
      * @access public
      * @param string $bPat bug pattern
      */
-    public function SetBugPattern($bPat) // @codingStandardsIgnoreLine
+    public function SetBugPattern($bPat) // phpcs:ignore
     {
         $this->bugPattern = $bPat;
     }
@@ -560,7 +560,7 @@ class Project
      * @access public
      * @return string website
      */
-    public function GetWebsite() // @codingStandardsIgnoreLine
+    public function GetWebsite() // phpcs:ignore
     {
         return $this->website;
     }
@@ -573,7 +573,7 @@ class Project
      * @access public
      * @param string $site website
      */
-    public function SetWebsite($site) // @codingStandardsIgnoreLine
+    public function SetWebsite($site) // phpcs:ignore
     {
         $this->website = $site;
     }
@@ -591,7 +591,7 @@ class Project
      * @access public
      * @return mixed head commit
      */
-    public function GetHeadCommit() // @codingStandardsIgnoreLine
+    public function GetHeadCommit() // phpcs:ignore
     {
         if (! $this->readHeadRef) {
             $this->ReadHeadCommit();
@@ -607,7 +607,7 @@ class Project
      *
      * @access protected
      */
-    public function ReadHeadCommit() // @codingStandardsIgnoreLine
+    public function ReadHeadCommit() // phpcs:ignore
     {
         $this->readHeadRef = true;
         $this->ReadHeadCommitRaw();
@@ -620,7 +620,7 @@ class Project
      *
      * @access private
      */
-    private function ReadHeadCommitRaw() // @codingStandardsIgnoreLine
+    private function ReadHeadCommitRaw() // phpcs:ignore
     {
         $head = trim(file_get_contents($this->GetPath() . '/HEAD'));
         if (preg_match('/^([0-9A-Fa-f]{40})$/', $head, $regs)) {
@@ -651,7 +651,7 @@ class Project
      * @access public
      * @return int timestamp
      */
-    public function GetEpoch() // @codingStandardsIgnoreLine
+    public function GetEpoch() // phpcs:ignore
     {
         if (! $this->epochRead) {
             $this->ReadEpoch();
@@ -669,7 +669,7 @@ class Project
      * @access public
      * @return int age
      */
-    public function GetAge() // @codingStandardsIgnoreLine
+    public function GetAge() // phpcs:ignore
     {
         if (! $this->epochRead) {
             $this->ReadEpoch();
@@ -686,7 +686,7 @@ class Project
      *
      * @access private
      */
-    private function ReadEpoch() // @codingStandardsIgnoreLine
+    private function ReadEpoch() // phpcs:ignore
     {
         $this->epochRead = true;
         $this->ReadEpochRaw();
@@ -699,7 +699,7 @@ class Project
      *
      * @access private
      */
-    private function ReadEpochRaw() // @codingStandardsIgnoreLine
+    private function ReadEpochRaw() // phpcs:ignore
     {
         if (! $this->readRefs) {
             $this->ReadRefList();
@@ -736,7 +736,7 @@ class Project
      *
      * @return Commit|null
      */
-    public function GetCommit($hash) // @codingStandardsIgnoreLine
+    public function GetCommit($hash) // phpcs:ignore
     {
         if ($hash === '') {
             return null;
@@ -798,7 +798,7 @@ class Project
      * @param string $type type of refs to get
      * @return array array of refs
      */
-    public function GetRefs($type = '') // @codingStandardsIgnoreLine
+    public function GetRefs($type = '') // phpcs:ignore
     {
         if (! $this->readRefs) {
             $this->ReadRefList();
@@ -820,7 +820,7 @@ class Project
      *
      * @access protected
      */
-    protected function ReadRefList() // @codingStandardsIgnoreLine
+    protected function ReadRefList() // phpcs:ignore
     {
         $this->readRefs = true;
         $this->ReadRefListRaw();
@@ -833,7 +833,7 @@ class Project
      *
      * @access private
      */
-    private function ReadRefListRaw() // @codingStandardsIgnoreLine
+    private function ReadRefListRaw() // phpcs:ignore
     {
         $pathlen = strlen($this->GetPath()) + 1;
 
@@ -914,7 +914,7 @@ class Project
      * @param string $dir directory
      * @return array array of filenames
      */
-    private function ListDir($dir) // @codingStandardsIgnoreLine
+    private function ListDir($dir) // phpcs:ignore
     {
         $files = [];
         if ($dh = opendir($dir)) {
@@ -949,7 +949,7 @@ class Project
      * @param int $count number of tags to load
      * @return array array of tags
      */
-    public function GetTags($count = 0) // @codingStandardsIgnoreLine
+    public function GetTags($count = 0) // phpcs:ignore
     {
         if (! $this->readRefs) {
             $this->ReadRefList();
@@ -966,7 +966,7 @@ class Project
      * @param int $count number of tags to load
      * @return array array of tags
      */
-    private function GetTagsRaw($count = 0) // @codingStandardsIgnoreLine
+    private function GetTagsRaw($count = 0) // phpcs:ignore
     {
         $tags = $this->git_exec->getAllTagsSortedByCreationDate();
 
@@ -986,7 +986,7 @@ class Project
      * @param string $tag tag to find
      * @return mixed tag object
      */
-    public function GetTag($tag) // @codingStandardsIgnoreLine
+    public function GetTag($tag) // phpcs:ignore
     {
         if ($tag === '') {
             return null;
@@ -1014,7 +1014,7 @@ class Project
      * @param string $tag tag to find
      * @return mixed tag object
      */
-    private function LoadTag($tag, $hash = '') // @codingStandardsIgnoreLine
+    private function LoadTag($tag, $hash = '') // phpcs:ignore
     {
         if ($tag === '') {
             return;
@@ -1036,7 +1036,7 @@ class Project
      * @param int $count number of tags to load
      * @return array array of heads
      */
-    public function GetHeads($count = 0) // @codingStandardsIgnoreLine
+    public function GetHeads($count = 0) // phpcs:ignore
     {
         if (! $this->readRefs) {
             $this->ReadRefList();
@@ -1053,7 +1053,7 @@ class Project
      * @param int $count number of tags to load
      * @return array array of heads
      */
-    private function GetHeadsRaw($count = 0) // @codingStandardsIgnoreLine
+    private function GetHeadsRaw($count = 0) // phpcs:ignore
     {
         $heads = $this->git_exec->getAllBranchesSortedByCreationDate();
 
@@ -1072,7 +1072,7 @@ class Project
      * @param string $head head to find
      * @return mixed head object
      */
-    public function GetHead($head) // @codingStandardsIgnoreLine
+    public function GetHead($head) // phpcs:ignore
     {
         if (empty($head)) {
             return null;
@@ -1106,7 +1106,7 @@ class Project
      * @param int $skip number of entries to skip
      * @return array array of hashes
      */
-    private function GetLogHash($hash, $count = 50, $skip = 0) // @codingStandardsIgnoreLine
+    private function GetLogHash($hash, $count = 50, $skip = 0) // phpcs:ignore
     {
         return $this->RevList($hash, $count, $skip);
     }
@@ -1122,7 +1122,7 @@ class Project
      * @param int $skip number of entries to skip
      * @return array array of commit objects
      */
-    public function GetLog($hash, $count = 50, $skip = 0) // @codingStandardsIgnoreLine
+    public function GetLog($hash, $count = 50, $skip = 0) // phpcs:ignore
     {
         if ($skip > Config::GetInstance()->GetValue('largeskip', 200)) {
             return $this->GetLogGit($hash, $count, $skip);
@@ -1142,7 +1142,7 @@ class Project
      * @param int $skip number of entries to skip
      * @return array array of commit objects
      */
-    private function GetLogGit($hash, $count = 50, $skip = 0) // @codingStandardsIgnoreLine
+    private function GetLogGit($hash, $count = 50, $skip = 0) // phpcs:ignore
     {
         $log = $this->GetLogHash($hash, $count, $skip);
         $len = count($log);
@@ -1160,7 +1160,7 @@ class Project
      *
      * @access private
      */
-    private function GetLogRaw($hash, $count = 50, $skip = 0) // @codingStandardsIgnoreLine
+    private function GetLogRaw($hash, $count = 50, $skip = 0) // phpcs:ignore
     {
         $total = $count + $skip;
 
@@ -1221,7 +1221,7 @@ class Project
      * @param string $hash blob hash
      * @return Blob
      */
-    public function GetBlob($hash) // @codingStandardsIgnoreLine
+    public function GetBlob($hash) // phpcs:ignore
     {
         if (empty($hash)) {
             return null;
@@ -1242,7 +1242,7 @@ class Project
      * @access public
      * @param string $hash tree hash
      */
-    public function GetTree($hash) // @codingStandardsIgnoreLine
+    public function GetTree($hash) // phpcs:ignore
     {
         if (empty($hash)) {
             return null;
@@ -1264,7 +1264,7 @@ class Project
      * @param string $hash object hash
      * @return string object data
      */
-    public function GetObject($hash, &$type = 0) // @codingStandardsIgnoreLine
+    public function GetObject($hash, &$type = 0) // phpcs:ignore
     {
         if (! preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
             return false;
@@ -1317,7 +1317,7 @@ class Project
      *
      * @access private
      */
-    private function ReadPacks() // @codingStandardsIgnoreLine
+    private function ReadPacks() // phpcs:ignore
     {
         $dh = opendir($this->GetPath() . '/objects/pack');
         if ($dh !== false) {
@@ -1348,7 +1348,7 @@ class Project
      * @param int $skip number of results to skip
      * @return array array of matching commits
      */
-    public function SearchCommit($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // @codingStandardsIgnoreLine
+    public function SearchCommit($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // phpcs:ignore
     {
         if (empty($pattern)) {
             return;
@@ -1380,7 +1380,7 @@ class Project
      * @param int $skip number of results to skip
      * @return array array of matching commits
      */
-    public function SearchAuthor($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // @codingStandardsIgnoreLine
+    public function SearchAuthor($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // phpcs:ignore
     {
         if (empty($pattern)) {
             return;
@@ -1412,7 +1412,7 @@ class Project
      * @param int $skip number of results to skip
      * @return array array of matching commits
      */
-    public function SearchCommitter($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // @codingStandardsIgnoreLine
+    public function SearchCommitter($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // phpcs:ignore
     {
         if (empty($pattern)) {
             return;
@@ -1448,7 +1448,7 @@ class Project
      * @param array $args args to give to rev-list
      * @return array array of hashes
      */
-    private function RevList($hash, $count = 50, $skip = 0, $args = array()) // @codingStandardsIgnoreLine
+    private function RevList($hash, $count = 50, $skip = 0, $args = array()) // phpcs:ignore
     {
         if ($count < 1) {
             return;

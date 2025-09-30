@@ -25,7 +25,7 @@ use Tuleap\Git\Permissions\Permission;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Project\UGroupLiteralizer;
 
-class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_Gitolite_ConfigPermissionsSerializer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var FineGrainedPermissionFactory

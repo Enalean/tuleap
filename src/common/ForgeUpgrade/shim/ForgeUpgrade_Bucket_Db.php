@@ -26,6 +26,6 @@ declare(strict_types=1);
  *
  * @deprecated
  */
-class ForgeUpgrade_Bucket_Db extends Tuleap\ForgeUpgrade\Bucket\BucketDb // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class ForgeUpgrade_Bucket_Db extends Tuleap\ForgeUpgrade\Bucket\BucketDb // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
 }

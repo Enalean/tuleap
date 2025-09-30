@@ -31,7 +31,7 @@ use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @psalm-param \Closure(Tracker): \Tuleap\Tracker\Semantic\TrackerSemanticManager $semantic_manager_instantiator

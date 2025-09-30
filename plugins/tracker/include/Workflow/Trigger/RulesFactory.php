@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * Build a PHP representation of a Rule out of json
  */
-class Tracker_Workflow_Trigger_RulesFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Workflow_Trigger_RulesFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         private readonly RetrieveUsedFields $formelement_factory,

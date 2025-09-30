@@ -68,7 +68,7 @@ class GitExe
      *
      * @param mixed $project project to set
      */
-    public function SetProject($project = null) // @codingStandardsIgnoreLine
+    public function SetProject($project = null) // phpcs:ignore
     {
         $this->project = $project;
     }
@@ -82,7 +82,7 @@ class GitExe
      * @param array $args arguments
      * @return string result of command
      */
-    public function Execute($command, $args) // @codingStandardsIgnoreLine
+    public function Execute($command, $args) // phpcs:ignore
     {
         $fullCommand = $this->CreateCommand($command, $args);
 
@@ -98,7 +98,7 @@ class GitExe
      * @param array $args arguments
      * @return resource process handle
      */
-    public function Open($command, $args, $mode = 'r') // @codingStandardsIgnoreLine
+    public function Open($command, $args, $mode = 'r') // phpcs:ignore
     {
         $fullCommand = $this->CreateCommand($command, $args);
 
@@ -116,7 +116,7 @@ class GitExe
      * @param array $args arguments
      * @return string result of command
      */
-    protected function CreateCommand($command, $args) // @codingStandardsIgnoreLine
+    protected function CreateCommand($command, $args) // phpcs:ignore
     {
         $gitDir = '';
         if ($this->project) {
@@ -134,7 +134,7 @@ class GitExe
      * @return string binary
      * @access public
      */
-    public function GetBinary() // @codingStandardsIgnoreLine
+    public function GetBinary() // phpcs:ignore
     {
         return $this->binary;
     }

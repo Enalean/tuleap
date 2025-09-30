@@ -22,7 +22,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-class b201901161452_add_timetracking_report extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201901161452_add_timetracking_report extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

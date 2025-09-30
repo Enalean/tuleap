@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201812051620_add_index_on_tracker_artifact_submitted_on extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201812051620_add_index_on_tracker_artifact_submitted_on extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

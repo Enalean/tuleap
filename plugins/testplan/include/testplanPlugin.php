@@ -61,7 +61,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 require_once __DIR__ . '/../../testmanagement/include/testmanagementPlugin.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class testplanPlugin extends Plugin
 {
     public function __construct(?int $id)

@@ -23,7 +23,7 @@
  * It allows the management of permission denied error.
  * It offres to user the possibility to request the project membership directly.
  */
-abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var URL

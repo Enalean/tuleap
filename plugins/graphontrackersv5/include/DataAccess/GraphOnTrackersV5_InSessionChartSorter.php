@@ -21,7 +21,7 @@ namespace Tuleap\GraphOnTrackersV5\DataAccess;
 
 use Tracker_Report_Session;
 
-class GraphOnTrackersV5_InSessionChartSorter //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class GraphOnTrackersV5_InSessionChartSorter //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string FREEZE__DONT_MOVE = '--';
     public const string BEGINNING         = 'beginning';

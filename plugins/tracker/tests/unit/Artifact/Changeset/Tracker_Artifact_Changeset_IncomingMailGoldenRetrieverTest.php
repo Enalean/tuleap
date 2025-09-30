@@ -34,7 +34,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private const RAW_MAIL_UPDATE   = 'raw mail content for update';
     private const RAW_MAIL_CREATION = 'raw mail content for creation';

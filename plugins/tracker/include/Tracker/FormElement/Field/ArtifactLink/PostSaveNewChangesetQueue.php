@@ -24,7 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  * Execute the various command during a postSaveNewChangeset
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
 {
     /** @var Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand[] */

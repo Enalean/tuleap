@@ -27,7 +27,7 @@ use Tuleap\User\PasswordVerifier;
 use Tuleap\User\RetrievePasswordlessOnlyState;
 use Tuleap\User\UserAuthenticationSucceeded;
 
-class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var EventDispatcherInterface */
     private $event_dispatcher;

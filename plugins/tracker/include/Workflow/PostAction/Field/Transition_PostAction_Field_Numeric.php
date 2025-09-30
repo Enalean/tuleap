@@ -23,7 +23,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 /**
  * Base class for numeric field post actions.
  */
-abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction_Field // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction_Field // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {//phpcs:ignore
 
     /**

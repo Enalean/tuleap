@@ -19,7 +19,7 @@
  *
  */
 
-class b201806061457_migrate_project_approval_forgeconfig extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201806061457_migrate_project_approval_forgeconfig extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

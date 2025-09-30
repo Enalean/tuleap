@@ -140,7 +140,7 @@ use Tuleap\WebAssembly\WasmtimeCacheConfigurationBuilder;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 final class tracker_functionsPlugin extends Plugin
 {
     public function __construct(?int $id)

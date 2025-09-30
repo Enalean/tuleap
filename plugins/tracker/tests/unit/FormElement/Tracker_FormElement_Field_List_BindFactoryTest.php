@@ -44,7 +44,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UGroupManager;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testImportStatik(): void
     {

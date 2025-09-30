@@ -24,7 +24,7 @@
 /**
  * Check that value is a string with neither carrige return nor null char.
  */
-class Valid_String extends \Valid_Text // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Valid_String extends \Valid_Text // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function validate($value)

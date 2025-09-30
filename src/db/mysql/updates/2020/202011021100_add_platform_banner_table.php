@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202011021100_add_platform_banner_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b202011021100_add_platform_banner_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

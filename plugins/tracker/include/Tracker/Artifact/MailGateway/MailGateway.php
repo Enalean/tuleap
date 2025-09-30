@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 abstract class Tracker_Artifact_MailGateway_MailGateway
 {
     public function __construct(

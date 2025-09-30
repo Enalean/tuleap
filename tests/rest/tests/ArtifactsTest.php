@@ -23,7 +23,7 @@ use Tuleap\REST\ForgeAccessSandbox;
 use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\Group('ArtifactsTest')]
-class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgnoreLine
+class ArtifactsTest extends ArtifactsTestExecutionHelper  // phpcs:ignore
 {
     use ForgeAccessSandbox;
 

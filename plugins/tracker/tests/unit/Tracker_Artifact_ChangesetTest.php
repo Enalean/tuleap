@@ -42,7 +42,7 @@ use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Artifact_ChangesetTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_ChangesetTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Tracker_Artifact_Changeset&MockObject $changeset;
     private Tracker_Artifact_Changeset_ValueDao&MockObject $dao;

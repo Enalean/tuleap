@@ -31,7 +31,7 @@ use Tuleap\REST\RestBase;
  */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('Regressions')]
-class Regressions_PutSoloCardTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Regressions_PutSoloCardTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function testItEditSoloCardLabel()
     {

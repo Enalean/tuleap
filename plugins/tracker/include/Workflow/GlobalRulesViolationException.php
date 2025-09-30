@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Workflow_GlobalRulesViolationException extends Tracker_Exception // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Workflow_GlobalRulesViolationException extends Tracker_Exception // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(Tracker $tracker)
     {

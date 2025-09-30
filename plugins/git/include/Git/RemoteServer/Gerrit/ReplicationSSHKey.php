@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string KEYNAME_PREFIX = 'gerrit_';
     public const string KEYNAME_SUFFIX = '@0.pub';

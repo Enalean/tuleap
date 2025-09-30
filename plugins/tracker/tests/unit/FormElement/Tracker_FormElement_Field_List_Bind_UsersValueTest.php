@@ -34,7 +34,7 @@ use UserHelper;
 use UserManager;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     use GlobalLanguageMock;
 

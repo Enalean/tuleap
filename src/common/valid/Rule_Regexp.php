@@ -24,7 +24,7 @@
 /**
  * Check if given string match a pattern
  */
-class Rule_Regexp extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_Regexp extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     protected $pattern;
     public function __construct($pattern)

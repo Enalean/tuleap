@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201804032030_add_password_configuration extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201804032030_add_password_configuration extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -21,7 +21,7 @@
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
 
-abstract class Cardwall_OnTop_Config_TrackerMapping // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Cardwall_OnTop_Config_TrackerMapping // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Tracker

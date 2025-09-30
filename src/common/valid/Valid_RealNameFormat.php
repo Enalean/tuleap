@@ -24,7 +24,7 @@
 /**
  * Check that value match user real name format.
  */
-class Valid_RealNameFormat extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Valid_RealNameFormat extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function validate($value)

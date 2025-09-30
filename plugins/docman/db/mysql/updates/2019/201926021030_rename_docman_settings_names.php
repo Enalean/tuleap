@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b201926021030_rename_docman_settings_names extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201926021030_rename_docman_settings_names extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

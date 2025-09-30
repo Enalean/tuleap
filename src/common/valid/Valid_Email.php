@@ -24,7 +24,7 @@
 /**
  * Check that submitted value is a simple string and a valid email.
  */
-class Valid_Email extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Valid_Email extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $separator;
     public function __construct($key = \null, $separator = \null)

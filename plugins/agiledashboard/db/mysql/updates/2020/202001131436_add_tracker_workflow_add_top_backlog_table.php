@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202001131436_add_tracker_workflow_add_top_backlog_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b202001131436_add_tracker_workflow_add_top_backlog_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

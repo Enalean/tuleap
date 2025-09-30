@@ -22,7 +22,7 @@
 use Tuleap\Color\ColorName;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_ColorPresenterCollection implements Iterator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_ColorPresenterCollection implements Iterator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var array */
     private $colors = [];

@@ -23,7 +23,7 @@ declare(strict_types=1);
 use ColinODell\PsrTestLogger\TestLogger;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger;
 

@@ -26,7 +26,7 @@ use SimpleXMLElement;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class AgileDashboardXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class AgileDashboardXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private SimpleXMLElement $xml_object;
     private AgileDashboardXMLImporter $importer;

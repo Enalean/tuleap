@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\View\ArtifactViewCopy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
         EventManager $event_manager,

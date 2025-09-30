@@ -19,7 +19,7 @@
  *
  */
 
-class b201807251400_add_widget_note_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201807251400_add_widget_note_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

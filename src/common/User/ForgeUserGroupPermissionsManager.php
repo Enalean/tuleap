@@ -20,7 +20,7 @@
 
 use Tuleap\User\ForgePermissionsRetriever;
 
-class User_ForgeUserGroupPermissionsManager implements ForgePermissionsRetriever // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class User_ForgeUserGroupPermissionsManager implements ForgePermissionsRetriever // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var User_ForgeUserGroupPermissionsDao

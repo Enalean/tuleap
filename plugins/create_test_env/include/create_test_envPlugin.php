@@ -35,7 +35,7 @@ use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserConnectionUpdateEvent;
 
-// @codingStandardsIgnoreLine
+// phpcs:ignore
 class create_test_envPlugin extends Plugin
 {
     public const string NAME = 'create_test_env';

@@ -46,7 +46,7 @@ require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../../pullrequest/include/pullrequestPlugin.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 {
     public function __construct($id)

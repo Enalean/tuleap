@@ -22,7 +22,7 @@
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $plugin;
     public $group_id;
