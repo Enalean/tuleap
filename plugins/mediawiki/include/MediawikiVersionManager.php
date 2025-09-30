@@ -21,10 +21,10 @@
 
 class MediawikiVersionManager
 {
-    public const MEDIAWIKI_120_VERSION = '1.20';
-    public const MEDIAWIKI_123_VERSION = '1.23';
+    public const string MEDIAWIKI_120_VERSION = '1.20';
+    public const string MEDIAWIKI_123_VERSION = '1.23';
 
-    public static $AVAILABLE_VERSIONS = [
+    public static array $AVAILABLE_VERSIONS = [
         self::MEDIAWIKI_120_VERSION,
         self::MEDIAWIKI_123_VERSION,
     ];

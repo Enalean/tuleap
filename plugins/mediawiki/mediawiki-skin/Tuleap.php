@@ -21,7 +21,7 @@ if (! defined('MEDIAWIKI')) {
  */
 class SkinTuleap extends SkinTemplate
 {
-    public const MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
+    public const string MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
 
     /** Using fusionforge. */
     public $skinname       = 'tuleap';

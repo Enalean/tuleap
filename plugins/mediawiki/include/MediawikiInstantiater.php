@@ -21,9 +21,9 @@
  */
 
 
-class MediaWikiInstantiater
+class MediaWikiInstantiater //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const MW_123_PATH = '/usr/share/mediawiki-tuleap-123';
+    public const string MW_123_PATH = '/usr/share/mediawiki-tuleap-123';
 
     /** @var \Psr\Log\LoggerInterface */
     private $logger;

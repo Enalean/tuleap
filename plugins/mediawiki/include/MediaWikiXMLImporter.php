@@ -20,9 +20,9 @@
 
 use Tuleap\Project\XML\Import\ImportConfig;
 
-class MediaWikiXMLImporter
+class MediaWikiXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const SERVICE_NAME = 'mediawiki';
+    public const string SERVICE_NAME = 'mediawiki';
 
     /**
      * @var \Psr\Log\LoggerInterface

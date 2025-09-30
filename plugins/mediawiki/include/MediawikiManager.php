@@ -20,10 +20,10 @@
 
 use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
-class MediawikiManager
+class MediawikiManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const READ_ACCESS  = 'PLUGIN_MEDIAWIKI_READ';
-    public const WRITE_ACCESS = 'PLUGIN_MEDIAWIKI_WRITE';
+    public const string READ_ACCESS  = 'PLUGIN_MEDIAWIKI_READ';
+    public const string WRITE_ACCESS = 'PLUGIN_MEDIAWIKI_WRITE';
 
     /** @var MediawikiDao */
     private $dao;
