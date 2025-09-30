@@ -16,11 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Folder } from "../../src/type";
+import type { Folder, FolderProperties } from "../../src/type";
 
 export class FolderBuilder {
     private readonly id: number;
     private parent_id: number | null = null;
+    private title: string = "";
+    private properties: FolderProperties = {
+        total_size: 0,
+        nb_files: 0,
+    };
 
     constructor(id: number) {
         this.id = id;
@@ -31,15 +36,22 @@ export class FolderBuilder {
         return this;
     }
 
+    public withTitle(title: string): this {
+        this.title = title;
+        return this;
+    }
+
+    public withProperties(properties: FolderProperties): this {
+        this.properties = properties;
+        return this;
+    }
+
     public build(): Folder {
         return {
             can_user_manage: false,
             creation_date: "",
             description: "",
-            folder_properties: {
-                total_size: 0,
-                nb_files: 0,
-            },
+            folder_properties: this.properties,
             id: this.id,
             is_expanded: false,
             is_uploading: false,
@@ -71,7 +83,7 @@ export class FolderBuilder {
                 value: "",
                 recursion: "",
             },
-            title: "",
+            title: this.title,
             type: "folder",
             updated: false,
             upload_error: null,

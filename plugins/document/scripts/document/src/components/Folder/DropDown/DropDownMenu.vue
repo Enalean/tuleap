@@ -92,6 +92,7 @@
         <download-folder-as-zip
             data-test="document-dropdown-download-folder-as-zip"
             v-bind:item="item"
+            v-bind:document_properties="document_properties"
         />
     </template>
 
@@ -116,6 +117,7 @@ import type { Item } from "../../../type";
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IS_DELETION_ALLOWED, PROJECT } from "../../../configuration-keys";
+import { getDocumentProperties } from "../../../helpers/properties/document-properties";
 
 const props = defineProps<{ item: Item }>();
 
@@ -124,6 +126,8 @@ const is_deletion_allowed = strictInject(IS_DELETION_ALLOWED);
 
 const NOTIFS_PANE_NAME = "notifications";
 const APPROVAL_TABLES_PANE_NAME = "approval";
+
+const document_properties = getDocumentProperties();
 
 const is_item_a_folder = computed((): boolean => isFolder(props.item));
 
