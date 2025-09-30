@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Search;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AlwaysThereColumnRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {

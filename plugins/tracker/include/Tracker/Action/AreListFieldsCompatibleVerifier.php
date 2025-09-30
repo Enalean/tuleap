@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
-
 final class AreListFieldsCompatibleVerifier implements VerifyListFieldsAreCompatible
 {
     #[\Override]

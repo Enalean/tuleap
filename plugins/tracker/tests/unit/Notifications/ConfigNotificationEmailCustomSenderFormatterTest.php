@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ConfigNotificationEmailCustomSenderFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {

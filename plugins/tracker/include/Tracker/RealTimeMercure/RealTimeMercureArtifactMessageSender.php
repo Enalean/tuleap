@@ -18,6 +18,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\Tracker\RealtimeMercure;
 
 use Tuleap\RealTimeMercure\Client;

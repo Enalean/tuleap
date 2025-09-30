@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace TuleapCfg\Command\SetupMysql;
 
 use Tuleap\Cryptography\ConcealedString;

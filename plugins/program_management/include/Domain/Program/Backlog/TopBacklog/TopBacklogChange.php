@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog;
 
-
 /**
  * @psalm-immutable
  */

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Repository\View;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LanguageDetectorForPrismJSTest extends \Tuleap\Test\PHPUnit\TestCase
 {

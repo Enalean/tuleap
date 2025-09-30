@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 define('PLUGIN_DOCMAN_DB_FALSE', 0);
 define('PLUGIN_DOCMAN_DB_TRUE', 1);
 

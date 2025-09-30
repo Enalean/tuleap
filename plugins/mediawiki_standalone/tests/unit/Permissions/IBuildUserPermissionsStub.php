@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\MediawikiStandalone\Permissions;
 
 final class IBuildUserPermissionsStub implements IBuildUserPermissions

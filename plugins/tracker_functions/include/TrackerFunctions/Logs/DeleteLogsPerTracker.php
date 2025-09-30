@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Logs;
 
-
 interface DeleteLogsPerTracker
 {
     public function deleteLogsPerTracker(int $tracker_id): void;

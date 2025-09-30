@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-
 interface UsedInvitationRetriever
 {
     public function searchInvitationUsedToRegister(int $user_id): ?Invitation;

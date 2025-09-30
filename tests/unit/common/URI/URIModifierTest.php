@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\URI;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class URIModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {

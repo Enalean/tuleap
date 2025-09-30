@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Identifier;
 
-
 interface SectionIdentifier
 {
     public function getBytes(): string;

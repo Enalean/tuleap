@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-
 interface IBuildUserPermissions
 {
     public function getPermissions(\PFUser $user, \Project $project): UserPermissions;

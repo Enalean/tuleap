@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\OnlyOffice\DocumentServer;
 
 use Tuleap\Cryptography\ConcealedString;

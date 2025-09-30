@@ -13,6 +13,9 @@
         <exclude name="PSR2.Namespaces.UseDeclaration.SpaceAfterLastUse"/>
         <!-- conflict and mostly checked by TuleapCodingStandard.Sniffs.Commenting.FileCopyrightSniff -->
         <exclude name="PSR12.Files.FileHeader.SpacingAfterTagBlock"/>
+        <!-- currently has issue with our other rules -->
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterUseFunctionBlock"/>
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterUseBlock"/>
     </rule>
     <!-- Forbid superfluous whitespaces -->
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">

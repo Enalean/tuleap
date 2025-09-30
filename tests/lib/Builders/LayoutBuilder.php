@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Builders;
 
-
 final class LayoutBuilder
 {
     public static function build(): TestLayout

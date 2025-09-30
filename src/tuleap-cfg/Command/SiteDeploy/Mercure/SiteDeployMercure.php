@@ -21,7 +21,6 @@
 
 namespace TuleapCfg\Command\SiteDeploy\Mercure;
 
-
 final class SiteDeployMercure
 {
     public function __construct()

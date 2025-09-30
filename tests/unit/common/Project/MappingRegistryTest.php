@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappingRegistryTest extends \Tuleap\Test\PHPUnit\TestCase
 {

@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Title;
 
 use PFUser;

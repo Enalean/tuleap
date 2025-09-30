@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-
 final class InvitationTestBuilder
 {
     private string $to_email        = 'jdoe@example.com';

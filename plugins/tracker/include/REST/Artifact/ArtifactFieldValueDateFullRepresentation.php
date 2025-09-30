@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-
 final class ArtifactFieldValueDateFullRepresentation extends ArtifactFieldValueRepresentation
 {
     private function __construct(public readonly string $type, public readonly bool $is_time_displayed)

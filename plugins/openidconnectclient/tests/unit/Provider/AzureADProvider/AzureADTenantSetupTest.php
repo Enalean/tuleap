@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AzureADTenantSetupTest extends \Tuleap\Test\PHPUnit\TestCase
 {

@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Logs;
+
 enum FunctionLogLineStatus: string
 {
     case PASSED = 'passed';

@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tuleap\Tracker\Milestone\PaneInfo;

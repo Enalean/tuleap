@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class StepDefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {

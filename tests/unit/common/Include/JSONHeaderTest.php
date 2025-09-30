@@ -20,7 +20,6 @@
 
 namespace Tuleap;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JSONHeaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

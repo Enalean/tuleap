@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\DefaultBranch;
 
-
 final class CannotSetANonExistingBranchAsDefaultException extends \RuntimeException
 {
     public function __construct(string $branch_name)

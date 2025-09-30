@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Tools\Xml2Php\Tracker\Report;
 
 use PhpParser\Node\Arg;

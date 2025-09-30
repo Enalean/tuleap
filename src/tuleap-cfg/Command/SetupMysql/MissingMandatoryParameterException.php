@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SetupMysql;
 
-
 final class MissingMandatoryParameterException extends \Exception
 {
     public function __construct(string $variable_name)

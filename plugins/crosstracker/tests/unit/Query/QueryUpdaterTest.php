@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Query;
 
 use Tuleap\CrossTracker\Tests\Builders\CrossTrackerQueryUnitTestBuilder;

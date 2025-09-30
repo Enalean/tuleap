@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 namespace Tuleap\Massmail;
+
 /**
  * @psalm-immutable
  */

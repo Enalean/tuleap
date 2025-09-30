@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 namespace Tuleap\DynamicCredentials\Session;
+
 interface DynamicCredentialIdentifierStorage
 {
     public function setIdentifier(string $identifier): void;

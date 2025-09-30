@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use Cocur\Slugify\Slugify;

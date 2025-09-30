@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Tracker\Test\Stub\Artifact\Changeset;
 
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreated;

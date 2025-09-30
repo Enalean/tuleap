@@ -24,7 +24,6 @@
  * restore-tar-repository /path/to/tarball.tar /path/to/restoredir
  */
 
-
 $output    = [];
 $exit_code = null;
 exec('tar -xzpf ' . escapeshellarg($argv[1]) . ' -C ' . escapeshellarg($argv[2]), $output, $exit_code);

@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 define('TRACKER_BASE_URL', '/plugins/tracker');
 define('TRACKER_BASE_DIR', dirname(__FILE__));
 define('TRACKER_TEMPLATE_DIR', realpath(dirname(__FILE__) . '/../templates'));

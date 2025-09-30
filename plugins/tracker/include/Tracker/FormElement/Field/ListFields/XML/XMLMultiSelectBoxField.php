@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
-
 final class XMLMultiSelectBoxField extends XMLListField
 {
     #[\Override]

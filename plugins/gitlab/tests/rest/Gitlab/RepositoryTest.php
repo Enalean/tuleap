@@ -20,7 +20,6 @@
 
 namespace Tuleap\Gitlab\REST;
 
-
 require_once __DIR__ . '/../bootstrap.php';
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

@@ -22,6 +22,7 @@
  */
 
   /** This script will destroy a mediawiki instance of a specific project.     */
+
 if ($argc < 2) {
     echo 'Usage ' . $argv[0] . " <project>\n";
     exit(0);

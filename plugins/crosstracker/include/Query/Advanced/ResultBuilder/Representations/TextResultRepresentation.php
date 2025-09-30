@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations;
 
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValueRepresentation;

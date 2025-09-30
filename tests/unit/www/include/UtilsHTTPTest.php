@@ -20,7 +20,6 @@
 
 namespace Tuleap;
 
-
 require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

@@ -19,7 +19,6 @@
  */
 namespace Tuleap\Gitlab\Plugin;
 
-
 class PluginInfo extends \PluginInfo
 {
     public function __construct(\gitlabPlugin $plugin)

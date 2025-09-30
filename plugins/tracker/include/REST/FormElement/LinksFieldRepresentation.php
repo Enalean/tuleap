@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Tracker\REST\FormElement;
 
 use Tracker_REST_FormElementRepresentation;

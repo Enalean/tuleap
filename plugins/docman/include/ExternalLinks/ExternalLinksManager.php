@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\ExternalLinks;
 
-
 final class ExternalLinksManager
 {
     /**

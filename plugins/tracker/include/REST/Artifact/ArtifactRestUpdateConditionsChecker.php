@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Luracast\Restler\RestException;

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
-
 interface SearchExpiredUploads
 {
     /**

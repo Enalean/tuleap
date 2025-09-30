@@ -23,7 +23,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 try {
     require_once __DIR__ . '/../../../src/www/include/pre.php';
 

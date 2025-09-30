@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest\Comment;
 
-
 class Factory
 {
     public function __construct(private Dao $dao)

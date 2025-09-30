@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\AuthorizationServer;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PromptParameterValuesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {

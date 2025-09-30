@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-
 /**
  * This event is thrown after authentication of a user against the local User database.
  *

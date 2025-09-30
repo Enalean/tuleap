@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-
 final class ConfigSetTestValueValidator implements ValueValidator
 {
     #[\Override]

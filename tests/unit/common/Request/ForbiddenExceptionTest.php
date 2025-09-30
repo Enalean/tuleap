@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForbiddenExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {

@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Tests\Stub\Widget;
 
 use Codendi_Request;

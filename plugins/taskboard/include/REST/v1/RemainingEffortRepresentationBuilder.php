@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Taskboard\REST\v1;
 
 use PFUser;

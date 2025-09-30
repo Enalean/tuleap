@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;

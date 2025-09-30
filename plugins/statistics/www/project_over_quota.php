@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $include_assets = new \Tuleap\Layout\IncludeCoreAssets();

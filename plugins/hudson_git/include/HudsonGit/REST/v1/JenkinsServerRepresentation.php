@@ -24,7 +24,6 @@
 
 namespace Tuleap\HudsonGit\REST\v1;
 
-
 /**
  * @psalm-immutable
  */

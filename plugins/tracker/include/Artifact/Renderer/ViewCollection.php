@@ -19,8 +19,6 @@
  *
  */
 
-
-
 namespace Tuleap\Tracker\Artifact\Renderer;
 
 use Codendi_Request;

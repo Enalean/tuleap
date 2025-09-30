@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template\Upload;
 
-
 final readonly class RetrieveUploadedArchiveForProjectStub implements RetrieveUploadedArchiveForProject
 {
     private function __construct(private ?string $path)

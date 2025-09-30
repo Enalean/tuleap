@@ -20,14 +20,7 @@
         <exclude name="PSR12.Files.FileHeader.SpacingAfterTagBlock"/>
         <!-- currently has issue with our other rules -->
         <exclude name="PSR12.Files.FileHeader.SpacingAfterUseFunctionBlock"/>
-        <!-- To solve in a dedicated contribution -->
-        <exclude name="PSR12.Files.FileHeader.SpacingAfterDocblockBlock"/>
-        <!-- To solve in a dedicated contribution -->
         <exclude name="PSR12.Files.FileHeader.SpacingAfterUseBlock"/>
-        <!-- To solve in a dedicated contribution -->
-        <exclude name="PSR12.Files.FileHeader.SpacingAfterDeclareBlock"/>
-        <!-- To solve in a dedicated contribution -->
-        <exclude name="PSR12.Files.FileHeader.SpacingAfterNamespaceBlock"/>
     </rule>
 
     <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">

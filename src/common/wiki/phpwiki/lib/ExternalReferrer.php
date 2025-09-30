@@ -6,6 +6,7 @@
  * Todo:
  *   store all external referrers in (rotatable) log/db for a RecentReferrers plugin.
  */
+
 if (! function_exists('isExternalReferrer')) { // better define that in stdlib.php
     function isExternalReferrer(&$request)
     {

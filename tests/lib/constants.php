@@ -17,4 +17,5 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
 include_once dirname(__FILE__) . '/../../plugins/tracker/include/constants.php';

@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Roadmap\REST\v1;
 
 use Luracast\Restler\RestException;

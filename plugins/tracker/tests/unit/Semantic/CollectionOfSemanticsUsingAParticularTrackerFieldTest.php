@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Semantic;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {

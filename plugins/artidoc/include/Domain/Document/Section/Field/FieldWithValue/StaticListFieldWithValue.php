@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;

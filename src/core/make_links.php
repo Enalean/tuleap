@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 /**
  * Simple API script available through HTTP
  *

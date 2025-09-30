@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+
 final class Parenthesis implements Term
 {
     public function __construct(public readonly OrExpression $or_expression)

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-
 class StatusColorForChangesetProvider
 {
     public function __construct(private StatusValueForChangesetProvider $value_for_changeset_provider)
