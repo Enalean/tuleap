@@ -55,7 +55,7 @@ final readonly class ArtifactLinkConfigController
 
         $base_layout->addJavascriptAsset(new JavascriptViteAsset(
             new IncludeViteAssets(
-                __DIR__ . '/../../../../../../scripts/site-admin/frontend-assets',
+                __DIR__ . '/../../../../../scripts/site-admin/frontend-assets',
                 '/assets/trackers/site-admin'
             ),
             'src/admin-type.js'

@@ -44,7 +44,7 @@ class PossibleParentSelectorRenderer
         }
 
         $include_assets = new \Tuleap\Layout\IncludeViteAssets(
-            __DIR__ . '/../../../../../scripts/artifact/frontend-assets',
+            __DIR__ . '/../../../../scripts/artifact/frontend-assets',
             '/assets/trackers/artifact'
         );
         $GLOBALS['HTML']->addJavascriptAsset(
