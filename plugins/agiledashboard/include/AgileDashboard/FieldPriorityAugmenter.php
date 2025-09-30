@@ -18,20 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Priority\SequenceIdManager;
+
 class AgileDashboard_FieldPriorityAugmenter
 {
-    /** @var AgileDashboard_SequenceIdManager */
-    private $sequence_id_manager;
-
-    /** @var Planning_MilestoneFactory */
-    private $milestone_factory;
-
     public function __construct(
-        AgileDashboard_SequenceIdManager $sequence_id_manager,
-        Planning_MilestoneFactory $milestone_factory,
+        private readonly SequenceIdManager $sequence_id_manager,
+        private readonly Planning_MilestoneFactory $milestone_factory,
     ) {
-        $this->sequence_id_manager = $sequence_id_manager;
-        $this->milestone_factory   = $milestone_factory;
     }
 
     public function getAugmentedDataForFieldPriority(PFUser $user, Project $project, array $additional_criteria, int $artifact_id): ?int

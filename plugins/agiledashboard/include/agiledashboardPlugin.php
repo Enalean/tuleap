@@ -71,6 +71,7 @@ use Tuleap\AgileDashboard\Planning\BacklogHistoryEntry;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
+use Tuleap\AgileDashboard\Priority\SequenceIdManager;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Semantic\XML\SemanticsExporter;
 use Tuleap\AgileDashboard\SplitModalPresenter;
@@ -204,7 +205,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public const string USER_PREF_DISPLAY_SPLIT_MODAL = 'should_display_agiledashboard_split_modal';
 
-    /** @var AgileDashboard_SequenceIdManager */
+    /** @var SequenceIdManager */
     private $sequence_id_manager;
 
     /**
@@ -995,7 +996,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     private function getSequenceIdManager()
     {
         if (! $this->sequence_id_manager) {
-            $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
+            $this->sequence_id_manager = new SequenceIdManager(
                 $this->getBacklogFactory(),
                 $this->getBacklogItemCollectionFactory(
                     $this->getMilestoneFactory(),
