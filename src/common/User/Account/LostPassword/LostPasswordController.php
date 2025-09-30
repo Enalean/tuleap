@@ -76,7 +76,20 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
             $user = $this->retrieve_user_by_username->getUserByUserName($username);
         }
 
-        if ($user === null || $user->getUserPw() === null) {
+        if ($user === null) {
+            $this->logger->info(sprintf("Tried recovering password for '%s' but no user matches this username, aborting", $username));
+            $this->displayConfirmation($layout);
+            return;
+        }
+
+        if ($user->getUserPw() === null) {
+            $this->logger->info(
+                sprintf(
+                    "Tried recovering password for '%s' but the user #%d does not have a password (check OpenID Connect...)",
+                    $username,
+                    $user->getId(),
+                )
+            );
             $this->displayConfirmation($layout);
             return;
         }
@@ -88,7 +101,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
                     try {
                         $reset_token = $this->password_reset_token_creator->create($user);
                     } catch (RecentlyCreatedCodeException) {
-                        $this->logger->info(sprintf('Reset code for user #%d was recently requested, not sending one again', $user->getId()));
+                        $this->logger->info(sprintf('Password reset code for user #%d was recently requested, not sending one again', $user->getId()));
                         return Result::ok(true);
                     }
 
@@ -121,6 +134,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
                         return Result::err(Fault::fromMessage('An error occurred while sending the email'));
                     }
 
+                    $this->logger->info(sprintf('Password reset code sent to user #%d', $user->getId()));
                     return Result::ok(true);
                 }
             )->match(
