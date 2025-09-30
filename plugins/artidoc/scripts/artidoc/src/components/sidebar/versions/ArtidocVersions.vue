@@ -30,8 +30,15 @@
         {{ error }}
     </div>
     <list-of-versions-skeleton v-if="is_loading_versions" />
-    <template v-else>
-        <flat-list-of-versions v-bind:versions="versions" />
+    <section v-if="!error && !is_loading_versions">
+        <div class="filter">
+            <select class="tlp-select" v-model="display">
+                <option v-bind:value="ALL_VERSIONS">{{ $gettext("All versions") }}</option>
+                <option v-bind:value="NAMED_VERSIONS">{{ $gettext("Named versions") }}</option>
+            </select>
+        </div>
+        <flat-list-of-versions v-if="display === ALL_VERSIONS" v-bind:versions="versions" />
+        <flat-list-of-versions v-if="display === NAMED_VERSIONS" v-bind:versions="named_versions" />
         <button
             class="tlp-button-mini tlp-button-primary load-more-versions"
             v-on:click="more"
@@ -48,11 +55,11 @@
             ></i>
             {{ $gettext("Load more versions") }}
         </button>
-    </template>
+    </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { Version } from "./fake-list-of-versions";
 import { getVersions } from "./fake-list-of-versions";
@@ -70,6 +77,14 @@ let next: ReadonlyArray<Version> = [];
 const has_more_versions = ref(true);
 const is_loading_more_versions = ref(false);
 const is_loading_versions = ref(true);
+
+const ALL_VERSIONS = "all";
+const NAMED_VERSIONS = "named";
+type Choices = typeof ALL_VERSIONS | typeof NAMED_VERSIONS;
+
+const display = ref<Choices>(ALL_VERSIONS);
+
+const named_versions = computed(() => versions.value.filter((version) => version.title.isValue()));
 
 onMounted(() => {
     setTimeout(() => {
@@ -104,10 +119,25 @@ function gotit(): void {
 </script>
 
 <style scoped lang="scss">
+@use "@/themes/includes/viewport-breakpoint";
+
 .tlp-alert-danger,
 .tlp-alert-info {
     margin: 0;
     border-radius: 0;
+}
+
+section {
+    height: var(--artidoc-sidebar-content-height);
+    overflow: hidden auto;
+
+    @media (max-width: viewport-breakpoint.$small-screen-size) {
+        height: fit-content;
+    }
+}
+
+.filter {
+    margin: var(--tlp-medium-spacing);
 }
 
 .load-more-versions {
