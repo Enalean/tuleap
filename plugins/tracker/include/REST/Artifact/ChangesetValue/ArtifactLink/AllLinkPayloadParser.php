@@ -24,13 +24,11 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
 final class AllLinkPayloadParser
 {
-    private const REVERSE_DIRECTION = 'reverse';
-    private const FORWARD_DIRECTION = 'forward';
-
     /**
      * @param LinkWithDirectionRepresentation[] $all_links
      * @throws \Tracker_FormElement_InvalidFieldValueException
@@ -39,7 +37,7 @@ final class AllLinkPayloadParser
     {
         $reverse_links = [];
         foreach ($all_links as $link) {
-            if ($link->direction === self::REVERSE_DIRECTION) {
+            if ($link->direction === LinkDirection::REVERSE->value) {
                 $reverse_links[] = RESTReverseLinkProxy::fromPayload($link);
             }
         }
@@ -55,7 +53,7 @@ final class AllLinkPayloadParser
     {
         $forward_links = [];
         foreach ($all_links as $link) {
-            if ($link->direction === self::FORWARD_DIRECTION) {
+            if ($link->direction === LinkDirection::FORWARD->value) {
                 $forward_links[] = RESTForwardLinkProxy::fromAllLinksPayload($link);
             }
         }

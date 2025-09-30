@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder;
 
 use PFUser;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Tracker;
 
@@ -31,6 +32,7 @@ final readonly class ResultBuilderVisitorParameters implements VisitorParameters
 {
     /**
      * @param Tracker[] $trackers
+     * @param Option<LinkDirection> $direction
      */
     public function __construct(
         public array $trackers,

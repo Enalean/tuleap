@@ -25,6 +25,7 @@ namespace Tuleap\REST;
 use Exception;
 use Psl\Json;
 use Psr\Http\Message\ResponseInterface;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 
 class ArtifactsTestExecutionHelper extends ArtifactBase
 {
@@ -153,15 +154,25 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
             'natures' => [
                 [
                     'shortname' => $nature_is_child,
-                    'direction' => 'forward',
+                    'direction' => LinkDirection::FORWARD->value,
                     'label'     => 'Child',
-                    'uri'       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_is_child&direction=forward",
+                    'uri'       => sprintf(
+                        'artifacts/%s/linked_artifacts?nature=%s&direction=%s',
+                        $artifact_id,
+                        $nature_is_child,
+                        LinkDirection::FORWARD->value
+                    ),
                 ],
                 [
                     'shortname' => $nature_empty,
-                    'direction' => 'forward',
+                    'direction' => LinkDirection::FORWARD->value,
                     'label'     => 'is Linked to',
-                    'uri'       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_empty&direction=forward",
+                    'uri'       => sprintf(
+                        'artifacts/%s/linked_artifacts?nature=%s&direction=%s',
+                        $artifact_id,
+                        $nature_empty,
+                        LinkDirection::FORWARD->value
+                    ),
                 ],
             ],
         ];

@@ -40,6 +40,9 @@ final readonly class LinkTypeResultBuilder
     {
     }
 
+    /**
+     * @param Option<LinkDirection> $direction
+     */
     public function getResult(array $select_results, Option $direction): SelectedValuesCollection
     {
         $values = [];
@@ -47,7 +50,7 @@ final readonly class LinkTypeResultBuilder
         foreach ($select_results as $result) {
             $id          = $result['id'];
             $values[$id] = $direction->match(
-                fn(string $link_direction) => $this->createSelectedValueWithLinkType($id, $result, $link_direction),
+                fn(LinkDirection $link_direction) => $this->createSelectedValueWithLinkType($id, $result, $link_direction),
                 fn() => $this->createEmptySelectedValue()
             );
         }
@@ -58,30 +61,30 @@ final readonly class LinkTypeResultBuilder
         );
     }
 
-    private function createSelectedValueWithLinkType(int $id, array $result, string $link_direction): SelectedValue
+    private function createSelectedValueWithLinkType(int $id, array $result, LinkDirection $link_direction): SelectedValue
     {
         $shortname = $result['@link_type'] ?? ArtifactLinkField::DEFAULT_LINK_TYPE;
         if ($shortname === ArtifactLinkField::DEFAULT_LINK_TYPE) {
             return $this->getShortnameWhenNoLinkType($link_direction);
         }
         $uri = 'artifacts/' . urlencode((string) $id) . '/linked_artifacts?nature=' . urlencode($shortname) .
-            '&direction=' . urlencode($link_direction);
+            '&direction=' . urlencode($link_direction->value);
 
-        $label = $result[$link_direction];
+        $label = $result[$link_direction->value];
         if ($label !== '') {
-            return $this->buildRepresentationWithLabel($shortname, $link_direction, $label, $uri);
+            return $this->buildRepresentationWithLabel($shortname, $link_direction->value, $label, $uri);
         }
 
         $system_type_presenter = $this->type_presenter_factory->getSystemTypeFromShortname($shortname);
 
-        $label = ($link_direction === LinkDirection::FORWARD->value) ? $system_type_presenter?->forward_label : $system_type_presenter?->reverse_label;
-        return $this->buildRepresentationWithLabel($shortname, $link_direction, $label, $uri);
+        $label = ($link_direction === LinkDirection::FORWARD) ? $system_type_presenter?->forward_label : $system_type_presenter?->reverse_label;
+        return $this->buildRepresentationWithLabel($shortname, $link_direction->value, $label, $uri);
     }
 
-    private function getShortnameWhenNoLinkType(string $direction): SelectedValue
+    private function getShortnameWhenNoLinkType(LinkDirection $direction): SelectedValue
     {
-        $label                    = $direction === LinkDirection::FORWARD->value ?  dgettext('tuleap-crosstracker', 'is Linked to') :  dgettext('tuleap-crosstracker', 'is Linked from');
-        $link_type_representation = new LinkTypeRepresentation(ArtifactLinkField::DEFAULT_LINK_TYPE, $direction, $label, '');
+        $label                    = $direction === LinkDirection::FORWARD ?  dgettext('tuleap-crosstracker', 'is Linked to') :  dgettext('tuleap-crosstracker', 'is Linked from');
+        $link_type_representation = new LinkTypeRepresentation(ArtifactLinkField::DEFAULT_LINK_TYPE, $direction->value, $label, '');
         return new SelectedValue(AllowedMetadata::LINK_TYPE, ArtifactLinkTypeRepresentation::build($link_type_representation));
     }
 

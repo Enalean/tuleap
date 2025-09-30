@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
@@ -34,10 +35,10 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
 {
     use ForgeConfigSandbox;
 
-    private const FIELD_ID                 = 405;
-    private const FIRST_ADDED_ARTIFACT_ID  = 66;
-    private const SECOND_ADDED_ARTIFACT_ID = 460;
-    private const PARENT_ARTIFACT_ID       = 165;
+    private const int FIELD_ID                 = 405;
+    private const int FIRST_ADDED_ARTIFACT_ID  = 66;
+    private const int SECOND_ADDED_ARTIFACT_ID = 460;
+    private const int PARENT_ARTIFACT_ID       = 165;
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
@@ -112,8 +113,16 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
 
     public function testItBuildsFromARESTPayloadWithOnlyAllLinksKey(): void
     {
-        $link1_representation = new LinkWithDirectionRepresentation(self::FIRST_ADDED_ARTIFACT_ID, 'forward', '');
-        $link2_representation = new LinkWithDirectionRepresentation(self::SECOND_ADDED_ARTIFACT_ID, 'reverse', '');
+        $link1_representation = new LinkWithDirectionRepresentation(
+            self::FIRST_ADDED_ARTIFACT_ID,
+            LinkDirection::FORWARD->value,
+            ArtifactLinkField::DEFAULT_LINK_TYPE
+        );
+        $link2_representation = new LinkWithDirectionRepresentation(
+            self::SECOND_ADDED_ARTIFACT_ID,
+            LinkDirection::REVERSE->value,
+            ArtifactLinkField::DEFAULT_LINK_TYPE
+        );
 
         $payload            = new ArtifactValuesRepresentation();
         $payload->all_links = [$link1_representation, $link2_representation];

@@ -161,7 +161,10 @@ final class CrossTrackerWidgetResource extends AuthenticatedResource
             $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $id);
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory(new ForwardLinkTypeSelectFromBuilder(), new CrossTrackerWidgetRetriever($this->getWidgetDao()))->getForwardLinks(
+                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory(
+                    new ForwardLinkTypeSelectFromBuilder(),
+                    new CrossTrackerWidgetRetriever($this->getWidgetDao())
+                )->getForwardLinks(
                     CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($tql_query, Option::fromValue($id)),
                     $source_artifact_id,
                     $current_user,

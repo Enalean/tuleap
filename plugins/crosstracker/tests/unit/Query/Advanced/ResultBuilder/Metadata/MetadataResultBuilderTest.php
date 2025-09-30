@@ -128,7 +128,7 @@ final class MetadataResultBuilderTest extends TestCase
             $metadata,
             $selected_result,
             UserTestBuilder::buildWithDefaults(),
-            Option::fromValue(LinkDirection::FORWARD->value)
+            Option::fromValue(LinkDirection::FORWARD)
         );
     }
 

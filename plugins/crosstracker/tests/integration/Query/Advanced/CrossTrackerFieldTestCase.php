@@ -42,13 +42,13 @@ use Tuleap\DB\UUID;
 use Tuleap\Option\Option;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
-use function Psl\Type\string;
 
 abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
 {
@@ -112,7 +112,14 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
                 new WithoutLinkTypeSelectFromBuilder(),
                 $cross_tracker_widget_retriever
             )
-            ->getArtifactsMatchingQuery($cross_tracker_widget_retriever, $query, $user, 10, 0, Option::nothing(string()));
+            ->getArtifactsMatchingQuery(
+                $cross_tracker_widget_retriever,
+                $query,
+                $user,
+                10,
+                0,
+                Option::nothing(LinkDirection::class)
+            );
         return array_values(array_map(static function (array $artifact): int {
             if (! isset($artifact['@id']) || ! ($artifact['@id'] instanceof NumericResultRepresentation)) {
                 throw new LogicException('Query result should contains @id column');
@@ -125,10 +132,15 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
     final protected function getQueryResults(CrossTrackerQuery $query, PFUser $user): CrossTrackerQueryContentRepresentation
     {
         $cross_tracker_widget_retriever = new CrossTrackerWidgetRetriever(new CrossTrackerWidgetDao());
-        $result                         = (new CrossTrackerArtifactQueryFactoryBuilder())
+        return (new CrossTrackerArtifactQueryFactoryBuilder())
             ->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder(), $cross_tracker_widget_retriever)
-            ->getArtifactsMatchingQuery($cross_tracker_widget_retriever, $query, $user, 10, 0, Option::nothing(string()));
-        assert($result instanceof CrossTrackerQueryContentRepresentation);
-        return $result;
+            ->getArtifactsMatchingQuery(
+                $cross_tracker_widget_retriever,
+                $query,
+                $user,
+                10,
+                0,
+                Option::nothing(LinkDirection::class)
+            );
     }
 }

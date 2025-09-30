@@ -35,6 +35,6 @@ final class ArtifactLinkTypeRepresentation
     public function __construct(ArtifactLinkType $link_type)
     {
         $this->shortname = $link_type->link_shortname;
-        $this->direction = $link_type->link_direction;
+        $this->direction = $link_type->link_direction->value;
     }
 }

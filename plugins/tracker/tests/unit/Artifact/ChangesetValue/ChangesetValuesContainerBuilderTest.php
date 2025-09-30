@@ -26,7 +26,9 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
@@ -100,8 +102,8 @@ final class ChangesetValuesContainerBuilderTest extends TestCase
             12 => psl_json_encode([
                 'field_id'  => 12,
                 'all_links' => [
-                    new LinkWithDirectionRepresentation(9846, 'forward', ''),
-                    new LinkWithDirectionRepresentation(9847, 'reverse', '_is_child'),
+                    new LinkWithDirectionRepresentation(9846, LinkDirection::FORWARD->value, ArtifactLinkField::DEFAULT_LINK_TYPE),
+                    new LinkWithDirectionRepresentation(9847, LinkDirection::REVERSE->value, ArtifactLinkField::TYPE_IS_CHILD),
                 ],
             ]),
         ]);
@@ -111,7 +113,7 @@ final class ChangesetValuesContainerBuilderTest extends TestCase
                 'new_values'     => '9846',
                 'removed_values' => [],
                 'types'          => [
-                    9846 => '',
+                    9846 => ArtifactLinkField::DEFAULT_LINK_TYPE,
                 ],
             ],
         ], $changeset_values_container->getFieldsData());
@@ -131,8 +133,8 @@ final class ChangesetValuesContainerBuilderTest extends TestCase
                 12 => psl_json_encode([
                     'field_id'  => 12,
                     'all_links' => [
-                        new LinkWithDirectionRepresentation(9846, 'forward', ''),
-                        new LinkWithDirectionRepresentation(9847, 'reverse', '_is_child'),
+                        new LinkWithDirectionRepresentation(9846, LinkDirection::FORWARD->value, ArtifactLinkField::DEFAULT_LINK_TYPE),
+                        new LinkWithDirectionRepresentation(9847, LinkDirection::REVERSE->value, ArtifactLinkField::TYPE_IS_CHILD),
                     ],
                 ]),
             ],
@@ -144,7 +146,7 @@ final class ChangesetValuesContainerBuilderTest extends TestCase
             12 => [
                 'new_values' => '9846',
                 'types'      => [
-                    9846 => '',
+                    9846 => ArtifactLinkField::DEFAULT_LINK_TYPE,
                 ],
             ],
         ], $changeset_values_container->getFieldsData());

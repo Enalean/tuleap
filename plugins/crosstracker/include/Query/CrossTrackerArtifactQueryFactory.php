@@ -112,6 +112,7 @@ final readonly class CrossTrackerArtifactQueryFactory
     }
 
     /**
+     * @param Option<LinkDirection> $direction
      * @throws ExpertQueryIsEmptyException
      * @throws FromIsInvalidException
      * @throws LimitSizeIsExceededException
@@ -197,7 +198,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             $limit,
             $offset,
             Option::fromValue($source_artifact_id),
-            Option::fromValue(LinkDirection::FORWARD->value),
+            Option::fromValue(LinkDirection::FORWARD),
         );
     }
 
@@ -237,12 +238,13 @@ final readonly class CrossTrackerArtifactQueryFactory
             $limit,
             $offset,
             Option::fromValue($target_artifact_id),
-            Option::fromValue(LinkDirection::REVERSE->value),
+            Option::fromValue(LinkDirection::REVERSE),
         );
     }
 
     /**
      * @param Option<int> $artifact_id_for_links
+     * @param Option<LinkDirection> $direction
      * @throws FromIsInvalidException
      * @throws LimitSizeIsExceededException
      * @throws MissingFromException
@@ -294,6 +296,7 @@ final readonly class CrossTrackerArtifactQueryFactory
     /**
      * @param Tracker[] $trackers
      * @param Option<int> $target_artifact_id_for_reverse_links
+     * @param Option<LinkDirection> $direction
      */
     private function retrieveQueryContentRepresentation(
         ParsedCrossTrackerQuery $query,
@@ -334,7 +337,13 @@ final readonly class CrossTrackerArtifactQueryFactory
             array_values($artifact_ids),
         );
 
-        $results = $this->result_builder->buildResult([new Metadata('artifact'), ...$query->parsed_query->getSelect()], $trackers, $current_user, $select_results, $direction);
+        $results = $this->result_builder->buildResult(
+            [new Metadata('artifact'), ...$query->parsed_query->getSelect()],
+            $trackers,
+            $current_user,
+            $select_results,
+            $direction
+        );
 
         return $this->buildQueryContentRepresentation($results, $total_size);
     }

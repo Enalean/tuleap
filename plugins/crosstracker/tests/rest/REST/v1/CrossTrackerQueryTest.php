@@ -26,6 +26,8 @@ use Psl\Json;
 use Tuleap\CrossTracker\TestBase;
 use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\RESTTestDataBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossTrackerQueryTest extends TestBase
@@ -195,9 +197,9 @@ final class CrossTrackerQueryTest extends TestBase
 
         self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
 
-        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['shortname']);
+        self::assertSame(ArtifactLinkField::TYPE_IS_CHILD, $json_response['artifacts'][0]['@link_type']['shortname']);
         self::assertSame('Parent', $json_response['artifacts'][0]['@link_type']['label']);
-        self::assertSame('reverse', $json_response['artifacts'][0]['@link_type']['direction']);
+        self::assertSame(LinkDirection::REVERSE->value, $json_response['artifacts'][0]['@link_type']['direction']);
     }
 
     /**
@@ -267,9 +269,9 @@ final class CrossTrackerQueryTest extends TestBase
 
         self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
 
-        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['shortname']);
+        self::assertSame(ArtifactLinkField::TYPE_IS_CHILD, $json_response['artifacts'][0]['@link_type']['shortname']);
         self::assertSame('Parent', $json_response['artifacts'][0]['@link_type']['label']);
-        self::assertSame('reverse', $json_response['artifacts'][0]['@link_type']['direction']);
+        self::assertSame(LinkDirection::REVERSE->value, $json_response['artifacts'][0]['@link_type']['direction']);
     }
 
     /**
@@ -296,14 +298,11 @@ final class CrossTrackerQueryTest extends TestBase
             ['order' => 'asc']
         );
 
-        $artifacts = json_decode(
+        $artifacts = Json\decode(
             $this->getResponseByName(
                 BaseTestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', "trackers/$this->forward_cross_tracker_tracker_id/artifacts?$query")
             )->getBody()->getContents(),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
         );
 
         $artifact_title   = 'artifact A';
@@ -321,9 +320,9 @@ final class CrossTrackerQueryTest extends TestBase
 
         self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
 
-        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['shortname']);
+        self::assertSame(ArtifactLinkField::TYPE_IS_CHILD, $json_response['artifacts'][0]['@link_type']['shortname']);
         self::assertSame('Child', $json_response['artifacts'][0]['@link_type']['label']);
-        self::assertSame('forward', $json_response['artifacts'][0]['@link_type']['direction']);
+        self::assertSame(LinkDirection::FORWARD->value, $json_response['artifacts'][0]['@link_type']['direction']);
     }
 
     /**
@@ -375,9 +374,9 @@ final class CrossTrackerQueryTest extends TestBase
 
         self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
 
-        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['shortname']);
+        self::assertSame(ArtifactLinkField::TYPE_IS_CHILD, $json_response['artifacts'][0]['@link_type']['shortname']);
         self::assertSame('Child', $json_response['artifacts'][0]['@link_type']['label']);
-        self::assertSame('forward', $json_response['artifacts'][0]['@link_type']['direction']);
+        self::assertSame(LinkDirection::FORWARD->value, $json_response['artifacts'][0]['@link_type']['direction']);
     }
 
     public function testGetQueryWithoutArtifacts(): void
