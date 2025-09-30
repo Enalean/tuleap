@@ -30,13 +30,12 @@
             v-on:toggle-links="toggleLinks"
             v-bind:level="level"
             v-bind:is_last="is_last"
-            v-bind:parent_element="parent_element"
-            v-bind:parent_caret="parent_caret"
+            v-bind:uuid="row.row_uuid"
             v-bind:direction="row.direction"
             v-bind:reverse_links_count="reverse_links_count"
         />
     </div>
-    <template v-if="is_expanded && current_element_ref && current_caret_ref">
+    <template v-if="is_expanded">
         <artifact-link-rows
             v-for="(artifact_link, index) in [forward, reverse]"
             v-bind:key="index"
@@ -47,8 +46,6 @@
             v-bind:artifact_links_rows="artifact_link.artifact_links"
             v-bind:level="level + 1"
             v-bind:tql_query="tql_query"
-            v-bind:parent_element="current_element_ref"
-            v-bind:parent_caret="current_caret_ref"
             v-bind:reverse_links_count="reverse.artifact_links.length"
             v-bind:ancestors="[...ancestors, row.artifact_id]"
         />
@@ -104,9 +101,6 @@ const is_expanded = ref(false);
 const error_message = ref("");
 const total_number_of_forward_links = ref(0);
 const total_number_of_reverse_links = ref(0);
-
-const current_element_ref = ref<HTMLElement>();
-const current_caret_ref = ref<HTMLElement>();
 
 const forward = computed((): ArtifactLinksFetchStatus => {
     return {
@@ -167,10 +161,7 @@ function filterAlreadySeenArtifact(rows: ReadonlyArray<ArtifactRow>): ArtifactRo
     return rows.filter((row) => row.artifact_id !== props.ancestors.slice(-1)[0]);
 }
 
-function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): void {
-    current_element_ref.value = current_element;
-    current_caret_ref.value = current_caret;
-
+function toggleLinks(): void {
     is_expanded.value = !is_expanded.value;
 
     if (!is_expanded.value) {

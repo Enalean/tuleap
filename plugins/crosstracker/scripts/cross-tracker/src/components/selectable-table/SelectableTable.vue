@@ -55,9 +55,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, provide } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
+    ARROW_DATA_STORE,
     ARROW_REDRAW_TRIGGERER,
     EMITTER,
     GET_COLUMN_NAME,
@@ -79,12 +80,15 @@ import {
     SEARCH_ARTIFACTS_SUCCESS_EVENT,
 } from "../../helpers/widget-events";
 import ArtifactRows from "./ArtifactRows.vue";
+import { ArrowDataStore } from "../../domain/ArrowDataStore";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const arrow_redraw_triggerer = strictInject(ARROW_REDRAW_TRIGGERER);
 const row_collection_store = strictInject(ROW_COLLECTION_STORE);
+
+provide(ARROW_DATA_STORE, ArrowDataStore());
 
 const props = defineProps<{
     tql_query: string;

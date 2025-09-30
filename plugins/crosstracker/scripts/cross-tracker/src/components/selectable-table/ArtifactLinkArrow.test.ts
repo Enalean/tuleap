@@ -29,6 +29,7 @@ import { EMITTER } from "../../injection-symbols";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
+import { v4 as uuidv4 } from "uuid";
 
 const parent_cell = {
     offsetHeight: 32,
@@ -99,6 +100,17 @@ describe("ArtifactLinkArrow", () => {
                 is_last_link,
                 direction,
                 reverse_links_count,
+                uuid: uuidv4(),
+                parent_element: {
+                    element: parent_cell,
+                    caret: parent_caret,
+                    uuid: uuidv4(),
+                },
+                current_element: {
+                    element: child_cell,
+                    caret: child_caret,
+                    uuid: uuidv4(),
+                },
             },
         });
     }

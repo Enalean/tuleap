@@ -26,20 +26,16 @@
     >
         <artifact-link-arrow
             v-if="
-                cell_element &&
-                caret_element &&
-                parent_element &&
-                parent_caret &&
+                current_arrow_data_entry &&
                 direction &&
-                reverse_links_count !== undefined
+                reverse_links_count !== undefined &&
+                get_parent_element !== undefined
             "
-            v-bind:child_cell="cell_element"
-            v-bind:child_caret="caret_element"
             v-bind:is_last_link="is_last"
-            v-bind:parent_cell="parent_element"
-            v-bind:parent_caret="parent_caret"
             v-bind:direction="direction"
             v-bind:reverse_links_count="reverse_links_count"
+            v-bind:current_element="current_arrow_data_entry"
+            v-bind:parent_element="get_parent_element"
         />
         <caret-indentation v-bind:level="level" />
         <button
@@ -67,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef, onMounted } from "vue";
 import { useGettext } from "vue3-gettext";
 import {
     type ArtifactLinkDirection,
@@ -78,31 +74,38 @@ import {
 import type { ToggleLinks } from "../../helpers/ToggleLinksEmit";
 import CaretIndentation from "./CaretIndentation.vue";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
-import { DASHBOARD_TYPE, DASHBOARD_ID } from "../../injection-symbols";
+import {
+    DASHBOARD_TYPE,
+    DASHBOARD_ID,
+    ROW_COLLECTION_STORE,
+    ARROW_DATA_STORE,
+} from "../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
+import type { ArrowDataEntry } from "../../domain/ArrowDataStore";
 
 const dashboard_id = strictInject(DASHBOARD_ID);
 const dashboard_type = strictInject(DASHBOARD_TYPE);
+const row_collection_store = strictInject(ROW_COLLECTION_STORE);
+const arrow_data_store = strictInject(ARROW_DATA_STORE);
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
+    uuid: string;
     cell: Cell | undefined;
     artifact_uri: string;
     expected_number_of_forward_link: number;
     expected_number_of_reverse_link: number;
     level: number;
     is_last: boolean;
-    parent_element: HTMLElement | undefined;
-    parent_caret: HTMLElement | undefined;
     direction: ArtifactLinkDirection | undefined;
     reverse_links_count: number | undefined;
 }>();
 
 const cell_element = useTemplateRef<HTMLElement>("pretty-title-cell-element");
 const caret_element = useTemplateRef<HTMLElement>("target-caret-element");
-
+const current_arrow_data_entry = ref<ArrowDataEntry>();
 const emit = defineEmits<ToggleLinks>();
 
 const artifact_url = computed((): string => {
@@ -140,10 +143,30 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 
 function toggleArtifactLinksDisplay(): void {
     are_artifact_links_expanded.value = !are_artifact_links_expanded.value;
-    if (cell_element.value && caret_element.value) {
-        emit("toggle-links", cell_element.value, caret_element.value);
-    }
+    emit("toggle-links");
 }
+
+const get_parent_element = computed(() => {
+    const parent_row = row_collection_store.getParentByUUId(props.uuid);
+    if (!parent_row) {
+        return undefined;
+    }
+    return arrow_data_store.getByUUID(parent_row.row.row_uuid);
+});
+
+onMounted(() => {
+    if (!caret_element.value || !cell_element.value) {
+        return;
+    }
+
+    current_arrow_data_entry.value = {
+        uuid: props.uuid,
+        caret: caret_element.value,
+        element: cell_element.value,
+    };
+
+    arrow_data_store.addEntry(props.uuid, cell_element.value, caret_element.value);
+});
 </script>
 
 <style scoped lang="scss">
