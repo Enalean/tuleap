@@ -33,9 +33,9 @@ use Tuleap\Cryptography\ConcealedString;
  * servers, query templates, etc.
  */
 #[ConfigKeyCategory('LDAP')]
-class LDAP
+class LDAP //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const CONFIGURATION_VARIABLES = [
+    public const array CONFIGURATION_VARIABLES = [
         'sys_ldap_server_common_name',
         'sys_ldap_server',
         'sys_ldap_server_type',
@@ -72,13 +72,13 @@ class LDAP
 
     #[ConfigKey('Timeout delay for LDAP operations in seconds')]
     #[ConfigKeyInt(5)]
-    public const CONFIG_LDAP_TIMEOUT = 'sys_ldap_timeout';
+    public const string CONFIG_LDAP_TIMEOUT = 'sys_ldap_timeout';
 
     /**
      * This is equivalent to searching the entire directory.
      */
-    public const SCOPE_SUBTREE      = 1;
-    public const SCOPE_SUBTREE_TEXT = 'subtree';
+    public const int SCOPE_SUBTREE         = 1;
+    public const string SCOPE_SUBTREE_TEXT = 'subtree';
 
     /**
      * LDAP_SCOPE_ONELEVEL means that the search should only return information
@@ -86,23 +86,23 @@ class LDAP
      * (Equivalent to typing "ls" and getting a list of files and folders in
      * the current working directory.)
      */
-    public const SCOPE_ONELEVEL      = 2;
-    public const SCOPE_ONELEVEL_TEXT = 'onelevel';
+    public const int SCOPE_ONELEVEL         = 2;
+    public const string SCOPE_ONELEVEL_TEXT = 'onelevel';
 
     /**
      * It is equivalent to reading an entry from the directory.
      */
-    public const SCOPE_BASE = 3;
+    public const int SCOPE_BASE = 3;
 
     /**
      * Error value when search exceed either server or client size limit.
      */
-    public const ERR_SIZELIMIT = 0x04;
+    public const int ERR_SIZELIMIT = 0x04;
 
-    public const ERR_SUCCESS = 0x00;
+    public const int ERR_SUCCESS = 0x00;
 
-    public const SERVER_TYPE_ACTIVE_DIRECTORY = 'ActiveDirectory';
-    public const SERVER_TYPE_OPEN_LDAP        = 'OpenLDAP';
+    public const string SERVER_TYPE_ACTIVE_DIRECTORY = 'ActiveDirectory';
+    public const string SERVER_TYPE_OPEN_LDAP        = 'OpenLDAP';
 
     private $ds;
     private $bound;
@@ -254,10 +254,8 @@ class LDAP
 
     /**
      * Connect and bind to the LDAP Directory
-     *
-     * @return bool
      */
-    public function _connectAndBind()
+    public function _connectAndBind(): bool // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $this->connect()) {
             return false;
@@ -654,7 +652,7 @@ class LDAP
      * Note: don't enable it for each request, otherwise, you may hide unwanted
      * errors.
      */
-    private function _initErrorHandler()
+    private function _initErrorHandler(): void //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->errorsTrapped) {
             /**
@@ -669,7 +667,7 @@ class LDAP
     /**
      * After LDAP query, restore the PHP error handler to its previous state.
      */
-    private function _restoreErrorHandler()
+    private function _restoreErrorHandler(): void //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->errorsTrapped) {
             restore_error_handler();
