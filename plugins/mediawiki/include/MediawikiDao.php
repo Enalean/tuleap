@@ -19,10 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class MediawikiDao extends DataAccessObject
+class MediawikiDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const DEDICATED_DATABASE_PREFIX       = 'plugin_mediawiki_';
-    public const DEDICATED_DATABASE_TABLE_PREFIX = 'mw';
+    public const string DEDICATED_DATABASE_PREFIX       = 'plugin_mediawiki_';
+    public const string DEDICATED_DATABASE_TABLE_PREFIX = 'mw';
 
     private $database_name = [];
     private $table_prefix  = [];

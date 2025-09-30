@@ -37,7 +37,7 @@ use XML_SimpleXMLCDATAFactory;
 
 final class XMLMediaWikiExporter
 {
-    private const EXPORT_FILE_PREFIX = 'export_mw_';
+    private const string EXPORT_FILE_PREFIX = 'export_mw_';
 
     public function __construct(
         private readonly MediawikiManager $manager,

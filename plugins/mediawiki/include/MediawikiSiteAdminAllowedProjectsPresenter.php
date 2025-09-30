@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MediawikiSiteAdminAllowedProjectsPresenter
+class MediawikiSiteAdminAllowedProjectsPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const TEMPLATE = 'grant-only-allowed-projects';
+    public const string TEMPLATE = 'grant-only-allowed-projects';
 
     /**
      * @var Project[]
@@ -35,27 +35,27 @@ class MediawikiSiteAdminAllowedProjectsPresenter
         $this->count_project_to_migrate = $count_projects_to_migrate;
     }
 
-    public function there_is_no_project()
+    public function there_is_no_project() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return count($this->allowed_projects) === 0;
     }
 
-    public function update_allowed_projects_action()
+    public function update_allowed_projects_action() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return '/plugins/mediawiki/forge_admin.php?action=site_update_allowed_project_list';
     }
 
-    public function update_allowed_projects_action_csrf()
+    public function update_allowed_projects_action_csrf() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return new CSRFSynchronizerToken($this->update_allowed_projects_action());
     }
 
-    public function resource_allowed_project_title()
+    public function resource_allowed_project_title() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'MediaWiki');
     }
 
-    public function resource_allowed_project_subtitle()
+    public function resource_allowed_project_subtitle() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'Projects that use Mediawiki 1.23 (LTS)');
     }
@@ -69,77 +69,77 @@ class MediawikiSiteAdminAllowedProjectsPresenter
         }
     }
 
-    public function resource_allowed_project_list_allow_placeholder()
+    public function resource_allowed_project_list_allow_placeholder() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'Project name');
     }
 
-    public function resource_allowed_project_list_filter_placeholder()
+    public function resource_allowed_project_list_filter_placeholder() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'Project id or project name');
     }
 
-    public function resource_allowed_project_list_allow_project()
+    public function resource_allowed_project_list_allow_project() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'Migrate');
     }
 
-    public function resource_allowed_project_list_id()
+    public function resource_allowed_project_list_id() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'Id');
     }
 
-    public function resource_allowed_project_list_name()
+    public function resource_allowed_project_list_name() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'Name');
     }
 
-    public function resource_allowed_project_list_empty()
+    public function resource_allowed_project_list_empty() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'Currently, there are no projects that uses Mediawiki 1.23.');
     }
 
-    public function url_project()
+    public function url_project() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return MEDIAWIKI_BASE_URL . '/wiki';
     }
 
-    public function resource_allowed_project_filter_empty()
+    public function resource_allowed_project_filter_empty() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('admin', 'allowed_projects_filter_empty');
     }
 
-    public function allow_all_enabled()
+    public function allow_all_enabled() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return true;
     }
 
-    public function restricted_resource_action()
+    public function restricted_resource_action() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return '/plugins/mediawiki/forge_admin.php?action=site_update_allow_all_projects';
     }
 
-    public function restricted_resource_action_csrf()
+    public function restricted_resource_action_csrf() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return new CSRFSynchronizerToken($this->restricted_resource_action());
     }
 
-    public function is_resource_restricted()
+    public function is_resource_restricted() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->count_project_to_migrate > 0;
     }
 
-    public function can_be_unrestricited()
+    public function can_be_unrestricited() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return ! $this->is_resource_restricted();
     }
 
-    public function resource_allowed_project_allow_all()
+    public function resource_allowed_project_allow_all() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'Migrate all projects to Mediawiki 1.23');
     }
 
-    public function resource_allowed_project_list()
+    public function resource_allowed_project_list() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-mediawiki', 'List of migrated projects');
     }

@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
+class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const NAME = 'MEDIAWIKI_SWITCH_TO_123';
+    public const string NAME = 'MEDIAWIKI_SWITCH_TO_123';
 
-    public const ALL = 'all';
+    public const string ALL = 'all';
 
     /** @var Mediawiki_Migration_MediawikiMigrator **/
     private $mediawiki_migrator;

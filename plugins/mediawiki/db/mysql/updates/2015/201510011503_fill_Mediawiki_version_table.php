@@ -18,8 +18,8 @@
 
 class b201510011503_fill_Mediawiki_version_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public const MW_123_VERSION = '1.23';
-    public const MW_120_VERSION = '1.20';
+    public const string MW_123_VERSION = '1.23';
+    public const string MW_120_VERSION = '1.20';
 
     /**
      * Description of the bucket

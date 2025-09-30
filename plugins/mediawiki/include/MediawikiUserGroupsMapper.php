@@ -24,15 +24,15 @@ use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdm
 /**
  * This class do the mapping between Tuleap And Mediawiki groups
  */
-class MediawikiUserGroupsMapper
+class MediawikiUserGroupsMapper //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const MEDIAWIKI_GROUPS_ANONYMOUS  = 'anonymous';
-    public const MEDIAWIKI_GROUPS_USER       = 'user';
-    public const MEDIAWIKI_GROUPS_BOT        = 'bot';
-    public const MEDIAWIKI_GROUPS_SYSOP      = 'sysop';
-    public const MEDIAWIKI_GROUPS_BUREAUCRAT = 'bureaucrat';
+    public const string MEDIAWIKI_GROUPS_ANONYMOUS  = 'anonymous';
+    public const string MEDIAWIKI_GROUPS_USER       = 'user';
+    public const string MEDIAWIKI_GROUPS_BOT        = 'bot';
+    public const string MEDIAWIKI_GROUPS_SYSOP      = 'sysop';
+    public const string MEDIAWIKI_GROUPS_BUREAUCRAT = 'bureaucrat';
 
-    public static $MEDIAWIKI_GROUPS_NAME =  [
+    public static array $MEDIAWIKI_GROUPS_NAME =  [
         self::MEDIAWIKI_GROUPS_ANONYMOUS,
         self::MEDIAWIKI_GROUPS_USER,
         self::MEDIAWIKI_GROUPS_BOT,

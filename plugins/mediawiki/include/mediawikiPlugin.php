@@ -67,7 +67,7 @@ require_once __DIR__ . '/../../mediawiki_standalone/vendor/autoload.php';
 
 class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const SERVICE_SHORTNAME = 'plugin_mediawiki';
+    public const string SERVICE_SHORTNAME = 'plugin_mediawiki';
 
     public function __construct($id = 0)
     {

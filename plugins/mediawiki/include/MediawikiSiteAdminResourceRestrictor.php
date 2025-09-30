@@ -20,7 +20,7 @@
 
 class MediawikiSiteAdminResourceRestrictor
 {
-    public const RESOURCE_ID = 1;
+    public const int RESOURCE_ID = 1;
 
     /**
      * @var ProjectManager
