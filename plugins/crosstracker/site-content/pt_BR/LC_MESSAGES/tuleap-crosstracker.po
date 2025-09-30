@@ -241,5 +241,11 @@ msgstr ""
 msgid "integer"
 msgstr ""
 
+msgid "is Linked from"
+msgstr ""
+
+msgid "is Linked to"
+msgstr ""
+
 msgid "whitespace"
 msgstr ""
