@@ -109,7 +109,7 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
 }
 
 def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAnalyze) {
-    if (filesToAnalyze == '') {
+    if (filesToAnalyze == '' || !filesToAnalyze.contains('.php')) {
         return;
     }
     sh """
