@@ -31,11 +31,9 @@ import EmptyEditCell from "./EmptyEditCell.vue";
 import EmptySelectableCell from "./EmptySelectableCell.vue";
 import { TABLE_DATA_STORE } from "../../../injection-symbols";
 import { TableDataStore } from "../../../domain/TableDataStore";
-import mitt from "mitt";
-import type { Events } from "../../../helpers/widget-events";
 
 const DATE_COLUMN_NAME = "start_date";
-const table_data_store = TableDataStore(mitt<Events>());
+const table_data_store = TableDataStore();
 table_data_store.setColumns(
     new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME).add(DATE_COLUMN_NAME),
 );

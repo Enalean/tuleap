@@ -32,18 +32,12 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
-import {
-    EMITTER,
-    RETRIEVE_ARTIFACT_LINKS,
-    TABLE_DATA_STORE,
-    WIDGET_ID,
-} from "../../injection-symbols";
+import { RETRIEVE_ARTIFACT_LINKS, TABLE_DATA_STORE, WIDGET_ID } from "../../injection-symbols";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import RowArtifact from "./RowArtifact.vue";
 import SelectableCell from "./SelectableCell.vue";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import LoadAllButton from "../feedback/LoadAllButton.vue";
-import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 import { TableDataStore } from "../../domain/TableDataStore";
 
 vi.useFakeTimers();
@@ -85,7 +79,6 @@ describe("RowArtifact", () => {
         ancestors: number[],
         artifact_id: number,
         level: number,
-        emitter: EmitterStub,
         table_data_store: TableDataStore;
 
     beforeEach(() => {
@@ -93,8 +86,7 @@ describe("RowArtifact", () => {
         ancestors = [123, 234];
         artifact_links_table_retriever = RetrieveArtifactLinksStub.withDefaultContent();
         level = 0;
-        emitter = EmitterStub();
-        table_data_store = TableDataStore(emitter);
+        table_data_store = TableDataStore();
         table_data_store.setColumns(new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME));
     });
 
@@ -105,7 +97,6 @@ describe("RowArtifact", () => {
                 provide: {
                     [RETRIEVE_ARTIFACT_LINKS.valueOf()]: artifact_links_table_retriever,
                     [WIDGET_ID.valueOf()]: 101,
-                    [EMITTER.valueOf()]: emitter,
                     [TABLE_DATA_STORE.valueOf()]: table_data_store,
                 },
             },

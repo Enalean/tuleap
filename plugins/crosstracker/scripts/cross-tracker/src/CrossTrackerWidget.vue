@@ -73,7 +73,7 @@ import { TableDataStore } from "./domain/TableDataStore";
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
 const widget_title_updater = strictInject(WIDGET_TITLE_UPDATER);
-const table_data_store = TableDataStore(emitter);
+const table_data_store = TableDataStore();
 
 const widget_pane = ref(QUERY_ACTIVE_PANE);
 const selected_query = ref<Query>();
@@ -99,7 +99,6 @@ onMounted(() => {
     emitter.on(NEW_QUERY_CREATED_EVENT, setCurrentlySelectedQuery);
     emitter.on(QUERY_EDITED_EVENT, setCurrentlySelectedQuery);
     widget_title_updater.listenToUpdateTitle();
-    table_data_store.listen();
 });
 
 onBeforeUnmount(() => {
@@ -111,7 +110,6 @@ onBeforeUnmount(() => {
     emitter.off(QUERY_EDITED_EVENT, setCurrentlySelectedQuery);
     emitter.all.clear();
     widget_title_updater.removeListener();
-    table_data_store.removeListeners();
 });
 
 function setCurrentlySelectedQuery(

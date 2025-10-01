@@ -109,7 +109,7 @@ describe(`SelectableTable`, () => {
                     ),
                     [EMITTER.valueOf()]: emitter,
                     [ARROW_REDRAW_TRIGGERER.valueOf()]: stub_arrow_redrawer_triggerer,
-                    [TABLE_DATA_STORE.valueOf()]: TableDataStore(emitter),
+                    [TABLE_DATA_STORE.valueOf()]: TableDataStore(),
                 },
             },
             props: {
