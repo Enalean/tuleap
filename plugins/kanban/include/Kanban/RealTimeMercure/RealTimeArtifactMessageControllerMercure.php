@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\Kanban\RealTimeMercure;
 
 use Tuleap\Kanban\KanbanFactory;

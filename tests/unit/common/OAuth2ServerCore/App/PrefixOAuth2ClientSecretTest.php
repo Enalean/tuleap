@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\App;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixOAuth2ClientSecretTest extends \Tuleap\Test\PHPUnit\TestCase
 {

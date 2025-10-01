@@ -19,6 +19,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../admin/project_admin_utils.php';
 require __DIR__ . '/source_code_access_utils.php';

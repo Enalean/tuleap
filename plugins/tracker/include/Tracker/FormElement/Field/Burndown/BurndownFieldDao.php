@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-
 class BurndownFieldDao extends \DataAccessObject
 {
     /**

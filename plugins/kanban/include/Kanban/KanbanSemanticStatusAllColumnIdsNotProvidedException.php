@@ -19,6 +19,7 @@
 declare(strict_types=1);
 
 namespace Tuleap\Kanban;
+
 final class KanbanSemanticStatusAllColumnIdsNotProvidedException extends \Exception
 {
     public function __construct()

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-
 final class ProgramIterationTrackerNotFoundException extends \Exception implements ProgramTrackerException
 {
     private string $i18n_message;

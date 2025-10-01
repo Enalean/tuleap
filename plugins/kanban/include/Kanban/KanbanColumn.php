@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tuleap\Kanban;
+
 class KanbanColumn
 {
     public function __construct(

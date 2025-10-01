@@ -20,7 +20,6 @@
 
 namespace Tuleap\User\Avatar;
 
-
 interface AvatarHashStorageDeletor
 {
     public function delete(\PFUser $user): void;

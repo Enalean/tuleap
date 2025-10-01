@@ -19,4 +19,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 Toggler::toggle(HTTPRequest::instance()->get('id'));

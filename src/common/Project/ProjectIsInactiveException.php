@@ -20,7 +20,6 @@
 
 namespace Tuleap\Project;
 
-
 class ProjectIsInactiveException extends \Exception
 {
 }

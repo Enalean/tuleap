@@ -20,7 +20,6 @@
 
 namespace Tuleap\Gitlab\Plugin;
 
-
 class PluginDescriptor extends \PluginDescriptor
 {
     public function __construct()

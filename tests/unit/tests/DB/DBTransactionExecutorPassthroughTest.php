@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\DB;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DBTransactionExecutorPassthroughTest extends \Tuleap\Test\PHPUnit\TestCase
 {

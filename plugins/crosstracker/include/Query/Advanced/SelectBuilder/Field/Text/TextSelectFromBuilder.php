@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\Text;
 
 use ParagonIE\EasyDB\EasyDB;

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\CopyItem;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ItemBeingCopiedExpectationTest extends \Tuleap\Test\PHPUnit\TestCase
 {

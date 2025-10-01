@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Widget;
 
-
 interface SearchCrossTrackerWidget
 {
     public function searchWidgetExistence(int $widget_id): bool;

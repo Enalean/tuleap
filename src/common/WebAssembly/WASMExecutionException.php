@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
 
-
 final class WASMExecutionException extends \RuntimeException
 {
     private function __construct(string $message, ?\Throwable $previous = null)

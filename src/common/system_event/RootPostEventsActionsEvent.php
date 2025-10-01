@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\SystemEvent;
 
-
 final class RootPostEventsActionsEvent
 {
     public const string NAME = 'rootPostEventsActionsEvent';

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Stubs\User\Avatar;
 
-
 final class AvatarHashStorageDeletorStub implements \Tuleap\User\Avatar\AvatarHashStorageDeletor
 {
     private bool $has_been_deleted = false;

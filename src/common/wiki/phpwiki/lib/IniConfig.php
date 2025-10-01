@@ -11,6 +11,7 @@
  *
  * Author: Joby Walker, Reini Urban, Matthew Palmer
  */
+
 /*
  * Copyright 2004,2005 $ThePhpWikiProgrammingTeam
  *

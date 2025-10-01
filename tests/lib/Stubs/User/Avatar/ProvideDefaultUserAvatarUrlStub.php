@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Test\Stubs\User\Avatar;
 
 use Tuleap\User\Avatar\ProvideDefaultUserAvatarUrl;

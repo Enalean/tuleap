@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-
 final class InvitationStatusUpdaterStub implements InvitationStatusUpdater
 {
     private bool $has_been_marked_as_error = false;

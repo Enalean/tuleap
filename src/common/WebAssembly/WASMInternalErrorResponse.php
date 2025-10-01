@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
+
 final class WASMInternalErrorResponse
 {
     public readonly string $internal_error;

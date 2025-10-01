@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactValuesRepresentionTest extends \Tuleap\Test\PHPUnit\TestCase
 {

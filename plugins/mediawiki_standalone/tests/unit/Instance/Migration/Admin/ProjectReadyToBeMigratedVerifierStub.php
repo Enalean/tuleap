@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance\Migration\Admin;
 
-
 final class ProjectReadyToBeMigratedVerifierStub implements ProjectReadyToBeMigratedVerifier
 {
     private function __construct(private readonly bool $ready)

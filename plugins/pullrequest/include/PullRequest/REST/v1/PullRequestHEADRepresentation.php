@@ -19,7 +19,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\PullRequest\PullRequest;

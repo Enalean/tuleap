@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template\Upload;
 
-
 final class FinishFileUploadPostActionStub implements FinishFileUploadPostAction
 {
     private ?int $processed_project_id  = null;

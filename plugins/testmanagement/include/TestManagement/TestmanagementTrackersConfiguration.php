@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement;
 
-
 class TestmanagementTrackersConfiguration
 {
     /** @var TestmanagementConfigTracker */

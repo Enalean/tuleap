@@ -21,7 +21,6 @@
 
 namespace Tuleap\Dashboard;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DashboardTest extends \Tuleap\Test\PHPUnit\TestCase
 {

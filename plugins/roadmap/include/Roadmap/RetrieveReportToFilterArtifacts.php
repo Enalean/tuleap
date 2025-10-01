@@ -20,7 +20,6 @@
 
 namespace Tuleap\Roadmap;
 
-
 interface RetrieveReportToFilterArtifacts
 {
     public function getReportToFilterArtifacts(int $widget_id, \PFUser $user): ?\Tracker_Report;

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Widget;
 
-
 /**
 * Widget_Contacts
 *

@@ -20,7 +20,6 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-
 class ExtractedTestResultFromJunit
 {
     /**

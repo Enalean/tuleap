@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-
 interface BuildIterationUpdateProcessor
 {
     public function getProcessor(): ProcessIterationUpdate;

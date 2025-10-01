@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\AgileDashboard\Planning\Configuration;
 
 use Planning;

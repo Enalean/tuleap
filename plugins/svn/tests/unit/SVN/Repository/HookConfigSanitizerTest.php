@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\Repository;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class HookConfigSanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {

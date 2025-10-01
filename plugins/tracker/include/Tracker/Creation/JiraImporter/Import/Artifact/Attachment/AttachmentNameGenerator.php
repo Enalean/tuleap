@@ -21,9 +21,7 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
-
 
 interface AttachmentNameGenerator
 {

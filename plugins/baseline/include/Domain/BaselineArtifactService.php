@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-
 class BaselineArtifactService
 {
     /** @var BaselineArtifactRepository */

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BinaryDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {

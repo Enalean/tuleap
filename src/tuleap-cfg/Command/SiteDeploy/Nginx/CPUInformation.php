@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SiteDeploy\Nginx;
 
-
 interface CPUInformation
 {
     public function wordSize(): int;

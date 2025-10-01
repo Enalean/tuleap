@@ -19,7 +19,9 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\Tracker\TrackerDeletion;
+
 interface RetrieveDeletedTracker
 {
     public function retrieveTrackersMarkAsDeleted(): array;

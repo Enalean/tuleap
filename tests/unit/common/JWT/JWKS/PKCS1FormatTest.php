@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\JWT\JWKS;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PKCS1FormatTest extends \Tuleap\Test\PHPUnit\TestCase
 {

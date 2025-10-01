@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Administration;
 
-
 final class MaxSize10Mb implements MaxSizeProvider
 {
     #[\Override]

@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-
 /**
  * @psalm-immutable
  */

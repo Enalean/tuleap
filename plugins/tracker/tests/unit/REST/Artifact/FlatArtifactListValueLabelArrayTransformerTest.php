@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FlatArtifactListValueLabelArrayTransformerTest extends \Tuleap\Test\PHPUnit\TestCase
 {

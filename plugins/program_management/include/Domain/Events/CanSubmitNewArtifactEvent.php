@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Domain\Events;
 
 use Tuleap\ProgramManagement\Domain\TrackerReference;

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier;
 
-
 interface FreetextIdentifier
 {
     public function getBytes(): string;

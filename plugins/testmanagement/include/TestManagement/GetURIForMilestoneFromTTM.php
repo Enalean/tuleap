@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\TestManagement;
 
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;

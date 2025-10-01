@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
-
 /**
  * I hold a link from another Artifact to the current Artifact.
  * @psalm-immutable

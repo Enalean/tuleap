@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 $G_SESSION = [];
 
 function session_make_url($loc)

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
-
 class VisitRecorder
 {
     public function __construct(private readonly RecentlyVisitedDao $dao)

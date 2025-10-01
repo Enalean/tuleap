@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\PullRequest\DefaultSettings;
 
 final class DefaultSettingsUrlBuilder

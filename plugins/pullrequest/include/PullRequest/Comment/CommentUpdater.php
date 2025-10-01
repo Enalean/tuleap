@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Comment;
 
-
 interface CommentUpdater
 {
     public function updateComment(Comment $new_comment): void;

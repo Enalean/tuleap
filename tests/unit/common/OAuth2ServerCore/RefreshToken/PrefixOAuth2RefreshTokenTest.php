@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\RefreshToken;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrefixOAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Glyph;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class GlyphLocationTest extends \Tuleap\Test\PHPUnit\TestCase
 {

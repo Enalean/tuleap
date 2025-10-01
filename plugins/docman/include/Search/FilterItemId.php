@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Search;
 
-
 class FilterItemId extends \Docman_Filter
 {
     public function __construct()

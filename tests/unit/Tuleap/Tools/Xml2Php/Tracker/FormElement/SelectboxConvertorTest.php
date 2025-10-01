@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Tools\Xml2Php\Tracker\FormElement;
 
 use PhpParser\PrettyPrinter;

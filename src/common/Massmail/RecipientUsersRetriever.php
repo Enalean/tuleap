@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 namespace Tuleap\Massmail;
+
 class RecipientUsersRetriever
 {
     public function __construct(private RecipientUserDAO $recipient_user_dao)

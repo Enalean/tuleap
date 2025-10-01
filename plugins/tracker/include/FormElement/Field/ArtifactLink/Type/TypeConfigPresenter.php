@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-
 class TypeConfigPresenter
 {
     public $desc;

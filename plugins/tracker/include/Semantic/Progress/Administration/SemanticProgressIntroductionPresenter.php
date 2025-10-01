@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress\Administration;
 
-
 class SemanticProgressIntroductionPresenter
 {
     /**

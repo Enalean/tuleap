@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\PullRequest\Tests\Stub;
 
 use Tuleap\PullRequest\PullRequest\Reviewer\RepositoryPullRequestsReviewersIdsPage;

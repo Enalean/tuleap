@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
-
 interface DispatchIterationUpdate
 {
     public function dispatchUpdate(IterationUpdate $update): void;

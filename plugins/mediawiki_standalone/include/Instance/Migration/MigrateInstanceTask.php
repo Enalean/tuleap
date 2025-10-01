@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 use Tuleap\Queue\QueueTask;

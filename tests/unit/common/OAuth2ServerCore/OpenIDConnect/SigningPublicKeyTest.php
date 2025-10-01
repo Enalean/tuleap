@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SigningPublicKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {

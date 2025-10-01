@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\XML\Exporter\FieldChange;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldChangeArtifactLinksBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

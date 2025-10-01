@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\InvalidQueryException;

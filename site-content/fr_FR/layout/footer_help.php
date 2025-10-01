@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 ?>
 <h3 class="footer-section-title">Besoin d'aide ?</h3>
 <p class="footer-paragraph">

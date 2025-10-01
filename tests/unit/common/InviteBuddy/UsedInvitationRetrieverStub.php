@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-
 class UsedInvitationRetrieverStub implements UsedInvitationRetriever
 {
     private function __construct(private ?Invitation $invitation)

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CrossReferenceByDirectionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {

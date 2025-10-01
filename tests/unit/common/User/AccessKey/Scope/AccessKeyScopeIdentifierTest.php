@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AccessKeyScopeIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
