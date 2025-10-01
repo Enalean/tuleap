@@ -1967,15 +1967,6 @@
       <code><![CDATA[$xml_planning->permissions->permission[1]['ugroup']]]></code>
     </PossiblyNullArrayAccess>
   </file>
-  <file src="plugins/agiledashboard/tests/unit/Priority/SequenceIdManagerTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
-  </file>
   <file src="plugins/agiledashboard/tests/unit/REST/QueryToCriterionOnlyAllStatusConverterTest.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[new QueryToCriterionOnlyAllStatusConverter()]]></code>
