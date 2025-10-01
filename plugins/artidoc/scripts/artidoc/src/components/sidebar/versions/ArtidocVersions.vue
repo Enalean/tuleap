@@ -43,6 +43,7 @@
             class="tlp-button-mini tlp-button-primary load-more-versions"
             v-on:click="more"
             v-if="has_more_versions && !error"
+            v-bind:disabled="is_loading_more_versions"
         >
             <i
                 class="tlp-button-icon"
