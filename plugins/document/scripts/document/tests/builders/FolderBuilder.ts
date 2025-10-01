@@ -16,15 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Folder, FolderProperties } from "../../src/type";
+import type { Folder, FolderProperties, FolderStatus, Property, User } from "../../src/type";
+import { UserBuilder } from "./UserBuilder";
 
 export class FolderBuilder {
     private readonly id: number;
     private parent_id: number | null = null;
     private title: string = "";
-    private properties: FolderProperties = {
+    private description: string = "";
+    private folder_properties: FolderProperties = {
         total_size: 0,
         nb_files: 0,
+    };
+    private owner: User = new UserBuilder(101).build();
+    private properties: Array<Property> = [];
+    private status: FolderStatus = {
+        value: "",
+        recursion: "",
     };
 
     constructor(id: number) {
@@ -41,8 +49,28 @@ export class FolderBuilder {
         return this;
     }
 
-    public withProperties(properties: FolderProperties): this {
+    public withDescription(description: string): this {
+        this.description = description;
+        return this;
+    }
+
+    public withFolderProperties(folder_properties: FolderProperties): this {
+        this.folder_properties = folder_properties;
+        return this;
+    }
+
+    public withOwner(owner: User): this {
+        this.owner = owner;
+        return this;
+    }
+
+    public withProperties(properties: Array<Property>): this {
         this.properties = properties;
+        return this;
+    }
+
+    public withStatus(status: FolderStatus): this {
+        this.status = status;
         return this;
     }
 
@@ -50,8 +78,8 @@ export class FolderBuilder {
         return {
             can_user_manage: false,
             creation_date: "",
-            description: "",
-            folder_properties: this.properties,
+            description: this.description,
+            folder_properties: this.folder_properties,
             id: this.id,
             is_expanded: false,
             is_uploading: false,
@@ -61,14 +89,7 @@ export class FolderBuilder {
             lock_info: null,
             move_uri: "",
             obsolescence_date: null,
-            owner: {
-                id: 0,
-                display_name: "",
-                has_avatar: false,
-                avatar_url: "",
-                user_url: "",
-                is_anonymous: false,
-            },
+            owner: this.owner,
             parent_id: this.parent_id,
             permissions_for_groups: {
                 apply_permissions_on_children: false,
@@ -78,11 +99,8 @@ export class FolderBuilder {
             },
             post_processed_description: "",
             progress: null,
-            properties: [],
-            status: {
-                value: "",
-                recursion: "",
-            },
+            properties: this.properties,
+            status: this.status,
             title: this.title,
             type: "folder",
             updated: false,

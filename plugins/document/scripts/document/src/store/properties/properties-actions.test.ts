@@ -20,11 +20,7 @@
 import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import {
-    loadProjectProperties,
-    updateFolderProperties,
-    updateProperties,
-} from "./properties-actions";
+import { loadProjectProperties, updateProperties } from "./properties-actions";
 import * as properties_rest_querier from "../../api/properties-rest-querier";
 import * as rest_querier from "../../api/rest-querier";
 import {
@@ -47,22 +43,18 @@ import type {
     Property,
     ListValue,
 } from "../../type";
-import type { PropertiesState } from "./module";
 import emitter from "../../helpers/emitter";
 
 vi.mock("../../helpers/emitter");
 
 describe("Properties actions", () => {
-    let context: ActionContext<PropertiesState, RootState>, getProjectProperties: MockInstance;
+    let context: ActionContext<RootState, RootState>, getProjectProperties: MockInstance;
 
     beforeEach(() => {
         context = {
-            rootState: {
-                configuration: { project_id: 102 },
-            },
             commit: vi.fn(),
             dispatch: vi.fn(),
-        } as unknown as ActionContext<PropertiesState, RootState>;
+        } as unknown as ActionContext<RootState, RootState>;
 
         getProjectProperties = vi.spyOn(properties_rest_querier, "getProjectProperties");
 
@@ -79,7 +71,7 @@ describe("Properties actions", () => {
 
         getProjectProperties.mockReturnValue(properties);
 
-        await loadProjectProperties(context);
+        await loadProjectProperties(context, 102);
 
         expect(context.commit).toHaveBeenCalledWith("saveProjectProperties", properties);
     });
@@ -94,22 +86,19 @@ describe("Properties actions", () => {
             },
         });
 
-        await loadProjectProperties(context);
+        await loadProjectProperties(context, 102);
 
         expect(context.dispatch).toHaveBeenCalled();
     });
 
     describe("replacePropertiesWithUpdatesOnes", () => {
-        let context: ActionContext<PropertiesState, RootState>, getItem: MockInstance;
+        let context: ActionContext<RootState, RootState>, getItem: MockInstance;
 
         beforeEach(() => {
             context = {
-                rootState: {
-                    configuration: { is_status_property_used: false },
-                },
                 commit: vi.fn(),
                 dispatch: vi.fn(),
-            } as unknown as ActionContext<PropertiesState, RootState>;
+            } as unknown as ActionContext<RootState, RootState>;
 
             getItem = vi.spyOn(rest_querier, "getItem");
         });
@@ -151,7 +140,12 @@ describe("Properties actions", () => {
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateProperties(context, { item, item_to_update, current_folder });
+                await updateProperties(context, {
+                    item,
+                    item_to_update,
+                    current_folder,
+                    is_status_property_used: false,
+                });
 
                 expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
@@ -204,7 +198,12 @@ describe("Properties actions", () => {
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateProperties(context, { item, item_to_update, current_folder });
+                await updateProperties(context, {
+                    item,
+                    item_to_update,
+                    current_folder,
+                    is_status_property_used: false,
+                });
 
                 expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
@@ -259,7 +258,12 @@ describe("Properties actions", () => {
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateProperties(context, { item, item_to_update, current_folder });
+                await updateProperties(context, {
+                    item,
+                    item_to_update,
+                    current_folder,
+                    is_status_property_used: false,
+                });
 
                 expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
@@ -314,7 +318,12 @@ describe("Properties actions", () => {
                     id: 456,
                 } as Folder;
 
-                await updateProperties(context, { item, item_to_update, current_folder });
+                await updateProperties(context, {
+                    item,
+                    item_to_update,
+                    current_folder,
+                    is_status_property_used: false,
+                });
 
                 expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
@@ -370,7 +379,12 @@ describe("Properties actions", () => {
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateProperties(context, { item, item_to_update, current_folder });
+                await updateProperties(context, {
+                    item,
+                    item_to_update,
+                    current_folder,
+                    is_status_property_used: false,
+                });
 
                 expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
@@ -425,78 +439,11 @@ describe("Properties actions", () => {
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateProperties(context, { item, item_to_update, current_folder });
-
-                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
-                expect(context.commit).toHaveBeenCalledWith(
-                    "removeItemFromFolderContent",
-                    item_to_update,
-                    { root: true },
-                );
-                expect(context.commit).toHaveBeenCalledWith(
-                    "addJustCreatedItemToFolderContent",
-                    item_to_update,
-                    { root: true },
-                );
-                expect(context.commit).toHaveBeenCalledWith(
-                    "updateCurrentItemForQuickLokDisplay",
-                    item_to_update,
-                    { root: true },
-                );
-            });
-
-            it("should update folder properties", async () => {
-                vi.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
-                    Promise.resolve({} as unknown as Response),
-                );
-                const item = {
-                    id: 123,
-                    title: "My folder",
-                    type: TYPE_FOLDER,
-                    description: "on",
-                    owner: {
-                        id: 102,
-                    },
-                } as Folder;
-
-                const list_values: Array<ListValue> = [
-                    {
-                        id: 103,
-                    } as ListValue,
-                ];
-                const folder_properties: Property = {
-                    short_name: "status",
-                    list_value: list_values,
-                } as Property;
-                const properties: Array<Property> = [folder_properties];
-                const item_to_update = {
-                    id: 123,
-                    title: "My new empty title",
-                    type: TYPE_FOLDER,
-                    description: "My empty description",
-                    owner: {
-                        id: 102,
-                    },
-                    properties,
-                    status: {
-                        value: "rejected",
-                        recursion: "all_item",
-                    },
-                } as Folder;
-
-                const current_folder = {
-                    id: 456,
-                } as Folder;
-
-                getItem.mockReturnValue(Promise.resolve(item_to_update));
-
-                const properties_to_update: Array<string> = [];
-                await updateFolderProperties(context, {
+                await updateProperties(context, {
                     item,
                     item_to_update,
                     current_folder,
-                    properties_to_update,
-                    recursion_option: "all_item",
+                    is_status_property_used: false,
                 });
 
                 expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
@@ -519,14 +466,9 @@ describe("Properties actions", () => {
 
             it("should update folder properties with status recursion", async () => {
                 context = {
-                    rootState: {
-                        configuration: {
-                            is_status_property_used: true,
-                        },
-                    },
                     commit: vi.fn(),
                     dispatch: vi.fn(),
-                } as unknown as ActionContext<PropertiesState, RootState>;
+                } as unknown as ActionContext<RootState, RootState>;
 
                 const put_rest_mock = vi
                     .spyOn(properties_rest_querier, "putFolderDocumentProperties")
@@ -576,6 +518,7 @@ describe("Properties actions", () => {
                     item,
                     item_to_update,
                     current_folder,
+                    is_status_property_used: true,
                 });
 
                 expect(put_rest_mock).toHaveBeenCalledWith(
@@ -595,14 +538,9 @@ describe("Properties actions", () => {
 
         it("should update folder properties without status recursion", async () => {
             context = {
-                rootState: {
-                    configuration: {
-                        is_status_property_used: false,
-                    },
-                },
                 commit: vi.fn(),
                 dispatch: vi.fn(),
-            } as unknown as ActionContext<PropertiesState, RootState>;
+            } as unknown as ActionContext<RootState, RootState>;
 
             const put_rest_mock = vi
                 .spyOn(properties_rest_querier, "putFolderDocumentProperties")
@@ -652,6 +590,7 @@ describe("Properties actions", () => {
                 item,
                 item_to_update,
                 current_folder,
+                is_status_property_used: false,
             });
 
             expect(put_rest_mock).toHaveBeenCalledWith(
@@ -712,7 +651,12 @@ describe("Properties actions", () => {
 
                 getItem.mockReturnValue(Promise.resolve(item_to_update));
 
-                await updateProperties(context, { item, item_to_update, current_folder });
+                await updateProperties(context, {
+                    item,
+                    item_to_update,
+                    current_folder,
+                    is_status_property_used: false,
+                });
 
                 expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
