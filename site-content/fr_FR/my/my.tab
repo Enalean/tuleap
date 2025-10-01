@@ -30,7 +30,6 @@ my_index	add_bookmark	Ajouter un favori
 my_index	my_projects	Mes projets
 my_index	not_member	Vous n'êtes membre d'aucun projet
 my_index	admin_link	Admin
-my_index	quit_proj	Quitter ce projet ?
 my_index	priv_proj	<em>Projet privé</em>
 my_index	my_projects_legend	Légende :
 #my_index	a	A

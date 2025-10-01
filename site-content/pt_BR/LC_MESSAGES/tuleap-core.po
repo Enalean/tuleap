@@ -2758,6 +2758,9 @@ msgstr "Roxo"
 msgid "Purpose"
 msgstr "Finalidade"
 
+msgid "Quit this project?"
+msgstr ""
+
 msgid "REST"
 msgstr "REST"
 

@@ -135,6 +135,8 @@ const webpack_config_for_burning_parrot_code = {
         "burning-parrot": "./src/BurningParrot/src/index.ts",
         "dashboards/dashboard": "./src/dashboards/dashboard.js",
         "dashboards/widget-contact-modal": "./src/dashboards/widgets/contact-modal.ts",
+        "dashboards/widget-my-projects-leave-project":
+            "./src/dashboards/widgets/my-projects-leave-project.ts",
         "frs-admin-license-agreement": "./src/frs/admin/license-agreement.ts",
         "project-admin": "./src/project/admin/src/index.ts",
         "project-admin-ugroups": "./src/project/admin/src/project-admin-ugroups.ts",

@@ -2814,6 +2814,9 @@ msgstr "Violet"
 msgid "Purpose"
 msgstr "Motif"
 
+msgid "Quit this project?"
+msgstr "Quitter ce projet ?"
+
 msgid "REST"
 msgstr "REST"
 

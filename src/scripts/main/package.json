@@ -12,6 +12,7 @@
     "@tuleap/common-theme": "workspace:*",
     "@tuleap/concurrency-limit-pool": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
+    "@tuleap/dom": "workspace:*",
     "@tuleap/filter-inline-table": "workspace:*",
     "@tuleap/flamingparrot-theme": "workspace:*",
     "@tuleap/gettext": "workspace:*",
