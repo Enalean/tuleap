@@ -78,12 +78,14 @@ import type { ErrorState } from "../../../../store/error/module";
 import { useGettext } from "vue3-gettext";
 import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { DocumentProperties } from "../../../../helpers/properties/document-properties";
 
 const { $gettext } = useGettext();
 const $store = useStore();
 
 const props = defineProps<{
     item: Folder;
+    document_properties: DocumentProperties;
 }>();
 
 const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
@@ -152,13 +154,15 @@ async function updateProperties(event: SubmitEvent): Promise<void> {
         properties_to_update.value,
         recursion_option.value,
     );
-    await $store.dispatch("properties/updateFolderProperties", {
-        item: props.item,
-        item_to_update: item_to_update.value,
-        current_folder: current_folder.value,
-        properties_to_update: properties_to_update.value,
-        recursion_option: recursion_option.value,
-    });
+    await props.document_properties.updateFolderProperties(
+        $store,
+        props.item,
+        item_to_update.value,
+        current_folder.value,
+        properties_to_update.value,
+        recursion_option.value,
+        is_status_property_used,
+    );
     is_loading.value = false;
     if (!has_modal_error.value) {
         modal?.hide();

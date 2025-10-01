@@ -46,6 +46,7 @@
                     v-if="shown_update_properties_modal !== null"
                     v-bind:is="shown_update_properties_modal"
                     v-bind:item="updated_item"
+                    v-bind:document_properties="document_properties"
                     data-test="document-update-properties-modal"
                 />
             </div>
@@ -124,6 +125,7 @@ import type {
 import { useGetters, useState } from "vuex-composition-helpers";
 import type { Empty, Item, ItemType, RootState } from "../../type";
 import type { RootGetter } from "../../store/getters";
+import { getDocumentProperties } from "../../helpers/properties/document-properties";
 
 const ModalConfirmDeletion = defineAsyncComponent(
     () => import("./DropDown/Delete/ModalConfirmDeletion.vue"),
@@ -140,6 +142,8 @@ const ModalArchiveSizeWarning = defineAsyncComponent(
 const FileVersionChangelogModal = defineAsyncComponent(
     () => import("./DropDown/NewVersion/FileVersionChangelogModal.vue"),
 );
+
+const document_properties = getDocumentProperties();
 
 const shown_new_version_modal = ref<Component | null>(null);
 const shown_update_properties_modal = ref<Component | null>(null);

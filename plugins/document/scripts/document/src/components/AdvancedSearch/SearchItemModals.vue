@@ -30,6 +30,7 @@
         <component
             v-bind:is="shown_update_properties_modal"
             v-bind:item="updated_properties"
+            v-bind:document_properties="document_properties"
             data-test="document-update-properties-modal"
         />
         <modal-confirm-deletion
@@ -85,6 +86,9 @@ import NewItemModal from "../Folder/DropDown/NewDocument/NewItemModal.vue";
 import NewFolderModal from "../Folder/DropDown/NewDocument/NewFolderModal.vue";
 import ModalMaxArchiveSizeThresholdExceeded from "../Folder/DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue";
 import ModalArchiveSizeWarning from "../Folder/DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue";
+import { getDocumentProperties } from "../../helpers/properties/document-properties";
+
+const document_properties = getDocumentProperties();
 
 const item_to_delete = ref<Item | null>(null);
 
@@ -109,17 +113,11 @@ function showUpdateItemPropertiesModal(event: UpdatePropertiesEvent): void {
     updated_properties.value = event.detail.current_item;
     if (isFolder(updated_properties.value)) {
         shown_update_properties_modal.value = defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "update-folder-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdateFolderPropertiesModal.vue"
-                ),
+            () => import("../Folder/DropDown/UpdateProperties/UpdateFolderPropertiesModal.vue"),
         );
     } else {
         shown_update_properties_modal.value = defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "update-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"
-                ),
+            () => import("../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"),
         );
     }
 }
