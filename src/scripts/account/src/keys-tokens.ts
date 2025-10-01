@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker } from "@tuleap/tlp-date-picker";
 import "@tuleap/copy-to-clipboard";
 import { getAuthenticationResult, openTargetModalIdAfterAuthentication } from "@tuleap/webauthn";
-import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
+import { selectOrThrow } from "@tuleap/dom";
 import type { ResultAsync } from "neverthrow";
 import type { Modal } from "@tuleap/tlp-modal";
 import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import type { Fault } from "@tuleap/fault";
-import type { GetText } from "@tuleap/gettext";
-import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
+import type { GetText, LocaleString } from "@tuleap/gettext";
+import { getLocaleWithDefault, getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
 
 const HIDDEN_CLASS = "user-preferences-hidden";
@@ -34,14 +34,14 @@ const ALERT_DANGER_ID = "keys-tokens-alert-danger";
 const ADD_SSH_KEY_BUTTON_ID = "add-ssh-key-button";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const locale = getAttributeOrThrow(document.body, "data-user-locale");
+    const locale = getLocaleWithDefault(document);
     const gettext_provider = await initGettext(
         locale,
         "core-account",
         (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
     );
 
-    Initializer(gettext_provider).init();
+    Initializer(locale, gettext_provider).init();
 });
 
 const isCouldNotCheckRegisteredPasskeys = (fault: Fault): boolean =>
@@ -56,7 +56,7 @@ const addAccessKeyButton = (): ResultAsync<Modal | null, Fault> =>
 
 type Initializer = { init(): void };
 
-function Initializer(gettext_provider: GetText): Initializer {
+function Initializer(locale: LocaleString, gettext_provider: GetText): Initializer {
     const error_div = selectOrThrow(document, `#${ALERT_DANGER_ID}`);
     const handleWebAuthnModalFault = (fault: Fault): void => {
         let error_message = String(fault);
@@ -122,7 +122,7 @@ function Initializer(gettext_provider: GetText): Initializer {
             );
             authenticateAndAttachResponseToForm(form, error, icon, button);
         }, handleWebAuthnModalFault);
-        addAccessKeyDatePicker();
+        addAccessKeyDatePicker(locale);
 
         toggleButtonAccordingToCheckBoxesStateWithIds(
             "button-revoke-access-tokens",
@@ -177,13 +177,13 @@ function authenticateAndAttachResponseToForm(
     });
 }
 
-function addAccessKeyDatePicker(): void {
-    const date_picker = document.getElementById("access-key-expiration-date-picker");
-    if (!(date_picker instanceof HTMLInputElement)) {
-        throw new Error(`Could not find input tag with id #access-key-expiration-date-picker`);
-    }
-
-    datePicker(date_picker);
+function addAccessKeyDatePicker(locale: LocaleString): void {
+    const date_picker = selectOrThrow(
+        document,
+        "#access-key-expiration-date-picker",
+        HTMLInputElement,
+    );
+    createDatePicker(date_picker, locale);
 }
 
 function handleSVNTokens(): void {
