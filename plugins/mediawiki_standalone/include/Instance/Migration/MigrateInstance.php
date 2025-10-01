@@ -49,8 +49,8 @@ use Tuleap\ServerHostname;
 
 final class MigrateInstance
 {
-    final public const TOPIC                = 'tuleap.mediawiki-standalone.instance-migration';
-    public const MEDIAWIKI_123_SERVICE_NAME = 'plugin_mediawiki';
+    final public const string TOPIC                = 'tuleap.mediawiki-standalone.instance-migration';
+    public const string MEDIAWIKI_123_SERVICE_NAME = 'plugin_mediawiki';
 
     private function __construct(
         private readonly MediaWikiManagementCommandFactory $command_factory,

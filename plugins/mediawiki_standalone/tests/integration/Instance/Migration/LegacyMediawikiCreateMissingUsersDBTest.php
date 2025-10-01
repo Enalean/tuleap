@@ -37,10 +37,10 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LegacyMediawikiCreateMissingUsersDBTest extends TestCase
 {
-    private const DB_PREFIX         = 'migration_';
-    private const MW_USER_TABLE     = self::DB_PREFIX . 'user';
-    private const MW_REVISION_TABLE = self::DB_PREFIX . 'revision';
-    private const TEST_USER_NAME    = 'mwuser1';
+    private const string DB_PREFIX         = 'migration_';
+    private const string MW_USER_TABLE     = self::DB_PREFIX . 'user';
+    private const string MW_REVISION_TABLE = self::DB_PREFIX . 'revision';
+    private const string TEST_USER_NAME    = 'mwuser1';
 
     #[\Override]
     protected function setUp(): void

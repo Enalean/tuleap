@@ -35,9 +35,9 @@ use Tuleap\Project\Service\ServiceForCreation;
 
 class MediawikiStandaloneService extends \Service implements ServiceForCreation
 {
-    public const ICON_NAME           = 'fas fa-tlp-mediawiki';
-    private const SERVICE_URL_PREFIX = '/mediawiki/';
-    public const  SERVICE_SHORTNAME  = 'plugin_mediawiki_standalone';
+    public const string ICON_NAME           = 'fas fa-tlp-mediawiki';
+    private const string SERVICE_URL_PREFIX = '/mediawiki/';
+    public const  string SERVICE_SHORTNAME  = 'plugin_mediawiki_standalone';
 
     #[\Override]
     public static function forServiceCreation(\Project $project): self

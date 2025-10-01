@@ -25,7 +25,7 @@ namespace Tuleap\MediawikiStandalone\Service;
 
 final class ServiceAvailabilityHandler
 {
-    private const LEGACY_MEDIAWIKI_SERVICE_SHORTNAME = 'plugin_mediawiki';
+    private const string LEGACY_MEDIAWIKI_SERVICE_SHORTNAME = 'plugin_mediawiki';
 
     public function __construct(private MediawikiFlavorUsage $mediawiki_flavor_usage)
     {

@@ -31,7 +31,7 @@ use Tuleap\ServerHostname;
 
 final class LogUsersOutInstance implements InstanceOperation
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-log-users-out';
+    public const string TOPIC = 'tuleap.mediawiki-standalone.instance-log-users-out';
 
     private function __construct(private ?\Project $project, private ?int $user_id)
     {

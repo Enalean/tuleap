@@ -40,7 +40,7 @@ use Tuleap\Test\Stubs\UGroupRetrieverStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AdminSavePermissionsControllerTest extends TestCase
 {
-    private const PROJECT_ID = 101;
+    private const int PROJECT_ID = 101;
 
     public function testSavePermissions(): void
     {

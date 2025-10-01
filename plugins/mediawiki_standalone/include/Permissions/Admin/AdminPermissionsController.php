@@ -37,7 +37,7 @@ use Tuleap\Request\ForbiddenException;
 
 final class AdminPermissionsController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
 {
-    public const PROJECT_NAME_VARIABLE_NAME = 'project_name';
+    public const string PROJECT_NAME_VARIABLE_NAME = 'project_name';
 
     public function __construct(
         private ResponseFactoryInterface $response_factory,

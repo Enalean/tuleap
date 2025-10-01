@@ -28,12 +28,12 @@ use Tuleap\Queue\EnqueueTaskInterface;
 
 final class ProjectPermissionsSaver
 {
-    private const PERM_RESET_FOR_READERS   = 'perm_reset_for_mediawiki_standalone_readers';
-    private const PERM_GRANTED_FOR_READERS = 'perm_granted_for_mediawiki_standalone_readers';
-    private const PERM_RESET_FOR_WRITERS   = 'perm_reset_for_mediawiki_standalone_writers';
-    private const PERM_GRANTED_FOR_WRITERS = 'perm_granted_for_mediawiki_standalone_writers';
-    private const PERM_RESET_FOR_ADMINS    = 'perm_reset_for_mediawiki_standalone_admins';
-    private const PERM_GRANTED_FOR_ADMINS  = 'perm_granted_for_mediawiki_standalone_admins';
+    private const string PERM_RESET_FOR_READERS   = 'perm_reset_for_mediawiki_standalone_readers';
+    private const string PERM_GRANTED_FOR_READERS = 'perm_granted_for_mediawiki_standalone_readers';
+    private const string PERM_RESET_FOR_WRITERS   = 'perm_reset_for_mediawiki_standalone_writers';
+    private const string PERM_GRANTED_FOR_WRITERS = 'perm_granted_for_mediawiki_standalone_writers';
+    private const string PERM_RESET_FOR_ADMINS    = 'perm_reset_for_mediawiki_standalone_admins';
+    private const string PERM_GRANTED_FOR_ADMINS  = 'perm_granted_for_mediawiki_standalone_admins';
 
     public function __construct(
         private ISaveProjectPermissions $permissions_dao,

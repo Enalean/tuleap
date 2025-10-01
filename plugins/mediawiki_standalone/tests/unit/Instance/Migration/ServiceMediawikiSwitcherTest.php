@@ -31,11 +31,11 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceMediawikiSwitcherTest extends TestCase
 {
-    private const PROJECT_ID              = 101;
-    private const LEGACY_SERVICE_ID       = 111;
-    private const STANDALONE_SERVICE_ID   = 222;
-    private const LEGACY_SERVICE_RANK     = 120;
-    private const STANDALONE_SERVICE_RANK = 161;
+    private const int PROJECT_ID              = 101;
+    private const int LEGACY_SERVICE_ID       = 111;
+    private const int STANDALONE_SERVICE_ID   = 222;
+    private const int LEGACY_SERVICE_RANK     = 120;
+    private const int STANDALONE_SERVICE_RANK = 161;
 
     public function testSwitchToStandalone(): void
     {

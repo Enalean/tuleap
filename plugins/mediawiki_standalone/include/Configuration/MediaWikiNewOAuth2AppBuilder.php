@@ -29,7 +29,7 @@ use Tuleap\ServerHostname;
 
 final class MediaWikiNewOAuth2AppBuilder
 {
-    private const OAUTH2_REDIRECT_ENDPOINT = '/mediawiki/_oauth/Special:TuleapLogin/callback';
+    private const string OAUTH2_REDIRECT_ENDPOINT = '/mediawiki/_oauth/Special:TuleapLogin/callback';
 
     public function __construct(private SplitTokenVerificationStringHasher $hasher)
     {

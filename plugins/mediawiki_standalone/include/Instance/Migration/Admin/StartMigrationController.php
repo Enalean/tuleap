@@ -39,7 +39,7 @@ use Tuleap\Request\NotFoundException;
 
 final class StartMigrationController extends DispatchablePSR15Compatible
 {
-    public const URL = '/mediawiki_standalone/admin/migrations';
+    public const string URL = '/mediawiki_standalone/admin/migrations';
 
     public function __construct(
         private readonly CSRFSynchronizerTokenProvider $token_provider,

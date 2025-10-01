@@ -32,7 +32,7 @@ use Tuleap\ServerHostname;
 
 final class SuspendInstance implements InstanceOperation
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-suspension';
+    public const string TOPIC = 'tuleap.mediawiki-standalone.instance-suspension';
 
     private function __construct(private \Project $project)
     {

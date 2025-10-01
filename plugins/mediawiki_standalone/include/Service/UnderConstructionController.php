@@ -36,7 +36,7 @@ use Tuleap\Request\NotFoundException;
 
 final class UnderConstructionController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
-    public const PROJECT_NAME_VARIABLE_NAME = 'project_name';
+    public const string PROJECT_NAME_VARIABLE_NAME = 'project_name';
 
     public function __construct(
         private readonly ProjectByUnixNameFactory $project_retriever,

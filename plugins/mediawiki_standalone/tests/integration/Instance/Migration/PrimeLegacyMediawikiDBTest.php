@@ -31,12 +31,12 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrimeLegacyMediawikiDBTest extends TestCase
 {
-    private const DB_PREFIX            = 'migration_';
-    private const MW_USER_TABLE        = self::DB_PREFIX . 'user';
-    private const MAPPING_TABLE        = self::DB_PREFIX . 'tuleap_user_mapping';
-    private const TEST_USER_NAME       = 'mwuser1';
-    private const ADDITIONAL_TEST_DB   = 'testdb_mw_standalone_preparation';
-    private const TEST_TABLE_BASE_NAME = 'test_migration';
+    private const string DB_PREFIX            = 'migration_';
+    private const string MW_USER_TABLE        = self::DB_PREFIX . 'user';
+    private const string MAPPING_TABLE        = self::DB_PREFIX . 'tuleap_user_mapping';
+    private const string TEST_USER_NAME       = 'mwuser1';
+    private const string ADDITIONAL_TEST_DB   = 'testdb_mw_standalone_preparation';
+    private const string TEST_TABLE_BASE_NAME = 'test_migration';
 
     #[\Override]
     protected function setUp(): void

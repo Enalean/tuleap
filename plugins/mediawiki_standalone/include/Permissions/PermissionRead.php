@@ -27,7 +27,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
  */
 final class PermissionRead implements Permission
 {
-    public const NAME = 'READ';
+    public const string NAME = 'READ';
 
     #[\Override]
     public function getName(): string

@@ -42,7 +42,7 @@ use Tuleap\ServerHostname;
 
 final class CreateInstance
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-creation';
+    public const string TOPIC = 'tuleap.mediawiki-standalone.instance-creation';
 
     private function __construct(
         private readonly \Project $project,

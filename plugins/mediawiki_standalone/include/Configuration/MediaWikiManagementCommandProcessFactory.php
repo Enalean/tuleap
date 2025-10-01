@@ -32,7 +32,7 @@ use Tuleap\NeverThrow\Result;
 
 final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagementCommandFactory
 {
-    private const LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI = 'LocalSettings.php';
+    private const string LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI = 'LocalSettings.php';
 
     public function __construct(private LoggerInterface $logger, private string $path_setting_directory)
     {

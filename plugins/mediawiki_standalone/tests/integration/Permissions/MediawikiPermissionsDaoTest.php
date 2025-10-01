@@ -30,10 +30,10 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MediawikiPermissionsDaoTest extends TestIntegrationTestCase
 {
-    private const PROJECT_ID     = 1001;
-    private const DEVELOPERS_ID  = 101;
-    private const QA_ID          = 102;
-    private const INTEGRATORS_ID = 103;
+    private const int PROJECT_ID     = 1001;
+    private const int DEVELOPERS_ID  = 101;
+    private const int QA_ID          = 102;
+    private const int INTEGRATORS_ID = 103;
 
     private MediawikiPermissionsDao $dao;
     private \Project $project;

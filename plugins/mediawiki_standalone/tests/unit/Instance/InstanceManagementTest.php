@@ -57,7 +57,7 @@ final class InstanceManagementTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const DELETED_PROJECT_ID = 130;
+    private const int DELETED_PROJECT_ID = 130;
 
     private TestLogger $logger;
     private Client $mediawiki_client;

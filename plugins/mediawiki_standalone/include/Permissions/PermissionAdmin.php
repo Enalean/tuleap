@@ -27,7 +27,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
  */
 final class PermissionAdmin implements Permission
 {
-    public const NAME = 'ADMIN';
+    public const string NAME = 'ADMIN';
 
     #[\Override]
     public function getName(): string

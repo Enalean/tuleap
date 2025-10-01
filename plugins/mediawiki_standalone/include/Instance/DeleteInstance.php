@@ -32,7 +32,7 @@ use Tuleap\ServerHostname;
 
 final class DeleteInstance implements InstanceOperation
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-deletion';
+    public const string TOPIC = 'tuleap.mediawiki-standalone.instance-deletion';
 
     public function __construct(private \Project $project)
     {
