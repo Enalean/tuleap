@@ -56,9 +56,9 @@ final class ConfirmNewEmailController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $confirmation_hash = $request->getValidated('confirm_hash', 'string', '');
+        $confirmation_hash = (string) $request->getValidated('confirm_hash', 'string', '');
         $current_user      = $request->getCurrentUser();
         if ($current_user->isAnonymous()) {
             $url_redirect = new \URLRedirect($this->event_manager);
@@ -71,7 +71,7 @@ final class ConfirmNewEmailController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        if (! hash_equals($current_user->getConfirmHash(), $confirmation_hash)) {
+        if ($confirmation_hash !== '' && ! hash_equals($current_user->getConfirmHash(), $confirmation_hash)) {
             $layout->addFeedback(\Feedback::ERROR, _('You are not the user who asked for email change'));
             $layout->redirect('/');
         }
@@ -88,8 +88,8 @@ final class ConfirmNewEmailController implements DispatchableWithRequest
         $layout->redirect(DisplayAccountInformationController::URL);
     }
 
-    public static function getUrlToSelf(string $confirm_hash)
+    public static function getUrlToSelf(string $confirm_hash): string
     {
-        return sprintf('%s?confirm_hash=%s', self::URL, $confirm_hash);
+        return sprintf('%s?confirm_hash=%s', self::URL, urlencode($confirm_hash));
     }
 }
