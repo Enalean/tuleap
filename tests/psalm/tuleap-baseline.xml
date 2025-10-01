@@ -27901,7 +27901,6 @@
     <MissingPropertyType>
       <code><![CDATA[$DEFAULT_MAPPING_PRIVATE_PROJECT]]></code>
       <code><![CDATA[$DEFAULT_MAPPING_PUBLIC_PROJECT]]></code>
-      <code><![CDATA[$MEDIAWIKI_GROUPS_NAME]]></code>
       <code><![CDATA[$MEDIAWIKI_MODIFIABLE_GROUP_NAMES]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -27953,9 +27952,6 @@
     <MissingParamType>
       <code><![CDATA[$version]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$AVAILABLE_VERSIONS]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[countProjectsToMigrateTo123]]></code>
       <code><![CDATA[getAllProjectsToMigrateTo123]]></code>
@@ -38655,6 +38651,17 @@
       <code><![CDATA[linkArtifact]]></code>
     </DeprecatedMethod>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommand.php">
+    <MissingReturnType>
+      <code><![CDATA[hasChanges]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[getArtifactLinkInfoDiff]]></code>
+    </PossiblyNullReference>
+    <UndefinedMethod>
+      <code><![CDATA[getArtifactLinkInfoDiff]]></code>
+    </UndefinedMethod>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/ArtifactInTypeTablePresenter.php">
     <MissingParamType>
       <code><![CDATA[$html_classes]]></code>
@@ -45628,29 +45635,6 @@
       <code><![CDATA[getUserDateFormatPreference]]></code>
       <code><![CDATA[validate]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetCommand.php">
-    <MissingReturnType>
-      <code><![CDATA[execute]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetQueue.php">
-    <MissingReturnType>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[execute]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommand.php">
-    <MissingReturnType>
-      <code><![CDATA[execute]]></code>
-      <code><![CDATA[hasChanges]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[getArtifactLinkInfoDiff]]></code>
-    </PossiblyNullReference>
-    <UndefinedMethod>
-      <code><![CDATA[getArtifactLinkInfoDiff]]></code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownCacheGenerationChecker.php">
     <MissingParamType>
@@ -58828,11 +58812,6 @@
     <UndefinedInterfaceMethod>
       <code><![CDATA[$reverse_links]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/tracker/tests/unit/REST/Artifact/ChangesetValue/ArtifactLink/RESTForwardLinkProxyTest.php">
-    <MissingReturnType>
-      <code><![CDATA[testFromPayload]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/tests/unit/REST/Artifact/ChangesetValue/FieldsDataBuilderTest.php">
     <PossiblyInvalidArgument>
@@ -76967,11 +76946,6 @@
       <code><![CDATA[! $this->language_id]]></code>
       <code><![CDATA[$row['has_custom_avatar'] ?? 0]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="src/common/User/Password/PasswordExpirationChecker.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/User/Password/PasswordValidatorPresenter.php">
     <MissingParamType>

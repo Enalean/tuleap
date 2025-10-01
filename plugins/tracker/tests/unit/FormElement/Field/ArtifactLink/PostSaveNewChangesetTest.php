@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -39,7 +38,7 @@ final class PostSaveNewChangesetTest extends TestCase
         $user               = UserTestBuilder::buildWithDefaults();
         $new_changeset      = ChangesetTestBuilder::aChangeset(456)->build();
         $previous_changeset = null;
-        $command            = $this->createMock(Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class);
+        $command            = $this->createMock(PostSaveNewChangesetCommand::class);
         $field              = $this->createPartialMock(ArtifactLinkField::class, [
             'getProcessChildrenTriggersCommand',
             'getPostSaveNewChangesetLinkParentArtifact',

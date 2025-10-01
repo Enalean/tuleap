@@ -22,11 +22,9 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class PostSaveNewChangesetLinkParentArtifact implements
-    Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
+class PostSaveNewChangesetLinkParentArtifact implements PostSaveNewChangesetCommand
 {
     /**
      * @var ParentLinkAction
