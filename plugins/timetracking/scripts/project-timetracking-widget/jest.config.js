@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./times";
-export * from "./project";
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+
+const jest_base_config = defineJestConfiguration();
+export default {
+    ...jest_base_config,
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
+    displayName: "project-timetracking-widget",
+};

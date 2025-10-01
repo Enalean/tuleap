@@ -77,6 +77,9 @@ msgstr "Les permissions ont été enregistrées avec succès."
 msgid "Personal time tracking"
 msgstr "Suivi de temps personnel"
 
+msgid "Project Timetracking"
+msgstr "Suivi du temps des projets"
+
 msgid "Read"
 msgstr "Lecture"
 
@@ -148,9 +151,6 @@ msgstr "Le suivi de temps est désactivé pour ce tracker."
 
 msgid "Time tracking is enabled for tracker."
 msgstr "Le suivi de temps est activé pour ce tracker."
-
-msgid "Timetracking overview"
-msgstr "Aperçu des suivis de temps"
 
 msgid "Update"
 msgstr "Mettre à jour"

@@ -26,12 +26,12 @@ CREATE TABLE plugin_timetracking_times (
   INDEX time (user_id, artifact_id, day)
 ) ENGINE=InnoDB;
 
-CREATE TABLE plugin_timetracking_overview_widget (
+CREATE TABLE plugin_timetracking_project_widget (
     id INT(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
     widget_title VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB;
 
-CREATE TABLE plugin_timetracking_overview_report_tracker (
+CREATE TABLE plugin_timetracking_project_report_tracker (
     report_id INT(11) NOT NULL,
     tracker_id INT(11) NOT NULL,
     PRIMARY KEY (report_id, tracker_id)

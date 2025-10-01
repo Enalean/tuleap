@@ -83,9 +83,9 @@ class ProjectResource
     private $time_retriever;
 
     /**
-     * @var TimetrackingOverviewRepresentationsBuilder
+     * @var ProjectTimetrackingRepresentationsBuilder
      */
-    private $timetracking_overview_builder;
+    private $project_timetracking_builder;
 
     public function __construct()
     {
@@ -119,9 +119,9 @@ class ProjectResource
             new FrozenFieldsRetriever(new FrozenFieldsDao(), $form_element_factory)
         );
 
-        $permissions_functions_wrapper       = new PermissionsFunctionsWrapper();
-        $tracker_factory                     = TrackerFactory::instance();
-        $this->timetracking_overview_builder = new TimetrackingOverviewRepresentationsBuilder(
+        $permissions_functions_wrapper      = new PermissionsFunctionsWrapper();
+        $tracker_factory                    = TrackerFactory::instance();
+        $this->project_timetracking_builder = new ProjectTimetrackingRepresentationsBuilder(
             $admin_dao,
             $permissions_retriever,
             $tracker_factory,
@@ -197,7 +197,7 @@ class ProjectResource
         $this->checkQuery($query);
         $current_user = $this->user_manager->getCurrentUser();
         if ($representation === 'minimal') {
-            return $this->timetracking_overview_builder->getTrackersMinimalRepresentationsWithTimetracking(
+            return $this->project_timetracking_builder->getTrackersMinimalRepresentationsWithTimetracking(
                 $current_user,
                 $project,
                 $limit,
@@ -205,7 +205,7 @@ class ProjectResource
             );
         }
 
-        return $this->timetracking_overview_builder->getTrackersFullRepresentationsWithTimetracking(
+        return $this->project_timetracking_builder->getTrackersFullRepresentationsWithTimetracking(
             $current_user,
             $project,
             $limit,

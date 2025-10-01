@@ -37409,15 +37409,7 @@
       <code><![CDATA[checkQuery]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingDatesExtractor.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$query]]></code>
-    </PossiblyNullArgument>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($query)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingOverviewRepresentationsBuilder.php">
+  <file src="plugins/timetracking/include/Timetracking/REST/v1/ProjectTimetrackingRepresentationsBuilder.php">
     <MissingParamType>
       <code><![CDATA[$permissions_retriever]]></code>
     </MissingParamType>
@@ -37428,6 +37420,14 @@
       <code><![CDATA[(int) $this->admin_dao->foundRows()]]></code>
       <code><![CDATA[(int) $this->admin_dao->foundRows()]]></code>
     </RedundantCast>
+  </file>
+  <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingDatesExtractor.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$query]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($query)]]></code>
+    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingPUTRepresentation.php">
     <PossiblyNullPropertyAssignmentValue>
@@ -37676,9 +37676,9 @@
       <code><![CDATA[updateReport]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/timetracking/include/Timetracking/Widget/TimeTrackingOverview.php">
+  <file src="plugins/timetracking/include/Timetracking/Widget/ProjectTimetracking.php">
     <MissingClassConstType>
-      <code><![CDATA[NAME = 'timetracking-overview']]></code>
+      <code><![CDATA[NAME = 'project-timetracking']]></code>
     </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$content_id]]></code>
@@ -37888,7 +37888,6 @@
     <MissingReturnType>
       <code><![CDATA[addTimeOnLastMonthPeriod]]></code>
       <code><![CDATA[createUser]]></code>
-      <code><![CDATA[initTimetrackingOverviewWidget]]></code>
       <code><![CDATA[setUp]]></code>
     </MissingReturnType>
     <PossiblyFalseReference>

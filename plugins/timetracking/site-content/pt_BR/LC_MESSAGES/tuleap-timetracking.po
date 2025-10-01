@@ -68,6 +68,9 @@ msgstr ""
 msgid "Personal time tracking"
 msgstr ""
 
+msgid "Project Timetracking"
+msgstr ""
+
 msgid "Read"
 msgstr ""
 
@@ -135,9 +138,6 @@ msgid "Time tracking is disabled for tracker."
 msgstr ""
 
 msgid "Time tracking is enabled for tracker."
-msgstr ""
-
-msgid "Timetracking overview"
 msgstr ""
 
 msgid "Update"

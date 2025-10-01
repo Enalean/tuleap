@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./times";
-export * from "./project";
+namespace Tuleap\Timetracking\Exceptions;
+
+use Exception;
+
+class ProjectTimetrackingWidgetNoTitle extends Exception
+{
+    public function __construct()
+    {
+        parent::__construct('Please enter a title');
+    }
+}
