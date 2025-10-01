@@ -31,6 +31,7 @@ import type { UpdateQuery } from "./domain/UpdateQuery";
 import type { Emitter } from "mitt";
 import type { Events } from "./helpers/widget-events";
 import type { RetrieveArtifactLinks } from "./domain/RetrieveArtifactLinks";
+import type { RowCollectionStore } from "./domain/RowCollectionStore";
 
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
@@ -50,3 +51,4 @@ export const WIDGET_TITLE_UPDATER: StrictInjectionKey<WidgetTitleUpdater> = Symb
 export const ARROW_REDRAW_TRIGGERER: StrictInjectionKey<ArrowRedrawTriggerer> = Symbol();
 export const WIDGET_CONTAINER: StrictInjectionKey<HTMLElement> = Symbol();
 export const DASHBOARD_ID: StrictInjectionKey<number> = Symbol();
+export const ROW_COLLECTION_STORE: StrictInjectionKey<RowCollectionStore> = Symbol();
