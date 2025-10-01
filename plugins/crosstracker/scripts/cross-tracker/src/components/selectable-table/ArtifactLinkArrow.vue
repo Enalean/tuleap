@@ -31,6 +31,7 @@ import { EMITTER } from "../../injection-symbols";
 import { SELECTABLE_TABLE_RESIZED_EVENT } from "../../helpers/widget-events";
 import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
 import { REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
+import type { ArrowDataEntry } from "../../domain/ArrowDataStore";
 
 interface Point {
     x: number;
@@ -49,18 +50,20 @@ const OFFSET_TO_AVOID_CUT_ARROW = 1;
 const ARROWHEAD_STEEPNESS = 4;
 
 const props = defineProps<{
-    child_cell: HTMLElement;
-    child_caret: HTMLElement;
-    parent_cell: HTMLElement;
-    parent_caret: HTMLElement;
     is_last_link: boolean;
     direction: ArtifactLinkDirection;
     reverse_links_count: number;
+    parent_element: ArrowDataEntry;
+    current_element: ArrowDataEntry;
 }>();
 
 const svg_styling = ref<string>(getSVGStyle());
 const arrow_points = ref<ArrowPoints>(
-    getArrowPoints(props.parent_cell, props.parent_caret, props.child_caret),
+    getArrowPoints(
+        props.parent_element.element,
+        props.parent_element.caret,
+        props.current_element.caret,
+    ),
 );
 
 const path = computed((): string =>
@@ -72,12 +75,14 @@ const path = computed((): string =>
 );
 
 function getSVGStyle(): string {
-    const child_cell_offsetBottom = props.child_cell.offsetTop + props.child_cell.offsetHeight;
-    const parent_cell_offsetBottom = props.parent_cell.offsetTop + props.parent_cell.offsetHeight;
+    const child_cell_offsetBottom =
+        props.current_element.element.offsetTop + props.current_element.element.offsetHeight;
+    const parent_cell_offsetBottom =
+        props.parent_element.element.offsetTop + props.parent_element.element.offsetHeight;
 
     return `position: absolute;
-           left: ${props.parent_caret.offsetLeft}px;
-           width: ${props.child_caret.offsetLeft - props.parent_caret.offsetLeft}px;
+           left: ${props.parent_element.caret.offsetLeft}px;
+           width: ${props.current_element.caret.offsetLeft - props.parent_element.caret.offsetLeft}px;
            top: ${parent_cell_offsetBottom}px;
            height: ${child_cell_offsetBottom - parent_cell_offsetBottom}px;`;
 }
@@ -103,7 +108,11 @@ function getArrowPoints(
 }
 
 function resetProps(): void {
-    arrow_points.value = getArrowPoints(props.parent_cell, props.parent_caret, props.child_caret);
+    arrow_points.value = getArrowPoints(
+        props.parent_element.element,
+        props.parent_element.caret,
+        props.current_element.caret,
+    );
     svg_styling.value = getSVGStyle();
 }
 

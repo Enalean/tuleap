@@ -31,8 +31,6 @@
         v-bind:columns="columns"
         v-bind:level="level"
         v-bind:tql_query="tql_query"
-        v-bind:parent_element="parent_element"
-        v-bind:parent_caret="parent_caret"
         v-bind:reverse_links_count="reverse_links_count"
         v-bind:ancestors="ancestors"
         v-bind:parent_row="row"
@@ -52,8 +50,6 @@ defineProps<{
     level: number;
     artifact_links_rows: ArtifactsTable["rows"];
     expected_number_of_links: number;
-    parent_element: HTMLElement;
-    parent_caret: HTMLElement;
     reverse_links_count: number;
     ancestors: number[];
 }>();

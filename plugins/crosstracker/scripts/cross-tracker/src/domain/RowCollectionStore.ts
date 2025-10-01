@@ -32,6 +32,7 @@ export type RowCollectionStore = {
     removeListeners(): void;
     getRowCollection(): Array<RowEntry>;
     resetStore(): void;
+    getParentByUUId(uuid: string): RowEntry | undefined;
 };
 
 export const RowCollectionStore = (emitter: Emitter<Events>): RowCollectionStore => {
@@ -65,6 +66,14 @@ export const RowCollectionStore = (emitter: Emitter<Events>): RowCollectionStore
 
         resetStore(): void {
             row_collection = [];
+        },
+
+        getParentByUUId(uuid: string): RowEntry | undefined {
+            const current_item = row_collection.find((item) => item.row.row_uuid === uuid);
+
+            return row_collection.find(
+                (item) => item.row.row_uuid === current_item?.parent_row_uuid,
+            );
         },
     };
 };

@@ -62,6 +62,7 @@
         </span>
         <pretty-title-cell-component
             v-if="props.cell.type === PRETTY_TITLE_CELL"
+            v-bind:uuid="uuid"
             v-bind:cell="cell"
             v-bind:artifact_uri="artifact_uri"
             v-bind:expected_number_of_forward_link="expected_number_of_forward_link"
@@ -71,8 +72,6 @@
             class="cell"
             v-bind:level="level"
             data-test="cell"
-            v-bind:parent_element="parent_element"
-            v-bind:parent_caret="parent_caret"
             v-bind:direction="direction"
             v-bind:reverse_links_count="reverse_links_count"
         />
@@ -120,14 +119,13 @@ const date_formatter = strictInject(DATE_FORMATTER);
 const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
 
 const props = defineProps<{
+    uuid: string;
     cell: Cell | undefined;
     artifact_uri: string;
     expected_number_of_forward_link: number;
     expected_number_of_reverse_link: number;
     level: number;
     is_last: boolean;
-    parent_element: HTMLElement | undefined;
-    parent_caret: HTMLElement | undefined;
     direction: ArtifactLinkDirection | undefined;
     reverse_links_count: number | undefined;
 }>();
@@ -148,8 +146,8 @@ function renderCell(cell: Cell): string {
     return "";
 }
 
-function toggleArtifactLinksDisplay(parent_element: HTMLElement, parent_caret: HTMLElement): void {
-    emit("toggle-links", parent_element, parent_caret);
+function toggleArtifactLinksDisplay(): void {
+    emit("toggle-links");
 }
 
 const getBadgeClass = (color: ColorName): string => `tlp-badge-${color} tlp-badge-outline`;

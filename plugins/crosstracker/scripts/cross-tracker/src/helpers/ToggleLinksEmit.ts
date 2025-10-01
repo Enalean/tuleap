@@ -17,5 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 export type ToggleLinks = {
-    (e: "toggle-links", parent_row: HTMLElement, parent_caret: HTMLElement): void;
+    (e: "toggle-links"): void;
 };
