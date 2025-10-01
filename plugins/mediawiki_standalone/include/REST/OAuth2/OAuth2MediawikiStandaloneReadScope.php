@@ -35,7 +35,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
  */
 final class OAuth2MediawikiStandaloneReadScope implements AuthenticationScope
 {
-    private const IDENTIFIER_KEY = 'read:mediawiki_standalone';
+    private const string IDENTIFIER_KEY = 'read:mediawiki_standalone';
 
     private AuthenticationScopeDefinition $definition;
 

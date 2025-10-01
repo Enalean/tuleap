@@ -39,12 +39,12 @@ use Tuleap\Http\HttpClientFactory;
 #[ConfigKeyCategory('MediaWiki')]
 final class MediawikiHTTPClientFactory implements MediawikiClientFactory
 {
-    private const TIMEOUT = 30;
+    private const int TIMEOUT = 30;
 
     #[ConfigKey('Pre-shared secret between Tuleap and Mediawiki')]
     #[ConfigKeySecret]
     #[ConfigCannotBeModified]
-    public const SHARED_SECRET = 'mediawiki_standalone_shared_secret';
+    public const string SHARED_SECRET = 'mediawiki_standalone_shared_secret';
 
     /**
      * @throws ConfigurationErrorException

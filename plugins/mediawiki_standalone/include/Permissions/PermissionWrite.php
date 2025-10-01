@@ -27,7 +27,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
  */
 final class PermissionWrite implements Permission
 {
-    public const NAME = 'WRITE';
+    public const string NAME = 'WRITE';
 
     #[\Override]
     public function getName(): string

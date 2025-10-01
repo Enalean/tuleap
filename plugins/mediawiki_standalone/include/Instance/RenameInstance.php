@@ -32,7 +32,7 @@ use Tuleap\ServerHostname;
 
 final class RenameInstance implements InstanceOperation
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-rename';
+    public const string TOPIC = 'tuleap.mediawiki-standalone.instance-rename';
 
     private function __construct(private \Project $project, private string $new_name)
     {

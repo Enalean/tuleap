@@ -27,7 +27,7 @@ use Tuleap\Queue\QueueTask;
 
 final class UpdateMediaWikiTask implements QueueTask
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.farm-install-update';
+    public const string TOPIC = 'tuleap.mediawiki-standalone.farm-install-update';
 
     #[\Override]
     public function getTopic(): string

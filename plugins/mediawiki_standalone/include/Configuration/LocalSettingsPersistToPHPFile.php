@@ -27,7 +27,7 @@ use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustache
 
 final class LocalSettingsPersistToPHPFile implements LocalSettingsPersist
 {
-    private const FILE_NAME = 'LocalSettings.local.php';
+    private const string FILE_NAME = 'LocalSettings.local.php';
 
     public function __construct(private string $path_setting_directory, private PHPStringMustacheRenderer $renderer)
     {

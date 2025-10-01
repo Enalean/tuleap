@@ -32,7 +32,7 @@ use Tuleap\ServerHostname;
 
 final class ResumeInstance implements InstanceOperation
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-resume';
+    public const string TOPIC = 'tuleap.mediawiki-standalone.instance-resume';
 
 
     private function __construct(private \Project $project)

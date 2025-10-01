@@ -33,7 +33,7 @@ use Tuleap\Option\Option;
 
 final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMediawikiDBPrimer
 {
-    private const MAPPING_TABLE_BASE_NAME = 'tuleap_user_mapping';
+    private const string MAPPING_TABLE_BASE_NAME = 'tuleap_user_mapping';
 
     /**
      * @psalm-return Ok<null>|Err<Fault>

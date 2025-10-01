@@ -36,7 +36,7 @@ use Tuleap\Request\NotFoundException;
 
 final class DisplayMigrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/mediawiki_standalone/admin/migrations';
+    public const string URL = '/mediawiki_standalone/admin/migrations';
 
     public function __construct(
         private readonly LegacyReadyToMigrateDao $to_migrate_dao,

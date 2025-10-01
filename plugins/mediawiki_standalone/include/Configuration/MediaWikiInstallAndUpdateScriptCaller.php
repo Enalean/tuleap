@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 
 final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAndUpdateHandler
 {
-    private const MAX_ONGOING_PROCESSES = 2;
+    private const int MAX_ONGOING_PROCESSES = 2;
 
     public function __construct(
         private MediaWikiManagementCommandFactory $management_command_factory,

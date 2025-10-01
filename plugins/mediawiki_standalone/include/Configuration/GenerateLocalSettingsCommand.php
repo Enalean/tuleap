@@ -28,7 +28,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class GenerateLocalSettingsCommand extends Command
 {
-    public const NAME = 'mediawiki_standalone:generate_local_settings';
+    public const string NAME = 'mediawiki_standalone:generate_local_settings';
 
     public function __construct(private LocalSettingsInstantiator $instantiator)
     {
