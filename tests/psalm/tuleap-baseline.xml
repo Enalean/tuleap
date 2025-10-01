@@ -28364,11 +28364,6 @@
       <code><![CDATA[$command]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="plugins/oauth2_server/include/App/AppFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[PLUGIN_APP = 'plugin_oauth2']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/oauth2_server/include/AuthorizationServer/AuthorizationEndpointProcessConsentController.php">
     <InvalidArrayOffset>
       <code><![CDATA[$body_params[self::OIDC_NONCE]]]></code>
