@@ -29,10 +29,10 @@ import {
     putWikiProperties,
 } from "../../api/properties-rest-querier";
 import { getCustomProperties } from "../../helpers/properties-helpers/custom-properties-helper";
-import { getItem, getItemWithSize } from "../../api/rest-querier";
+import { getItem } from "../../api/rest-querier";
 import { formatCustomPropertiesForFolderUpdate } from "../../helpers/properties-helpers/update-data-transformatter-helper";
 import type { ActionContext } from "vuex";
-import type { FolderStatus, Folder, FolderProperties, Item, RootState } from "../../type";
+import type { FolderStatus, Folder, Item, RootState } from "../../type";
 import type { PropertiesState } from "./module";
 import {
     isEmbedded,
@@ -49,7 +49,6 @@ export interface PropertiesActions {
     readonly loadProjectProperties: typeof loadProjectProperties;
     readonly updateProperties: typeof updateProperties;
     readonly updateFolderProperties: typeof updateFolderProperties;
-    readonly getFolderProperties: typeof getFolderProperties;
 }
 
 export const loadProjectProperties = async (
@@ -209,17 +208,4 @@ export const updateFolderProperties = async (
         current_folder: payload.current_folder,
     };
     await updateProperties(context, update_payload);
-};
-
-export const getFolderProperties = async (
-    context: ActionContext<PropertiesState, RootState>,
-    folder_item: Folder,
-): Promise<FolderProperties | null> => {
-    try {
-        const folder = await getItemWithSize(folder_item.id);
-        return folder.folder_properties;
-    } catch (exception) {
-        await context.dispatch("error/handleGlobalModalError", exception);
-        return null;
-    }
 };

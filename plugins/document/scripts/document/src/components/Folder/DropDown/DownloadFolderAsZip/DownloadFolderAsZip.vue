@@ -41,21 +41,22 @@ import { redirectToUrl } from "../../../../helpers/location-helper";
 import emitter from "../../../../helpers/emitter";
 import type { Folder } from "../../../../type";
 import { isPlatformOSX } from "../../../../helpers/platform-detector";
-import { useNamespacedActions } from "vuex-composition-helpers";
 import { computed, ref } from "vue";
-import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { MAX_ARCHIVE_SIZE, PROJECT, WARNING_THRESHOLD } from "../../../../configuration-keys";
+import type { DocumentProperties } from "../../../../helpers/properties/document-properties";
+import { useStore } from "vuex-composition-helpers";
 
-const props = defineProps<{ item: Folder }>();
+const $store = useStore();
+
+const props = defineProps<{
+    item: Folder;
+    document_properties: DocumentProperties;
+}>();
 
 const project = strictInject(PROJECT);
 const warning_threshold = strictInject(WARNING_THRESHOLD);
 const max_archive_size = strictInject(MAX_ARCHIVE_SIZE);
-
-const { getFolderProperties } = useNamespacedActions<PropertiesActions>("properties", [
-    "getFolderProperties",
-]);
 
 const is_retrieving_folder_size = ref(false);
 
@@ -77,7 +78,10 @@ function shouldWarnOSXUser(total_size: number, nb_files: number): boolean {
 async function checkFolderSize(): Promise<void> {
     is_retrieving_folder_size.value = true;
 
-    const folder_properties = await getFolderProperties(props.item);
+    const folder_properties = await props.document_properties.getFolderProperties(
+        $store,
+        props.item,
+    );
     is_retrieving_folder_size.value = false;
 
     if (folder_properties === null) {

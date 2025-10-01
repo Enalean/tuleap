@@ -21,7 +21,6 @@ import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import {
-    getFolderProperties,
     loadProjectProperties,
     updateFolderProperties,
     updateProperties,
@@ -725,47 +724,6 @@ describe("Properties actions", () => {
                     root: true,
                 });
             });
-        });
-    });
-
-    describe("getFolderProperties", () => {
-        it("Given a folder item, it's properties are fetched and returned", async () => {
-            const getItemWithSize = vi.spyOn(rest_querier, "getItemWithSize").mockReturnValue(
-                Promise.resolve({
-                    id: 3,
-                    title: "Project Documentation",
-                    folder_properties: {
-                        total_size: 102546950,
-                        nb_files: 27,
-                    },
-                } as Folder),
-            );
-
-            const properties = await getFolderProperties(context, {
-                id: 3,
-                title: "Project Documentation",
-            } as Folder);
-
-            expect(getItemWithSize).toHaveBeenCalled();
-            expect(properties).toStrictEqual({
-                total_size: 102546950,
-                nb_files: 27,
-            });
-        });
-
-        it("Handles errors when it fails", async () => {
-            const getItemWithSize = vi
-                .spyOn(rest_querier, "getItemWithSize")
-                .mockReturnValue(Promise.reject("error"));
-
-            const folder = await getFolderProperties(context, {
-                id: 3,
-                title: "Project Documentation",
-            } as Folder);
-
-            expect(getItemWithSize).toHaveBeenCalled();
-            expect(folder).toBeNull();
-            expect(context.dispatch).toHaveBeenCalled();
         });
     });
 });

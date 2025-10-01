@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -24,39 +25,30 @@ import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
 import * as location_helper from "../../../../helpers/location-helper";
 import * as platform_detector from "../../../../helpers/platform-detector";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import type { PropertiesState } from "../../../../store/properties/module";
 import type { Folder } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
 import { MAX_ARCHIVE_SIZE, PROJECT, WARNING_THRESHOLD } from "../../../../configuration-keys";
 import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
 
 describe("DownloadFolderAsZip", () => {
-    let load_properties: vi.Mock, item: Folder;
+    let item: Folder;
+    let getFolderProperties: MockInstance;
 
     beforeEach(() => {
-        load_properties = vi.fn();
         item = { id: 10, type: "folder" } as Folder;
+        getFolderProperties = vi.fn();
     });
 
     function getWrapper(
         max_archive_size = 1,
     ): VueWrapper<InstanceType<typeof DownloadFolderAsZip>> {
         return shallowMount(DownloadFolderAsZip, {
-            props: { item },
+            props: {
+                item,
+                document_properties: { getFolderProperties },
+            },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        properties: {
-                            state: {
-                                has_loaded_properties: true,
-                            } as unknown as PropertiesState,
-                            actions: {
-                                getFolderProperties: load_properties,
-                            },
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 provide: {
                     [PROJECT.valueOf()]: new ProjectBuilder(101)
                         .withName("tuleap-documentation")
@@ -69,28 +61,28 @@ describe("DownloadFolderAsZip", () => {
     }
 
     it("Opens the modal when the folder size exceeds the max_archive_size threshold", async () => {
-        load_properties.mockImplementation(() => {
+        getFolderProperties.mockImplementation(() => {
             return Promise.resolve({ total_size: 2000000 });
         });
         const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
         await wrapper.trigger("click");
 
-        expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).toHaveBeenCalledWith("show-max-archive-size-threshold-exceeded-modal", {
             detail: { current_folder_size: 2000000 },
         });
     });
 
     it("Opens the warning modal when the size exceeds the warning_threshold", async () => {
-        load_properties.mockImplementation(() => {
+        getFolderProperties.mockImplementation(() => {
             return Promise.resolve({ total_size: 600000, nb_files: 100000 });
         });
         const emitMock = vi.spyOn(emitter, "emit");
         const wrapper = getWrapper();
         await wrapper.trigger("click");
 
-        expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
@@ -103,7 +95,7 @@ describe("DownloadFolderAsZip", () => {
 
     it("Opens the warning modal when user is on OSX and archive size exceeds or equals 4GB", async () => {
         const four_GB = 4 * Math.pow(10, 9);
-        load_properties.mockImplementation(() => {
+        getFolderProperties.mockImplementation(() => {
             return Promise.resolve({ total_size: four_GB });
         });
         const emitMock = vi.spyOn(emitter, "emit");
@@ -113,7 +105,7 @@ describe("DownloadFolderAsZip", () => {
 
         await wrapper.trigger("click");
 
-        expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: four_GB,
@@ -125,7 +117,7 @@ describe("DownloadFolderAsZip", () => {
     });
 
     it("Opens the warning modal when user is on OSX and archive size contains more than 64k files", async () => {
-        load_properties.mockImplementation(() => {
+        getFolderProperties.mockImplementation(() => {
             return Promise.resolve({ total_size: 600000, nb_files: 100000 });
         });
         const emitMock = vi.spyOn(emitter, "emit");
@@ -135,7 +127,7 @@ describe("DownloadFolderAsZip", () => {
 
         await wrapper.trigger("click");
 
-        expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
@@ -148,7 +140,7 @@ describe("DownloadFolderAsZip", () => {
 
     it(`Sets the location to the download URI instead of simply using href
         so that people can't just skip the max threshold modal`, async () => {
-        load_properties.mockImplementation(() => {
+        getFolderProperties.mockImplementation(() => {
             return Promise.resolve({ total_size: 10 });
         });
         const redirect = vi.spyOn(location_helper, "redirectToUrl").mockImplementation(() => {
@@ -159,7 +151,7 @@ describe("DownloadFolderAsZip", () => {
 
         await wrapper.get("[data-test=download-as-zip-button]").trigger("click");
 
-        expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
+        expect(getFolderProperties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).not.toHaveBeenCalled();
         expect(redirect).toHaveBeenCalledWith(
             "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
