@@ -34,8 +34,6 @@ use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue;
-use Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_FormElementFactory;
@@ -1620,9 +1618,9 @@ class ArtifactLinkField extends TrackerField
         $queue->execute($artifact, $submitter, $new_changeset, $fields_data, $previous_changeset);
     }
 
-    private function getPostNewChangesetQueue(): Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
+    private function getPostNewChangesetQueue(): PostSaveNewChangesetQueue
     {
-        $queue = new Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue();
+        $queue = new PostSaveNewChangesetQueue();
         $queue->add($this->getProcessChildrenTriggersCommand());
         $queue->add($this->getPostSaveNewChangesetLinkParentArtifact());
 
@@ -1632,9 +1630,9 @@ class ArtifactLinkField extends TrackerField
     /**
      * @protected for testing purpose
      */
-    protected function getProcessChildrenTriggersCommand(): Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand
+    protected function getProcessChildrenTriggersCommand(): PostSaveNewChangesetCommand
     {
-        return new Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand(
+        return new ProcessChildrenTriggersCommand(
             $this,
             $this->getWorkflowFactory()->getTriggerRulesManager()
         );

@@ -25,12 +25,9 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
@@ -41,11 +38,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class ProcessChildrenTriggersCommandTest extends TestCase
 {
     private ArtifactLinkField $field;
-    private Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand $command;
+    private ProcessChildrenTriggersCommand $command;
     private Artifact $artifact;
     private PFUser $user;
     private Tracker_Workflow_Trigger_RulesManager&MockObject $trigger_rules_manager;
-    private TypePresenterFactory&MockObject $nature_factory;
 
     #[\Override]
     protected function setUp(): void
@@ -56,10 +52,7 @@ final class ProcessChildrenTriggersCommandTest extends TestCase
         $this->artifact              = ArtifactTestBuilder::anArtifact(653421)->build();
         $this->user                  = new PFUser(['language_id' => 'en']);
 
-        $this->nature_factory = $this->createMock(TypePresenterFactory::class);
-        $this->nature_factory->method('getFromShortname')->willReturn(new TypePresenter('', '', '', true));
-
-        $this->command = new Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand(
+        $this->command = new ProcessChildrenTriggersCommand(
             $this->field,
             $this->trigger_rules_manager
         );

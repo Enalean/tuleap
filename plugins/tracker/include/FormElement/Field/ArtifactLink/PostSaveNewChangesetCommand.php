@@ -18,14 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
+
+use PFUser;
+use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * Execute something during a postSaveNewChangeset
  */
-
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
-interface Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
+interface PostSaveNewChangesetCommand
 {
     /**
      * Do the real stuff
@@ -36,5 +38,5 @@ interface Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
         ?Tracker_Artifact_Changeset $previous_changeset = null,
-    );
+    ): void;
 }

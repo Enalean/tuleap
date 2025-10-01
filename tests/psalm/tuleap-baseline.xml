@@ -38625,6 +38625,17 @@
       <code><![CDATA[linkArtifact]]></code>
     </DeprecatedMethod>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommand.php">
+    <MissingReturnType>
+      <code><![CDATA[hasChanges]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[getArtifactLinkInfoDiff]]></code>
+    </PossiblyNullReference>
+    <UndefinedMethod>
+      <code><![CDATA[getArtifactLinkInfoDiff]]></code>
+    </UndefinedMethod>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/ArtifactInTypeTablePresenter.php">
     <MissingParamType>
       <code><![CDATA[$html_classes]]></code>
@@ -45598,29 +45609,6 @@
       <code><![CDATA[getUserDateFormatPreference]]></code>
       <code><![CDATA[validate]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetCommand.php">
-    <MissingReturnType>
-      <code><![CDATA[execute]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetQueue.php">
-    <MissingReturnType>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[execute]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommand.php">
-    <MissingReturnType>
-      <code><![CDATA[execute]]></code>
-      <code><![CDATA[hasChanges]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[getArtifactLinkInfoDiff]]></code>
-    </PossiblyNullReference>
-    <UndefinedMethod>
-      <code><![CDATA[getArtifactLinkInfoDiff]]></code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownCacheGenerationChecker.php">
     <MissingParamType>

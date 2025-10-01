@@ -18,34 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
+
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 /**
  * Update the link direction in order to ensure that it is correct resp. the
  * association definition.
  */
-
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
-class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand implements
-    Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
+final readonly class ProcessChildrenTriggersCommand implements PostSaveNewChangesetCommand
 {
-    /** @var ArtifactLinkField */
-    private $field;
-
-    /** @var Tracker_Workflow_Trigger_RulesManager */
-    private $trigger_rules_manager;
-
     public function __construct(
-        ArtifactLinkField $field,
-        Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
+        private ArtifactLinkField $field,
+        private Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
     ) {
-        $this->field                 = $field;
-        $this->trigger_rules_manager = $trigger_rules_manager;
     }
 
     /**
-     * @see Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand::execute()
+     * @see PostSaveNewChangesetCommand::execute()
      */
     #[\Override]
     public function execute(
@@ -54,7 +47,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
         ?Tracker_Artifact_Changeset $previous_changeset = null,
-    ) {
+    ): void {
         if ($this->hasChanges($new_changeset, $previous_changeset)) {
             $this->trigger_rules_manager->processChildrenTriggers($artifact);
         }
