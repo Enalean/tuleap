@@ -29,6 +29,7 @@ use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
+use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
@@ -196,19 +197,32 @@ final class SequenceIdManagerTest extends TestCase
 
     public function testItCanDealWithMultipleCallWithDifferentMilestones(): void
     {
-        $matcher = self::exactly(2);
-        $this->backlog_factory->expects($matcher)->method('getBacklog')->willReturnCallback(function (...$parameters) use ($matcher) {
-            if ($matcher->numberOfInvocations() === 1) {
-                self::assertSame($this->user, $parameters[0]);
-                self::assertSame($this->milestone_1, $parameters[1]);
-                return $this->backlog_1;
-            }
-            if ($matcher->numberOfInvocations() === 2) {
-                self::assertSame($this->user, $parameters[0]);
-                self::assertSame($this->milestone_2, $parameters[1]);
-                return $this->backlog_2;
-            }
-        });
+        $expected_calls = [
+            [
+                'user' => $this->user,
+                'milestone' => $this->milestone_1,
+                'return' => $this->backlog_1,
+            ],
+            [
+                'user' => $this->user,
+                'milestone' => $this->milestone_2,
+                'return' => $this->backlog_2,
+            ],
+        ];
+
+        $this->backlog_factory->expects($this->exactly(2))
+            ->method('getBacklog')
+            ->willReturnCallback(
+                function (PFUser $user, Planning_Milestone $milestone) use (&$expected_calls) {
+                    $expected = array_shift($expected_calls);
+                    self::assertNotNull($expected);
+
+                    self::assertSame($expected['user'], $user);
+                    self::assertSame($expected['milestone'], $milestone);
+
+                    return $expected['return'];
+                }
+            );
 
         $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $backlog_items->push($this->artifact_2);
