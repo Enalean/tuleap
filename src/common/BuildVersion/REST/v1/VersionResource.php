@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\BuildVersion\REST\v1;
 
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\REST\Header;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 
 class VersionResource
 {
@@ -51,7 +52,7 @@ class VersionResource
      */
     public function get(): VersionRepresentation
     {
-        $version = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
+        $version = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()));
         return new VersionRepresentation($version->flavor_name, $version->version_number);
     }
 }

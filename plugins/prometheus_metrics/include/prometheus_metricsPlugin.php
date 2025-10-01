@@ -21,7 +21,7 @@
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
@@ -33,6 +33,7 @@ use Tuleap\PrometheusMetrics\ClearPrometheusMetricsCommand;
 use Tuleap\PrometheusMetrics\PrometheusFlushableStorageProvider;
 use Tuleap\Request\CollectRoutesEvent;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -74,7 +75,7 @@ class prometheus_metricsPlugin extends Plugin  // phpcs:ignore
             new MetricsCollectorDao(),
             new NbUsersByStatusBuilder(new UserCounterDao()),
             EventManager::instance(),
-            VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence()),
+            VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance())),
             (new \Tuleap\Queue\QueueFactory(BackendLogger::getDefaultLogger()))->getPersistentQueue(\Tuleap\Queue\Worker::EVENT_QUEUE_NAME),
             (new PrometheusFlushableStorageProvider())->getFlushableStorage(),
             new MetricsAuthentication(

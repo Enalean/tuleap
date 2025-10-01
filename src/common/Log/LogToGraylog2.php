@@ -35,9 +35,10 @@ use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Psr\Log\LoggerInterface;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Config\ConfigKey;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 
 final class LogToGraylog2
 {
@@ -72,7 +73,7 @@ final class LogToGraylog2
 
         $logger->pushProcessor(new IntrospectionProcessor());
         $logger->pushProcessor(new IncludeBacktraceProcessor());
-        $logger->pushProcessor(new TuleapIdentifierProcessor(VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())));
+        $logger->pushProcessor(new TuleapIdentifierProcessor(VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()))));
 
         return $logger;
     }

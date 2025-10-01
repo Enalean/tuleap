@@ -21,7 +21,7 @@
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\BrowserDetection\DetectedBrowser;
-use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
@@ -65,6 +65,7 @@ use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Sanitizer\URISanitizer;
+use Tuleap\SeatManagement\CachedLicenseBuilder;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\SwitchToPresenterBuilder;
 use Tuleap\Widget\WidgetFactory;
@@ -98,7 +99,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         parent::__construct($root);
 
         $this->renderer         = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->tuleap_version   = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
+        $this->tuleap_version   = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()));
         $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());

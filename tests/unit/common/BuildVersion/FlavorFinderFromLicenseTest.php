@@ -20,28 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SeatManagement;
+namespace Tuleap\BuildVersion;
 
-use Override;
+use Tuleap\SeatManagement\License;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\SeatManagement\BuildLicenseStub;
 
-final readonly class LicenseBuilder implements BuildLicense
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class FlavorFinderFromLicenseTest extends TestCase
 {
-    private const string PUBLIC_KEY_DIRECTORY = __DIR__ . '/keys';
+    public function testItReturnTrueIfLicenseIsEnterpriseEdition(): void
+    {
+        $finder = new FlavorFinderFromLicense(BuildLicenseStub::buildWithLicense(License::buildEnterpriseEdition()));
 
-    public function __construct(
-        private CheckPublicKeyPresence $public_key_retriever,
-    ) {
+        self::assertTrue($finder->isEnterprise());
     }
 
-    #[Override]
-    public function build(): License
+    public function testItReturnFalseIfLicenseIsCommunityEdition(): void
     {
-        $is_public_key_present = $this->public_key_retriever->checkPresence(self::PUBLIC_KEY_DIRECTORY);
+        $finder = new FlavorFinderFromLicense(BuildLicenseStub::buildWithLicense(License::buildCommunityEdition()));
 
-        if (! $is_public_key_present) {
-            return License::buildCommunityEdition();
-        }
-
-        return License::buildEnterpriseEdition();
+        self::assertFalse($finder->isEnterprise());
     }
 }

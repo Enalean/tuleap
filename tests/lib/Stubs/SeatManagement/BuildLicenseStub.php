@@ -20,28 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SeatManagement;
+namespace Tuleap\Test\Stubs\SeatManagement;
 
 use Override;
+use Tuleap\SeatManagement\BuildLicense;
+use Tuleap\SeatManagement\License;
 
-final readonly class LicenseBuilder implements BuildLicense
+final class BuildLicenseStub implements BuildLicense
 {
-    private const string PUBLIC_KEY_DIRECTORY = __DIR__ . '/keys';
+    private int $call_count = 0;
 
-    public function __construct(
-        private CheckPublicKeyPresence $public_key_retriever,
-    ) {
+    private function __construct(private readonly License $license)
+    {
+    }
+
+    public static function buildWithLicense(License $license): self
+    {
+        return new self($license);
     }
 
     #[Override]
     public function build(): License
     {
-        $is_public_key_present = $this->public_key_retriever->checkPresence(self::PUBLIC_KEY_DIRECTORY);
+        $this->call_count++;
+        return $this->license;
+    }
 
-        if (! $is_public_key_present) {
-            return License::buildCommunityEdition();
-        }
-
-        return License::buildEnterpriseEdition();
+    public function getCallCount(): int
+    {
+        return $this->call_count;
     }
 }
