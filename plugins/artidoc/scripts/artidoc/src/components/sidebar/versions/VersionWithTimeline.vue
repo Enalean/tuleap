@@ -72,4 +72,13 @@ li {
         height: var(--tlp-large-spacing);
     }
 }
+
+ul:has(+ .load-more-versions) > li:last-of-type::before {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        transparent 0,
+        var(--timeline-color) var(--tlp-large-spacing)
+    );
+}
 </style>
