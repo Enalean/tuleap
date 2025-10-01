@@ -21,7 +21,6 @@
 
 namespace Tuleap\AgileDashboard\BacklogItem;
 
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use Override;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -32,6 +31,7 @@ use PlanningFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Dao\ArtifactDao;
@@ -74,7 +74,7 @@ final class SubBacklogItemProviderTest extends TestCase
         $this->dao = $this->createMock(ArtifactDao::class);
 
         $this->user                      = $this->createMock(PFUser::class);
-        $backlog_factory                 = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $backlog_factory                 = $this->createMock(MilestoneBacklogFactory::class);
         $backlog_item_collection_factory = $this->createMock(BacklogItemCollectionFactory::class);
         $planning_factory                = $this->createMock(PlanningFactory::class);
 

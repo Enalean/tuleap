@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Priority;
 
-use AgileDashboard_Milestone_Backlog_Backlog;
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use PFUser;
@@ -33,6 +31,8 @@ use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -54,9 +54,9 @@ final class SequenceIdManagerTest extends TestCase
     private SequenceIdManager $sequence_id_manager;
     private Planning_ArtifactMilestone&MockObject $milestone_1;
     private Planning_ArtifactMilestone&MockObject $milestone_2;
-    private AgileDashboard_Milestone_Backlog_BacklogFactory&MockObject $backlog_factory;
-    private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog_1;
-    private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog_2;
+    private MilestoneBacklogFactory&MockObject $backlog_factory;
+    private MilestoneBacklog&MockObject $backlog_1;
+    private MilestoneBacklog&MockObject $backlog_2;
     private PFUser $user;
     private BacklogItemCollectionFactory&MockObject $backlog_item_collection_factory;
     private BacklogItem $backlog_item_1;
@@ -78,9 +78,9 @@ final class SequenceIdManagerTest extends TestCase
         $this->virtual_top_milestone = $this->createMock(Planning_VirtualTopMilestone::class);
         $this->virtual_top_milestone->method('getArtifactId')->willReturn(null);
 
-        $this->backlog_1       = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
-        $this->backlog_2       = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
-        $this->backlog_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $this->backlog_1       = $this->createMock(MilestoneBacklog::class);
+        $this->backlog_2       = $this->createMock(MilestoneBacklog::class);
+        $this->backlog_factory = $this->createMock(MilestoneBacklogFactory::class);
 
         $this->backlog_item_collection_factory = $this->createMock(BacklogItemCollectionFactory::class);
 
@@ -264,7 +264,7 @@ final class SequenceIdManagerTest extends TestCase
         $this->backlog_item_collection_factory->expects($this->once())->method('getUnassignedOpenCollection')
             ->willReturn($this->items_collection);
         $this->backlog_factory->expects($this->once())->method('getSelfBacklog')
-            ->willReturn($this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class));
+            ->willReturn($this->createMock(MilestoneBacklog::class));
 
         self::assertEquals(
             1,

@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use AgileDashboard_Milestone_Backlog_Backlog;
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,6 +34,8 @@ use PlanningFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\BacklogItemPresenter;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -79,8 +79,8 @@ final class MilestoneResourceValidatorTest extends TestCase
         );
         $this->milestone->setAncestors([$parent_milestone]);
 
-        $self_backlog = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
-        $backlog      = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $self_backlog = $this->createMock(MilestoneBacklog::class);
+        $backlog      = $this->createMock(MilestoneBacklog::class);
 
         $this->artifact1 = ArtifactTestBuilder::anArtifact(102)
             ->inTracker(TrackerTestBuilder::aTracker()->withId(555)->build())
@@ -97,7 +97,7 @@ final class MilestoneResourceValidatorTest extends TestCase
         $this->todo_collection          = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $this->planning_factory         = $this->createMock(PlanningFactory::class);
         $this->tracker_artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
-        $backlog_factory                = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $backlog_factory                = $this->createMock(MilestoneBacklogFactory::class);
         $milestone_factory              = $this->createMock(Planning_MilestoneFactory::class);
         $backlog_row_collection_factory = $this->createMock(BacklogItemCollectionFactory::class);
 

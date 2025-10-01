@@ -24,18 +24,18 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use EventManager;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneRedirectParameter;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 
 class DetailsPresenterBuilder
 {
     public function __construct(
-        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly MilestoneBacklogFactory $backlog_factory,
         private readonly BacklogItemCollectionFactory $collection_factory,
         private readonly BurnupFieldRetriever $field_retriever,
         private readonly EventManager $event_manager,

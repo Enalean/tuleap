@@ -24,7 +24,6 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
-use AgileDashboard_Milestone_Backlog_Backlog;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection;
@@ -89,7 +88,7 @@ class BacklogItemCollectionFactory
     public function getTodoCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
@@ -100,7 +99,7 @@ class BacklogItemCollectionFactory
     public function getDoneCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
@@ -111,7 +110,7 @@ class BacklogItemCollectionFactory
     public function getUnassignedOpenCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $collection = $this->getUnplannedOpenCollection($user, $milestone, $backlog, $redirect_to_self);
@@ -122,7 +121,7 @@ class BacklogItemCollectionFactory
     public function getUnassignedCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $collection = $this->getUnplannedCollection($user, $milestone, $backlog, $redirect_to_self);
@@ -133,7 +132,7 @@ class BacklogItemCollectionFactory
     public function getUnplannedCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
@@ -145,7 +144,7 @@ class BacklogItemCollectionFactory
     public function getOpenClosedUnplannedCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirection_url,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
@@ -211,7 +210,7 @@ class BacklogItemCollectionFactory
     public function getUnplannedOpenCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $artifacts         = [];
@@ -236,7 +235,7 @@ class BacklogItemCollectionFactory
     public function getInconsistentCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
@@ -247,7 +246,7 @@ class BacklogItemCollectionFactory
     public function getOpenClosedAndInconsistentCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
@@ -262,7 +261,7 @@ class BacklogItemCollectionFactory
     public function getOpenAndClosedCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
@@ -273,7 +272,7 @@ class BacklogItemCollectionFactory
     private function initCollections(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_Backlog $backlog,
+        MilestoneBacklog $backlog,
         ?string $redirect_to_self,
     ): void {
         if (isset($this->open_and_closed_collection[$milestone->getArtifactId() ?? 0])) {

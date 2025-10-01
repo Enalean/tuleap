@@ -20,12 +20,12 @@
 
 namespace Tuleap\AgileDashboard\Priority;
 
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use PFUser;
 use Planning_Milestone;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 
 class SequenceIdManager
 {
@@ -33,7 +33,7 @@ class SequenceIdManager
     private array $backlog_item_ids;
 
     public function __construct(
-        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly MilestoneBacklogFactory $backlog_factory,
         private readonly BacklogItemCollectionFactory $backlog_item_collection_factory,
     ) {
         $this->backlog_item_ids = [];

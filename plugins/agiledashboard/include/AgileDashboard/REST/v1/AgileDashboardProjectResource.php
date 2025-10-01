@@ -324,7 +324,7 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
 
         $milestone_factory = \Planning_MilestoneFactory::build();
 
-        $backlog_factory = new \AgileDashboard_Milestone_Backlog_BacklogFactory(
+        $backlog_factory = new \Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory(
             new BacklogItemDao(),
             $tracker_artifact_factory,
             $planning_factory,

@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use AgileDashboard_Milestone_Backlog_Backlog;
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use MilestoneParentLinker;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -49,13 +49,13 @@ final class MilestoneParentLinkerTest extends TestCase
     private Planning_Milestone&MockObject $milestone;
     private ArtifactLinker&MockObject $artifact_linker;
     private PFUser $user;
-    private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog;
+    private MilestoneBacklog&MockObject $backlog;
 
     #[\Override]
     protected function setUp(): void
     {
         $milestone_factory             = $this->createMock(Planning_MilestoneFactory::class);
-        $backlog_factory               = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $backlog_factory               = $this->createMock(MilestoneBacklogFactory::class);
         $this->artifact_linker         = $this->createMock(ArtifactLinker::class);
         $this->milestone_parent_linker = new MilestoneParentLinker(
             $milestone_factory,
@@ -64,7 +64,7 @@ final class MilestoneParentLinkerTest extends TestCase
         );
 
         $this->milestone = $this->createMock(Planning_Milestone::class);
-        $this->backlog   = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $this->backlog   = $this->createMock(MilestoneBacklog::class);
         $this->user      = UserTestBuilder::buildWithDefaults();
 
         $backlog_factory->method('getBacklog')->willReturn($this->backlog);
