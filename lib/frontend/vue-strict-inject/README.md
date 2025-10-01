@@ -13,5 +13,5 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 
 // ...
 
-const value = inject(SYMBOL);
+const value = strictInject(SYMBOL);
 ```

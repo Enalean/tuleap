@@ -21,7 +21,8 @@
 <template>
     <section>
         <h1 v-bind:class="{ 'version-with-title': version.title.isValue() }">
-            {{ title }}
+            <span>{{ title }}</span>
+            <version-toggle v-if="toggle_state" v-bind:toggle_state="toggle_state" />
         </h1>
         <div class="metadata">
             <tlp-relative-date
@@ -58,8 +59,10 @@ import { IntlFormatter } from "@tuleap/date-helper";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import VersionDescription from "@/components/sidebar/versions/VersionDescription.vue";
+import VersionToggle from "@/components/sidebar/versions/VersionToggle.vue";
+import type { ToggleState } from "@/components/sidebar/versions/toggle-state";
 
-const props = defineProps<{ version: Version }>();
+const props = defineProps<{ version: Version; toggle_state?: ToggleState }>();
 
 const { $gettext } = useGettext();
 
