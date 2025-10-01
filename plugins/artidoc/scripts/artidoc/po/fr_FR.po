@@ -30,6 +30,9 @@ msgstr "Créer une nouvelle section"
 msgid "Add section"
 msgstr "Ajouter la section"
 
+msgid "All versions"
+msgstr "Toutes les versions"
+
 msgid "Already existing as section in this document"
 msgstr "Existent déjà en tant que section dans ce document"
 
@@ -235,6 +238,9 @@ msgstr "Déplacer vers le bas"
 
 msgid "Move up"
 msgstr "Déplacer vers le haut"
+
+msgid "Named versions"
+msgstr "Les versions nommées"
 
 msgid "No artifact is matching your query"
 msgstr "Aucun artifact ne correspond à votre recherche"

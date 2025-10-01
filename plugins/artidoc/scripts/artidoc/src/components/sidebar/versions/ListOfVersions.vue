@@ -32,15 +32,9 @@ ul {
     --timeline-color-for-version-with-title: var(--tlp-main-color-lighter-50);
 
     position: relative;
-    height: var(--artidoc-sidebar-content-height);
     padding: 0 0 var(--tlp-medium-spacing);
-    overflow: hidden auto;
     list-style-type: none;
     color: var(--tlp-dimmed-color);
-
-    @media (max-width: viewport-breakpoint.$small-screen-size) {
-        height: fit-content;
-    }
 
     &::after {
         content: "specimen";
