@@ -19,7 +19,7 @@
 
 <template>
     <div class="people-timetracking-query-displayer">
-        <div class="people-timetracking-query-displayer-dates">
+        <div class="people-timetracking-query-displayer-dates" data-test="query-displayer">
             <div class="tlp-property">
                 <label class="tlp-label">{{ $gettext("From") }}</label>
                 <span data-test="start-date">{{ query.start_date }}</span>

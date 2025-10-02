@@ -25,6 +25,28 @@ describe("Time tracking", function () {
         now = Date.now();
     });
 
+    function createANewTab(): void {
+        cy.get("[data-test=dashboard-add-button]").click();
+        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+        cy.get("[data-test=dashboard-add-button-submit]").click();
+    }
+
+    function createAnArtifactWithTime(date: string, time: string): void {
+        cy.get("[data-test=new-artifact]").click();
+        cy.get("[data-test=details]").type("My artifact");
+        cy.get("[data-test=artifact-submit-and-stay]").click();
+
+        // directly on artifact
+        cy.get("[data-test=timetracking]").click();
+        cy.get("[data-test=timetracking-add-button]").click();
+
+        cy.get("[data-test=timetracking-new-row-step]").type("My time");
+        cy.get("[data-test=timetracking-new-row-date]").clear().type(date);
+        cy.get("[data-test=timetracking-new-row-time]").type(time);
+
+        cy.get("[data-test=timetracking-add-time]").click();
+    }
+
     it("Project administrator must be able to configure timetracking", function () {
         cy.projectAdministratorSession();
 
@@ -54,19 +76,7 @@ describe("Time tracking", function () {
         cy.visitProjectService("timetracking", "Trackers");
         cy.getContains("[data-test=tracker-link]", "Issues").click();
 
-        cy.get("[data-test=new-artifact]").click();
-        cy.get("[data-test=details]").type("My artifact");
-        cy.get("[data-test=artifact-submit-and-stay]").click();
-
-        // directly on artifact
-        cy.get("[data-test=timetracking]").click();
-        cy.get("[data-test=timetracking-add-button]").click();
-
-        cy.get("[data-test=timetracking-new-row-step]").type("My time");
-        cy.get("[data-test=timetracking-new-row-date]").clear().type("2020-02-06");
-        cy.get("[data-test=timetracking-new-row-time]").type("03:00");
-
-        cy.get("[data-test=timetracking-add-time]").click();
+        createAnArtifactWithTime("2020-02-06", "03:00");
 
         cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 2);
 
@@ -100,9 +110,7 @@ describe("Time tracking", function () {
         cy.projectMemberSession();
 
         cy.visit("/my");
-        cy.get("[data-test=dashboard-add-button]").click();
-        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
-        cy.get("[data-test=dashboard-add-button-submit]").click();
+        createANewTab();
 
         cy.get("[data-test=dashboard-configuration-button]").click();
 
@@ -142,9 +150,7 @@ describe("Time tracking", function () {
         cy.projectAdministratorSession();
         cy.visit("/my");
 
-        cy.get("[data-test=dashboard-add-button]").click();
-        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
-        cy.get("[data-test=dashboard-add-button-submit]").click();
+        createANewTab();
 
         cy.get("[data-test=dashboard-configuration-button]").click();
 
@@ -173,5 +179,80 @@ describe("Time tracking", function () {
         //check that user can save report
         cy.get("[data-test=save-project-timetracking-report]").click();
         cy.get("[data-test=report-success]").contains("successfully saved");
+    });
+
+    it("people timetracking can track the time spent over all user projects", function () {
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const hours_of_a_regular_user = 3;
+        const hours_of_project_member = 12;
+
+        cy.log("Add some times with ARegularUser");
+        cy.regularUserSession();
+        cy.visitProjectService("timetracking", "Trackers");
+        cy.getContains("[data-test=tracker-link]", "Issues").click();
+        createAnArtifactWithTime(
+            `${yesterday.getFullYear()}-${yesterday.getMonth() + 1}-${yesterday.getDate()}`,
+            `0${hours_of_a_regular_user}:00`,
+        );
+
+        cy.log("Add some times with ProjectMember");
+        cy.projectMemberSession();
+        cy.visitProjectService("timetracking", "Trackers");
+        cy.getContains("[data-test=tracker-link]", "Issues").click();
+        createAnArtifactWithTime(
+            `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+            `${hours_of_project_member}:00`,
+        );
+
+        cy.log("ProjectAdministrator can see the sum of times for ARegularUser and ProjectMember");
+        cy.projectAdministratorSession();
+        cy.log("Add widget people timetracking over dashboard");
+        cy.visit("/my");
+        createANewTab();
+        cy.get("[data-test=dashboard-add-widget-button]").click({ force: true });
+        cy.get("[data-test=people-timetracking-widget]").click({ force: true });
+        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
+        cy.get("[data-test=query-displayer]").click();
+        cy.get("[data-test=predefined-periods-select]").select("last_7_days");
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+            .focus()
+            .type("ProjectMember");
+        cy.get("[data-test=lazybox-item]").click();
+        cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true })
+            .focus()
+            .type("ARegularUser");
+        cy.get("[data-test=lazybox-item]").click();
+        cy.get("[data-test=save-button]").click();
+
+        cy.get("[data-test=all-rows]").find("tr").should("have.length", 2);
+        cy.get("[data-test=user-times]")
+            .first()
+            .within(() => {
+                cy.get("[data-test=times]").should(($element) => {
+                    const time = $element.text().trim();
+                    const [hours] = time.split(":").map(Number);
+
+                    expect(hours).to.be.at.least(
+                        hours_of_project_member,
+                        `Expected time ${time} to be at least ${hours_of_project_member} hours`,
+                    );
+                });
+            });
+        cy.get("[data-test=user-times]")
+            .last()
+            .within(() => {
+                cy.get("[data-test=times]").should(($element) => {
+                    const time = $element.text().trim();
+                    const [hours] = time.split(":").map(Number);
+
+                    expect(hours).to.be.at.least(
+                        hours_of_a_regular_user,
+                        `Expected time ${time} to be at least ${hours_of_a_regular_user} hours`,
+                    );
+                });
+            });
     });
 });
