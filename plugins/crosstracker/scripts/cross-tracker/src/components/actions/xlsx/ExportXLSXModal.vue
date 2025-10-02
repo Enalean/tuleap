@@ -48,19 +48,12 @@
             </button>
             <export-top-level-x-l-s-x-button
                 v-bind:current_query="current_query"
-                v-bind:button_class="'tlp-button-primary tlp-modal-action'"
-                v-bind:button_label="$gettext('Export all')"
                 v-on:hide-modal="hide()"
             />
-            <button
-                type="button"
-                class="tlp-button-primary tlp-modal-action"
-                disabled
-                title="Under implementation"
-            >
-                <i class="fa-solid fa-download tlp-modal-close-icon" aria-hidden="true"></i>
-                {{ $gettext("Export with links") }}
-            </button>
+            <export-with-links-x-l-s-x-button
+                v-bind:current_query="current_query"
+                v-on:hide-modal="hide()"
+            />
         </div>
     </div>
 </template>
@@ -76,6 +69,7 @@ import ExportTopLevelXLSXButton from "./ExportTopLevelXLSXButton.vue";
 import type { Query } from "../../../type";
 import FeedbackMessage from "../../feedback/FeedbackMessage.vue";
 import { useGettext } from "vue3-gettext";
+import ExportWithLinksXLSXButton from "./ExportWithLinksXLSXButton.vue";
 
 const emitter = strictInject(EMITTER);
 
@@ -103,8 +97,8 @@ onBeforeUnmount(() => {
 function textContent(): string {
     return $gettext(
         `Your TQL results span multiple pages. Choose how you’d like to export:<br/>
-         <strong>All</strong> artifacts (top-level only)<br/>
-         Export the artifacts in the current page <strong>with their visible links</strong>`,
+         <strong>All</strong> artifacts (top-level only).<br/>
+         Export the artifacts in the current page <strong>with their visible links</strong>.`,
     );
 }
 

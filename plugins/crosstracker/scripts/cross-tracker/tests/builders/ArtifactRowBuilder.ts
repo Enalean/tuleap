@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
-import { NO_DIRECTION } from "../../src/domain/ArtifactsTable";
+import type { ArtifactLinkDirection, ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
+import {
+    FORWARD_DIRECTION,
+    REVERSE_DIRECTION,
+    NO_DIRECTION,
+} from "../../src/domain/ArtifactsTable";
 import { v4 as uuidv4 } from "uuid";
 
 export class ArtifactRowBuilder {
@@ -29,6 +33,8 @@ export class ArtifactRowBuilder {
         artifact_uri: "/plugins/tracker/?aid=698",
         cells: new Map(),
     };
+    row_uuid: string = uuidv4();
+    direction: ArtifactLinkDirection = NO_DIRECTION;
 
     public addCell(column_name: string, cell: Cell): this {
         this.#row.cells.set(column_name, cell);
@@ -40,27 +46,42 @@ export class ArtifactRowBuilder {
         return this;
     }
 
+    public withRowUuid(uuid: string): this {
+        this.row_uuid = uuid;
+        return this;
+    }
+
+    public isAForwardRow(): this {
+        this.direction = FORWARD_DIRECTION;
+        return this;
+    }
+
+    public isAReverseRow(): this {
+        this.direction = REVERSE_DIRECTION;
+        return this;
+    }
+
     public buildWithExpectedNumberOfLinks(
         expected_number_of_forward_links: number,
         expected_number_of_reverse_links: number,
     ): ArtifactRow {
         return {
-            row_uuid: uuidv4(),
+            row_uuid: this.row_uuid,
             artifact_id: this.#id,
             expected_number_of_forward_links,
             expected_number_of_reverse_links,
             artifact_uri: "/plugins/tracker/?aid=698",
             cells: new Map(),
-            direction: NO_DIRECTION,
+            direction: this.direction,
         };
     }
 
     public build(): ArtifactRow {
         return {
-            row_uuid: uuidv4(),
+            row_uuid: this.row_uuid,
             artifact_id: this.#id,
             ...this.#row,
-            direction: NO_DIRECTION,
+            direction: this.direction,
         };
     }
 }
