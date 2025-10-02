@@ -30,6 +30,7 @@ use TestHelper;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
@@ -38,6 +39,7 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 final class TemporaryFileManagerPurgeTest extends TestCase
 {
     use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     private string $file_to_delete;
     private Tracker_Artifact_Attachment_TemporaryFileManager $file_manager;
@@ -47,7 +49,7 @@ final class TemporaryFileManagerPurgeTest extends TestCase
     #[\Override]
     public function setUp(): void
     {
-        $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
+        $this->cache_dir = $this->getTmpDir();
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
 
         $this->dao = $this->createMock(Tracker_Artifact_Attachment_TemporaryFileManagerDao::class);
@@ -63,12 +65,6 @@ final class TemporaryFileManagerPurgeTest extends TestCase
         $this->file_to_delete = $this->cache_dir . '/rest_attachement_temp_101_XyKoe';
 
         touch($this->file_to_delete);
-    }
-
-    #[\Override]
-    public function tearDown(): void
-    {
-        exec('rm -rf ' . escapeshellarg($this->cache_dir));
     }
 
     public function testItPurgesOldFiles(): void

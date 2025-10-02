@@ -238,6 +238,8 @@
   </rule>
   <rule ref="SlevomatCodingStandard.Attributes.DisallowAttributesJoining"/>
   <rule ref="SlevomatCodingStandard.Attributes.RequireAttributeAfterDocComment"/>
+  <!-- Forbid usage of the backtick operator -->
+  <rule ref="Generic.PHP.BacktickOperator"/>
   <!-- Enforce some PHPUnit test behaviors -->
   <rule ref="./TuleapCodingStandard/Sniffs/Test/EnforcePHPUnitAttributesSniff.php"/>
   <rule ref="./TuleapCodingStandard/Sniffs/Test/DisallowUsageOfSelfForMockExpectsSniff.php"/>
