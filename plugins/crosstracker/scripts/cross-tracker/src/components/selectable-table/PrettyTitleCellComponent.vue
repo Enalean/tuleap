@@ -77,7 +77,7 @@ import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 import {
     DASHBOARD_TYPE,
     DASHBOARD_ID,
-    ROW_COLLECTION_STORE,
+    TABLE_DATA_STORE,
     ARROW_DATA_STORE,
 } from "../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -86,7 +86,7 @@ import type { ArrowDataEntry } from "../../domain/ArrowDataStore";
 
 const dashboard_id = strictInject(DASHBOARD_ID);
 const dashboard_type = strictInject(DASHBOARD_TYPE);
-const row_collection_store = strictInject(ROW_COLLECTION_STORE);
+const table_data_store = strictInject(TABLE_DATA_STORE);
 const arrow_data_store = strictInject(ARROW_DATA_STORE);
 
 const { $gettext } = useGettext();
@@ -147,7 +147,7 @@ function toggleArtifactLinksDisplay(): void {
 }
 
 const get_parent_element = computed(() => {
-    const parent_row = row_collection_store.getParentByUUId(props.uuid);
+    const parent_row = table_data_store.getParentByUUId(props.uuid);
     if (!parent_row) {
         return undefined;
     }

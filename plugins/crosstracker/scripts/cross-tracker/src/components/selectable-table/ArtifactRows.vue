@@ -23,7 +23,6 @@
         v-for="(row, index) of rows"
         v-bind:key="row.artifact_id + level"
         v-bind:row="row"
-        v-bind:columns="columns"
         v-bind:level="level"
         v-bind:tql_query="tql_query"
         v-bind:is_last="rows.length === index + 1"
@@ -41,7 +40,6 @@ import type { ArtifactsTable, ArtifactRow } from "../../domain/ArtifactsTable";
 
 defineProps<{
     rows: ArtifactsTable["rows"];
-    columns: ArtifactsTable["columns"];
     tql_query: string;
     level: number;
     parent_element?: HTMLElement;

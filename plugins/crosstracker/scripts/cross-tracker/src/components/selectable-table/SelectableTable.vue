@@ -25,10 +25,13 @@
             <div class="selectable-table" v-if="!is_loading">
                 <span
                     class="headers-cell"
-                    v-for="(column_name, column_index) of columns"
+                    v-for="(column_name, column_index) of table_data_store.getColumns()"
                     v-bind:key="column_name"
                     v-bind:class="{
-                        'is-last-cell-of-row': isLastCellOfRow(column_index, columns.size),
+                        'is-last-cell-of-row': isLastCellOfRow(
+                            column_index,
+                            table_data_store.getColumns().size,
+                        ),
                         'is-pretty-title-column': column_name === PRETTY_TITLE_COLUMN_NAME,
                     }"
                     data-test="column-header"
@@ -36,7 +39,6 @@
                 >
                 <artifact-rows
                     v-bind:rows="rows"
-                    v-bind:columns="columns"
                     v-bind:level="0"
                     v-bind:tql_query="tql_query"
                     v-bind:ancestors="[]"
@@ -63,7 +65,7 @@ import {
     EMITTER,
     GET_COLUMN_NAME,
     RETRIEVE_ARTIFACTS_TABLE,
-    ROW_COLLECTION_STORE,
+    TABLE_DATA_STORE,
 } from "../../injection-symbols";
 
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
@@ -86,7 +88,7 @@ const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const arrow_redraw_triggerer = strictInject(ARROW_REDRAW_TRIGGERER);
-const row_collection_store = strictInject(ROW_COLLECTION_STORE);
+const table_data_store = strictInject(TABLE_DATA_STORE);
 
 provide(ARROW_DATA_STORE, ArrowDataStore());
 
@@ -96,7 +98,6 @@ const props = defineProps<{
 
 const selectable_table_element = useTemplateRef<HTMLElement>("selectable-table");
 const is_loading = ref(false);
-const columns = ref<ArtifactsTable["columns"]>(new Set());
 const rows = ref<ArtifactsTable["rows"]>([]);
 const total = ref(0);
 let offset = 0;
@@ -124,12 +125,12 @@ function refreshArtifactList(): void {
 
 function resetArtifactList(): void {
     rows.value = [];
-    columns.value = new Set<string>();
     is_loading.value = true;
+    table_data_store.resetStore();
 }
 
 onMounted(() => {
-    row_collection_store.resetStore();
+    table_data_store.resetStore();
     refreshArtifactList();
     emitter.on(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
     emitter.on(SEARCH_ARTIFACTS_EVENT, handleSearchArtifactsEvent);
@@ -171,8 +172,8 @@ function getSelectableQueryContent(tql_query: string): void {
         .getSelectableQueryResult(tql_query, limit, offset)
         .match(
             (content_with_total) => {
-                columns.value = content_with_total.table.columns;
-                number_of_selected_columns.value = columns.value.size - 1;
+                table_data_store.setColumns(content_with_total.table.columns);
+                number_of_selected_columns.value = table_data_store.getColumns().size - 1;
                 rows.value = content_with_total.table.rows;
                 total.value = content_with_total.total;
                 emitter.emit(SEARCH_ARTIFACTS_SUCCESS_EVENT);
