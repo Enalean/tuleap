@@ -135,6 +135,9 @@ msgstr ""
 msgid "Display"
 msgstr "Affichage"
 
+msgid "Display automatic versions"
+msgstr "Afficher les versions automatiques"
+
 msgid ""
 "Do you want to continue to force save your modification, or discard it and "
 "load the new one?"
@@ -193,6 +196,9 @@ msgstr "Plein écran"
 msgid "Go to artifact"
 msgstr "Aller à l'artifact"
 
+msgid "Group by named versions"
+msgstr "Grouper par versions nommées"
+
 msgid "Heading 1"
 msgstr "Titre 1"
 
@@ -201,6 +207,9 @@ msgstr "Titre 2"
 
 msgid "Heading 3"
 msgstr "Titre 3"
+
+msgid "Hide automatic versions"
+msgstr "Cacher les versions automatiques"
 
 msgid ""
 "If you choose another tracker, your current fields will be replaced and lost."

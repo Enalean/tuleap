@@ -35,10 +35,17 @@
             <select class="tlp-select" v-model="display">
                 <option v-bind:value="ALL_VERSIONS">{{ $gettext("All versions") }}</option>
                 <option v-bind:value="NAMED_VERSIONS">{{ $gettext("Named versions") }}</option>
+                <option v-bind:value="GROUP_BY_NAMED_VERSIONS">
+                    {{ $gettext("Group by named versions") }}
+                </option>
             </select>
         </div>
         <flat-list-of-versions v-if="display === ALL_VERSIONS" v-bind:versions="versions" />
         <flat-list-of-versions v-if="display === NAMED_VERSIONS" v-bind:versions="named_versions" />
+        <grouped-by-named-list-of-versions
+            v-if="display === GROUP_BY_NAMED_VERSIONS"
+            v-bind:grouped_versions="grouped_versions"
+        />
         <button
             class="tlp-button-mini tlp-button-primary load-more-versions"
             v-on:click="more"
@@ -68,6 +75,8 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT_ID } from "@/project-id-injection-key";
 import FlatListOfVersions from "@/components/sidebar/versions/FlatListOfVersions.vue";
 import ListOfVersionsSkeleton from "@/components/sidebar/versions/ListOfVersionsSkeleton.vue";
+import { groupVersionsByNamedVersion } from "@/components/sidebar/versions/group-versions-by-named-version";
+import GroupedByNamedListOfVersions from "@/components/sidebar/versions/GroupedByNamedListOfVersions.vue";
 
 const { $gettext } = useGettext();
 const versions = ref<ReadonlyArray<Version>>([]);
@@ -81,11 +90,14 @@ const is_loading_versions = ref(true);
 
 const ALL_VERSIONS = "all";
 const NAMED_VERSIONS = "named";
-type Choices = typeof ALL_VERSIONS | typeof NAMED_VERSIONS;
+const GROUP_BY_NAMED_VERSIONS = "group";
+
+type Choices = typeof ALL_VERSIONS | typeof NAMED_VERSIONS | typeof GROUP_BY_NAMED_VERSIONS;
 
 const display = ref<Choices>(ALL_VERSIONS);
 
 const named_versions = computed(() => versions.value.filter((version) => version.title.isValue()));
+const grouped_versions = computed(() => groupVersionsByNamedVersion(versions.value));
 
 onMounted(() => {
     setTimeout(() => {

@@ -72,7 +72,9 @@ export function getVersions(project_id: number): ResultAsync<ReadonlyArray<Versi
                                         ? "v1 Final"
                                         : index === 30
                                           ? "v1 Draft"
-                                          : null,
+                                          : index === 105
+                                            ? "v0.1"
+                                            : null,
                         ),
                         description: Option.fromNullable(
                             Math.floor(Math.random() * 2) === 1
