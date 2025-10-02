@@ -28610,29 +28610,7 @@
       <code><![CDATA[$is_selected]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Administration/IconPresenterFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[AVAILABLE_ICONS = [
-        'github',
-        'google-plus',
-        'linkedin',
-        'facebook',
-        'windows',
-        'globe',
-        'circle',
-        'circle-blank',
-        'cloud',
-        'asterisk',
-        'certificate',
-        'heart',
-        'tlp-tuleap',
-    ]]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Administration/Presenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[TEMPLATE = 'administration-providers']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$csrf_token]]></code>
       <code><![CDATA[$is_a_provider_configured_as_unique_authentication_endpoint]]></code>
@@ -28697,11 +28675,6 @@
       <code><![CDATA[$user_identifier]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Authentication/IDTokenVerifier.php">
-    <MissingClassConstType>
-      <code><![CDATA[LEEWAY_DATE_INTERVAL = 'PT10S']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Authentication/StateManager.php">
     <InvalidNullableReturnType>
       <code><![CDATA[State]]></code>
@@ -28714,9 +28687,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Authentication/StateStorage.php">
-    <MissingClassConstType>
-      <code><![CDATA[AUTHORIZATION_STATE = 'tuleap_oidc_authorization_state']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[clear]]></code>
     </MissingReturnType>
@@ -28795,11 +28765,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$return_to]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Login/Registration/AutomaticUserRegistration.php">
-    <MissingClassConstType>
-      <code><![CDATA[CONFIG_LDAP_ATTRIBUTE = 'openidconnectclient_ldap_attribute']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Login/SpecificLoginPresenter.php">
     <MissingReturnType>
@@ -29001,9 +28966,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[SESSION_LINK_ID_KEY = 'tuleap_oidc_link_id']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$params]]></code>

@@ -38,7 +38,7 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
  */
 class IDTokenVerifier
 {
-    private const LEEWAY_DATE_INTERVAL = 'PT10S';
+    private const string LEEWAY_DATE_INTERVAL = 'PT10S';
 
     /**
      * @var Parser

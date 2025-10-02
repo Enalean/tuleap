@@ -111,7 +111,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
 {
-    public const SESSION_LINK_ID_KEY = 'tuleap_oidc_link_id';
+    public const string SESSION_LINK_ID_KEY = 'tuleap_oidc_link_id';
 
     public function __construct($id)
     {

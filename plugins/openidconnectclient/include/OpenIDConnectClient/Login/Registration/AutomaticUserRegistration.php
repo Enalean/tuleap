@@ -29,7 +29,7 @@ use UserManager;
 class AutomaticUserRegistration
 {
     #[ConfigKey('OpenID Connect `userinfo` attribute to be used as `ldap_id` (for instance `preferred_username` for `sAMAccountName`)')]
-    public const CONFIG_LDAP_ATTRIBUTE = 'openidconnectclient_ldap_attribute';
+    public const string CONFIG_LDAP_ATTRIBUTE = 'openidconnectclient_ldap_attribute';
 
     /**
      * @var UserManager

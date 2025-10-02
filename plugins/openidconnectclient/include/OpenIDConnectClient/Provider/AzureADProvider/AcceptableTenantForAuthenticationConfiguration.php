@@ -30,7 +30,7 @@ final class AcceptableTenantForAuthenticationConfiguration
     /**
      * @see https://docs.microsoft.com/en-us/azure/active-directory/develop/access-tokens#payload-claims
      */
-    private const TENANT_CONSUMERS_GUID = '9188040d-6c67-4c5b-b112-36a304b66dad';
+    private const string TENANT_CONSUMERS_GUID = '9188040d-6c67-4c5b-b112-36a304b66dad';
 
     /**
      * @var string
