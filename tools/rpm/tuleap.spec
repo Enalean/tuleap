@@ -1036,7 +1036,6 @@ fi
 %{APP_DIR}/src/www/help
 %{APP_DIR}/src/www/include
 %{APP_DIR}/src/www/my
-%{APP_DIR}/src/www/news
 %{APP_DIR}/src/www/project
 %{APP_DIR}/src/www/reference
 %{APP_DIR}/src/www/scripts

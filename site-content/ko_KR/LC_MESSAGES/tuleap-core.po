@@ -163,14 +163,6 @@ msgstr ""
 msgid "%s new projects"
 msgstr "%s개의 새 프로젝트"
 
-#, php-format
-msgid "%s news"
-msgstr "%s개의 뉴스"
-
-#, php-format
-msgid "%s project news highlights"
-msgstr "%s개의 프로젝트 뉴스 하이라이트"
-
 msgid "(day/month/year)"
 msgstr "(일/월/년)"
 

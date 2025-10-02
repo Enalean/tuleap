@@ -307,64 +307,6 @@ $text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
     }
 }
 
-.homepage-news-container-title {
-    margin: 0 0 40px;
-    color: var(--tlp-main-color-lighter-90);
-    font-size: 42px;
-}
-
-.homepage-news {
-    margin: 0 0 40px;
-}
-
-.homepage-news-title {
-    margin: 0 0 7px;
-    color: var(--tlp-white-color);
-    font-size: 24px;
-    line-height: 32px;
-    text-transform: none;
-}
-
-.homepage-news-info {
-    display: flex;
-    align-items: center;
-    margin: 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-neutral-dark-color);
-    font-size: 13px;
-
-    > .homepage-news-info-user {
-        display: flex;
-        align-items: center;
-        margin: 0 10px 0 0;
-        color: var(--tlp-neutral-dark-color);
-
-        > .tlp-avatar-mini {
-            margin: 0 5px 0 0;
-        }
-    }
-
-    > .homepage-news-info-time-ago {
-        margin: 0 10px 0 0;
-
-        > .fa-clock-o {
-            margin: 0 5px 0 0;
-        }
-    }
-
-    > .homepage-news-info-project {
-        color: var(--tlp-neutral-dark-color);
-
-        > .fa-archive {
-            margin: 0 5px 0 0;
-        }
-    }
-}
-
-.homepage-news-content {
-    color: var(--tlp-typo-default-text-color-on-dark-background);
-    line-height: 28px;
-}
-
 .homepage > footer {
     position: relative;
     z-index: 3;
