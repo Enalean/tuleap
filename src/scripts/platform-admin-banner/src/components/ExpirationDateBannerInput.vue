@@ -41,7 +41,7 @@
 import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { DatePickerInstance } from "@tuleap/tlp-date-picker";
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 
 const { $gettext } = useGettext();
 
@@ -62,7 +62,7 @@ onMounted(() => {
     }
     const now = new Date();
     const min_expiration_date = new Date(new Date(now).setHours(now.getHours() + 1));
-    datepicker_instance = datePicker(input_field.value, {
+    datepicker_instance = createDatePicker(input_field.value, getLocaleWithDefault(document), {
         minDate: min_expiration_date,
         onChange: onDatePickerChange,
     });

@@ -1,5 +1,7 @@
-/**
- * Copyright (c) Enalean SAS - 2016 - Present. All rights reserved
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 
 document.addEventListener("DOMContentLoaded", () => {
     const expiry_elements = document.querySelectorAll("input[id^=expiry-]");
+    const locale = getLocaleWithDefault(document);
 
     for (const expiry_element of expiry_elements) {
         if (expiry_element instanceof HTMLInputElement) {
-            datePicker(expiry_element);
+            createDatePicker(expiry_element, locale);
         }
     }
 });

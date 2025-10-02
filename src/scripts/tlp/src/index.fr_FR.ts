@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "@tuleap/tlp-date-picker/fr_FR";
 export * from "./js/index";
 
 import "select2/dist/js/i18n/fr.js";

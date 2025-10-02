@@ -20,6 +20,9 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\ProjectHistoryPresenter;
 use Tuleap\Project\Admin\ProjectHistoryResultsPresenter;
 use Tuleap\Project\Admin\ProjectHistorySearchPresenter;
@@ -31,8 +34,9 @@ require_once __DIR__ . '/../project/admin/project_history.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
-$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-project-history.js'));
+$include_assets = new IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($include_assets, 'site-admin-project-history.js'));
+$GLOBALS['HTML']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($include_assets, 'site-admin-project-history-styles'));
 
 $project = ProjectManager::instance()->getProject($group_id ?? 0);
 

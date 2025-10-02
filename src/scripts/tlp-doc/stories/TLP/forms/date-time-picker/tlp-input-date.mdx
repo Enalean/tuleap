@@ -16,10 +16,22 @@ Date/time picker is based on <a href="https://flatpickr.js.org/">flatpickr</a>.
 
 #### Typescript example
 
+It requires an HTMLInputElement and a locale string.
 ```typescript
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 
-datePicker(document.querySelector("#date-picker"));
+const locale = getLocaleWithDefault(document); // will read the locale string like "en_US" from the document body
+const input = document.querySelector("#date-picker");
+if (!(input instanceof HTMLInputElement)) {
+    return;
+}
+
+createDatePicker(input, locale); // returns the date picker object
+```
+
+Import the CSS style:
+```scss
+@use "pkg:@tuleap/tlp-date-picker";
 ```
 
 ## Date and time

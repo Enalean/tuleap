@@ -17,20 +17,24 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker } from "@tuleap/tlp-date-picker";
+import { en_US_LOCALE } from "@tuleap/core-constants";
 
 class DatePickerWrapper extends HTMLElement {
-    connectedCallback(): void {
-        let select_element: HTMLInputElement | null = null;
-        if (this.querySelector("#date-picker")) {
-            select_element = this.querySelector("#date-picker");
-        } else {
-            select_element = this.querySelector("#datetime-picker");
+    getDateInput(): HTMLInputElement | null {
+        const date_picker = this.querySelector("#date-picker");
+        if (date_picker instanceof HTMLInputElement) {
+            return date_picker;
         }
-        if (!select_element) {
+        return this.querySelector("#datetime-picker");
+    }
+
+    connectedCallback(): void {
+        const input = this.getDateInput();
+        if (!(input instanceof HTMLInputElement)) {
             return;
         }
-        datePicker(select_element);
+        createDatePicker(input, en_US_LOCALE);
     }
 }
 

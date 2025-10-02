@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Platform\Banner;
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Builders\Layout\CssAssetGenericBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
@@ -53,6 +54,7 @@ final class PlatformBannerAdministrationControllerTest extends \Tuleap\Test\PHPU
             $this->renderer,
             JavascriptAssetGenericBuilder::build(),
             JavascriptAssetGenericBuilder::build(),
+            CSSAssetGenericBuilder::build(),
             $this->banner_retriever
         );
         $controller->process($request, $layout, []);

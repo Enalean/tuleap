@@ -29,6 +29,9 @@ use Tuleap\InviteBuddy\InvitationInstrumentation;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
@@ -42,8 +45,9 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
-$GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($include_assets, 'site-admin-pending-users.js'));
+$include_assets = new IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
+$GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($include_assets, 'site-admin-pending-users.js'));
+$GLOBALS['HTML']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($include_assets, 'site-admin-pending-users-styles'));
 
 define('ADMIN_APPROVE_PENDING_PAGE_PENDING', 'pending');
 define('ADMIN_APPROVE_PENDING_PAGE_VALIDATED', 'validated');

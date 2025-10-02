@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../scss/main.scss";
-import flatpickr from "flatpickr";
-import { French } from "flatpickr/dist/l10n/fr.js";
+declare(strict_types=1);
 
-flatpickr.localize(French);
+namespace Tuleap\Builders\Layout;
 
-export * from "./flatpickr";
+use Tuleap\Layout\CssAssetGeneric;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Test\Builders\IncludeAssetsBuilder;
+
+final readonly class CssAssetGenericBuilder
+{
+    public static function build(): CssAssetGeneric
+    {
+        return new CssAssetWithoutVariantDeclinaisons(IncludeAssetsBuilder::build(), 'styles');
+    }
+}

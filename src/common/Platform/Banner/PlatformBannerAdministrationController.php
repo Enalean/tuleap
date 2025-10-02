@@ -25,18 +25,20 @@ namespace Tuleap\Platform\Banner;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAssetGeneric;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
-final class PlatformBannerAdministrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final readonly class PlatformBannerAdministrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public function __construct(
-        private readonly AdminPageRenderer $admin_page_renderer,
-        private readonly JavascriptAssetGeneric $ckeditor_assets,
-        private readonly JavascriptAssetGeneric $banner_assets,
-        private readonly BannerRetriever $banner_retriever,
+        private AdminPageRenderer $admin_page_renderer,
+        private JavascriptAssetGeneric $ckeditor_assets,
+        private JavascriptAssetGeneric $banner_assets,
+        private CssAssetGeneric $css_assets,
+        private BannerRetriever $banner_retriever,
     ) {
     }
 
@@ -49,6 +51,7 @@ final class PlatformBannerAdministrationController implements DispatchableWithRe
 
         $layout->addJavascriptAsset($this->ckeditor_assets);
         $layout->addJavascriptAsset($this->banner_assets);
+        $layout->addCssAsset($this->css_assets);
 
         $banner = $this->banner_retriever->getBanner();
 
