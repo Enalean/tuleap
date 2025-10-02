@@ -39,7 +39,7 @@ use Tuleap\User\Account\UserPreferencesHeader;
 
 final class AccountAppsController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
 {
-    public const URL = '/plugins/oauth2_server/account/apps';
+    public const string URL = '/plugins/oauth2_server/account/apps';
 
     /**
      * @var ResponseFactoryInterface

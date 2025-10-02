@@ -41,12 +41,12 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 final class AuthorizationEndpointProcessConsentController extends DispatchablePSR15Compatible
 {
     // We can name those however we want, they are not constrained by the spec.
-    private const REDIRECT_URI        = 'redirect_uri';
-    private const STATE               = 'state';
-    private const APP_IDENTIFIER      = 'app_identifier';
-    private const SCOPE               = 'scope';
-    private const PKCE_CODE_CHALLENGE = 'pkce_code_challenge';
-    private const OIDC_NONCE          = 'oidc_nonce';
+    private const string REDIRECT_URI        = 'redirect_uri';
+    private const string STATE               = 'state';
+    private const string APP_IDENTIFIER      = 'app_identifier';
+    private const string SCOPE               = 'scope';
+    private const string PKCE_CODE_CHALLENGE = 'pkce_code_challenge';
+    private const string OIDC_NONCE          = 'oidc_nonce';
 
     /**
      * @var \UserManager

@@ -83,8 +83,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class oauth2_serverPlugin extends Plugin
 {
-    public const SERVICE_NAME_INSTRUMENTATION = 'oauth2_server';
-    public const CSRF_TOKEN_APP_EDITION       = 'oauth2_server_app_edition';
+    public const string SERVICE_NAME_INSTRUMENTATION = 'oauth2_server';
+    public const string CSRF_TOKEN_APP_EDITION       = 'oauth2_server_app_edition';
 
     public function __construct(?int $id)
     {

@@ -36,8 +36,8 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 
 final class AppRevocationController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
 {
-    public const  URL    = '/plugins/oauth2_server/account/apps/revoke';
-    private const APP_ID = 'app_id';
+    public const  string URL    = '/plugins/oauth2_server/account/apps/revoke';
+    private const string APP_ID = 'app_id';
     /**
      * @var ResponseFactoryInterface
      */

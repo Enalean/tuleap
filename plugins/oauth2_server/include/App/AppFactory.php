@@ -27,7 +27,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 
 class AppFactory
 {
-    public const PLUGIN_APP = 'plugin_oauth2';
+    public const string PLUGIN_APP = 'plugin_oauth2';
 
     /**
      * @var AppDao
