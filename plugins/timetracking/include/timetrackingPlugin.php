@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
@@ -47,7 +46,6 @@ use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
-use Tuleap\Timetracking\Widget\FeatureFlagTimetrackingManagementWidget;
 use Tuleap\Timetracking\Widget\PeopleTimetrackingWidget;
 use Tuleap\Timetracking\Widget\ProjectTimetracking;
 use Tuleap\Timetracking\Widget\UserWidget;
@@ -66,7 +64,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class timetrackingPlugin extends PluginWithLegacyInternalRouting implements PluginWithConfigKeys// phpcs:ignore
+class timetrackingPlugin extends PluginWithLegacyInternalRouting // phpcs:ignore
 {
     public function __construct($id)
     {
@@ -316,7 +314,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
                 )
             );
         }
-        if ($get_widget_event->getName() === PeopleTimetrackingWidget::NAME && FeatureFlagTimetrackingManagementWidget::isActive()) {
+        if ($get_widget_event->getName() === PeopleTimetrackingWidget::NAME) {
             $get_widget_event->setWidget(new PeopleTimetrackingWidget(new \Tuleap\Timetracking\Widget\People\PeopleDao()));
         }
     }
@@ -450,11 +448,5 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
                 dgettext('tuleap-timetracking', 'Archive should not contain timetracking data.'),
             );
         }
-    }
-
-    #[\Override]
-    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(FeatureFlagTimetrackingManagementWidget::class);
     }
 }
