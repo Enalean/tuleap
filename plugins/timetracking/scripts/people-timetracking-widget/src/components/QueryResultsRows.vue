@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <tbody>
+    <tbody data-test="all-rows">
         <query-results-row
             v-for="user_times in results"
             v-bind:key="user_times.user.id"

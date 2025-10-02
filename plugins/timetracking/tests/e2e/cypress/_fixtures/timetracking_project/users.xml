@@ -32,4 +32,11 @@
         <email>ProjectMember@example.com</email>
         <ldapid></ldapid>
     </user>
+    <user>
+      <id><![CDATA[108]]></id>
+      <username><![CDATA[ARegularUser]]></username>
+      <realname><![CDATA[ARegularUser]]></realname>
+      <email><![CDATA[ARegularUser@example.com]]></email>
+      <ldapid><![CDATA[]]></ldapid>
+    </user>
 </users>

@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <tr>
+    <tr data-test="user-times">
         <td class="user">
             <div>
                 <div class="tlp-avatar-small">

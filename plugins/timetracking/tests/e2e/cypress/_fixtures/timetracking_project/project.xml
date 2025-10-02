@@ -25,6 +25,7 @@
             <members>
                 <member format="username">ProjectAdministrator</member>
                 <member format="username">ProjectMember</member>
+                <member format="username">ARegularUser</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="">
