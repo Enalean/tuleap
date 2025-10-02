@@ -56,7 +56,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         'Lists' => 'ic/mail.png',
         'Tasks' => 'ic/index.png',
         'Docs' => 'ic/docman.png',
-        'News' => 'ic/news.png',
         'Files' => 'ic/save.png',
         'Trackers' => 'ic/tracker20w.png',
     ];

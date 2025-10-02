@@ -65614,13 +65614,10 @@
   </file>
   <file src="src/common/Forum/MessageRetriever.php">
     <DeprecatedFunction>
-      <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($id)]]></code>
       <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($qry)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query('SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id
             FROM forum_group_list,forum
@@ -68543,7 +68540,6 @@
     <MissingPropertyType>
       <code><![CDATA[$has_avatar]]></code>
       <code><![CDATA[$is_member_updatable]]></code>
-      <code><![CDATA[$is_news_admin]]></code>
       <code><![CDATA[$member_updatable_messages]]></code>
       <code><![CDATA[$profile_page_url]]></code>
       <code><![CDATA[$user_id]]></code>
@@ -68696,16 +68692,6 @@
       <code><![CDATA[NAME = 'userBecomesForumAdmin']]></code>
     </MissingClassConstType>
   </file>
-  <file src="src/common/Project/Admin/ProjectUGroup/UserBecomesNewsAdministrator.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'userBecomesNewsAdministrator']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="src/common/Project/Admin/ProjectUGroup/UserBecomesNewsWriter.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'userBecomesNewsWriter']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="src/common/Project/Admin/ProjectUGroup/UserBecomesProjectAdmin.php">
     <MissingClassConstType>
       <code><![CDATA[NAME = 'userBecomesProjectAdmin']]></code>
@@ -68719,16 +68705,6 @@
   <file src="src/common/Project/Admin/ProjectUGroup/UserIsNoLongerForumAdmin.php">
     <MissingClassConstType>
       <code><![CDATA[NAME = 'userIsNoLongerForumAdmin']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="src/common/Project/Admin/ProjectUGroup/UserIsNoLongerNewsAdministrator.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'userIsNoLongerNewsAdministrator']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="src/common/Project/Admin/ProjectUGroup/UserIsNoLongerNewsWriter.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'userIsNoLongerNewsWriter']]></code>
     </MissingClassConstType>
   </file>
   <file src="src/common/Project/Admin/ProjectUGroup/UserIsNoLongerProjectAdmin.php">
@@ -69546,7 +69522,6 @@
       <code><![CDATA[ACCESS_PUBLIC_UNRESTRICTED   = 'unrestricted']]></code>
       <code><![CDATA[DEFAULT_ADMIN_PROJECT_ID    = 1]]></code>
       <code><![CDATA[DEFAULT_TEMPLATE_PROJECT_ID = 100]]></code>
-      <code><![CDATA[SITE_NEWS_PROJECT_ID        = 46]]></code>
       <code><![CDATA[STATUS_ACTIVE       = 'A']]></code>
       <code><![CDATA[STATUS_ACTIVE_LABEL = 'active']]></code>
       <code><![CDATA[STATUS_CREATING_FROM_ARCHIVE = 'X']]></code>
@@ -69655,7 +69630,7 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ('
+      <code><![CDATA[db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags) VALUES ('
             . db_ei($user->getId()) . ','
             . db_ei($group_id) . ','
             . "'A'," // admin flags
@@ -69666,7 +69641,6 @@
             . '2,' // support flags
             . '2,' // file_flags
             . '2,' // wiki_flags
-            . '2,' // svn_flags
             . '2)')]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
@@ -69884,8 +69858,6 @@
       <code><![CDATA[DYNAMIC_UPPER_BOUNDARY = 100]]></code>
       <code><![CDATA[FILE_MANAGER_ADMIN = 11]]></code>
       <code><![CDATA[FORUM_ADMIN        = 16]]></code>
-      <code><![CDATA[NEWS_ADMIN         = 17]]></code>
-      <code><![CDATA[NEWS_WRITER        = 18]]></code>
       <code><![CDATA[NONE               = 100]]></code>
       <code><![CDATA[NORMALIZED_NAMES = [
         self::NONE               => 'nobody',
@@ -69900,8 +69872,6 @@
         self::WIKI_ADMIN         => 'wiki_admins',
         self::TRACKER_ADMIN      => 'tracker_admins',
         self::FORUM_ADMIN        => 'forum_admins',
-        self::NEWS_ADMIN         => 'news_admins',
-        self::NEWS_WRITER        => 'news_editors',
         self::SVN_ADMIN          => 'svn_admins',
     ]]]></code>
       <code><![CDATA[PROJECT_ADMIN      = 4]]></code>
@@ -70373,11 +70343,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$group_id]]></code>
     </RiskyTruthyFalsyComparison>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$allow_news_browsing]]></code>
-      <code><![CDATA[strpos($req_uri, '/news/') === 0 &&
-            $allow_news_browsing]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/common/Project/Service.php">
     <MissingClassConstType>
@@ -70390,11 +70355,9 @@
         self::ADMIN     => 'fas fa-cogs',
         self::FORUM     => 'fas fa-users',
         self::HOMEPAGE  => 'fas fa-home',
-        self::NEWS      => 'fas fa-rss',
         self::WIKI      => 'fas fa-tlp-wiki',
         self::TRACKERV3 => 'fas fa-list-ol',
     ]]]></code>
-      <code><![CDATA[NEWS      = 'news']]></code>
       <code><![CDATA[SCOPE_PROJECT = 'project']]></code>
       <code><![CDATA[SCOPE_SYSTEM  = 'system']]></code>
       <code><![CDATA[SUMMARY   = 'summary']]></code>
@@ -73789,8 +73752,6 @@
   <file src="src/common/Project/UserPermissionsDao.php">
     <MissingClassConstType>
       <code><![CDATA[FORUM_ADMIN_FLAG   = '2']]></code>
-      <code><![CDATA[NEWS_ADMIN_FLAG    = '2']]></code>
-      <code><![CDATA[NEWS_WRITER_FLAG   = '1']]></code>
       <code><![CDATA[PROJECT_ADMIN_FLAG = 'A']]></code>
       <code><![CDATA[WIKI_ADMIN_FLAG    = '2']]></code>
     </MissingClassConstType>
@@ -73806,18 +73767,6 @@
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
@@ -73832,19 +73781,13 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[addUserAsForumAdmin]]></code>
-      <code><![CDATA[addUserAsNewsAdmin]]></code>
-      <code><![CDATA[addUserAsNewsEditor]]></code>
       <code><![CDATA[addUserAsProjectAdmin]]></code>
       <code><![CDATA[addUserAsProjectMember]]></code>
       <code><![CDATA[addUserAsWikiAdmin]]></code>
       <code><![CDATA[isUserPartOfForumAdmins]]></code>
-      <code><![CDATA[isUserPartOfNewsAdmins]]></code>
-      <code><![CDATA[isUserPartOfNewsEditors]]></code>
       <code><![CDATA[isUserPartOfProjectMembers]]></code>
       <code><![CDATA[isUserPartOfWikiAdmins]]></code>
       <code><![CDATA[removeUserFromForumAdmin]]></code>
-      <code><![CDATA[removeUserFromNewsAdmin]]></code>
-      <code><![CDATA[removeUserFromNewsEditor]]></code>
       <code><![CDATA[removeUserFromProjectAdmin]]></code>
       <code><![CDATA[removeUserFromWikiAdmin]]></code>
     </MissingReturnType>
@@ -75893,12 +75836,8 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/User/Account/ConfirmNewEmailController.php">
-    <InvalidReturnType>
-      <code><![CDATA[process]]></code>
-    </InvalidReturnType>
     <MissingReturnType>
       <code><![CDATA[buildSelf]]></code>
-      <code><![CDATA[getUrlToSelf]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/User/Account/PasswordPreUpdateEvent.php">
@@ -77165,8 +77104,6 @@
       <code><![CDATA[AUTHENTICATED      = 'ugroup_authenticated_users_desc_key']]></code>
       <code><![CDATA[FILE_ADMINS        = 'ugroup_file_manager_admin_desc_key']]></code>
       <code><![CDATA[FORUM_ADMINS       = 'ugroup_forum_admin_desc_key']]></code>
-      <code><![CDATA[NEWS_ADMIN         = 'ugroup_news_admin_desc_key']]></code>
-      <code><![CDATA[NEWS_WRITER        = 'ugroup_news_writer_desc_key']]></code>
       <code><![CDATA[NOBODY             = 'ugroup_nobody_desc_key']]></code>
       <code><![CDATA[PROJECT_ADMINS     = 'ugroup_project_admins_desc_key']]></code>
       <code><![CDATA[PROJECT_MEMBERS    = 'ugroup_project_members_desc_key']]></code>
@@ -77183,8 +77120,6 @@
       <code><![CDATA[CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label']]></code>
       <code><![CDATA[FILE_ADMINS                = 'ugroup_file_manager_admin_name_key']]></code>
       <code><![CDATA[FORUM_ADMINS               = 'ugroup_forum_admin_name_key']]></code>
-      <code><![CDATA[NEWS_ADMIN                 = 'ugroup_news_admin_name_key']]></code>
-      <code><![CDATA[NEWS_WRITER                = 'ugroup_news_writer_name_key']]></code>
       <code><![CDATA[NOBODY                     = 'ugroup_nobody_name_key']]></code>
       <code><![CDATA[PROJECT_ADMINS             = 'ugroup_project_admins_name_key']]></code>
       <code><![CDATA[PROJECT_MEMBERS            = 'ugroup_project_members_name_key']]></code>
@@ -77709,7 +77644,6 @@
         'projectmembers',
         ProjectHeartbeat::NAME,
         'projectlatestfilereleases',
-        'projectlatestnews',
         'projectpublicareas',
         'projectlatestsvncommits',
         'projectsvnstats',
@@ -80557,19 +80491,6 @@
       <code><![CDATA[searchMailSalt]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/dao/NewsBytesDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$forum_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[searchByForumId]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/dao/PermissionsDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -82836,7 +82757,6 @@
       <code><![CDATA[String]]></code>
     </InvalidFalsableReturnType>
     <MissingParamType>
-      <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$url]]></code>
       <code><![CDATA[$url]]></code>
       <code><![CDATA[$url]]></code>
@@ -82845,10 +82765,8 @@
     <MissingReturnType>
       <code><![CDATA[getArtifactDao]]></code>
       <code><![CDATA[getForumDao]]></code>
-      <code><![CDATA[getGroupIdForNewsFromForumId]]></code>
       <code><![CDATA[getGroupIdFromUrl]]></code>
       <code><![CDATA[getHost]]></code>
-      <code><![CDATA[getNewsBytesDao]]></code>
       <code><![CDATA[getProjectDao]]></code>
       <code><![CDATA[getProjectNameRule]]></code>
       <code><![CDATA[getScheme]]></code>
@@ -82860,9 +82778,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$_REQUEST['msg_id']]]></code>
     </RiskyTruthyFalsyComparison>
-    <TooManyArguments>
-      <code><![CDATA[new NewsBytesDao(CodendiDataAccess::instance())]]></code>
-    </TooManyArguments>
   </file>
   <file src="src/common/include/URLRedirect.php">
     <InvalidArgument>
@@ -91200,7 +91115,6 @@
   <file src="src/www/forum/admin/index.php">
     <DeprecatedFunction>
       <code><![CDATA[db_affected_rows($result)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
@@ -91215,8 +91129,6 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($forum_id))]]></code>
-      <code><![CDATA[db_result($gr, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'description')]]></code>
       <code><![CDATA[db_result($result, $i, 'forum_name')]]></code>
       <code><![CDATA[db_result($result, $i, 'forum_name')]]></code>
@@ -91230,7 +91142,6 @@
   </file>
   <file src="src/www/forum/forum.php">
     <DeprecatedFunction>
-      <code><![CDATA[db_ei($f_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
@@ -91246,11 +91157,9 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query('SELECT group_forum_id,forum_name ' .
-                'FROM forum_group_list ' .
-                "WHERE group_id='" . db_ei($group_id) . "' AND is_public IN ($public_flag)")]]></code>
-      <code><![CDATA[db_query('SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($f_id))]]></code>
+            'FROM forum_group_list ' .
+            "WHERE group_id='" . db_ei($group_id) . "' AND is_public IN ($public_flag)")]]></code>
       <code><![CDATA[db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
-      <code><![CDATA[db_result($gr, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'date')]]></code>
       <code><![CDATA[db_result($result, $i, 'date')]]></code>
       <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
@@ -91266,7 +91175,6 @@
       <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
       <code><![CDATA[db_result($result, $row, 'body')]]></code>
       <code><![CDATA[db_result($result, $row, 'date')]]></code>
-      <code><![CDATA[db_result($result, $row, 'group_forum_id')]]></code>
       <code><![CDATA[db_result($result, $row, 'group_id')]]></code>
       <code><![CDATA[db_result($result, $row, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $row, 'msg_id')]]></code>
@@ -91302,7 +91210,6 @@
   </file>
   <file src="src/www/forum/forum_utils.php">
     <DeprecatedFunction>
-      <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
@@ -91375,7 +91282,6 @@
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_numrows($res1)]]></code>
       <code><![CDATA[db_numrows($res2)]]></code>
       <code><![CDATA[db_numrows($res3)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
@@ -91391,7 +91297,6 @@
       <code><![CDATA[db_query($del)]]></code>
       <code><![CDATA[db_query($qry)]]></code>
       <code><![CDATA[db_query($qry)]]></code>
-      <code><![CDATA[db_query($qry1)]]></code>
       <code><![CDATA[db_query($qry1)]]></code>
       <code><![CDATA[db_query($qry2)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -91425,7 +91330,6 @@
       <code><![CDATA[db_query('SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
       <code><![CDATA[db_result($res, 0, 'thread_id')]]></code>
       <code><![CDATA[db_result($res, 0, 'thread_id')]]></code>
-      <code><![CDATA[db_result($res1, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($res2, 0, 'has_followups')]]></code>
       <code><![CDATA[db_result($result, $i, 'body')]]></code>
       <code><![CDATA[db_result($result, $i, 'body')]]></code>
@@ -91462,7 +91366,6 @@
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$et]]></code>
       <code><![CDATA[$et]]></code>
-      <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
@@ -91520,7 +91423,6 @@
       <code><![CDATA[forum_thread_monitor]]></code>
       <code><![CDATA[forum_utils_access_allowed]]></code>
       <code><![CDATA[forum_utils_get_styles]]></code>
-      <code><![CDATA[forum_utils_news_access]]></code>
       <code><![CDATA[get_forum_group_id]]></code>
       <code><![CDATA[get_forum_saved_date]]></code>
       <code><![CDATA[get_next_thread_id]]></code>
@@ -91563,9 +91465,6 @@
   <file src="src/www/forum/monitor.php">
     <DeprecatedFunction>
       <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
-      <code><![CDATA[db_query($qry)]]></code>
       <code><![CDATA[db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
       <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
@@ -91603,13 +91502,10 @@
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
       <code><![CDATA[db_error()]]></code>
       <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($qry)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -96018,8 +95914,8 @@
   </file>
   <file src="tests/unit/common/FRS/PermissionsPerGroup/PackagePermissionPerGroupRepresentationBuilderTest.php">
     <InvalidArgument>
-      <code><![CDATA[ProjectUGroup::NEWS_WRITER]]></code>
-      <code><![CDATA[ProjectUGroup::NEWS_WRITER]]></code>
+      <code><![CDATA[ProjectUGroup::DOCUMENT_ADMIN]]></code>
+      <code><![CDATA[ProjectUGroup::DOCUMENT_ADMIN]]></code>
       <code><![CDATA[ProjectUGroup::PROJECT_ADMIN]]></code>
       <code><![CDATA[ProjectUGroup::PROJECT_ADMIN]]></code>
     </InvalidArgument>

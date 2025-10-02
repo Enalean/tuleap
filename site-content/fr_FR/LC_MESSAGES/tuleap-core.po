@@ -1495,16 +1495,14 @@ msgstr "La surveillance du forum est maintenant activée"
 msgid "Forum is restricted"
 msgstr "Forum restreint"
 
-msgid ""
-"Forums and News services are deprecated. They will be completely removed in "
-"March 2025."
-msgstr ""
-"Les services Forums et News sont dépréciés. Ils seront complétement "
-"supprimés en Mars 2025."
-
 #, php-format
 msgid "Forums for '%1$s'"
 msgstr "Forums pour '%1$s'"
+
+msgid ""
+"Forums service is deprecated. It will be completely removed in March 2025."
+"Le service Forums est déprécié. Il sera complètement "
+"supprimé en Mars 2025."
 
 msgid "Full name"
 msgstr "Nom Complet"
@@ -4841,13 +4839,6 @@ msgstr ""
 
 msgid "You should provide a file in entry."
 msgstr "Vous devez fournir un fichier en entrée."
-
-msgid ""
-"You should remove user from news administrators before being able to remove "
-"him from writers."
-msgstr ""
-"Vous devez supprimer l'utilisateur des administrateurs d'annonces avant de "
-"pouvoir l'enlever des rédacteurs."
 
 msgid "You should send a png image"
 msgstr "Merci d'uploader une image au format png"

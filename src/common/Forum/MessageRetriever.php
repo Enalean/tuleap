@@ -52,15 +52,6 @@ class MessageRetriever
             throw new PermissionToAccessForumException(_('Forum is restricted'));
         }
 
-        //check if the message is a comment on a piece of news.  If so, check permissions on this news
-        $qry = 'SELECT * FROM news_bytes WHERE forum_id=' . db_ei($forum_id);
-        $res = db_query($qry);
-        if (db_numrows($res) > 0) {
-            if (! forum_utils_news_access($forum_id)) {
-                throw new PermissionToAccessForumException($GLOBALS['Language']->getText('news_admin_index', 'permission_denied'));
-            }
-        }
-
         $sql = 'SELECT user.user_name,forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ' .
             'FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id=' . db_ei($id);
 

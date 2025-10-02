@@ -74,16 +74,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
                     $authorized_to_delete_message = false;
 
-                    // Then, check if the message belongs to a news or a forum
-                    if ($message_group_id == ForgeConfig::get('sys_news_group')) {
-                        // This message belongs to a news item.
-                        // Check that the news belongs to the same project
-                        $gr = db_query('SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($forum_id));
-                        if (db_result($gr, 0, 'group_id') == $group_id) {
-                            // authorized to delete the message
-                            $authorized_to_delete_message = true;
-                        }
-                    } elseif ($message_group_id == $group_id) {
+                    if ($message_group_id == $group_id) {
                         // the message belongs to this group's forums
                         $authorized_to_delete_message = true;
                     }

@@ -27,9 +27,6 @@ class UserPermissionsDao extends DataAccessObject
     public const PROJECT_ADMIN_FLAG = 'A';
     public const WIKI_ADMIN_FLAG    = '2';
     public const FORUM_ADMIN_FLAG   = '2';
-    public const NEWS_WRITER_FLAG   = '1';
-    public const NEWS_ADMIN_FLAG    = '2';
-
     public function isUserPartOfProjectMembers($project_id, $user_id)
     {
         $sql  = 'SELECT NULL FROM user_group WHERE group_id = ? AND user_id = ?';
@@ -152,68 +149,6 @@ class UserPermissionsDao extends DataAccessObject
                 WHERE group_id = ? AND user_id = ? AND forum_flags = ?';
 
         $rows = $this->getDB()->run($sql, $project_id, $user_id, self::FORUM_ADMIN_FLAG);
-
-        return count($rows) > 0;
-    }
-
-    public function addUserAsNewsEditor($project_id, $user_id)
-    {
-        $sql = 'UPDATE user_group
-                SET news_flags = ?
-                WHERE group_id = ?
-                  AND user_id = ?';
-
-        $this->getDB()->run($sql, self::NEWS_WRITER_FLAG, $project_id, $user_id);
-    }
-
-    public function removeUserFromNewsEditor($project_id, $user_id)
-    {
-        $sql = 'UPDATE user_group
-                SET news_flags = 0
-                WHERE group_id = ?
-                  AND user_id = ?';
-
-        $this->getDB()->run($sql, $project_id, $user_id);
-    }
-
-    public function isUserPartOfNewsEditors($project_id, $user_id)
-    {
-        $sql = 'SELECT NULL
-                FROM user_group
-                WHERE group_id = ? AND user_id = ? AND news_flags = ?';
-
-        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::NEWS_WRITER_FLAG);
-
-        return count($rows) > 0;
-    }
-
-    public function addUserAsNewsAdmin($project_id, $user_id)
-    {
-        $sql = 'UPDATE user_group
-                SET news_flags = ?
-                WHERE group_id = ?
-                  AND user_id = ?';
-
-        $this->getDB()->run($sql, self::NEWS_ADMIN_FLAG, $project_id, $user_id);
-    }
-
-    public function removeUserFromNewsAdmin($project_id, $user_id)
-    {
-        $sql = 'UPDATE user_group
-                SET news_flags = ?
-                WHERE group_id = ?
-                  AND user_id = ?';
-
-        $this->getDB()->run($sql, self::NEWS_WRITER_FLAG, $project_id, $user_id);
-    }
-
-    public function isUserPartOfNewsAdmins($project_id, $user_id)
-    {
-        $sql = 'SELECT NULL
-                FROM user_group
-                WHERE group_id = ? AND user_id = ? AND news_flags = ?';
-
-        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::NEWS_ADMIN_FLAG);
 
         return count($rows) > 0;
     }

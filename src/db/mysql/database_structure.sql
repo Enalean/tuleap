@@ -546,25 +546,6 @@ CREATE TABLE group_desc_value (
 );
 
 #
-# Table structure for table 'news_bytes'
-#
-
-CREATE TABLE news_bytes (
-  id int(11) NOT NULL auto_increment,
-  group_id int(11) NOT NULL default '0',
-  submitted_by int(11) NOT NULL default '0',
-  is_approved int(11) NOT NULL default '0',
-  date int(11) NOT NULL default '0',
-  forum_id int(11) NOT NULL default '0',
-  summary text,
-  details text,
-  PRIMARY KEY  (id),
-  KEY idx_news_bytes_forum (forum_id),
-  KEY idx_news_bytes_group (group_id),
-  KEY idx_news_bytes_approved (is_approved)
-);
-
-#
 # Table structure for table 'session'
 #
 

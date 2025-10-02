@@ -52,8 +52,6 @@ class Admin_Homepage_Presenter
     public $label_language;
     /** @var bool */
     public $display_statistics_on_home_page;
-    /** @var bool */
-    public $warn_local_inc;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -68,7 +66,6 @@ class Admin_Homepage_Presenter
 
         $this->path_logo       = Admin_Homepage_LogoFinder::getCurrentUrl();
         $this->use_custom_logo = Admin_Homepage_LogoFinder::isCustomLogoUsed();
-        $this->warn_local_inc  = ForgeConfig::get('sys_display_homepage_news', -1) === -1 ? false : true;
 
         $this->save                 = _('Save configuration');
         $this->logo                 = _('Homepage logo');

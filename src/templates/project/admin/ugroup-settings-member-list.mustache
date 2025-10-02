@@ -115,20 +115,12 @@
                                                 tlp-tooltip
                                                 tlp-tooltip-left
                                             {{/ is_member_updatable }}
-                                            {{# is_news_admin }}
-                                                tlp-tooltip
-                                                tlp-tooltip-left
-                                            {{/ is_news_admin }}
                                             project-admin-remove-user-from-group"
                                             data-target-modal-id="project-admin-remove-user-from-group-modal"
                                             {{^ is_member_updatable }}
                                                 disabled
                                                 data-tlp-tooltip="{{# member_updatable_messages }}{{ . }} {{/ member_updatable_messages }}"
                                             {{/ is_member_updatable }}
-                                            {{# is_news_admin }}
-                                                disabled
-                                                data-tlp-tooltip="{{# gettext }} You should remove user from news administrators before being able to remove him from writers.{{/ gettext }}"
-                                            {{/ is_news_admin }}
                                             data-user-id="{{ user_id }}"
                                             data-user-name="{{ username_display }}"
                                             data-ugroup-name="{{ name }}"

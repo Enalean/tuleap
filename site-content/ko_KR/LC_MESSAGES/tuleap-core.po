@@ -1430,14 +1430,13 @@ msgstr "포럼은 현재 모니터링 중입니다."
 msgid "Forum is restricted"
 msgstr "포럼이 제한되어 있습니다."
 
-msgid ""
-"Forums and News services are deprecated. They will be completely removed in "
-"March 2025."
-msgstr ""
-
 #, php-format
 msgid "Forums for '%1$s'"
 msgstr "'%1$s’에 대한 포럼"
+
+msgid ""
+"Forums service is deprecated. It will be completely removed in March 2025."
+msgstr ""
 
 msgid "Full name"
 msgstr "전체 이름"
@@ -4598,11 +4597,6 @@ msgstr ""
 
 msgid "You should provide a file in entry."
 msgstr "항목에 파일을 제공해야 합니다."
-
-msgid ""
-"You should remove user from news administrators before being able to remove "
-"him from writers."
-msgstr "사용자를 작성자에서 삭제하기 전에 뉴스 관리자에서 삭제해야 합니다."
 
 msgid "You should send a png image"
 msgstr "png 이미지를 보내야 합니다."

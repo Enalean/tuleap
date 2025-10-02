@@ -341,7 +341,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
 
         $expected_packages = [];
 
-        $representation = $this->representation_builder->build($this->project, ProjectUGroup::NEWS_WRITER);
+        $representation = $this->representation_builder->build($this->project, ProjectUGroup::DOCUMENT_ADMIN);
         $this->assertEquals($expected_packages, $representation);
     }
 
@@ -378,7 +378,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
 
         $expected_packages = [];
 
-        $representation = $this->representation_builder->build($this->project, ProjectUGroup::NEWS_WRITER);
+        $representation = $this->representation_builder->build($this->project, ProjectUGroup::DOCUMENT_ADMIN);
         $this->assertEquals($expected_packages, $representation);
     }
 }

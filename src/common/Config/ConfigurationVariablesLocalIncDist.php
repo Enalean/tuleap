@@ -159,11 +159,6 @@ final readonly class ConfigurationVariablesLocalIncDist
     #[ConfigKeyString('codendiadm')]
     public const HTTP_USER = 'sys_http_user';
 
-    #[ConfigKey('Project id corresponding to Tuleap News group')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyInt(46)]
-    public const NEWS_GROUP = 'sys_news_group';
-
     #[ConfigKey('Make project categorisation mandatory')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyHelp('If a project has not categorized itself, it will result in a warning in project dashboard page.')]
@@ -274,10 +269,10 @@ final readonly class ConfigurationVariablesLocalIncDist
     #[ConfigKeyLegacyBool(true)]
     public const DISPLAY_PROJECT_PRIVACY_IN_SERVICE_BAR = 'sys_display_project_privacy_in_service_bar';
 
-    #[ConfigKey('Hard limit to number of emailed people when the news admin choose to send a news by email')]
+    #[ConfigKey('Hard limit to number of emailed people when the massmail admin choose to send a massmail by email')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyHelp(<<<EOT
-    Only used in news service for now
+    Only used in massmail service for now
     EOT)]
     #[ConfigKeyInt(100)]
     public const MAX_NUMBER_OF_EMAILED_PEOPLE = 'sys_max_number_of_emailed_people';

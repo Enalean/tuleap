@@ -26,7 +26,6 @@
     <service shortname="mail" enabled="0"/>
     <service shortname="docman" enabled="0"/>
     <service shortname="wiki" enabled="0"/>
-    <service shortname="news" enabled="0"/>
     <service shortname="plugin_svn" enabled="0"/>
     <service shortname="file" enabled="0"/>
     <service shortname="plugin_tracker" enabled="1"/>

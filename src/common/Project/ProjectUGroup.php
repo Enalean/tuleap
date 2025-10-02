@@ -45,8 +45,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     public const WIKI_ADMIN         = 14;
     public const TRACKER_ADMIN      = 15;
     public const FORUM_ADMIN        = 16;
-    public const NEWS_ADMIN         = 17;
-    public const NEWS_WRITER        = 18;
     public const SVN_ADMIN          = 19;
 
     public const PROJECT_ADMIN_NAME   = 'project_admins';
@@ -71,8 +69,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::WIKI_ADMIN,
         self::TRACKER_ADMIN,
         self::FORUM_ADMIN,
-        self::NEWS_ADMIN,
-        self::NEWS_WRITER,
         self::SVN_ADMIN,
     ];
 
@@ -89,8 +85,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::WIKI_ADMIN         => 'wiki_admins',
         self::TRACKER_ADMIN      => 'tracker_admins',
         self::FORUM_ADMIN        => 'forum_admins',
-        self::NEWS_ADMIN         => 'news_admins',
-        self::NEWS_WRITER        => 'news_editors',
         self::SVN_ADMIN          => 'svn_admins',
     ];
 

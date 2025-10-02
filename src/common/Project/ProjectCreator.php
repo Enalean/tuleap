@@ -428,7 +428,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function setProjectAdmin($group_id, PFUser $user)
     {
-        $result = db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ('
+        $result = db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags) VALUES ('
             . db_ei($user->getId()) . ','
             . db_ei($group_id) . ','
             . "'A'," // admin flags
@@ -439,8 +439,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             . '2,' // support flags
             . '2,' // file_flags
             . '2,' // wiki_flags
-            . '2,' // svn_flags
-            . '2)'); // news_flags
+            . '2)'); // svn_flags
         if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'set_owner_fail', [ForgeConfig::get('sys_email_admin'), db_error()]));
         }

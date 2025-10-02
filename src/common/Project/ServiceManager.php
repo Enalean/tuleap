@@ -38,7 +38,6 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
         Service::ADMIN,
         Service::HOMEPAGE,
         Service::FORUM,
-        Service::NEWS,
         Service::FILE,
         Service::SVN,
         Service::WIKI,
@@ -110,7 +109,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
 
             foreach ($allowed_services_dar as $row) {
                 try {
-                    if (($row['short_name'] === Service::NEWS || $row['short_name'] === Service::FORUM) && ! \Tuleap\Forum\DeprecatedForum::isProjectAllowed($project)) {
+                    if (($row['short_name'] === Service::FORUM) && ! \Tuleap\Forum\DeprecatedForum::isProjectAllowed($project)) {
                         continue;
                     }
                     $service                                                                   = $this->instantiateFromRow($project, $row);

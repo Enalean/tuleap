@@ -34,9 +34,9 @@ use Tuleap\Layout\BaseLayout;
  */
 final class DeprecatedForum
 {
-    #[FeatureFlagConfigKey('Give back temporary access to Forum and News services for a subset of projects')]
+    #[FeatureFlagConfigKey('Give back temporary access to Forum service for a subset of projects')]
     #[ConfigKeyHelp(<<<EOT
-    List of projects where News or Forum service should be restored temporarily
+    List of projects where Forum service should be restored temporarily
     until they are migrated. It will be completely removed in March 2025.
     EOT)]
     #[ConfigKeyHidden]
@@ -45,7 +45,7 @@ final class DeprecatedForum
 
     public static function getDeprecationMessage(): string
     {
-        return _('Forums and News services are deprecated. They will be completely removed in March 2025.');
+        return _('Forums service is deprecated. It will be completely removed in March 2025.');
     }
 
     public static function redirectIfNotAllowed(\Project $project, BaseLayout $response): void

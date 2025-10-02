@@ -20,9 +20,8 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testStatus(): void
     {
@@ -109,7 +108,6 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                 'file_flags' => '2',
                 'wiki_flags' => '2',
                 'svn_flags' => '2',
-                'news_flags' => '2',
             ],
         ];
         $siteadmin->method('getUserGroupData')->willReturn($ug_siteadmin);
@@ -142,7 +140,6 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                 'file_flags'    => '2',
                 'wiki_flags'    => '2',
                 'svn_flags'     => '2',
-                'news_flags'    => '2',
             ],
         ];
         $projectadmin->method('getUserGroupData')->willReturn($ug_project_admin);
@@ -183,7 +180,6 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
                 'file_flags'    => '2',
                 'wiki_flags'    => '2',
                 'svn_flags'     => '2',
-                'news_flags'    => '2',
             ],
         ];
         $projectmember->method('getUserGroupData')->willReturn($ug_project_member);

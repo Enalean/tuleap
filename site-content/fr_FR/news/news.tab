@@ -1,9 +1,0 @@
-#
-# Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
-# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# This file is licensed under the GNU General Public License version 2. See the file COPYING.
-#
-#-----------------------------------------------
-# Script: SF/www/news/admin/index.php
-#
-news_admin_index	permission_denied	Permission refusée

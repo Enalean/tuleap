@@ -375,24 +375,6 @@ function ugroup_db_get_dynamic_members(
                     AND forum_flags = '2'
                     AND " . $user_status . '
                     ORDER BY ' . $sqlorder . ' )';
-    } elseif ((int) $ugroup_id === ProjectUGroup::NEWS_WRITER) {
-        // News writer
-        return "(SELECT user.user_id, $sqlname, user.realname, user.user_name,  user.email, user.status
-                    FROM user, user_group ug
-                    WHERE user.user_id = ug.user_id
-                    AND ug.group_id = $group_id
-                    AND (ug.news_flags = '1' OR ug.news_flags = '2')
-                    AND " . $user_status . '
-                    ORDER BY ' . $sqlorder . ' )';
-    } elseif ((int) $ugroup_id === ProjectUGroup::NEWS_ADMIN) {
-        // News admin
-        return "(SELECT user.user_id, $sqlname, user.realname, user.user_name, user.email, user.status
-                    FROM user, user_group ug
-                    WHERE user.user_id = ug.user_id
-                    AND ug.group_id = $group_id
-                    AND ug.news_flags = '2'
-                    AND " . $user_status . '
-                    ORDER BY ' . $sqlorder . ' )';
     }
     return null;
 }
