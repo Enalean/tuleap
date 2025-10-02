@@ -22,7 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
+use BackendLogger;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\Validation\Validator;
 use Override;
+use Ramsey\Uuid\Uuid;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 
 final class CachedLicenseBuilder implements BuildLicense
 {
@@ -36,7 +42,15 @@ final class CachedLicenseBuilder implements BuildLicense
     public static function instance(): self
     {
         if (self::$instance === null) {
-            self::$instance = new self(new LicenseBuilder(new PublicKeyPresenceChecker()));
+            self::$instance = new self(new LicenseBuilder(
+                new PublicKeyPresenceChecker(),
+                new LicenseSignatureChecker(
+                    BackendLogger::getDefaultLogger(),
+                    new Parser(new JoseEncoder()),
+                    new Validator(),
+                    ValinorMapperBuilderFactory::mapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
+                ),
+            ));
         }
 
         return self::$instance;

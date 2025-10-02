@@ -22,24 +22,62 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\SeatManagement\CheckLicenseSignatureStub;
 use Tuleap\Test\Stubs\SeatManagement\CheckPublicKeyPresenceStub;
+use function Psl\Filesystem\create_directory;
+use function Psl\Filesystem\create_file;
+use function Psl\Filesystem\delete_file;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class LicenseBuilderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
+    /** @var non-empty-string */
+    private string $license_file_path;
+
+    #[\Override]
+    protected function setUp(): void
+    {
+        $temp_dir                = vfsStream::setup()->url();
+        $conf_directory          = $temp_dir . '/conf';
+        $this->license_file_path = "$conf_directory/license.key";
+        \ForgeConfig::set('sys_custom_dir', $temp_dir);
+
+        create_directory($conf_directory);
+        create_file($this->license_file_path);
+    }
+
     public function testItShouldReturnTCEWhenThereIsNoKey(): void
     {
-        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithNoKey());
+        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithNoKey(), CheckLicenseSignatureStub::buildWithValidSignature());
 
         self::assertEquals(License::buildCommunityEdition(), $builder->build());
     }
 
-    public function testItShouldReturnTEEWhenThereIsAtLeastOneKey(): void
+    public function testItShouldReturnTEEWithAMigrationDateWhenThereIsNoLicenseFile(): void
     {
-        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithKey());
+        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithKey(), CheckLicenseSignatureStub::buildWithValidSignature());
+        delete_file($this->license_file_path);
 
-        self::assertEquals(License::buildEnterpriseEdition(), $builder->build());
+        self::assertEquals(License::buildEnterpriseEdition(null), $builder->build());
+    }
+
+    public function testItShouldReturnExpiredTEEIfLicenseSignatureIsInvalid(): void
+    {
+        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithKey(), CheckLicenseSignatureStub::buildWithInvalidSignature());
+
+        self::assertEquals(License::buildInvalidEnterpriseEdition(), $builder->build());
+    }
+
+    public function testItShouldReturnValidTEEIfLicenseSignatureIsValid(): void
+    {
+        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithKey(), CheckLicenseSignatureStub::buildWithValidSignature());
+
+        self::assertEquals(License::buildEnterpriseEdition(null), $builder->build());
     }
 }

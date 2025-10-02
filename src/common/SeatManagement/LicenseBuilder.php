@@ -23,25 +23,36 @@ declare(strict_types=1);
 namespace Tuleap\SeatManagement;
 
 use Override;
+use function Psl\Filesystem\is_file;
 
 final readonly class LicenseBuilder implements BuildLicense
 {
     private const string PUBLIC_KEY_DIRECTORY = __DIR__ . '/keys';
 
     public function __construct(
-        private CheckPublicKeyPresence $public_key_retriever,
+        private CheckPublicKeyPresence $public_key_presence_checker,
+        private CheckLicenseSignature $license_signature_checker,
     ) {
     }
 
     #[Override]
     public function build(): License
     {
-        $is_public_key_present = $this->public_key_retriever->checkPresence(self::PUBLIC_KEY_DIRECTORY);
+        $is_public_key_present = $this->public_key_presence_checker->checkPresence(self::PUBLIC_KEY_DIRECTORY);
 
         if (! $is_public_key_present) {
             return License::buildCommunityEdition();
         }
 
-        return License::buildEnterpriseEdition();
+        $licence_key_path = ((string) \ForgeConfig::get('sys_custom_dir')) . '/conf/license.key';
+        if (! is_file($licence_key_path)) {
+            return License::buildEnterpriseEdition(null);
+        }
+
+        if (! $this->license_signature_checker->checkLicenseSignature($licence_key_path, self::PUBLIC_KEY_DIRECTORY)) {
+            return License::buildInvalidEnterpriseEdition();
+        }
+
+        return License::buildEnterpriseEdition(null);
     }
 }

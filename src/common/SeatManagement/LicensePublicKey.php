@@ -22,24 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
-use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\SeatManagement\BuildLicenseStub;
+use Ramsey\Uuid\UuidInterface;
+use Tuleap\Mapper\Base64UrlSafeDecode;
 
-#[DisableReturnValueGenerationForTestDoubles]
-final class CachedLicenseBuilderTest extends TestCase
+final readonly class LicensePublicKey
 {
-    public function testItUsesCache(): void
-    {
-        $license         = License::buildEnterpriseEdition(null);
-        $license_builder = BuildLicenseStub::buildWithLicense($license);
-
-        $cache = new CachedLicenseBuilder($license_builder);
-
-        $cache->build();
-        $cache->build();
-
-        self::assertSame(1, $license_builder->getCallCount());
-        self::assertSame($license, $cache->build());
-    }
+    /**
+     * @var 'OKP'
+     */
+    public string $kty;
+    /**
+     * @var 'EdDSA'
+     */
+    public string $alg;
+    public UuidInterface $kid;
+    /**
+     * @var 'Ed25519'
+     */
+    public string $crv;
+    /**
+     * @var non-empty-string
+     */
+    #[Base64UrlSafeDecode]
+    public string $x;
 }

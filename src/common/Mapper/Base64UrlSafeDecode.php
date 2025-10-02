@@ -20,26 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SeatManagement;
+namespace Tuleap\Mapper;
 
-use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\SeatManagement\BuildLicenseStub;
+use Attribute;
+use CuyZ\Valinor\Mapper\AsConverter;
+use Psl\Encoding\Base64\Variant;
+use function Psl\Encoding\Base64\decode as base64_decode;
 
-#[DisableReturnValueGenerationForTestDoubles]
-final class CachedLicenseBuilderTest extends TestCase
+#[AsConverter]
+#[Attribute(Attribute::TARGET_PROPERTY)]
+final class Base64UrlSafeDecode
 {
-    public function testItUsesCache(): void
+    /**
+     * @param callable(mixed): mixed $next
+     */
+    public function map(string $value, callable $next): mixed
     {
-        $license         = License::buildEnterpriseEdition(null);
-        $license_builder = BuildLicenseStub::buildWithLicense($license);
+        $decoded = base64_decode($value, Variant::UrlSafe, false);
 
-        $cache = new CachedLicenseBuilder($license_builder);
-
-        $cache->build();
-        $cache->build();
-
-        self::assertSame(1, $license_builder->getCallCount());
-        self::assertSame($license, $cache->build());
+        return $next($decoded);
     }
 }
