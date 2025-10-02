@@ -30,7 +30,6 @@ use Tuleap\Timetracking\REST\v1\TimetrackingReportRepresentation;
 use Tuleap\Timetracking\REST\v1\TimetrackingRepresentation;
 use Tuleap\Timetracking\REST\v1\TimetrackingResource;
 use Tuleap\Timetracking\REST\v1\User\TimetrackingUserResource;
-use Tuleap\Timetracking\Widget\FeatureFlagTimetrackingManagementWidget;
 use Tuleap\User\REST\UserRepresentation;
 
 /**
@@ -52,15 +51,13 @@ class ResourcesInjector
 
         $restler->addAPIClass(TimetrackingUserResource::class, UserRepresentation::ROUTE);
 
-        if (FeatureFlagTimetrackingManagementWidget::isActive()) {
-            $restler->addAPIClass(
-                v1\PeopleTimetracking\PeopleTimetrackingWidgetResource::class,
-                PeopleTimetrackingWidgetResource::NAME
-            );
-            $restler->addAPIClass(
-                v1\PeopleTimetracking\PeopleTimetrackingUsersResource::class,
-                PeopleTimetrackingUsersResource::NAME
-            );
-        }
+        $restler->addAPIClass(
+            v1\PeopleTimetracking\PeopleTimetrackingWidgetResource::class,
+            PeopleTimetrackingWidgetResource::NAME
+        );
+        $restler->addAPIClass(
+            v1\PeopleTimetracking\PeopleTimetrackingUsersResource::class,
+            PeopleTimetrackingUsersResource::NAME
+        );
     }
 }
