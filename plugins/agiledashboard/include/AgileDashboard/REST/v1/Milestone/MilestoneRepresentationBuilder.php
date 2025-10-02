@@ -42,7 +42,7 @@ class MilestoneRepresentationBuilder
      */
     private $milestone_factory;
     /**
-     * @var \AgileDashboard_Milestone_Backlog_BacklogFactory
+     * @var \Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory
      */
     private $backlog_factory;
     /**
@@ -68,7 +68,7 @@ class MilestoneRepresentationBuilder
 
     public function __construct(
         \Planning_MilestoneFactory $milestone_factory,
-        \AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        \Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory $backlog_factory,
         \EventManager $event_manager,
         ParentTrackerRetriever $parent_tracker_retriever,
         \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $sub_milestone_finder,

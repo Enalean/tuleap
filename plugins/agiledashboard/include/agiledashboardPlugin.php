@@ -63,6 +63,7 @@ use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\MilestoneReportCriterionDao;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
@@ -816,7 +817,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     private function getBacklogFactory()
     {
-        return new AgileDashboard_Milestone_Backlog_BacklogFactory(
+        return new MilestoneBacklogFactory(
             new BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build(),

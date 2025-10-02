@@ -24,8 +24,6 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use AgileDashboard_Milestone_Backlog_Backlog;
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use PFUser;
 use Planning_Milestone;
@@ -34,6 +32,8 @@ use PlanningFactory;
 use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
@@ -45,7 +45,7 @@ class MilestoneResourceValidator
     public function __construct(
         private readonly PlanningFactory $planning_factory,
         private readonly Tracker_ArtifactFactory $tracker_artifact_factory,
-        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly MilestoneBacklogFactory $backlog_factory,
         private readonly Planning_MilestoneFactory $milestone_factory,
         private readonly BacklogItemCollectionFactory $backlog_item_collection_factory,
     ) {
@@ -157,12 +157,12 @@ class MilestoneResourceValidator
         return $artifacts;
     }
 
-    private function getMilestoneDoneBacklogItems(PFUser $user, Planning_Milestone $milestone, AgileDashboard_Milestone_Backlog_Backlog $backlog)
+    private function getMilestoneDoneBacklogItems(PFUser $user, Planning_Milestone $milestone, MilestoneBacklog $backlog)
     {
         return $this->backlog_item_collection_factory->getDoneCollection($user, $milestone, $backlog, null);
     }
 
-    private function getMilestoneTodoBacklogItems(PFUser $user, Planning_Milestone $milestone, AgileDashboard_Milestone_Backlog_Backlog $backlog)
+    private function getMilestoneTodoBacklogItems(PFUser $user, Planning_Milestone $milestone, MilestoneBacklog $backlog)
     {
         return $this->backlog_item_collection_factory->getTodoCollection($user, $milestone, $backlog, null);
     }

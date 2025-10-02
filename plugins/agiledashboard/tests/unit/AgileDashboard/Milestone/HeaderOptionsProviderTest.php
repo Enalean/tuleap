@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use AgileDashboard_Milestone_Backlog_Backlog;
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_PaneInfoIdentifier;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
@@ -49,7 +49,7 @@ final class HeaderOptionsProviderTest extends TestCase
     private HeaderOptionsProvider $provider;
     private PFUser $user;
     private Planning_Milestone $milestone;
-    private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog;
+    private MilestoneBacklog&MockObject $backlog;
     private ParentTrackerRetriever&MockObject $parent_retriever;
     private Tracker $epic;
     private Tracker $story;
@@ -60,7 +60,7 @@ final class HeaderOptionsProviderTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $backlog_factory        = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $backlog_factory        = $this->createMock(MilestoneBacklogFactory::class);
         $this->parent_retriever = $this->createMock(ParentTrackerRetriever::class);
 
         $header_options_for_planning_provider = $this->createMock(HeaderOptionsForPlanningProvider::class);
@@ -82,7 +82,7 @@ final class HeaderOptionsProviderTest extends TestCase
             ArtifactTestBuilder::anArtifact(42)->withTitle('Milestone title')->build(),
         );
 
-        $this->backlog = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $this->backlog = $this->createMock(MilestoneBacklog::class);
         $backlog_factory->method('getBacklog')
             ->with($this->user, $this->milestone)
             ->willReturn($this->backlog);

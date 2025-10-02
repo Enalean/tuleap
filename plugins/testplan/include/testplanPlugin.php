@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\BacklogItemDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
@@ -42,11 +43,11 @@ use Tuleap\TestPlan\TestPlanPresenterBuilder;
 use Tuleap\TestPlan\TestPlanTestDefinitionTrackerRetriever;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
+use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
-use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
@@ -190,7 +191,7 @@ final class testplanPlugin extends Plugin
             ),
             new TestPlanHeaderOptionsProvider(
                 new HeaderOptionsProvider(
-                    new AgileDashboard_Milestone_Backlog_BacklogFactory(
+                    new MilestoneBacklogFactory(
                         new BacklogItemDao(),
                         Tracker_ArtifactFactory::instance(),
                         $planning_factory,

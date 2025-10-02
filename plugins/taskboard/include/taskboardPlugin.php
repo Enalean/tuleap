@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
@@ -57,7 +58,7 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class taskboardPlugin extends Plugin
 {
     public const NAME = 'taskboard';
@@ -146,7 +147,7 @@ class taskboardPlugin extends Plugin
             ),
             new VisitRecorder(new RecentlyVisitedDao()),
             new HeaderOptionsProvider(
-                new AgileDashboard_Milestone_Backlog_BacklogFactory(
+                new MilestoneBacklogFactory(
                     new BacklogItemDao(),
                     Tracker_ArtifactFactory::instance(),
                     $planning_factory,

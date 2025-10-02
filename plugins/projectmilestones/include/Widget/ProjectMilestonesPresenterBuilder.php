@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
-use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboardPlugin;
 use HTTPRequest;
@@ -45,6 +44,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Project\ProjectAccessChecker;
@@ -67,7 +67,7 @@ class ProjectMilestonesPresenterBuilder
      */
     private $request;
     /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogFactory
+     * @var MilestoneBacklogFactory
      */
     private $agile_dashboard_milestone_backlog_backlog_factory;
     private BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory;
@@ -118,7 +118,7 @@ class ProjectMilestonesPresenterBuilder
 
     public function __construct(
         HTTPRequest $request,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $agile_dashboard_milestone_backlog_backlog_factory,
+        MilestoneBacklogFactory $agile_dashboard_milestone_backlog_backlog_factory,
         BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory,
         Planning_MilestoneFactory $planning_milestone_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
@@ -155,7 +155,7 @@ class ProjectMilestonesPresenterBuilder
 
         return new self(
             HTTPRequest::instance(),
-            new AgileDashboard_Milestone_Backlog_BacklogFactory(
+            new MilestoneBacklogFactory(
                 new BacklogItemDao(),
                 $artifact_factory,
                 $planning_factory,

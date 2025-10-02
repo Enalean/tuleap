@@ -22,52 +22,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
+use AgileDashboard_Milestone_Backlog_DescendantItemsFinder;
+use PFUser;
+use Planning_Milestone;
+use Planning_VirtualTopMilestone;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\Tracker\Tracker;
 
 /**
  * I retrieve the content of the backlog
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
-class AgileDashboard_Milestone_Backlog_Backlog
+class MilestoneBacklog
 {
-    /** @var Tracker[] */
-    private $descendant_trackers;
-
-    /**
-     * @var int|null
-     */
-    private $limit;
-
-    private ?int $offset;
-
-    private Planning_Milestone $milestone;
-
     private int $content_size = 0;
 
     private int $backlog_size = 0;
 
     /** @var Tracker[] */
-    private $backlogitem_trackers;
+    private array $backlogitem_trackers;
+    private AgileDashboard_Milestone_Backlog_DescendantItemsFinder $items_finder;
 
-    /** @var AgileDashboard_Milestone_Backlog_DescendantItemsFinder */
-    private $items_finder;
-
+    /**
+     * @psalm-param Tracker[] $descendant_trackers
+     */
     public function __construct(
-        Tracker_ArtifactFactory $artifact_factory,
-        Planning_Milestone $milestone,
-        array $item_names,
-        array $descendant_trackers,
-        BacklogItemDao $item_dao,
-        \Tuleap\Tracker\Artifact\Dao\ArtifactDao $artifact_dao,
-        ?int $limit = null,
-        ?int $offset = null,
+        readonly Tracker_ArtifactFactory $artifact_factory,
+        private readonly Planning_Milestone $milestone,
+        readonly array $item_names,
+        private readonly array $descendant_trackers,
+        readonly BacklogItemDao $item_dao,
+        readonly \Tuleap\Tracker\Artifact\Dao\ArtifactDao $artifact_dao,
+        private readonly ?int $limit = null,
+        private readonly ?int $offset = null,
     ) {
-        $this->milestone            = $milestone;
         $this->backlogitem_trackers = $item_names;
-        $this->descendant_trackers  = $descendant_trackers;
-        $this->limit                = $limit;
-        $this->offset               = $offset;
 
         $this->items_finder = new AgileDashboard_Milestone_Backlog_DescendantItemsFinder(
             $item_dao,
@@ -107,7 +99,7 @@ class AgileDashboard_Milestone_Backlog_Backlog
     }
 
     /** @return Tracker[] */
-    public function getItemTrackers()
+    public function getItemTrackers(): array
     {
         return $this->backlogitem_trackers;
     }
@@ -117,8 +109,7 @@ class AgileDashboard_Milestone_Backlog_Backlog
         return $this->getDescendantTrackers();
     }
 
-    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getArtifacts(PFUser $user)
+    public function getArtifacts(PFUser $user): AgileDashboard_Milestone_Backlog_DescendantItemsCollection
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null && $this->offset !== null) {
@@ -137,8 +128,7 @@ class AgileDashboard_Milestone_Backlog_Backlog
         return $artifacts_collection;
     }
 
-    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getOpenUnplannedArtifacts(PFUser $user, array $sub_milestone_ids)
+    public function getOpenUnplannedArtifacts(PFUser $user, array $sub_milestone_ids): AgileDashboard_Milestone_Backlog_DescendantItemsCollection
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null && $this->offset !== null) {
@@ -182,8 +172,7 @@ class AgileDashboard_Milestone_Backlog_Backlog
         return $this->items_finder->getAllMilestoneUnplannedBacklogItems($user, $sub_milestone_ids);
     }
 
-    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getUnplannedArtifacts(PFUser $user, array $sub_milestone_ids)
+    public function getUnplannedArtifacts(PFUser $user, array $sub_milestone_ids): AgileDashboard_Milestone_Backlog_DescendantItemsCollection
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null && $this->offset !== null) {

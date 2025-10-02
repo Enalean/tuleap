@@ -19,15 +19,16 @@
  */
 
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
-use Tuleap\AgileDashboard\ConfigurationManager;
-use Tuleap\AgileDashboard\ConfigurationDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\ConfigurationDao;
+use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
@@ -72,7 +73,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     private $all_bread_crumbs_for_milestone_builder;
     /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogFactory
+     * @var MilestoneBacklogFactory
      */
     private $backlog_factory;
     private ProvideCurrentUser $current_user_provider;
@@ -81,7 +82,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         Planning_MilestonePaneFactory $pane_factory,
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $all_bread_crumbs_for_milestone_builder,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        MilestoneBacklogFactory $backlog_factory,
         ProvideCurrentUser $current_user_provider,
     ) {
         $this->pane_factory                           = $pane_factory;

@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
@@ -32,7 +33,7 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 /**
  * A pane to be displayed in AgileDashboard
  */
-class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var CardwallPaneInfo
@@ -241,7 +242,7 @@ class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.Cla
             CachedSemanticStatusFieldRetriever::instance(),
         );
 
-        $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
+        $backlog_factory = new MilestoneBacklogFactory(
             new BacklogItemDao(),
             $this->artifact_factory,
             $this->planning_factory,

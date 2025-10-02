@@ -24,15 +24,16 @@
 
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPresenterBuilder;
 
 /**
  * Like RepRap, I build builders
  */
-class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct(
-        private readonly AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        private readonly MilestoneBacklogFactory $backlog_factory,
         private readonly BacklogItemCollectionFactory $row_collection_factory,
         private readonly BurnupFieldRetriever $field_retriever,
         private readonly EventManager $event_manager,

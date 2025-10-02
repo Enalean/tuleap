@@ -1,10 +1,6 @@
 <?php
-/**
- * Copyright Enalean (c) 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,37 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+use PFUser;
+use Planning_Milestone;
+use PlanningFactory;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\Tracker\Tracker;
 
 /**
  * I build AgileDashboard_Milestone_Backlog_Backlog
  */
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
-class AgileDashboard_Milestone_Backlog_BacklogFactory
+class MilestoneBacklogFactory
 {
-    /** @var BacklogItemDao */
-    private $dao;
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    /** @var PlanningFactory */
-    private $planning_factory;
-
     public function __construct(
-        BacklogItemDao $dao,
-        Tracker_ArtifactFactory $artifact_factory,
-        PlanningFactory $planning_factory,
+        private readonly BacklogItemDao $dao,
+        private readonly Tracker_ArtifactFactory $artifact_factory,
+        private readonly PlanningFactory $planning_factory,
         private readonly \Tuleap\Tracker\Artifact\Dao\ArtifactDao $artifact_dao,
     ) {
-        $this->dao              = $dao;
-        $this->artifact_factory = $artifact_factory;
-        $this->planning_factory = $planning_factory;
     }
 
-    public function getBacklog(PFUser $user, Planning_Milestone $milestone, ?int $limit = null, ?int $offset = null): \AgileDashboard_Milestone_Backlog_Backlog
+    public function getBacklog(PFUser $user, Planning_Milestone $milestone, ?int $limit = null, ?int $offset = null): \Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog
     {
         $backlog_trackers_children_can_manage = [];
         $first_child_backlog_trackers         = $this->getFirstChildBacklogTracker($user, $milestone);
@@ -64,7 +52,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
         return $this->instantiateBacklog($milestone, $backlog_trackers_children_can_manage, $limit, $offset);
     }
 
-    public function getSelfBacklog(Planning_Milestone $milestone, ?int $limit = null, ?int $offset = null): AgileDashboard_Milestone_Backlog_Backlog
+    public function getSelfBacklog(Planning_Milestone $milestone, ?int $limit = null, ?int $offset = null): MilestoneBacklog
     {
         return $this->instantiateBacklog(
             $milestone,
@@ -79,8 +67,8 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
         array $backlog_trackers_children_can_manage,
         ?int $limit = null,
         ?int $offset = null,
-    ): AgileDashboard_Milestone_Backlog_Backlog {
-        return new AgileDashboard_Milestone_Backlog_Backlog(
+    ): MilestoneBacklog {
+        return new MilestoneBacklog(
             $this->artifact_factory,
             $milestone,
             $milestone->getPlanning()->getBacklogTrackers(),
