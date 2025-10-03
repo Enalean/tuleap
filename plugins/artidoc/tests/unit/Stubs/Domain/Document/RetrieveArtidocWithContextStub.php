@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Stubs\Domain\Document;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\UserCannotReadDocumentFault;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -51,7 +52,7 @@ final readonly class RetrieveArtidocWithContextStub implements RetrieveArtidocWi
 
     public static function withoutDocument(): self
     {
-        return new self(Result::err(Fault::fromMessage('Not found')), false);
+        return new self(Result::err(UserCannotReadDocumentFault::build()), false);
     }
 
     public static function shouldNotBeCalled(): self

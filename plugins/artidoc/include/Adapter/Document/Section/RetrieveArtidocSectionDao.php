@@ -30,6 +30,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
+use Tuleap\Artidoc\Domain\Document\Section\SearchAllArtifactSections;
 use Tuleap\Artidoc\Domain\Document\Section\SearchAllSections;
 use Tuleap\Artidoc\Domain\Document\Section\SearchOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\SearchPaginatedRetrievedSections;
@@ -39,7 +40,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class RetrieveArtidocSectionDao extends DataAccessObject implements SearchOneSection, SearchPaginatedRetrievedSections, SearchAllSections
+final class RetrieveArtidocSectionDao extends DataAccessObject implements SearchOneSection, SearchPaginatedRetrievedSections, SearchAllSections, SearchAllArtifactSections
 {
     public function __construct(
         private readonly SectionIdentifierFactory $section_identifier_factory,
@@ -197,6 +198,47 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
                     /**
                      * @param array{ id: string, item_id: int, artifact_id: int|null, freetext_id: int|null, freetext_title: string|null, freetext_description: string|null, rank: int, level: int } $row
                      */
+                    function (array $row): RetrievedSection {
+                        $row['id'] = $this->section_identifier_factory->buildFromBytesData($row['id']);
+
+                        return $this->instantiateRetrievedSection($row);
+                    },
+                    $rows,
+                ),
+            );
+        });
+    }
+
+    /**
+     * @return list<RetrievedSection>
+     */
+    #[Override]
+    public function searchAllArtifactSectionsOfDocument(ArtidocWithContext $artidoc): array
+    {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc) {
+            $item_id = $artidoc->document->getId();
+
+            $rows = $db->run(
+                <<<EOS
+                SELECT section.id,
+                   section.item_id,
+                   section_version.artifact_id,
+                   section_version.`rank`,
+                   section_version.level
+                FROM plugin_artidoc_section AS section
+                    INNER JOIN plugin_artidoc_section_version AS section_version
+                        ON (section.id = section_version.section_id)
+                WHERE section.item_id = ? AND section_version.artifact_id IS NOT NULL
+                ORDER BY section_version.`rank`
+                EOS,
+                $item_id,
+            );
+
+            return array_values(
+                array_map(
+                /**
+                 * @param array{ id: string, item_id: int, artifact_id: int|null, freetext_id: null, freetext_title: null, freetext_description: null, rank: int, level: int } $row
+                 */
                     function (array $row): RetrievedSection {
                         $row['id'] = $this->section_identifier_factory->buildFromBytesData($row['id']);
 

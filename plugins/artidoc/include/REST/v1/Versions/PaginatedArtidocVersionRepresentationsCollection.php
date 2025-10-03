@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\REST\v1\Versions;
 
-use Tuleap\NeverThrow\Fault;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactVersionRepresentation;
 
-/**
- * @psalm-immutable
- */
-final readonly class UserCannotReadSectionFault extends Fault
+final readonly class PaginatedArtidocVersionRepresentationsCollection
 {
-    public static function fromFault(Fault $fault): Fault
+    /**
+     * @param list<ArtifactVersionRepresentation> $versions
+     */
+    public function __construct(public array $versions, public int $limit, public int $offset, public int $total)
     {
-        return new self((string) $fault);
     }
 }

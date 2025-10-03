@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\Domain\Document;
+namespace Tuleap\Artidoc\Domain\Document;
 
-use Tuleap\Artidoc\Domain\Document\Artidoc;
+use Tuleap\NeverThrow\Fault;
 
-final class ArtidocStub implements Artidoc
+/**
+ * This Fault is meant to be used when the user does not have
+ * the READ permission on one or more sections of the document.
+ *
+ * @psalm-immutable
+ */
+final readonly class PartiallyReadableDocumentFault extends Fault
 {
-    private function __construct()
+    public static function build(): Fault
     {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    #[\Override]
-    public function getId(): int
-    {
-        return 123;
-    }
-
-    #[\Override]
-    public function getTitle(): string
-    {
-        return 'Title';
-    }
-
-    #[\Override]
-    public function getParentId(): int
-    {
-        return 1;
-    }
-
-    #[\Override]
-    public function getProjectId(): int
-    {
-        return 101;
+        return new self('User cannot read the whole document');
     }
 }
