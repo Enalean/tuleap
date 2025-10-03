@@ -32,7 +32,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanFileLastVersionProviderTest extends TestCase
 {
-    private const PROJECT_ID = 102;
+    private const int PROJECT_ID = 102;
 
     /**
      * @var \Docman_ItemFactory&\PHPUnit\Framework\MockObject\Stub

@@ -34,7 +34,7 @@ use Tuleap\User\ProvideCurrentUser;
 
 final class OnlyOfficeAdminSettingsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const ADMIN_SETTINGS_URL = '/onlyoffice/admin';
+    public const string ADMIN_SETTINGS_URL = '/onlyoffice/admin';
 
     public function __construct(
         private AdminPageRenderer $admin_page_renderer,

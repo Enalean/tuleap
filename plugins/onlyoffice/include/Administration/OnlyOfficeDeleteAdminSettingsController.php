@@ -34,7 +34,7 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 
 final class OnlyOfficeDeleteAdminSettingsController extends DispatchablePSR15Compatible
 {
-    public const URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/delete';
+    public const string URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/delete';
 
     public function __construct(
         private CSRFSynchronizerToken $csrf_token,

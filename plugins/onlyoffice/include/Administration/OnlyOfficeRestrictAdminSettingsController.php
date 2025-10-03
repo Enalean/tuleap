@@ -42,7 +42,7 @@ use Tuleap\Request\NotFoundException;
 
 final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15Compatible
 {
-    public const URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/restrict';
+    public const string URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/restrict';
 
     public function __construct(
         private CSRFSynchronizerToken $csrf_token,

@@ -37,7 +37,7 @@ use Tuleap\Request\ForbiddenException;
 
 final class OnlyOfficeCreateAdminSettingsController extends DispatchablePSR15Compatible
 {
-    public const URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/create';
+    public const string URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/create';
 
     public function __construct(
         private CSRFSynchronizerToken $csrf_token,

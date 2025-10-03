@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OnlyOfficeDocumentProviderTest extends TestCase
 {
-    private const ITEM_ID = 123;
+    private const int ITEM_ID = 123;
     private \Project $project;
 
     #[\Override]
