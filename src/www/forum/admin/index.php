@@ -80,8 +80,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     }
 
                     if ($authorized_to_delete_message) {
-                        //delete monitor settings on the corresponding thread, before deleting the message
-                        forum_thread_delete_monitor($forum_id, $msg_id);
                         $GLOBALS['Response']->addFeedback(Feedback::INFO, sprintf(_('%1$s message(s) deleted'), recursive_delete($msg_id, $forum_id)));
                     } else {
                         $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Message is not in your group'));
@@ -94,29 +92,21 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             /*
                 Adding forums to this group
             */
-            $vMonitored = new Valid_WhiteList('is_monitored', [0, 1]);
-            $vMonitored->required();
 
             if (
                 $request->valid($vForumName) &&
                 $request->valid($vDescription) &&
                 $request->valid($vIsPublic) &&
-                $request->valid($vMonitored)
             ) {
-                $forum_name   = $request->get('forum_name');
-                $is_public    = $request->get('is_public');
-                $description  = $request->get('description');
-                $is_monitored = $request->get('is_monitored');
+                $forum_name  = $request->get('forum_name');
+                $is_public   = $request->get('is_public');
+                $description = $request->get('description');
 
                 if (
                     (in_array($current_project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true) && $is_public == 0)
                     || forum_can_be_public($current_project)
                 ) {
                     $fid = forum_create_forum($group_id, $forum_name, $is_public, 1, $description);
-
-                    if ($is_monitored) {
-                        forum_add_monitor($fid, UserManager::instance()->getCurrentUser()->getId());
-                    }
                 }
             }
         } elseif ($request->existAndNonEmpty('change_status')) {
@@ -210,13 +200,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                         <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> ' . $GLOBALS['Language']->getText('global', 'yes') . ' &nbsp;&nbsp;&nbsp;&nbsp;
                         <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> ' . $GLOBALS['Language']->getText('global', 'no') . '<P>';
         }
-                        echo '<P><B>' . _('Want to monitor this forum?') . '</B><BR>
-                                                      ' . _('As the Forum creator it is <u>strongly recommend</u> that you monitor this forum to be instantly notified via email of any new message posted to the Forum.') . ' <br>
-			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="1" CHECKED> ' . $GLOBALS['Language']->getText('global', 'yes') . ' &nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="0"> ' . $GLOBALS['Language']->getText('global', 'no') . '<P>
-			<P>
-			<B><span class="highlight">' . _('Once you add a forum, it cannot be modified or deleted!') . '</span></B>
-			<P>
+                        echo '<P>
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . _('Add This Forum') . '">
 			</FORM>';
 

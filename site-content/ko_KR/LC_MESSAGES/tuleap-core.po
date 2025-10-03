@@ -246,9 +246,6 @@ msgstr ""
 "은 <a href=\"/doc/en/administration-guide/system-administration/filtering-"
 "outbound-requests.html\">설명서</a>를 확인하세요.</p>"
 
-msgid "<strong>Monitor this thread</strong>"
-msgstr "<strong>이 스레드 모니터링</strong>"
-
 msgid "A deleted project can not be restored."
 msgstr "삭제된 프로젝트는 복원할 수 없습니다."
 
@@ -637,14 +634,6 @@ msgid ""
 msgstr ""
 "%1$s일 전에 전송된 통지 이후로 아무런 접속이 없어 %2$s 정책에 따라 사용자 계"
 "정이 정지되었습니다."
-
-msgid ""
-"As the Forum creator it is <u>strongly recommend</u> that you monitor this "
-"forum to be instantly notified via email of any new message posted to the "
-"Forum."
-msgstr ""
-"포럼 작성자는 이 포럼을 모니터링하여 포럼에 게시된 새 메시지에 대해 이메일로 "
-"즉시 알림을 받을 것을<u>강력히 권장합니다</u>."
 
 msgid "Ask to join"
 msgstr "가입 요청"
@@ -1309,9 +1298,6 @@ msgstr "포럼 '%1$s'을(를) 추가하는 동안 오류 발생"
 msgid "Error Updating Forum Info"
 msgstr "포럼 정보를 업데이트하는 중 오류 발생"
 
-msgid "Error inserting into forum_monitoring"
-msgstr "forum_monitoring에 삽입하는 중 오류 발생"
-
 msgid "Error inserting into forum_saved_place"
 msgstr "forum_saved_place에 삽입하는 중 오류 발생"
 
@@ -1425,12 +1411,6 @@ msgstr "포럼 정보가 성공적으로 업데이트되었습니다."
 
 msgid "Forum Name"
 msgstr "포럼명"
-
-msgid "Forum already monitored"
-msgstr "포럼이 이미 모니터링됨"
-
-msgid "Forum is now being monitored"
-msgstr "포럼은 현재 모니터링 중입니다."
 
 msgid "Forum is restricted"
 msgstr "포럼이 제한되어 있습니다."
@@ -1963,18 +1943,6 @@ msgstr ""
 msgid "Moderation"
 msgstr "수정"
 
-msgid "Monitor Forum"
-msgstr "포럼 모니터링"
-
-msgid "Monitor a forum"
-msgstr "포럼 모니터링"
-
-msgid "Monitor?"
-msgstr "모니터링 하시겠습니까?"
-
-msgid "Monitoring has been turned off"
-msgstr "모니터링이 꺼져 있습니다."
-
 msgid "Month"
 msgstr "월"
 
@@ -2190,9 +2158,6 @@ msgstr "네, 알겠습니다."
 msgid ""
 "Once approved, you will receive a confirmation email to <strong>%s</strong>"
 msgstr "승인되면 다음 주소로 확인 이메일을 받게 됩니다. <strong>%s</strong>"
-
-msgid "Once you add a forum, it cannot be modified or deleted!"
-msgstr "포럼을 추가한 후에는 수정하거나 삭제할 수 없습니다."
 
 msgid "Only project members can access its content."
 msgstr "프로젝트 멤버만 콘텐츠에 액세스할 수 있습니다."
@@ -3151,9 +3116,6 @@ msgstr "작업 시작"
 msgid "Status"
 msgstr "상태"
 
-msgid "Stop Monitoring Forum"
-msgstr "포럼 모니터링 중지"
-
 msgid ""
 "Streamline your workflow and focus on what's hot with an easy-to-use board"
 msgstr ""
@@ -3755,17 +3717,8 @@ msgstr "이는 모든 프로젝트에서 이 서비스를 제거합니다."
 msgid "Thread"
 msgstr "스레드"
 
-msgid "Thread Monitoring Panel"
-msgstr "스레드 모니터링 패널"
-
 msgid "Thread View"
 msgstr "스레드 뷰"
-
-msgid "Thread monitoring update failed."
-msgstr "스레드 모니터링 업데이트에 실패했습니다."
-
-msgid "Thread monitoring updated."
-msgstr "스레드 모니터링이 업데이트되었습니다."
 
 msgid "Threaded"
 msgstr "스레드 됨"
@@ -3803,9 +3756,6 @@ msgstr "로그인하려면 (아이디 %s):"
 
 msgid "To sign up:"
 msgstr "가입 방법:"
-
-msgid "To turn off monitoring, simply click the <B>Stop Monitoring Forum</B>."
-msgstr "모니터링을 끄려면 <B>포럼 모니터링 중지</B>를 클릭하세요."
 
 msgid "Today"
 msgstr "오늘"
@@ -4113,9 +4063,6 @@ msgid ""
 "followups!!"
 msgstr "경고! 메시지와 모든 후속 메시지를 영구적으로 삭제하려고 합니다."
 
-msgid "Want to monitor this forum?"
-msgstr "이 포럼을 모니터링하고 싶으신가요?"
-
 msgid "Warnings"
 msgstr "경고"
 
@@ -4323,13 +4270,6 @@ msgstr[0] ""
 
 msgid "You are going to be redirected"
 msgstr "곧 리다이렉트됩니다."
-
-msgid ""
-"You are monitoring the whole forum. If you want to monitor only specific "
-"threads, Stop Monitoring Forum."
-msgstr ""
-"전체 포럼을 모니터링하고 있습니다. 특정 스레드만 모니터링하려면 포럼 모니터링"
-"을 중지하세요."
 
 msgid "You are not allowed to access this resource"
 msgstr "이 리소스에 액세스할 수 없습니다."
@@ -4611,12 +4551,6 @@ msgstr "png 이미지를 보내야 합니다."
 
 msgid "You should send an image with height smaller than 100px"
 msgstr "높이가 100px보다 작은 이미지를 보내야 합니다."
-
-msgid "You will not receive any more emails from this forum."
-msgstr "이 포럼에서 더 이상 이메일을 받지 않습니다."
-
-msgid "You will now be emailed followups to this entire forum."
-msgstr "이제 이 포럼 전체에 대한 후속을 이메일로 받게 됩니다."
 
 msgid "You will receive an email when the project is approved."
 msgstr "프로젝트가 승인되면 이메일을 받게 됩니다."

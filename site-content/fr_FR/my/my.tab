@@ -90,9 +90,3 @@ bookmark_delete	deleted	Favori détruit !
 # Script: SF/www/my/bookmark_edit.php
 #
 bookmark_edit	title	Modifier un favori
-#
-#-----------------------------------------------
-# Script: SF/www/my/stop_monitor.php
-#
-my_monitored_forum	title	Arrêt de la surveillance d'un forum.
-my_monitored_forum	stop_monitoring	La surveillance du forum est arrêtée. Vous ne recevrez plus de courrier électronique en provenance de ce forum.
