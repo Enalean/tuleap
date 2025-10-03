@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
-use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboardPlugin;
 use HTTPRequest;
 use Planning;
@@ -43,6 +42,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
@@ -166,7 +166,7 @@ class ProjectMilestonesPresenterBuilder
                 $artifact_factory,
                 $milestone_factory,
                 $planning_factory,
-                new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
+                new BacklogItemBuilder(),
                 new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
                 new ArtifactsInExplicitBacklogDao(),
                 new PriorityDao(),

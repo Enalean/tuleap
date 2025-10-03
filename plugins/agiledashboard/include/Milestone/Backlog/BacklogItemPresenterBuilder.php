@@ -22,23 +22,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemPresenter;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBuildBacklogItemAndBacklogItemCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
- * I build BacklogItem{,Collection}
+ * I build BacklogItemPresenter{,Collection}
  */
-class AgileDashboard_Milestone_Backlog_BacklogItemBuilder implements AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection
+class AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder implements IBuildBacklogItemAndBacklogItemCollection
 {
     #[Override]
-    public function getCollection()
+    public function getCollection(): AgileDashboard_Milestone_Backlog_IBacklogItemCollection
     {
-        return new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
+        return new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
     }
 
     #[Override]
-    public function getItem(Artifact $artifact, ?string $redirect_to_self, bool $is_inconsistent)
+    public function getItem(Artifact $artifact, ?string $redirect_to_self, bool $is_inconsistent): BacklogItemPresenter
     {
-        return new BacklogItem($artifact, $is_inconsistent);
+        return new BacklogItemPresenter($artifact, $redirect_to_self ?? '', $is_inconsistent);
     }
 }

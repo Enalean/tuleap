@@ -24,11 +24,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard;
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use Override;
-use Tuleap\AgileDashboard\Milestone\Backlog\BacklogRowPresenter;
-use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
