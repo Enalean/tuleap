@@ -15,16 +15,18 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+use Countable;
+use Iterator;
 
 /**
  * First class collection of Backlog Items
  */
-interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection extends Iterator, Countable
+interface IBacklogItemCollection extends Iterator, Countable
 {
     public function getParentItemName(): string;
 

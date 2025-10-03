@@ -24,16 +24,16 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
-use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 
 class DetailsPresenter
 {
     public string $no_items_label;
 
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection */
+    /** @var IBacklogItemCollection */
     public $items_collection;
 
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection */
+    /** @var IBacklogItemCollection */
     public $inconsistent_collection;
 
     /** @var String */
@@ -52,8 +52,8 @@ class DetailsPresenter
     public $chart_presenter;
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $items,
-        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $inconsistent_collection,
+        IBacklogItemCollection $items,
+        IBacklogItemCollection $inconsistent_collection,
         array $trackers,
         string $solve_inconsistencies_url,
         DetailsChartPresenter $chart_presenter,
@@ -84,32 +84,32 @@ class DetailsPresenter
         return 'pane-details';
     }
 
-    public function solve_inconsistencies_button(): string
+    public function solve_inconsistencies_button(): string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-agiledashboard', 'Import them in the backlog');
     }
 
-    public function solve_inconsistencies_url(): string
+    public function solve_inconsistencies_url(): string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->solve_inconsistencies_url;
     }
 
-    public function status_title(): string
+    public function status_title(): string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('plugin-agiledashboard', 'Status');
     }
 
-    public function has_something(): bool
+    public function has_something(): bool //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->items_collection->count() > 0;
     }
 
-    public function inconsistent_items_intro(): string
+    public function inconsistent_items_intro(): string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return dgettext('tuleap-agiledashboard', 'Some items are not linked to this milestone.');
     }
 
-    public function has_something_inconsistent(): bool
+    public function has_something_inconsistent(): bool //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return count($this->inconsistent_collection) > 0;
     }

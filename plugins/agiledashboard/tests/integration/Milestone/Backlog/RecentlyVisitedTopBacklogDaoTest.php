@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog;
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 

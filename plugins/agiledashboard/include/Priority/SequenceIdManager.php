@@ -20,11 +20,11 @@
 
 namespace Tuleap\AgileDashboard\Priority;
 
-use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
-use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use PFUser;
 use Planning_Milestone;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\DescendantItemsCollection;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 
 class SequenceIdManager
@@ -83,7 +83,7 @@ class SequenceIdManager
         }
     }
 
-    private function storeTopBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $backlog_items): void
+    private function storeTopBacklogArtifacts($milestone_id, IBacklogItemCollection $backlog_items): void
     {
         $artifact_position = 1;
         foreach ($backlog_items as $backlog_item) {
@@ -92,7 +92,7 @@ class SequenceIdManager
         }
     }
 
-    private function storeBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_DescendantItemsCollection $backlog_artifacts): void
+    private function storeBacklogArtifacts($milestone_id, DescendantItemsCollection $backlog_artifacts): void
     {
         $artifact_position = 1;
         foreach ($backlog_artifacts as $backlog_artifact) {

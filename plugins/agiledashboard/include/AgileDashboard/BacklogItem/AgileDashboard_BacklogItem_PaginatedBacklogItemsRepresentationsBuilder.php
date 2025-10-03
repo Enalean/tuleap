@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\BacklogItem;
 
-use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
@@ -92,7 +92,7 @@ final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentat
         ISearchOnStatus $criterion,
         int $limit,
         int $offset,
-    ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
+    ): IBacklogItemCollection {
         if (
             $milestone instanceof Planning_VirtualTopMilestone &&
             $this->explicit_backlog_dao->isProjectUsingExplicitBacklog($milestone->getGroupId())

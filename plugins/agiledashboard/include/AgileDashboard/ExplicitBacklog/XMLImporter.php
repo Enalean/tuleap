@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
-use Psr\Log\LoggerInterface;
 use PFUser;
 use Project;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;

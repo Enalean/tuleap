@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog;
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use Tuleap\AgileDashboard\AgileDashboardServiceHomepageUrlBuilder;
 use Tuleap\Project\CheckProjectAccess;
@@ -30,7 +30,7 @@ use Tuleap\User\History\HistoryEntryCollection;
 
 final class VisitRetriever
 {
-    private const TYPE = 'topbacklog';
+    private const string TYPE = 'topbacklog';
 
     public function __construct(
         private readonly RecentlyVisitedTopBacklogDao $dao,
