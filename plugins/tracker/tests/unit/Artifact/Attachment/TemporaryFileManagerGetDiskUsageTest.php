@@ -28,6 +28,7 @@ use PFUser;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
@@ -36,6 +37,7 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 final class TemporaryFileManagerGetDiskUsageTest extends TestCase
 {
     use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     private Tracker_Artifact_Attachment_TemporaryFileManager $file_manager;
     private string $cache_dir;
@@ -44,7 +46,7 @@ final class TemporaryFileManagerGetDiskUsageTest extends TestCase
     #[\Override]
     public function setUp(): void
     {
-        $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
+        $this->cache_dir = $this->getTmpDir();
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
 
         $this->user = new PFUser(['user_id' => 101, 'language_id' => 'en_US']);
@@ -58,12 +60,6 @@ final class TemporaryFileManagerGetDiskUsageTest extends TestCase
             3,
             new DBTransactionExecutorPassthrough(),
         );
-    }
-
-    #[\Override]
-    public function tearDown(): void
-    {
-        exec('rm -rf ' . escapeshellarg($this->cache_dir));
     }
 
     public function testItReturns0WhenNoFiles(): void

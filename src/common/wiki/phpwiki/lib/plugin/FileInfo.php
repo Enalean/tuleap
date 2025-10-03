@@ -201,79 +201,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
 
     public function exeversion($file)
     {
-        if (! isWindows()) {
-            return '?';
-        }
-        if (function_exists('res_list_type') or loadPhpExtension('win32std')) {
-            return $this->exeversion_resopen($file);
-        }
-        return exeversion_showver($file);
-        return '';
-    }
-
-    // http://www.codeproject.com/dll/showver.asp
-    public function exeversion_showver($file)
-    {
-        $path   = realpath($file);
-        $result = `showver $path`;
         return '?';
-    }
-
-    // Read "RT_VERSION/VERSIONINFO" exe/dll resource info for MSWin32 binaries
-    // The "win32std" extension is not ready yet to pass back a VERSIONINFO struct
-    public function exeversion_resopen($file)
-    {
-        if (function_exists('res_list_type') or loadPhpExtension('win32std')) {
-            // See http://msdn.microsoft.com/workshop/networking/predefined/res.asp
-            $v = file_get_contents('res://' . realpath($file) . urlencode('/RT_VERSION/#1'));
-            if ($v) {
-             // This is really a binary VERSIONINFO block, with lots of
-             // nul bytes (widechar) which cannot be transported as string.
-                return "$v";
-            } else {
-                $h = res_open(realpath($file));
-                $v = res_get($h, 'RT_VERSION', 'FileVersion');
-                res_close($h);
-                if ($v) {
-                    return $v;
-                }
-
-                $h = res_open(realpath($file));
-                $v = res_get($h, '#1', 'RT_VERSION', 1);
-                res_close($h);
-                if ($v) {
-                    return $v;
-                }
-            }
-
-            /* The version consists of two 32-bit integers, defined by four 16-bit integers.
-               For example, "FILEVERSION 3,10,0,61" is translated into two doublewords:
-               0x0003000a and 0x0000003d, in that order. */
-       /*
-        $h = res_open(realpath($file));
-
-        echo "Res list of '$file': \n";
-        $list= res_list_type($h, true);
-        if( $list===FALSE ) err( "Can't list type" );
-
-        for( $i= 0; $i<count($list); $i++ ) {
-         echo $list[$i]."\n";
-         $res= res_list($h, $list[$i]);
-         for( $j= 0; $j<count($res); $j++ ) {
-          echo "\t".$res[$j]."\n";
-         }
-        }
-        echo "Res get: ".res_get( $h, 'A_TYPE', 'A_RC_NAME' )."\n\n";
-        res_close( $h );
-       */
-            if ($v) {
-                return "$v";
-            } else {
-                return '';
-            }
-        } else {
-            return '';
-        }
     }
 }
 

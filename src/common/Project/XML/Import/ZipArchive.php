@@ -61,11 +61,15 @@ class ZipArchive implements ArchiveInterface
      *
      * @return string Path to the new directory
      */
-    private function tempdir($tmp_dir)
+    private function tempdir(string $tmp_dir): string
     {
-        $template = 'import_project_XXXXXX';
-
-        return trim(`mktemp -d -p $tmp_dir $template`);
+        if ($tmp_dir === '') {
+            throw new \RuntimeException('Provided tmp_dir must not be empty');
+        }
+        $path = \Psl\Filesystem\create_temporary_file($tmp_dir, 'import_project_');
+        \Psl\Filesystem\delete_file($path);
+        \Psl\Filesystem\create_directory($path, 0700);
+        return $path;
     }
 
     #[\Override]
