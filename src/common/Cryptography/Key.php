@@ -51,12 +51,12 @@ class Key
         return ['key_material' => '** protected value**'];
     }
 
-    public function __sleep(): array
+    public function __serialize(): never
     {
         throw new CannotSerializeKeyException();
     }
 
-    public function __wakeup(): void
+    public function __unserialize(array $data): never
     {
         throw new CannotSerializeKeyException();
     }

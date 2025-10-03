@@ -52,12 +52,12 @@ final class ConcealedString implements \Stringable
         return ['value' => '** protected value, invoke getString instead of trying to dump it **'];
     }
 
-    public function __sleep()
+    public function __serialize(): never
     {
         self::throwSerializationException();
     }
 
-    public function __wakeup()
+    public function __unserialize(array $data): never
     {
         self::throwSerializationException();
     }
@@ -65,7 +65,7 @@ final class ConcealedString implements \Stringable
     /**
      * @psalm-mutation-free
      */
-    private static function throwSerializationException(): void
+    private static function throwSerializationException(): never
     {
         throw new \LogicException(
             'A concealed string is not supposed to be serialized directly, if need to do so please call ' .
