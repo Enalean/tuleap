@@ -21,14 +21,12 @@
     <artifact-link-row-skeleton
         v-if="is_loading"
         v-bind:row="row"
-        v-bind:columns="columns"
         v-bind:expected_number_of_links="expected_number_of_links"
         v-bind:level="level"
     />
     <artifact-rows
         v-else
         v-bind:rows="artifact_links_rows"
-        v-bind:columns="columns"
         v-bind:level="level"
         v-bind:tql_query="tql_query"
         v-bind:reverse_links_count="reverse_links_count"
@@ -45,7 +43,6 @@ import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 defineProps<{
     is_loading: boolean;
     row: ArtifactRow;
-    columns: ArtifactsTable["columns"];
     tql_query: string;
     level: number;
     artifact_links_rows: ArtifactsTable["rows"];

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -31,10 +31,10 @@ import {
     ARROW_DATA_STORE,
     DASHBOARD_ID,
     DASHBOARD_TYPE,
-    ROW_COLLECTION_STORE,
+    TABLE_DATA_STORE,
 } from "../../injection-symbols";
 import { PROJECT_DASHBOARD, USER_DASHBOARD } from "../../domain/DashboardType";
-import { RowCollectionStore } from "../../domain/RowCollectionStore";
+import { TableDataStore } from "../../domain/TableDataStore";
 import { ArrowDataStore } from "../../domain/ArrowDataStore";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
@@ -51,7 +51,7 @@ describe("PrettyTitleCellComponent", () => {
     let level: number;
     let dashboard_type: string;
     let emitter: Emitter<Events>;
-    let row_collection_store: RowCollectionStore;
+    let table_data_store: TableDataStore;
     let arrow_data_store: ArrowDataStore;
 
     const parent_uuid = uuidv4();
@@ -66,8 +66,8 @@ describe("PrettyTitleCellComponent", () => {
         reverse_links_count = undefined;
         dashboard_type = PROJECT_DASHBOARD;
         emitter = mitt<Events>();
-        row_collection_store = RowCollectionStore(emitter);
-        row_collection_store.listen();
+        table_data_store = TableDataStore(emitter);
+        table_data_store.listen();
         emitter.emit(INSERTED_ROW_EVENT, {
             row: { row_uuid: row_uuid } as ArtifactRow,
             parent_row: { row_uuid: parent_uuid } as ArtifactRow,
@@ -81,7 +81,7 @@ describe("PrettyTitleCellComponent", () => {
     });
 
     afterEach(() => {
-        row_collection_store.removeListeners();
+        table_data_store.removeListeners();
     });
 
     const getWrapper = (): VueWrapper<InstanceType<typeof PrettyTitleCellComponent>> => {
@@ -91,7 +91,7 @@ describe("PrettyTitleCellComponent", () => {
                 provide: {
                     [DASHBOARD_TYPE.valueOf()]: dashboard_type,
                     [DASHBOARD_ID.valueOf()]: 22,
-                    [ROW_COLLECTION_STORE.valueOf()]: row_collection_store,
+                    [TABLE_DATA_STORE.valueOf()]: table_data_store,
                     [ARROW_DATA_STORE.valueOf()]: arrow_data_store,
                 },
             },

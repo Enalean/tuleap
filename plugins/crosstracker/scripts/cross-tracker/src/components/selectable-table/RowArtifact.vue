@@ -21,7 +21,7 @@
     <div class="artifact-row" data-test="artifact-row">
         <edit-cell v-bind:uri="row.artifact_uri" />
         <selectable-cell
-            v-for="column_name of columns"
+            v-for="column_name of table_data_store.getColumns()"
             v-bind:key="column_name + '_' + level + '_' + row.artifact_id"
             v-bind:cell="row.cells.get(column_name)"
             v-bind:artifact_uri="row.artifact_uri"
@@ -40,7 +40,6 @@
             v-for="(artifact_link, index) in [forward, reverse]"
             v-bind:key="index"
             v-bind:row="row"
-            v-bind:columns="columns"
             v-bind:is_loading="artifact_link.is_loading"
             v-bind:expected_number_of_links="artifact_link.expected_number_of_links"
             v-bind:artifact_links_rows="artifact_link.artifact_links"
@@ -62,13 +61,19 @@ import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../api/ArtifactLinks
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import LoadAllButton from "../feedback/LoadAllButton.vue";
-import { EMITTER, RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
+import {
+    EMITTER,
+    RETRIEVE_ARTIFACT_LINKS,
+    TABLE_DATA_STORE,
+    WIDGET_ID,
+} from "../../injection-symbols";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import SelectableCell from "./SelectableCell.vue";
 import EditCell from "./EditCell.vue";
 import { REMOVED_ROW_EVENT, INSERTED_ROW_EVENT } from "../../helpers/widget-events";
 
 const emitter = strictInject(EMITTER);
+const table_data_store = strictInject(TABLE_DATA_STORE);
 
 interface ArtifactLinksFetchStatus {
     is_loading: boolean;
@@ -78,7 +83,6 @@ interface ArtifactLinksFetchStatus {
 
 const props = defineProps<{
     row: ArtifactRow;
-    columns: ArtifactsTable["columns"];
     tql_query: string;
     level: number;
     is_last: boolean;

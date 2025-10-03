@@ -21,13 +21,15 @@ import type { Emitter } from "mitt";
 import mitt from "mitt";
 import type { Events } from "../helpers/widget-events";
 import { INSERTED_ROW_EVENT, REMOVED_ROW_EVENT } from "../helpers/widget-events";
-import { RowCollectionStore } from "./RowCollectionStore";
+import { TableDataStore } from "./TableDataStore";
 import type { ArtifactRow } from "./ArtifactsTable";
 import { v4 as uuidv4 } from "uuid";
+import type { ColumnName } from "./ColumnName";
+import { PRETTY_TITLE_COLUMN_NAME } from "./ColumnName";
 
 describe("RowCollectionStore", () => {
     let emitter: Emitter<Events>;
-    let store: RowCollectionStore;
+    let store: TableDataStore;
 
     const row_uuid = uuidv4();
     const parent_row_uuid = uuidv4();
@@ -54,7 +56,7 @@ describe("RowCollectionStore", () => {
 
     beforeEach(() => {
         emitter = mitt<Events>();
-        store = RowCollectionStore(emitter);
+        store = TableDataStore(emitter);
 
         store.listen();
     });
@@ -80,11 +82,14 @@ describe("RowCollectionStore", () => {
     it("should empty the store on reset", () => {
         emitter.emit(INSERTED_ROW_EVENT, { row, parent_row });
         emitter.emit(INSERTED_ROW_EVENT, { row, parent_row });
+        store.setColumns(new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME));
 
         expect(store.getRowCollection().length).toBe(2);
+        expect(store.getColumns().size).toBe(1);
 
         store.resetStore();
 
         expect(store.getRowCollection().length).toBe(0);
+        expect(store.getColumns().size).toBe(0);
     });
 });

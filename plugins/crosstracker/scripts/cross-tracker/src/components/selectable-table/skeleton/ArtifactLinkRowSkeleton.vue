@@ -25,7 +25,7 @@
     >
         <empty-edit-cell class="tlp-skeleton-icon" />
         <empty-selectable-cell
-            v-for="column_name of columns"
+            v-for="column_name of table_data_store.getColumns()"
             v-bind:key="column_name + index"
             v-bind:cell="row.cells.get(column_name)"
             v-bind:level="level"
@@ -35,13 +35,16 @@
 
 <script setup lang="ts">
 import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../../api/ArtifactLinksRetriever";
-import type { ArtifactRow, ArtifactsTable } from "../../../domain/ArtifactsTable";
+import type { ArtifactRow } from "../../../domain/ArtifactsTable";
 import EmptySelectableCell from "./EmptySelectableCell.vue";
 import EmptyEditCell from "./EmptyEditCell.vue";
+import { TABLE_DATA_STORE } from "../../../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
+
+const table_data_store = strictInject(TABLE_DATA_STORE);
 
 defineProps<{
     row: ArtifactRow;
-    columns: ArtifactsTable["columns"];
     level: number;
     expected_number_of_links: number;
 }>();

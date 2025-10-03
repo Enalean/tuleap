@@ -29,14 +29,26 @@ import { DATE_CELL, PRETTY_TITLE_CELL } from "../../../domain/ArtifactsTable";
 import ArtifactLinkRowSkeleton from "./ArtifactLinkRowSkeleton.vue";
 import EmptyEditCell from "./EmptyEditCell.vue";
 import EmptySelectableCell from "./EmptySelectableCell.vue";
+import { TABLE_DATA_STORE } from "../../../injection-symbols";
+import { TableDataStore } from "../../../domain/TableDataStore";
+import mitt from "mitt";
+import type { Events } from "../../../helpers/widget-events";
 
 const DATE_COLUMN_NAME = "start_date";
-const columns = new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME).add(DATE_COLUMN_NAME);
+const table_data_store = TableDataStore(mitt<Events>());
+table_data_store.setColumns(
+    new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME).add(DATE_COLUMN_NAME),
+);
 
 describe("ArtifactLinkRowSkeleton", () => {
     function getWrapper(expected_number_of_links: number): VueWrapper {
         return shallowMount(ArtifactLinkRowSkeleton, {
-            global: { ...getGlobalTestOptions() },
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [TABLE_DATA_STORE.valueOf()]: table_data_store,
+                },
+            },
             props: {
                 row: new ArtifactRowBuilder()
                     .addCell(PRETTY_TITLE_COLUMN_NAME, {
@@ -52,7 +64,6 @@ describe("ArtifactLinkRowSkeleton", () => {
                         with_time: true,
                     })
                     .build(),
-                columns,
                 expected_number_of_links,
                 level: 0,
             },
@@ -66,7 +77,7 @@ describe("ArtifactLinkRowSkeleton", () => {
 
             expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(expected_number_of_links);
             expect(wrapper.findAllComponents(EmptySelectableCell)).toHaveLength(
-                expected_number_of_links * columns.size,
+                expected_number_of_links * table_data_store.getColumns().size,
             );
         },
     );
