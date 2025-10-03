@@ -24,6 +24,7 @@ use DateTimeImmutable;
 use Exception;
 use GitRepository;
 use Psr\Log\LoggerInterface;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Log\CannotCreateLogException;
@@ -94,15 +95,14 @@ class HookTriggerController
             return;
         }
 
-        $jenkins_server_url      = $row['jenkins_server_url'];
-        $jenkins_encrypted_token = $row['encrypted_token'];
+        $jenkins_server_url = $row['jenkins_server_url'];
         $this->logger->debug('Trigger repository jenkins server: ' . $jenkins_server_url);
         $commit_reference_to_send             = $row['is_commit_reference_needed'] ? $commit_reference : null;
         $polling_urls                         = [];
         $status_code                          = $this->pushGitNotifications(
             $repository,
             $jenkins_server_url,
-            $jenkins_encrypted_token,
+            $row['token'],
             $commit_reference_to_send,
             $polling_urls
         );
@@ -149,7 +149,7 @@ class HookTriggerController
             $status_code              = $this->pushGitNotifications(
                 $repository,
                 $jenkins_server_url,
-                $jenkins_server->getEncryptedToken(),
+                $jenkins_server->getToken(),
                 $commit_reference_to_send,
                 $polling_urls
             );
@@ -182,14 +182,14 @@ class HookTriggerController
     private function pushGitNotifications(
         GitRepository $repository,
         string $jenkins_server_url,
-        ?string $encrypted_token,
+        ?ConcealedString $token,
         ?string $commit_reference,
         array &$polling_urls,
     ): ?int {
         $transports = $repository->getAccessURL();
         foreach ($transports as $protocol => $url) {
             try {
-                $response = $this->jenkins_client->pushGitNotifications($jenkins_server_url, $url, $encrypted_token, $commit_reference);
+                $response = $this->jenkins_client->pushGitNotifications($jenkins_server_url, $url, $token, $commit_reference);
 
                 $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
                 if (count($response->getJobPaths()) > 0) {

@@ -24,7 +24,6 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Valid_HTTPURI;
 
@@ -50,7 +49,6 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->adder = new JenkinsServerAdder(
             $this->git_jenkins_administration_server_dao,
             new Valid_HTTPURI(),
-            new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)))
         );
 
         $this->project = ProjectTestBuilder::aProject()->build();

@@ -25,8 +25,6 @@ namespace Tuleap\HudsonGit\Git\Administration\XML;
 use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 
 class XMLExporter
@@ -41,7 +39,7 @@ class XMLExporter
      */
     private $logger;
 
-    public function __construct(JenkinsServerFactory $jenkins_server_factory, LoggerInterface $logger, private EncryptionKey $encryption_key)
+    public function __construct(JenkinsServerFactory $jenkins_server_factory, LoggerInterface $logger)
     {
         $this->jenkins_server_factory = $jenkins_server_factory;
         $this->logger                 = $logger;
@@ -60,9 +58,9 @@ class XMLExporter
             $this->logger->info('Exporting project jenkins server: ' . $jenkins_server->getServerURL());
             $jenkins_server_node = $jenkins_servers_admin_node->addChild('jenkins-server');
             $jenkins_server_node->addAttribute('url', $jenkins_server->getServerURL());
-            $encrypted_token = $jenkins_server->getEncryptedToken();
-            if ($encrypted_token !== null) {
-                $jenkins_server_node->addAttribute('jenkins_token', SymmetricCrypto::decrypt($encrypted_token, $this->encryption_key)->getString());
+            $token = $jenkins_server->getToken();
+            if ($token !== null) {
+                $jenkins_server_node->addAttribute('jenkins_token', $token->getString());
             }
         }
     }

@@ -20,26 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\DB;
-
-use Tuleap\Option\Option;
-
-interface DatabaseUUIDFactory
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+final class b202510031545_encrypt_tokens_with_new_api extends \Tuleap\ForgeUpgrade\Bucket
 {
-    /**
-     * @return non-empty-string
-     */
-    public function buildUUIDBytes(): string;
+    public function description(): string
+    {
+        return 'Re-encrypt tokens using the current Tuleap cryptography API';
+    }
 
-    /**
-     * @return non-empty-string
-     */
-    public function buildUUIDBytesFromTime(\DateTimeInterface $time): string;
-
-    public function buildUUIDFromBytesData(string $bytes): UUID;
-
-    /**
-     * @return Option<UUID>
-     */
-    public function buildUUIDFromHexadecimalString(string $string): Option;
+    public function up(): void
+    {
+        $this->api->reencrypt2025ContentWithTheCurrentCryptographyAPI(
+            'plugin_hudson_git_project_server',
+            'id',
+            'encrypted_token'
+        );
+        $this->api->reencrypt2025ContentWithTheCurrentCryptographyAPI(
+            'plugin_hudson_git_server',
+            'repository_id',
+            'encrypted_token'
+        );
+    }
 }

@@ -26,8 +26,6 @@ use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -49,7 +47,6 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
-    private EncryptionKey $encryption_key;
 
     #[\Override]
     protected function setUp(): void
@@ -58,12 +55,10 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->jenkins_server_factory = $this->createMock(JenkinsServerFactory::class);
         $this->logger                 = $this->createMock(LoggerInterface::class);
-        $this->encryption_key         = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
         $this->exporter = new XMLExporter(
             $this->jenkins_server_factory,
             $this->logger,
-            $this->encryption_key,
         );
 
         $this->project = ProjectTestBuilder::aProject()->build();
@@ -75,7 +70,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getJenkinsServerOfProject')
             ->willReturn([
                 new JenkinsServer(new UUIDTestContext(), ('https://url'), null, $this->project),
-                new JenkinsServer(new UUIDTestContext(), ('https://url2'), SymmetricCrypto::encrypt(new ConcealedString('my_token'), $this->encryption_key), $this->project),
+                new JenkinsServer(new UUIDTestContext(), ('https://url2'), new ConcealedString('my_token'), $this->project),
             ]);
 
         $xml_git = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
