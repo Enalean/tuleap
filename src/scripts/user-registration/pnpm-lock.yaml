@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/list-picker':
     specifier: workspace:*
     version: link:../../../lib/frontend/list-picker
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/locale
   '@tuleap/tlp-date-picker':
     specifier: workspace:^
     version: link:../../../lib/frontend/tlp-date-picker

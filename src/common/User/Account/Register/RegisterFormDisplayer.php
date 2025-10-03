@@ -48,7 +48,8 @@ final class RegisterFormDisplayer implements IDisplayRegisterForm
     ): void {
         $this->render(
             $layout,
-            $this->presenter_builder->getPresenterClosureForFirstDisplay($request, $layout, $context)
+            $this->presenter_builder->getPresenterClosureForFirstDisplay($request, $layout, $context),
+            $context
         );
     }
 
@@ -61,24 +62,24 @@ final class RegisterFormDisplayer implements IDisplayRegisterForm
     ): void {
         $this->render(
             $layout,
-            $this->presenter_builder->getPresenterClosure($request, $layout, $context, $issue)
+            $this->presenter_builder->getPresenterClosure($request, $layout, $context, $issue),
+            $context
         );
     }
 
     /**
      * @param \Closure(): void $render
      */
-    private function render(BaseLayout $layout, \Closure $render): void
+    private function render(BaseLayout $layout, \Closure $render, RegisterFormContext $context): void
     {
-        $layout->addJavascriptAsset(
-            new JavascriptViteAsset(
-                new IncludeViteAssets(
-                    __DIR__ . '/../../../../scripts/user-registration/frontend-assets',
-                    '/assets/core/user-registration'
-                ),
-                'src/index.ts'
-            )
+        $user_registration_assets = new IncludeViteAssets(
+            __DIR__ . '/../../../../scripts/user-registration/frontend-assets',
+            '/assets/core/user-registration'
         );
+        $layout->addJavascriptAsset(new JavascriptViteAsset($user_registration_assets, 'src/main-anonymous.ts'));
+        if ($context->is_admin) {
+            $layout->addJavascriptAsset(new JavascriptViteAsset($user_registration_assets, 'src/main-site-admin.ts'));
+        }
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(

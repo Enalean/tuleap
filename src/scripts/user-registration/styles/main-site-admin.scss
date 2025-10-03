@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-
-export default vite.defineAppConfig(
-    { plugin_name: "core", sub_app_name: "user-registration" },
-    {
-        build: {
-            rollupOptions: {
-                input: {
-                    "main-anonymous": path.resolve(__dirname, "src/main-anonymous.ts"),
-                    "main-site-admin": path.resolve(__dirname, "src/main-site-admin.ts"),
-                },
-            },
-        },
-    },
-);
+@use "pkg:@tuleap/tlp-date-picker";
