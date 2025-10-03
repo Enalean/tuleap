@@ -26,7 +26,6 @@ namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
-use AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection;
 use AgileDashBoard_Semantic_InitialEffort;
 use PFUser;
 use Planning;
@@ -71,7 +70,7 @@ class BacklogItemCollectionFactory
         private readonly Tracker_ArtifactFactory $artifact_factory,
         private readonly Planning_MilestoneFactory $milestone_factory,
         private readonly PlanningFactory $planning_factory,
-        private readonly AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
+        private readonly IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
         private readonly RemainingEffortValueRetriever $remaining_effort_value_retriever,
         private readonly ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         private readonly PriorityDao $artifact_priority_dao,

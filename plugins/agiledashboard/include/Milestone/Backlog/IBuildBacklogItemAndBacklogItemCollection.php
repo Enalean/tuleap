@@ -22,21 +22,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * I build BacklogItem{,Collection}
  */
-interface AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection
+interface IBuildBacklogItemAndBacklogItemCollection
 {
-    /**
-     * @return AgileDashboard_Milestone_Backlog_IBacklogItemCollection
-     */
-    public function getCollection();
+    public function getCollection(): AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 
-    /**
-     * @return IBacklogItem
-     */
-    public function getItem(Artifact $artifact, ?string $redirect_to_self, bool $is_inconsistent);
+    public function getItem(Artifact $artifact, ?string $redirect_to_self, bool $is_inconsistent): IBacklogItem;
 }
