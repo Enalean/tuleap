@@ -26,7 +26,7 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class IconPresenterFactory
 {
-    private const AVAILABLE_ICONS = [
+    private const array AVAILABLE_ICONS = [
         'github',
         'google-plus',
         'linkedin',

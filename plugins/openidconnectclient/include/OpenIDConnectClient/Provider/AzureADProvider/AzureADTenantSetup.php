@@ -27,11 +27,11 @@ namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
  */
 final class AzureADTenantSetup
 {
-    private const TENANT_SPECIFIC_IDENTIFIER      = 'tenant_specific';
-    private const TENANT_COMMON_IDENTIFIER        = 'common';
-    private const TENANT_ORGANIZATIONS_IDENTIFIER = 'organizations';
-    private const TENANT_CONSUMERS_IDENTIFIER     = 'consumers';
-    private const VALID_IDENTIFIERS               = [
+    private const string TENANT_SPECIFIC_IDENTIFIER      = 'tenant_specific';
+    private const string TENANT_COMMON_IDENTIFIER        = 'common';
+    private const string TENANT_ORGANIZATIONS_IDENTIFIER = 'organizations';
+    private const string TENANT_CONSUMERS_IDENTIFIER     = 'consumers';
+    private const array VALID_IDENTIFIERS                = [
         self::TENANT_COMMON_IDENTIFIER,
         self::TENANT_ORGANIZATIONS_IDENTIFIER,
         self::TENANT_CONSUMERS_IDENTIFIER,

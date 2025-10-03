@@ -31,10 +31,10 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const SIGNED_STATE        = 'Tuleap_signed_state';
-    private const NONCE_FOR_TEST      = '000000';
-    private const PKCE_CODE_VERIFIER  = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-    private const PKCE_CODE_CHALLENGE = 'ZtNPunH49FD35FWYhT5Tv8I7vRKQJ8uxMaL0_9eHjNA';
+    private const string SIGNED_STATE        = 'Tuleap_signed_state';
+    private const string NONCE_FOR_TEST      = '000000';
+    private const string PKCE_CODE_VERIFIER  = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+    private const string PKCE_CODE_CHALLENGE = 'ZtNPunH49FD35FWYhT5Tv8I7vRKQJ8uxMaL0_9eHjNA';
 
     private MockObject&StateManager $state_manager;
 

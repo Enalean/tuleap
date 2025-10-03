@@ -27,7 +27,7 @@ use Tuleap\ServerHostname;
 
 final class AzureADProvider implements Provider
 {
-    private const BASE_AZURE_URL = 'https://login.microsoftonline.com/';
+    private const string BASE_AZURE_URL = 'https://login.microsoftonline.com/';
 
     /**
      * @var int

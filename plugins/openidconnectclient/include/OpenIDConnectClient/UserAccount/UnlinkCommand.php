@@ -32,7 +32,7 @@ use UserManager;
 
 final class UnlinkCommand extends Command
 {
-    public const NAME = 'oidc_client:remove-all-user-links';
+    public const string NAME = 'oidc_client:remove-all-user-links';
 
     public function __construct(
         private readonly UserManager $user_manager,

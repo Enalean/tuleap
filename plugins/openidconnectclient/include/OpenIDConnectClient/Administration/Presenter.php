@@ -48,7 +48,7 @@ class Presenter
      * @var string
      */
     public $csrf_token;
-    public const TEMPLATE = 'administration-providers';
+    public const string TEMPLATE = 'administration-providers';
     /**
      * @var AzureADTenantSetupPresenter[]
      */

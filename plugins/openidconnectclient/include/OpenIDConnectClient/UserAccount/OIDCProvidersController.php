@@ -40,7 +40,7 @@ use Tuleap\User\Account\UserPreferencesHeader;
 
 final class OIDCProvidersController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/plugins/openidconnectclient/account';
+    public const string URL = '/plugins/openidconnectclient/account';
 
     /**
      * @var \TemplateRenderer
