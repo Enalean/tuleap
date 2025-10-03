@@ -517,6 +517,13 @@ msgstr ""
 "Vous devriez recharger la page afin de retrouver un état correct (cependant "
 "vous allez perdre vos modifications)."
 
+msgid ""
+"You will be able to display \"%{ title }\" a read-only version (not yet "
+"implemented)."
+msgstr ""
+"Vous serez capable d'afficher la version \"%{ title }\" en lecture seule (en "
+"cours de développement)."
+
 msgid "Your artidoc is currently set up on \"%{ tracker_name }\""
 msgstr "Votre artidoc est actuellement configuré sur \"%{ tracker_name }\""
 

@@ -31,10 +31,10 @@ import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.fa
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 
 describe("SectionStateBuilder", () => {
-    let can_user_edit_document: boolean, pending_uploads: Ref<OnGoingUploadFileWithId[]>;
+    let can_user_edit_document: Ref<boolean>, pending_uploads: Ref<OnGoingUploadFileWithId[]>;
 
     beforeEach(() => {
-        can_user_edit_document = true;
+        can_user_edit_document = ref(true);
         pending_uploads = ref([]);
     });
 
@@ -79,10 +79,10 @@ describe("SectionStateBuilder", () => {
         ])(
             "When the section is a %s, then it should return the value of can_user_edit_document",
             (section_type, section) => {
-                can_user_edit_document = true;
+                can_user_edit_document.value = true;
                 expect(createState(section).is_section_editable.value).toBe(true);
 
-                can_user_edit_document = false;
+                can_user_edit_document.value = false;
                 expect(createState(section).is_section_editable.value).toBe(false);
             },
         );
@@ -90,10 +90,10 @@ describe("SectionStateBuilder", () => {
         it("When the section is an artifact section and the user can edit it, then it should return the value of can_user_edit_document", () => {
             const section = ArtifactSectionFactory.override({ can_user_edit_section: true });
 
-            can_user_edit_document = true;
+            can_user_edit_document.value = true;
             expect(createState(section).is_section_editable.value).toBe(true);
 
-            can_user_edit_document = false;
+            can_user_edit_document.value = false;
             expect(createState(section).is_section_editable.value).toBe(false);
         });
 

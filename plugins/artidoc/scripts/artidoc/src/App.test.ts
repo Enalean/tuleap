@@ -44,7 +44,7 @@ describe("App", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(true),
                     [DOCUMENT_ID.valueOf()]: 1,
                     [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: ref(false),

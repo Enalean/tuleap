@@ -33,7 +33,7 @@ describe("SectionsStatesCollection", () => {
         stored_sections: ReactiveStoredArtidocSection[];
 
     beforeEach(() => {
-        states_collection = getSectionsStatesCollection(getSectionStateBuilder(true, ref([])));
+        states_collection = getSectionsStatesCollection(getSectionStateBuilder(ref(true), ref([])));
 
         stored_sections = ReactiveStoredArtidocSectionStub.fromCollection([
             FreetextSectionFactory.create(),

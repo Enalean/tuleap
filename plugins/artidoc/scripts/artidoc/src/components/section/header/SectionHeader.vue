@@ -55,7 +55,9 @@ const display_title = computed(() => {
     return props.section.value.display_level + props.section.value.title;
 });
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
-const can_header_be_edited = computed(() => props.is_print_mode !== true && can_user_edit_document);
+const can_header_be_edited = computed(
+    () => props.is_print_mode !== true && can_user_edit_document.value,
+);
 </script>
 
 <style lang="scss" scoped>

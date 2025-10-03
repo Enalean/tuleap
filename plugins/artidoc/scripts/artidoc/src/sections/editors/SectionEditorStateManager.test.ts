@@ -31,7 +31,7 @@ describe("SectionEditorStateManager", () => {
     let state_builder: BuildSectionState;
 
     beforeEach(() => {
-        state_builder = getSectionStateBuilder(true, ref([]));
+        state_builder = getSectionStateBuilder(ref(true), ref([]));
     });
 
     describe("setEditedContent", () => {

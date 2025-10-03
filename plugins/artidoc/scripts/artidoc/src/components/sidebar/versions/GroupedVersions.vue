@@ -21,12 +21,16 @@
 <template>
     <version-with-timeline>
         <version-disc v-bind:is_version_with_title="true" />
-        <version-entry v-bind:version="group.parent" v-bind:toggle_state="toggle_state" />
+        <version-entry
+            v-bind:version="group.parent"
+            v-bind:toggle_state="toggle_state"
+            v-bind:is_latest="is_first_group"
+        />
     </version-with-timeline>
     <template v-if="is_open">
         <version-with-timeline v-for="version in group.versions" v-bind:key="version.id">
             <version-disc v-bind:is_version_with_title="false" />
-            <version-entry v-bind:version="version" />
+            <version-entry v-bind:version="version" v-bind:is_latest="false" />
         </version-with-timeline>
     </template>
 </template>
@@ -39,7 +43,7 @@ import VersionWithTimeline from "./VersionWithTimeline.vue";
 import type { VersionsUnderVersion } from "./group-versions-by-named-version";
 import type { ToggleState } from "./toggle-state";
 
-defineProps<{ group: VersionsUnderVersion }>();
+defineProps<{ group: VersionsUnderVersion; is_first_group: boolean }>();
 
 const is_open = ref(false);
 

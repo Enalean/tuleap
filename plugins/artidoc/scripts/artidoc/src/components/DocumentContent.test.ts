@@ -19,6 +19,7 @@
 
 import { beforeEach, describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
+import { ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
@@ -32,9 +33,14 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import type { CurrentVersionDisplayed } from "@/components/current-version-displayed";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
+import { noop } from "@/helpers/noop";
+import { Option } from "@tuleap/option";
 
 describe("DocumentContent", () => {
     let sections_collection: SectionsCollection,
+        current_version_displayed: CurrentVersionDisplayed,
         section_1: ArtidocSection,
         section_2: ArtidocSection,
         section_3: ArtidocSection,
@@ -46,7 +52,8 @@ describe("DocumentContent", () => {
                 provide: {
                     [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(can_user_edit_document),
+                    [CURRENT_VERSION_DISPLAYED.valueOf()]: current_version_displayed,
                 },
             },
         });
@@ -75,6 +82,12 @@ describe("DocumentContent", () => {
         ]);
 
         can_user_edit_document = true;
+
+        current_version_displayed = {
+            old_version: ref(Option.nothing()),
+            switchToLatestVersion: noop,
+            switchToOldVersion: noop,
+        };
     });
 
     it("should display the three sections", () => {

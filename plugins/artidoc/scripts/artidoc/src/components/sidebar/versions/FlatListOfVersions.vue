@@ -20,9 +20,9 @@
 
 <template>
     <list-of-versions>
-        <version-with-timeline v-for="version in versions" v-bind:key="version.id">
+        <version-with-timeline v-for="(version, index) in versions" v-bind:key="version.id">
             <version-disc v-bind:is_version_with_title="version.title.isValue()" />
-            <version-entry v-bind:version="version" />
+            <version-entry v-bind:version="version" v-bind:is_latest="index === 0" />
         </version-with-timeline>
     </list-of-versions>
 </template>

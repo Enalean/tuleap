@@ -65,7 +65,7 @@ describe("TableOfContents", () => {
                     [DOCUMENT_ID.valueOf()]: 123,
                     [SECTIONS_COLLECTION.valueOf()]:
                         SectionsCollectionStub.fromReactiveStoredArtifactSections(sections),
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(can_user_edit_document),
                     [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,
                     [IS_LOADING_SECTIONS.valueOf()]: ref(is_loading_sections),
                     [SECTIONS_STATES_COLLECTION.valueOf()]:

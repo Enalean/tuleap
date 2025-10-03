@@ -68,7 +68,7 @@ describe("DocumentView", () => {
         return shallowMount(DocumentView, {
             global: {
                 provide: {
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(can_user_edit_document),
                     [SELECTED_TRACKER.valueOf()]: selected_tracker,
                     [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [IS_LOADING_SECTIONS.valueOf()]: is_loading_sections,
