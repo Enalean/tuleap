@@ -18,8 +18,8 @@
  */
 
 import { utils, writeFile } from "xlsx";
-import { transformAContentCellIntoASheet } from "./transform-query-to-xlsx-sheet";
-import type { ContentSection } from "./data-formater";
+import { transformAContentCellIntoASheet } from "./without-link/transform-query-to-xlsx-sheet";
+import type { ContentSection } from "./without-link/data-formater";
 
 export function downloadXLSX(content: ContentSection, title: string): void {
     const book = utils.book_new();

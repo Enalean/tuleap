@@ -20,8 +20,8 @@ import type { RetrieveArtifactsTable } from "../../domain/RetrieveArtifactsTable
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { ok } from "neverthrow";
-import type { ContentSection } from "./xlsx/data-formater";
-import { formatData } from "./xlsx/data-formater";
+import type { ContentSection } from "./xlsx/without-link/data-formater";
+import { formatData } from "./xlsx/without-link/data-formater";
 import type { GetColumnName } from "../../domain/ColumnNameGetter";
 import type { Query } from "../../type";
 
