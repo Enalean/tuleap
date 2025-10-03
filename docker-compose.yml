@@ -27,6 +27,7 @@ services:
       - reverse-proxy-cert:/front-cert:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
       - .env:/root/.tuleap_env:ro
+      - tools/docker/tuleap-aio-dev/license.key:/etc/tuleap/conf/license.key:ro,cached
     tmpfs: /run
     env_file:
     - .env
