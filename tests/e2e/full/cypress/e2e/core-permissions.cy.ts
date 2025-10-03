@@ -32,14 +32,12 @@ describe("Core", function () {
     it("Permissions are respected", function () {
         cy.log("Project administrator can access core administration pages");
         cy.visit("/forum/admin/?group_id=" + this.project_id);
-        cy.visit("/news/admin/?group_id=" + this.project_id);
         cy.visit(`/wiki/admin/index.php?group_id=${this.project_id}&view=wikiPerms`);
         cy.visit(`/file/admin/?group_id=${this.project_id}&action=edit-permissions`);
 
         cy.projectMemberSession();
         cy.log("Project members has never access to core administration pages");
         checkForumPermissions(this.project_id);
-        checkNewsPermissions(this.project_id);
         checkPhpWikiPermissions(this.project_id);
         checkFrsPermissions(this.project_id);
         checkProjectAdminPermissions(this.project_id);
@@ -89,14 +87,6 @@ function checkForumPermissions(project_id: string): void {
     cy.visit("/forum/admin/?group_id=" + project_id);
     cy.get("[data-test=feedback]").contains(
         "You are not granted sufficient permission to perform this operation.",
-    );
-}
-
-function checkNewsPermissions(project_id: string): void {
-    cy.visit("/news/admin/?group_id=" + project_id);
-
-    cy.get("[data-test=feedback]").contains(
-        "Permission Denied. You have to be an admin on the News service of this project.",
     );
 }
 

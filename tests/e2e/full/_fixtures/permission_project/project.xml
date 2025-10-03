@@ -21,7 +21,6 @@
         <service shortname="forum" enabled="true"/>
         <service shortname="mail" enabled="true"/>
         <service shortname="wiki" enabled="true"/>
-        <service shortname="news" enabled="true"/>
         <service shortname="file" enabled="true"/>
     </services>
 </project>
