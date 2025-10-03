@@ -194,7 +194,11 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfTargetValuesAreDifferent(): void
     {
-        $GLOBALS['Response']->method('addFeedback')->with('error', 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb(Champ2)');
+        $GLOBALS['Response']->method('send400JSONErrors')->with([
+            'error' => [
+                'message' => 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb(Champ2)',
+            ],
+        ]);
 
         $value_field_list  = [
             123 => 456,
@@ -220,7 +224,11 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testValidateListRulesReturnErrorIfTargetValueIsNotProvided(): void
     {
-        $GLOBALS['Response']->method('addFeedback')->with('error', 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb()');
+        $GLOBALS['Response']->method('send400JSONErrors')->with([
+            'error' => [
+                'message' => 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb()',
+            ],
+        ]);
 
         $value_field_list = [
             123 => 457,
@@ -246,7 +254,11 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testValidateListRulesReturnErrorIfTargetValueIsNotProvidedAtArtifactCreation(): void
     {
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb()');
+        $GLOBALS['Response']->expects($this->once())->method('send400JSONErrors')->with([
+            'error' => [
+                'message' => 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb()',
+            ],
+        ]);
 
         $value_field_list = [
             123 => 457,
@@ -265,7 +277,11 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfSourceValuesAreDifferent(): void
     {
-        $GLOBALS['Response']->method('addFeedback')->with('error', 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb(Champ2)');
+        $GLOBALS['Response']->method('send400JSONErrors')->with([
+            'error' => [
+                'message' => 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb(Champ2)',
+            ],
+        ]);
 
         $value_field_list = [
             123 => 456,
@@ -285,7 +301,11 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfTrackersIdsAreDifferent(): void
     {
-        $GLOBALS['Response']->method('addFeedback')->with('error', 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb(Champ2)');
+        $GLOBALS['Response']->method('send400JSONErrors')->with([
+            'error' => [
+                'message' => 'Global rules are not respected in tracker MyTracker (#110) - aaaaa(Champ1) -> bbbbb(Champ2)',
+            ],
+        ]);
 
         $value_field_list  = [
             123 => 456,
@@ -368,7 +388,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS1ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('send400JSONErrors');
         $value_field_list = [
             '101' => 'A2',
             '102' => 'B3',
@@ -380,7 +400,11 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS2ValidateListRulesReturnFalseAndErrorIfC3TryToAccessToB3(): void
     {
-        $GLOBALS['Response']->method('addFeedback')->with('error', 'Global rules are not respected in tracker MyTracker (#110) - f_2(Champ2) -> f_3(Champ3)');
+        $GLOBALS['Response']->method('send400JSONErrors')->with([
+            'error' => [
+                'message' => 'Global rules are not respected in tracker MyTracker (#110) - f_2(Champ2) -> f_3(Champ3)',
+            ],
+        ]);
 
         $value_field_list = [
             '101' => 'A2',
@@ -394,7 +418,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS3ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('send400JSONErrors');
         $value_field_list = [
             '101' => ['A1', 'A2'],
             '102' => 'B3',
@@ -406,7 +430,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS4ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('send400JSONErrors');
         $value_field_list = [
             '101' => ['A1', 'A2'],
             '102' => 'B2',
@@ -418,7 +442,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS5ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback');
+        $GLOBALS['Response']->expects($this->never())->method('send400JSONErrors');
 
         $value_field_list = [
             '101' => 'A1',
@@ -432,7 +456,12 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS6ValidateListRulesReturnFalseAndErrorIfA1TryToAccessToB2(): void
     {
-        $GLOBALS['Response']->method('addFeedback')->with('error', 'Global rules are not respected in tracker MyTracker (#110) - f_1(Champ1) -> f_2(Champ2)');
+        $GLOBALS['Response']->method('send400JSONErrors')->with([
+            'error' => [
+                'message' => 'Global rules are not respected in tracker MyTracker (#110) - f_1(Champ1) -> f_2(Champ2)',
+            ],
+        ]);
+
         $value_field_list = [
             '101' => 'A1',
             '102' => ['B1', 'B2'], //A1 cannot access to B2 !

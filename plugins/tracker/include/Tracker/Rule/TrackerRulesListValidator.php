@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Rule;
 
-use Feedback;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
@@ -205,7 +204,11 @@ class TrackerRulesListValidator
         $message  = sprintf(dgettext('tuleap-tracker', 'Global rules are not respected in tracker %s (#%d)'), $tracker->getName(), $tracker->getId());
         $message .= ' - ' . $source_label .  '(' . implode(', ', $pb_source_values) . ') -> ' . $target_label . '(' . implode(', ', $pb_target_values) . ')';
         $this->logger->debug($message);
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
+        $GLOBALS['Response']->send400JSONErrors([
+            'error' => [
+                'message' => $message,
+            ],
+        ]);
     }
 
     private function getSelectedValuesForField(ListField $field, array $value_field_list): array
