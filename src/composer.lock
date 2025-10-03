@@ -472,16 +472,16 @@
         },
         {
             "name": "cuyz/valinor",
-            "version": "2.1.1",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CuyZ/Valinor.git",
-                "reference": "f51e9beebdefc968cbfcd4a2c561b40575288610"
+                "reference": "35470e576041dd9695ef36aceaab8925bc676586"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/f51e9beebdefc968cbfcd4a2c561b40575288610",
-                "reference": "f51e9beebdefc968cbfcd4a2c561b40575288610",
+                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/35470e576041dd9695ef36aceaab8925bc676586",
+                "reference": "35470e576041dd9695ef36aceaab8925bc676586",
                 "shasum": ""
             },
             "require": {
@@ -494,7 +494,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.4",
-                "infection/infection": "^0.29",
+                "infection/infection": "^0.31",
                 "marcocesarato/php-conventional-changelog": "^1.12",
                 "mikey179/vfsstream": "^1.6.10",
                 "phpbench/phpbench": "^1.3",
@@ -537,7 +537,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CuyZ/Valinor/issues",
-                "source": "https://github.com/CuyZ/Valinor/tree/2.1.1"
+                "source": "https://github.com/CuyZ/Valinor/tree/2.2.0"
             },
             "funding": [
                 {
@@ -545,7 +545,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-23T20:32:01+00:00"
+            "time": "2025-09-29T13:07:34+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
