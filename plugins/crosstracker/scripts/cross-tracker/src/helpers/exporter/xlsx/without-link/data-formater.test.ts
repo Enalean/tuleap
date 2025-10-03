@@ -1,24 +1,24 @@
 /*
- * Copyright (c) Enalean, 2025-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
- *  Tuleap is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  Tuleap is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ArtifactsTableBuilder } from "../../../api/ArtifactsTableBuilder";
-import { SelectableQueryContentRepresentationStub } from "../../../../tests/builders/SelectableQueryContentRepresentationStub";
+import { ArtifactsTableBuilder } from "../../../../api/ArtifactsTableBuilder";
+import { SelectableQueryContentRepresentationStub } from "../../../../../tests/builders/SelectableQueryContentRepresentationStub";
 import {
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
@@ -30,17 +30,17 @@ import {
     USER_GROUP_LIST_SELECTABLE_TYPE,
     USER_LIST_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
-} from "../../../api/cross-tracker-rest-api-types";
-import { ArtifactRepresentationStub } from "../../../../tests/builders/ArtifactRepresentationStub";
-import { ARTIFACT_COLUMN_NAME } from "../../../domain/ColumnName";
+} from "../../../../api/cross-tracker-rest-api-types";
+import { ArtifactRepresentationStub } from "../../../../../tests/builders/ArtifactRepresentationStub";
+import { ARTIFACT_COLUMN_NAME } from "../../../../domain/ColumnName";
 
 import { describe, expect, it } from "vitest";
 import type { ContentSection } from "./data-formater";
 import { formatData } from "./data-formater";
 import { NumberCell, TextCell, EmptyCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
-import { ColumnNameGetter } from "../../../domain/ColumnNameGetter";
-import { createVueGettextProviderPassThrough } from "../../vue-gettext-provider-for-test";
-import { NO_DIRECTION } from "../../../domain/ArtifactsTable";
+import { ColumnNameGetter } from "../../../../domain/ColumnNameGetter";
+import { createVueGettextProviderPassThrough } from "../../../vue-gettext-provider-for-test";
+import { NO_DIRECTION } from "../../../../domain/ArtifactsTable";
 
 describe("data-formater", () => {
     const artifact_column = ARTIFACT_COLUMN_NAME;
