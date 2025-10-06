@@ -95,6 +95,15 @@ msgstr ""
 msgid "Export XLSX"
 msgstr ""
 
+msgid "Export all"
+msgstr ""
+
+msgid "Export of %{query_title}"
+msgstr ""
+
+msgid "Export with links"
+msgstr ""
+
 msgid "First"
 msgstr ""
 
@@ -234,4 +243,11 @@ msgid ""
 "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT "
 "CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), MY_PROJECTS(), "
 "parenthesis. Autocomplete is activated with Ctrl + Space."
+msgstr ""
+
+msgid ""
+"Your TQL results span multiple pages. Choose how you’d like to export:<br/>\n"
+"         <strong>All</strong> artifacts (top-level only)<br/>\n"
+"         Export the artifacts in the current page <strong>with their visible "
+"links</strong>"
 msgstr ""

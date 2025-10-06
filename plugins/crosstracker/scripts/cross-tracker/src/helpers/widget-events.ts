@@ -37,6 +37,8 @@ export const DISPLAY_QUERY_PREVIEW_EVENT = "display-query-preview";
 export const TOGGLE_QUERY_DETAILS_EVENT = "toggle-query-details";
 export const STARTING_XLSX_EXPORT_EVENT = "starting-xlsx-export-event";
 export const SELECTABLE_TABLE_RESIZED_EVENT = "selectable-table-resized-event";
+export const DISPLAY_XLSX_MODAL_EVENT = "display-xlsx-modal-event";
+export const HIDE_XLSX_MODAL_EVENT = "hide-xlsx-modal-event";
 
 export type Events = {
     [SWITCH_QUERY_EVENT]: SwitchQueryEvent;
@@ -55,6 +57,8 @@ export type Events = {
     [TOGGLE_QUERY_DETAILS_EVENT]: ToggleQueryDetailsEvent;
     [STARTING_XLSX_EXPORT_EVENT]: void;
     [SELECTABLE_TABLE_RESIZED_EVENT]: void;
+    [DISPLAY_XLSX_MODAL_EVENT]: void;
+    [HIDE_XLSX_MODAL_EVENT]: void;
 };
 
 export type ToggleQueryDetailsEvent = {
