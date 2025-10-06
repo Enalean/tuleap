@@ -19,6 +19,7 @@
 
 import { selectOrThrow } from "@tuleap/dom";
 import { RelativeDateElement } from "@tuleap/tlp-relative-date";
+import { fr_FR_LOCALE } from "@tuleap/locale";
 import { setCatalog } from "../../../gettext-catalog";
 import type { FollowUpComment } from "../../../domain/comments/FollowUpComment";
 import type { HostElement } from "./ModalCommentsSection";
@@ -46,7 +47,7 @@ describe(`CommentTemplate`, () => {
         const updateFunction = getCommentTemplate(
             comment,
             CommentUserPreferencesBuilder.userPreferences()
-                .withLocale("fr_FR")
+                .withLocale(fr_FR_LOCALE)
                 .withRelativeDatesDisplay("relative_first-absolute_tooltip")
                 .build(),
         );

@@ -19,15 +19,17 @@
 
 import * as tlp_date_picker from "@tuleap/tlp-date-picker";
 import { DatePickerInitializer } from "./DatePickerInitializer";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 
 describe("DatePickerInitializer", () => {
     it("Given an input element, Then it should init a TLP datePicker on it", () => {
-        const datePickerSpy = jest.spyOn(tlp_date_picker, "datePicker");
+        const datePickerSpy = jest.spyOn(tlp_date_picker, "createDatePicker");
         const input = document.implementation.createHTMLDocument().createElement("input");
-        const initializer = DatePickerInitializer();
+        const user_locale = DEFAULT_LOCALE;
+        const initializer = DatePickerInitializer(user_locale);
 
         initializer.initDatePicker(input);
 
-        expect(datePickerSpy).toHaveBeenCalledWith(input);
+        expect(datePickerSpy).toHaveBeenCalledWith(input, user_locale);
     });
 });

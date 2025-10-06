@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createDatePicker } from "@tuleap/tlp-date-picker";
-import type { LocaleString } from "@tuleap/locale";
-
-export interface DatePickerInitializerType {
-    initDatePicker(input_element: HTMLInputElement): void;
-}
-
-export const DatePickerInitializer = (locale: LocaleString): DatePickerInitializerType => ({
-    initDatePicker(input_element: HTMLInputElement): void {
-        createDatePicker(input_element, locale);
-    },
-});
+@use "pkg:@tuleap/tlp-date-picker";

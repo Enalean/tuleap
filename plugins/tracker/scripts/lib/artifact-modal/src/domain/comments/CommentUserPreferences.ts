@@ -19,7 +19,8 @@
 
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
-import type { DateTimeFormat, LocaleString } from "@tuleap/core-constants";
+import type { DateTimeFormat } from "@tuleap/core-constants";
+import type { LocaleString } from "@tuleap/locale";
 
 export type CommentUserPreferences = {
     readonly is_comment_order_inverted: boolean;

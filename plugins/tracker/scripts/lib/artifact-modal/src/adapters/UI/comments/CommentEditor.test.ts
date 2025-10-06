@@ -18,7 +18,7 @@
  */
 
 import { selectOrThrow } from "@tuleap/dom";
-import { en_US_LOCALE } from "@tuleap/core-constants";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import { setCatalog } from "../../../gettext-catalog";
 import type { HostElement } from "./CommentEditor";
@@ -34,7 +34,7 @@ function getHost(data: Partial<HostElement>): HostElement {
         controller: FormattedTextController(
             DispatchEventsStub.buildNoOp(),
             InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
-            FormattedTextUserPreferences.build(TEXT_FORMAT_TEXT, en_US_LOCALE),
+            FormattedTextUserPreferences.build(TEXT_FORMAT_TEXT, DEFAULT_LOCALE),
         ),
         dispatchEvent(event) {
             if (event) {

@@ -19,6 +19,7 @@
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
+    "@tuleap/locale": "workspace:^",
     "@tuleap/mention": "workspace:^",
     "@tuleap/option": "workspace:*",
     "@tuleap/plugin-tracker-artifact-common": "workspace:^",

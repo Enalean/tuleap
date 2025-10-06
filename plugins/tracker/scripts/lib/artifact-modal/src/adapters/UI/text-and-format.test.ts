@@ -19,7 +19,7 @@
 
 import { Fault } from "@tuleap/fault";
 import { selectOrThrow } from "@tuleap/dom";
-import { en_US_LOCALE } from "@tuleap/core-constants";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 import type { HostElement, TextAndFormat, TextAndFormatOptions } from "./text-and-format";
 import { getTextAndFormatTemplate, interpretCommonMark, isDisabled } from "./text-and-format";
@@ -69,7 +69,7 @@ describe(`TextAndFormat`, () => {
             controller: FormattedTextController(
                 DispatchEventsStub.buildNoOp(),
                 interpreter,
-                FormattedTextUserPreferences.build(TEXT_FORMAT_TEXT, en_US_LOCALE),
+                FormattedTextUserPreferences.build(TEXT_FORMAT_TEXT, DEFAULT_LOCALE),
             ),
         } as HostElement;
         return Object.assign(element, host);

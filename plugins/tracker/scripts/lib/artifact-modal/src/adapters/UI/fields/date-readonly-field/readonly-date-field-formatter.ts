@@ -18,13 +18,11 @@
  */
 
 import type { FormatReadonlyDateField } from "../../../../domain/fields/readonly-date-field/FormatReadonlyDateField";
+import type { LocaleString } from "@tuleap/locale";
+import { toBCP47 } from "@tuleap/locale";
 
-function toBCP47(locale: string): string {
-    return locale.replace("_", "-");
-}
-
-export const ReadonlyDateFieldFormatter = (locale: string): FormatReadonlyDateField => {
-    const formatter = new Intl.DateTimeFormat(toBCP47(locale), {
+export const ReadonlyDateFieldFormatter = (user_locale: LocaleString): FormatReadonlyDateField => {
+    const formatter = new Intl.DateTimeFormat(toBCP47(user_locale), {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",

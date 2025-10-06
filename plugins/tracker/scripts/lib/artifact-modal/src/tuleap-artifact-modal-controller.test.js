@@ -20,13 +20,12 @@
 import artifact_modal_module from "./tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
-
 import BaseModalController from "./tuleap-artifact-modal-controller.js";
-
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
 import { Option } from "@tuleap/option";
 import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import * as modal_create_mode_state from "./modal-creation-mode-state";
 import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./adapters/UI/fields/file-field/file-field-detector";
@@ -99,6 +98,7 @@ describe("TuleapArtifactModalController", () => {
                                 },
                             },
                         },
+                        user_locale: DEFAULT_LOCALE,
                     },
                     TuleapArtifactModalLoading,
                     displayItemCallback: mockCallback,

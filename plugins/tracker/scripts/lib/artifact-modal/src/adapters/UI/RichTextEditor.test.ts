@@ -25,7 +25,7 @@ import type {
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
-import { en_US_LOCALE } from "@tuleap/core-constants";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
@@ -173,7 +173,7 @@ describe(`RichTextEditor`, () => {
             controller: FormattedTextController(
                 event_dispatcher,
                 InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
-                FormattedTextUserPreferences.build(TEXT_FORMAT_TEXT, en_US_LOCALE),
+                FormattedTextUserPreferences.build(TEXT_FORMAT_TEXT, DEFAULT_LOCALE),
             ),
         } as HostElement);
     }

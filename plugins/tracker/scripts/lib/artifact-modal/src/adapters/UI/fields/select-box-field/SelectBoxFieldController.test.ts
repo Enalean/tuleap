@@ -19,6 +19,7 @@
 
 import * as list_picker_lib from "@tuleap/list-picker";
 import type { ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import type { SelectBoxFieldValueModelType } from "./SelectBoxFieldValueModelType";
 import type { ControlSelectBoxField } from "./SelectBoxFieldController";
 import { SelectBoxFieldController } from "./SelectBoxFieldController";
@@ -41,7 +42,7 @@ describe("SelectBoxFieldController", () => {
         did_change_list_field_value_events: DidChangeListFieldValue[];
 
     const getController = (): ControlSelectBoxField =>
-        SelectBoxFieldController(event_dispatcher, field, value_model, false, "en_US");
+        SelectBoxFieldController(event_dispatcher, field, value_model, false, DEFAULT_LOCALE);
 
     beforeEach(() => {
         did_change_allowed_values_events = [];
@@ -179,7 +180,7 @@ describe("SelectBoxFieldController", () => {
             controller.initListPicker(select);
 
             expect(list_picker_lib.createListPicker).toHaveBeenCalledWith(select, {
-                locale: "en_US",
+                locale: DEFAULT_LOCALE,
                 is_filterable: true,
             });
 
@@ -198,7 +199,7 @@ describe("SelectBoxFieldController", () => {
             getController().initListPicker(select);
 
             expect(list_picker_lib.createListPicker).toHaveBeenCalledWith(select, {
-                locale: "en_US",
+                locale: DEFAULT_LOCALE,
                 is_filterable: true,
                 none_value: "100",
             });

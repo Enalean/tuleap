@@ -18,7 +18,7 @@
  */
 
 import { Option } from "@tuleap/option";
-import { fr_FR_LOCALE } from "@tuleap/core-constants";
+import { fr_FR_LOCALE } from "@tuleap/locale";
 import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import type { EventDispatcherType } from "../AllEvents";
 import { EventDispatcher, WillDisableSubmit } from "../AllEvents";
