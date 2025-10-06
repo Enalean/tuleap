@@ -29,43 +29,22 @@ use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 class DetailsPresenter
 {
     public string $no_items_label;
+    public string $backlog_item_type;
+    public string $item_is_inconsistent_label;
 
-    /** @var IBacklogItemCollection */
-    public $items_collection;
 
-    /** @var IBacklogItemCollection */
-    public $inconsistent_collection;
-
-    /** @var String */
-    public $backlog_item_type;
-
-    /**
-     * @var string
-     */
-    public $item_is_inconsistent_label;
-
-    /** @var String */
-    private $solve_inconsistencies_url;
-    /**
-     * @var DetailsChartPresenter
-     */
-    public $chart_presenter;
 
     public function __construct(
-        IBacklogItemCollection $items,
-        IBacklogItemCollection $inconsistent_collection,
+        private readonly IBacklogItemCollection $items_collection,
+        private readonly IBacklogItemCollection $inconsistent_collection,
         array $trackers,
-        string $solve_inconsistencies_url,
-        DetailsChartPresenter $chart_presenter,
+        private readonly string $solve_inconsistencies_url,
+        readonly DetailsChartPresenter $chart_presenter,
     ) {
-        $this->items_collection          = $items;
-        $this->inconsistent_collection   = $inconsistent_collection;
-        $this->backlog_item_type         = $this->getTrackerNames($trackers);
-        $this->solve_inconsistencies_url = $solve_inconsistencies_url;
+        $this->backlog_item_type = $this->getTrackerNames($trackers);
 
         $this->no_items_label             = dgettext('tuleap-agiledashboard', 'There is no item yet');
         $this->item_is_inconsistent_label = dgettext('tuleap-agiledashboard', 'Item is not linked to this milestone');
-        $this->chart_presenter            = $chart_presenter;
     }
 
     private function getTrackerNames(array $trackers): string

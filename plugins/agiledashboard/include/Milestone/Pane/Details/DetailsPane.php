@@ -32,22 +32,14 @@ use TemplateRendererFactory;
  */
 class DetailsPane extends AgileDashboard_Pane
 {
-    /** @var DetailsPaneInfo */
-    private $info;
-
-    /** @var DetailsPresenter */
-    private $presenter;
-
     public function __construct(
-        DetailsPaneInfo $info,
-        DetailsPresenter $presenter,
+        private readonly DetailsPaneInfo $info,
+        private readonly DetailsPresenter $presenter,
     ) {
-        $this->info      = $info;
-        $this->presenter = $presenter;
     }
 
     #[Override]
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->info->getIdentifier();
     }
@@ -56,7 +48,7 @@ class DetailsPane extends AgileDashboard_Pane
      * @see AgileDashboard_Pane::getFullContent()
      */
     #[Override]
-    public function getFullContent()
+    public function getFullContent(): string
     {
         return $this->getPaneContent();
     }
@@ -65,7 +57,7 @@ class DetailsPane extends AgileDashboard_Pane
      * @see AgileDashboard_Pane::getMinimalContent()
      */
     #[Override]
-    public function getMinimalContent()
+    public function getMinimalContent(): string
     {
         return '';
     }

@@ -37,7 +37,7 @@ class DetailsPaneInfo extends PaneInfo
      * @return string eg: 'cardwall'
      */
     #[Override]
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
@@ -46,7 +46,7 @@ class DetailsPaneInfo extends PaneInfo
      * @return string eg: 'Card Wall'
      */
     #[Override]
-    public function getTitle()
+    public function getTitle(): string
     {
         return dgettext('tuleap-agiledashboard', 'Overview');
     }

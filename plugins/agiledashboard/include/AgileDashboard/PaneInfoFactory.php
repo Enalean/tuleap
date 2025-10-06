@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 
 /**
  * I build panes info for a Planning_Milestone
  */
-class AgileDashboard_PaneInfoFactory
+class AgileDashboard_PaneInfoFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder */
     private $submilestone_finder;
