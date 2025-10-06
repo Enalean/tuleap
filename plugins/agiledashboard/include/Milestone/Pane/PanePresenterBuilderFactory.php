@@ -22,6 +22,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Pane;
+
+use EventManager;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
@@ -30,20 +33,17 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPresenterBuilder;
 /**
  * Like RepRap, I build builders
  */
-class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+readonly class PanePresenterBuilderFactory
 {
     public function __construct(
-        private readonly MilestoneBacklogFactory $backlog_factory,
-        private readonly BacklogItemCollectionFactory $row_collection_factory,
-        private readonly BurnupFieldRetriever $field_retriever,
-        private readonly EventManager $event_manager,
+        private MilestoneBacklogFactory $backlog_factory,
+        private BacklogItemCollectionFactory $row_collection_factory,
+        private BurnupFieldRetriever $field_retriever,
+        private EventManager $event_manager,
     ) {
     }
 
-    /**
-     * @return DetailsPresenterBuilder
-     */
-    public function getDetailsPresenterBuilder()
+    public function getDetailsPresenterBuilder(): DetailsPresenterBuilder
     {
         return new DetailsPresenterBuilder(
             $this->backlog_factory,

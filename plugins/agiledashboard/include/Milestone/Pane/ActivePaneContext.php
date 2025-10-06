@@ -26,29 +26,13 @@ use Codendi_Request;
 use PFUser;
 use Planning_MilestoneFactory;
 
-class ActivePaneContext
+readonly class ActivePaneContext
 {
-    /**
-     * @var Codendi_Request
-     */
-    private $request;
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
     public function __construct(
-        Codendi_Request $request,
-        PFUser $user,
-        Planning_MilestoneFactory $milestone_factory,
+        private Codendi_Request $request,
+        private PFUser $user,
+        private Planning_MilestoneFactory $milestone_factory,
     ) {
-        $this->request           = $request;
-        $this->user              = $user;
-        $this->milestone_factory = $milestone_factory;
     }
 
     public function getRequest(): Codendi_Request

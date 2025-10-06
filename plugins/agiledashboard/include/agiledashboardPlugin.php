@@ -69,6 +69,7 @@ use Tuleap\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\VisitRetriever;
 use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\MilestoneReportCriterionDao;
+use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterBuilderFactory;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
 use Tuleap\AgileDashboard\Planning\BacklogHistoryEntry;
@@ -1423,7 +1424,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return new Planning_MilestonePaneFactory(
             $request,
             $milestone_factory,
-            new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
+            new PanePresenterBuilderFactory(
                 $this->getBacklogFactory(),
                 $this->getBacklogItemCollectionFactory(
                     $this->getMilestoneFactory(),

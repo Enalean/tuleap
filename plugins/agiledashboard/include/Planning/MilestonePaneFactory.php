@@ -20,9 +20,10 @@
 
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPane;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterBuilderFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\Tracker\Milestone\PaneInfo;
 
@@ -46,7 +47,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
+    /** @var PanePresenterBuilderFactory */
     private $pane_presenter_builder_factory;
 
     /** @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder */
@@ -63,7 +64,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function __construct(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
+        PanePresenterBuilderFactory $pane_presenter_builder_factory,
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         AgileDashboard_PaneInfoFactory $pane_info_factory,
         EventManager $event_manager,

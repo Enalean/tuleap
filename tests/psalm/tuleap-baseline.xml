@@ -1382,11 +1382,6 @@
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
   </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Pane/PaneInfoCollectorTest.php">
-    <PossiblyNullReference>
-      <code><![CDATA[getIdentifier]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Pane/Planning/SubmilestoneFinderTest.php">
     <InternalMethod>
       <code><![CDATA[numberOfInvocations]]></code>
