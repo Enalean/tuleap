@@ -61,18 +61,11 @@ import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../api/ArtifactLinks
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import LoadAllButton from "../feedback/LoadAllButton.vue";
-import {
-    EMITTER,
-    RETRIEVE_ARTIFACT_LINKS,
-    TABLE_DATA_STORE,
-    WIDGET_ID,
-} from "../../injection-symbols";
+import { RETRIEVE_ARTIFACT_LINKS, TABLE_DATA_STORE, WIDGET_ID } from "../../injection-symbols";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import SelectableCell from "./SelectableCell.vue";
 import EditCell from "./EditCell.vue";
-import { REMOVED_ROW_EVENT, INSERTED_ROW_EVENT } from "../../helpers/widget-events";
 
-const emitter = strictInject(EMITTER);
 const table_data_store = strictInject(TABLE_DATA_STORE);
 
 interface ArtifactLinksFetchStatus {
@@ -127,16 +120,14 @@ const display_a_load_all_button = computed((): boolean => {
 });
 
 onMounted((): void => {
-    emitter.emit(INSERTED_ROW_EVENT, {
+    table_data_store.addEntry({
+        parent_row_uuid: props.parent_row ? props.parent_row.row_uuid : null,
         row: props.row,
-        parent_row: props.parent_row,
     });
 });
 
 onBeforeUnmount((): void => {
-    emitter.emit(REMOVED_ROW_EVENT, {
-        row: props.row,
-    });
+    table_data_store.removeEntry(props.row.row_uuid);
 });
 
 function totalNumberOfLinksIsGreaterThanMaximalLimit(): boolean {
