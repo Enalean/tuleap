@@ -37,7 +37,7 @@ use HTTPRequest;
 
 class DashboardProjectMilestones extends Widget
 {
-    public const NAME = 'dashboardprojectmilestone';
+    public const string NAME = 'dashboardprojectmilestone';
     /**
      * @var ProjectMilestonesWidgetRetriever
      */

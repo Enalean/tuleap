@@ -59,8 +59,8 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 class ProjectMilestonesPresenterBuilder
 {
-    private const COUNT_ELEMENTS_MODE = 'count';
-    private const EFFORT_MODE         = 'effort';
+    private const string COUNT_ELEMENTS_MODE = 'count';
+    private const string EFFORT_MODE         = 'effort';
 
     /**
      * @var HTTPRequest

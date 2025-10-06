@@ -27,7 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ClearPrometheusMetricsCommand extends Command
 {
-    public const NAME = 'prometheus_metrics:clear';
+    public const string NAME = 'prometheus_metrics:clear';
     /**
      * @var FlushableStorage
      */

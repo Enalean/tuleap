@@ -26,7 +26,7 @@ use Tuleap\ProjectOwnership\Notification\Sender;
 
 class ProjectOwnerStatusNotificationSystemEvent extends \SystemEvent
 {
-    public const NAME = 'PROJECT_OWNER_STATUS_NOTIFICATION';
+    public const string NAME = 'PROJECT_OWNER_STATUS_NOTIFICATION';
 
     /**
      * @var Sender

@@ -33,7 +33,7 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 
 final class MetricsAuthentication implements MiddlewareInterface
 {
-    private const USERNAME = 'metrics';
+    private const string USERNAME = 'metrics';
 
     /**
      * @var ResponseFactoryInterface
