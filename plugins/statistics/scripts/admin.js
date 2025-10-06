@@ -18,7 +18,7 @@
  */
 
 import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
@@ -29,9 +29,10 @@ import {
 
 document.addEventListener("DOMContentLoaded", function () {
     const date_picker_elements = document.querySelectorAll(".tlp-input-date");
+    const locale = getLocaleWithDefault(document);
 
     for (const element of date_picker_elements) {
-        datePicker(element);
+        createDatePicker(element, locale);
     }
 
     const ckeditor_selector = document.querySelectorAll(".project-over-quota-massmail-body");

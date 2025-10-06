@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker, getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_logging_date_picker_element = document.getElementById("user-logging-date-picker");
     if (!(user_logging_date_picker_element instanceof HTMLInputElement)) {
         throw new Error("Cannot find #user-logging-date-picker in the DOM");
     }
-    datePicker(user_logging_date_picker_element);
+    createDatePicker(user_logging_date_picker_element, getLocaleWithDefault(document));
 });

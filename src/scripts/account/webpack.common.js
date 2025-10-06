@@ -32,7 +32,7 @@ const config = {
         "check-pw": "./src/check-pw.ts",
         "keys-tokens": "./src/keys-tokens.ts",
         security: "./src/security.ts",
-        "account-style": "./themes/account.scss",
+        "account-style": "./styles/account.scss",
     },
     context: __dirname,
     output: webpack_configurator.configureOutput(

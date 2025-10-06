@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "pkg:@tuleap/tlp-date-picker";
+
 .siteadmin-statistics-project-quota,
 #siteadmin-statistics-frequencies,
 #siteadmin-statistics-disk-usage {
