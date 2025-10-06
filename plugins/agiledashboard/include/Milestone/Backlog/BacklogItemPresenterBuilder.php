@@ -22,19 +22,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemPresenter;
-use Tuleap\AgileDashboard\Milestone\Backlog\IBuildBacklogItemAndBacklogItemCollection;
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+use Override;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * I build BacklogItemPresenter{,Collection}
  */
-class AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder implements IBuildBacklogItemAndBacklogItemCollection
+class BacklogItemPresenterBuilder implements IBuildBacklogItemAndBacklogItemCollection
 {
     #[Override]
-    public function getCollection(): AgileDashboard_Milestone_Backlog_IBacklogItemCollection
+    public function getCollection(): IBacklogItemCollection
     {
-        return new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
+        return new BacklogItemPresenterCollection();
     }
 
     #[Override]

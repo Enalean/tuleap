@@ -24,7 +24,6 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
-use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 interface IBuildBacklogItemAndBacklogItemCollection
 {
-    public function getCollection(): AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
+    public function getCollection(): IBacklogItemCollection;
 
     public function getItem(Artifact $artifact, ?string $redirect_to_self, bool $is_inconsistent): IBacklogItem;
 }

@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Priority;
 
-use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
-use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
+use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\DescendantItemsCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -62,7 +62,7 @@ final class SequenceIdManagerTest extends TestCase
     private BacklogItem $backlog_item_1;
     private BacklogItem $backlog_item_2;
     private BacklogItem $backlog_item_3;
-    private AgileDashboard_Milestone_Backlog_BacklogItemCollection $items_collection;
+    private BacklogItemCollection $items_collection;
 
     #[\Override]
     protected function setUp(): void
@@ -108,13 +108,13 @@ final class SequenceIdManagerTest extends TestCase
         $this->backlog_item_2 = new BacklogItem($this->artifact_2, false);
         $this->backlog_item_3 = new BacklogItem($this->artifact_3, false);
 
-        $this->items_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
+        $this->items_collection = new BacklogItemCollection();
     }
 
     public function testItReturnsNothingIfThereAreNoArtifactsInMilestonesBacklog(): void
     {
         $this->backlog_1->expects($this->once())->method('getArtifacts')->with($this->user)
-            ->willReturn(new AgileDashboard_Milestone_Backlog_DescendantItemsCollection());
+            ->willReturn(new DescendantItemsCollection());
 
         $this->backlog_factory->expects($this->once())->method('getBacklog')->with($this->user, $this->milestone_1)
             ->willReturn($this->backlog_1);
@@ -124,7 +124,7 @@ final class SequenceIdManagerTest extends TestCase
 
     public function testItReturnsNothingIfTheArtifactIsNotInTheMilestoneBacklog(): void
     {
-        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items = new DescendantItemsCollection();
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_3);
@@ -139,7 +139,7 @@ final class SequenceIdManagerTest extends TestCase
 
     public function testItReturns1IfTheArtifactIsInFirstPlace(): void
     {
-        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items = new DescendantItemsCollection();
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_3);
@@ -157,7 +157,7 @@ final class SequenceIdManagerTest extends TestCase
 
     public function testItReturns2IfTheArtifactIsInFirstPlace(): void
     {
-        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items = new DescendantItemsCollection();
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
@@ -175,7 +175,7 @@ final class SequenceIdManagerTest extends TestCase
 
     public function testItKeepsInMemoryTheBacklogResult(): void
     {
-        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items = new DescendantItemsCollection();
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
@@ -224,7 +224,7 @@ final class SequenceIdManagerTest extends TestCase
                 }
             );
 
-        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items = new DescendantItemsCollection();
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
@@ -232,7 +232,7 @@ final class SequenceIdManagerTest extends TestCase
         $this->backlog_1->expects($this->once())->method('getArtifacts')->with($this->user)
             ->willReturn($backlog_items);
 
-        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items = new DescendantItemsCollection();
         $backlog_items->push($this->artifact_4);
         $backlog_items->push($this->artifact_5);
         $backlog_items->push($this->artifact_6);

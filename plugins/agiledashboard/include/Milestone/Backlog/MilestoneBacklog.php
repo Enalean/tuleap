@@ -24,8 +24,6 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
-use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
-use AgileDashboard_Milestone_Backlog_DescendantItemsFinder;
 use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
@@ -44,7 +42,7 @@ class MilestoneBacklog
 
     /** @var Tracker[] */
     private array $backlogitem_trackers;
-    private AgileDashboard_Milestone_Backlog_DescendantItemsFinder $items_finder;
+    private DescendantItemsFinder $items_finder;
 
     /**
      * @psalm-param Tracker[] $descendant_trackers
@@ -61,7 +59,7 @@ class MilestoneBacklog
     ) {
         $this->backlogitem_trackers = $item_names;
 
-        $this->items_finder = new AgileDashboard_Milestone_Backlog_DescendantItemsFinder(
+        $this->items_finder = new DescendantItemsFinder(
             $item_dao,
             $artifact_dao,
             $artifact_factory,
@@ -109,7 +107,7 @@ class MilestoneBacklog
         return $this->getDescendantTrackers();
     }
 
-    public function getArtifacts(PFUser $user): AgileDashboard_Milestone_Backlog_DescendantItemsCollection
+    public function getArtifacts(PFUser $user): DescendantItemsCollection
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null && $this->offset !== null) {
@@ -128,7 +126,7 @@ class MilestoneBacklog
         return $artifacts_collection;
     }
 
-    public function getOpenUnplannedArtifacts(PFUser $user, array $sub_milestone_ids): AgileDashboard_Milestone_Backlog_DescendantItemsCollection
+    public function getOpenUnplannedArtifacts(PFUser $user, array $sub_milestone_ids): DescendantItemsCollection
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null && $this->offset !== null) {
@@ -151,7 +149,7 @@ class MilestoneBacklog
         return $artifacts_collection;
     }
 
-    public function getOpenClosedUnplannedArtifacts(PFUser $user, array $sub_milestone_ids): AgileDashboard_Milestone_Backlog_DescendantItemsCollection
+    public function getOpenClosedUnplannedArtifacts(PFUser $user, array $sub_milestone_ids): DescendantItemsCollection
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit === null && $this->offset === null) {
@@ -172,7 +170,7 @@ class MilestoneBacklog
         return $this->items_finder->getAllMilestoneUnplannedBacklogItems($user, $sub_milestone_ids);
     }
 
-    public function getUnplannedArtifacts(PFUser $user, array $sub_milestone_ids): AgileDashboard_Milestone_Backlog_DescendantItemsCollection
+    public function getUnplannedArtifacts(PFUser $user, array $sub_milestone_ids): DescendantItemsCollection
     {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null && $this->offset !== null) {

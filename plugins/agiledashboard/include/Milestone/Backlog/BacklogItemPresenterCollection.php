@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection extends AgileDashboard_Milestone_Backlog_BacklogItemCollection
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+class BacklogItemPresenterCollection extends BacklogItemCollection
 {
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use Tracker_ArtifactFactory;
@@ -31,6 +30,7 @@ use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
@@ -80,7 +80,7 @@ class ContentForMiletoneProvider
         \PFUser $user,
         int $limit,
         int $offset,
-    ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
+    ): IBacklogItemCollection {
         $backlog = $this->backlog_factory->getSelfBacklog($milestone, $limit, $offset);
 
         return $this->backlog_item_collection_factory->getOpenAndClosedCollection(

@@ -24,7 +24,6 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
@@ -32,6 +31,7 @@ use PlanningFactory;
 use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
+use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItemCollection;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -127,9 +127,9 @@ class MilestoneResourceValidator
     private function getArtifactsFromBodyContent(
         array $ids,
         array $backlog_tracker_ids,
-        ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo = null,
-        ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done = null,
-        ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned = null,
+        ?IBacklogItemCollection $todo = null,
+        ?IBacklogItemCollection $done = null,
+        ?IBacklogItemCollection $open_unplanned = null,
     ) {
         $artifacts = [];
 
@@ -167,12 +167,12 @@ class MilestoneResourceValidator
         return $this->backlog_item_collection_factory->getTodoCollection($user, $milestone, $backlog, null);
     }
 
-    private function isArtifactInUnplannedParentMilestoneBacklogItems(Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $unplanned_backlog_items)
+    private function isArtifactInUnplannedParentMilestoneBacklogItems(Artifact $artifact, IBacklogItemCollection $unplanned_backlog_items)
     {
         return $unplanned_backlog_items->containsId($artifact->getId());
     }
 
-    private function isArtifactInPlannedMilestoneBacklogItems(Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo)
+    private function isArtifactInPlannedMilestoneBacklogItems(Artifact $artifact, IBacklogItemCollection $done, IBacklogItemCollection $todo)
     {
         return ($done->containsId($artifact->getId()) || $todo->containsId($artifact->getId()));
     }

@@ -22,10 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
-class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
-    AgileDashboard_Milestone_Backlog_IBacklogItemCollection
+use Override;
+
+class BacklogItemCollection implements
+    IBacklogItemCollection
 {
     /** @var IBacklogItem[] */
     private $rows = [];
@@ -47,7 +49,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     #[Override]
     public function setParentItemName(string $name): void
     {
-        $this->parent_item_name = $name;
+         $this->parent_item_name = $name;
     }
 
     #[Override]

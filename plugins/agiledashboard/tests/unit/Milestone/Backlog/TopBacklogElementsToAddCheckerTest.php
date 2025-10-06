@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -40,12 +39,12 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TopBacklogElementsToAddCheckerTest extends TestCase
 {
-    private readonly TopBacklogElementsToAddChecker $checker;
-    private readonly RetrieveRootPlanning&MockObject $planning_factory;
-    private readonly Project $project;
-    private readonly PFUser $user;
-    private readonly Planning $root_planning;
-    private readonly Artifact $artifact_201;
+    private TopBacklogElementsToAddChecker $checker;
+    private RetrieveRootPlanning&MockObject $planning_factory;
+    private Project $project;
+    private PFUser $user;
+    private Planning $root_planning;
+    private Artifact $artifact_201;
 
     #[\Override]
     protected function setUp(): void

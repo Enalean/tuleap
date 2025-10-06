@@ -20,10 +20,10 @@
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 

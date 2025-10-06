@@ -20,7 +20,6 @@
 
 use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXmlImport;
-use Tuleap\AgileDashboard\XML\AgileDashboardXMLImporter;
 use Tuleap\AgileDashboard\AgileDashboard_XMLController;
 use Tuleap\AgileDashboard\AgileDashboardServiceHomepageUrlBuilder;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
@@ -47,6 +46,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
+use Tuleap\AgileDashboard\XML\AgileDashboardXMLImporter;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;

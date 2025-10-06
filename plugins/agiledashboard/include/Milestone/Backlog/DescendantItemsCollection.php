@@ -18,12 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
+
+use Countable;
+use Iterator;
+use Override;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
  * @template-implements Iterator<Artifact>
  */
-class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iterator, Countable
+class DescendantItemsCollection implements Iterator, Countable
 {
     /** @var Artifact[] */
     private $items = [];

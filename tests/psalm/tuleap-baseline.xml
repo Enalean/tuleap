@@ -39,25 +39,6 @@
       <code><![CDATA[json_encode($burnup_representation)]]></code>
     </PossiblyFalsePropertyAssignmentValue>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/DescendantItemsCollection.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[current($this->items)]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[Artifact]]></code>
-    </InvalidFalsableReturnType>
-    <InvalidNullableReturnType>
-      <code><![CDATA[int]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[key($this->items)]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/IBacklogItemCollection.php">
-    <MissingTemplateParam>
-      <code><![CDATA[Iterator]]></code>
-    </MissingTemplateParam>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneDao.php">
     <PossiblyNullArgument>
       <code><![CDATA[$first_tracker_id]]></code>
@@ -749,6 +730,25 @@
       <code><![CDATA[getProjectsWithADActivated]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/agiledashboard/include/Milestone/Backlog/DescendantItemsCollection.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[current($this->items)]]></code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[Artifact]]></code>
+    </InvalidFalsableReturnType>
+    <InvalidNullableReturnType>
+      <code><![CDATA[int]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[key($this->items)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="plugins/agiledashboard/include/Milestone/Backlog/IBacklogItemCollection.php">
+    <MissingTemplateParam>
+      <code><![CDATA[Iterator]]></code>
+    </MissingTemplateParam>
+  </file>
   <file src="plugins/agiledashboard/include/PaneRedirectionExtractor.php">
     <InvalidNullableReturnType>
       <code><![CDATA[array]]></code>
@@ -1357,16 +1357,6 @@
       <code><![CDATA[$non_planning_rows]]></code>
       <code><![CDATA[$non_planning_rows]]></code>
     </DeprecatedMethod>
-  </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Backlog/TopBacklogElementsToAddCheckerTest.php">
-    <InaccessibleProperty>
-      <code><![CDATA[$this->artifact_201]]></code>
-      <code><![CDATA[$this->checker]]></code>
-      <code><![CDATA[$this->planning_factory]]></code>
-      <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->root_planning]]></code>
-      <code><![CDATA[$this->user]]></code>
-    </InaccessibleProperty>
   </file>
   <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/MilestoneReportCriterionProviderTest.php">
     <PossiblyNullArgument>
@@ -16059,9 +16049,6 @@
     <FalsableReturnStatement>
       <code><![CDATA[file_get_contents($this->dir . '/project.config')]]></code>
     </FalsableReturnStatement>
-    <ForbiddenCode>
-      <code><![CDATA[`cd $this->dir; rm project.config`]]></code>
-    </ForbiddenCode>
     <InvalidFalsableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidFalsableReturnType>
@@ -16117,7 +16104,6 @@
       <code><![CDATA[pushToServer]]></code>
       <code><![CDATA[removeFromSection]]></code>
       <code><![CDATA[removeMinimalPermissions]]></code>
-      <code><![CDATA[removeProjectConfig]]></code>
       <code><![CDATA[removeTemporaryDirectory]]></code>
       <code><![CDATA[shouldAddRegisteredUsersToGroup]]></code>
     </MissingReturnType>
@@ -44204,18 +44190,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/XMLImportZipArchive.php">
-    <ForbiddenCode>
-      <code><![CDATA[`mktemp -d -p $tmp_dir $template`]]></code>
-    </ForbiddenCode>
     <MissingClassConstType>
       <code><![CDATA[ARTIFACTS_XML_FILENAME = 'artifacts.xml']]></code>
       <code><![CDATA[RESOURCE_NAME          = 'tv5']]></code>
     </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$extraction_path]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$resource_name]]></code>
-      <code><![CDATA[$tmp_dir]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[cleanUp]]></code>
@@ -56386,15 +56366,7 @@
       <code><![CDATA['Tuleap\Tracker\Artifact\Attachment\QuotaExceededException']]></code>
     </ArgumentTypeCoercion>
   </file>
-  <file src="plugins/tracker/tests/unit/Artifact/Attachment/TemporaryFileManagerGetDiskUsageTest.php">
-    <ForbiddenCode>
-      <code><![CDATA[`mktemp -d -p /var/tmp cache_dir_XXXXXX`]]></code>
-    </ForbiddenCode>
-  </file>
   <file src="plugins/tracker/tests/unit/Artifact/Attachment/TemporaryFileManagerPurgeTest.php">
-    <ForbiddenCode>
-      <code><![CDATA[`mktemp -d -p /var/tmp cache_dir_XXXXXX`]]></code>
-    </ForbiddenCode>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -74088,12 +74060,8 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/XML/Import/ZipArchive.php">
-    <ForbiddenCode>
-      <code><![CDATA[`mktemp -d -p $tmp_dir $template`]]></code>
-    </ForbiddenCode>
     <MissingParamType>
       <code><![CDATA[$archive_path]]></code>
-      <code><![CDATA[$tmp_dir]]></code>
       <code><![CDATA[$tmpdir]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -75855,12 +75823,8 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/User/Account/ConfirmNewEmailController.php">
-    <InvalidReturnType>
-      <code><![CDATA[process]]></code>
-    </InvalidReturnType>
     <MissingReturnType>
       <code><![CDATA[buildSelf]]></code>
-      <code><![CDATA[getUrlToSelf]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/User/Account/PasswordPreUpdateEvent.php">

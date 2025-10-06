@@ -24,8 +24,6 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
-use AgileDashboard_Milestone_Backlog_BacklogItemCollection;
-use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use Override;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -35,9 +33,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 class BacklogItemBuilder implements IBuildBacklogItemAndBacklogItemCollection
 {
     #[Override]
-    public function getCollection(): AgileDashboard_Milestone_Backlog_IBacklogItemCollection
+    public function getCollection(): IBacklogItemCollection
     {
-        return new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
+        return new BacklogItemCollection();
     }
 
     #[Override]
