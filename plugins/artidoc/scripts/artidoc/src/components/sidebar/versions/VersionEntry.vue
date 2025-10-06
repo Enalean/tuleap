@@ -23,6 +23,7 @@
         <h1 v-bind:class="{ 'version-with-title': version.title.isValue() }">
             <span>{{ title }}</span>
             <version-toggle v-if="toggle_state" v-bind:toggle_state="toggle_state" />
+            <display-version-button v-on:click="click" />
         </h1>
         <div class="metadata">
             <tlp-relative-date
@@ -62,6 +63,7 @@ import VersionDescription from "@/components/sidebar/versions/VersionDescription
 import VersionToggle from "@/components/sidebar/versions/VersionToggle.vue";
 import type { ToggleState } from "@/components/sidebar/versions/toggle-state";
 import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
+import DisplayVersionButton from "@/components/sidebar/versions/DisplayVersionButton.vue";
 
 const props = defineProps<{ version: Version; is_latest: boolean; toggle_state?: ToggleState }>();
 
