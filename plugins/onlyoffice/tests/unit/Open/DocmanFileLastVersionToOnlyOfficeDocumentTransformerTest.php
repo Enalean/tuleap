@@ -33,13 +33,12 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
+final class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
 {
-    private const PROJECT_ID = 101;
-    private const ITEM_ID    = 123;
+    private const int PROJECT_ID = 101;
 
-    private const ONLYOFFICE_IS_AVAILABLE     = true;
-    private const ONLYOFFICE_IS_NOT_AVAILABLE = false;
+    private const true ONLYOFFICE_IS_AVAILABLE      = true;
+    private const false ONLYOFFICE_IS_NOT_AVAILABLE = false;
 
     private \Project $project;
 

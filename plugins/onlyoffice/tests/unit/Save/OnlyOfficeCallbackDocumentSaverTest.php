@@ -46,7 +46,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const PROJECT_ID = 102;
+    private const int PROJECT_ID = 102;
     /**
      * @var \Docman_PermissionsManager&\PHPUnit\Framework\MockObject\Stub
      */

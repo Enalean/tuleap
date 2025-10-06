@@ -24,7 +24,7 @@ namespace Tuleap\OnlyOffice\Open;
 
 final class AllowedFileExtensions
 {
-    private const EXTENSIONS = [
+    private const array EXTENSIONS = [
         'csv',
         'doc',
         'docm',
@@ -62,7 +62,7 @@ final class AllowedFileExtensions
         'xltx',
     ];
 
-    private const EXTENSIONS_THAT_CAN_BE_EDITED = [
+    private const array EXTENSIONS_THAT_CAN_BE_EDITED = [
         'docx',
         'docxf',
         'oform',

@@ -28408,14 +28408,6 @@
       <code><![CDATA[$document->item->getId()]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/onlyoffice/tests/unit/Open/DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[ITEM_ID    = 123]]></code>
-      <code><![CDATA[ONLYOFFICE_IS_AVAILABLE     = true]]></code>
-      <code><![CDATA[ONLYOFFICE_IS_NOT_AVAILABLE = false]]></code>
-      <code><![CDATA[PROJECT_ID = 101]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/onlyoffice/tests/unit/Stubs/IRetrieveDocumentServersStub.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$servers]]></code>

@@ -27,8 +27,8 @@ namespace Tuleap\OnlyOffice\Save;
  */
 final class OnlyOfficeDocumentStatusCallback
 {
-    public const STATUS_SAVE           = 2;
-    public const STATUS_SAVE_CORRUPTED = 3;
+    public const int STATUS_SAVE           = 2;
+    public const int STATUS_SAVE_CORRUPTED = 3;
 
     private function __construct()
     {

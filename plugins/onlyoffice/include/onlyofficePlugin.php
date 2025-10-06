@@ -86,8 +86,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 final class onlyofficePlugin extends Plugin
 {
-    private const LOG_IDENTIFIER              = 'onlyoffice_syslog';
-    private const DELAY_SAVE_TOKEN_EXPIRATION = 'PT15M';
+    private const string LOG_IDENTIFIER              = 'onlyoffice_syslog';
+    private const string DELAY_SAVE_TOKEN_EXPIRATION = 'PT15M';
 
     public function __construct(?int $id)
     {

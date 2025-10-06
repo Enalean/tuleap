@@ -27,7 +27,7 @@ use Tuleap\ServerHostname;
 
 final class OnlyOfficeSaveCallbackURLGenerator
 {
-    public const CALLBACK_SAVE_URL = '/onlyoffice/document_save';
+    public const string CALLBACK_SAVE_URL = '/onlyoffice/document_save';
 
     public function __construct(private OnlyOfficeSaveDocumentTokenGenerator $save_document_token_generator)
     {
