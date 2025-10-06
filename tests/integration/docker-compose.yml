@@ -10,6 +10,7 @@ services:
       - SEED
     volumes:
       - ${BASEDIR}:/usr/share/tuleap:ro,cached
+      - ${BASEDIR}/tools/docker/tuleap-aio-dev/license.key:/etc/tuleap/conf/license.key:ro,cached
     command: /usr/share/tuleap/tests/integration/bin/run.sh
 
   mysql80:
