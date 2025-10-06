@@ -31,8 +31,16 @@
     </div>
     <list-of-versions-skeleton v-if="is_loading_versions" />
     <section v-if="!error && !is_loading_versions">
-        <div class="filter">
-            <select class="tlp-select" v-model="display">
+        <div class="tlp-form-element tlp-form-element-prepend">
+            <span class="tlp-prepend">
+                <i
+                    class="fa-solid fa-filter"
+                    role="img"
+                    v-bind:title="show_title"
+                    id="show-label"
+                ></i>
+            </span>
+            <select class="tlp-select" v-model="display" aria-labelledby="show-label">
                 <option v-bind:value="ALL_VERSIONS">{{ $gettext("All versions") }}</option>
                 <option v-bind:value="NAMED_VERSIONS">{{ $gettext("Named versions") }}</option>
                 <option v-bind:value="GROUP_BY_NAMED_VERSIONS">
@@ -87,6 +95,7 @@ let next: ReadonlyArray<Version> = [];
 const has_more_versions = ref(true);
 const is_loading_more_versions = ref(false);
 const is_loading_versions = ref(true);
+const show_title = $gettext("Change display of versions");
 
 const ALL_VERSIONS = "all";
 const NAMED_VERSIONS = "named";
@@ -149,8 +158,14 @@ section {
     }
 }
 
-.filter {
+.tlp-form-element {
     margin: var(--tlp-medium-spacing);
+}
+
+select {
+    order: 2;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .load-more-versions {

@@ -91,6 +91,9 @@ msgstr "Bloqué"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Change display of versions"
+msgstr "Changer l'affichage des versions"
+
 msgid "Change section heading level"
 msgstr "Changer le niveau de titre d'une section"
 
