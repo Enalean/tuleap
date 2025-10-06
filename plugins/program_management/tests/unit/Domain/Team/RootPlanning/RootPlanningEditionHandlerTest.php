@@ -31,7 +31,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID = 110;
+    private const int PROJECT_ID = 110;
     private VerifyIsTeamStub $team_verifier;
     private RootPlanningEditionEvent $event;
     private RootPlanningEditionEventProxy $event_proxy;

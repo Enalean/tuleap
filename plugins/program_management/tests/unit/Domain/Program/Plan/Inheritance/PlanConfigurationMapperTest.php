@@ -39,13 +39,13 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanConfigurationMapperTest extends TestCase
 {
-    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID                 = 37;
-    private const SOURCE_ITERATION_TRACKER_ID                         = 35;
-    private const FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED         = 64;
-    private const SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED        = 65;
-    private const NEW_PROGRAM_ID                                      = 227;
-    private const FIRST_SOURCE_USER_GROUP_ID_GRANTED_PLAN_PERMISSION  = \ProjectUGroup::PROJECT_MEMBERS;
-    private const SECOND_SOURCE_USER_GROUP_ID_GRANTED_PLAN_PERMISSION = 822;
+    private const int SOURCE_PROGRAM_INCREMENT_TRACKER_ID                 = 37;
+    private const int SOURCE_ITERATION_TRACKER_ID                         = 35;
+    private const int FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED         = 64;
+    private const int SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED        = 65;
+    private const int NEW_PROGRAM_ID                                      = 227;
+    private const int FIRST_SOURCE_USER_GROUP_ID_GRANTED_PLAN_PERMISSION  = \ProjectUGroup::PROJECT_MEMBERS;
+    private const int SECOND_SOURCE_USER_GROUP_ID_GRANTED_PLAN_PERMISSION = 822;
     /** @var array<int, NewConfigurationTrackerIsValidCertificate> */
     private array $tracker_mapping;
     /** @var Option<int> */

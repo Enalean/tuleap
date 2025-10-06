@@ -31,10 +31,10 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredIterationIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_MIRROR_ITERATION_ID  = 678;
-    private const SECOND_MIRROR_ITERATION_ID = 55;
-    private const THIRD_MIRROR_ITERATION_ID  = 808;
-    private const FOURTH_MIRROR_ITERATION_ID = 249;
+    private const int FIRST_MIRROR_ITERATION_ID  = 678;
+    private const int SECOND_MIRROR_ITERATION_ID = 55;
+    private const int THIRD_MIRROR_ITERATION_ID  = 808;
+    private const int FOURTH_MIRROR_ITERATION_ID = 249;
     private SearchMirroredTimeboxesStub $mirror_searcher;
     private \Closure $getId;
 

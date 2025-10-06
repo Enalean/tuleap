@@ -38,11 +38,11 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramBacklogConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_TRACKER_ID = 70;
-    private const ITERATION_TRACKER_ID         = 80;
-    private const PROGRAM_INCREMENT_LABEL      = 'Program Increments';
-    private const PROGRAM_INCREMENT_SUB_LABEL  = 'program increment';
-    private const ITERATION_LABEL              = 'Iterations';
+    private const int PROGRAM_INCREMENT_TRACKER_ID   = 70;
+    private const int ITERATION_TRACKER_ID           = 80;
+    private const string PROGRAM_INCREMENT_LABEL     = 'Program Increments';
+    private const string PROGRAM_INCREMENT_SUB_LABEL = 'program increment';
+    private const string ITERATION_LABEL             = 'Iterations';
     private ?IterationTrackerConfiguration $iteration_configuration;
     private ProgramIdentifier $program;
     private UserIdentifier $user;

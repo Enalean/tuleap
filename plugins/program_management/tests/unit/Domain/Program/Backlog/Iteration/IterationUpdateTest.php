@@ -31,11 +31,11 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ITERATION_ID         = 10;
-    private const ITERATION_TRACKER_ID = 25;
-    private const USER_ID              = 118;
-    private const CHANGESET_ID         = 3001;
-    private const OLD_CHANGESET_ID     = 3000;
+    private const int ITERATION_ID         = 10;
+    private const int ITERATION_TRACKER_ID = 25;
+    private const int USER_ID              = 118;
+    private const int CHANGESET_ID         = 3001;
+    private const int OLD_CHANGESET_ID     = 3000;
 
     private ArtifactUpdatedEventStub $event;
 

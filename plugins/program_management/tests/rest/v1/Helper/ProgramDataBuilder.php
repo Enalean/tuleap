@@ -53,9 +53,9 @@ use UserManager;
 
 final class ProgramDataBuilder extends RESTTestDataBuilder
 {
-    public const PROJECT_TEAM_NAME        = 'team';
-    public const PROJECT_PROGRAM_NAME     = 'program';
-    private const MAX_ATTEMPTS_ASYNC_WAIT = 10;
+    public const string PROJECT_TEAM_NAME     = 'team';
+    public const string PROJECT_PROGRAM_NAME  = 'program';
+    private const int MAX_ATTEMPTS_ASYNC_WAIT = 10;
 
     private ProgramIncrementCreationDispatcher $creation_dispatcher;
     private ?\PFUser $user;

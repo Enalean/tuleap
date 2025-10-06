@@ -31,7 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BacklogServiceBlockerTest extends TestCase
 {
-    private const PROJECT_ID = 134;
+    private const int PROJECT_ID = 134;
 
     public function testItReturnsFalseWhenProgramServiceIsNotUsed(): void
     {

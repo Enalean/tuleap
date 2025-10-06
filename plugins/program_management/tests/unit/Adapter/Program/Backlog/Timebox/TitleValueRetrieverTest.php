@@ -41,8 +41,8 @@ use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TitleValueRetrieverTest extends TestCase
 {
-    private const ARTIFACT_ID = 1;
-    private const TITLE       = 'Unawful paramine';
+    private const int ARTIFACT_ID = 1;
+    private const string TITLE    = 'Unawful paramine';
     private \PFUser $user;
     private bool $is_title_semantic_defined = true;
     private bool $can_user_read_title_field = true;

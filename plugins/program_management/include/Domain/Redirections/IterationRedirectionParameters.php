@@ -28,10 +28,10 @@ namespace Tuleap\ProgramManagement\Domain\Redirections;
  */
 interface IterationRedirectionParameters
 {
-    public const FLAG                         = 'redirect-to-planned-iterations';
-    public const PARAM_INCREMENT_ID           = 'increment-id';
-    public const REDIRECT_AFTER_CREATE_ACTION = 'create';
-    public const REDIRECT_AFTER_UPDATE_ACTION = 'update';
+    public const string FLAG                         = 'redirect-to-planned-iterations';
+    public const string PARAM_INCREMENT_ID           = 'increment-id';
+    public const string REDIRECT_AFTER_CREATE_ACTION = 'create';
+    public const string REDIRECT_AFTER_UPDATE_ACTION = 'update';
 
     public function getValue(): string;
 

@@ -34,10 +34,10 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID                            = 108;
-    private const PROGRAM_INCREMENT_ID               = 58;
-    private const PROGRAM_INCREMENT_CHANGESET_ID     = 7383;
-    private const PROGRAM_INCREMENT_OLD_CHANGESET_ID = 7382;
+    private const int USER_ID                            = 108;
+    private const int PROGRAM_INCREMENT_ID               = 58;
+    private const int PROGRAM_INCREMENT_CHANGESET_ID     = 7383;
+    private const int PROGRAM_INCREMENT_OLD_CHANGESET_ID = 7382;
     private ProcessProgramIncrementUpdateStub $update_processor;
     private ProcessIterationCreationStub $iteration_processor;
     private ProgramIncrementUpdateEventStub $event;

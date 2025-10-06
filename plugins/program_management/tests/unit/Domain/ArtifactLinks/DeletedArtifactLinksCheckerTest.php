@@ -29,8 +29,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DeletedArtifactLinksCheckerTest extends TestCase
 {
-    private const ARTIFACT_ID        = 7821;
-    private const LINKED_ARTIFACT_ID = 1115;
+    private const int ARTIFACT_ID        = 7821;
+    private const int LINKED_ARTIFACT_ID = 1115;
 
     public function testItDoesNothingIfThereIsNoLinkInDeletedLinks(): void
     {

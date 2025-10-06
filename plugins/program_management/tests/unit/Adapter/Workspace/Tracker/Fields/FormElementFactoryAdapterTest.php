@@ -30,7 +30,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormElementFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 99;
+    private const int TRACKER_ID = 99;
     private RetrieveFullTrackerStub $tracker_retriever;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElementFactory

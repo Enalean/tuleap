@@ -41,9 +41,9 @@ use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackersDuplicatedHandlerTest extends TestCase
 {
-    private const SOURCE_PROJECT_ID                   = 114;
-    private const NEW_PROJECT_ID                      = 127;
-    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID = 12;
+    private const int SOURCE_PROJECT_ID                   = 114;
+    private const int NEW_PROJECT_ID                      = 127;
+    private const int SOURCE_PROGRAM_INCREMENT_TRACKER_ID = 12;
     private RetrievePlanConfigurationStub $retrieve_plan;
     private SaveNewPlanConfigurationStub $save_new_plan;
     private TestLogger $logger;

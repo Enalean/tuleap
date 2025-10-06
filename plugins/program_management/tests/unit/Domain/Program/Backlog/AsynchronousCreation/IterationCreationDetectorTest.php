@@ -35,8 +35,8 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ITERATION_ID  = 828;
-    private const SECOND_ITERATION_ID = 251;
+    private const int FIRST_ITERATION_ID  = 828;
+    private const int SECOND_ITERATION_ID = 251;
     private ProgramIncrementUpdate $program_increment_update;
     private SearchIterationsStub $iterations_searcher;
     private VerifyIsVisibleArtifactStub $visibility_verifier;

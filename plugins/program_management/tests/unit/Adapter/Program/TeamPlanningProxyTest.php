@@ -30,12 +30,12 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamPlanningProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID              = 101;
-    private const PLANNING_ID             = 43;
-    private const PLANNING_NAME           = 'test';
-    private const MILESTONE_TRACKER_ID    = 82;
-    private const USER_STORIES_TRACKER_ID = 644;
-    private const BUGS_TRACKER_ID         = 816;
+    private const int PROJECT_ID              = 101;
+    private const int PLANNING_ID             = 43;
+    private const string PLANNING_NAME        = 'test';
+    private const int MILESTONE_TRACKER_ID    = 82;
+    private const int USER_STORIES_TRACKER_ID = 644;
+    private const int BUGS_TRACKER_ID         = 816;
 
     public function testItBuildAPlanning(): void
     {

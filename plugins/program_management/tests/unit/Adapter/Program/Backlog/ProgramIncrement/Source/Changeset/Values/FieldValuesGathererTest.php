@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const CHANGESET_ID = 8501;
+    private const int CHANGESET_ID = 8501;
     private SynchronizedFieldReferences $fields;
     private \Tracker_Artifact_Changeset $changeset;
     /**

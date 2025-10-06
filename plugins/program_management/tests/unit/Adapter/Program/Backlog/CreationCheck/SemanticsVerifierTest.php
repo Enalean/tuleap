@@ -42,8 +42,8 @@ use Tuleap\Tracker\Test\Stub\Semantic\Title\SearchTrackersWithoutTitleSemanticSt
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;
-    private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 2048;
+    private const int FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;
+    private const int SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 2048;
     private TrackerReference $program_increment_tracker;
     private TrackerCollection $trackers;
     private SourceTrackerCollection $source_trackers;

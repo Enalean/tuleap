@@ -40,13 +40,13 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FEATURE_ID        = 673;
-    private const TRACKER_ID        = 80;
-    private const TRACKER_SHORTNAME = 'feature';
-    private const URI               = '/plugins/tracker/?aid=' . self::FEATURE_ID;
-    private const BACKGROUND_COLOR  = 'chrome-silver';
-    private const TITLE             = 'Upscale Recti';
-    private const PROJECT_ID        = 296;
+    private const int FEATURE_ID           = 673;
+    private const int TRACKER_ID           = 80;
+    private const string TRACKER_SHORTNAME = 'feature';
+    private const string URI               = '/plugins/tracker/?aid=' . self::FEATURE_ID;
+    private const string BACKGROUND_COLOR  = 'chrome-silver';
+    private const string TITLE             = 'Upscale Recti';
+    private const int PROJECT_ID           = 296;
 
     private function getRepresentation(): FeatureRepresentation
     {

@@ -30,9 +30,9 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementChangedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 964;
-    private const TRACKER_ID           = 50;
-    private const USER_ID              = 104;
+    private const int PROGRAM_INCREMENT_ID = 964;
+    private const int TRACKER_ID           = 50;
+    private const int USER_ID              = 104;
     private ProgramIncrementCreation $creation;
     private ProgramIncrementUpdate $update;
 

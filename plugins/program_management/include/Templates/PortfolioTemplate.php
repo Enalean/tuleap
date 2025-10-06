@@ -30,9 +30,9 @@ use Tuleap\Project\XML\ConsistencyChecker;
 
 final class PortfolioTemplate implements CategorisedTemplate
 {
-    public const NAME = 'program_management_portfolio';
+    public const string NAME = 'program_management_portfolio';
 
-    private const PORTFOLIO_XML = __DIR__ . '/../../resources/templates/portfolio_template.xml';
+    private const string PORTFOLIO_XML = __DIR__ . '/../../resources/templates/portfolio_template.xml';
 
     private string $title;
     private string $description;

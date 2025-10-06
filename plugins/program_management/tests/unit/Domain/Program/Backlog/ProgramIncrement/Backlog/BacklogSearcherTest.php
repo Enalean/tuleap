@@ -45,20 +45,20 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID     = 59;
-    private const FIRST_USER_STORY_ID      = 316;
-    private const FIRST_TITLE              = 'intuitional refinage';
-    private const FIRST_TRACKER_SHORTNAME  = 'requirement';
-    private const FIRST_TRACKER_ID         = 69;
-    private const FIRST_COLOR              = 'daphne-blue';
-    private const SECOND_USER_STORY_ID     = 245;
-    private const SECOND_TITLE             = 'sylvanity monolatrist';
-    private const SECOND_TRACKER_SHORTNAME = 'story';
-    private const SECOND_TRACKER_ID        = 91;
-    private const SECOND_COLOR             = 'plum-crazy';
-    private const THIRD_USER_STORY_ID      = 290;
-    private const FOURTH_USER_STORY_ID     = 832;
-    private const EXPECTED_URI             = '/plugins/tracker/?aid=';
+    private const int PROGRAM_INCREMENT_ID        = 59;
+    private const int FIRST_USER_STORY_ID         = 316;
+    private const string FIRST_TITLE              = 'intuitional refinage';
+    private const string FIRST_TRACKER_SHORTNAME  = 'requirement';
+    private const int FIRST_TRACKER_ID            = 69;
+    private const string FIRST_COLOR              = 'daphne-blue';
+    private const int SECOND_USER_STORY_ID        = 245;
+    private const string SECOND_TITLE             = 'sylvanity monolatrist';
+    private const string SECOND_TRACKER_SHORTNAME = 'story';
+    private const int SECOND_TRACKER_ID           = 91;
+    private const string SECOND_COLOR             = 'plum-crazy';
+    private const int THIRD_USER_STORY_ID         = 290;
+    private const int FOURTH_USER_STORY_ID        = 832;
+    private const string EXPECTED_URI             = '/plugins/tracker/?aid=';
     private VerifyIsProgramIncrementStub $program_increment_verifier;
 
     #[\Override]

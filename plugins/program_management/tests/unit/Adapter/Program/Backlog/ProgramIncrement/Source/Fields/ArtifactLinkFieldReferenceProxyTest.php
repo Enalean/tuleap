@@ -27,8 +27,8 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID    = 157;
-    private const FIELD_LABEL = 'Fides';
+    private const int FIELD_ID       = 157;
+    private const string FIELD_LABEL = 'Fides';
 
     public function testItBuildsFromTrackerField(): void
     {

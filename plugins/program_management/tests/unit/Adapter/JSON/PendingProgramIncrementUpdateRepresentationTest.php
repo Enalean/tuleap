@@ -29,14 +29,14 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PendingProgramIncrementUpdateRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ITERATION_ID                 = 276;
-    private const SECOND_ITERATION_ID                = 245;
-    private const FIRST_ITERATION_CHANGESET_ID       = 4807;
-    private const SECOND_ITERATION_CHANGESET_ID      = 2710;
-    private const PROGRAM_INCREMENT_ID               = 54;
-    private const PROGRAM_INCREMENT_CHANGESET_ID     = 9556;
-    private const PROGRAM_INCREMENT_OLD_CHANGESET_ID = 9555;
-    private const USER_ID                            = 199;
+    private const int FIRST_ITERATION_ID                 = 276;
+    private const int SECOND_ITERATION_ID                = 245;
+    private const int FIRST_ITERATION_CHANGESET_ID       = 4807;
+    private const int SECOND_ITERATION_CHANGESET_ID      = 2710;
+    private const int PROGRAM_INCREMENT_ID               = 54;
+    private const int PROGRAM_INCREMENT_CHANGESET_ID     = 9556;
+    private const int PROGRAM_INCREMENT_OLD_CHANGESET_ID = 9555;
+    private const int USER_ID                            = 199;
     private ProgramIncrementUpdate $update;
 
     #[\Override]

@@ -33,7 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramServiceBlockerTest extends TestCase
 {
-    private const PROJECT_ID = 101;
+    private const int PROJECT_ID = 101;
 
     /**
      * @return Option<string>

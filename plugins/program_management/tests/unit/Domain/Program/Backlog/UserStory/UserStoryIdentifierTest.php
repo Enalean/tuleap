@@ -37,10 +37,10 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryIdentifierTest extends TestCase
 {
-    private const FIRST_USER_STORY_ID  = 666;
-    private const SECOND_USER_STORY_ID = 698;
-    private const THIRD_USER_STORY_ID  = 714;
-    private const FOURTH_USER_STORY_ID = 182;
+    private const int FIRST_USER_STORY_ID  = 666;
+    private const int SECOND_USER_STORY_ID = 698;
+    private const int THIRD_USER_STORY_ID  = 714;
+    private const int FOURTH_USER_STORY_ID = 182;
     private SearchChildrenOfFeature $user_story_searcher;
     private VerifyUserStoryIsVisibleStub $verify_is_visible;
     private SearchUserStoryPlannedInIteration $search_user_story_planned_in_iteration;

@@ -38,7 +38,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueRetrieverTest extends TestCase
 {
-    private const USER_ID = 599;
+    private const int USER_ID = 599;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&Artifact
      */

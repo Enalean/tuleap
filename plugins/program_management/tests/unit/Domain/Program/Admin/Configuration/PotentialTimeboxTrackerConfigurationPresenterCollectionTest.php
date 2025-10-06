@@ -34,8 +34,8 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_TRACKER_ID  = 300;
-    private const SECOND_TRACKER_ID = 500;
+    private const int FIRST_TRACKER_ID  = 300;
+    private const int SECOND_TRACKER_ID = 500;
     private ProgramForAdministrationIdentifier $program;
 
     #[\Override]

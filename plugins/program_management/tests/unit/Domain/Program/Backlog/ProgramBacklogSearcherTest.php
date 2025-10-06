@@ -39,18 +39,18 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramBacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID            = 118;
-    private const BUG_ID                = 638;
-    private const BUG_TITLE             = 'shinny';
-    private const BUG_TRACKER_ID        = 2;
-    private const BUG_SHORT_NAME        = 'bug';
-    private const BUG_COLOR             = 'clockwork-orange';
-    private const USER_STORY_ID         = 328;
-    private const USER_STORY_TITLE      = 'busyish';
-    private const USER_STORY_TRACKER_ID = 74;
-    private const USER_STORY_SHORT_NAME = 'user_stories';
-    private const USER_STORY_COLOR      = 'coral-pink';
-    private const BASE_URI              = '/plugins/tracker/?aid=';
+    private const int PROGRAM_ID               = 118;
+    private const int BUG_ID                   = 638;
+    private const string BUG_TITLE             = 'shinny';
+    private const int BUG_TRACKER_ID           = 2;
+    private const string BUG_SHORT_NAME        = 'bug';
+    private const string BUG_COLOR             = 'clockwork-orange';
+    private const int USER_STORY_ID            = 328;
+    private const string USER_STORY_TITLE      = 'busyish';
+    private const int USER_STORY_TRACKER_ID    = 74;
+    private const string USER_STORY_SHORT_NAME = 'user_stories';
+    private const string USER_STORY_COLOR      = 'coral-pink';
+    private const string BASE_URI              = '/plugins/tracker/?aid=';
     private SearchPlannableFeaturesStub $features_searcher;
 
     #[\Override]

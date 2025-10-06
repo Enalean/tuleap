@@ -30,9 +30,9 @@ use Tuleap\ProgramManagement\Tests\Stub\CheckNewIterationTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewIterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ITERATION_TRACKER_ID = 84;
-    private const LABEL                = 'Cycles';
-    private const SUB_LABEL            = 'cycle';
+    private const int ITERATION_TRACKER_ID = 84;
+    private const string LABEL             = 'Cycles';
+    private const string SUB_LABEL         = 'cycle';
     private CheckNewIterationTrackerStub $iteration_checker;
     private PlanIterationChange $iteration_change;
 

@@ -30,8 +30,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinksNewTypesCheckerTest extends TestCase
 {
-    private const ARTIFACT_ID        = 9624;
-    private const LINKED_ARTIFACT_ID = 8244;
+    private const int ARTIFACT_ID        = 9624;
+    private const int LINKED_ARTIFACT_ID = 8244;
 
     public function testItDoesNothingIfThereIsNoLinkInProvidedLinks(): void
     {

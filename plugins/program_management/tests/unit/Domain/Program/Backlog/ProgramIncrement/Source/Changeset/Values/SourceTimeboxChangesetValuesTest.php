@@ -31,14 +31,14 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TITLE_VALUE                         = 'pseudographeme';
-    private const DESCRIPTION_VALUE                   = '<p>chondrofibroma overfeel</p>';
-    private const DESCRIPTION_FORMAT                  = 'html';
-    private const SOURCE_TIMEBOX_ID                   = 11;
-    private const SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP = 1628844094;
-    private const START_DATE_VALUE                    = 1374629589;
-    private const END_PERIOD_VALUE                    = 1476705188;
-    private const STATUS_VALUE                        = 'Ongoing';
+    private const string TITLE_VALUE                      = 'pseudographeme';
+    private const string DESCRIPTION_VALUE                = '<p>chondrofibroma overfeel</p>';
+    private const string DESCRIPTION_FORMAT               = 'html';
+    private const int SOURCE_TIMEBOX_ID                   = 11;
+    private const int SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP = 1628844094;
+    private const int START_DATE_VALUE                    = 1374629589;
+    private const int END_PERIOD_VALUE                    = 1476705188;
+    private const string STATUS_VALUE                     = 'Ongoing';
     private GatherFieldValuesStub $values_gatherer;
 
     #[\Override]

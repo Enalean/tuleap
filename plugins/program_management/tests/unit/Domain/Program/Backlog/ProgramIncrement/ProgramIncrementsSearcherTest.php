@@ -33,9 +33,9 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementsSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID                  = 12;
-    private const FIRST_PROGRAM_INCREMENT_ID  = 18;
-    private const SECOND_PROGRAM_INCREMENT_ID = 83;
+    private const int PROGRAM_ID                  = 12;
+    private const int FIRST_PROGRAM_INCREMENT_ID  = 18;
+    private const int SECOND_PROGRAM_INCREMENT_ID = 83;
     private UserIdentifierStub $user;
     private ProgramIncrement $first_program_increment;
     private ProgramIncrement $second_program_increment;

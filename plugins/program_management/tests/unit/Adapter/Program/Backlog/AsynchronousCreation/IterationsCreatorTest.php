@@ -50,8 +50,8 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_TEAM_ID  = 168;
-    private const SECOND_TEAM_ID = 160;
+    private const int FIRST_TEAM_ID  = 168;
+    private const int SECOND_TEAM_ID = 160;
     private RetrieveMirroredIterationTrackerStub $milestone_retriever;
     private CreateArtifactStub $artifact_creator;
     private RetrieveMirroredProgramIncrementFromTeamStub $mirrored_program_increment_retriever;

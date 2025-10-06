@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PendingIterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ITERATION_ID = 242;
-    private const CHANGESET_ID = 5945;
+    private const int ITERATION_ID = 242;
+    private const int CHANGESET_ID = 5945;
     private VerifyIsIterationStub $iteration_verifier;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIsChangesetStub $changeset_verifier;

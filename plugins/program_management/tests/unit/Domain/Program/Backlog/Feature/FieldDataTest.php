@@ -27,12 +27,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChang
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_TEAM_ID          = 114;
-    private const ARTIFACT_LINK_FIELD_ID = 717;
-    private const FIRST_USER_STORY_ID    = 368;
-    private const SECOND_USER_STORY_ID   = 139;
-    private const THIRD_USER_STORY_ID    = 795;
-    private const FOURTH_USER_STORY_ID   = 935;
+    private const int FIRST_TEAM_ID          = 114;
+    private const int ARTIFACT_LINK_FIELD_ID = 717;
+    private const int FIRST_USER_STORY_ID    = 368;
+    private const int SECOND_USER_STORY_ID   = 139;
+    private const int THIRD_USER_STORY_ID    = 795;
+    private const int FOURTH_USER_STORY_ID   = 935;
     private array $user_stories_to_add;
     private array $user_stories_to_remove;
 

@@ -44,7 +44,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 758;
+    private const int FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 758;
     private WorkflowVerifier $verifier;
     /**
      * @var MockObject&\Workflow_Dao

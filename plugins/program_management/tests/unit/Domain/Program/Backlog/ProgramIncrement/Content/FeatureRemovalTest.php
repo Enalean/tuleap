@@ -34,7 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FEATURE_ID = 741;
+    private const int FEATURE_ID = 741;
     private FeatureIdentifier $feature;
     private UserCanPrioritize $user_can_prioritize;
 

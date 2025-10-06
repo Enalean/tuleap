@@ -33,10 +33,10 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_USER_STORY_ID  = 1000;
-    private const SECOND_USER_STORY_ID = 36;
-    private const THIRD_USER_STORY_ID  = 910;
-    private const FOURTH_USER_STORY_ID = 335;
+    private const int FIRST_USER_STORY_ID  = 1000;
+    private const int SECOND_USER_STORY_ID = 36;
+    private const int THIRD_USER_STORY_ID  = 910;
+    private const int FOURTH_USER_STORY_ID = 335;
     private SearchChildrenOfFeatureStub $user_stories_searcher;
     private SearchUserStoryPlannedInIterationStub $planned_stories_searcher;
     private \Closure $getId;

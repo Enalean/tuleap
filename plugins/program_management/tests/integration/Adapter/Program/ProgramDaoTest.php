@@ -30,8 +30,8 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramDaoTest extends TestIntegrationTestCase
 {
-    private const PROGRAM_INCREMENT_TRACKER_ID = 60;
-    private const PROGRAM_ID                   = 115;
+    private const int PROGRAM_INCREMENT_TRACKER_ID = 60;
+    private const int PROGRAM_ID                   = 115;
     private static int $valid_artifact_id;
     private ProgramDaoProject $dao;
 

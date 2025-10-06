@@ -42,7 +42,7 @@ use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID = 666;
+    private const int USER_ID = 666;
     private UserStoryInOneMirrorPlanner $planner;
     private CreateNewChangesetStub $create_new_changeset;
     private Artifact&MockObject $artifact;

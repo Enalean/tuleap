@@ -33,8 +33,8 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_MIRROR_ID  = 48;
-    private const SECOND_MIRROR_ID = 37;
+    private const int FIRST_MIRROR_ID  = 48;
+    private const int SECOND_MIRROR_ID = 37;
     private SearchMirroredTimeboxesStub $timebox_searcher;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private RetrieveMirroredProgramIncrementFromTeamStub $mirror_retriever;

@@ -30,10 +30,10 @@ use Tuleap\Project\XML\ConsistencyChecker;
 
 final class TeamTemplate implements CategorisedTemplate
 {
-    public const NAME = 'program_management_team';
+    public const string NAME = 'program_management_team';
 
-    private const PROGRAM_XML = __DIR__ . '/../../resources/templates/scrum_team_template.xml';
-    private const TTM_XML     = __DIR__ . '/../../resources/templates/testmanagement.xml';
+    private const string PROGRAM_XML = __DIR__ . '/../../resources/templates/scrum_team_template.xml';
+    private const string TTM_XML     = __DIR__ . '/../../resources/templates/testmanagement.xml';
 
     private string $title;
     private string $description;

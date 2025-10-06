@@ -36,9 +36,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationUpdateEventProxyTest extends TestCase
 {
-    private const ITERATION_ID = 20;
-    private const CHANGESET_ID = 100;
-    private const USER_ID      = 300;
+    private const int ITERATION_ID = 20;
+    private const int CHANGESET_ID = 100;
+    private const int USER_ID      = 300;
     private TestLogger $logger;
     private VerifyIsUserStub $user_verifier;
     private VerifyIsIterationStub $iteration_verifier;

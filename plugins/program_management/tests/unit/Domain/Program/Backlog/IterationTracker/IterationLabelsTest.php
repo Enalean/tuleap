@@ -28,8 +28,8 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationLabelsStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const LABEL     = 'Iterations';
-    private const SUB_LABEL = 'iteration';
+    private const string LABEL     = 'Iterations';
+    private const string SUB_LABEL = 'iteration';
 
     private ?IterationTrackerIdentifier $iteration_tracker;
     private RetrieveIterationLabelsStub $label_retriever;

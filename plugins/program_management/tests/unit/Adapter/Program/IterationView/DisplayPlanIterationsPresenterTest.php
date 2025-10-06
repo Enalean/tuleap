@@ -37,9 +37,9 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserIsProgramAdminStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayPlanIterationsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ITERATION_TRACKER_ID = 101;
-    private const ITERATION_LABEL      = 'Cycles';
-    private const ITERATION_SUB_LABEL  = 'cycle';
+    private const int ITERATION_TRACKER_ID   = 101;
+    private const string ITERATION_LABEL     = 'Cycles';
+    private const string ITERATION_SUB_LABEL = 'cycle';
 
     public function testItBuilds(): void
     {

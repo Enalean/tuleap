@@ -45,7 +45,7 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private array $variables;
     private StorePendingTeamSynchronizationStub $store_pending_team_synchronization;
 
-    private const TEAM_ID = 123;
+    private const int TEAM_ID = 123;
 
     #[\Override]
     protected function setUp(): void

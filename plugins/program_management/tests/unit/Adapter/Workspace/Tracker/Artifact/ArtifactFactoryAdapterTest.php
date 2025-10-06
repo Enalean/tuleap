@@ -29,7 +29,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID = 644;
+    private const int ARTIFACT_ID = 644;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_ArtifactFactory
      */

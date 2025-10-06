@@ -30,7 +30,7 @@ use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
  */
 final class MassChangeTopBacklogSourceInformation
 {
-    private const MASS_CHANGE_ACTION_NAME = 'masschange-action-program-management-top-backlog';
+    private const string MASS_CHANGE_ACTION_NAME = 'masschange-action-program-management-top-backlog';
 
     /**
      * @var int

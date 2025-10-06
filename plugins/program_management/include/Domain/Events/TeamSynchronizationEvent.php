@@ -22,7 +22,7 @@ namespace Tuleap\ProgramManagement\Domain\Events;
 
 interface TeamSynchronizationEvent
 {
-    public const TOPIC = 'tuleap.program_management.team.synchronize';
+    public const string TOPIC = 'tuleap.program_management.team.synchronize';
 
     public function getProgramId(): int;
 

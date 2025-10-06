@@ -37,7 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 16;
+    private const int PROGRAM_INCREMENT_ID = 16;
     private UserIdentifier $user;
     private RetrieveTitleValueUserCanSeeStub $title_retriever;
     private ProgramIncrementIdentifier $program_increment_identifier;

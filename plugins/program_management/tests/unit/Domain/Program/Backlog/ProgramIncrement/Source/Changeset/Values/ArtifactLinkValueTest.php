@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID = 51;
+    private const int ARTIFACT_ID = 51;
 
     public function testItBuildsFromArtifactAndType(): void
     {

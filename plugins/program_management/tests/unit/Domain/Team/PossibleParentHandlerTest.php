@@ -49,10 +49,10 @@ use function PHPUnit\Framework\assertNull;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PossibleParentHandlerTest extends TestCase
 {
-    private const FEATURE_ID   = 123;
-    private const PROGRAM_ID_1 = 899;
-    private const PROGRAM_ID_2 = 741;
-    private const PROJECT_ID   = 555;
+    private const int FEATURE_ID   = 123;
+    private const int PROGRAM_ID_1 = 899;
+    private const int PROGRAM_ID_2 = 741;
+    private const int PROJECT_ID   = 555;
 
     private SearchOpenFeaturesStub $search_open_features;
     private RetrieveOpenFeatureCount $retrieve_open_feature_count;

@@ -37,7 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanUpdateTimeboxStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 274;
+    private const int PROGRAM_INCREMENT_ID = 274;
     private UserIdentifierStub $user;
     private UserCanPrioritize $user_can_prioritize;
     private ProgramIncrementIdentifier $program_increment;

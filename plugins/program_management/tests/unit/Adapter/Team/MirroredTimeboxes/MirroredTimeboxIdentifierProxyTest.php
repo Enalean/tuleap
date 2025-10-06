@@ -27,7 +27,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredTimeboxIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID = 54;
+    private const int ARTIFACT_ID = 54;
 
     public function testItBuildsFromArtifact(): void
     {

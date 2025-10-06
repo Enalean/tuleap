@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\StartDateFieldReferenceStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StartDateValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const VALUE = 1525268947;
+    private const int VALUE = 1525268947;
 
     public function testItBuildsFromStartDateReference(): void
     {

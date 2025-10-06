@@ -30,10 +30,10 @@ use Tuleap\Project\XML\ConsistencyChecker;
 
 final class ProgramTemplate implements CategorisedTemplate
 {
-    public const NAME = 'program_management_program';
+    public const string NAME = 'program_management_program';
 
-    private const PROGRAM_XML        = __DIR__ . '/../../resources/templates/program_template.xml';
-    private const PROGRAM_CONFIG_XML = __DIR__ . '/../../resources/templates/program_management_config.xml';
+    private const string PROGRAM_XML        = __DIR__ . '/../../resources/templates/program_template.xml';
+    private const string PROGRAM_CONFIG_XML = __DIR__ . '/../../resources/templates/program_management_config.xml';
 
     private string $title;
     private string $description;

@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ITERATION_ID  = 388;
-    private const SECOND_ITERATION_ID = 540;
+    private const int FIRST_ITERATION_ID  = 388;
+    private const int SECOND_ITERATION_ID = 540;
     private SearchIterationsStub $iteration_searcher;
 
     #[\Override]

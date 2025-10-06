@@ -32,9 +32,9 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID  = 29;
-    private const USER_ID      = 186;
-    private const CHANGESET_ID = 7806;
+    private const int ARTIFACT_ID  = 29;
+    private const int USER_ID      = 186;
+    private const int CHANGESET_ID = 7806;
     private TestLogger $logger;
     /**
      * @var Stub&\UserManager

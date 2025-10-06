@@ -32,7 +32,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 85;
+    private const int TRACKER_ID = 85;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\TrackerFactory
      */

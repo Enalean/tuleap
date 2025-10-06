@@ -40,8 +40,8 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID                     = 602;
-    private const PROJECT_ADMIN_USER_GROUP_ID = 4;
+    private const int USER_ID                     = 602;
+    private const int PROJECT_ADMIN_USER_GROUP_ID = 4;
     private ProgramIdentifier $program_identifier;
     private UserIdentifier $user_identifier;
     private CheckProjectAccessStub $access_checker;

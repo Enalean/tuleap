@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DomainChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const CHANGESET_ID = 7715;
+    private const int CHANGESET_ID = 7715;
     private IterationIdentifier $iteration;
 
     #[\Override]

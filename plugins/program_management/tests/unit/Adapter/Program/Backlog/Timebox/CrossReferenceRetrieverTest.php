@@ -34,7 +34,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossReferenceRetrieverTest extends TestCase
 {
-    private const ARTIFACT_ID = 1;
+    private const int ARTIFACT_ID = 1;
     private string $tracker_short_name;
 
     #[\Override]

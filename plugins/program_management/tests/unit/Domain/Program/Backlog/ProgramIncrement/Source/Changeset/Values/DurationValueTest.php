@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveDurationValueStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DurationValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const VALUE = 36;
+    private const int VALUE = 36;
 
     public function testItBuildsFromDurationReference(): void
     {

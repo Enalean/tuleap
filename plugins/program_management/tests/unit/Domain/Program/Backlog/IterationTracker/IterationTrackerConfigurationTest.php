@@ -31,9 +31,9 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ITERATION_TRACKER_ID = 94;
-    private const LABEL                = 'Iterations';
-    private const SUB_LABEL            = 'iteration';
+    private const int ITERATION_TRACKER_ID = 94;
+    private const string LABEL             = 'Iterations';
+    private const string SUB_LABEL         = 'iteration';
     private RetrieveVisibleIterationTrackerStub $tracker_retriever;
 
     #[\Override]

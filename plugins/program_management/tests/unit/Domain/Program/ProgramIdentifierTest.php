@@ -38,7 +38,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIdentifierTest extends TestCase
 {
-    private const PROGRAM_ID = 101;
+    private const int PROGRAM_ID = 101;
     private BuildProgramStub $program_builder;
     private UserIdentifier $user;
     private ProgramIncrementIdentifier $program_increment;

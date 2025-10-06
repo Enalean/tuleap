@@ -31,10 +31,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID   = 12;
-    private const LABEL        = 'sarcosporid';
-    private const PROJECT_ID   = 165;
-    private const PROJECT_NAME = 'interregna';
+    private const int TRACKER_ID      = 12;
+    private const string LABEL        = 'sarcosporid';
+    private const int PROJECT_ID      = 165;
+    private const string PROJECT_NAME = 'interregna';
 
     private function getProject(): \Project
     {

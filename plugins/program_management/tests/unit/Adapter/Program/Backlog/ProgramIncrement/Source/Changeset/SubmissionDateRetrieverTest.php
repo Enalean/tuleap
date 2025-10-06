@@ -33,9 +33,9 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmissionDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const SUBMISSION_TIMESTAMP = 1631191239;
-    private const ARTIFACT_ID          = 470;
-    private const CHANGESET_ID         = 5180;
+    private const int SUBMISSION_TIMESTAMP = 1631191239;
+    private const int ARTIFACT_ID          = 470;
+    private const int CHANGESET_ID         = 5180;
     private ArtifactIdentifierStub $artifact_identifier;
     private DomainChangeset $changeset_identifier;
     /**

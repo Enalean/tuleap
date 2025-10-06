@@ -33,8 +33,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerOfArtifactRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID = 550;
-    private const TRACKER_ID  = 908;
+    private const int ARTIFACT_ID = 550;
+    private const int TRACKER_ID  = 908;
 
     private function getRetriever(): TrackerOfArtifactRetriever
     {

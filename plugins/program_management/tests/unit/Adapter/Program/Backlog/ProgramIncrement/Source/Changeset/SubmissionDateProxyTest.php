@@ -27,7 +27,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmissionDateProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const SUBMISSION_TIMESTAMP = 1631178060;
+    private const int SUBMISSION_TIMESTAMP = 1631178060;
 
     public function testItBuildsFromChangeset(): void
     {

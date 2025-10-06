@@ -36,8 +36,8 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectToIterationsProcessorTest extends TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 100;
-    private const PROJECT_SHORTNAME    = 'my_project';
+    private const int PROGRAM_INCREMENT_ID = 100;
+    private const string PROJECT_SHORTNAME = 'my_project';
     private ProjectReference $project;
     private Tracker_Artifact_Redirect $redirect;
     private RedirectUserAfterArtifactCreationOrUpdateEvent $event;

@@ -41,7 +41,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID = 635;
+    private const int USER_ID = 635;
     private SearchProgramIncrementLinkedToFeature $program_increments_dao;
     private \Tracker_ArtifactFactory&MockObject $artifact_factory;
     private ArtifactLinkUpdater&MockObject $artifact_link_updater;

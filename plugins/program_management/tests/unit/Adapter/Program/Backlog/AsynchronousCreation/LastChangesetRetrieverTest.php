@@ -34,8 +34,8 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LastChangesetRetrieverTest extends TestCase
 {
-    private const ITERATION_ID      = 52;
-    private const LAST_CHANGESET_ID = 3862;
+    private const int ITERATION_ID      = 52;
+    private const int LAST_CHANGESET_ID = 3862;
     /**
      * @var Stub&\Tracker_Artifact_ChangesetFactory
      */

@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_FEATURE_ID  = 424;
-    private const SECOND_FEATURE_ID = 399;
+    private const int FIRST_FEATURE_ID  = 424;
+    private const int SECOND_FEATURE_ID = 399;
     private SearchFeaturesStub $feature_searcher;
 
     #[\Override]

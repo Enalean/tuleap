@@ -40,18 +40,18 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementContentSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID  = 202;
-    private const BUG_ID                = 689;
-    private const BUG_TITLE             = 'alkalescent';
-    private const BUG_TRACKER_ID        = 32;
-    private const BUG_SHORT_NAME        = 'bug';
-    private const BUG_COLOR             = 'fiesta-red';
-    private const USER_STORY_ID         = 337;
-    private const USER_STORY_TITLE      = 'tracklessly';
-    private const USER_STORY_TRACKER_ID = 34;
-    private const USER_STORY_SHORT_NAME = 'user_stories';
-    private const USER_STORY_COLOR      = 'graffiti-yellow';
-    private const BASE_URI              = '/plugins/tracker/?aid=';
+    private const int PROGRAM_INCREMENT_ID     = 202;
+    private const int BUG_ID                   = 689;
+    private const string BUG_TITLE             = 'alkalescent';
+    private const int BUG_TRACKER_ID           = 32;
+    private const string BUG_SHORT_NAME        = 'bug';
+    private const string BUG_COLOR             = 'fiesta-red';
+    private const int USER_STORY_ID            = 337;
+    private const string USER_STORY_TITLE      = 'tracklessly';
+    private const int USER_STORY_TRACKER_ID    = 34;
+    private const string USER_STORY_SHORT_NAME = 'user_stories';
+    private const string USER_STORY_COLOR      = 'graffiti-yellow';
+    private const string BASE_URI              = '/plugins/tracker/?aid=';
     private SearchFeaturesStub $features_searcher;
 
     #[\Override]

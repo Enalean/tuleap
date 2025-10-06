@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TitleFieldReferenceStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TitleValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TITLE_VALUE = 'uncomprehended Sinupallialia';
+    private const string TITLE_VALUE = 'uncomprehended Sinupallialia';
 
     public function testItBuildsFromTitleReference(): void
     {

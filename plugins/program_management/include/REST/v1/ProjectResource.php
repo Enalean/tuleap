@@ -108,7 +108,7 @@ use URLVerification;
 
 final class ProjectResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 50;
+    private const int MAX_LIMIT = 50;
 
     private CreateTeam $team_creator;
     private \UserManager $user_manager;

@@ -28,9 +28,9 @@ namespace Tuleap\ProgramManagement\Domain\Redirections;
  */
 interface ProgramRedirectionParameters
 {
-    public const FLAG                         = 'program_increment';
-    public const REDIRECT_AFTER_CREATE_ACTION = 'create';
-    public const REDIRECT_AFTER_UPDATE_ACTION = 'update';
+    public const string FLAG                         = 'program_increment';
+    public const string REDIRECT_AFTER_CREATE_ACTION = 'create';
+    public const string REDIRECT_AFTER_UPDATE_ACTION = 'update';
 
     public function getValue(): string;
 

@@ -32,21 +32,21 @@ use Tuleap\ProgramManagement\Tests\Stub\ArtifactLinkFieldReferenceStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const MAPPED_STATUS_BIND_VALUE_ID = 7227;
-    private const ARTIFACT_LINK_ID            = 2469;
-    private const TITLE_ID                    = 8733;
-    private const DESCRIPTION_ID              = 2825;
-    private const STATUS_ID                   = 9147;
-    private const START_DATE_ID               = 5778;
-    private const END_DATE_ID                 = 9339;
-    private const DURATION_ID                 = 2062;
-    private const SOURCE_PROGRAM_INCREMENT_ID = 112;
-    private const TITLE_VALUE                 = 'Program Release';
-    private const DESCRIPTION_CONTENT         = '<p>Description</p>';
-    private const DESCRIPTION_FORMAT          = 'html';
-    private const START_DATE_VALUE            = 1601579528; // 2020-10-01T21:12:08+02:00
-    private const END_DATE_VALUE              = 1602288617; // 2020-10-10T02:10:17+02:00
-    private const DURATION_VALUE              = 17;
+    private const int MAPPED_STATUS_BIND_VALUE_ID = 7227;
+    private const int ARTIFACT_LINK_ID            = 2469;
+    private const int TITLE_ID                    = 8733;
+    private const int DESCRIPTION_ID              = 2825;
+    private const int STATUS_ID                   = 9147;
+    private const int START_DATE_ID               = 5778;
+    private const int END_DATE_ID                 = 9339;
+    private const int DURATION_ID                 = 2062;
+    private const int SOURCE_PROGRAM_INCREMENT_ID = 112;
+    private const string TITLE_VALUE              = 'Program Release';
+    private const string DESCRIPTION_CONTENT      = '<p>Description</p>';
+    private const string DESCRIPTION_FORMAT       = 'html';
+    private const int START_DATE_VALUE            = 1601579528; // 2020-10-01T21:12:08+02:00
+    private const int END_DATE_VALUE              = 1602288617; // 2020-10-10T02:10:17+02:00
+    private const int DURATION_VALUE              = 17;
     private MirroredTimeboxChangesetValues $values_with_end_date;
     private MirroredTimeboxChangesetValues $values_with_duration;
 

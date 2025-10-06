@@ -28,8 +28,8 @@ use Tuleap\ProgramManagement\Tests\Builder\IterationLabelsBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationLabelsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const LABEL     = 'Cycles';
-    private const SUB_LABEL = 'cycle';
+    private const string LABEL     = 'Cycles';
+    private const string SUB_LABEL = 'cycle';
     private IterationLabels $labels;
 
     #[\Override]

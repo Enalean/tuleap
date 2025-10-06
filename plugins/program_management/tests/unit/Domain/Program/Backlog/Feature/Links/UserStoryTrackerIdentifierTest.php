@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryTrackerIdentifierTest extends TestCase
 {
-    private const TRACKER__ID = 100;
+    private const int TRACKER__ID = 100;
     public function testItBuildsIdentifier(): void
     {
         $tracker_retriever = RetrieveTrackerFromUserStoryStub::withId(self::TRACKER__ID);

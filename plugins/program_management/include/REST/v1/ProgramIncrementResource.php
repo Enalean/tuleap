@@ -97,8 +97,8 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 final class ProgramIncrementResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 50;
-    public const  ROUTE     = 'program_increment';
+    private const int MAX_LIMIT = 50;
+    public const  string ROUTE  = 'program_increment';
 
     /**
      * Get content of a program increment

@@ -30,12 +30,12 @@ use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TITLE_ID         = 615;
-    private const DESCRIPTION_ID   = 843;
-    private const STATUS_ID        = 946;
-    private const START_DATE_ID    = 213;
-    private const END_PERIOD_ID    = 126;
-    private const ARTIFACT_LINK_ID = 128;
+    private const int TITLE_ID         = 615;
+    private const int DESCRIPTION_ID   = 843;
+    private const int STATUS_ID        = 946;
+    private const int START_DATE_ID    = 213;
+    private const int END_PERIOD_ID    = 126;
+    private const int ARTIFACT_LINK_ID = 128;
     private GatherSynchronizedFieldsStub $gatherer;
     private TrackerIdentifier $program_increment_tracker;
 

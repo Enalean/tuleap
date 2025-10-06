@@ -31,9 +31,9 @@ use Tuleap\Queue\QueueFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementCreationDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 18;
-    private const USER_ID              = 120;
-    private const CHANGESET_ID         = 4043;
+    private const int PROGRAM_INCREMENT_ID = 18;
+    private const int USER_ID              = 120;
+    private const int CHANGESET_ID         = 4043;
     /**
      * @var Stub&QueueFactory
      */

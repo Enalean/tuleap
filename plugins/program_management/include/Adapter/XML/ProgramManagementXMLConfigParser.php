@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Adapter\XML\Exceptions\CannotLoadXMLConfigFileExcep
 
 final class ProgramManagementXMLConfigParser implements ParseXMLConfig
 {
-    private const PROGRAM_MANAGEMENT_CONFIG_XML = 'program-management-config.xml';
+    private const string PROGRAM_MANAGEMENT_CONFIG_XML = 'program-management-config.xml';
 
     #[\Override]
     public function isThereAConfigToImport(string $extraction_path): bool

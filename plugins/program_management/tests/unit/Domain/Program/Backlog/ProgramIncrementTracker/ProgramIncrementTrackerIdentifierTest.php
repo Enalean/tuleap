@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_TRACKER_ID = 17;
+    private const int PROGRAM_INCREMENT_TRACKER_ID = 17;
     private TrackerIdentifierStub $tracker_identifier;
 
     #[\Override]

@@ -35,21 +35,21 @@ use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_LINK_ID            = 530;
-    private const TITLE_ID                    = 130;
-    private const DESCRIPTION_ID              = 483;
-    private const STATUS_ID                   = 656;
-    private const START_DATE_ID               = 801;
-    private const END_DATE_ID                 = 234;
-    private const DURATION_ID                 = 756;
-    private const LINKED_ARTIFACT_ID          = 95;
-    private const TITLE_VALUE                 = 'Circassian';
-    private const DESCRIPTION_VALUE           = 'consideringly palpebral';
-    private const DESCRIPTION_FORMAT          = 'html';
-    private const MAPPED_STATUS_BIND_VALUE_ID = 4192;
-    private const START_DATE_VALUE            = 1587058228;
-    private const END_DATE_VALUE              = 1723649644;
-    private const DURATION_VALUE              = 34;
+    private const int ARTIFACT_LINK_ID            = 530;
+    private const int TITLE_ID                    = 130;
+    private const int DESCRIPTION_ID              = 483;
+    private const int STATUS_ID                   = 656;
+    private const int START_DATE_ID               = 801;
+    private const int END_DATE_ID                 = 234;
+    private const int DURATION_ID                 = 756;
+    private const int LINKED_ARTIFACT_ID          = 95;
+    private const string TITLE_VALUE              = 'Circassian';
+    private const string DESCRIPTION_VALUE        = 'consideringly palpebral';
+    private const string DESCRIPTION_FORMAT       = 'html';
+    private const int MAPPED_STATUS_BIND_VALUE_ID = 4192;
+    private const int START_DATE_VALUE            = 1587058228;
+    private const int END_DATE_VALUE              = 1723649644;
+    private const int DURATION_VALUE              = 34;
     private MapStatusByValueStub $status_mapper;
     private SourceTimeboxChangesetValues $source_values;
     private ArtifactLinkValue $artifact_link_value;

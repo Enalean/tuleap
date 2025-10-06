@@ -43,10 +43,10 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 37;
-    private const FEATURE_ID           = 76;
-    private const PROGRAM_ID           = 110;
-    private const USER_ID              = 123;
+    private const int PROGRAM_INCREMENT_ID = 37;
+    private const int FEATURE_ID           = 76;
+    private const int PROGRAM_ID           = 110;
+    private const int USER_ID              = 123;
     private RetrieveFullArtifactStub $artifact_retriever;
     private ArtifactLinkUpdater&MockObject $artifact_link_updater;
     private Artifact $artifact;
