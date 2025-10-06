@@ -25,11 +25,11 @@ namespace Tuleap\GraphOnTrackersV5\DataAccess;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
-use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesV5;
+use Tuleap\GraphOnTrackersV5\Common\HTMLSelectboxElementWithTrackerListFieldsV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Chart_PieDataBuilder;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Pie;
 
-class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
+class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     protected $field_base;
 
@@ -76,12 +76,12 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         return $c;
     }
 
-    public function getField_base()
+    public function getField_base() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_base;
     }
 
-    public function setField_base($field_base)
+    public function setField_base($field_base) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_base = $field_base;
     }
@@ -104,7 +104,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         return array_merge(
             parent::getProperties(),
             [
-                'field_base' => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
+                'field_base' => new HTMLSelectboxElementWithTrackerListFieldsV5(
                     $this->getTracker(),
                     dgettext('tuleap-graphontrackersv5', 'Source Data'),
                     'chart[field_base]',

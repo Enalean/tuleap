@@ -27,19 +27,26 @@ namespace Tuleap\GraphOnTrackersV5\Common;
 use HTML_Element_Option;
 use HTML_Element_Selectbox;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 
 /**
- * Define an html selectbox field for selectbox fields and text fields provided by the tracker
+ * Define an HTML selectbox element for list fields and text fields provided by the tracker
+ *
+ * Open list fields are ignored
  */
-final class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_Element_Selectbox // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
+final class HTMLSelectboxElementWithTrackerListAndTextFieldsV5 extends HTML_Element_Selectbox
 {
-    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = '', $with_user = true, $desc = '')
+    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = '', $desc = '')
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
-        $aff = Tracker_FormElementFactory::instance();
+        $form_element_factory = Tracker_FormElementFactory::instance();
 
-        foreach ($aff->getUsedListFields($tracker) as $field) {
+        foreach ($form_element_factory->getUsedListFields($tracker) as $field) {
+            if ($field instanceof OpenListField) {
+                continue;
+            }
+
             if ($field->userCanRead()) {
                 if ($field->getName() != 'comment_type_id') {
                     $selected = $this->value == $field->id;
@@ -47,7 +54,7 @@ final class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends H
                 }
             }
         }
-        foreach ($aff->getUsedStringFields($tracker) as $field) {
+        foreach ($form_element_factory->getUsedStringFields($tracker) as $field) {
             if ($field->userCanRead()) {
                 $selected = $this->value == $field->id;
                 $this->addOption(new HTML_Element_Option($field->getLabel(), $field->id, $selected));

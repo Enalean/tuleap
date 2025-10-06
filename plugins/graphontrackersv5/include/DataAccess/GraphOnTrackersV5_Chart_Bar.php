@@ -26,11 +26,11 @@ namespace Tuleap\GraphOnTrackersV5\DataAccess;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
-use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesV5;
+use Tuleap\GraphOnTrackersV5\Common\HTMLSelectboxElementWithTrackerListFieldsV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Chart_BarDataBuilder;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Bar;
 
-class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
+class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     protected $field_base;
     protected $field_group;
@@ -83,22 +83,22 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
         return $c;
     }
 
-    public function getField_base()
+    public function getField_base() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_base;
     }
 
-    public function setField_base($field_base)
+    public function setField_base($field_base) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_base = $field_base;
     }
 
-    public function getField_group()
+    public function getField_group() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_group;
     }
 
-    public function setField_group($field_group)
+    public function setField_group($field_group) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_group = $field_group;
     }
@@ -121,9 +121,9 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
         return array_merge(
             parent::getProperties(),
             [
-                new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Source Data'), 'chart[field_base]', $this->getField_base(), false),
+                new HTMLSelectboxElementWithTrackerListFieldsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Source Data'), 'chart[field_base]', $this->getField_base(), false),
 
-                new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Group by'), 'chart[field_group]', $this->getField_group(), true),
+                new HTMLSelectboxElementWithTrackerListFieldsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Group by'), 'chart[field_group]', $this->getField_group(), true),
             ]
         );
     }
