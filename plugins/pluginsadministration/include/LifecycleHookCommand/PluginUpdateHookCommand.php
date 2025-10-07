@@ -32,7 +32,7 @@ use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 
 final class PluginUpdateHookCommand extends Command
 {
-    public const NAME = 'plugins_administration:update_hook';
+    public const string NAME = 'plugins_administration:update_hook';
 
     public function __construct(
         private EventDispatcherInterface $event_dispatcher,

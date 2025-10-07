@@ -29106,44 +29106,14 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/pluginsadministration/include/ManageAllowedProjectsPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[TEMPLATE = 'manage-allowed-projects']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$is_plugin_restricted]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$allow_all_enabled]]></code>
     </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[resource_allowed_project_allow_all]]></code>
-      <code><![CDATA[resource_allowed_project_filter_empty]]></code>
-      <code><![CDATA[resource_allowed_project_information]]></code>
-      <code><![CDATA[resource_allowed_project_list]]></code>
-      <code><![CDATA[resource_allowed_project_list_allow_placeholder]]></code>
-      <code><![CDATA[resource_allowed_project_list_allow_project]]></code>
-      <code><![CDATA[resource_allowed_project_list_empty]]></code>
-      <code><![CDATA[resource_allowed_project_list_filter_placeholder]]></code>
-      <code><![CDATA[resource_allowed_project_list_id]]></code>
-      <code><![CDATA[resource_allowed_project_list_name]]></code>
-      <code><![CDATA[resource_allowed_project_list_revoke_projects]]></code>
-      <code><![CDATA[resource_allowed_project_pane_title]]></code>
-      <code><![CDATA[resource_allowed_project_revoke_description]]></code>
-      <code><![CDATA[resource_allowed_project_revoke_no]]></code>
-      <code><![CDATA[resource_allowed_project_revoke_title]]></code>
-      <code><![CDATA[resource_allowed_project_revoke_yes]]></code>
-      <code><![CDATA[resource_allowed_project_title]]></code>
-      <code><![CDATA[restricted_resource_action]]></code>
-      <code><![CDATA[restricted_resource_action_csrf]]></code>
-      <code><![CDATA[there_is_no_project]]></code>
-      <code><![CDATA[update_allowed_projects_action]]></code>
-      <code><![CDATA[update_allowed_projects_action_csrf]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/pluginsadministration/include/PluginDisablerVerifier.php">
-    <MissingClassConstType>
-      <code><![CDATA[SETTING_CANNOT_DISABLE_PLUGINS_WEB_UI = 'sys_plugins_that_can_not_be_disabled_from_the_web_ui']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$plugins_that_can_not_be_disabled_option]]></code>
     </MissingParamType>
