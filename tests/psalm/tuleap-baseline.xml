@@ -30288,9 +30288,6 @@
     <InvalidReturnType>
       <code><![CDATA[process]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[HISTORY_FIELD_NAME = 'pullrequest-default-settings']]></code>
-    </MissingClassConstType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
@@ -30304,11 +30301,6 @@
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidPropertyAssignmentValue>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/Events/PullRequestDiffRepresentationBuild.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'pullRequestDiffRepresentationBuild']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Exception/UnknownBranchNameException.php">
     <MissingParamType>
@@ -30394,9 +30386,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/GetCreatePullRequest.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'pullrequest_hook_create_pull_request']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getCreator]]></code>
       <code><![CDATA[getProject]]></code>
@@ -30404,9 +30393,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/GitExec.php">
-    <MissingClassConstType>
-      <code><![CDATA[GIT_MERGE_CONFLICT_MARKER_REGEX = '^\+<<<<<<<']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$base_ref]]></code>
       <code><![CDATA[$branch_name]]></code>
@@ -30455,12 +30441,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/GitReference/GitPullRequestReference.php">
-    <MissingClassConstType>
-      <code><![CDATA[PR_NAMESPACE = 'refs/tlpr/']]></code>
-      <code><![CDATA[STATUS_BROKEN          = 2]]></code>
-      <code><![CDATA[STATUS_NOT_YET_CREATED = 1]]></code>
-      <code><![CDATA[STATUS_OK              = 0]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$git_reference_id]]></code>
       <code><![CDATA[$new_git_reference_id]]></code>
@@ -30471,9 +30451,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/GitReference/GitPullRequestReferenceBulkConverter.php">
-    <MissingClassConstType>
-      <code><![CDATA[STOP_CONVERSION_FILE = 'tuleap_plugin_pullrequest_stop_bulk_convert']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[convertAllPullRequestsWithoutAGitReference]]></code>
     </MissingReturnType>
@@ -30547,11 +30524,6 @@
       <code><![CDATA[updateCommentOnAddedOrKeptLine]]></code>
       <code><![CDATA[updateCommentOnDeletedLine]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/InlineComment/Notification/InlineCommentCodeContextExtractor.php">
-    <MissingClassConstType>
-      <code><![CDATA[CODE_CONTEXT_NB_LINES = 5]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Label/LabeledItemCollector.php">
     <DeprecatedMethod>
@@ -30677,9 +30649,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/NavigationTab/NavigationTabPresenterBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[TAB_PULLREQUEST = 'tabs-pullrequest']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$selected_tab]]></code>
     </MissingParamType>
@@ -30955,15 +30924,6 @@
     </InvalidArgument>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/PullRequest.php">
-    <MissingClassConstType>
-      <code><![CDATA[CONFLICT_MERGE       = 3]]></code>
-      <code><![CDATA[FASTFORWARD_MERGE    = 2]]></code>
-      <code><![CDATA[NO_FASTFORWARD_MERGE = 1]]></code>
-      <code><![CDATA[STATUS_ABANDONED = 'A']]></code>
-      <code><![CDATA[STATUS_MERGED    = 'M']]></code>
-      <code><![CDATA[STATUS_REVIEW    = 'R']]></code>
-      <code><![CDATA[UNKNOWN_MERGE        = 0]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$branch_dest]]></code>
       <code><![CDATA[$branch_src]]></code>
@@ -31007,9 +30967,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/PullRequestMerger.php">
-    <MissingClassConstType>
-      <code><![CDATA[MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$destination_revision]]></code>
       <code><![CDATA[$destination_revision]]></code>
@@ -31162,9 +31119,6 @@
     <InvalidOperand>
       <code><![CDATA[$this->id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'pull_requests']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$status_acronym]]></code>
     </MissingParamType>
@@ -31174,34 +31128,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[COMMENTS_ROUTE = 'comments']]></code>
-      <code><![CDATA[CONFLICT_MERGE       = 'conflict']]></code>
-      <code><![CDATA[DIFF_ROUTE     = 'file_diff']]></code>
-      <code><![CDATA[FASTFORWARD_MERGE    = 'fastforward']]></code>
-      <code><![CDATA[FILES_ROUTE    = 'files']]></code>
-      <code><![CDATA[INLINE_ROUTE   = 'inline-comments']]></code>
-      <code><![CDATA[LABELS_ROUTE   = 'labels']]></code>
-      <code><![CDATA[NO_FASTFORWARD_MERGE = 'no_fastforward']]></code>
-      <code><![CDATA[ROUTE = parent::ROUTE]]></code>
-      <code><![CDATA[STATUS_ABANDON = 'abandon']]></code>
-      <code><![CDATA[STATUS_MERGE   = 'merge']]></code>
-      <code><![CDATA[STATUS_REVIEW  = 'review']]></code>
-      <code><![CDATA[TIMELINE_ROUTE = 'timeline']]></code>
-      <code><![CDATA[UNKNOWN_MERGE        = 'unknown-merge-status']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$last_build_date]]></code>
       <code><![CDATA[$last_build_status_name]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestRepresentationFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[BUILD_STATUS_FAIL    = 'fail']]></code>
-      <code><![CDATA[BUILD_STATUS_PENDING = 'pending']]></code>
-      <code><![CDATA[BUILD_STATUS_SUCCESS = 'success']]></code>
-      <code><![CDATA[BUILD_STATUS_UNKNOWN = 'unknown']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestStatusInfoRepresentationBuilder.php">
     <RiskyTruthyFalsyComparison>
@@ -31225,9 +31155,6 @@
       <code><![CDATA[protected function getTimeline($id, $limit = 10, $offset = 0)]]></code>
       <code><![CDATA[public function getCommits($id, $limit = 50, $offset = 0)]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -31262,11 +31189,6 @@
       <code><![CDATA[PathToHash]]></code>
       <code><![CDATA[PathToHash]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/REST/v1/RepositoryResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/Reviewer/ReviewerRepresentationInformationExtractor.php">
     <MissingPropertyType>
@@ -31332,11 +31254,6 @@
     <MissingReturnType>
       <code><![CDATA[searchByScopeAndKeywordAndGroupId]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/RepoManagement/PullRequestPane.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'pullrequest']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/RepoManagement/RepoManagementController.php">
     <InvalidClass>
@@ -31410,12 +31327,6 @@
       <code><![CDATA[getTotalSize]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/pullrequest/include/PullRequest/Timeline/TimelineComment.php">
-    <MissingClassConstType>
-      <code><![CDATA[FORMAT_MARKDOWN = 'commonmark']]></code>
-      <code><![CDATA[FORMAT_TEXT     = 'text']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/pullrequest/include/PullRequest/Tooltip/Presenter.php">
     <MissingParamType>
       <code><![CDATA[$creation_date]]></code>
@@ -31437,11 +31348,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/UniDiffLine.php">
-    <MissingClassConstType>
-      <code><![CDATA[ADDED   =  1]]></code>
-      <code><![CDATA[KEPT    =  0]]></code>
-      <code><![CDATA[REMOVED = -1]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$content]]></code>
       <code><![CDATA[$new_offset]]></code>
@@ -31470,11 +31376,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/pullrequest/include/pullrequestPlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[PR_REFERENCE_KEYWORD          = 'pr']]></code>
-      <code><![CDATA[PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest']]></code>
-      <code><![CDATA[REFERENCE_NATURE              = 'pullrequest']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$branch_name]]></code>
       <code><![CDATA[$dest_branch_name]]></code>

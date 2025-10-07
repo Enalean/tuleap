@@ -29,8 +29,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThreadCommentColorRetrieverTest extends TestCase
 {
-    private const PULLREQUEST_ID = 1;
-    private const PARENT_ID      = 10;
+    private const int PULLREQUEST_ID = 1;
+    private const int PARENT_ID      = 10;
     private CountThreadsStub $thread_counter;
     private ParentCommentSearcherStub $comment_searcher;
 

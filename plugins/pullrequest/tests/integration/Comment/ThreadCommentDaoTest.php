@@ -28,9 +28,9 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThreadCommentDaoTest extends TestIntegrationTestCase
 {
-    private const PULL_REQUEST_1_ID = 1;
-    private const FIRST_COMMENT_ID  = 1;
-    private const SECOND_COMMENT_ID = 2;
+    private const int PULL_REQUEST_1_ID = 1;
+    private const int FIRST_COMMENT_ID  = 1;
+    private const int SECOND_COMMENT_ID = 2;
 
     #[\Override]
     protected function setUp(): void

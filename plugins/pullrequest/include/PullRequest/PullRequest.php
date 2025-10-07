@@ -27,14 +27,14 @@ use Tuleap\Label\Labelable;
  */
 class PullRequest implements Labelable
 {
-    public const STATUS_ABANDONED = 'A';
-    public const STATUS_MERGED    = 'M';
-    public const STATUS_REVIEW    = 'R';
+    public const string STATUS_ABANDONED = 'A';
+    public const string STATUS_MERGED    = 'M';
+    public const string STATUS_REVIEW    = 'R';
 
-    public const UNKNOWN_MERGE        = 0;
-    public const NO_FASTFORWARD_MERGE = 1;
-    public const FASTFORWARD_MERGE    = 2;
-    public const CONFLICT_MERGE       = 3;
+    public const int UNKNOWN_MERGE        = 0;
+    public const int NO_FASTFORWARD_MERGE = 1;
+    public const int FASTFORWARD_MERGE    = 2;
+    public const int CONFLICT_MERGE       = 3;
 
     public function __construct(
         private $id,

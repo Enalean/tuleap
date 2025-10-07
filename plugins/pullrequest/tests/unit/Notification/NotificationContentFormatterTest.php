@@ -32,8 +32,8 @@ use Tuleap\Test\Stubs\ContentInterpretorStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotificationContentFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const COMMENT_SOURCE      = '**Some content**';
-    private const INTERPRETED_COMMENT = '<b>Some content</b>';
+    private const string COMMENT_SOURCE      = '**Some content**';
+    private const string INTERPRETED_COMMENT = '<b>Some content</b>';
     private RetrieveGitRepositoryStub $repository_retriever;
     private PullRequest $pull_request;
     private ContentInterpretorStub $content_interpreter;

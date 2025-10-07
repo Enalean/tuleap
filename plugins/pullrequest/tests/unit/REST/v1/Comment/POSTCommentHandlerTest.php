@@ -49,11 +49,11 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class POSTCommentHandlerTest extends TestCase
 {
-    private const INSERTED_ID    = 59;
-    private const CONTENT        = 'interinsurance';
-    private const PARENT_ID      = 58;
-    private const POST_TIMESTAMP = 1651725436;
-    private const AUTHOR_ID      = 658;
+    private const int INSERTED_ID    = 59;
+    private const string CONTENT     = 'interinsurance';
+    private const int PARENT_ID      = 58;
+    private const int POST_TIMESTAMP = 1651725436;
+    private const int AUTHOR_ID      = 658;
     private string $format;
     private ?int $parent_id;
     private ParentCommentSearcherStub $parent_comment_searcher;

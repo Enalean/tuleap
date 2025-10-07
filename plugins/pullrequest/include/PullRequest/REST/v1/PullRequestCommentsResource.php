@@ -65,7 +65,7 @@ final class PullRequestCommentsResource extends AuthenticatedResource
         Header::allowOptionsPatch();
     }
 
-    public const ROUTE = 'pull_request_comments';
+    public const string ROUTE = 'pull_request_comments';
 
     /**
      * Update an existing comment

@@ -31,23 +31,23 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 class PullRequestRepresentation extends PullRequestMinimalRepresentation
 {
-    public const ROUTE = parent::ROUTE;
+    public const string ROUTE = parent::ROUTE;
 
-    public const COMMENTS_ROUTE = 'comments';
-    public const INLINE_ROUTE   = 'inline-comments';
-    public const LABELS_ROUTE   = 'labels';
-    public const FILES_ROUTE    = 'files';
-    public const DIFF_ROUTE     = 'file_diff';
-    public const TIMELINE_ROUTE = 'timeline';
+    public const string COMMENTS_ROUTE = 'comments';
+    public const string INLINE_ROUTE   = 'inline-comments';
+    public const string LABELS_ROUTE   = 'labels';
+    public const string FILES_ROUTE    = 'files';
+    public const string DIFF_ROUTE     = 'file_diff';
+    public const string TIMELINE_ROUTE = 'timeline';
 
-    public const STATUS_ABANDON = 'abandon';
-    public const STATUS_MERGE   = 'merge';
-    public const STATUS_REVIEW  = 'review';
+    public const string STATUS_ABANDON = 'abandon';
+    public const string STATUS_MERGE   = 'merge';
+    public const string STATUS_REVIEW  = 'review';
 
-    public const NO_FASTFORWARD_MERGE = 'no_fastforward';
-    public const FASTFORWARD_MERGE    = 'fastforward';
-    public const CONFLICT_MERGE       = 'conflict';
-    public const UNKNOWN_MERGE        = 'unknown-merge-status';
+    public const string NO_FASTFORWARD_MERGE = 'no_fastforward';
+    public const string FASTFORWARD_MERGE    = 'fastforward';
+    public const string CONFLICT_MERGE       = 'conflict';
+    public const string UNKNOWN_MERGE        = 'unknown-merge-status';
 
     public string $description;
     public string $reference_src;

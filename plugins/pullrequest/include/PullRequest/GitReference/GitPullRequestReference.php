@@ -22,11 +22,11 @@ namespace Tuleap\PullRequest\GitReference;
 
 class GitPullRequestReference
 {
-    public const PR_NAMESPACE = 'refs/tlpr/';
+    public const string PR_NAMESPACE = 'refs/tlpr/';
 
-    public const STATUS_OK              = 0;
-    public const STATUS_NOT_YET_CREATED = 1;
-    public const STATUS_BROKEN          = 2;
+    public const int STATUS_OK              = 0;
+    public const int STATUS_NOT_YET_CREATED = 1;
+    public const int STATUS_BROKEN          = 2;
 
     /**
      * @var int

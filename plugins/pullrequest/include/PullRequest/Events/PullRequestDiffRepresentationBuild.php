@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class PullRequestDiffRepresentationBuild implements Dispatchable
 {
-    public const NAME = 'pullRequestDiffRepresentationBuild';
+    public const string NAME = 'pullRequestDiffRepresentationBuild';
 
     /**
      * @var string

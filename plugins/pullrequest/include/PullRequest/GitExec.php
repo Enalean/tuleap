@@ -26,7 +26,7 @@ use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 
 class GitExec extends Git_Exec
 {
-    private const GIT_MERGE_CONFLICT_MARKER_REGEX = '^\+<<<<<<<';
+    private const string GIT_MERGE_CONFLICT_MARKER_REGEX = '^\+<<<<<<<';
 
     /**
      * @throws UnknownBranchNameException

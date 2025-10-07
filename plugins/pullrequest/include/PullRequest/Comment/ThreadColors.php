@@ -27,7 +27,7 @@ namespace Tuleap\PullRequest\Comment;
  */
 final class ThreadColors
 {
-    public const TLP_COLORS = [
+    public const array TLP_COLORS = [
         'graffiti-yellow',
         'daphne-blue',
         'coral-pink',

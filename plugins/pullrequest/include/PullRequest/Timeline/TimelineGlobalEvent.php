@@ -22,11 +22,11 @@ namespace Tuleap\PullRequest\Timeline;
 
 final class TimelineGlobalEvent implements TimelineEvent
 {
-    public const UPDATE  = 1;
-    public const REBASE  = 2;
-    public const MERGE   = 3;
-    public const ABANDON = 4;
-    public const REOPEN  = 5;
+    public const int UPDATE  = 1;
+    public const int REBASE  = 2;
+    public const int MERGE   = 3;
+    public const int ABANDON = 4;
+    public const int REOPEN  = 5;
 
     private function __construct(
         private readonly int $id,

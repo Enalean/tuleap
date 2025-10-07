@@ -28,7 +28,7 @@ use Tuleap\Queue\Worker;
 
 final readonly class EventSubjectToNotificationAsynchronousQueueDispatcher implements EventDispatcherInterface
 {
-    public const TOPIC = 'tuleap.pullrequest.notification';
+    public const string TOPIC = 'tuleap.pullrequest.notification';
 
     public function __construct(private QueueFactory $queue_factory)
     {

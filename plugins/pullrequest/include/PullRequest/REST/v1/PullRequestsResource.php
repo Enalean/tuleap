@@ -144,7 +144,7 @@ use UserManager;
 
 class PullRequestsResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     private PullRequestPermissionChecker $permission_checker;
     private LabelsUpdater $labels_updater;

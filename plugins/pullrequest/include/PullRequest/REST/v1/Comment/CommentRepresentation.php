@@ -29,7 +29,7 @@ use Tuleap\User\REST\MinimalUserRepresentation;
  */
 final class CommentRepresentation
 {
-    public const TYPE = 'comment';
+    public const string TYPE = 'comment';
 
     public readonly int $id;
 

@@ -56,7 +56,7 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 final class PullRequestInlineCommentsResource extends AuthenticatedResource
 {
-    public const ROUTE = 'pull_request_inline_comments';
+    public const string ROUTE = 'pull_request_inline_comments';
 
     /**
      * @url OPTIONS {id}

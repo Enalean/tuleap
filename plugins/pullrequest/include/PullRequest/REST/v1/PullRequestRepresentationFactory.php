@@ -37,10 +37,10 @@ use Tuleap\User\RetrieveUserById;
 
 class PullRequestRepresentationFactory
 {
-    public const BUILD_STATUS_UNKNOWN = 'unknown';
-    public const BUILD_STATUS_SUCCESS = 'success';
-    public const BUILD_STATUS_FAIL    = 'fail';
-    public const BUILD_STATUS_PENDING = 'pending';
+    public const string BUILD_STATUS_UNKNOWN = 'unknown';
+    public const string BUILD_STATUS_SUCCESS = 'success';
+    public const string BUILD_STATUS_FAIL    = 'fail';
+    public const string BUILD_STATUS_PENDING = 'pending';
 
     public function __construct(
         private readonly AccessControlVerifier $access_control_verifier,

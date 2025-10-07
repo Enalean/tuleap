@@ -46,8 +46,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestWithGitReferenceRetrieverTest extends TestCase
 {
-    private const PULL_REQUEST_ID = 15;
-    private const REFERENCE_ID    = 150;
+    private const int PULL_REQUEST_ID = 15;
+    private const int REFERENCE_ID    = 150;
     private GetReferenceByPullRequestIdStub $git_pull_request_reference_dao;
     private RetrieveGitRepository $git_repository_factory;
     private SearchPullRequestStub $pull_request_dao;

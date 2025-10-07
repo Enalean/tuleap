@@ -58,8 +58,8 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PATCHCommentHandlerTest extends TestCase
 {
-    private const CURRENT_USER_ID = 105;
-    private const NEW_CONTENT     = 'B35';
+    private const int CURRENT_USER_ID = 105;
+    private const string NEW_CONTENT  = 'B35';
 
     private CommentPATCHRepresentation $comment_data;
     private CommentSearcherStub $comment_dao_searcher;

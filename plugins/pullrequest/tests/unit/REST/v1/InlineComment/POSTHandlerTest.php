@@ -50,14 +50,14 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class POSTHandlerTest extends TestCase
 {
-    private const INSERTED_ID    = 57;
-    private const CONTENT        = 'caciocavallo';
-    private const FILE_PATH      = 'path/to/file.php';
-    private const UNIDIFF_OFFSET = 23;
-    private const POSITION       = 'right';
-    private const PARENT_ID      = 43;
-    private const POST_TIMESTAMP = 1509159123;
-    private const AUTHOR_ID      = 305;
+    private const int INSERTED_ID    = 57;
+    private const string CONTENT     = 'caciocavallo';
+    private const string FILE_PATH   = 'path/to/file.php';
+    private const int UNIDIFF_OFFSET = 23;
+    private const string POSITION    = 'right';
+    private const int PARENT_ID      = 43;
+    private const int POST_TIMESTAMP = 1509159123;
+    private const int AUTHOR_ID      = 305;
     private string $format;
     private ?int $parent_id;
     private ParentCommentSearcherStub $parent_comment_searcher;

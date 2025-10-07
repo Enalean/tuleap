@@ -35,7 +35,7 @@ use Tuleap\Request\NotFoundException;
 
 class DefaultSettingsController implements DispatchableWithRequest
 {
-    public const HISTORY_FIELD_NAME = 'pullrequest-default-settings';
+    public const string HISTORY_FIELD_NAME = 'pullrequest-default-settings';
 
     public function __construct(
         private readonly MergeSettingDAO $merge_setting_dao,

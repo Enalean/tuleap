@@ -34,7 +34,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_DOING_THE_CHANGES_ID = 999;
+    private const int USER_DOING_THE_CHANGES_ID = 999;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ReviewerDAO

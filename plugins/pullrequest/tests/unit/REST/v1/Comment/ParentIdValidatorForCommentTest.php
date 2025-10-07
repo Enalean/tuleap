@@ -31,7 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParentIdValidatorForCommentTest extends TestCase
 {
-    private const PULL_REQUEST_ID = 10;
+    private const int PULL_REQUEST_ID = 10;
     private int $parent_id;
     private CommentSearcherStub $comment_dao;
 

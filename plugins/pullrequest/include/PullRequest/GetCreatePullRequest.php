@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetCreatePullRequest implements Dispatchable
 {
-    public const NAME = 'pullrequest_hook_create_pull_request';
+    public const string NAME = 'pullrequest_hook_create_pull_request';
 
     private $pull_request;
     private $creator;

@@ -53,9 +53,9 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GETHandlerTest extends TestCase
 {
-    private const REFERENCE_ID = 10523;
-    private const OFFSET       = 0;
-    private const LIMIT        = 50;
+    private const int REFERENCE_ID = 10523;
+    private const int OFFSET       = 0;
+    private const int LIMIT        = 50;
 
     private \GitRepository $repository;
     private PullRequest $pull_request;
