@@ -20,7 +20,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import NewItemModal from "./NewItemModal.vue";
 import emitter from "../../../../helpers/emitter";
 import * as tlp_modal from "@tuleap/tlp-modal";
@@ -106,7 +106,7 @@ describe("NewItemModal", () => {
                     provide: {
                         [PROJECT.valueOf()]: new ProjectBuilder(102).build(),
                         [IS_STATUS_PROPERTY_USED.valueOf()]: true,
-                        [USER_LOCALE.valueOf()]: "en_US",
+                        [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
                     },
                 },
             });

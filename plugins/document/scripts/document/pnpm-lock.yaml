@@ -29,6 +29,9 @@ dependencies:
   '@tuleap/keyboard-shortcuts':
     specifier: workspace:*
     version: link:../../../../lib/frontend/keyboard-shortcuts
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/locale
   '@tuleap/project-background':
     specifier: workspace:^
     version: link:../../../../lib/frontend/project-background

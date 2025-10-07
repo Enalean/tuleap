@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function toBCP47(locale: string): string {
+import type { LocaleString } from "./constants";
+
+export function toBCP47(locale: LocaleString): string {
     return locale.replace("_", "-");
 }

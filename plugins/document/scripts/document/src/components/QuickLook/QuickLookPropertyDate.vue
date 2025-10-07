@@ -59,6 +59,7 @@ import {
 } from "../../helpers/date-formatter";
 import { PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME } from "../../constants";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
+import { toBCP47 } from "@tuleap/locale";
 import { computed } from "vue";
 import type { Property } from "../../type";
 import { useGettext } from "vue3-gettext";
@@ -70,7 +71,7 @@ const { $gettext } = useGettext();
 const props = defineProps<{ property: Property }>();
 
 const date_time_format = strictInject(DATE_TIME_FORMAT);
-const user_locale = strictInject(USER_LOCALE);
+const user_locale = toBCP47(strictInject(USER_LOCALE));
 const relative_dates_display = strictInject(RELATIVE_DATES_DISPLAY);
 
 const is_date_valid = computed((): boolean => {

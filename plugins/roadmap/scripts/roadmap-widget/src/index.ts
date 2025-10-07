@@ -22,10 +22,10 @@ import { createGettext } from "vue3-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./components/App.vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { getLocaleWithDefault, toBCP47 } from "@tuleap/locale";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
 import { createInitializedStore } from "./store";
 import type { RootState } from "./store/type";
-import { toBCP47 } from "./helpers/locale-for-intl";
 import type { TimeScale } from "./type";
 import { Settings } from "luxon";
 import "./style/widget-roadmap.scss";
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const initial_root_state: RootState = {
             gettext_provider,
-            locale_bcp47: toBCP47(document.body.dataset.userLocale || "en_US"),
+            locale_bcp47: toBCP47(getLocaleWithDefault(document)),
             should_load_lvl1_iterations: Boolean(should_load_lvl1_iterations),
             should_load_lvl2_iterations: Boolean(should_load_lvl2_iterations),
         } as RootState;

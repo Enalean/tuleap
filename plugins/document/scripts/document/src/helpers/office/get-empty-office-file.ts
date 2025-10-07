@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { LocaleString } from "@tuleap/locale";
 
 export async function getEmptyOfficeFileFromMimeType(
-    locale: string,
+    locale: LocaleString,
     mime_type: string,
 ): Promise<{ file: File; badge_class: string; extension: string }> {
     let response: Response;

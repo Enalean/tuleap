@@ -20,8 +20,8 @@
 import { describe, expect, it } from "vitest";
 import type { DateFormatType } from "./IntlFormatter";
 import { IntlFormatter } from "./IntlFormatter";
-import type { LocaleString } from "@tuleap/core-constants";
-import { en_US_LOCALE, fr_FR_LOCALE, ko_KR_LOCALE } from "@tuleap/core-constants";
+import type { LocaleString } from "@tuleap/locale";
+import { en_US_LOCALE, fr_FR_LOCALE, ko_KR_LOCALE } from "@tuleap/locale";
 
 type Configuration = [LocaleString, string, DateFormatType];
 

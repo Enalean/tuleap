@@ -21,6 +21,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
 import * as date_formatter from "../../helpers/date-formatter";
 import type { Property } from "../../type";
@@ -40,7 +41,7 @@ describe("QuickLookPropertyDate", () => {
                 },
                 provide: {
                     [DATE_TIME_FORMAT.valueOf()]: "d/m/Y H:i",
-                    [USER_LOCALE.valueOf()]: "en_US",
+                    [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
                     [RELATIVE_DATES_DISPLAY.valueOf()]: "relative_first-absolute_shown",
                 },
             },

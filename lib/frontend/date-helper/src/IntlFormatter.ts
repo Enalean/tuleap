@@ -17,12 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LocaleString } from "@tuleap/core-constants";
-import { fr_FR_LOCALE } from "@tuleap/core-constants";
-
-function toBCP47(locale: string): string {
-    return locale.replace("_", "-");
-}
+import type { LocaleString } from "@tuleap/locale";
+import { fr_FR_LOCALE, toBCP47 } from "@tuleap/locale";
 
 function formatToPseudoISO(formatter: Intl.DateTimeFormat, date_string: string): string {
     const initial_accumulator = {

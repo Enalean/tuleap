@@ -19,6 +19,7 @@
 
 import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import DocumentRelativeDate from "./DocumentRelativeDate.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { DATE_TIME_FORMAT, RELATIVE_DATES_DISPLAY, USER_LOCALE } from "../../configuration-keys";
@@ -36,7 +37,7 @@ describe("DocumentRelativeDate", () => {
                 },
                 provide: {
                     [DATE_TIME_FORMAT.valueOf()]: "Y-m-d H:i",
-                    [USER_LOCALE.valueOf()]: "en_US",
+                    [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
                     [RELATIVE_DATES_DISPLAY.valueOf()]: "relative_first-absolute_shown",
                 },
             },
@@ -58,7 +59,7 @@ describe("DocumentRelativeDate", () => {
                 },
                 provide: {
                     [DATE_TIME_FORMAT.valueOf()]: "Y-m-d H:i",
-                    [USER_LOCALE.valueOf()]: "en_US",
+                    [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
                     [RELATIVE_DATES_DISPLAY.valueOf()]: "relative_first-absolute_shown",
                 },
             },
