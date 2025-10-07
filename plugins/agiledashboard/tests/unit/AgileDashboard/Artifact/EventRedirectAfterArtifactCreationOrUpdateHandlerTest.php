@@ -28,11 +28,11 @@ use PFUser;
 use Planning;
 use Planning_ArtifactLinker;
 use Planning_MilestoneFactory;
-use Planning_MilestonePaneFactory;
 use PlanningFactory;
 use Project;
 use ProjectManager;
 use Tracker_Artifact_Redirect;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\GlobalResponseMock;
@@ -64,7 +64,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
     private Planning_ArtifactLinker&\PHPUnit\Framework\MockObject\MockObject $artifact_linker;
     private PlanningFactory&\PHPUnit\Framework\MockObject\MockObject $planning_factory;
     private Planning_MilestoneFactory&\PHPUnit\Framework\MockObject\MockObject $milestone_factory;
-    private Planning_MilestonePaneFactory&\PHPUnit\Framework\MockObject\MockObject $pane_factory;
+    private PlanningMilestonePaneFactory&\PHPUnit\Framework\MockObject\MockObject $pane_factory;
     private Artifact $artifact;
 
     #[Override]
@@ -75,7 +75,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $this->artifact_linker                    = $this->createMock(Planning_ArtifactLinker::class);
         $this->planning_factory                   = $this->createMock(PlanningFactory::class);
         $this->milestone_factory                  = $this->createMock(Planning_MilestoneFactory::class);
-        $this->pane_factory                       = $this->createMock(Planning_MilestonePaneFactory::class);
+        $this->pane_factory                       = $this->createMock(PlanningMilestonePaneFactory::class);
 
         $this->injector = new RedirectParameterInjector(
             $this->params_extractor,

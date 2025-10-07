@@ -32,7 +32,7 @@ class CardwallPaneInfo extends PaneInfo
     }
 
     /**
-     * @see AgileDashboard_Pane::getIdentifier()
+     * @see AgileDashboardPane::getIdentifier()
      */
     #[\Override]
     public function getIdentifier()
@@ -41,7 +41,7 @@ class CardwallPaneInfo extends PaneInfo
     }
 
     /**
-     * @see AgileDashboard_Pane::getTitle()
+     * @see AgileDashboardPane::getTitle()
      */
     #[\Override]
     public function getTitle()

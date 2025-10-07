@@ -23,6 +23,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemCollectionFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
@@ -34,7 +35,7 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 /**
  * A pane to be displayed in AgileDashboard
  */
-class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Cardwall_Pane extends AgileDashboardPane // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var CardwallPaneInfo
@@ -100,25 +101,25 @@ class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.Cla
     }
 
     #[\Override]
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->info->getIdentifier();
     }
 
     /**
-     * @see AgileDashboard_Pane::getFullContent()
+     * @see AgileDashboardPane::getFullContent()
      */
     #[\Override]
-    public function getFullContent()
+    public function getFullContent(): string
     {
         return $this->getPaneContent('agiledashboard-fullpane');
     }
 
     /**
-     * @see AgileDashboard_Pane::getMinimalContent()
+     * @see AgileDashboardPane::getMinimalContent()
      */
     #[\Override]
-    public function getMinimalContent()
+    public function getMinimalContent(): string
     {
         return $this->getPaneContent('agiledashboard-minimalpane');
     }

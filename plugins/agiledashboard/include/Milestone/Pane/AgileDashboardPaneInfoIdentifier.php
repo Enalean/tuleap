@@ -18,17 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Pane;
+
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
 
-class AgileDashboard_PaneInfoIdentifier
+class AgileDashboardPaneInfoIdentifier
 {
     /**
      * @param string $pane_info_identifier
-     *
-     * @return bool
      */
-    public function isPaneAPlanningV2($pane_info_identifier)
+    public function isPaneAPlanningV2($pane_info_identifier): bool
     {
         return in_array($pane_info_identifier, [
             PlanningV2PaneInfo::IDENTIFIER,

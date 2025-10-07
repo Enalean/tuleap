@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan;
 
-use Planning_MilestonePaneFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
 use UserHelper;
@@ -32,7 +32,7 @@ use UserHelper;
 class TestPlanPresenterBuilder
 {
     public function __construct(
-        private Planning_MilestonePaneFactory $pane_factory,
+        private PlanningMilestonePaneFactory $pane_factory,
         private Config $testmanagement_config,
         private TrackerFactory $tracker_factory,
         private TestPlanTestDefinitionTrackerRetriever $definition_tracker_retriever,

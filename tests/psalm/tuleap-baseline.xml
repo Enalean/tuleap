@@ -901,14 +901,6 @@
       <code><![CDATA[$milestone_artifact == null]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/agiledashboard/include/Planning/MilestonePaneFactory.php">
-    <MissingReturnType>
-      <code><![CDATA[buildDefaultPane]]></code>
-      <code><![CDATA[getDetailsPane]]></code>
-      <code><![CDATA[getDetailsPaneInfo]]></code>
-      <code><![CDATA[getDetailsPresenterBuilder]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/Planning/MilestonePresenter.php">
     <InvalidOperand>
       <code><![CDATA[$this->milestone->getArtifactId()]]></code>
@@ -75872,7 +75864,6 @@
       <code><![CDATA[$display_nb_projects]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$nb_active_sessions]]></code>
       <code><![CDATA[$nb_matching_users]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$result]]></code>
@@ -75889,10 +75880,8 @@
       <code><![CDATA[$export_url]]></code>
       <code><![CDATA[$login_name_header]]></code>
       <code><![CDATA[$matching_users]]></code>
-      <code><![CDATA[$nb_active_sessions]]></code>
       <code><![CDATA[$nb_matching_users]]></code>
       <code><![CDATA[$nb_projects_header]]></code>
-      <code><![CDATA[$profile_header]]></code>
       <code><![CDATA[$real_nam_header]]></code>
       <code><![CDATA[$sortby_name_icon]]></code>
       <code><![CDATA[$sortby_name_url]]></code>
@@ -75910,9 +75899,7 @@
       <code><![CDATA[getSortUrlParams]]></code>
     </MissingReturnType>
     <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->active_sessions_confirm]]></code>
       <code><![CDATA[$this->active_sessions_csrf]]></code>
-      <code><![CDATA[$this->active_sessions_label]]></code>
       <code><![CDATA[$this->export_csv]]></code>
       <code><![CDATA[$this->no_matching_users]]></code>
       <code><![CDATA[$this->pagination]]></code>

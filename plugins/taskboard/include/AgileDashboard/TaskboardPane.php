@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
-use AgileDashboard_Pane;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
-class TaskboardPane extends AgileDashboard_Pane
+class TaskboardPane extends AgileDashboardPane
 {
     /**
      * @var TaskboardPaneInfo
@@ -42,7 +42,7 @@ class TaskboardPane extends AgileDashboard_Pane
      * @see PaneInfo::getIdentifier()
      */
     #[\Override]
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->pane_info->getIdentifier();
     }
@@ -53,7 +53,7 @@ class TaskboardPane extends AgileDashboard_Pane
      * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
     #[\Override]
-    public function getFullContent()
+    public function getFullContent(): string
     {
         return '';
     }
@@ -65,7 +65,7 @@ class TaskboardPane extends AgileDashboard_Pane
      * @return string eg: '<table>...</table>'
      */
     #[\Override]
-    public function getMinimalContent()
+    public function getMinimalContent(): string
     {
         return '';
     }

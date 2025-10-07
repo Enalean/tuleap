@@ -20,9 +20,9 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
-use AgileDashboard_Pane;
 use Override;
 use TemplateRendererFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
 
 /**
  * I display the content of a milestone in a pane
@@ -30,7 +30,7 @@ use TemplateRendererFactory;
  * The content of a "release" is all "stories" (open and closed) that belongs to
  * the release (aka their "epic" parent are planned into the release)
  */
-class DetailsPane extends AgileDashboard_Pane
+class DetailsPane extends AgileDashboardPane
 {
     public function __construct(
         private readonly DetailsPaneInfo $info,
@@ -45,7 +45,7 @@ class DetailsPane extends AgileDashboard_Pane
     }
 
     /**
-     * @see AgileDashboard_Pane::getFullContent()
+     * @see AgileDashboardPane::getFullContent()
      */
     #[Override]
     public function getFullContent(): string
@@ -54,7 +54,7 @@ class DetailsPane extends AgileDashboard_Pane
     }
 
     /**
-     * @see AgileDashboard_Pane::getMinimalContent()
+     * @see AgileDashboardPane::getMinimalContent()
      */
     #[Override]
     public function getMinimalContent(): string

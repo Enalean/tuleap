@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
-use AgileDashboard_Pane;
 use PFUser;
 use Planning_Milestone;
 use Tuleap\Event\Dispatchable;
@@ -33,7 +32,7 @@ class PaneInfoCollector implements Dispatchable
     public const string NAME = 'agiledashboardEventAdditionalPanesOnMilestone';
 
     /**
-     * @var null|\Closure(): AgileDashboard_Pane
+     * @var null|\Closure(): AgileDashboardPane
      */
     private ?\Closure $active_pane_builder = null;
 
@@ -44,7 +43,7 @@ class PaneInfoCollector implements Dispatchable
         private readonly Planning_Milestone $milestone,
         private readonly ?ActivePaneContext $active_pane_context,
         private array $panes,
-        private readonly ?AgileDashboard_Pane $active_pane,
+        private readonly ?AgileDashboardPane $active_pane,
         private readonly PFUser $current_user,
     ) {
     }
@@ -97,7 +96,7 @@ class PaneInfoCollector implements Dispatchable
         );
     }
 
-    public function getActivePane(): ?AgileDashboard_Pane
+    public function getActivePane(): ?AgileDashboardPane
     {
         if ($this->active_pane_builder) {
             return call_user_func($this->active_pane_builder);
@@ -107,7 +106,7 @@ class PaneInfoCollector implements Dispatchable
     }
 
     /**
-     * @param \Closure(): AgileDashboard_Pane $active_pane_builder
+     * @param \Closure(): AgileDashboardPane $active_pane_builder
      */
     public function setActivePaneBuilder(\Closure $active_pane_builder): void
     {

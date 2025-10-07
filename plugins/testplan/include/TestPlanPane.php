@@ -20,10 +20,10 @@
 
 namespace Tuleap\TestPlan;
 
-use AgileDashboard_Pane;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
-final class TestPlanPane extends AgileDashboard_Pane
+final class TestPlanPane extends AgileDashboardPane
 {
     /**
      * @var TestPlanPaneInfo

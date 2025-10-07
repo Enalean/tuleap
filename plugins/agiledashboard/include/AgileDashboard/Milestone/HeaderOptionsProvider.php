@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use AgileDashboard_PaneInfoIdentifier;
 use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
@@ -39,7 +39,7 @@ class HeaderOptionsProvider
 {
     public function __construct(
         private readonly MilestoneBacklogFactory $backlog_factory,
-        private readonly AgileDashboard_PaneInfoIdentifier $pane_info_identifier,
+        private readonly AgileDashboardPaneInfoIdentifier $pane_info_identifier,
         private readonly TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
         private readonly HeaderOptionsForPlanningProvider $header_options_for_planning_provider,
         private readonly ParentTrackerRetriever $parent_tracker_retriever,

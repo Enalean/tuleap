@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 
@@ -25,7 +26,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
  * I facilitate the association of Backlog Elements with sub-milestones
  *
  */
-class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboard_Pane
+class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboardPane //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /** @var PlanningV2PaneInfo */
     private $info;
@@ -41,29 +42,26 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
         $this->presenter = $presenter;
     }
 
-    /**
-     * @return string
-     */
     #[Override]
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->info->getIdentifier();
     }
 
     /**
-     * @see AgileDashboard_Pane::getFullContent()
+     * @see AgileDashboardPane::getFullContent()
      */
     #[Override]
-    public function getFullContent()
+    public function getFullContent(): string
     {
         return $this->getPaneContent();
     }
 
     /**
-     * @see AgileDashboard_Pane::getMinimalContent()
+     * @see AgileDashboardPane::getMinimalContent()
      */
     #[Override]
-    public function getMinimalContent()
+    public function getMinimalContent(): string
     {
         return '';
     }

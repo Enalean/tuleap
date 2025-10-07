@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
-use AgileDashboard_Pane;
 use Planning_NoMilestone;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\FRS\AgileDashboardPaneInfo;
@@ -142,7 +141,7 @@ final class PaneInfoCollectorTest extends TestCase
 
     public function testItReturnsDefaultActivePane(): void
     {
-        $active_pane = $this->createMock(AgileDashboard_Pane::class);
+        $active_pane = $this->createMock(AgileDashboardPane::class);
         $active_pane->method('getIdentifier')->willReturn('ad');
 
         $collector = new PaneInfoCollector(
@@ -158,7 +157,7 @@ final class PaneInfoCollectorTest extends TestCase
 
     public function testItReturnsActivePaneProvidedByBuilder(): void
     {
-        $default_active_pane = $this->createMock(AgileDashboard_Pane::class);
+        $default_active_pane = $this->createMock(AgileDashboardPane::class);
         $default_active_pane->method('getIdentifier')->willReturn('ad');
 
         $collector = new PaneInfoCollector(
@@ -170,7 +169,7 @@ final class PaneInfoCollectorTest extends TestCase
         );
 
         $collector->setActivePaneBuilder(function () {
-            $pane = $this->createMock(AgileDashboard_Pane::class);
+            $pane = $this->createMock(AgileDashboardPane::class);
             $pane->method('getIdentifier')->willReturn('taskboard');
 
             return $pane;
