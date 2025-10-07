@@ -61,7 +61,7 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 final class POSTHandler extends TestCase
 {
-    private const ROOT_COMMENT_ID = 80;
+    private const int ROOT_COMMENT_ID = 80;
 
     private \PFUser $reply_author;
     private InlineCommentReplyPOSTRepresentation $reply_data;

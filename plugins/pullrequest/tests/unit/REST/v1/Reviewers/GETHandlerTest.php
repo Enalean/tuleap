@@ -35,7 +35,7 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GETHandlerTest extends TestCase
 {
-    private const LIMIT = 1;
+    private const int LIMIT = 1;
 
     public function testItReturnsOkWithRepositoryPullRequestReviewersRepresentation(): void
     {

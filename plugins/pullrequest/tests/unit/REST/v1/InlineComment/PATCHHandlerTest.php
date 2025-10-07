@@ -53,8 +53,8 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PATCHHandlerTest extends TestCase
 {
-    private const INLINE_COMMENT_ID = 49;
-    private const UPDATED_CONTENT   = 'animastical zebrawood';
+    private const int INLINE_COMMENT_ID  = 49;
+    private const string UPDATED_CONTENT = 'animastical zebrawood';
     private InlineCommentSearcherStub $comment_searcher;
     private PullRequest $pull_request;
     private \PFUser $comment_author;

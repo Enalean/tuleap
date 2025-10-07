@@ -33,8 +33,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestRetrieverTest extends TestCase
 {
-    private const PULL_REQUEST_ID = 548;
-    private const TITLE           = 'antasthenic pseudosessile';
+    private const int PULL_REQUEST_ID = 548;
+    private const string TITLE        = 'antasthenic pseudosessile';
     private SearchPullRequestStub $pull_request_dao;
 
     #[\Override]

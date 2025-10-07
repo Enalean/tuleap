@@ -29,7 +29,7 @@ use Tuleap\PullRequest\Tests\Stub\InlineCommentSearcherStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const INLINE_COMMENT_ID = 12;
+    private const int INLINE_COMMENT_ID = 12;
     private InlineCommentSearcherStub $dao;
 
     #[\Override]

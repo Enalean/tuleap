@@ -45,7 +45,7 @@ final class ReviewerAutocompleterController extends DispatchablePSR15Compatible 
      * Arbitrary limit, implement a proper pagination of the results
      * if you want all everything
      */
-    private const MAX_USERS_RETURNED_TO_AUTOCOMPLETER = 20;
+    private const int MAX_USERS_RETURNED_TO_AUTOCOMPLETER = 20;
 
     public function __construct(
         private readonly UserManager $user_manager,

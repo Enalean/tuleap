@@ -31,8 +31,8 @@ use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReviewerDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const REPOSITORY_ID = 5;
-    private const FORK_ID       = 19;
+    private const int REPOSITORY_ID = 5;
+    private const int FORK_ID       = 19;
 
     private int $bob_user_id;
     private int $alice_user_id;

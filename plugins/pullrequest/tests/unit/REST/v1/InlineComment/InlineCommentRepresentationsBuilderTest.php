@@ -35,10 +35,10 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InlineCommentRepresentationsBuilderTest extends TestCase
 {
-    private const COMMENTS_AUTHOR_ID = 190;
-    private const FILE_PATH          = 'path/to/file.php';
-    private const FIRST_COMMENT_ID   = 761;
-    private const SECOND_COMMENT_ID  = 762;
+    private const int COMMENTS_AUTHOR_ID = 190;
+    private const string FILE_PATH       = 'path/to/file.php';
+    private const int FIRST_COMMENT_ID   = 761;
+    private const int SECOND_COMMENT_ID  = 762;
     private SearchInlineCommentsOnFileStub $comments_searcher;
     private RetrieveUserByIdStub $user_retriever;
     private PullRequest $pull_request;

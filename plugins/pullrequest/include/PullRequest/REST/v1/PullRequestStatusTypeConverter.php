@@ -26,11 +26,11 @@ use Tuleap\PullRequest\Timeline\TimelineGlobalEvent;
 
 final class PullRequestStatusTypeConverter
 {
-    private const UPDATE  = 'update';
-    private const REBASE  = 'rebase';
-    private const MERGE   = 'merge';
-    private const ABANDON = 'abandon';
-    private const REOPEN  = 'reopen';
+    private const string UPDATE  = 'update';
+    private const string REBASE  = 'rebase';
+    private const string MERGE   = 'merge';
+    private const string ABANDON = 'abandon';
+    private const string REOPEN  = 'reopen';
 
     public static function fromIntStatusToStringStatus(int $type_acronym): string
     {

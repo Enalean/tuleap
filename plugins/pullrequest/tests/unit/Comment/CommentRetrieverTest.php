@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentRetrieverTest extends TestCase
 {
-    private const COMMENT_ID = 15;
+    private const int COMMENT_ID = 15;
     private CommentSearcherStub $comment_dao;
 
     #[\Override]

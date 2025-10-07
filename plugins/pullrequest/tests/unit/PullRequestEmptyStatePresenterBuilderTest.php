@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestEmptyStatePresenterBuilderTest extends TestCase
 {
-    private const PARENT_REPOSITORY_URL = 'url/to/parent_repository.git';
+    private const string PARENT_REPOSITORY_URL = 'url/to/parent_repository.git';
 
     private PullRequestEmptyStatePresenterBuilder $presenter_builder;
 

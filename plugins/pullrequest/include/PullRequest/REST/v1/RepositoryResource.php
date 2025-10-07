@@ -54,7 +54,7 @@ use UserManager;
 
 class RepositoryResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     /**
      * @url OPTIONS {id}/pull_requests

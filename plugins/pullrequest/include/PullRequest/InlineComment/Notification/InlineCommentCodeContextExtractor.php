@@ -31,7 +31,7 @@ use Tuleap\PullRequest\UniDiffLine;
 
 class InlineCommentCodeContextExtractor
 {
-    private const CODE_CONTEXT_NB_LINES = 5;
+    private const int CODE_CONTEXT_NB_LINES = 5;
 
     /**
      * @var FileUniDiffBuilder

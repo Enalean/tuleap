@@ -29,7 +29,7 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullRequestMerger
 {
-    public const MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
+    public const string MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
 
     /**
      * @var MergeSettingRetriever

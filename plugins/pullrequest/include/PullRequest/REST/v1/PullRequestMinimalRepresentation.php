@@ -30,7 +30,7 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 class PullRequestMinimalRepresentation
 {
-    public const ROUTE = 'pull_requests';
+    public const string ROUTE = 'pull_requests';
 
     public int $id;
     public string $title;

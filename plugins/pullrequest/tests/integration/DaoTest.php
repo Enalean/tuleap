@@ -40,15 +40,15 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DaoTest extends TestCase
 {
-    private const REPOSITORY_ID = 5;
-    private const LIMIT         = 10;
-    private const OFFSET        = 0;
+    private const int REPOSITORY_ID = 5;
+    private const int LIMIT         = 10;
+    private const int OFFSET        = 0;
 
-    private const BOB_USER_ID   = 102;
-    private const ALICE_USER_ID = 103;
+    private const int BOB_USER_ID   = 102;
+    private const int ALICE_USER_ID = 103;
 
-    private const LABEL_EMERGENCY_ID = 11;
-    private const LABEL_EASY_FIX_ID  = 19;
+    private const int LABEL_EMERGENCY_ID = 11;
+    private const int LABEL_EASY_FIX_ID  = 19;
 
     private Dao $dao;
     private PullRequestLabelDao $pull_requests_labels_dao;

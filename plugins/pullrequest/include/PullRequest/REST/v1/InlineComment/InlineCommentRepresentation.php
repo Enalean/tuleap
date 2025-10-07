@@ -30,7 +30,7 @@ use Tuleap\User\REST\MinimalUserRepresentation;
  */
 final class InlineCommentRepresentation
 {
-    public const TYPE = 'inline-comment';
+    public const string TYPE = 'inline-comment';
 
     public readonly int $id;
     public readonly string $file_path;

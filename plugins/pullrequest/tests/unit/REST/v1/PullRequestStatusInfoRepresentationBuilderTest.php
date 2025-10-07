@@ -35,7 +35,7 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID = 102;
+    private const int USER_ID = 102;
 
     public function testItReturnsARepresentationWhenThePullRequestHasBeenMergedAndAMergeEventExists(): void
     {

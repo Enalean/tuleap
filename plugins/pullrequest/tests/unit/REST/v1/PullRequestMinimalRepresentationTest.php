@@ -37,17 +37,17 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestMinimalRepresentationTest extends TestCase
 {
-    private const PULL_REQUEST_ID         = 21;
-    private const TITLE                   = 'Fix phalangiform presubject';
-    private const SOURCE_REPO_NAME        = 'glycerate_twinner';
-    private const SOURCE_BRANCH_NAME      = 'Phalacrocoracidae';
-    private const SOURCE_SHA1             = '7357425451377171515369565166767166476977';
-    private const DESTINATION_REPO_NAME   = 'pantherlike_pennant';
-    private const DESTINATION_BRANCH_NAME = 'main';
-    private const CREATOR_USER_ID         = 172;
-    private const CREATOR_NAME            = 'Sarah Rocha';
-    private const FIRST_REVIEWER_USER_ID  = 126;
-    private const SECOND_REVIEWER_USER_ID = 187;
+    private const int PULL_REQUEST_ID            = 21;
+    private const string TITLE                   = 'Fix phalangiform presubject';
+    private const string SOURCE_REPO_NAME        = 'glycerate_twinner';
+    private const string SOURCE_BRANCH_NAME      = 'Phalacrocoracidae';
+    private const string SOURCE_SHA1             = '7357425451377171515369565166767166476977';
+    private const string DESTINATION_REPO_NAME   = 'pantherlike_pennant';
+    private const string DESTINATION_BRANCH_NAME = 'main';
+    private const int CREATOR_USER_ID            = 172;
+    private const string CREATOR_NAME            = 'Sarah Rocha';
+    private const int FIRST_REVIEWER_USER_ID     = 126;
+    private const int SECOND_REVIEWER_USER_ID    = 187;
 
     private GitoliteAccessURLGenerator&Stub $url_generator;
     private PullRequest $pull_request;

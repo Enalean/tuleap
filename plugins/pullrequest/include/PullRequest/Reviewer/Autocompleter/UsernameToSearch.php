@@ -27,7 +27,7 @@ namespace Tuleap\PullRequest\Reviewer\Autocompleter;
  */
 final class UsernameToSearch
 {
-    private const MINIMAL_LENGTH = 3;
+    private const int MINIMAL_LENGTH = 3;
 
     /**
      * @var string
