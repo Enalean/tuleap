@@ -44,7 +44,7 @@ class FormElementConvertorBuilder
             'subby'    => \Tuleap\Tracker\FormElement\Field\SubmittedBy\XML\XMLSubmittedByField::class,
             'aid'      => \Tuleap\Tracker\FormElement\Field\ArtifactId\XML\XMLArtifactIdField::class,
             'art_link' => \Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField::class,
-            'cross'    => \Tuleap\Tracker\FormElement\Field\CrossReference\XML\XMLCrossReferenceField::class,
+            'cross'    => \Tuleap\Tracker\FormElement\Field\CrossReferences\XMLCrossReferenceField::class,
             'burndown' => \Tuleap\Tracker\FormElement\Field\Burndown\XML\XMLBurndownField::class,
             'luby'     => \Tuleap\Tracker\FormElement\Field\LastUpdateBy\XML\XMLLastModifiedByField::class,
             'column'   => \Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn::class,

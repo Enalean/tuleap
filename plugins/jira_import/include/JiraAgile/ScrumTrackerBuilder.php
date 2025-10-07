@@ -31,7 +31,7 @@ use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\XML\XMLArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Burndown\XML\XMLBurndownField;
-use Tuleap\Tracker\FormElement\Field\CrossReference\XML\XMLCrossReferenceField;
+use Tuleap\Tracker\FormElement\Field\CrossReferences\XMLCrossReferenceField;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\Integer\XML\XMLIntegerField;
 use Tuleap\Tracker\FormElement\Field\LastModifiedBy\XML\XMLLastModifiedByField;

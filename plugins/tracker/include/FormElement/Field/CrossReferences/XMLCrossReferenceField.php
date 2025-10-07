@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\CrossReference\XML;
+namespace Tuleap\Tracker\FormElement\Field\CrossReferences;
 
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
