@@ -53,7 +53,7 @@
     </template>
 </template>
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
@@ -61,12 +61,14 @@ import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../api/ArtifactLinks
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import LoadAllButton from "../feedback/LoadAllButton.vue";
-import { RETRIEVE_ARTIFACT_LINKS, TABLE_DATA_STORE, WIDGET_ID } from "../../injection-symbols";
+import { TABLE_DATA_ORCHESTRATOR, TABLE_DATA_STORE } from "../../injection-symbols";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import SelectableCell from "./SelectableCell.vue";
 import EditCell from "./EditCell.vue";
+import type { TableDataStore } from "../../domain/TableDataStore";
+import type { TableDataOrchestrator } from "../../domain/TableDataOrchestrator";
 
-const table_data_store = strictInject(TABLE_DATA_STORE);
+const table_data_store: TableDataStore = strictInject(TABLE_DATA_STORE);
 
 interface ArtifactLinksFetchStatus {
     is_loading: boolean;
@@ -87,8 +89,7 @@ const props = defineProps<{
 }>();
 
 const DIRECT_PARENT = 1;
-const artifact_links_retriever = strictInject(RETRIEVE_ARTIFACT_LINKS);
-const widget_id = strictInject(WIDGET_ID);
+const table_data_orchestrator: TableDataOrchestrator = strictInject(TABLE_DATA_ORCHESTRATOR);
 
 const forward_links = ref<ReadonlyArray<ArtifactRow>>([]);
 const reverse_links = ref<ReadonlyArray<ArtifactRow>>([]);
@@ -117,17 +118,6 @@ const reverse = computed((): ArtifactLinksFetchStatus => {
 
 const display_a_load_all_button = computed((): boolean => {
     return totalNumberOfLinksIsGreaterThanMaximalLimit() && linksAreNotAllLoaded();
-});
-
-onMounted((): void => {
-    table_data_store.addEntry({
-        parent_row_uuid: props.parent_row ? props.parent_row.row_uuid : null,
-        row: props.row,
-    });
-});
-
-onBeforeUnmount((): void => {
-    table_data_store.removeEntry(props.row.row_uuid);
 });
 
 function totalNumberOfLinksIsGreaterThanMaximalLimit(): boolean {
@@ -160,15 +150,15 @@ function toggleLinks(): void {
     is_expanded.value = !is_expanded.value;
 
     if (!is_expanded.value) {
+        table_data_orchestrator.closeArtifactRow(props.row);
         return;
     }
 
-    if (!are_forward_links_loading.value && !are_reverse_links_loading.value) {
-        return;
-    }
+    are_forward_links_loading.value = true;
+    are_reverse_links_loading.value = true;
 
-    artifact_links_retriever
-        .getForwardLinks(widget_id, props.row.artifact_id, props.tql_query)
+    table_data_orchestrator
+        .loadForwardArtifactLinks(props.row, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 total_number_of_forward_links.value = artifacts.total;
@@ -182,8 +172,8 @@ function toggleLinks(): void {
             are_forward_links_loading.value = false;
         });
 
-    artifact_links_retriever
-        .getReverseLinks(widget_id, props.row.artifact_id, props.tql_query)
+    table_data_orchestrator
+        .loadReverseArtifactLinks(props.row, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 total_number_of_reverse_links.value = artifacts.total;
@@ -200,18 +190,13 @@ function toggleLinks(): void {
 
 function loadAllArtifactLinks(): void {
     if (total_number_of_forward_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED) {
-        artifact_links_retriever
-            .getAllForwardLinks(widget_id, props.row.artifact_id, props.tql_query)
+        table_data_orchestrator
+            .loadAllForwardArtifactLinks(props.row, props.tql_query)
             .match(
-                (artifacts: ArtifactsTable[]) => {
-                    if (artifacts.length === 0) {
-                        return;
-                    }
+                (artifacts: ArtifactsTable) => {
                     const rows: ArtifactRow[] = [];
-                    for (const artifact of artifacts) {
-                        if (artifact.rows) {
-                            rows.push(...artifact.rows);
-                        }
+                    if (artifacts.rows) {
+                        rows.push(...artifacts.rows);
                     }
                     forward_links.value = filterAlreadySeenArtifact(rows);
                 },
@@ -225,18 +210,13 @@ function loadAllArtifactLinks(): void {
     }
 
     if (total_number_of_reverse_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED) {
-        artifact_links_retriever
-            .getAllReverseLinks(widget_id, props.row.artifact_id, props.tql_query)
+        table_data_orchestrator
+            .loadAllReverseArtifactLinks(props.row, props.tql_query)
             .match(
-                (artifacts: ArtifactsTable[]) => {
-                    if (artifacts.length === 0) {
-                        return;
-                    }
+                (artifacts: ArtifactsTable) => {
                     const rows: ArtifactRow[] = [];
-                    for (const artifact of artifacts) {
-                        if (artifact.rows) {
-                            rows.push(...artifact.rows);
-                        }
+                    if (artifacts.rows) {
+                        rows.push(...artifacts.rows);
                     }
                     reverse_links.value = filterAlreadySeenArtifact(rows);
                 },

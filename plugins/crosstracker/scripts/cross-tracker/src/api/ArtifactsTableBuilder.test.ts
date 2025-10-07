@@ -83,6 +83,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const numeric_column = "remaining_effort";
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [
                         { type: DATE_SELECTABLE_TYPE, name: date_column },
@@ -101,7 +102,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns).toHaveLength(3);
@@ -147,6 +147,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const date_column = "start_date";
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: DATE_SELECTABLE_TYPE, name: date_column }],
                     [
@@ -161,7 +162,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(date_column)).toBe(true);
@@ -195,6 +195,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const numeric_column = "remaining_effort";
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: NUMERIC_SELECTABLE_TYPE, name: numeric_column }],
                     [
@@ -207,7 +208,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [numeric_column]: { value: null } }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(numeric_column)).toBe(true);
@@ -237,6 +237,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const text_column = "details";
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: TEXT_SELECTABLE_TYPE, name: text_column }],
                     [
@@ -244,7 +245,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [text_column]: { value: "" } }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(text_column)).toBe(true);
@@ -267,6 +267,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const unknown_column = "details";
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: UNKNOWN_SELECTABLE_TYPE, name: unknown_column }],
                     [
@@ -276,7 +277,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [unknown_column]: { value: "" } }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(unknown_column)).toBe(true);
@@ -311,6 +311,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const user_column = SUBMITTED_BY_COLUMN_NAME;
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: USER_SELECTABLE_TYPE, name: user_column }],
                     [
@@ -318,7 +319,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [user_column]: second_user }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(user_column)).toBe(true);
@@ -348,6 +348,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const list_column = STATUS_COLUMN_NAME;
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: STATIC_LIST_SELECTABLE_TYPE, name: list_column }],
                     [
@@ -362,7 +363,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(list_column)).toBe(true);
@@ -419,6 +419,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const list_column = ASSIGNED_TO_COLUMN_NAME;
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: USER_LIST_SELECTABLE_TYPE, name: list_column }],
                     [
@@ -431,7 +432,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [list_column]: { value: [] } }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(list_column)).toBe(true);
@@ -476,6 +476,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const list_column = "notified_team";
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: USER_GROUP_LIST_SELECTABLE_TYPE, name: list_column }],
                     [
@@ -490,7 +491,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(list_column)).toBe(true);
@@ -524,6 +524,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const project_column = PROJECT_COLUMN_NAME;
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: PROJECT_SELECTABLE_TYPE, name: project_column }],
                     [
@@ -531,7 +532,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [project_column]: second_project }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(project_column)).toBe(true);
@@ -558,6 +558,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const tracker_column = TRACKER_COLUMN_NAME;
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: TRACKER_SELECTABLE_TYPE, name: tracker_column }],
                     [
@@ -565,7 +566,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [tracker_column]: second_tracker }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(tracker_column)).toBe(true);
@@ -602,6 +602,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const title_column = PRETTY_TITLE_COLUMN_NAME;
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: PRETTY_TITLE_SELECTABLE_TYPE, name: title_column }],
                     [
@@ -609,7 +610,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         ArtifactRepresentationStub.build({ [title_column]: second_title }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(title_column)).toBe(true);
@@ -640,6 +640,7 @@ describe(`ArtifactsTableBuilder`, () => {
             const link_type_value_forward = "Is Parent Of";
 
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: LINK_TYPE_SELECTABLE_TYPE, name: link_type_column }],
                     [
@@ -659,7 +660,6 @@ describe(`ArtifactsTableBuilder`, () => {
                         }),
                     ],
                 ),
-                NO_DIRECTION,
             );
 
             expect(table.columns.has(link_type_column)).toBe(true);
@@ -682,11 +682,11 @@ describe(`ArtifactsTableBuilder`, () => {
             it will NOT include it in the columns of the table
             and will NOT include it in the rows`, () => {
             const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                NO_DIRECTION,
                 SelectableQueryContentRepresentationStub.build(
                     [{ type: "unsupported", name: "wacken" }],
                     [ArtifactRepresentationStub.build({ wacken: { value: "frightfulness" } })],
                 ),
-                NO_DIRECTION,
             );
             expect(table.columns).toHaveLength(1);
             expect(table.columns.has(ARTIFACT_COLUMN_NAME)).toBe(true);
@@ -716,37 +716,31 @@ describe(`ArtifactsTableBuilder`, () => {
             (selected_type, representation) => {
                 expect(() =>
                     ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                        NO_DIRECTION,
                         SelectableQueryContentRepresentationStub.build(
                             [{ type: selected_type, name: "makeress" }],
                             [ArtifactRepresentationStub.build({ makeress: representation })],
                         ),
-                        NO_DIRECTION,
                     ),
                 ).toThrow();
             },
         );
 
         it(`allows an empty query so that we can show an empty state screen`, () => {
-            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
-                {
-                    selected: [],
-                    artifacts: [],
-                },
-                NO_DIRECTION,
-            );
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(NO_DIRECTION, {
+                selected: [],
+                artifacts: [],
+            });
             expect(table.columns).toHaveLength(0);
             expect(table.rows).toHaveLength(0);
         });
 
         it(`when the artifact value does not match the @artifact representation, it will throw an error`, () => {
             expect(() =>
-                ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
-                    {
-                        selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }],
-                        artifacts: [{ [ARTIFACT_COLUMN_NAME]: { uri_is_missing: true } }],
-                    },
-                    NO_DIRECTION,
-                ),
+                ArtifactsTableBuilder().mapQueryContentToArtifactsTable(NO_DIRECTION, {
+                    selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }],
+                    artifacts: [{ [ARTIFACT_COLUMN_NAME]: { uri_is_missing: true } }],
+                }),
             ).toThrow();
         });
     });

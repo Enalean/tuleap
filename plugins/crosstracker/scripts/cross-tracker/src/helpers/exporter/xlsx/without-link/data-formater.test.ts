@@ -117,83 +117,81 @@ describe("data-formater", () => {
     };
 
     it("generates the formatted data with that will be used to create the XLSX document with rows", () => {
-        const table = [
-            ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
-                SelectableQueryContentRepresentationStub.build(
-                    [
-                        { type: NUMERIC_SELECTABLE_TYPE, name: numeric_column },
-                        { type: PROJECT_SELECTABLE_TYPE, name: project_column },
-                        { type: TEXT_SELECTABLE_TYPE, name: text_column },
-                        { type: USER_SELECTABLE_TYPE, name: user_column },
-                        { type: TRACKER_SELECTABLE_TYPE, name: tracker_column },
-                        { type: USER_LIST_SELECTABLE_TYPE, name: user_list_column },
-                        { type: USER_GROUP_LIST_SELECTABLE_TYPE, name: user_group_column },
-                        { type: DATE_SELECTABLE_TYPE, name: date_column },
-                        { type: DATE_SELECTABLE_TYPE, name: datetime_column },
-                        { type: STATIC_LIST_SELECTABLE_TYPE, name: static_list_column },
-                        { type: PRETTY_TITLE_SELECTABLE_TYPE, name: pretty_title_column },
-                    ],
-                    [
-                        ArtifactRepresentationStub.build({
-                            [artifact_column]: { uri: first_artifact_uri },
-                            [numeric_column]: { value: float_value },
-                            [project_column]: { name: project_name, icon: "" },
-                            [text_column]: { value: first_text },
-                            [user_column]: { display_name: first_user, user_url: null },
-                            [tracker_column]: {
-                                name: first_tracker,
-                                color: "tlp-swatch-fiesta-red",
-                            },
-                            [user_list_column]: { value: first_user_list },
-                            [user_group_column]: { value: first_user_group_list },
-                            [date_column]: { value: first_date, with_time: false },
-                            [datetime_column]: { value: null, with_time: false },
-                            [static_list_column]: {
-                                value: [first_value, second_value],
-                            },
-                            [pretty_title_column]: first_pretty_title,
-                        }),
-                        ArtifactRepresentationStub.build({
-                            [artifact_column]: { uri: second_artifact_uri },
-                            [numeric_column]: { value: int_value },
-                            [project_column]: { name: project_name, icon: "" },
-                            [text_column]: { value: "" },
-                            [user_column]: { display_name: first_user, user_url: null },
-                            [tracker_column]: {
-                                name: first_tracker,
-                                color: "tlp-swatch-fiesta-red",
-                            },
-                            [user_list_column]: { value: first_user_list },
-                            [user_group_column]: { value: first_user_group_list },
-                            [date_column]: { value: null, with_time: false },
-                            [datetime_column]: { value: null, with_time: false },
-                            [static_list_column]: { value: [] },
-                            [pretty_title_column]: second_pretty_title,
-                        }),
-                        ArtifactRepresentationStub.build({
-                            [artifact_column]: { uri: third_artifact_uri },
-                            [numeric_column]: { value: null },
-                            [project_column]: { name: other_project_name, icon: "" },
-                            [text_column]: { value: second_text },
-                            [user_column]: { display_name: second_user, user_url: null },
-                            [tracker_column]: {
-                                name: second_tracker,
-                                color: "tlp-swatch-deep-blue",
-                            },
-                            [user_list_column]: { value: second_user_list },
-                            [user_group_column]: {
-                                value: second_user_group_list,
-                            },
-                            [date_column]: { value: null, with_time: false },
-                            [datetime_column]: { value: first_datetime, with_time: true },
-                            [static_list_column]: { value: [second_value] },
-                            [pretty_title_column]: third_pretty_title,
-                        }),
-                    ],
-                ),
-                NO_DIRECTION,
+        const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+            NO_DIRECTION,
+            SelectableQueryContentRepresentationStub.build(
+                [
+                    { type: NUMERIC_SELECTABLE_TYPE, name: numeric_column },
+                    { type: PROJECT_SELECTABLE_TYPE, name: project_column },
+                    { type: TEXT_SELECTABLE_TYPE, name: text_column },
+                    { type: USER_SELECTABLE_TYPE, name: user_column },
+                    { type: TRACKER_SELECTABLE_TYPE, name: tracker_column },
+                    { type: USER_LIST_SELECTABLE_TYPE, name: user_list_column },
+                    { type: USER_GROUP_LIST_SELECTABLE_TYPE, name: user_group_column },
+                    { type: DATE_SELECTABLE_TYPE, name: date_column },
+                    { type: DATE_SELECTABLE_TYPE, name: datetime_column },
+                    { type: STATIC_LIST_SELECTABLE_TYPE, name: static_list_column },
+                    { type: PRETTY_TITLE_SELECTABLE_TYPE, name: pretty_title_column },
+                ],
+                [
+                    ArtifactRepresentationStub.build({
+                        [artifact_column]: { uri: first_artifact_uri },
+                        [numeric_column]: { value: float_value },
+                        [project_column]: { name: project_name, icon: "" },
+                        [text_column]: { value: first_text },
+                        [user_column]: { display_name: first_user, user_url: null },
+                        [tracker_column]: {
+                            name: first_tracker,
+                            color: "tlp-swatch-fiesta-red",
+                        },
+                        [user_list_column]: { value: first_user_list },
+                        [user_group_column]: { value: first_user_group_list },
+                        [date_column]: { value: first_date, with_time: false },
+                        [datetime_column]: { value: null, with_time: false },
+                        [static_list_column]: {
+                            value: [first_value, second_value],
+                        },
+                        [pretty_title_column]: first_pretty_title,
+                    }),
+                    ArtifactRepresentationStub.build({
+                        [artifact_column]: { uri: second_artifact_uri },
+                        [numeric_column]: { value: int_value },
+                        [project_column]: { name: project_name, icon: "" },
+                        [text_column]: { value: "" },
+                        [user_column]: { display_name: first_user, user_url: null },
+                        [tracker_column]: {
+                            name: first_tracker,
+                            color: "tlp-swatch-fiesta-red",
+                        },
+                        [user_list_column]: { value: first_user_list },
+                        [user_group_column]: { value: first_user_group_list },
+                        [date_column]: { value: null, with_time: false },
+                        [datetime_column]: { value: null, with_time: false },
+                        [static_list_column]: { value: [] },
+                        [pretty_title_column]: second_pretty_title,
+                    }),
+                    ArtifactRepresentationStub.build({
+                        [artifact_column]: { uri: third_artifact_uri },
+                        [numeric_column]: { value: null },
+                        [project_column]: { name: other_project_name, icon: "" },
+                        [text_column]: { value: second_text },
+                        [user_column]: { display_name: second_user, user_url: null },
+                        [tracker_column]: {
+                            name: second_tracker,
+                            color: "tlp-swatch-deep-blue",
+                        },
+                        [user_list_column]: { value: second_user_list },
+                        [user_group_column]: {
+                            value: second_user_group_list,
+                        },
+                        [date_column]: { value: null, with_time: false },
+                        [datetime_column]: { value: first_datetime, with_time: true },
+                        [static_list_column]: { value: [second_value] },
+                        [pretty_title_column]: third_pretty_title,
+                    }),
+                ],
             ),
-        ];
+        );
         const result = formatData(table, ColumnNameGetter(createVueGettextProviderPassThrough()));
 
         const content_cell_result: ContentSection = {

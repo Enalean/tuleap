@@ -64,7 +64,7 @@ import {
     ARROW_REDRAW_TRIGGERER,
     EMITTER,
     GET_COLUMN_NAME,
-    RETRIEVE_ARTIFACTS_TABLE,
+    TABLE_DATA_ORCHESTRATOR,
     TABLE_DATA_STORE,
 } from "../../injection-symbols";
 
@@ -83,12 +83,16 @@ import {
 } from "../../helpers/widget-events";
 import ArtifactRows from "./ArtifactRows.vue";
 import { ArrowDataStore } from "../../domain/ArrowDataStore";
+import type { TableDataOrchestrator } from "../../domain/TableDataOrchestrator";
+import type { ArrowRedrawTriggerer } from "../../ArrowRedrawTriggerer";
+import type { TableDataStore } from "../../domain/TableDataStore";
+import type { GetColumnName } from "../../domain/ColumnNameGetter";
 
-const column_name_getter = strictInject(GET_COLUMN_NAME);
+const column_name_getter: GetColumnName = strictInject(GET_COLUMN_NAME);
 
-const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
-const arrow_redraw_triggerer = strictInject(ARROW_REDRAW_TRIGGERER);
-const table_data_store = strictInject(TABLE_DATA_STORE);
+const table_data_orchestrator: TableDataOrchestrator = strictInject(TABLE_DATA_ORCHESTRATOR);
+const arrow_redraw_triggerer: ArrowRedrawTriggerer = strictInject(ARROW_REDRAW_TRIGGERER);
+const table_data_store: TableDataStore = strictInject(TABLE_DATA_STORE);
 
 provide(ARROW_DATA_STORE, ArrowDataStore());
 
@@ -168,11 +172,10 @@ function getSelectableQueryContent(tql_query: string): void {
         return;
     }
 
-    artifacts_retriever
-        .getSelectableQueryResult(tql_query, limit, offset)
+    table_data_orchestrator
+        .loadTopLevelArtifacts(tql_query, limit, offset)
         .match(
             (content_with_total) => {
-                table_data_store.setColumns(content_with_total.table.columns);
                 number_of_selected_columns.value = table_data_store.getColumns().size - 1;
                 rows.value = content_with_total.table.rows;
                 total.value = content_with_total.total;

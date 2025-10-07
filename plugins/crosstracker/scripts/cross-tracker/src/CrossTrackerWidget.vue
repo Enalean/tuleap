@@ -35,14 +35,9 @@
     />
 </template>
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, provide } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    EMITTER,
-    IS_USER_ADMIN,
-    TABLE_DATA_STORE,
-    WIDGET_TITLE_UPDATER,
-} from "./injection-symbols";
+import { EMITTER, IS_USER_ADMIN, WIDGET_TITLE_UPDATER } from "./injection-symbols";
 import type {
     CreatedQueryEvent,
     EditedQueryEvent,
@@ -68,12 +63,11 @@ import ReadQuery from "./components/ReadQuery.vue";
 import FeedbackMessage from "./components/feedback/FeedbackMessage.vue";
 import EditQuery from "./components/query/edition/EditQuery.vue";
 import type { Query } from "./type";
-import { TableDataStore } from "./domain/TableDataStore";
+import type { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 
 const is_user_admin = strictInject(IS_USER_ADMIN);
 const emitter = strictInject(EMITTER);
-const widget_title_updater = strictInject(WIDGET_TITLE_UPDATER);
-const table_data_store = TableDataStore();
+const widget_title_updater: WidgetTitleUpdater = strictInject(WIDGET_TITLE_UPDATER);
 
 const widget_pane = ref(QUERY_ACTIVE_PANE);
 const selected_query = ref<Query>();
@@ -84,8 +78,6 @@ const query_to_edit = ref<Query>({
     title: "",
     tql_query: "",
 });
-
-provide(TABLE_DATA_STORE, table_data_store);
 
 function displayActiveQuery(): void {
     widget_pane.value = QUERY_ACTIVE_PANE;

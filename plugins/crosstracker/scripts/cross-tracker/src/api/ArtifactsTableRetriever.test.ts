@@ -101,19 +101,18 @@ describe(`ArtifactsTableRetriever`, () => {
                     }),
                 ],
             );
-            const end_date_field_name = "end_date";
             const second_date_value = "2025-04-10T11:54:15+07:00";
             const query_content_second_page = SelectableQueryContentRepresentationStub.build(
-                [{ type: "date", name: end_date_field_name }],
+                [{ type: "date", name: date_field_name }],
                 [
                     ArtifactRepresentationStub.build({
-                        [end_date_field_name]: { value: null, with_time: false },
+                        [date_field_name]: { value: null, with_time: false },
                     }),
                     ArtifactRepresentationStub.build({
-                        [end_date_field_name]: { value: null, with_time: false },
+                        [date_field_name]: { value: null, with_time: false },
                     }),
                     ArtifactRepresentationStub.build({
-                        [end_date_field_name]: { value: second_date_value, with_time: true },
+                        [date_field_name]: { value: second_date_value, with_time: true },
                     }),
                 ],
             );
@@ -135,7 +134,7 @@ describe(`ArtifactsTableRetriever`, () => {
                 throw Error("Expected an Ok");
             }
             const table = result.value;
-            expect(table).toHaveLength(2);
+            expect(table.rows).toHaveLength(5);
         });
     });
 });

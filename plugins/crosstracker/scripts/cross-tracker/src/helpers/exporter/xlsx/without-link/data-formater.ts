@@ -30,11 +30,11 @@ export type ContentSection = {
 };
 
 export function formatData(
-    artifact_table: ReadonlyArray<ArtifactsTable>,
+    artifact_table: ArtifactsTable,
     column_name_getter: GetColumnName,
 ): ContentSection {
     const first_row_column_names: TextCell[] = [];
-    artifact_table[0].columns.forEach((column_name) => {
+    artifact_table.columns.forEach((column_name) => {
         if (column_name === ARTIFACT_COLUMN_NAME) {
             return;
         }
@@ -45,19 +45,19 @@ export function formatData(
 
     const rows: ReportCell[][] = [];
     let row_values: ReportCell[] = [];
-    artifact_table.forEach((artifact) => {
-        for (const row of artifact.rows) {
-            row_values = [];
-            for (const column of artifact.columns) {
-                if (column === ARTIFACT_COLUMN_NAME) {
-                    continue;
-                }
-                const current_artifact_cell = row.cells.get(column);
-                row_values.push(buildXLSXContentCell(current_artifact_cell));
+
+    for (const row of artifact_table.rows) {
+        row_values = [];
+        for (const column of artifact_table.columns) {
+            if (column === ARTIFACT_COLUMN_NAME) {
+                continue;
             }
-            rows.push(row_values);
+            const current_artifact_cell = row.cells.get(column);
+            row_values.push(buildXLSXContentCell(current_artifact_cell));
         }
-    });
+        rows.push(row_values);
+    }
+
     return {
         headers: first_row_column_names,
         rows,

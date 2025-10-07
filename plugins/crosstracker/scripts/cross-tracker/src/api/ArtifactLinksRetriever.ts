@@ -30,11 +30,11 @@ import type { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 export const MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED = 50;
 
 export const ArtifactLinksRetriever = (
+    widget_id: number,
     table_builder: ArtifactsTableBuilder,
 ): RetrieveArtifactLinks => {
     return {
         getForwardLinks(
-            widget_id: number,
             artifact_id: number,
             tql_query: string,
         ): ResultAsync<ArtifactsTableWithTotal, Fault> {
@@ -50,8 +50,8 @@ export const ArtifactLinksRetriever = (
                     (query_content) => {
                         return {
                             table: table_builder.mapQueryContentToArtifactsTable(
-                                query_content,
                                 FORWARD_DIRECTION,
+                                query_content,
                             ),
                             total,
                         };
@@ -61,7 +61,6 @@ export const ArtifactLinksRetriever = (
         },
 
         getReverseLinks(
-            widget_id: number,
             artifact_id: number,
             tql_query: string,
         ): ResultAsync<ArtifactsTableWithTotal, Fault> {
@@ -77,8 +76,8 @@ export const ArtifactLinksRetriever = (
                     (query_content) => {
                         return {
                             table: table_builder.mapQueryContentToArtifactsTable(
-                                query_content,
                                 REVERSE_DIRECTION,
+                                query_content,
                             ),
                             total,
                         };
@@ -88,10 +87,9 @@ export const ArtifactLinksRetriever = (
         },
 
         getAllForwardLinks(
-            widget_id: number,
             artifact_id: number,
             tql_query: string,
-        ): ResultAsync<ArtifactsTable[], Fault> {
+        ): ResultAsync<ArtifactsTable, Fault> {
             return getAllJSON<SelectableQueryContentRepresentation>(
                 uri`/api/v1/crosstracker_widget/${widget_id}/forward_links`,
                 {
@@ -102,17 +100,17 @@ export const ArtifactLinksRetriever = (
                     },
                 },
             ).map((query_content) => {
-                return query_content.map((table) =>
-                    table_builder.mapQueryContentToArtifactsTable(table, FORWARD_DIRECTION),
+                return table_builder.mapQueryContentToArtifactsTable(
+                    FORWARD_DIRECTION,
+                    ...query_content,
                 );
             });
         },
 
         getAllReverseLinks(
-            widget_id: number,
             artifact_id: number,
             tql_query: string,
-        ): ResultAsync<ArtifactsTable[], Fault> {
+        ): ResultAsync<ArtifactsTable, Fault> {
             return getAllJSON<SelectableQueryContentRepresentation>(
                 uri`/api/v1/crosstracker_widget/${widget_id}/reverse_links`,
                 {
@@ -123,8 +121,9 @@ export const ArtifactLinksRetriever = (
                     },
                 },
             ).map((query_content) => {
-                return query_content.map((table) =>
-                    table_builder.mapQueryContentToArtifactsTable(table, REVERSE_DIRECTION),
+                return table_builder.mapQueryContentToArtifactsTable(
+                    REVERSE_DIRECTION,
+                    ...query_content,
                 );
             });
         },

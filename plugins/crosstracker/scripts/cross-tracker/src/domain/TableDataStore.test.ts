@@ -63,7 +63,7 @@ describe("TableDataStore", () => {
     });
 
     it("should remove row", () => {
-        store.removeEntry(row.row_uuid);
+        store.removeEntryByParentUUID(row.row_uuid);
 
         expect(store.getRowCollection().length).toBe(0);
     });

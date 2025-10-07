@@ -23,12 +23,9 @@ import type { VueWrapper } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
-import { RetrieveArtifactLinksStub } from "../../../tests/stubs/RetrieveArtifactLinksStub";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { RETRIEVE_ARTIFACT_LINKS } from "../../injection-symbols";
-import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
 import ArtifactRows from "./ArtifactRows.vue";
 import RowArtifact from "./RowArtifact.vue";
 
@@ -37,12 +34,9 @@ const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
 describe("ArtifactRows", () => {
-    let table: ArtifactsTable,
-        artifact_links_table_retriever: RetrieveArtifactLinks,
-        ancestors: number[];
+    let table: ArtifactsTable, ancestors: number[];
 
     beforeEach(() => {
-        artifact_links_table_retriever = RetrieveArtifactLinksStub.withDefaultContent();
         ancestors = [123, 135];
 
         table = new ArtifactsTableBuilder()
@@ -88,9 +82,6 @@ describe("ArtifactRows", () => {
         return shallowMount(ArtifactRows, {
             global: {
                 ...getGlobalTestOptions(),
-                provide: {
-                    [RETRIEVE_ARTIFACT_LINKS.valueOf()]: artifact_links_table_retriever,
-                },
             },
             props: {
                 rows: artifacts_table.rows,

@@ -40,8 +40,9 @@ import EmptySelectableCell from "./EmptySelectableCell.vue";
 import EmptyEditCell from "./EmptyEditCell.vue";
 import { TABLE_DATA_STORE } from "../../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { TableDataStore } from "../../../domain/TableDataStore";
 
-const table_data_store = strictInject(TABLE_DATA_STORE);
+const table_data_store: TableDataStore = strictInject(TABLE_DATA_STORE);
 
 defineProps<{
     row: ArtifactRow;
