@@ -135,14 +135,11 @@ final class PerTrackerArtifactIdField extends ArtifactIdField
 
     /**
      * Display the html field in the admin ui
-     * @return string html
      */
     #[Override]
-    protected function fetchAdminFormElement()
+    protected function fetchAdminFormElement(): string
     {
-        $html  = '';
-        $html .= '<a href="#' . TRACKER_BASE_URL . '/?aid=123" onclick="return false;">3</a>';
-        return $html;
+        return '<a href="#' . TRACKER_BASE_URL . '/?aid=123" aria-disabled="true">3</a>';
     }
 
     #[Override]

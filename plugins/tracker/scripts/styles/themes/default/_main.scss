@@ -1663,6 +1663,10 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 .tracker-admin-fields {
     display: flex;
     gap: var(--tlp-medium-spacing);
+
+    a[aria-disabled="true"] {
+        pointer-events: none;
+    }
 }
 
 .tracker-admin-palette {
