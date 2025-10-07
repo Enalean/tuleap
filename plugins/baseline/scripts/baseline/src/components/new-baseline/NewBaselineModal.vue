@@ -124,15 +124,17 @@
 </template>
 
 <script>
-import { getOpenMilestones, createBaseline } from "../../api/rest-querier";
+import { createBaseline, getOpenMilestones } from "../../api/rest-querier";
 import MilestonesSelect from "./MilestonesSelect.vue";
 import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
-import { datePicker as createDatePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker } from "@tuleap/tlp-date-picker";
 
 export default {
     name: "NewBaselineModal",
 
     components: { MilestonesSelect, MilestonesSelectSkeleton },
+
+    inject: ["locale"],
 
     props: {
         project_id: { mandatory: true, type: Number },
@@ -210,7 +212,7 @@ export default {
         },
 
         createDatePicker() {
-            createDatePicker(this.$refs.snapshot_date, {
+            createDatePicker(this.$refs.snapshot_date, this.locale, {
                 maxDate: "today",
                 onValueUpdate: (_, date) => {
                     this.snapshot_date = date;

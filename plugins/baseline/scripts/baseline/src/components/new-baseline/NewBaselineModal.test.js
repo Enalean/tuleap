@@ -19,6 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import { DEFAULT_LOCALE } from "@tuleap/core-constants";
 import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import * as rest_querier from "../../api/rest-querier";
 import NewBaselineModal from "./NewBaselineModal.vue";
@@ -80,6 +81,9 @@ describe("NewBaselineModal", () => {
                         },
                     },
                 }),
+                provide: {
+                    locale: DEFAULT_LOCALE,
+                },
             },
         });
         await jest.runOnlyPendingTimersAsync();

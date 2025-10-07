@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:^
     version: link:../../src/themes/BurningParrot
+  '@tuleap/core-constants':
+    specifier: workspace:^
+    version: link:../../lib/frontend/constants
   '@tuleap/date-helper':
     specifier: workspace:*
     version: link:../../lib/frontend/date-helper

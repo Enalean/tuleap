@@ -15,7 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 import { createApp } from "vue";
@@ -26,10 +25,13 @@ import { createInitializedRouter } from "./router/index";
 import App from "./components/App.vue";
 import store from "./store/index";
 import DateUtils from "./support/date-utils";
+import { getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const locale = getLocaleWithDefault(document);
+
     DateUtils.setOptions({
-        user_locale: document.body.dataset.userLocale,
+        user_locale: locale,
         user_timezone: document.body.dataset.userTimezone,
         format: document.body.dataset.dateTimeFormat,
     });
@@ -60,6 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         admin_url,
     })
         .provide("is_admin", is_admin)
+        .provide("locale", locale)
         .use(VueDOMPurifyHTML)
         .use(
             await initVueGettext(
