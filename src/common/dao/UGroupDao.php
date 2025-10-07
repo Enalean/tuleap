@@ -19,11 +19,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use ParagonIE\EasyDB\EasyStatement;
+
 /**
  * @psalm-type UGroupRow = array{ugroup_id: int, name: string, description: string, source_id: int, group_id: int}
  */
-class UGroupDao extends \Tuleap\DB\DataAccessObject
+class UGroupDao extends \Tuleap\DB\DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    private const int LEGACY_NEWS_ADMIN_ID  = 17;
+    private const int LEGACY_NEWS_WRITER_ID = 18;
     /**
      * @psalm-return ?UGroupRow
      */
@@ -43,7 +47,7 @@ class UGroupDao extends \Tuleap\DB\DataAccessObject
         if (count($ugroup_ids) <= 0) {
             return [];
         }
-        $ugroup_ids_stmt = \ParagonIE\EasyDB\EasyStatement::open()->in(
+        $ugroup_ids_stmt = EasyStatement::open()->in(
             'ugroup_id IN (?*)',
             $ugroup_ids
         );
@@ -59,11 +63,17 @@ class UGroupDao extends \Tuleap\DB\DataAccessObject
      */
     public function searchDynamicAndStaticByGroupId(int $project_id): array
     {
-        $sql = 'SELECT *
+        $legacy_groups = [self::LEGACY_NEWS_ADMIN_ID, self::LEGACY_NEWS_WRITER_ID];
+
+        $exclude_statement = EasyStatement::open()->in('ugroup_id NOT IN (?*)', $legacy_groups);
+        $params            = [$project_id, ...$legacy_groups];
+
+        $sql = "SELECT *
                 FROM ugroup
-                WHERE group_id = ? OR (group_id = 100 and ugroup_id <= 100)
-                ORDER BY ugroup_id';
-        return $this->getDB()->run($sql, $project_id);
+                WHERE (group_id = ? OR (group_id = 100 and ugroup_id <= 100 ))
+                AND $exclude_statement
+                ORDER BY ugroup_id";
+        return $this->getDB()->run($sql, ...$params);
     }
 
     /**
