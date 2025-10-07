@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <button type="button" v-bind:title="title" v-on:click="emit('click')">
+    <button type="button" v-bind:title="title" v-on:click="click">
         <i class="fa-solid fa-eye" role="img"></i>
     </button>
 </template>
@@ -31,7 +31,11 @@ const { $gettext } = useGettext();
 
 const title = $gettext("Display this version");
 
-const emit = defineEmits<{ (e: "click"): void }>();
+const emit = defineEmits<{ (e: "click", event: Event): void }>();
+
+function click(evt: Event): void {
+    emit("click", evt);
+}
 </script>
 
 <style scoped lang="scss">
