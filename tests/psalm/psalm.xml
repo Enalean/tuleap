@@ -34,6 +34,7 @@
             <directory name="src/embedded_vendor/jpgraph/"/>
             <directory name="tools/utils/xml-templates-to-php/vendor/"/>
             <directory name="tests/rest/vendor/"/>
+            <file name="plugins/tracker/grammar/backend-assets/Tracker/Report/Query/Advanced/Grammar/Parser.php"/>
             <!-- Avoid issues when executed inside the dev container since it will want to scan MW code -->
             <file name="plugins/mediawiki/www/LocalSettings.php"/>
             <file name="plugins/mediawiki/www/upgrade_sample.php"/>
