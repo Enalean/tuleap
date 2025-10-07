@@ -56,7 +56,7 @@ export type BuildSectionState = {
 };
 
 export const getSectionStateBuilder = (
-    can_user_edit_document: boolean,
+    can_user_edit_document: Ref<boolean>,
     pending_uploads: Ref<OnGoingUploadFileWithId[]>,
 ): BuildSectionState => {
     return {
@@ -71,11 +71,11 @@ export const getSectionStateBuilder = (
             }),
             is_section_editable: computed(() => {
                 if (isPendingArtifactSection(section.value) || isFreetextSection(section.value)) {
-                    return can_user_edit_document;
+                    return can_user_edit_document.value;
                 }
 
                 if (isArtifactSection(section.value) && section.value.can_user_edit_section) {
-                    return can_user_edit_document;
+                    return can_user_edit_document.value;
                 }
 
                 return false;

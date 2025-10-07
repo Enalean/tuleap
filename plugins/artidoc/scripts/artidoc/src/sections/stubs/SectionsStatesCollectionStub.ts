@@ -25,12 +25,12 @@ import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection
 
 export const SectionsStatesCollectionStub = {
     build: (): SectionsStatesCollection =>
-        getSectionsStatesCollection(getSectionStateBuilder(true, ref([]))),
+        getSectionsStatesCollection(getSectionStateBuilder(ref(true), ref([]))),
     fromReactiveStoredArtifactSections: (
         sections: ReactiveStoredArtidocSection[],
     ): SectionsStatesCollection => {
         const states_collection = getSectionsStatesCollection(
-            getSectionStateBuilder(true, ref([])),
+            getSectionStateBuilder(ref(true), ref([])),
         );
         states_collection.createAllSectionsStates(sections);
 

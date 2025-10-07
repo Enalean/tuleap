@@ -27,7 +27,10 @@ import App from "./App.vue";
 
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import { buildUserPreferences, USER_PREFERENCES } from "@/user-preferences-injection-key";
-import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import {
+    CAN_USER_EDIT_DOCUMENT,
+    ORIGINAL_CAN_USER_EDIT_DOCUMENT,
+} from "@/can-user-edit-document-injection-key";
 import { TITLE } from "@/title-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
@@ -104,9 +107,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(TOOLBAR_BUS, buildToolbarBus());
     app.provide(HEADINGS_BUTTON_STATE, getHeadingsButtonState());
 
-    const can_user_edit_document = Boolean(
+    const original_can_user_edit_document = Boolean(
         getAttributeOrThrow(vue_mount_point, "data-can-user-edit-document"),
     );
+    const can_user_edit_document = ref(original_can_user_edit_document);
     const can_user_display_versions = Boolean(
         getAttributeOrThrow(vue_mount_point, "data-can-user-display-versions"),
     );
@@ -138,7 +142,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         sections_collection,
         states_collection,
         selected_tracker,
-        can_user_edit_document,
+        original_can_user_edit_document,
         is_loading_failed,
     );
 
@@ -148,6 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(SECTIONS_STATES_COLLECTION, states_collection)
         .provide(FILE_UPLOADS_COLLECTION, file_uploads_collection)
         .provide(NOTIFICATION_COLLECTION, buildNotificationsCollection())
+        .provide(ORIGINAL_CAN_USER_EDIT_DOCUMENT, original_can_user_edit_document)
         .provide(CAN_USER_EDIT_DOCUMENT, can_user_edit_document)
         .provide(CAN_USER_DISPLAY_VERSIONS, can_user_display_versions)
         .provide(ARE_VERSIONS_DISPLAYED, ref(false))

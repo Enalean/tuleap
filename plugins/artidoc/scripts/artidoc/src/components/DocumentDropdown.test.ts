@@ -57,7 +57,7 @@ describe("DocumentDropdown", () => {
                 provide: {
                     [IS_LOADING_SECTIONS.valueOf()]: ref(is_loading_sections),
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: ref(is_loading_sections_failed),
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(can_user_edit_document),
                     [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                 },
             },

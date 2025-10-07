@@ -60,7 +60,7 @@ const selected_fields = strictInject(SELECTED_FIELDS);
 const available_fields = strictInject(AVAILABLE_FIELDS);
 
 const should_display_configuration_panel = computed(
-    () => can_user_edit_document && selected_tracker.value.isNothing(),
+    () => can_user_edit_document.value && selected_tracker.value.isNothing(),
 );
 
 const configuration_saver = buildTrackerConfigurationSaver(

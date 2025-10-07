@@ -126,15 +126,13 @@ const { $gettext } = useGettext();
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
-const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+const is_reorder_allowed = strictInject(CAN_USER_EDIT_DOCUMENT);
 const document_id = strictInject(DOCUMENT_ID);
 const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 const bad_sections = strictInject(SECTIONS_BELOW_ARTIFACTS);
 
 const sections_reorderer = buildSectionsReorderer(sections_collection);
 const sections_structurer = getSectionsStructurer(sections_collection);
-
-const is_reorder_allowed = can_user_edit_document;
 
 const list = ref<HTMLElement>();
 
@@ -248,7 +246,7 @@ const section_under_artifact_title = $gettext(
 );
 
 onMounted(() => {
-    if (!list.value || !is_reorder_allowed) {
+    if (!list.value || !is_reorder_allowed.value) {
         return;
     }
 

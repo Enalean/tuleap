@@ -36,7 +36,7 @@
     />
 </template>
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, computed } from "vue";
+import { defineAsyncComponent, onMounted } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { loadTooltips } from "@tuleap/tooltip";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -56,9 +56,7 @@ defineProps<{
 }>();
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
-const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
-
-const can_section_be_edited = computed(() => can_user_edit_document);
+const can_section_be_edited = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const async_editor = defineAsyncComponent({
     loader: () => import("./SectionDescriptionEditorProseMirror.vue"),

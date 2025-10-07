@@ -18,6 +18,7 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionHeader from "./SectionHeader.vue";
@@ -53,7 +54,7 @@ describe("SectionHeader", () => {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(can_user_edit_document),
                 },
             },
             props: {

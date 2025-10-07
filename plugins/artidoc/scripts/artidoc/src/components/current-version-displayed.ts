@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,16 @@
  */
 
 import type { Ref } from "vue";
+import type { Version } from "./sidebar/versions/fake-list-of-versions";
+import type { Option } from "@tuleap/option";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-export const CAN_USER_EDIT_DOCUMENT: StrictInjectionKey<Ref<boolean>> =
-    Symbol("can_user_edit_document");
-export const ORIGINAL_CAN_USER_EDIT_DOCUMENT: StrictInjectionKey<boolean> = Symbol(
-    "original_can_user_edit_document",
+export interface CurrentVersionDisplayed {
+    old_version: Ref<Option<Version>>;
+    switchToOldVersion: (version: Version) => void;
+    switchToLatestVersion: () => void;
+}
+
+export const CURRENT_VERSION_DISPLAYED: StrictInjectionKey<CurrentVersionDisplayed> = Symbol(
+    "current_version_displayed",
 );

@@ -20,14 +20,24 @@
 
 <template>
     <list-of-versions>
-        <template v-for="group in grouped_versions" v-bind:key="group.id">
+        <template v-for="(group, index_group) in grouped_versions" v-bind:key="group.id">
             <template v-if="isOrphan(group)">
-                <version-with-timeline v-for="version in group.versions" v-bind:key="version.id">
+                <version-with-timeline
+                    v-for="(version, index_version) in group.versions"
+                    v-bind:key="version.id"
+                >
                     <version-disc v-bind:is_version_with_title="version.title.isValue()" />
-                    <version-entry v-bind:version="version" />
+                    <version-entry
+                        v-bind:version="version"
+                        v-bind:is_latest="index_group === 0 && index_version === 0"
+                    />
                 </version-with-timeline>
             </template>
-            <grouped-versions v-bind:group="group" v-if="isVersionsUnderVersion(group)" />
+            <grouped-versions
+                v-bind:group="group"
+                v-if="isVersionsUnderVersion(group)"
+                v-bind:is_first_group="index_group === 0"
+            />
         </template>
     </list-of-versions>
 </template>

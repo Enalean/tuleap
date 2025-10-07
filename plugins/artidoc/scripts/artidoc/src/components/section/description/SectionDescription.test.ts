@@ -49,7 +49,7 @@ describe("SectionDescription", () => {
             global: {
                 provide: {
                     [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(can_user_edit_document),
                     [IS_LOADING_SECTIONS.valueOf()]: ref(are_sections_loading),
                 },
                 stubs: {

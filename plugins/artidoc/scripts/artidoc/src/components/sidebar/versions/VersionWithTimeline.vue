@@ -44,7 +44,7 @@ li {
     border-left: #{$border-width} solid transparent;
     gap: var(--tlp-small-spacing);
 
-    &:first-child {
+    &:has(> .version-displayed) {
         border-left-color: var(--tlp-main-color);
         background: var(--tlp-main-color-hover-background);
     }

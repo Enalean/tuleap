@@ -24,6 +24,7 @@
         v-bind:sections="sections_collection"
         v-bind:states_collection="states_collection"
     />
+    <old-version-notice />
     <notification-container />
     <div class="tlp-card">
         <ul class="artidoc-sections-list">
@@ -78,6 +79,7 @@ import RemoveFreetextSectionModal from "@/components/RemoveFreetextSectionModal.
 import { getSectionsRemover } from "@/sections/remove/SectionsRemover";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
+import OldVersionNotice from "@/components/OldVersionNotice.vue";
 
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);

@@ -18,21 +18,33 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { ref } from "vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentLayout from "./DocumentLayout.vue";
 import DocumentContent from "./DocumentContent.vue";
 import DocumentSidebar from "./sidebar/DocumentSidebar.vue";
+import {
+    CAN_USER_EDIT_DOCUMENT,
+    ORIGINAL_CAN_USER_EDIT_DOCUMENT,
+} from "@/can-user-edit-document-injection-key";
 
 describe("DocumentLayout", () => {
+    function getWrapper(): VueWrapper {
+        return shallowMount(DocumentLayout, {
+            global: {
+                provide: {
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(true),
+                    [ORIGINAL_CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
+                },
+            },
+        });
+    }
     it("should display document content", () => {
-        const wrapper = shallowMount(DocumentLayout);
-
-        expect(wrapper.findComponent(DocumentContent).exists()).toBe(true);
+        expect(getWrapper().findComponent(DocumentContent).exists()).toBe(true);
     });
 
     it("should display sidebar", () => {
-        const wrapper = shallowMount(DocumentLayout);
-
-        expect(wrapper.findComponent(DocumentSidebar).exists()).toBe(true);
+        expect(getWrapper().findComponent(DocumentSidebar).exists()).toBe(true);
     });
 });

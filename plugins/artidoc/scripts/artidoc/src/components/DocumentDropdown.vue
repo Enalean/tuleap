@@ -67,7 +67,7 @@ const should_display_pdf_menu_item = computed(
     () => !is_loading_sections.value && saved_sections.value.length > 0,
 );
 
-const should_display_dropdown = should_display_pdf_menu_item.value || can_user_edit_document;
+const should_display_dropdown = should_display_pdf_menu_item.value || can_user_edit_document.value;
 
 watch(trigger, () => {
     if (dropdown === null && trigger.value) {
