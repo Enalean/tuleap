@@ -44,11 +44,6 @@
       <code><![CDATA[$first_tracker_id]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Details/DetailsPresenterBuilder.php">
-    <InvalidOperand>
-      <code><![CDATA[$milestone->getArtifactId()]]></code>
-    </InvalidOperand>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Planning/SubmilestoneFinder.php">
     <PossiblyNullArgument>
       <code><![CDATA[$tracker_id]]></code>

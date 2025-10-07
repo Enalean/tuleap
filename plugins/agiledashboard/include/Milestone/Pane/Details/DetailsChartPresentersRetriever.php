@@ -27,23 +27,11 @@ use Tuleap\Event\Dispatchable;
 class DetailsChartPresentersRetriever implements Dispatchable
 {
     public const string NAME = 'detailsChartPresentersRetriever';
-    /**
-     * @var Planning_Milestone
-     */
-    private $milestone;
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var array
-     */
-    private $escaped_charts = [];
 
-    public function __construct(Planning_Milestone $milestone, PFUser $user)
+    private array $escaped_charts = [];
+
+    public function __construct(private readonly Planning_Milestone $milestone, private readonly PFUser $user)
     {
-        $this->milestone = $milestone;
-        $this->user      = $user;
     }
 
     public function getMilestone(): Planning_Milestone
@@ -61,10 +49,7 @@ class DetailsChartPresentersRetriever implements Dispatchable
         $this->escaped_charts[] = $escaped_chart;
     }
 
-    /**
-     * @return array
-     */
-    public function getEscapedCharts()
+    public function getEscapedCharts(): array
     {
         return $this->escaped_charts;
     }

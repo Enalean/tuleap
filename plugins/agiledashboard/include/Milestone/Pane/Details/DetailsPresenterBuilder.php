@@ -108,7 +108,7 @@ class DetailsPresenterBuilder
     {
         return AGILEDASHBOARD_BASE_URL .
             '/?group_id=' . $milestone->getGroupId() .
-            '&aid=' . $milestone->getArtifactId() .
+            '&aid=' . (int) $milestone->getArtifactId() .
             '&action=solve-inconsistencies' .
             '&' . $redirect_to_self;
     }
