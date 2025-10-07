@@ -643,6 +643,11 @@ msgstr ""
 msgid "Archive should not contain users."
 msgstr ""
 
+msgid ""
+"Are you sure that you want to force the reconnection for all (%s) users? "
+"This will force all users to login."
+msgstr ""
+
 msgid "Are you sure you want to remove this passkey?"
 msgstr ""
 
@@ -2742,6 +2747,9 @@ msgstr "Categorias públicas de projeto"
 
 msgid "Public?"
 msgstr "Público?"
+
+msgid "Purge all current sessions"
+msgstr ""
 
 msgid "Purple"
 msgstr "Roxo"

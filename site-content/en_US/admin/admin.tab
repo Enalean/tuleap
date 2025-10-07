@@ -219,8 +219,6 @@ admin_userlist	restrict	Restrict
 admin_userlist	delete	Delete
 admin_userlist	suspend	Suspend
 admin_userlist	status	Status
-admin_userlist	active_sessions_label	Purge all current sessions
-admin_userlist	active_sessions_confirm	Are you sure that you want to force the reconnection for all ($1) users? This will force all users to login.
 admin_userlist	nb_projects	# Projects
 admin_userlist	not_member_of	Not member of any project
 admin_userlist	member_of	Member of $1 project(s)

@@ -212,8 +212,6 @@ admin_userlist	restrict	Restreindre
 admin_userlist	delete	Détruire
 admin_userlist	suspend	Suspendre
 admin_userlist	status	Statut
-admin_userlist	active_sessions_label	Purger toutes les sessions en cours
-admin_userlist	active_sessions_confirm	Êtes-vous sûr de vouloir obliger tous vos utilisateurs ($1) à se reconnecter ?
 admin_userlist	nb_projects	# Projets
 admin_userlist	not_member_of	Membre d'aucun projet
 admin_userlist	member_of	Membre de $1 projet(s)

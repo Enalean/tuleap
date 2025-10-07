@@ -29,7 +29,6 @@ class UserListResultsPresenter
     public $title;
     public $export_url;
     public $nb_matching_users;
-    public $nb_active_sessions;
     public $display_purge_session;
     public $display_nb_projects;
     public $matching_users;
@@ -45,7 +44,6 @@ class UserListResultsPresenter
     public $real_nam_header;
     public $nb_projects_header;
     public $status_header;
-    public $profile_header;
     private $user_manager;
 
     public function __construct(
@@ -57,14 +55,13 @@ class UserListResultsPresenter
         $sort_params,
         $sort_order,
         $user_status,
-        $nb_active_sessions,
+        public readonly int $nb_active_sessions,
         $display_nb_projects,
         $limit,
         $offset,
     ) {
         $this->user_manager          = $user_manager;
         $this->nb_matching_users     = $nb_matching_users;
-        $this->nb_active_sessions    = $nb_active_sessions;
         $this->display_purge_session = $nb_active_sessions > 0;
         $this->display_nb_projects   = $display_nb_projects;
         $this->matching_users        = $this->getMatchingUsers($result);
@@ -102,10 +99,8 @@ class UserListResultsPresenter
         $this->title      = $GLOBALS['Language']->getText('admin_userlist', 'matching_users');
         $this->export_csv = $GLOBALS['Language']->getText('admin_userlist', 'export_csv');
 
-        $this->active_sessions_csrf    = new CSRFSynchronizerToken('/admin/sessions.php');
-        $this->active_sessions_label   = $GLOBALS['Language']->getText('admin_userlist', 'active_sessions_label');
-        $this->active_sessions_confirm = $GLOBALS['Language']->getText('admin_userlist', 'active_sessions_confirm', $nb_active_sessions);
-        $this->no_matching_users       = $GLOBALS['Language']->getText('admin_userlist', 'no_matching_users');
+        $this->active_sessions_csrf = new CSRFSynchronizerToken('/admin/sessions.php');
+        $this->no_matching_users    = $GLOBALS['Language']->getText('admin_userlist', 'no_matching_users');
 
         $default_params['sort_order'] = $sort_order;
         $this->pagination             = new PaginationPresenter(

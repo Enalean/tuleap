@@ -43,6 +43,7 @@ export default [
             "site-admin-trackers-pending-removal": "./src/trackers-pending-removal.ts",
             "site-admin-user-details": "./src/user-details.ts",
             "site-admin-user-details-styles": "./styles/user-details.scss",
+            "site-admin-user-list": "./src/user-list.ts",
             "site-admin-dates-display": "./src/dates-display.ts",
             "site-admin-description-fields": "./src/description-fields.ts",
             "site-admin-password-policy": "./src/password-policy.ts",
