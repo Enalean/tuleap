@@ -90,12 +90,25 @@ const formatted_date = computed((): string =>
 const title = computed(() => props.version.title.unwrapOr(formatted_date.value));
 
 const current_version_displayed = strictInject(CURRENT_VERSION_DISPLAYED);
-function click(): void {
+function click(event: Event): void {
+    if (hasClickOccurredOnSummaryElement(event)) {
+        return;
+    }
+
     if (props.is_latest) {
         current_version_displayed.switchToLatestVersion();
     } else {
         current_version_displayed.switchToOldVersion(props.version);
     }
+}
+
+function hasClickOccurredOnSummaryElement(event: Event): boolean {
+    return event
+        .composedPath()
+        .some(
+            (element: EventTarget) =>
+                element instanceof Element && element.tagName.toLowerCase() === "summary",
+        );
 }
 
 const classes = computed(() => {
