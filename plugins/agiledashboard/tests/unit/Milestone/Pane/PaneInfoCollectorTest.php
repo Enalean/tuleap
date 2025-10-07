@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -178,7 +178,7 @@ final class PaneInfoCollectorTest extends TestCase
 
 
         $default_active_pane = $collector->getActivePane();
-        self::assertEquals('taskboard', $default_active_pane->getIdentifier());
+        self::assertEquals('taskboard', $default_active_pane?->getIdentifier());
     }
 
     private function getPaneInfo(string $identifier): PaneInfo

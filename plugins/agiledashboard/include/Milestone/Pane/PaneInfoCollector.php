@@ -33,43 +33,20 @@ class PaneInfoCollector implements Dispatchable
     public const string NAME = 'agiledashboardEventAdditionalPanesOnMilestone';
 
     /**
-     * @var PaneInfo[]
-     */
-    private $panes;
-
-    /**
-     * @var AgileDashboard_Pane|null
-     */
-    private $active_pane;
-    /**
-     * @var Planning_Milestone
-     */
-    private $milestone;
-    /**
      * @var null|\Closure(): AgileDashboard_Pane
      */
-    private $active_pane_builder;
-    /**
-     * @var ActivePaneContext|null
-     */
-    private $active_pane_context;
-    /**
-     * @var PFUser
-     */
-    private $current_user;
+    private ?\Closure $active_pane_builder = null;
 
+    /**
+     * @param PaneInfo[] $panes
+     */
     public function __construct(
-        Planning_Milestone $milestone,
-        ?ActivePaneContext $active_pane_context,
-        array $panes,
-        ?AgileDashboard_Pane $active_pane,
-        PFUser $current_user,
+        private readonly Planning_Milestone $milestone,
+        private readonly ?ActivePaneContext $active_pane_context,
+        private array $panes,
+        private readonly ?AgileDashboard_Pane $active_pane,
+        private readonly PFUser $current_user,
     ) {
-        $this->milestone           = $milestone;
-        $this->active_pane_context = $active_pane_context;
-        $this->panes               = $panes;
-        $this->active_pane         = $active_pane;
-        $this->current_user        = $current_user;
     }
 
     public function getPanes(): array
