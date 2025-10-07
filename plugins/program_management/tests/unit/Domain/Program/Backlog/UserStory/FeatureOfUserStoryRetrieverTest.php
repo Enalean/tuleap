@@ -43,10 +43,10 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureOfUserStoryRetrieverTest extends TestCase
 {
-    private const FEATURE_ID         = 44;
-    private const FEATURE_TITLE      = 'reamass';
-    private const FEATURE_SHORT_NAME = 'feature';
-    private const BASE_URI           = '/plugins/tracker/?aid=';
+    private const int FEATURE_ID            = 44;
+    private const string FEATURE_TITLE      = 'reamass';
+    private const string FEATURE_SHORT_NAME = 'feature';
+    private const string BASE_URI           = '/plugins/tracker/?aid=';
     private SearchParentFeatureOfAUserStoryStub $search_parent_feature_of_a_user_story;
     private FeatureHasUserStoriesVerifier $feature_has_user_stories_verifier;
 

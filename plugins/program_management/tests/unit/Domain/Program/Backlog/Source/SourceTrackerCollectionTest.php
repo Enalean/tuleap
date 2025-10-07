@@ -41,9 +41,9 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TIMEBOX_TRACKER_ID   = 58;
-    private const BLUE_TEAM_TRACKER_ID = 79;
-    private const RED_TEAM_TRACKER_ID  = 80;
+    private const int TIMEBOX_TRACKER_ID   = 58;
+    private const int BLUE_TEAM_TRACKER_ID = 79;
+    private const int RED_TEAM_TRACKER_ID  = 80;
 
     private TeamProjectsCollection $teams;
     private UserIdentifier $user;

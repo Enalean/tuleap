@@ -50,23 +50,23 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const NEW_MIRRORED_TIMEBOX_ID     = 201;
-    private const SOURCE_PROGRAM_INCREMENT_ID = 101;
-    private const MIRRORED_TIMEBOX_TRACKER_ID = 33;
-    private const USER_ID                     = 198;
-    private const SUBMISSION_TIMESTAMP        = 1648451521;
-    private const TITLE_ID                    = 392;
-    private const TITLE_VALUE                 = 'welfaring';
-    private const DESCRIPTION_ID              = 675;
-    private const DESCRIPTION_VALUE           = 'preinstill';
-    private const DESCRIPTION_FORMAT          = 'text';
-    private const STATUS_ID                   = 439;
-    private const MAPPED_STATUS_BIND_VALUE_ID = 1080;
-    private const START_DATE_ID               = 980;
-    private const START_DATE_VALUE            = 1604288823; // 2020-11-02T04:47:03+01:00
-    private const END_DATE_ID                 = 483;
-    private const END_DATE_VALUE              = 1604665266; // 2020-11-06T13:21:06+01:00
-    private const ARTIFACT_LINK_ID            = 842;
+    private const int NEW_MIRRORED_TIMEBOX_ID     = 201;
+    private const int SOURCE_PROGRAM_INCREMENT_ID = 101;
+    private const int MIRRORED_TIMEBOX_TRACKER_ID = 33;
+    private const int USER_ID                     = 198;
+    private const int SUBMISSION_TIMESTAMP        = 1648451521;
+    private const int TITLE_ID                    = 392;
+    private const string TITLE_VALUE              = 'welfaring';
+    private const int DESCRIPTION_ID              = 675;
+    private const string DESCRIPTION_VALUE        = 'preinstill';
+    private const string DESCRIPTION_FORMAT       = 'text';
+    private const int STATUS_ID                   = 439;
+    private const int MAPPED_STATUS_BIND_VALUE_ID = 1080;
+    private const int START_DATE_ID               = 980;
+    private const int START_DATE_VALUE            = 1604288823; // 2020-11-02T04:47:03+01:00
+    private const int END_DATE_ID                 = 483;
+    private const int END_DATE_VALUE              = 1604665266; // 2020-11-06T13:21:06+01:00
+    private const int ARTIFACT_LINK_ID            = 842;
 
     private TrackerArtifactCreator&MockObject $creator;
     private MirroredTimeboxFirstChangeset $changeset;

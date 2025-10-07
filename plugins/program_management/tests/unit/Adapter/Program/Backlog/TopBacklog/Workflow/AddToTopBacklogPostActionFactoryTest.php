@@ -38,8 +38,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRANSITION_ID = 923;
-    private const PROJECT_ID    = 101;
+    private const int TRANSITION_ID = 923;
+    private const int PROJECT_ID    = 101;
     private Transition $transition;
     private \Workflow&MockObject $workflow;
     private SearchByTransitionIdStub $search_transition;

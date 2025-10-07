@@ -27,8 +27,8 @@ use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PendingIterationCreationRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ITERATION_ID = 758;
-    private const CHANGESET_ID = 3867;
+    private const int ITERATION_ID = 758;
+    private const int CHANGESET_ID = 3867;
 
     public function testItBuildsFromIterationCreation(): void
     {

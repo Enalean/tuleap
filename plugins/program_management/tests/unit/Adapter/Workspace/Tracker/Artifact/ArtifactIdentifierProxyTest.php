@@ -28,7 +28,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID = 883;
+    private const int ARTIFACT_ID = 883;
 
     public function testItBuildsFromArtifact(): void
     {

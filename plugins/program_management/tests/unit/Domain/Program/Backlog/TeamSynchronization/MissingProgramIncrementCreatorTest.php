@@ -48,8 +48,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MissingProgramIncrementCreatorTest extends TestCase
 {
-    private const PROGRAM_INCREMENT_ID = 1;
-    private const TEAM_ID              = 101;
+    private const int PROGRAM_INCREMENT_ID = 1;
+    private const int TEAM_ID              = 101;
     private TestLogger $logger;
     private TeamSynchronizationEvent $event;
     private UserIdentifier $user;

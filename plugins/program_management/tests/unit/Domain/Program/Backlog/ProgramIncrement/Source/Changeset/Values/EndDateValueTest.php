@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndDateValueStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EndDateValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const VALUE = 1693552563;
+    private const int VALUE = 1693552563;
 
     public function testItBuildsFromEndDateReference(): void
     {

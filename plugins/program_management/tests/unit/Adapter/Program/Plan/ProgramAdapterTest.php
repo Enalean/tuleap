@@ -38,8 +38,8 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID = 101;
-    private const USER_ID    = 135;
+    private const int PROJECT_ID = 101;
+    private const int USER_ID    = 135;
     private VerifyIsProgram $program_verifier;
     private UserIdentifier $user_identifier;
     private CheckProjectAccessStub $project_access_checker;

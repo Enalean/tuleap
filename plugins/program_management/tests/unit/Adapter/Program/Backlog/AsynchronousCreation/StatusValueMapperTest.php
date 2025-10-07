@@ -36,9 +36,9 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_BIND_VALUE_ID  = 1287;
-    private const SECOND_BIND_VALUE_ID = 3409;
-    private const THIRD_BIND_VALUE_ID  = 9264;
+    private const int FIRST_BIND_VALUE_ID  = 1287;
+    private const int SECOND_BIND_VALUE_ID = 3409;
+    private const int THIRD_BIND_VALUE_ID  = 9264;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_FormElementFactory
      */

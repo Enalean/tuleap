@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredIterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 21;
+    private const int TRACKER_ID = 21;
     private RetrieveMirroredIterationTrackerStub $tracker_retriever;
 
     #[\Override]

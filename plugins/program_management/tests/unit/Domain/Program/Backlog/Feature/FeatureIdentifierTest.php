@@ -37,9 +37,9 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FEATURE_ID        = 87;
-    private const FIRST_FEATURE_ID  = 623;
-    private const SECOND_FEATURE_ID = 374;
+    private const int FEATURE_ID        = 87;
+    private const int FIRST_FEATURE_ID  = 623;
+    private const int SECOND_FEATURE_ID = 374;
     private VerifyFeatureIsVisibleByProgramStub $visible_by_program_verifier;
     private VerifyFeatureIsVisible $visible_verifier;
     private CheckIsValidFeatureStub $feature_checker;

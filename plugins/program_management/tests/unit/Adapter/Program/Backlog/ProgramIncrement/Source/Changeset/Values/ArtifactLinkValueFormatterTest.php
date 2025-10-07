@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TIMEBOX_ID = 90;
+    private const int TIMEBOX_ID = 90;
 
     public function getFormatter(): ArtifactLinkValueFormatter
     {

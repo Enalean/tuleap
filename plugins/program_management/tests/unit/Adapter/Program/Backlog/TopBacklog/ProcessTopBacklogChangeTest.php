@@ -46,7 +46,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID = 101;
+    private const int USER_ID = 101;
     private \PFUser $user;
     private \Tracker_ArtifactFactory&MockObject $artifact_factory;
     private TopBacklogStore&MockObject $dao;

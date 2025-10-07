@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_TRACKER_ID = 101;
+    private const int PROGRAM_INCREMENT_TRACKER_ID = 101;
 
     public function testItBuildsFromProgram(): void
     {

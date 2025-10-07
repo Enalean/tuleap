@@ -47,9 +47,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayPlanIterationsControllerTest extends TestCase
 {
-    private const PROGRAM_ID           = 101;
-    private const PROGRAM_INCREMENT_ID = 1260;
-    private const ITERATION_TRACKER_ID = 224;
+    private const int PROGRAM_ID           = 101;
+    private const int PROGRAM_INCREMENT_ID = 1260;
+    private const int ITERATION_TRACKER_ID = 224;
 
     /**
      * @var Stub&\ProjectManager

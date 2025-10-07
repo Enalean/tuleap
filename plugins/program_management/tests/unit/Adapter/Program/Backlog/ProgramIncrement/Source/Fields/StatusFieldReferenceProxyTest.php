@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID    = 463;
-    private const FIELD_LABEL = 'zachun';
+    private const int FIELD_ID       = 463;
+    private const string FIELD_LABEL = 'zachun';
 
     public function testItBuildsFromTrackerField(): void
     {

@@ -32,7 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserCanLinkToProgramIncrementVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID = 477;
+    private const int USER_ID = 477;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField
      */

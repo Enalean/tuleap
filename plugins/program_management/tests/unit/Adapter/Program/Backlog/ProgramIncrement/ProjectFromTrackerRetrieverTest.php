@@ -32,9 +32,9 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID    = 219;
-    private const PROJECT_ID    = 288;
-    private const PROJECT_LABEL = 'My project';
+    private const int TRACKER_ID       = 219;
+    private const int PROJECT_ID       = 288;
+    private const string PROJECT_LABEL = 'My project';
     private TrackerReference $tracker_reference;
 
     #[\Override]

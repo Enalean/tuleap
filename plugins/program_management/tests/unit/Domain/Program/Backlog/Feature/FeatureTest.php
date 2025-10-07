@@ -36,12 +36,12 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyHasAtLeastOnePlannedUserStoryStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FEATURE_ID         = 243;
-    private const TRACKER_ID         = 38;
-    private const URI                = '/plugins/tracker/?aid=' . self::FEATURE_ID;
-    private const TRACKER_SHORT_NAME = 'feature';
-    private const BACKGROUND_COLOR   = 'fiesta-red';
-    private const TITLE              = 'Satiable Ovovitellin';
+    private const int FEATURE_ID            = 243;
+    private const int TRACKER_ID            = 38;
+    private const string URI                = '/plugins/tracker/?aid=' . self::FEATURE_ID;
+    private const string TRACKER_SHORT_NAME = 'feature';
+    private const string BACKGROUND_COLOR   = 'fiesta-red';
+    private const string TITLE              = 'Satiable Ovovitellin';
     private RetrieveFeatureTitleStub $title_retriever;
 
     #[\Override]

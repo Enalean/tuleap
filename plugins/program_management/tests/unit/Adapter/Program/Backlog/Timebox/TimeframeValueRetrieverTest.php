@@ -45,7 +45,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeframeValueRetrieverTest extends TestCase
 {
-    private const USER_ID = 154;
+    private const int USER_ID = 154;
     private Artifact $artifact;
     private SemanticTimeframeBuilder&Stub $semantic_timeframe_builder;
     private TimeboxIdentifier $artifact_identifier;

@@ -30,9 +30,9 @@ use Tuleap\Queue\QueueFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID = 1;
-    private const TEAM_ID    = 123;
-    private const USER_ID    = 456;
+    private const int PROGRAM_ID = 1;
+    private const int TEAM_ID    = 123;
+    private const int USER_ID    = 456;
 
     /**
      * @var Stub&QueueFactory

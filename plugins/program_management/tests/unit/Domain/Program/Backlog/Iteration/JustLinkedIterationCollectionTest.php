@@ -30,10 +30,10 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_PREVIOUS_ITERATION_ID    = 465;
-    private const SECOND_PREVIOUS_ITERATION_ID   = 730;
-    private const FIRST_JUST_ADDED_ITERATION_ID  = 878;
-    private const SECOND_JUST_ADDED_ITERATION_ID = 182;
+    private const int FIRST_PREVIOUS_ITERATION_ID    = 465;
+    private const int SECOND_PREVIOUS_ITERATION_ID   = 730;
+    private const int FIRST_JUST_ADDED_ITERATION_ID  = 878;
+    private const int SECOND_JUST_ADDED_ITERATION_ID = 182;
     private VerifyIterationHasBeenLinkedBeforeStub $link_verifier;
     private ProgramIncrementIdentifier $program_increment;
 

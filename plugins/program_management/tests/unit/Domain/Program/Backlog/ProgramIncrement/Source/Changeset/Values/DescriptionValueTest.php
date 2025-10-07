@@ -28,8 +28,8 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DescriptionValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const DESCRIPTION_VALUE  = 'unrosed adhamant';
-    private const DESCRIPTION_FORMAT = 'text';
+    private const string DESCRIPTION_VALUE  = 'unrosed adhamant';
+    private const string DESCRIPTION_FORMAT = 'text';
 
     public function testItBuildsFromDescriptionReference(): void
     {

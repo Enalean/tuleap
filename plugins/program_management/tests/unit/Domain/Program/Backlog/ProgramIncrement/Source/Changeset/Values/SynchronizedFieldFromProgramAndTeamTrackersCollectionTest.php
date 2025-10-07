@@ -39,12 +39,12 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_LINK_ID = 1;
-    private const TITLE_ID         = 2;
-    private const DESCRIPTION_ID   = 3;
-    private const STATUS_ID        = 4;
-    private const START_DATE_ID    = 5;
-    private const END_PERIOD_ID    = 6;
+    private const int ARTIFACT_LINK_ID = 1;
+    private const int TITLE_ID         = 2;
+    private const int DESCRIPTION_ID   = 3;
+    private const int STATUS_ID        = 4;
+    private const int START_DATE_ID    = 5;
+    private const int END_PERIOD_ID    = 6;
     private TestLogger $logger;
     private UserIdentifier $user_identifier;
     private TrackerReference $tracker;

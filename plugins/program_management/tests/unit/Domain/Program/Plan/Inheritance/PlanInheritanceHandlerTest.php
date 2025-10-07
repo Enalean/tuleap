@@ -40,10 +40,10 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanInheritanceHandlerTest extends TestCase
 {
-    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID          = 37;
-    private const SOURCE_ITERATION_TRACKER_ID                  = 35;
-    private const FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED  = 64;
-    private const SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED = 65;
+    private const int SOURCE_PROGRAM_INCREMENT_TRACKER_ID          = 37;
+    private const int SOURCE_ITERATION_TRACKER_ID                  = 35;
+    private const int FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED  = 64;
+    private const int SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED = 65;
     /** @var array<int, NewConfigurationTrackerIsValidCertificate> */
     private array $tracker_mapping;
     private SaveNewPlanConfigurationStub $save_new_plan;

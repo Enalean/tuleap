@@ -37,10 +37,10 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_TEAM_ID        = 102;
-    private const SECOND_TEAM_ID       = 149;
-    private const PROGRAM_INCREMENT_ID = 43;
-    private const USER_ID              = 119;
+    private const int FIRST_TEAM_ID        = 102;
+    private const int SECOND_TEAM_ID       = 149;
+    private const int PROGRAM_INCREMENT_ID = 43;
+    private const int USER_ID              = 119;
 
     private PlanUserStoriesInMirroredProgramIncrementsStub $user_stories_planner;
     private TestLogger $logger;

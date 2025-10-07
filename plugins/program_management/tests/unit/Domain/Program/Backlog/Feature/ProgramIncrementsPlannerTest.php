@@ -51,13 +51,13 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementsPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID         = 43;
-    private const USER_ID                      = 119;
-    private const FIRST_TEAM_ID                = 102;
-    private const SECOND_TEAM_ID               = 149;
-    private const CHANGESET_ID                 = 6053;
-    private const PROGRAM_INCREMENT_TRACKER_ID = 54;
-    private const ITERATION_TRACKER_ID         = 89;
+    private const int PROGRAM_INCREMENT_ID         = 43;
+    private const int USER_ID                      = 119;
+    private const int FIRST_TEAM_ID                = 102;
+    private const int SECOND_TEAM_ID               = 149;
+    private const int CHANGESET_ID                 = 6053;
+    private const int PROGRAM_INCREMENT_TRACKER_ID = 54;
+    private const int ITERATION_TRACKER_ID         = 89;
 
     private GatherSynchronizedFieldsStub $fields_gatherer;
     private ProgramIncrementCreation $creation;

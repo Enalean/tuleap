@@ -33,9 +33,9 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MirroredTimeboxChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const MIRRORED_TIMEBOX_ID  = 821;
-    private const USER_ID              = 189;
-    private const SUBMISSION_TIMESTAMP = 1408642745;
+    private const int MIRRORED_TIMEBOX_ID  = 821;
+    private const int USER_ID              = 189;
+    private const int SUBMISSION_TIMESTAMP = 1408642745;
     private RetrieveTrackerOfArtifactStub $tracker_retriever;
     private GatherSynchronizedFieldsStub $fields_gatherer;
     private MapStatusByValueStub $status_mapper;

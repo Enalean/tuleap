@@ -28,8 +28,8 @@ use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_LABEL  = 'diaster';
-    private const SECOND_LABEL = 'tolter';
+    private const string FIRST_LABEL  = 'diaster';
+    private const string SECOND_LABEL = 'tolter';
 
     public function testItBuildsFromStatusReference(): void
     {

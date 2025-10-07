@@ -45,15 +45,15 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID                            = 101;
-    private const PROGRAM_INCREMENT_ID               = 54;
-    private const PROGRAM_INCREMENT_CHANGESET_ID     = 8769;
-    private const PROGRAM_INCREMENT_OLD_CHANGESET_ID = 8768;
-    private const ITERATION_TRACKER_ID               = 91;
-    private const FIRST_ITERATION_ID                 = 573;
-    private const SECOND_ITERATION_ID                = 268;
-    private const FIRST_CHANGESET_ID                 = 4021;
-    private const SECOND_CHANGESET_ID                = 4997;
+    private const int USER_ID                            = 101;
+    private const int PROGRAM_INCREMENT_ID               = 54;
+    private const int PROGRAM_INCREMENT_CHANGESET_ID     = 8769;
+    private const int PROGRAM_INCREMENT_OLD_CHANGESET_ID = 8768;
+    private const int ITERATION_TRACKER_ID               = 91;
+    private const int FIRST_ITERATION_ID                 = 573;
+    private const int SECOND_ITERATION_ID                = 268;
+    private const int FIRST_CHANGESET_ID                 = 4021;
+    private const int SECOND_CHANGESET_ID                = 4997;
     private RetrieveLastChangesetStub $changeset_retriever;
     private TestLogger $logger;
     private RetrieveIterationTrackerStub $tracker_retriever;

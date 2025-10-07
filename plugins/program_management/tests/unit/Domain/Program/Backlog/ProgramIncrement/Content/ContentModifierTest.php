@@ -49,7 +49,7 @@ use function PHPUnit\Framework\assertTrue;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID = 128;
+    private const int PROGRAM_ID = 128;
     private UserIdentifier $user;
     private VerifyPrioritizeFeaturesPermissionStub $prioritize_permission_verifier;
     private VerifyFeatureIsVisibleByProgramStub $visible_feature_verifier;

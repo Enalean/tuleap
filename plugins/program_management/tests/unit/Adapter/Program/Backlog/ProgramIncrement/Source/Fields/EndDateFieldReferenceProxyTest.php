@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EndDateFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID    = 755;
-    private const FIELD_LABEL = 'actualist';
+    private const int FIELD_ID       = 755;
+    private const string FIELD_LABEL = 'actualist';
 
     public function testItBuildsFromTrackerField(): void
     {

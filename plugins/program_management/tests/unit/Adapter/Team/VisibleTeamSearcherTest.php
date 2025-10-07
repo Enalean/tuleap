@@ -45,9 +45,9 @@ final class VisibleTeamSearcherTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private const FIRST_TEAM_ID  = 184;
-    private const SECOND_TEAM_ID = 101;
-    private const USER_ID        = 745;
+    private const int FIRST_TEAM_ID  = 184;
+    private const int SECOND_TEAM_ID = 101;
+    private const int USER_ID        = 745;
     private SearchTeamsOfProgramStub $teams_searcher;
     private CheckProjectAccess $access_checker;
     private ProgramIdentifier $program;

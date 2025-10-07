@@ -36,8 +36,8 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanConfigurationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID                   = 102;
-    private const ADMINISTRATORS_USER_GROUP_ID = 4;
+    private const int PROGRAM_ID                   = 102;
+    private const int ADMINISTRATORS_USER_GROUP_ID = 4;
     private SaveNewPlanConfigurationStub $plan_saver;
 
     #[\Override]

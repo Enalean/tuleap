@@ -42,7 +42,7 @@ final class MissingMirroredMilestoneCollectionTest extends TestCase
      */
     private array $aggregated_teams;
 
-    private const PROJECT_ID = 102;
+    private const int PROJECT_ID = 102;
 
     #[\Override]
     protected function setUp(): void

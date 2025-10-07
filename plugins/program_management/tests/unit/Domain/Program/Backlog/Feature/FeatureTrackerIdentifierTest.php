@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerOfFeatureStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 974;
+    private const int TRACKER_ID = 974;
 
     private function getFeatureTracker(): FeatureTrackerIdentifier
     {

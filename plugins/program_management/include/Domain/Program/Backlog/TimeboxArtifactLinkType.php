@@ -25,5 +25,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 interface TimeboxArtifactLinkType
 {
-    public const ART_LINK_SHORT_NAME = '_mirrored_milestone';
+    public const string ART_LINK_SHORT_NAME = '_mirrored_milestone';
 }

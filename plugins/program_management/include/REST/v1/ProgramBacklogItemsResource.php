@@ -50,8 +50,8 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 final class ProgramBacklogItemsResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 50;
-    public const  ROUTE     = 'program_backlog_items';
+    private const int MAX_LIMIT = 50;
+    public const  string ROUTE  = 'program_backlog_items';
 
     /**
      * Get content of a feature

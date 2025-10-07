@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Tests\Stub\StatusFieldReferenceStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_BIND_VALUE_ID  = 3786;
-    private const SECOND_BIND_VALUE_ID = 1844;
+    private const int FIRST_BIND_VALUE_ID  = 3786;
+    private const int SECOND_BIND_VALUE_ID = 1844;
 
     public function testItBuildsFromStatusValueAndListField(): void
     {

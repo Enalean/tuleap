@@ -38,10 +38,10 @@ use Tuleap\Queue\WorkerEventContent;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID         = 38;
-    private const USER_ID                      = 173;
-    private const PROGRAM_INCREMENT_TRACKER_ID = 22;
-    private const CHANGESET_ID                 = 5265;
+    private const int PROGRAM_INCREMENT_ID         = 38;
+    private const int USER_ID                      = 173;
+    private const int PROGRAM_INCREMENT_TRACKER_ID = 22;
+    private const int CHANGESET_ID                 = 5265;
     private TestLogger $logger;
     private VerifyIsProgramIncrementStub $program_increment_verifier;
     private ProcessProgramIncrementCreationStub $processor;

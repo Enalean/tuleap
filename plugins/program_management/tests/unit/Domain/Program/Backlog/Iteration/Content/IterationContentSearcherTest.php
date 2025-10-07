@@ -51,11 +51,11 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationContentSearcherTest extends TestCase
 {
-    private const USER_STORY_ONE_ID = 555;
-    private const FIRST_COLOR       = 'sherwood-green';
-    private const USER_STORY_TWO_ID = 666;
-    private const SECOND_COLOR      = 'deep-blue';
-    private const ITERATION_ID      = 777;
+    private const int USER_STORY_ONE_ID = 555;
+    private const string FIRST_COLOR    = 'sherwood-green';
+    private const int USER_STORY_TWO_ID = 666;
+    private const string SECOND_COLOR   = 'deep-blue';
+    private const int ITERATION_ID      = 777;
 
     private VerifyIsIterationStub $verify_is_iteration;
     private VerifyIsVisibleArtifact $is_visible_artifact;

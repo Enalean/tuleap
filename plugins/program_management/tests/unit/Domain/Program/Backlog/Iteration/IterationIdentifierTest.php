@@ -34,10 +34,10 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_NOT_VISIBLE_ARTIFACT_ID  = 307;
-    private const SECOND_NOT_VISIBLE_ARTIFACT_ID = 100;
-    private const FIRST_VISIBLE_ARTIFACT_ID      = 271;
-    private const SECOND_VISIBLE_ARTIFACT_ID     = 124;
+    private const int FIRST_NOT_VISIBLE_ARTIFACT_ID  = 307;
+    private const int SECOND_NOT_VISIBLE_ARTIFACT_ID = 100;
+    private const int FIRST_VISIBLE_ARTIFACT_ID      = 271;
+    private const int SECOND_VISIBLE_ARTIFACT_ID     = 124;
     private UserIdentifier $user;
     private VerifyIsIterationStub $iteration_verifier;
     private VerifyIsVisibleArtifactStub $visibility_verifier;

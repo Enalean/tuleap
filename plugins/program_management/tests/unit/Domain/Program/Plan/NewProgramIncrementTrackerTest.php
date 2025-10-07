@@ -30,9 +30,9 @@ use Tuleap\ProgramManagement\Tests\Stub\CheckNewProgramIncrementTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 28;
-    private const LABEL      = 'Releases';
-    private const SUB_LABEL  = 'release';
+    private const int TRACKER_ID   = 28;
+    private const string LABEL     = 'Releases';
+    private const string SUB_LABEL = 'release';
     private CheckNewProgramIncrementTracker $program_increment_checker;
 
     #[\Override]

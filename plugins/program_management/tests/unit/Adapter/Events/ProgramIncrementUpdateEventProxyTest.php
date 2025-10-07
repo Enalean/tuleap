@@ -36,14 +36,14 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementUpdateEventProxyTest extends TestCase
 {
-    private const PROGRAM_INCREMENT_ID               = 29;
-    private const USER_ID                            = 186;
-    private const PROGRAM_INCREMENT_CHANGESET_ID     = 7806;
-    private const PROGRAM_INCREMENT_OLD_CHANGESET_ID = 7805;
-    private const FIRST_ITERATION_ID                 = 95;
-    private const FIRST_ITERATION_CHANGESET_ID       = 3874;
-    private const SECOND_ITERATION_ID                = 15;
-    private const SECOND_ITERATION_CHANGESET_ID      = 2197;
+    private const int PROGRAM_INCREMENT_ID               = 29;
+    private const int USER_ID                            = 186;
+    private const int PROGRAM_INCREMENT_CHANGESET_ID     = 7806;
+    private const int PROGRAM_INCREMENT_OLD_CHANGESET_ID = 7805;
+    private const int FIRST_ITERATION_ID                 = 95;
+    private const int FIRST_ITERATION_CHANGESET_ID       = 3874;
+    private const int SECOND_ITERATION_ID                = 15;
+    private const int SECOND_ITERATION_CHANGESET_ID      = 2197;
     private TestLogger $logger;
     private VerifyIsUserStub $user_verifier;
     private VerifyIsProgramIncrementStub $program_increment_verifier;

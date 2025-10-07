@@ -38,8 +38,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID           = 101;
-    private const MILESTONE_TRACKER_ID = 40;
+    private const int PROJECT_ID           = 101;
+    private const int MILESTONE_TRACKER_ID = 40;
     private PlanningAdapter $adapter;
     private \PlanningFactory&Stub $planning_factory;
     private UserIdentifierStub $user_identifier;

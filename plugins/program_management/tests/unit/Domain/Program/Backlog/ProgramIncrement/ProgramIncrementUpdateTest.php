@@ -30,11 +30,11 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID         = 120;
-    private const PROGRAM_INCREMENT_TRACKER_ID = 88;
-    private const USER_ID                      = 183;
-    private const CHANGESET_ID                 = 8996;
-    private const OLD_CHANGESET_ID             = 8995;
+    private const int PROGRAM_INCREMENT_ID         = 120;
+    private const int PROGRAM_INCREMENT_TRACKER_ID = 88;
+    private const int USER_ID                      = 183;
+    private const int CHANGESET_ID                 = 8996;
+    private const int OLD_CHANGESET_ID             = 8995;
     private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
     private RetrieveProgramIncrementTrackerStub $tracker_retriever;
     private ArtifactUpdatedEventStub $artifact_updated;

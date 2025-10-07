@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 interface ProgramIncrementCreationEvent
 {
-    public const TOPIC = 'tuleap.program_management.program_increment.creation';
+    public const string TOPIC = 'tuleap.program_management.program_increment.creation';
     public function getArtifactId(): int;
 
     public function getUser(): UserIdentifier;

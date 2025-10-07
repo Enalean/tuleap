@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 interface ProgramIncrementUpdateEvent
 {
-    public const TOPIC = 'tuleap.program_management.program_increment.update';
+    public const string TOPIC = 'tuleap.program_management.program_increment.update';
     public function getProgramIncrement(): ProgramIncrementIdentifier;
 
     public function getUser(): UserIdentifier;

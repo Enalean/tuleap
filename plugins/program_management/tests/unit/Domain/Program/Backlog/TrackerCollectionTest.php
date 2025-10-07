@@ -37,10 +37,10 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 78;
-    private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 57;
-    private const FIRST_MIRRORED_ITERATION_TRACKER_ID          = 49;
-    private const SECOND_MIRRORED_ITERATION_TRACKER_ID         = 3;
+    private const int FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 78;
+    private const int SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 57;
+    private const int FIRST_MIRRORED_ITERATION_TRACKER_ID          = 49;
+    private const int SECOND_MIRRORED_ITERATION_TRACKER_ID         = 3;
 
     private RetrieveMirroredProgramIncrementTrackerStub $mirrored_program_increment_tracker_retriever;
     private RetrieveMirroredIterationTrackerStub $mirrored_iteration_tracker_retriever;

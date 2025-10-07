@@ -29,8 +29,8 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DescriptionValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const DESCRIPTION_VALUE  = 'overhurriedly rattleskull';
-    private const DESCRIPTION_FORMAT = 'text';
+    private const string DESCRIPTION_VALUE  = 'overhurriedly rattleskull';
+    private const string DESCRIPTION_FORMAT = 'text';
 
     private function getFormatter(): DescriptionValueFormatter
     {

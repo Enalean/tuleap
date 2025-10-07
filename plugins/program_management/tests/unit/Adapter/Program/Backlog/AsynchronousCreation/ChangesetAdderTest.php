@@ -51,23 +51,23 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TIMEBOX_ID                    = 49;
-    private const USER_ID                       = 117;
-    private const SUBMISSION_DATE               = 1889365945;
-    private const TITLE_ID                      = 7469;
-    private const TITLE_VALUE                   = 'unfluent';
-    private const DESCRIPTION_ID                = 8775;
-    private const DESCRIPTION_VALUE             = 'offensively';
-    private const DESCRIPTION_FORMAT            = 'text';
-    private const STATUS_ID                     = 2319;
-    private const MAPPED_STATUS_BIND_VALUE_ID   = 3971;
-    private const START_DATE_ID                 = 2225;
-    private const START_DATE_VALUE              = 1298323326; // 2011-02-21T22:22:06+01:00
-    private const END_PERIOD_ID                 = 3513;
-    private const END_PERIOD_VALUE              = 1653168968; // 2022-05-21T23:36:08+02:00
-    private const ARTIFACT_LINK_ID              = 7248;
-    private const MIRRORED_PROGRAM_INCREMENT_ID = 86;
-    private const MIRRORED_ITERATION_ID         = 33;
+    private const int TIMEBOX_ID                    = 49;
+    private const int USER_ID                       = 117;
+    private const int SUBMISSION_DATE               = 1889365945;
+    private const int TITLE_ID                      = 7469;
+    private const string TITLE_VALUE                = 'unfluent';
+    private const int DESCRIPTION_ID                = 8775;
+    private const string DESCRIPTION_VALUE          = 'offensively';
+    private const string DESCRIPTION_FORMAT         = 'text';
+    private const int STATUS_ID                     = 2319;
+    private const int MAPPED_STATUS_BIND_VALUE_ID   = 3971;
+    private const int START_DATE_ID                 = 2225;
+    private const int START_DATE_VALUE              = 1298323326; // 2011-02-21T22:22:06+01:00
+    private const int END_PERIOD_ID                 = 3513;
+    private const int END_PERIOD_VALUE              = 1653168968; // 2022-05-21T23:36:08+02:00
+    private const int ARTIFACT_LINK_ID              = 7248;
+    private const int MIRRORED_PROGRAM_INCREMENT_ID = 86;
+    private const int MIRRORED_ITERATION_ID         = 33;
 
     /**
      * @var MockObject&NewChangesetCreator

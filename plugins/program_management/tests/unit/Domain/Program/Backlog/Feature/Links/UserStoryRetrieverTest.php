@@ -37,11 +37,11 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID        = 56;
-    private const USER_STORY_ONE_ID = 125;
-    private const FIRST_COLOR       = 'teddy-brown';
-    private const USER_STORY_TWO_ID = 126;
-    private const SECOND_COLOR      = 'army-green';
+    private const int TRACKER_ID        = 56;
+    private const int USER_STORY_ONE_ID = 125;
+    private const string FIRST_COLOR    = 'teddy-brown';
+    private const int USER_STORY_TWO_ID = 126;
+    private const string SECOND_COLOR   = 'army-green';
 
     private function getRetriever(): UserStoryRetriever
     {

@@ -26,8 +26,8 @@ use Tuleap\Project\Service\ServiceForCreation;
 
 class ProgramService extends \Service implements ServiceForCreation
 {
-    private const ICON_NAME         = 'fas fa-sitemap';
-    public const  SERVICE_SHORTNAME = 'plugin_program_management';
+    private const string ICON_NAME         = 'fas fa-sitemap';
+    public const  string SERVICE_SHORTNAME = 'plugin_program_management';
 
     #[\Override]
     public static function forServiceCreation(\Project $project): self

@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsFeatureStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FEATURE_ID = 769;
+    private const int FEATURE_ID = 769;
     private VerifyIsFeatureStub $feature_verifier;
     private VerifyFeatureIsVisibleStub $visibility_verifier;
 

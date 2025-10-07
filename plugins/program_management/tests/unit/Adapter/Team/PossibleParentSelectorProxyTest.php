@@ -47,7 +47,7 @@ use function PHPUnit\Framework\assertTrue;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PossibleParentSelectorProxyTest extends TestCase
 {
-    private const TEAM_PROJECT_ID = 555;
+    private const int TEAM_PROJECT_ID = 555;
     private PFUser $user;
     private Tracker $bug_tracker;
     private Tracker $user_story_tracker;

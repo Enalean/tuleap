@@ -55,8 +55,8 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 final class IterationResource
 {
-    private const MAX_LIMIT = 50;
-    public const  ROUTE     = 'iteration';
+    private const int MAX_LIMIT = 50;
+    public const  string ROUTE  = 'iteration';
 
     private \UserManager $user_manager;
     private UserManagerAdapter $user_adapter;

@@ -34,8 +34,8 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TEAM    = 123;
-    private const PROGRAM = 126;
+    private const int TEAM    = 123;
+    private const int PROGRAM = 126;
 
     private SearchTeamsOfProgramStub $teams_of_program_searcher;
     private UserIdentifier $user_identifier;

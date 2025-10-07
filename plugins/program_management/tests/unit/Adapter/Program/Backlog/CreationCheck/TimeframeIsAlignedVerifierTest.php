@@ -39,8 +39,8 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeframeIsAlignedVerifierTest extends TestCase
 {
-    private const FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;
-    private const SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 2048;
+    private const int FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID  = 1024;
+    private const int SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID = 2048;
 
     private TimeframeIsAlignedVerifier $verifier;
     private SemanticTimeframeDao&\PHPUnit\Framework\MockObject\MockObject $dao;

@@ -47,12 +47,12 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TITLE_FIELD_ID         = 789;
-    private const DESCRIPTION_FIELD_ID   = 3;
-    private const STATUS_FIELD_ID        = 4;
-    private const START_DATE_FIELD_ID    = 5;
-    private const END_PERIOD_FIELD_ID    = 6;
-    private const ARTIFACT_LINK_FIELD_ID = 987;
+    private const int TITLE_FIELD_ID         = 789;
+    private const int DESCRIPTION_FIELD_ID   = 3;
+    private const int STATUS_FIELD_ID        = 4;
+    private const int START_DATE_FIELD_ID    = 5;
+    private const int END_PERIOD_FIELD_ID    = 6;
+    private const int ARTIFACT_LINK_FIELD_ID = 987;
     private RetrieveTrackerFromField $retrieve_tracker_from_field;
     private VerifyFieldPermissions $retrieve_field_permissions;
     /**

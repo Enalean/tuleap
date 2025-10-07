@@ -35,8 +35,8 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CachedProgramBuilderTest extends TestCase
 {
-    private const PROJECT_ID = 233;
-    private const USER_ID    = 171;
+    private const int PROJECT_ID = 233;
+    private const int USER_ID    = 171;
     private UserIdentifierStub $user_identifier;
 
     #[\Override]

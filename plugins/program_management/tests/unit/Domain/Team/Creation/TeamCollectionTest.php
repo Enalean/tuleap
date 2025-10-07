@@ -31,9 +31,9 @@ use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID     = 102;
-    private const FIRST_TEAM_ID  = 140;
-    private const SECOND_TEAM_ID = 119;
+    private const int PROGRAM_ID     = 102;
+    private const int FIRST_TEAM_ID  = 140;
+    private const int SECOND_TEAM_ID = 119;
     private ProgramForAdministrationIdentifier $program;
     private BuildTeam $team_builder;
     private UserIdentifier $user_identifier;

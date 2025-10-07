@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyUserStoryIsVisibleStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FeatureHasUserStoriesVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_USER_STORY_ID  = 236;
-    private const SECOND_USER_STORY_ID = 111;
+    private const int FIRST_USER_STORY_ID  = 236;
+    private const int SECOND_USER_STORY_ID = 111;
     private SearchChildrenOfFeatureStub $search_children_of_feature;
     private VerifyUserStoryIsVisibleStub $visibility_verifier;
 

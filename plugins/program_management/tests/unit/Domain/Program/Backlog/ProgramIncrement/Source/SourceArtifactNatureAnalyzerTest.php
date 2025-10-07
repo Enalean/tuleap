@@ -40,8 +40,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TIMEBOX_ID = 247;
-    private const USER_ID    = 144;
+    private const int TIMEBOX_ID = 247;
+    private const int USER_ID    = 144;
     private RetrieveTimeboxFromMirroredTimeboxStub $timebox_retriever;
     /**
      * @var Stub&\Tracker_ArtifactFactory

@@ -38,13 +38,13 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_STORY_ID     = 993;
-    private const TITLE             = 'devorative pilocarpine';
-    private const URI               = '/plugins/tracker/?aid=' . self::USER_STORY_ID;
-    private const BACKGROUND_COLOR  = 'coral-pink';
-    private const TRACKER_ID        = 36;
-    private const TRACKER_SHORTNAME = 'user_story';
-    private const PROJECT_ID        = 280;
+    private const int USER_STORY_ID        = 993;
+    private const string TITLE             = 'devorative pilocarpine';
+    private const string URI               = '/plugins/tracker/?aid=' . self::USER_STORY_ID;
+    private const string BACKGROUND_COLOR  = 'coral-pink';
+    private const int TRACKER_ID           = 36;
+    private const string TRACKER_SHORTNAME = 'user_story';
+    private const int PROJECT_ID           = 280;
 
     private function getRepresentation(): UserStoryRepresentation
     {

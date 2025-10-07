@@ -33,8 +33,8 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class URIRetrieverTest extends TestCase
 {
-    private const ARTIFACT_ID  = 1;
-    private const EXPECTED_URI = '/plugins/tracker/?aid=' . self::ARTIFACT_ID;
+    private const int ARTIFACT_ID     = 1;
+    private const string EXPECTED_URI = '/plugins/tracker/?aid=' . self::ARTIFACT_ID;
 
     private function getRetriever(): URIRetriever
     {

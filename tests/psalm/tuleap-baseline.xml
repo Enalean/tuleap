@@ -29344,26 +29344,6 @@
       <code><![CDATA[! $xml_config]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/program_management/include/Domain/Events/IterationUpdateEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[TOPIC = 'tuleap.program_management.iteration.update']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/program_management/include/Domain/Events/ProgramIncrementCreationEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[TOPIC = 'tuleap.program_management.program_increment.creation']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/program_management/include/Domain/Events/ProgramIncrementUpdateEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[TOPIC = 'tuleap.program_management.program_increment.update']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/program_management/include/Domain/Events/TeamSynchronizationEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[TOPIC = 'tuleap.program_management.team.synchronize']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/program_management/include/Domain/Program/Backlog/Iteration/Iteration.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $title]]></code>
@@ -29389,36 +29369,10 @@
       <code><![CDATA[! $start_purge_timestamp]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/program_management/include/Domain/Program/Backlog/TimeboxArtifactLinkType.php">
-    <MissingClassConstType>
-      <code><![CDATA[ART_LINK_SHORT_NAME = '_mirrored_milestone']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/program_management/include/Domain/Redirections/IterationRedirectionParameters.php">
-    <MissingClassConstType>
-      <code><![CDATA[FLAG                         = 'redirect-to-planned-iterations']]></code>
-      <code><![CDATA[PARAM_INCREMENT_ID           = 'increment-id']]></code>
-      <code><![CDATA[REDIRECT_AFTER_CREATE_ACTION = 'create']]></code>
-      <code><![CDATA[REDIRECT_AFTER_UPDATE_ACTION = 'update']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/program_management/include/Domain/Redirections/ProgramRedirectionParameters.php">
-    <MissingClassConstType>
-      <code><![CDATA[FLAG                         = 'program_increment']]></code>
-      <code><![CDATA[REDIRECT_AFTER_CREATE_ACTION = 'create']]></code>
-      <code><![CDATA[REDIRECT_AFTER_UPDATE_ACTION = 'update']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/program_management/include/Domain/Team/MirroredTimebox/MirroredProgramIncrementIdentifier.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $program_increment_id]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/program_management/include/ProgramService.php">
-    <MissingClassConstType>
-      <code><![CDATA[ICON_NAME         = 'fas fa-sitemap']]></code>
-      <code><![CDATA[SERVICE_SHORTNAME = 'plugin_program_management']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/program_management/include/REST/v1/BacklogPatchRepresentation.php">
     <InvalidDocblock>

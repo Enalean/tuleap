@@ -29,8 +29,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewTrackerThatCanBePlannedCollectionTest extends TestCase
 {
-    private const FIRST_TRACKER_ID  = 1;
-    private const SECOND_TRACKER_ID = 63;
+    private const int FIRST_TRACKER_ID  = 1;
+    private const int SECOND_TRACKER_ID = 63;
     /**
      * @var int[]
      */

@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactMoveConditionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID = 105;
+    private const int ARTIFACT_ID = 105;
 
     public function testItDoesNotForbidArtifactMoveWhenTheArtifactIsNotAnProgramEntityNorAMirror(): void
     {

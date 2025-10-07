@@ -29,7 +29,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserManagerAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID = 170;
+    private const int USER_ID = 170;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\UserManager
      */

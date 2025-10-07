@@ -43,10 +43,10 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 {
-    private const MIRRORED_TIMEBOX_ID = 666;
-    private const USER_STORY_ID       = 1234;
-    private const FEATURE_ID          = 101;
-    private const TEAM_ID             = 172;
+    private const int MIRRORED_TIMEBOX_ID = 666;
+    private const int USER_STORY_ID       = 1234;
+    private const int FEATURE_ID          = 101;
+    private const int TEAM_ID             = 172;
 
     private ProgramIncrementChanged $program_increment_changed;
 

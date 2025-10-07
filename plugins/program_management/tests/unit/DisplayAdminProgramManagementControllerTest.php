@@ -65,8 +65,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TEAM_ID              = 150;
-    private const ITERATION_TRACKER_ID = 96;
+    private const int TEAM_ID              = 150;
+    private const int ITERATION_TRACKER_ID = 96;
     private BuildProgramStub $build_program;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\TemplateRenderer

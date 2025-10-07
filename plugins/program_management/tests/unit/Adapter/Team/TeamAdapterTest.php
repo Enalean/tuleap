@@ -42,8 +42,8 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    private const TEAM_ID = 202;
-    private const USER_ID = 192;
+    private const int TEAM_ID = 202;
+    private const int USER_ID = 192;
     private VerifyIsProgramStub $program_verifier;
     private ExplicitBacklogDao&Stub $explicit_backlog_dao;
     private RetrieveUserStub $retrieve_user;

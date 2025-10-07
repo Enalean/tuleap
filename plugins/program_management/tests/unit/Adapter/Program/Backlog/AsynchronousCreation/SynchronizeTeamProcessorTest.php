@@ -44,7 +44,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID = 1;
+    private const int PROGRAM_ID = 1;
 
     public function testItHandlesTeamSynchronizationEvents(): void
     {

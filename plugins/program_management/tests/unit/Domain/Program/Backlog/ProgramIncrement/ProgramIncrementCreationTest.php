@@ -33,10 +33,10 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_INCREMENT_ID         = 195;
-    private const PROGRAM_INCREMENT_TRACKER_ID = 88;
-    private const USER_ID                      = 106;
-    private const CHANGESET_ID                 = 6023;
+    private const int PROGRAM_INCREMENT_ID         = 195;
+    private const int PROGRAM_INCREMENT_TRACKER_ID = 88;
+    private const int USER_ID                      = 106;
+    private const int CHANGESET_ID                 = 6023;
     private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
     private VerifyIsProgramIncrementStub $program_increment_verifier;
     private VerifyIsVisibleArtifactStub $visibility_verifier;

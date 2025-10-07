@@ -29,8 +29,8 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TeamIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_TEAM_ID  = 134;
-    private const SECOND_TEAM_ID = 407;
+    private const int FIRST_TEAM_ID  = 134;
+    private const int SECOND_TEAM_ID = 407;
 
     private function getCollectionFromProgram(): array
     {

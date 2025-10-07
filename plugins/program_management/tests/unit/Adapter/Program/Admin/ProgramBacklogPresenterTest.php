@@ -38,13 +38,13 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramBacklogPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID                   = 114;
-    private const PROGRAM_LABEL                = 'Ichthulin';
-    private const PROGRAM_SHORT_NAME           = 'unstern';
-    private const PROGRAM_INCREMENT_TRACKER_ID = 54;
-    private const PROGRAM_INCREMENT_LABEL      = 'Program Increments';
-    private const PROGRAM_INCREMENT_SUB_LABEL  = 'program increment';
-    private const ITERATION_LABEL              = 'Iterations';
+    private const int PROGRAM_ID                     = 114;
+    private const string PROGRAM_LABEL               = 'Ichthulin';
+    private const string PROGRAM_SHORT_NAME          = 'unstern';
+    private const int PROGRAM_INCREMENT_TRACKER_ID   = 54;
+    private const string PROGRAM_INCREMENT_LABEL     = 'Program Increments';
+    private const string PROGRAM_INCREMENT_SUB_LABEL = 'program increment';
+    private const string ITERATION_LABEL             = 'Iterations';
     private ProgramBacklogConfiguration $configuration;
 
     #[\Override]

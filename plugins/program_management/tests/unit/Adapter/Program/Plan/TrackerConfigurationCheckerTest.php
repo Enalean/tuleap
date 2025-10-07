@@ -32,7 +32,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROGRAM_ID = 197;
+    private const int PROGRAM_ID = 197;
 
     private static function checkProgramIncrementIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
     {

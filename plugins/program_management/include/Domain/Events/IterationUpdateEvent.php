@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  */
 interface IterationUpdateEvent
 {
-    public const TOPIC = 'tuleap.program_management.iteration.update';
+    public const string TOPIC = 'tuleap.program_management.iteration.update';
 
     public function getIteration(): IterationIdentifier;
 

@@ -28,7 +28,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerIdentifierProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 91;
+    private const int TRACKER_ID = 91;
 
     public function testItBuildsFromTracker(): void
     {
