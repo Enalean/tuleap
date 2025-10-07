@@ -54,7 +54,7 @@
                 ref="target-caret-element"
             ></i>
         </button>
-        <a v-bind:href="artifact_url" class="link"
+        <a v-bind:href="artifact_url" class="link cross-reference"
             ><span v-bind:class="getCrossRefBadgeClass(props.cell)"
                 >{{ props.cell.tracker_name }} #{{ props.cell.artifact_id }}</span
             >{{ props.cell.title }}</a
@@ -83,6 +83,7 @@ import {
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
 import type { ArrowDataEntry } from "../../domain/ArrowDataStore";
+import { loadTooltips } from "@tuleap/tooltip";
 
 const dashboard_id = strictInject(DASHBOARD_ID);
 const dashboard_type = strictInject(DASHBOARD_TYPE);
@@ -166,6 +167,7 @@ onMounted(() => {
     };
 
     arrow_data_store.addEntry(props.uuid, cell_element.value, caret_element.value);
+    loadTooltips(cell_element.value);
 });
 </script>
 
