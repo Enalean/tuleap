@@ -1,0 +1,53 @@
+<h1>{{# dgettext }} tuleap-ai | AI Connectors {{/ dgettext }}</h1>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa-solid fa-flask tlp-pane-title-icon" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-ai | Mistral API configuration {{/ dgettext }}
+            </h1>
+        </div>
+        <form method="post" action="" class="tlp-pane-section">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/csrf_token}}
+
+            {{# connection_established }}
+            <div class="tlp-alert-info">
+                {{# dgettext }} tuleap-ai | Connection to Mistral API established. {{/ dgettext }}
+            </div>
+            {{/ connection_established }}
+
+            {{# api_error }}
+                <div class="tlp-alert-danger">
+                    {{# dgettext }} tuleap-ai | An error occurred while trying to reach Mistral API: %s. | {{ api_error }} {{/ dgettext }}
+                </div>
+            {{/ api_error }}
+
+            {{# authentication_failure }}
+                <div class="tlp-alert-warning">
+                    {{# dgettext }} tuleap-ai | Authentication failed. Please check your API key (either invalid or expired). {{/ dgettext }}
+                </div>
+            {{/ authentication_failure }}
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="mistral-api-key">{{# dgettext }} tuleap-ai | API Key {{/ dgettext }} </label>
+                <input type="password" id="mistral-api-key" name="{{ api_key_input }}" class="tlp-input" size="30">
+                <p class="tlp-text-info">
+                {{# missing_key }}
+                    {{# dgettext }} tuleap-ai | No API key set yet, please provide one. {{/ dgettext }}
+                {{/ missing_key }}
+                {{^ missing_key }}
+                    {{# dgettext }} tuleap-ai | API key set. Current secret not display, can only be updated. {{/ dgettext }}
+                {{/ missing_key }}
+                </p>
+            </div>
+
+            <div class="tlp-pane-section-submit">
+                <button class="tlp-button-primary" type="submit">
+                    <i class="fa-solid fa-save tlp-button-icon"></i> {{# gettext }} Save {{/ gettext }}
+                </button>
+            </div>
+        </form>
+    </div>
+</section>

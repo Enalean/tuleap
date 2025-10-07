@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap;
 
 use ForgeConfig;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 
@@ -43,5 +44,14 @@ trait ForgeConfigSandbox
     protected function restoreForgeConfig(): void
     {
         ForgeConfig::restore();
+    }
+
+    protected function setEncryptedValue(string $name, string $value): void
+    {
+        ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
+        ForgeConfig::set(
+            $name,
+            ForgeConfig::encryptValue(new \Tuleap\Cryptography\ConcealedString($value)),
+        );
     }
 }

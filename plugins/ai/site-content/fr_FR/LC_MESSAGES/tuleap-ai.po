@@ -1,0 +1,57 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.7\n"
+
+msgid "AI"
+msgstr "IA"
+
+msgid "AI Connectors"
+msgstr "Connecteurs IA"
+
+msgid "API Key"
+msgstr "Clé d'API"
+
+msgid "API key has been saved"
+msgstr "La clé d'API a été sauvée"
+
+msgid "API key is empty"
+msgstr "La clé d'API est vide"
+
+msgid "API key set. Current secret not display, can only be updated."
+msgstr ""
+"La clé d'API est enregistrée. Ce secret n'est pas affiché, il ne peut être "
+"que mis à jour."
+
+msgid "An error occurred while trying to access to API key in configuration."
+msgstr "Une erreur s'est produite en essayant d'accèder à la clé d'API."
+
+msgid "An error occurred while trying to reach Mistral API: %s."
+msgstr ""
+"Une erreur s'est produite en tentant d'accèder à l'API de Mistral : %s."
+
+msgid ""
+"Authentication failed. Please check your API key (either invalid or expired)."
+msgstr ""
+"L'identification a échoué. Veuillez mettre à jour votre clé d'API (invalide "
+"ou expirée)."
+
+msgid "Connection to Mistral API established."
+msgstr "La connexion à l'API de Mistral fonctionne."
+
+msgid "Global AI provider, connect to external AI services."
+msgstr "Gestion de l'accès aux fournisseurs d'IA."
+
+msgid "Mistral API configuration"
+msgstr "Configuration de l'API Mistral"
+
+msgid "No API key set yet, please provide one."
+msgstr "Aucune clé d'API enregistrée, veuillez en fournir une."

@@ -1,0 +1,13 @@
+{
+  "name": "tuleap/plugin-ai",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\AI\\": "include"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\AI\\": ["tests/unit"]
+    }
+  }
+}
