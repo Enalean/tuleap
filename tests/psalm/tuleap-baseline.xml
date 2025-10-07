@@ -31660,9 +31660,6 @@
     </PossiblyInvalidArrayAccess>
   </file>
   <file src="plugins/statistics/include/AdminHeaderPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[TEMPLATE = 'admin-header']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$active_tab]]></code>
       <code><![CDATA[$title]]></code>
@@ -31912,12 +31909,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/statistics/include/DiskUsageServicesPresenterBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[GROUP_BY_DAY_KEY   = 'day']]></code>
-      <code><![CDATA[GROUP_BY_MONTH_KEY = 'month']]></code>
-      <code><![CDATA[GROUP_BY_WEEK_KEY  = 'week']]></code>
-      <code><![CDATA[GROUP_BY_YEAR_KEY  = 'year']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$end_date]]></code>
       <code><![CDATA[$project_id]]></code>
@@ -31968,15 +31959,7 @@
       <code><![CDATA[$selected_project]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/statistics/include/Events/StatisticsRefreshDiskUsage.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'statisticsRefreshDiskUsage']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/statistics/include/Frequencies/FrequenciesPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[TEMPLATE = 'frequencies']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$datastr]]></code>
       <code><![CDATA[$enddate]]></code>
@@ -32166,10 +32149,6 @@
     <InvalidReturnType>
       <code><![CDATA[int]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[CONFIG_ALLOWED_QUOTA = 'statistics_allowed_quota']]></code>
-      <code><![CDATA[CONFIG_MAXIMUM_QUOTA = 'statistics_maximum_quota']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$allowed_size]]></code>
       <code><![CDATA[$current_size]]></code>
@@ -32259,9 +32238,6 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/statistics/include/SCMStatisticsPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[TEMPLATE = 'scm-statistics']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$end_date]]></code>
       <code><![CDATA[$selected_project]]></code>
@@ -32589,21 +32565,6 @@
     <InvalidReturnType>
       <code><![CDATA[int]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[BACKUP        = 'backup']]></code>
-      <code><![CDATA[BACKUP_OLD    = 'backup_old']]></code>
-      <code><![CDATA[CODENDI_LOGS  = 'codendi_log']]></code>
-      <code><![CDATA[CONFIG_PERIOD = 'statistics_period']]></code>
-      <code><![CDATA[FRS           = 'frs']]></code>
-      <code><![CDATA[FTP           = 'ftp']]></code>
-      <code><![CDATA[GRP_HOME      = 'grp_home']]></code>
-      <code><![CDATA[MYSQL         = 'mysql']]></code>
-      <code><![CDATA[PATH          = 'path_']]></code>
-      <code><![CDATA[PLUGIN_WEBDAV = 'plugin_webdav']]></code>
-      <code><![CDATA[SVN           = 'svn']]></code>
-      <code><![CDATA[USR_HOME      = 'usr_home']]></code>
-      <code><![CDATA[WIKI          = 'wiki']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$dar]]></code>
       <code><![CDATA[$date]]></code>
@@ -32799,13 +32760,6 @@
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
     </InvalidFalsableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[EXCEPTION_MOTIVATION = 'exception_motivation']]></code>
-      <code><![CDATA[GROUP_ID             = 'group_id']]></code>
-      <code><![CDATA[REQUESTER_ID         = 'requester_id']]></code>
-      <code><![CDATA[REQUEST_DATE         = 'request_date']]></code>
-      <code><![CDATA[REQUEST_SIZE         = 'requested_size']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$project_id]]></code>
     </MissingParamType>
@@ -32942,10 +32896,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/statistics/include/Statistics_Services_UsageFormatter.php">
-    <MissingClassConstType>
-      <code><![CDATA[GROUP_ID = 'group_id']]></code>
-      <code><![CDATA[VALUES   = 'result']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$query_result]]></code>
       <code><![CDATA[$query_result]]></code>
@@ -32960,9 +32910,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/statistics/include/SystemEventQueueStatistics.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'statistics']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getName]]></code>
@@ -32977,9 +32924,6 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
     </DeprecatedFunction>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'STATISTICS_DAILY']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[archiveSessions]]></code>
       <code><![CDATA[formatMessage]]></code>

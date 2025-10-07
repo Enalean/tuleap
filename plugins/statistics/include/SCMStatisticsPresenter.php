@@ -22,7 +22,7 @@ namespace Tuleap\Statistics;
 
 class SCMStatisticsPresenter
 {
-    public const TEMPLATE = 'scm-statistics';
+    public const string TEMPLATE = 'scm-statistics';
 
     public $scm_statistics_label;
     public $start_date_label;
