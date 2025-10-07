@@ -34,7 +34,7 @@ use Tuleap\SVNCore\Cache\ParameterRetriever;
 
 final class DisplayTuleapPMParamsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/plugins/svn/admin';
+    public const string URL = '/plugins/svn/admin';
 
     /**
      * @var ParameterRetriever

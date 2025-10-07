@@ -33092,18 +33092,12 @@
     </InvalidOperand>
   </file>
   <file src="plugins/svn/include/Events/SystemEvent_SVN_CREATE_REPOSITORY.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'SystemEvent_SVN_CREATE_REPOSITORY']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getParametersAsArray]]></code>
       <code><![CDATA[injectDependencies]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/Events/SystemEvent_SVN_DELETE_REPOSITORY.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'SystemEvent_SVN_DELETE_REPOSITORY']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$repository_id]]></code>
     </MissingParamType>
@@ -33122,9 +33116,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/svn/include/Events/SystemEvent_SVN_RESTORE_REPOSITORY.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'SystemEvent_SVN_RESTORE_REPOSITORY']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$repository_id]]></code>
     </MissingParamType>
@@ -33372,11 +33363,6 @@
       <code><![CDATA[preg_match_all('/^\s*\[(.*)\]\s*(?:#.*)?$/m', $svn_access_file->getFullContent(), $matches)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/svn/include/SVN/AccessControl/SVNRefreshAllAccessFilesCommand.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'svn:refresh-projects-access-files']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/svn/include/SVN/Admin/AdminController.php">
     <MissingParamType>
       <code><![CDATA[$emails]]></code>
@@ -33483,9 +33469,6 @@
     <DeprecatedMethod>
       <code><![CDATA[groupAddHistory]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIST_SIZE = 65535]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$immutable_tags_path]]></code>
       <code><![CDATA[$immutable_tags_path]]></code>
@@ -33521,9 +33504,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Admin/ImmutableTagPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_NUMBER_OF_FOLDERS = 10000]]></code>
-    </MissingClassConstType>
     <MissingClosureReturnType>
       <code><![CDATA[function (string $path) {]]></code>
     </MissingClosureReturnType>
@@ -33849,12 +33829,6 @@
       <code><![CDATA[$perms]]></code>
       <code><![CDATA[true]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[POST_COMMIT_HOOK         = 'post-commit']]></code>
-      <code><![CDATA[POST_REVPROP_CHANGE_HOOK = 'post-revprop-change']]></code>
-      <code><![CDATA[PRE_COMMIT_HOOK          = 'pre-commit']]></code>
-      <code><![CDATA[PRE_REVPROP_CHANGE_HOOK  = 'pre-revprop-change']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$can_change_svn_log]]></code>
       <code><![CDATA[$group_id]]></code>
@@ -34115,9 +34089,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/svn/include/SVN/Explorer/ExplorerController.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'explorer']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[createRepository]]></code>
       <code><![CDATA[generateTokenForCeateRepository]]></code>
@@ -34158,9 +34129,6 @@
     </PossiblyInvalidArrayAccess>
   </file>
   <file src="plugins/svn/include/SVN/Hooks/PostCommit.php">
-    <MissingClassConstType>
-      <code><![CDATA[PROCESS_POST_COMMIT = 'process_post_commit']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$goto_link]]></code>
       <code><![CDATA[$keyword]]></code>
@@ -34204,9 +34172,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Logs/DBWriter.php">
-    <MissingClassConstType>
-      <code><![CDATA[YESTERDAY_LOG_FILE = '/var/log/httpd/svn_log.1']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$filename]]></code>
     </MissingParamType>
@@ -34352,10 +34317,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Logs/LogCache.php">
-    <MissingClassConstType>
-      <code><![CDATA[READ  = 'read']]></code>
-      <code><![CDATA[WRITE = 'write']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$action_type]]></code>
       <code><![CDATA[$action_type]]></code>
@@ -34388,10 +34349,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Logs/Parser.php">
-    <MissingClassConstType>
-      <code><![CDATA[BASE_URL = '/svnplugin/']]></code>
-      <code><![CDATA[CORE_URL = '/svnroot/']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$file]]></code>
       <code><![CDATA[$svn_command]]></code>
@@ -34424,10 +34381,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[1]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[NA_LABEL = 'N/A']]></code>
-      <code><![CDATA[ONE_DAY  = 86400]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$span]]></code>
       <code><![CDATA[$span]]></code>
@@ -34706,10 +34659,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/svn/include/SVN/Repository/HookConfig.php">
-    <MissingClassConstType>
-      <code><![CDATA[COMMIT_MESSAGE_CAN_CHANGE = 'commit_message_can_change']]></code>
-      <code><![CDATA[MANDATORY_REFERENCE       = 'mandatory_reference']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$config_name]]></code>
     </MissingParamType>
@@ -34825,9 +34774,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$project->getID()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[PREFIX = 'svn']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$deleted_repositories]]></code>
       <code><![CDATA[$limit]]></code>
@@ -34878,9 +34824,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Repository/RuleName.php">
-    <MissingClassConstType>
-      <code><![CDATA[PATTERN_REPOSITORY_NAME = '[a-zA-Z][A-Za-z0-9-_.]{2,254}']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$name_repository]]></code>
     </MissingParamType>
@@ -35063,9 +35006,6 @@
       <code><![CDATA[$project->getId()]]></code>
       <code><![CDATA[self::PERMISSION_ADMIN]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[PERMISSION_ADMIN = 'PLUGIN_SVN_ADMIN']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[save]]></code>
     </MissingReturnType>
@@ -35155,9 +35095,6 @@
     <ImplicitToStringCast>
       <code><![CDATA[$attrs['dump-file']]]></code>
     </ImplicitToStringCast>
-    <MissingClassConstType>
-      <code><![CDATA[SERVICE_NAME = 'svn']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$extraction_path]]></code>
     </MissingParamType>
@@ -35216,10 +35153,6 @@
       <code><![CDATA[EVENT]]></code>
       <code><![CDATA[EVENT]]></code>
     </InvalidClass>
-    <MissingClassConstType>
-      <code><![CDATA[SERVICE_SHORTNAME  = 'plugin_svn']]></code>
-      <code><![CDATA[SYSTEM_NATURE_NAME = ReferenceManager::REFERENCE_NATURE_SVNREVISION]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$keyword]]></code>
@@ -35311,10 +35244,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/svn/tests/rest/SVN/RepositoryTestNonRegressionTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[TULEAP_MAGIC_GROUP_ID_ANONYMOUS = 1]]></code>
-      <code><![CDATA[TULEAP_MAGIC_GROUP_ID_MEMBERS   = 3]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[testPOSTRepositoryWithMissingKey]]></code>
       <code><![CDATA[testPOSTWithDuplicatePath]]></code>
@@ -35365,11 +35294,6 @@
       <code><![CDATA[$user_groups[self::UGROUP_NAME_1]]]></code>
       <code><![CDATA[$user_groups[self::UGROUP_NAME_2]]]></code>
     </InvalidPropertyAssignmentValue>
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_NAME  = 'svn-plugin-test']]></code>
-      <code><![CDATA[UGROUP_NAME_1 = 'svn_ugroup_1']]></code>
-      <code><![CDATA[UGROUP_NAME_2 = 'svn_ugroup_2']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$svn_domain]]></code>
     </MissingPropertyType>
@@ -75872,7 +75796,6 @@
       <code><![CDATA[$display_nb_projects]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$nb_active_sessions]]></code>
       <code><![CDATA[$nb_matching_users]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$result]]></code>
@@ -75889,10 +75812,8 @@
       <code><![CDATA[$export_url]]></code>
       <code><![CDATA[$login_name_header]]></code>
       <code><![CDATA[$matching_users]]></code>
-      <code><![CDATA[$nb_active_sessions]]></code>
       <code><![CDATA[$nb_matching_users]]></code>
       <code><![CDATA[$nb_projects_header]]></code>
-      <code><![CDATA[$profile_header]]></code>
       <code><![CDATA[$real_nam_header]]></code>
       <code><![CDATA[$sortby_name_icon]]></code>
       <code><![CDATA[$sortby_name_url]]></code>
@@ -75910,9 +75831,7 @@
       <code><![CDATA[getSortUrlParams]]></code>
     </MissingReturnType>
     <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->active_sessions_confirm]]></code>
       <code><![CDATA[$this->active_sessions_csrf]]></code>
-      <code><![CDATA[$this->active_sessions_label]]></code>
       <code><![CDATA[$this->export_csv]]></code>
       <code><![CDATA[$this->no_matching_users]]></code>
       <code><![CDATA[$this->pagination]]></code>

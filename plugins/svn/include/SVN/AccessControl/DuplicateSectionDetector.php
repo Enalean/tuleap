@@ -29,7 +29,7 @@ use Tuleap\SVN\SVNAccessFileContent;
 
 final class DuplicateSectionDetector
 {
-    private const GROUPS = 'groups';
+    private const string GROUPS = 'groups';
 
     public function inspect(SVNAccessFileContent $svn_access_file): CollectionOfSVNAccessFileFaults
     {

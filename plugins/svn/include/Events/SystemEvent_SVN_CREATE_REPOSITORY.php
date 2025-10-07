@@ -31,7 +31,7 @@ use Tuleap\SVN\Repository;
 
 class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
 {
-    public const NAME = 'SystemEvent_SVN_CREATE_REPOSITORY';
+    public const string NAME = 'SystemEvent_SVN_CREATE_REPOSITORY';
 
     /**
      * @var \Tuleap\SVN\BackendSVN

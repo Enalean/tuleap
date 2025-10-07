@@ -25,9 +25,9 @@ use Tuleap\REST\RestBase;
 #[\PHPUnit\Framework\Attributes\Group('SVNTests')]
 class TestBase extends RestBase
 {
-    public const PROJECT_NAME  = 'svn-plugin-test';
-    public const UGROUP_NAME_1 = 'svn_ugroup_1';
-    public const UGROUP_NAME_2 = 'svn_ugroup_2';
+    public const string PROJECT_NAME  = 'svn-plugin-test';
+    public const string UGROUP_NAME_1 = 'svn_ugroup_1';
+    public const string UGROUP_NAME_2 = 'svn_ugroup_2';
 
     protected $svn_domain = 'https://localhost';
 

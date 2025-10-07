@@ -33,7 +33,7 @@ use Tuleap\SVNCore\Cache\ParameterSaver;
 
 final class UpdateTuleapPMParamsController implements DispatchableWithRequest
 {
-    public const URL = '/plugins/svn/admin/cache';
+    public const string URL = '/plugins/svn/admin/cache';
 
     /**
      * @var ParameterSaver

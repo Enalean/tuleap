@@ -25,8 +25,8 @@ use DateTime;
 
 class Parser
 {
-    public const BASE_URL = '/svnplugin/';
-    public const CORE_URL = '/svnroot/';
+    public const string BASE_URL = '/svnplugin/';
+    public const string CORE_URL = '/svnroot/';
 
     public function parse($file)
     {

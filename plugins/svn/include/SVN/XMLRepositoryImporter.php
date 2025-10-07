@@ -40,7 +40,7 @@ use Tuleap\SVN\Repository\RuleName;
 
 class XMLRepositoryImporter
 {
-    public const SERVICE_NAME = 'svn';
+    public const string SERVICE_NAME = 'svn';
     /**
      * @var \Tuleap\SVN\BackendSVN
      */

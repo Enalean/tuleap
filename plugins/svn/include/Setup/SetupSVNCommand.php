@@ -31,7 +31,7 @@ use Tuleap\ServerHostname;
 
 final class SetupSVNCommand extends Command
 {
-    public const NAME = 'setup:svn';
+    public const string NAME = 'setup:svn';
 
     public function __construct()
     {

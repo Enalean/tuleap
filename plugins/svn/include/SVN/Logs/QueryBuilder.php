@@ -25,8 +25,8 @@ use DataAccessObject;
 
 class QueryBuilder extends DataAccessObject
 {
-    public const ONE_DAY  = 86400;
-    public const NA_LABEL = 'N/A';
+    public const int ONE_DAY     = 86400;
+    public const string NA_LABEL = 'N/A';
 
     public function buildQuery(Project $project, $span, $who)
     {

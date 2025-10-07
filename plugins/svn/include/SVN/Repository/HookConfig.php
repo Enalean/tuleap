@@ -23,8 +23,8 @@ use Tuleap\SVN\Repository;
 
 class HookConfig
 {
-    public const MANDATORY_REFERENCE       = 'mandatory_reference';
-    public const COMMIT_MESSAGE_CAN_CHANGE = 'commit_message_can_change';
+    public const string MANDATORY_REFERENCE       = 'mandatory_reference';
+    public const string COMMIT_MESSAGE_CAN_CHANGE = 'commit_message_can_change';
 
     /**
      * @var Repository

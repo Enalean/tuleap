@@ -30,7 +30,7 @@ use Tuleap\SVN\Repository\RepositoryManager;
 
 class SVNRefreshAllAccessFilesCommand extends Command
 {
-    public const NAME = 'svn:refresh-projects-access-files';
+    public const string NAME = 'svn:refresh-projects-access-files';
 
     /**
      * @var RepositoryManager
