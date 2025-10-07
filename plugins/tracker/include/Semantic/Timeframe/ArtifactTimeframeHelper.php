@@ -20,16 +20,18 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use Tracker_Artifact_Changeset;
 use DateTime;
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tracker_Artifact_ChangesetValue_Date;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class ArtifactTimeframeHelper
 {
     /**
-     * @var SemanticTimeframeBuilder
+     * @var BuildSemanticTimeframe
      */
     private $semantic_builder;
     /**
@@ -38,14 +40,14 @@ class ArtifactTimeframeHelper
     private $logger;
 
     public function __construct(
-        SemanticTimeframeBuilder $semantic_builder,
+        BuildSemanticTimeframe $semantic_builder,
         LoggerInterface $logger,
     ) {
         $this->semantic_builder = $semantic_builder;
         $this->logger           = $logger;
     }
 
-    public function artifactHelpShouldBeShownToUser(PFUser $user, TrackerField $field): bool
+    public function artifactHelpShouldBeShownToUser(PFUser $user, TrackerField $field, Artifact $artifact, Tracker_Artifact_Changeset $changeset): bool
     {
         $tracker = $field->getTracker();
 
@@ -66,6 +68,14 @@ class ArtifactTimeframeHelper
         }
 
         if (! $start_date_field->userCanRead($user)) {
+            return false;
+        }
+
+        /** @var ?Tracker_Artifact_ChangesetValue_Date $start_date_changeset_value */
+        $start_date_changeset_value = $changeset->getValue($start_date_field);
+        $start_timestamp            = $start_date_changeset_value?->getTimestamp() ?? 0;
+
+        if ($start_date_field->isEmpty($start_timestamp, $artifact) || $start_timestamp === 0) {
             return false;
         }
 

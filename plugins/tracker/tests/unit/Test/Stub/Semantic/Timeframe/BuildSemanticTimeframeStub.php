@@ -27,6 +27,7 @@ use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeConfigInvalid;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Tracker;
 
@@ -42,6 +43,14 @@ final class BuildSemanticTimeframeStub implements BuildSemanticTimeframe
         \Tuleap\Tracker\FormElement\Field\Date\DateField $end_field,
     ): self {
         return self::withTimeframeCalculator($tracker, new TimeframeWithEndDate($start_field, $end_field));
+    }
+
+    public static function withTimeframeSemanticBasedOnDuration(
+        Tracker $tracker,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $start_field,
+        \Tuleap\Tracker\FormElement\Field\NumericField $duration_field,
+    ): self {
+        return self::withTimeframeCalculator($tracker, new TimeframeWithDuration($start_field, $duration_field));
     }
 
     public static function withTimeframeSemanticNotConfigured(Tracker $tracker): self

@@ -786,8 +786,8 @@ class DateField extends TrackerField
         $user             = $this->getCurrentUser();
 
         if (
-            $timeframe_helper->artifactHelpShouldBeShownToUser($user, $this) &&
             $value &&
+            $timeframe_helper->artifactHelpShouldBeShownToUser($user, $this, $artifact, $value->getChangeset()) &&
             $value instanceof Tracker_Artifact_ChangesetValue_Date &&
             $value->getTimestamp() !== null
         ) {

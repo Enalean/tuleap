@@ -319,7 +319,7 @@ abstract class NumericField extends AlphaNumericField implements Tracker_FormEle
         $user              = $this->getCurrentUser();
         $time_frame_helper = $this->getArtifactTimeframeHelper();
 
-        if ($time_frame_helper->artifactHelpShouldBeShownToUser($user, $this)) {
+        if ($time_frame_helper->artifactHelpShouldBeShownToUser($user, $this, $artifact, $value->getChangeset())) {
             $html_value = $html_value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getEndDateArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
         }
 
