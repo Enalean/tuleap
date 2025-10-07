@@ -661,6 +661,13 @@ msgstr "L'archive ne peut pas contenir de paquets FRS."
 msgid "Archive should not contain users."
 msgstr "L'archive ne peut pas contenir des utilisateurs."
 
+msgid ""
+"Are you sure that you want to force the reconnection for all (%s) users? "
+"This will force all users to login."
+msgstr ""
+"Êtes-vous sûr de vouloir obliger tous vos utilisateurs (%s) à se "
+"reconnecter ?"
+
 msgid "Are you sure you want to remove this passkey?"
 msgstr "Êtes-vous sûr de vouloir supprimer cette clé d'authentification ?"
 
@@ -1501,8 +1508,8 @@ msgstr "Forums pour '%1$s'"
 
 msgid ""
 "Forums service is deprecated. It will be completely removed in March 2025."
-"Le service Forums est déprécié. Il sera complètement "
-"supprimé en Mars 2025."
+msgstr ""
+"Le service Forums est déprécié. Il sera complètement supprimé en Mars 2025."
 
 msgid "Full name"
 msgstr "Nom Complet"
@@ -2797,6 +2804,9 @@ msgstr "Catégories de projet publics"
 
 msgid "Public?"
 msgstr "Public ?"
+
+msgid "Purge all current sessions"
+msgstr "Purger toutes les sessions en cours"
 
 msgid "Purple"
 msgstr "Violet"

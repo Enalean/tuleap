@@ -623,6 +623,11 @@ msgstr "아카이브에 FRS 패키지가 포함되어서는 안됩니다."
 msgid "Archive should not contain users."
 msgstr "아카이브에 사용자가 포함되어서는 안됩니다."
 
+msgid ""
+"Are you sure that you want to force the reconnection for all (%s) users? "
+"This will force all users to login."
+msgstr ""
+
 msgid "Are you sure you want to remove this passkey?"
 msgstr "이 암호키를 제거하시겠습니까?"
 
@@ -2681,6 +2686,9 @@ msgstr "공개 프로젝트 카테고리"
 
 msgid "Public?"
 msgstr "공개?"
+
+msgid "Purge all current sessions"
+msgstr ""
 
 msgid "Purple"
 msgstr "보라색"

@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\JavascriptAsset;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
@@ -228,6 +229,7 @@ $results_presenter = new Tuleap\User\Admin\UserListResultsPresenter(
 $admin_page     = new AdminPageRenderer();
 $include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
 $admin_page->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'site-admin-userlist-styles'));
+$admin_page->addJavascriptAsset(new JavascriptAsset($include_assets, 'site-admin-user-list.js'));
 
 if ($group_id) {
     $project = ProjectManager::instance()->getProject($group_id);
