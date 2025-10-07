@@ -73,7 +73,7 @@ final class PUTHandler implements HandlePUT
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_Exception $exception) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
-                throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
+                throw new RestException(400, $GLOBALS['Response']->getRawFeedback());
             }
             throw new RestException(500, $exception->getMessage());
         } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {

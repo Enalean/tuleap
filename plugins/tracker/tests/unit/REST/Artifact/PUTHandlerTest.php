@@ -144,7 +144,7 @@ final class PUTHandlerTest extends TestCase
         $GLOBALS['Response']->method('getRawFeedback')->willReturn('Aaaah');
 
         $this->expectException(RestException::class);
-        $this->expectExceptionCode(500);
+        $this->expectExceptionCode(400);
         $this->handle();
     }
 
