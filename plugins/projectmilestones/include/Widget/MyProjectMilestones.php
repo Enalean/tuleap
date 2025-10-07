@@ -36,7 +36,7 @@ use HTTPRequest;
 
 class MyProjectMilestones extends Widget
 {
-    public const NAME = 'myprojectmilestone';
+    public const string NAME = 'myprojectmilestone';
     /**
      * @var ProjectMilestonesWidgetRetriever
      */

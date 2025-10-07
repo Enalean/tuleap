@@ -34,7 +34,7 @@ use Tuleap\Queue\Worker;
 
 class MetricsCollector
 {
-    private const PROJECT_STATUS = [
+    private const array PROJECT_STATUS = [
         Project::STATUS_ACTIVE  => 'active',
         Project::STATUS_PENDING => 'pending',
         Project::STATUS_DELETED => 'deleted',

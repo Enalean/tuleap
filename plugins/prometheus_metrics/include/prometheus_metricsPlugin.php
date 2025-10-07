@@ -39,7 +39,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class prometheus_metricsPlugin extends Plugin  // phpcs:ignore
 {
-    public const NAME = 'prometheus_metrics';
+    public const string NAME = 'prometheus_metrics';
 
     public function __construct($id)
     {

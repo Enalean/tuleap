@@ -29585,9 +29585,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/project_ownership/include/SystemEvents/ProjectOwnerStatusNotificationSystemEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'PROJECT_OWNER_STATUS_NOTIFICATION']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$status]]></code>
@@ -30142,9 +30139,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$this->project->getID()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'dashboardprojectmilestone']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$widget_id]]></code>
@@ -30167,9 +30161,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$this->project->getID()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'myprojectmilestone']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -30194,20 +30185,10 @@
     </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/projectmilestones/include/Widget/ProjectMilestonesPresenterBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[COUNT_ELEMENTS_MODE = 'count']]></code>
-      <code><![CDATA[EFFORT_MODE         = 'effort']]></code>
-    </MissingClassConstType>
     <RedundantPropertyInitializationCheck>
       <code><![CDATA[isset($this->planning_virtual_top_milestone)]]></code>
       <code><![CDATA[isset($this->semantic_timeframe)]]></code>
     </RedundantPropertyInitializationCheck>
-  </file>
-  <file src="plugins/projectmilestones/include/Widget/ProjectMilestonesWidgetRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[PARAM_SELECTED_PROJECT      = 'select-project-milestones-widget']]></code>
-      <code><![CDATA[VALUE_SELECTED_PROJECT_SELF = 'self']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/projectmilestones/include/projectmilestonesPlugin.php">
     <MissingParamType>
@@ -30220,13 +30201,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/prometheus_metrics/include/MetricsCollector.php">
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_STATUS = [
-        Project::STATUS_ACTIVE  => 'active',
-        Project::STATUS_PENDING => 'pending',
-        Project::STATUS_DELETED => 'deleted',
-    ]]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$value]]></code>
@@ -30238,9 +30212,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/prometheus_metrics/include/prometheus_metricsPlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'prometheus_metrics']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>

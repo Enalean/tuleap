@@ -39,8 +39,8 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 
 class ProjectMilestonesWidgetRetriever
 {
-    public const PARAM_SELECTED_PROJECT      = 'select-project-milestones-widget';
-    public const VALUE_SELECTED_PROJECT_SELF = 'self';
+    public const string PARAM_SELECTED_PROJECT      = 'select-project-milestones-widget';
+    public const string VALUE_SELECTED_PROJECT_SELF = 'self';
 
     /**
      * @var ProjectAccessChecker
