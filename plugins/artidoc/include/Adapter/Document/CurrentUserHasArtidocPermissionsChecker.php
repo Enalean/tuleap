@@ -25,9 +25,9 @@ namespace Tuleap\Artidoc\Adapter\Document;
 use Override;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Artidoc\Domain\Document\CheckCurrentUserHasArtidocPermissions;
+use Tuleap\Artidoc\Domain\Document\UserCannotReadDocumentFault;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
@@ -46,7 +46,7 @@ final readonly class CurrentUserHasArtidocPermissionsChecker implements CheckCur
     public function checkUserCanRead(Artidoc $artidoc): Ok|Err
     {
         if (! $this->getPermissions($artidoc)->userCanRead($this->current_user, $artidoc->getId())) {
-            return Result::err(Fault::fromMessage('User cannot read document'));
+            return Result::err(UserCannotReadDocumentFault::build());
         }
 
         return Result::ok($artidoc);

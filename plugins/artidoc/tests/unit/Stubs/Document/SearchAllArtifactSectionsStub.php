@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\Domain\Document;
+namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Domain\Document\Artidoc;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
+use Tuleap\Artidoc\Domain\Document\Section\SearchAllArtifactSections;
 
-final class ArtidocStub implements Artidoc
+final class SearchAllArtifactSectionsStub implements SearchAllArtifactSections
 {
+    /** @var array<int, list<RetrievedSection>> */
+    private array $sections_of_artidoc = [];
+
     private function __construct()
     {
     }
@@ -35,27 +40,18 @@ final class ArtidocStub implements Artidoc
         return new self();
     }
 
-    #[\Override]
-    public function getId(): int
+    /**
+     * @no-named-arguments
+     */
+    public function withSections(ArtidocWithContext $artidoc, RetrievedSection ...$sections): self
     {
-        return 123;
+        $this->sections_of_artidoc[$artidoc->document->getId()] = $sections;
+        return $this;
     }
 
     #[\Override]
-    public function getTitle(): string
+    public function searchAllArtifactSectionsOfDocument(ArtidocWithContext $artidoc): array
     {
-        return 'Title';
-    }
-
-    #[\Override]
-    public function getParentId(): int
-    {
-        return 1;
-    }
-
-    #[\Override]
-    public function getProjectId(): int
-    {
-        return 101;
+        return $this->sections_of_artidoc[$artidoc->document->getId()] ?? [];
     }
 }

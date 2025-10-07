@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\Domain\Document;
+namespace Tuleap\Artidoc\REST\v1\Versions;
 
-use Tuleap\Artidoc\Domain\Document\Artidoc;
-
-final class ArtidocStub implements Artidoc
+final readonly class PaginatedChangesetsCollection
 {
-    private function __construct()
+    /**
+     * @param list<\Tracker_Artifact_Changeset> $changesets
+     */
+    public function __construct(public array $changesets, public int $total)
     {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    #[\Override]
-    public function getId(): int
-    {
-        return 123;
-    }
-
-    #[\Override]
-    public function getTitle(): string
-    {
-        return 'Title';
-    }
-
-    #[\Override]
-    public function getParentId(): int
-    {
-        return 1;
-    }
-
-    #[\Override]
-    public function getProjectId(): int
-    {
-        return 101;
     }
 }
