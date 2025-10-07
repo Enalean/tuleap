@@ -32,8 +32,6 @@ class NameTranslator
     public const  PROJECT_MEMBERS            = 'ugroup_project_members_name_key';
     private const WIKI_ADMINS                = 'ugroup_wiki_admin_name_key';
     private const FORUM_ADMINS               = 'ugroup_forum_admin_name_key';
-    private const NEWS_WRITER                = 'ugroup_news_writer_name_key';
-    private const NEWS_ADMIN                 = 'ugroup_news_admin_name_key';
     private const FILE_ADMINS                = 'ugroup_file_manager_admin_name_key';
     private const TV3_TRACKER_ADMINS         = 'ugroup_tracker_admins_name_key';
     public const  CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label';
@@ -80,10 +78,6 @@ class NameTranslator
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_wiki_admins');
             case self::FORUM_ADMINS:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_forum_admins');
-            case self::NEWS_WRITER:
-                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_news_writers');
-            case self::NEWS_ADMIN:
-                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_news_admins');
             default:
                 return self::getUserGroupDisplayKey((string) $name);
         }
@@ -110,10 +104,6 @@ class NameTranslator
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_tracker_admins_name_key');
             case self::FORUM_ADMINS:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_forum_admin_name_key');
-            case self::NEWS_ADMIN:
-                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_news_admin_name_key');
-            case self::NEWS_WRITER:
-                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_news_writer_name_key');
             case self::NOBODY:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_nobody_name_key');
             default:

@@ -40,17 +40,7 @@ if (user_isloggedin()) {
             exit_error($Language->getText('global', 'error'), _('Forum is restricted'));
         }
 
-        $user_id = UserManager::instance()->getCurrentUser()->getId();
-        //If the forum is associated to a private news, non-allowed users shouldn't be able to monitor this forum
-        // but they should be able to disable monitoring news that have been set from public to private
-        $qry = 'SELECT * FROM news_bytes WHERE forum_id=' . db_ei($forum_id);
-        $res = db_query($qry);
-        if (db_numrows($res) > 0) {
-            if (! forum_utils_news_access($forum_id) && ! user_monitor_forum($forum_id, $user_id)) {
-                exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
-            }
-        }
-
+        $user_id             = UserManager::instance()->getCurrentUser()->getId();
         $forum_monitor_error = false;
         if (user_monitor_forum($forum_id, $user_id)) {
             // If already monitored then stop monitoring

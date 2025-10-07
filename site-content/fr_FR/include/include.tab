@@ -69,7 +69,6 @@ include_html	unknown_value	*** valeur inconnue ***
 #-----------------------------------------------
 # Script: SF/www/include/layout.php
 #
-include_layout	latest_news_rss	Dernières annonces RSS
 include_layout	newest_releases_rss	Dernières versions RSS
 include_layout	newest_projects_rss	Derniers projets RSS
 include_layout	query_count	Nombre de requetes
@@ -87,7 +86,6 @@ include_menu	user_admin	Admin. utilisateur
 include_menu	group_admin	Admin. groupe
 include_menu	pending_projects	Projets en attente
 include_menu	pending_users	Utilisateur en attente
-include_menu	site_news_approve	Approbation annonces site
 include_menu	mass_mail	Courrier en masse
 include_menu	trove_cat_list	Liste des catégories
 include_menu	trove_cat_add	Ajout des catégories
@@ -173,7 +171,6 @@ include_project_home	trackers	Trackers
 include_project_home	no_arttypefact	Impossible d'obtenir un ArtifactTypeFactory
 include_project_home	no_trackers_accessible	Aucun tracker accessible
 include_project_home	anon_ftp_space	Espace FTP anonyme
-include_project_home	latest_news	Dernières annonces
 include_project_home	start_monitoring	Surveiller ce paquet
 include_project_home	stop_monitoring	Arrêter de surveiller ce paquet
 include_project_home	latest_svn_commit	Derniers commits SVN

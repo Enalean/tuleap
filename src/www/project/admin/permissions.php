@@ -23,7 +23,6 @@
 
 // Supported object types and related object_id:
 //
-//type='NEWS_READ'                 id='forum_id'                   table='news_bytes'
 // type='PACKAGE_READ'             id='package_id'                 table='frs_package'
 // type='RELEASE_READ'             id='release_id'                 table='frs_release'
 // type='WIKI_READ'                id='group_id'                   table='wiki_page'
@@ -50,9 +49,7 @@ require_once __DIR__ . '/project_admin_utils.php';
 function permission_get_name($permission_type)
 {
     global $Language;
-    if ($permission_type == 'NEWS_READ') {
-        return $Language->getText('project_admin_permissions', 'news_access');
-    } elseif ($permission_type == 'PACKAGE_READ') {
+    if ($permission_type == 'PACKAGE_READ') {
         return $Language->getText('project_admin_permissions', 'pack_download');
     } elseif ($permission_type == 'RELEASE_READ') {
         return $Language->getText('project_admin_permissions', 'rel_download');
@@ -89,9 +86,7 @@ function permission_get_name($permission_type)
  */
 function permission_get_object_type($permission_type, $object_id)
 {
-    if ($permission_type == 'NEWS_READ') {
-        return 'news';
-    } elseif ($permission_type == 'PACKAGE_READ') {
+    if ($permission_type == 'PACKAGE_READ') {
         return 'package';
     } elseif ($permission_type == 'RELEASE_READ') {
         return 'release';
@@ -222,10 +217,7 @@ function permission_user_allowed_to_change($project_id, $permission_type, $objec
         return true;
     }
 
-    if ($permission_type == 'NEWS_READ') {
-        //special case : if user has write (or admin) perms on News, he can submit news ==> he can submit private news ==> he can define news perms
-        return (user_ismember($project_id, 'N1') || user_ismember($project_id, 'N2'));
-    } elseif ($permission_type == 'WIKI_READ') {
+    if ($permission_type == 'WIKI_READ') {
         return (user_ismember($project_id, 'W2'));
     } elseif ($permission_type == 'WIKIPAGE_READ') {
         return (user_ismember($project_id, 'W2'));

@@ -75,11 +75,6 @@ $sys_http_user  = "codendiadm"; // Unix user running the HTTP server
 //
 //
 
-
-// Group id corresponding to Tuleap News group
-// (was group 714 in SourceForge - sfnews)
-$sys_news_group = 46;
-
 // Make project categorisation mandatory. If a project has not categorized itself,
 // it will result in a warning in project summary page.
 $sys_trove_cat_mandatory = 1;

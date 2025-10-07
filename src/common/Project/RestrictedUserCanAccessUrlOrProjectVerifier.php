@@ -87,7 +87,6 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         // Default values are very restrictive, but they can be overriden in the site-content file
         // Default support project is project 1.
         $allow_welcome_page                  = false;       // Allow access to welcome page
-        $allow_news_browsing                 = false;      // Allow restricted users to read/comment news, including for their project
         $allow_user_browsing                 = false;      // Allow restricted users to access other user's page (Developer Profile)
         $allow_access_to_project_forums      = [1]; // Support project help forums are accessible through the 'Discussion Forums' link
         $allow_access_to_project_trackers    = [1]; // Support project trackers are used for support requests
@@ -95,7 +94,6 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         $allow_access_to_project_mail        = [1]; // Support project mailing lists (Developers Channels)
         $allow_access_to_project_frs         = [1]; // Support project file releases
         $allow_access_to_project_refs        = [1]; // Support project references
-        $allow_access_to_project_news        = [1]; // Support project news
         $allow_access_to_project_trackers_v5 = [1]; //Support project trackers v5 are used for support requests
         // List of fully public projects (same access for restricted and unrestricted users)
 
@@ -109,10 +107,8 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         $allow_access_to_project_forums      = array_flip($allow_access_to_project_forums);
         $allow_access_to_project_trackers    = array_flip($allow_access_to_project_trackers);
         $allow_access_to_project_docs        = array_flip($allow_access_to_project_docs);
-        $allow_access_to_project_mail        = array_flip($allow_access_to_project_mail);
         $allow_access_to_project_frs         = array_flip($allow_access_to_project_frs);
         $allow_access_to_project_refs        = array_flip($allow_access_to_project_refs);
-        $allow_access_to_project_news        = array_flip($allow_access_to_project_news);
         $allow_access_to_project_trackers_v5 = array_flip($allow_access_to_project_trackers_v5);
 
         foreach ($forbidden_url as $str) {
@@ -146,21 +142,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
             }
         }
 
-        // Forum and news. Each published news is a special forum of project 'news'
-        if (
-            strpos($req_uri, '/news/') === 0 &&
-            isset($allow_access_to_project_news[$group_id])
-        ) {
-            $user_is_allowed = true;
-        }
-
-        if (
-            strpos($req_uri, '/news/') === 0 &&
-            $allow_news_browsing
-        ) {
-            $user_is_allowed = true;
-        }
-
+        // Forum
         if (
             strpos($req_uri, '/forum/') === 0 &&
             isset($allow_access_to_project_forums[$group_id])

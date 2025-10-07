@@ -42,12 +42,6 @@ function forum_show_a_nested_message($result, $row = 0)
     global $Language;
     $g_id =  db_result($result, $row, 'group_id');
 
-    if ($g_id == ForgeConfig::get('sys_news_group')) {
-        $f_id =  db_result($result, $row, 'group_forum_id');
-        $gr   = db_query('SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($f_id));
-        $g_id = db_result($gr, 0, 'group_id');
-    }
-
     $purifier = Codendi_HTMLPurifier::instance();
     $poster   = UserManager::instance()->getUserByUserName(db_result($result, $row, 'user_name'));
     $ret_val  = '
@@ -141,11 +135,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         // Check permissions
     if (! forum_utils_access_allowed($forum_id)) {
         exit_error($Language->getText('global', 'error'), _('Forum is restricted'));
-    }
-
-    //If the forum is associated to a news, check permissions on this news
-    if (! forum_utils_news_access($forum_id)) {
-        exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
     }
 
     $vPostMsg = new Valid_WhiteList('post_message', ['y']);
@@ -284,11 +273,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     $group_id   = db_result($result, 0, 'group_id');
     $forum_name = db_result($result, 0, 'forum_name');
 
-    $is_a_news = false;
-    if ($group_id == ForgeConfig::get('sys_news_group')) {    // test here because forum_header will change the value of $group_id
-        $is_a_news = true;
-    }
-
     $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
     $title   = $project->getPublicName() . ' forum: ' . $forum_name;
@@ -352,17 +336,15 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         } else {
             $public_flag = '1';
         }
-        if ($is_a_news) {
-            $forum_popup = '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="' . $purifier->purify($forum_id) . '">';
-        } else {
-            $res   = db_query('SELECT group_forum_id,forum_name ' .
-                'FROM forum_group_list ' .
-                "WHERE group_id='" . db_ei($group_id) . "' AND is_public IN ($public_flag)");
-            $vals  = util_result_column_to_array($res, 0);
-            $texts = util_result_column_to_array($res, 1);
 
-            $forum_popup = html_build_select_box_from_arrays($vals, $texts, 'forum_id', $forum_id, false);
-        }
+        $res   = db_query('SELECT group_forum_id,forum_name ' .
+            'FROM forum_group_list ' .
+            "WHERE group_id='" . db_ei($group_id) . "' AND is_public IN ($public_flag)");
+        $vals  = util_result_column_to_array($res, 0);
+        $texts = util_result_column_to_array($res, 1);
+
+        $forum_popup = html_build_select_box_from_arrays($vals, $texts, 'forum_id', $forum_id, false);
+
         //create a pop-up select box showing options for viewing threads
 
         $vals  = forum_utils_get_styles();

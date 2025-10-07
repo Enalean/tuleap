@@ -26,7 +26,6 @@ group	long_forum	Forums de discussion
 group	long_ftp	Espace FTP anonyme
 group	long_homepage	Page d'accueil du projet
 group	long_mail	Listes de diffusion
-group	long_news	Dernières annonces
 group	long_patch	Gestionnaire de corrections
 group	long_pm	Gestion des tâches
 group	long_scm	Gestion de sources
@@ -47,7 +46,6 @@ group	short_homepage	Accueil
 group	short_mail	Listes
 group	short_main	Écran principal
 group	short_memberlist	Développeurs
-group	short_news	Annonces
 group	short_patch	Patchs
 group	short_pm	Tâches
 group	short_scm	Sources

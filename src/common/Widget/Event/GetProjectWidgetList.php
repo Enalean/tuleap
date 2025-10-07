@@ -33,7 +33,6 @@ class GetProjectWidgetList extends GetWidgetList
         'projectmembers',
         ProjectHeartbeat::NAME,
         'projectlatestfilereleases',
-        'projectlatestnews',
         'projectpublicareas',
         'projectlatestsvncommits',
         'projectsvnstats',

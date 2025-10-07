@@ -63,7 +63,6 @@ final class ServiceClassnameRetrieverTest extends TestCase
             [Service::ADMIN],
             [Service::FORUM],
             [Service::HOMEPAGE],
-            [Service::NEWS],
             [Service::WIKI],
             [Service::TRACKERV3],
         ];

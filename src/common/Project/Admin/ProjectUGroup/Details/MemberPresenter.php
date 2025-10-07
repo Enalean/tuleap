@@ -36,7 +36,6 @@ class MemberPresenter
     public $user_name;
     public $user_id;
     public $is_member_updatable;
-    public $is_news_admin;
     public $member_updatable_messages;
     public $user_is_project_admin;
     /**
@@ -57,13 +56,6 @@ class MemberPresenter
             $member->getRealName()
         );
 
-        $is_news_admin = false;
-        if (
-            $ugroup->getId() === ProjectUGroup::NEWS_WRITER
-            && $member->isMember($ugroup->getProjectId(), 'N2')
-        ) {
-            $is_news_admin = true;
-        }
 
         $this->has_avatar                = $member->hasAvatar();
         $this->avatar_url                = $provide_user_avatar_url->getAvatarUrl($member);
@@ -72,7 +64,6 @@ class MemberPresenter
         $updatable_error_messages        = $ugroup_members_updatable->getUserUpdatableErrorMessages($member);
         $this->is_member_updatable       = count($updatable_error_messages) === 0;
         $this->member_updatable_messages = $updatable_error_messages;
-        $this->is_news_admin             = $is_news_admin;
         $this->user_is_project_admin     = (int) $member->isAdmin($ugroup->getProjectId());
         $this->status_presenter          = new StatusPresenter($member->getStatus());
     }

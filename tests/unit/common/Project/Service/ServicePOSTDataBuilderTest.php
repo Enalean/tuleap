@@ -158,8 +158,8 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $project,
             [
                 'service_id'    => 12,
-                'short_name'    => Service::NEWS,
-                'label'         => 'News',
+                'short_name'    => Service::SVN,
+                'label'         => 'Svn',
                 'description'   => '',
                 'rank'          => 123,
                 'link'          => '',
@@ -236,8 +236,8 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $project,
             [
                 'service_id'    => 12,
-                'short_name'    => Service::NEWS,
-                'label'         => 'News',
+                'short_name'    => Service::ADMIN,
+                'label'         => 'Admin',
                 'description'   => '',
                 'rank'          => 123,
                 'link'          => '',
@@ -250,7 +250,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $post_data = $this->service_postdata_builder->buildFromREST($service, false);
 
-        self::assertSame('fas fa-rss', $post_data->getIconName());
+        self::assertSame('fas fa-cogs', $post_data->getIconName());
     }
 
     public function testBuildFromRequestForceAdminServiceToBeUsed(): void

@@ -366,12 +366,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
                     case 'SVN_ADMIN': //svn admin
                         $is_member = ($group_perm['svn_flags'] == 2);
                         break;
-                    case 'N1': //news write
-                        $is_member = ($group_perm['news_flags'] == 1);
-                        break;
-                    case 'N2': //news admin
-                        $is_member = ($group_perm['news_flags'] == 2);
-                        break;
                     default: //fubar request
                         $is_member = false;
                 }

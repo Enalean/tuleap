@@ -199,7 +199,6 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(105, $first_formatted_member->user_id);
         self::assertTrue($first_formatted_member->is_member_updatable);
         self::assertEmpty($first_formatted_member->member_updatable_messages);
-        self::assertFalse($first_formatted_member->is_news_admin);
         self::assertSame(0, $first_formatted_member->user_is_project_admin);
     }
 
@@ -245,36 +244,6 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_formatted_member = $result->members[0];
         self::assertFalse($first_formatted_member->is_member_updatable);
         self::assertContains('User cannot be updated', $first_formatted_member->member_updatable_messages);
-    }
-
-    public function testItSetsMemberIsNewsAdmin(): void
-    {
-        $project = ProjectTestBuilder::aProject()->build();
-        $ugroup  = $this->createMock(\ProjectUGroup::class);
-        $ugroup->method('isBound')->willReturn(false);
-        $ugroup->method('getId')->willReturn(\ProjectUGroup::NEWS_WRITER);
-        $ugroup->method('getProjectId')->willReturn(180);
-        $ugroup->method('isStatic')->willReturn(false);
-        $ugroup->method('getProject')->willReturn($project);
-        $first_member = $this->createMock(\PFUser::class);
-        $first_member->method('getUserName')->willReturn('jmost');
-        $first_member->method('getId')->willReturn(105);
-        $first_member->method('getRealName')->willReturn('Junko Most');
-        $first_member->method('hasAvatar')->willReturn(true);
-        $first_member->method('isAdmin')->willReturn(false);
-        $first_member->method('getStatus')->willReturn('A');
-        $first_member->method('getAvatarUrl')->willReturn('');
-        $first_member->method('isMember')->with(180, 'N2')->willReturn(true);
-        $ugroup->method('getMembersIncludingSuspendedAndDeleted')->willReturn([$first_member]);
-        $this->user_helper->method('getDisplayName');
-        $this->detector
-            ->method('isSynchronizedWithProjectMembers')
-            ->willReturn(false);
-
-        $result = $this->builder->build($ugroup);
-
-        $first_formatted_member = $result->members[0];
-        self::assertTrue($first_formatted_member->is_news_admin);
     }
 
     private function getEmptyBoundStaticUGroup(): \ProjectUGroup

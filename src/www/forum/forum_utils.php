@@ -45,34 +45,30 @@ function forum_header(HeaderConfiguration $params)
 
     $project = ProjectManager::instance()->getProjectById((int) $group_id);
 
-    if ($group_id == ForgeConfig::get('sys_news_group')) {
-        return;
-    } else {
-        //this is just a regular forum, not a news item
-        if (! $project->isError()) {
-            $service_forum = $project->getService(Service::FORUM);
-            if ($service_forum !== null) {
-                $breadcrumb = new BreadCrumb(
-                    new BreadCrumbLink($service_forum->getInternationalizedName(), $service_forum->getUrl())
+    //this is just a regular forum, not a news item
+    if (! $project->isError()) {
+        $service_forum = $project->getService(Service::FORUM);
+        if ($service_forum !== null) {
+            $breadcrumb = new BreadCrumb(
+                new BreadCrumbLink($service_forum->getInternationalizedName(), $service_forum->getUrl())
+            );
+            if (user_ismember($group_id, 'F2')) {
+                $admin_link = new BreadCrumbLink(
+                    _('Administration'),
+                    '/forum/admin/?group_id=' . urlencode((string) $group_id),
                 );
-                if (user_ismember($group_id, 'F2')) {
-                    $admin_link = new BreadCrumbLink(
-                        _('Administration'),
-                        '/forum/admin/?group_id=' . urlencode((string) $group_id),
-                    );
 
-                    $sub_items = new BreadCrumbSubItems();
-                    $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$admin_link])));
+                $sub_items = new BreadCrumbSubItems();
+                $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$admin_link])));
 
-                    $breadcrumb->setSubItems($sub_items);
-                }
-                $breadcrumb_collection = new BreadCrumbCollection();
-                $breadcrumb_collection->addBreadCrumb($breadcrumb);
-                $GLOBALS['HTML']->addBreadcrumbs($breadcrumb_collection);
+                $breadcrumb->setSubItems($sub_items);
             }
+            $breadcrumb_collection = new BreadCrumbCollection();
+            $breadcrumb_collection->addBreadCrumb($breadcrumb);
+            $GLOBALS['HTML']->addBreadcrumbs($breadcrumb_collection);
         }
-        site_project_header($project, $params);
     }
+    site_project_header($project, $params);
 
     /*
         Show horizontal forum links
@@ -593,28 +589,6 @@ function forum_utils_access_allowed($forum_id)
             return false;
         }
     }
-    return true;
-}
-
-function forum_utils_news_access($forum_id)
-{
-    /*
-    Takes a forum_id (associated to a news) and checks if the user is allowed to access the corresponding forum
-         */
-
-    $qry1 = 'SELECT group_id FROM news_bytes WHERE forum_id=' . db_ei($forum_id);
-    $res1 = db_query($qry1);
-
-    if ($res1 && db_numrows($res1) > 0) {
-        //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set
-        $g_id = db_result($res1, 0, 'group_id');
-
-        $project = ProjectManager::instance()->getProject($g_id);
-
-        return $project->usesService(Service::NEWS)
-            && permission_is_authorized('NEWS_READ', intval($forum_id), UserManager::instance()->getCurrentUser()->getId(), $g_id);
-    }
-
     return true;
 }
 

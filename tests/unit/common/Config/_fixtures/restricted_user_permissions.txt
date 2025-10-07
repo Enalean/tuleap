@@ -37,7 +37,6 @@
 //$allow_access_to_project_mail        = array(1); // Support project mailing lists (Developers Channels)
 //$allow_access_to_project_frs         = array(1); // Support project file releases
 //$allow_access_to_project_refs        = array(1); // Support project references
-//$allow_access_to_project_news        = array(1); // Support project news
 //$allow_access_to_project_trackers_v5 = array(1); //Support project trackers v5 are used for support requests
 
 // List of fully public projects (same access for restricted and unrestricted users)

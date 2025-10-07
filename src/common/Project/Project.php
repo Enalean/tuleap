@@ -59,7 +59,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public const STATUS_SYSTEM       = 's';
     public const STATUS_SYSTEM_LABEL = 'system';
 
-    public const SITE_NEWS_PROJECT_ID        = 46;
     public const DEFAULT_TEMPLATE_PROJECT_ID = 100;
     public const DEFAULT_ADMIN_PROJECT_ID    = 1;
 
@@ -122,12 +121,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public function usesFile(): bool
     {
         return $this->usesService(Service::FILE);
-    }
-
-    //whether or not this group has opted to use news
-    public function usesNews(): bool
-    {
-        return $this->usesService(Service::NEWS);
     }
 
     //whether or not this group has opted to use discussion forums

@@ -75,7 +75,6 @@ include_html	unknown_value	*** unknown value ***
 #-----------------------------------------------
 # Script: SF/www/include/layout.php
 #
-include_layout	latest_news_rss	Latest News RSS
 include_layout	newest_releases_rss	Newest Releases RSS
 include_layout	newest_projects_rss	Newest Projects RSS
 include_layout	query_count	Query Count
@@ -93,7 +92,6 @@ include_menu	user_admin	User Admin
 include_menu	group_admin	Group Admin
 include_menu	pending_projects	Pending Projects
 include_menu	pending_users	Pending Users
-include_menu	site_news_approve	Site News Approval
 include_menu	mass_mail	Mass Mail
 include_menu	trove_cat_list	Trove Cat. List
 include_menu	trove_cat_add	Trove Cat. Add
@@ -179,7 +177,6 @@ include_project_home	trackers	Trackers
 include_project_home	no_arttypefact	Could Not Get ArtifactTypeFactory
 include_project_home	no_trackers_accessible	No Accessible Trackers Found
 include_project_home	anon_ftp_space	Anonymous FTP Space
-include_project_home	latest_news	Latest News
 include_project_home	start_monitoring	Monitor this package
 include_project_home	stop_monitoring	Stop monitoring this package
 include_project_home	latest_svn_commit	Latest SVN Commits
