@@ -120,9 +120,9 @@ class ArtifactLinkField extends TrackerField
         $html .= '<input type="text"
                          value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" autocomplete="off" />';
         $html .= '<br />';
-        $html .= '<a href="#">bug #123</a><br />';
-        $html .= '<a href="#">bug #321</a><br />';
-        $html .= '<a href="#">story #10234</a>';
+        $html .= '<a href="#" aria-disabled="true">bug #123</a><br />';
+        $html .= '<a href="#" aria-disabled="true">bug #321</a><br />';
+        $html .= '<a href="#" aria-disabled="true">story #10234</a>';
         return $html;
     }
 
