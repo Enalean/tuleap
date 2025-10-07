@@ -19,58 +19,63 @@
   -->
 
 <template>
-    <div class="tlp-alert-info" v-if="should_display_under_construction_message">
-        <p>{{ $gettext("This feature of artidoc is under construction.") }}</p>
-        <p>{{ $gettext("Data is fake in order to gather feedback about the feature.") }}</p>
-        <button type="button" class="tlp-button-small tlp-button-primary" v-on:click="gotit()">
-            {{ $gettext("Ok, got it") }}
-        </button>
-    </div>
-    <div class="tlp-alert-danger" v-if="error">
-        {{ error }}
-    </div>
-    <list-of-versions-skeleton v-if="is_loading_versions" />
-    <section v-if="!error && !is_loading_versions">
-        <div class="tlp-form-element tlp-form-element-prepend">
-            <span class="tlp-prepend">
-                <i
-                    class="fa-solid fa-filter"
-                    role="img"
-                    v-bind:title="show_title"
-                    id="show-label"
-                ></i>
-            </span>
-            <select class="tlp-select" v-model="display" aria-labelledby="show-label">
-                <option v-bind:value="ALL_VERSIONS">{{ $gettext("All versions") }}</option>
-                <option v-bind:value="NAMED_VERSIONS">{{ $gettext("Named versions") }}</option>
-                <option v-bind:value="GROUP_BY_NAMED_VERSIONS">
-                    {{ $gettext("Group by named versions") }}
-                </option>
-            </select>
+    <section>
+        <div class="tlp-alert-info" v-if="should_display_under_construction_message">
+            <p>{{ $gettext("This feature of artidoc is under construction.") }}</p>
+            <p>{{ $gettext("Data is fake in order to gather feedback about the feature.") }}</p>
+            <button type="button" class="tlp-button-small tlp-button-primary" v-on:click="gotit()">
+                {{ $gettext("Ok, got it") }}
+            </button>
         </div>
-        <flat-list-of-versions v-if="display === ALL_VERSIONS" v-bind:versions="versions" />
-        <flat-list-of-versions v-if="display === NAMED_VERSIONS" v-bind:versions="named_versions" />
-        <grouped-by-named-list-of-versions
-            v-if="display === GROUP_BY_NAMED_VERSIONS"
-            v-bind:grouped_versions="grouped_versions"
-        />
-        <button
-            class="tlp-button-mini tlp-button-primary load-more-versions"
-            v-on:click="more"
-            v-if="has_more_versions && !error"
-            v-bind:disabled="is_loading_more_versions"
-        >
-            <i
-                class="tlp-button-icon"
-                v-bind:class="
-                    is_loading_more_versions
-                        ? 'fa-solid fa-circle-notch fa-spin'
-                        : 'fa-solid fa-arrow-down'
-                "
-                aria-hidden="true"
-            ></i>
-            {{ $gettext("Load more versions") }}
-        </button>
+        <div class="tlp-alert-danger" v-if="error">
+            {{ error }}
+        </div>
+        <list-of-versions-skeleton v-if="is_loading_versions" />
+        <template v-if="!error && !is_loading_versions">
+            <div class="tlp-form-element tlp-form-element-prepend">
+                <span class="tlp-prepend">
+                    <i
+                        class="fa-solid fa-filter"
+                        role="img"
+                        v-bind:title="show_title"
+                        id="show-label"
+                    ></i>
+                </span>
+                <select class="tlp-select" v-model="display" aria-labelledby="show-label">
+                    <option v-bind:value="ALL_VERSIONS">{{ $gettext("All versions") }}</option>
+                    <option v-bind:value="NAMED_VERSIONS">{{ $gettext("Named versions") }}</option>
+                    <option v-bind:value="GROUP_BY_NAMED_VERSIONS">
+                        {{ $gettext("Group by named versions") }}
+                    </option>
+                </select>
+            </div>
+            <flat-list-of-versions v-if="display === ALL_VERSIONS" v-bind:versions="versions" />
+            <flat-list-of-versions
+                v-if="display === NAMED_VERSIONS"
+                v-bind:versions="named_versions"
+            />
+            <grouped-by-named-list-of-versions
+                v-if="display === GROUP_BY_NAMED_VERSIONS"
+                v-bind:grouped_versions="grouped_versions"
+            />
+            <button
+                class="tlp-button-mini tlp-button-primary load-more-versions"
+                v-on:click="more"
+                v-if="has_more_versions && !error"
+                v-bind:disabled="is_loading_more_versions"
+            >
+                <i
+                    class="tlp-button-icon"
+                    v-bind:class="
+                        is_loading_more_versions
+                            ? 'fa-solid fa-circle-notch fa-spin'
+                            : 'fa-solid fa-arrow-down'
+                    "
+                    aria-hidden="true"
+                ></i>
+                {{ $gettext("Load more versions") }}
+            </button>
+        </template>
     </section>
 </template>
 
