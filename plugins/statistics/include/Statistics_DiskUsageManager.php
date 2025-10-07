@@ -30,20 +30,20 @@ class Statistics_DiskUsageManager // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     #[\Tuleap\Config\ConfigKey('The statistics period (default: 3)')]
     #[\Tuleap\Config\ConfigKeyInt(3)]
-    public const CONFIG_PERIOD = 'statistics_period';
+    public const string CONFIG_PERIOD = 'statistics_period';
 
-    public const SVN           = 'svn';
-    public const FRS           = 'frs';
-    public const FTP           = 'ftp';
-    public const GRP_HOME      = 'grp_home';
-    public const USR_HOME      = 'usr_home';
-    public const WIKI          = 'wiki';
-    public const PLUGIN_WEBDAV = 'plugin_webdav';
-    public const MYSQL         = 'mysql';
-    public const CODENDI_LOGS  = 'codendi_log';
-    public const BACKUP        = 'backup';
-    public const BACKUP_OLD    = 'backup_old';
-    public const PATH          = 'path_';
+    public const string SVN           = 'svn';
+    public const string FRS           = 'frs';
+    public const string FTP           = 'ftp';
+    public const string GRP_HOME      = 'grp_home';
+    public const string USR_HOME      = 'usr_home';
+    public const string WIKI          = 'wiki';
+    public const string PLUGIN_WEBDAV = 'plugin_webdav';
+    public const string MYSQL         = 'mysql';
+    public const string CODENDI_LOGS  = 'codendi_log';
+    public const string BACKUP        = 'backup';
+    public const string BACKUP_OLD    = 'backup_old';
+    public const string PATH          = 'path_';
 
     /**
      * @var Statistics_DiskUsageDao

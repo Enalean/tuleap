@@ -27,11 +27,11 @@ class ProjectQuotaManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
 {
     #[\Tuleap\Config\ConfigKey('Maximum disk size quota allowed by project (size in GB, default: 50)')]
     #[\Tuleap\Config\ConfigKeyInt(50)]
-    public const CONFIG_MAXIMUM_QUOTA = 'statistics_maximum_quota';
+    public const string CONFIG_MAXIMUM_QUOTA = 'statistics_maximum_quota';
 
     #[\Tuleap\Config\ConfigKey('The allowed disk size quota (size in GB, default: 5)')]
     #[\Tuleap\Config\ConfigKeyInt(5)]
-    public const CONFIG_ALLOWED_QUOTA = 'statistics_allowed_quota';
+    public const string CONFIG_ALLOWED_QUOTA = 'statistics_allowed_quota';
 
     /**
      * The Projects dao used to fetch data

@@ -20,14 +20,14 @@
  * DAO class for Project Quota
  */
 
-class Statistics_ProjectQuotaDao extends DataAccessObject
+class Statistics_ProjectQuotaDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    protected $tableName              = 'plugin_statistics_disk_quota_exception';
-    public const GROUP_ID             = 'group_id'; //PK
-    public const REQUESTER_ID         = 'requester_id';
-    public const REQUEST_SIZE         = 'requested_size';
-    public const EXCEPTION_MOTIVATION = 'exception_motivation';
-    public const REQUEST_DATE         = 'request_date';
+    protected $tableName                     = 'plugin_statistics_disk_quota_exception';
+    public const string GROUP_ID             = 'group_id'; //PK
+    public const string REQUESTER_ID         = 'requester_id';
+    public const string REQUEST_SIZE         = 'requested_size';
+    public const string EXCEPTION_MOTIVATION = 'exception_motivation';
+    public const string REQUEST_DATE         = 'request_date';
 
     /**
      * Get the dao table name
@@ -56,7 +56,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
         $requestedSize       = $this->da->escapeInt($requestedSize);
         $exceptionMotivation = $this->da->quoteSmart($exceptionMotivation);
         $requestDate         = $_SERVER['REQUEST_TIME'];
-        $query               = "REPLACE INTO plugin_statistics_disk_quota_exception 
+        $query               = "REPLACE INTO plugin_statistics_disk_quota_exception
                                 (group_id, requester_id, requested_size, exception_motivation, request_date)
                                 VALUES
                                 ($groupId, $requesterId, $requestedSize, $exceptionMotivation, $requestDate)";

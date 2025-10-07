@@ -27,10 +27,10 @@ use Statistics_DiskUsageOutput;
 
 class DiskUsageServicesPresenterBuilder
 {
-    public const GROUP_BY_DAY_KEY   = 'day';
-    public const GROUP_BY_WEEK_KEY  = 'week';
-    public const GROUP_BY_MONTH_KEY = 'month';
-    public const GROUP_BY_YEAR_KEY  = 'year';
+    public const string GROUP_BY_DAY_KEY   = 'day';
+    public const string GROUP_BY_WEEK_KEY  = 'week';
+    public const string GROUP_BY_MONTH_KEY = 'month';
+    public const string GROUP_BY_YEAR_KEY  = 'year';
 
     /**
      * @var Statistics_DiskUsageGraph
