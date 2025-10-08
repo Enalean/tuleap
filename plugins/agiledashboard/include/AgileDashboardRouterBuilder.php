@@ -31,6 +31,7 @@ use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
@@ -135,7 +136,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 new AgileDashboardPaneInfoIdentifier(),
                 $tracker_new_dropdown_link_presenter_builder,
                 new HeaderOptionsForPlanningProvider(
-                    new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+                    new SubmilestoneFinder(
                         Tracker_HierarchyFactory::instance(),
                         $planning_factory,
                     ),

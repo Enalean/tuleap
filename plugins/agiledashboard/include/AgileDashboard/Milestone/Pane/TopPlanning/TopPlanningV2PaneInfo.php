@@ -29,7 +29,7 @@ class TopPlanningV2PaneInfo extends PlanningV2PaneInfo
     public const string IDENTIFIER = 'topplanning-v2';
 
     #[Override]
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }

@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Option\Option;
@@ -35,7 +35,7 @@ use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 class HeaderOptionsForPlanningProvider
 {
     /**
-     * @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
+     * @var SubmilestoneFinder
      */
     private $submilestone_finder;
     /**
@@ -48,7 +48,7 @@ class HeaderOptionsForPlanningProvider
     private $header_options_inserter;
 
     public function __construct(
-        AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
+        SubmilestoneFinder $submilestone_finder,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
         CurrentContextSectionToHeaderOptionsInserter $header_options_inserter,
         private readonly VerifySubmissionPermissions $submission_permissions_verifier,

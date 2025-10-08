@@ -54,7 +54,7 @@ class MilestoneRepresentationBuilder
      */
     private $parent_tracker_retriever;
     /**
-     * @var \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
+     * @var \Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder
      */
     private $sub_milestone_finder;
     /**
@@ -71,7 +71,7 @@ class MilestoneRepresentationBuilder
         \Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory $backlog_factory,
         \EventManager $event_manager,
         ParentTrackerRetriever $parent_tracker_retriever,
-        \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $sub_milestone_finder,
+        \Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder $sub_milestone_finder,
         \PlanningFactory $planning_factory,
         ProjectBackgroundConfiguration $project_background_configuration,
     ) {

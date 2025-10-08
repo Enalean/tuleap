@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_VirtualTopMilestone;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
@@ -41,14 +41,14 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HeaderOptionsForPlanningProviderTest extends TestCase
 {
-    private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder&MockObject $submilestone_finder;
+    private SubmilestoneFinder&MockObject $submilestone_finder;
     private VerifySubmissionPermissions&MockObject $submission_permissions_verifier;
     private HeaderOptionsForPlanningProvider $provider;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->submilestone_finder             = $this->createMock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
+        $this->submilestone_finder             = $this->createMock(SubmilestoneFinder::class);
         $this->submission_permissions_verifier = $this->createMock(VerifySubmissionPermissions::class);
 
         $this->provider = new HeaderOptionsForPlanningProvider(

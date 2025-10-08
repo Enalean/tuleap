@@ -72,6 +72,7 @@ use Tuleap\AgileDashboard\Milestone\MilestoneReportCriterionDao;
 use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterBuilderFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
@@ -1413,7 +1414,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $planning_factory    = $this->getPlanningFactory();
         $milestone_factory   = $this->getMilestoneFactory();
         $hierarchy_factory   = $this->getHierarchyFactory();
-        $submilestone_finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+        $submilestone_finder = new SubmilestoneFinder(
             $hierarchy_factory,
             $planning_factory,
         );
