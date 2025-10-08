@@ -38504,6 +38504,57 @@
       <code><![CDATA[NAME = 'validateArtifactLinkValueEvent']]></code>
     </MissingClassConstType>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownCacheGenerationChecker.php">
+    <MissingParamType>
+      <code><![CDATA[$capacity]]></code>
+    </MissingParamType>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[getId]]></code>
+    </PossiblyInvalidMethodCall>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownCacheGenerator.php">
+    <MissingParamType>
+      <code><![CDATA[$artifact_id]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[forceBurndownCacheGeneration]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownCommonDataBuilder.php">
+    <MissingParamType>
+      <code><![CDATA[$capacity]]></code>
+      <code><![CDATA[$user_timezone]]></code>
+    </MissingParamType>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownDataBuilderForLegacy.php">
+    <MissingParamType>
+      <code><![CDATA[$capacity]]></code>
+      <code><![CDATA[$capacity]]></code>
+      <code><![CDATA[$is_burndown_under_calculation]]></code>
+      <code><![CDATA[$user_timezone]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[addBurndownRemainingEffortDotsBasedOnServerTimezone]]></code>
+      <code><![CDATA[build]]></code>
+      <code><![CDATA[getBurndownCalculationStatus]]></code>
+    </MissingReturnType>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownDataBuilderForREST.php">
+    <MissingParamType>
+      <code><![CDATA[$capacity]]></code>
+      <code><![CDATA[$is_burndown_under_calculation]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[addBurndownRemainingEffortDotsBasedOnServerTimezoneForREST]]></code>
+      <code><![CDATA[build]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownField.php">
     <InvalidReturnType>
       <code><![CDATA[getQueryFrom]]></code>
@@ -38545,6 +38596,43 @@
     <UndefinedMagicMethod>
       <code><![CDATA[Stroke]]></code>
     </UndefinedMagicMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownFieldDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[\DataAccessObject]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieveFirstRow]]></code>
+      <code><![CDATA[retrieveFirstRow]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownRemainingEffortAdderForLegacy.php">
+    <MissingReturnType>
+      <code><![CDATA[addRemainingEffortDataForLegacy]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[getCachedValue]]></code>
+    </PossiblyInvalidMethodCall>
+    <UndefinedMethod>
+      <code><![CDATA[getCachedValue]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownRemainingEffortAdderForREST.php">
+    <MissingReturnType>
+      <code><![CDATA[addRemainingEffortDataForREST]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[getComputedValue]]></code>
+      <code><![CDATA[getId]]></code>
+    </PossiblyInvalidMethodCall>
+    <UndefinedMethod>
+      <code><![CDATA[getComputedValue]]></code>
+    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/Computed/ComputedField.php">
     <DeprecatedMethod>
@@ -38879,6 +38967,196 @@
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/FieldDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[DataAccessObject]]></code>
+      <code><![CDATA[[$this->da, 'quoteSmart']]]></code>
+      <code><![CDATA[[$this->da, 'quoteSmart']]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[prepareRanking]]></code>
+      <code><![CDATA[prepareRanking]]></code>
+      <code><![CDATA[quoteLikeValueSuffix]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieveIds]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
+      <code><![CDATA[updateAndGetLastId]]></code>
+    </DeprecatedMethod>
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->retrieve($sql)]]></code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
+    </InvalidFalsableReturnType>
+    <MissingParamType>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$field]]></code>
+      <code><![CDATA[$field]]></code>
+      <code><![CDATA[$field]]></code>
+      <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$force_absolute_ranking]]></code>
+      <code><![CDATA[$from_field_id]]></code>
+      <code><![CDATA[$group_id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$mapping]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$notifications]]></code>
+      <code><![CDATA[$original_field_id]]></code>
+      <code><![CDATA[$original_field_id]]></code>
+      <code><![CDATA[$parent_id]]></code>
+      <code><![CDATA[$parent_id]]></code>
+      <code><![CDATA[$parent_id]]></code>
+      <code><![CDATA[$prefix_name]]></code>
+      <code><![CDATA[$project_id]]></code>
+      <code><![CDATA[$rank]]></code>
+      <code><![CDATA[$required]]></code>
+      <code><![CDATA[$scope]]></code>
+      <code><![CDATA[$to_tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$use_it]]></code>
+      <code><![CDATA[$used]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[create]]></code>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[duplicate]]></code>
+      <code><![CDATA[getUsedUserClosedListFieldById]]></code>
+      <code><![CDATA[mapNewParentsAfterDuplication]]></code>
+      <code><![CDATA[save]]></code>
+      <code><![CDATA[searchById]]></code>
+      <code><![CDATA[searchByParentId]]></code>
+      <code><![CDATA[searchByTrackerId]]></code>
+      <code><![CDATA[searchByTrackerIdAndName]]></code>
+      <code><![CDATA[searchFieldIdsByGroupId]]></code>
+      <code><![CDATA[searchNextUsedSibling]]></code>
+      <code><![CDATA[searchProjectSharedFieldsTargets]]></code>
+      <code><![CDATA[searchSharedTargets]]></code>
+      <code><![CDATA[searchUnusedByTrackerId]]></code>
+      <code><![CDATA[searchUsedByIdAndType]]></code>
+      <code><![CDATA[searchUsedByParentId]]></code>
+      <code><![CDATA[searchUsedByTrackerId]]></code>
+      <code><![CDATA[searchUsedByTrackerIdAndName]]></code>
+      <code><![CDATA[searchUsedByTrackerIdAndType]]></code>
+      <code><![CDATA[searchUsedStaticSbFieldByTrackerId]]></code>
+      <code><![CDATA[searchUsedUserClosedListFieldsByTrackerId]]></code>
+      <code><![CDATA[setType]]></code>
+      <code><![CDATA[updateOriginalFieldId]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/FieldValueDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[update]]></code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code><![CDATA[$changeset_value_id]]></code>
+      <code><![CDATA[$changeset_value_id]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[searchById]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/Files/AttachmentController.php">
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $fileinfo->getId()]]></code>
@@ -39112,6 +39390,11 @@
       <code><![CDATA[$changeset_value]]></code>
     </NullableReturnStatement>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/Integer/ChangesChecker.php">
+    <MissingParamType>
+      <code><![CDATA[$new_value]]></code>
+    </MissingParamType>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/Integer/IntegerField.php">
     <ImplicitToStringCast>
       <code><![CDATA[$match_expression->sql]]></code>
@@ -39129,6 +39412,32 @@
     <NullableReturnStatement>
       <code><![CDATA[$changeset_value]]></code>
     </NullableReturnStatement>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Integer/IntegerValueDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[parent::__construct()]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code><![CDATA[$changeset_value_id]]></code>
+      <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$from]]></code>
+      <code><![CDATA[$to]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[create]]></code>
+      <code><![CDATA[createNoneValue]]></code>
+      <code><![CDATA[keep]]></code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/LastUpdateBy/LastUpdateByField.php">
     <InvalidNullableReturnType>
@@ -39479,6 +39788,16 @@
       <code><![CDATA[accept]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/PermissionsOnArtifact/ChangesChecker.php">
+    <MissingParamType>
+      <code><![CDATA[$new_value]]></code>
+    </MissingParamType>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(bool) $old_value->getUsed()]]></code>
+      <code><![CDATA[(bool) $old_value->getUsed()]]></code>
+      <code><![CDATA[(bool) $old_value->getUsed()]]></code>
+    </RedundantCastGivenDocblockType>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/PermissionsOnArtifact/PermissionsOnArtifactField.php">
     <DeprecatedFunction>
       <code><![CDATA[db_ei($row['ugroup_id'])]]></code>
@@ -39540,6 +39859,14 @@
       <code><![CDATA[$this->values]]></code>
     </UndefinedThisPropertyFetch>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/PermissionsOnArtifact/PermissionsOnArtifactFieldValueDao.php">
+    <MissingParamType>
+      <code><![CDATA[$changeset_value_id]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[create]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/Priority/PriorityField.php">
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
@@ -39556,6 +39883,29 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getValue]]></code>
     </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/RetrieveFieldById.php">
+    <MissingParamType>
+      <code><![CDATA[$field_id]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Shareable/PropagatePropertiesDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[commit]]></code>
+      <code><![CDATA[enableExceptionsOnError]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[parent::__construct()]]></code>
+      <code><![CDATA[rollBack]]></code>
+      <code><![CDATA[startTransaction]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+    </DeprecatedMethod>
+    <MissingReturnType>
+      <code><![CDATA[propagateLabelAndDescription]]></code>
+      <code><![CDATA[propagateNameIfPossible]]></code>
+      <code><![CDATA[propagateProperties]]></code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/String/StringField.php">
     <InvalidNullableReturnType>
@@ -39681,6 +40031,43 @@
       <code><![CDATA[getText]]></code>
     </UndefinedMethod>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/Text/TextValueDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[parent::__construct()]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[quoteSmart]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code><![CDATA[$body_format]]></code>
+      <code><![CDATA[$changeset_value_id]]></code>
+      <code><![CDATA[$changeset_value_id]]></code>
+      <code><![CDATA[$from]]></code>
+      <code><![CDATA[$to]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[create]]></code>
+      <code><![CDATA[createNoneValue]]></code>
+      <code><![CDATA[createWithBodyFormat]]></code>
+      <code><![CDATA[keep]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/Text/XML/XMLTextField.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/TrackerField.php">
     <DeprecatedFunction>
       <code><![CDATA[db_ei($this->getId())]]></code>
@@ -39758,6 +40145,16 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$criteria->is_advanced]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/XML/XMLChangesetValue.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/XML/XMLFieldPermission.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/FormElement/StaticField/LineBreak/LineBreakStaticField.php">
     <MissingParamType>
@@ -45185,284 +45582,6 @@
       <code><![CDATA[validate]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownCacheGenerationChecker.php">
-    <MissingParamType>
-      <code><![CDATA[$capacity]]></code>
-    </MissingParamType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[getId]]></code>
-    </PossiblyInvalidMethodCall>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownCacheGenerator.php">
-    <MissingParamType>
-      <code><![CDATA[$artifact_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[forceBurndownCacheGeneration]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownCommonDataBuilder.php">
-    <MissingParamType>
-      <code><![CDATA[$capacity]]></code>
-      <code><![CDATA[$user_timezone]]></code>
-    </MissingParamType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownDataBuilderForLegacy.php">
-    <MissingParamType>
-      <code><![CDATA[$capacity]]></code>
-      <code><![CDATA[$capacity]]></code>
-      <code><![CDATA[$is_burndown_under_calculation]]></code>
-      <code><![CDATA[$user_timezone]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addBurndownRemainingEffortDotsBasedOnServerTimezone]]></code>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[getBurndownCalculationStatus]]></code>
-    </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownDataBuilderForREST.php">
-    <MissingParamType>
-      <code><![CDATA[$capacity]]></code>
-      <code><![CDATA[$is_burndown_under_calculation]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addBurndownRemainingEffortDotsBasedOnServerTimezoneForREST]]></code>
-      <code><![CDATA[build]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownFieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[\DataAccessObject]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-    </DeprecatedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownRemainingEffortAdderForLegacy.php">
-    <MissingReturnType>
-      <code><![CDATA[addRemainingEffortDataForLegacy]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[getCachedValue]]></code>
-    </PossiblyInvalidMethodCall>
-    <UndefinedMethod>
-      <code><![CDATA[getCachedValue]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownRemainingEffortAdderForREST.php">
-    <MissingReturnType>
-      <code><![CDATA[addRemainingEffortDataForREST]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[getComputedValue]]></code>
-      <code><![CDATA[getId]]></code>
-    </PossiblyInvalidMethodCall>
-    <UndefinedMethod>
-      <code><![CDATA[getComputedValue]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/FieldDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[DataAccessObject]]></code>
-      <code><![CDATA[[$this->da, 'quoteSmart']]]></code>
-      <code><![CDATA[[$this->da, 'quoteSmart']]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[prepareRanking]]></code>
-      <code><![CDATA[prepareRanking]]></code>
-      <code><![CDATA[quoteLikeValueSuffix]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveIds]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[updateAndGetLastId]]></code>
-      <code><![CDATA[updateAndGetLastId]]></code>
-    </DeprecatedMethod>
-    <FalsableReturnStatement>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
-    </InvalidFalsableReturnType>
-    <MissingParamType>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$force_absolute_ranking]]></code>
-      <code><![CDATA[$from_field_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$mapping]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$notifications]]></code>
-      <code><![CDATA[$original_field_id]]></code>
-      <code><![CDATA[$original_field_id]]></code>
-      <code><![CDATA[$parent_id]]></code>
-      <code><![CDATA[$parent_id]]></code>
-      <code><![CDATA[$parent_id]]></code>
-      <code><![CDATA[$prefix_name]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$rank]]></code>
-      <code><![CDATA[$required]]></code>
-      <code><![CDATA[$scope]]></code>
-      <code><![CDATA[$to_tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$use_it]]></code>
-      <code><![CDATA[$used]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[create]]></code>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[duplicate]]></code>
-      <code><![CDATA[getUsedUserClosedListFieldById]]></code>
-      <code><![CDATA[mapNewParentsAfterDuplication]]></code>
-      <code><![CDATA[save]]></code>
-      <code><![CDATA[searchById]]></code>
-      <code><![CDATA[searchByParentId]]></code>
-      <code><![CDATA[searchByTrackerId]]></code>
-      <code><![CDATA[searchByTrackerIdAndName]]></code>
-      <code><![CDATA[searchFieldIdsByGroupId]]></code>
-      <code><![CDATA[searchNextUsedSibling]]></code>
-      <code><![CDATA[searchProjectSharedFieldsTargets]]></code>
-      <code><![CDATA[searchSharedTargets]]></code>
-      <code><![CDATA[searchUnusedByTrackerId]]></code>
-      <code><![CDATA[searchUsedByIdAndType]]></code>
-      <code><![CDATA[searchUsedByParentId]]></code>
-      <code><![CDATA[searchUsedByTrackerId]]></code>
-      <code><![CDATA[searchUsedByTrackerIdAndName]]></code>
-      <code><![CDATA[searchUsedByTrackerIdAndType]]></code>
-      <code><![CDATA[searchUsedStaticSbFieldByTrackerId]]></code>
-      <code><![CDATA[searchUsedUserClosedListFieldsByTrackerId]]></code>
-      <code><![CDATA[setType]]></code>
-      <code><![CDATA[updateOriginalFieldId]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/FieldValueDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$changeset_value_id]]></code>
-      <code><![CDATA[$changeset_value_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[searchById]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/FloatingPointNumber/ChangesChecker.php">
     <MissingParamType>
       <code><![CDATA[$new_value]]></code>
@@ -45470,37 +45589,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/FloatingPointNumber/FloatValueDao.php">
     <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$changeset_value_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$from]]></code>
-      <code><![CDATA[$to]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[create]]></code>
-      <code><![CDATA[createNoneValue]]></code>
-      <code><![CDATA[keep]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Integer/ChangesChecker.php">
-    <MissingParamType>
-      <code><![CDATA[$new_value]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Integer/IntegerValueDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
@@ -46039,94 +46127,6 @@
       <code><![CDATA[Array]]></code>
       <code><![CDATA[Array]]></code>
     </InvalidFalsableReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/PermissionsOnArtifact/ChangesChecker.php">
-    <MissingParamType>
-      <code><![CDATA[$new_value]]></code>
-    </MissingParamType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(bool) $old_value->getUsed()]]></code>
-      <code><![CDATA[(bool) $old_value->getUsed()]]></code>
-      <code><![CDATA[(bool) $old_value->getUsed()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/PermissionsOnArtifact/PermissionsOnArtifactFieldValueDao.php">
-    <MissingParamType>
-      <code><![CDATA[$changeset_value_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[create]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/RetrieveFieldById.php">
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Shareable/PropagatePropertiesDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[commit]]></code>
-      <code><![CDATA[enableExceptionsOnError]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[rollBack]]></code>
-      <code><![CDATA[startTransaction]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code><![CDATA[propagateLabelAndDescription]]></code>
-      <code><![CDATA[propagateNameIfPossible]]></code>
-      <code><![CDATA[propagateProperties]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Text/TextValueDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$body_format]]></code>
-      <code><![CDATA[$changeset_value_id]]></code>
-      <code><![CDATA[$changeset_value_id]]></code>
-      <code><![CDATA[$from]]></code>
-      <code><![CDATA[$to]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[create]]></code>
-      <code><![CDATA[createNoneValue]]></code>
-      <code><![CDATA[createWithBodyFormat]]></code>
-      <code><![CDATA[keep]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/Text/XML/XMLTextField.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/XML/XMLChangesetValue.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/XML/XMLFieldPermission.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/FieldCalculator.php">
     <MissingParamType>

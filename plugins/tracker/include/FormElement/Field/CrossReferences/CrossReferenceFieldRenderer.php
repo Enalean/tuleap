@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\CrossReference;
+namespace Tuleap\Tracker\FormElement\Field\CrossReferences;
 
+use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Tracker\Artifact\Artifact;
-use PFUser;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
 
 class CrossReferenceFieldRenderer
@@ -50,7 +50,7 @@ class CrossReferenceFieldRenderer
     {
         $can_delete = $user->isSuperUser() || $user->isAdmin((int) $artifact->getTracker()->getGroupId());
         $renderer   = $this->template_renderer->getRenderer(
-            __DIR__ . '/../../../../../templates/form-element/reference'
+            __DIR__ . '/../../../../templates/form-element/reference'
         );
 
         return $renderer->renderToString(
