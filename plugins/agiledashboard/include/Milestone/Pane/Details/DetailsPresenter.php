@@ -35,10 +35,10 @@ class DetailsPresenter
 
 
     public function __construct(
-        private readonly IBacklogItemCollection $items_collection,
-        private readonly IBacklogItemCollection $inconsistent_collection,
+        public readonly IBacklogItemCollection $items_collection,
+        public readonly IBacklogItemCollection $inconsistent_collection,
         array $trackers,
-        private readonly string $solve_inconsistencies_url,
+        public readonly string $solve_inconsistencies_url,
         readonly DetailsChartPresenter $chart_presenter,
     ) {
         $this->backlog_item_type = $this->getTrackerNames($trackers);
