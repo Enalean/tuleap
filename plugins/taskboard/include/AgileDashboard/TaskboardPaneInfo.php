@@ -26,7 +26,7 @@ use Tuleap\Tracker\Milestone\PaneInfo;
 
 class TaskboardPaneInfo extends PaneInfo
 {
-    public const NAME = \taskboardPlugin::NAME;
+    public const string NAME = \taskboardPlugin::NAME;
 
     public function __construct(private \Planning_Milestone $milestone)
     {

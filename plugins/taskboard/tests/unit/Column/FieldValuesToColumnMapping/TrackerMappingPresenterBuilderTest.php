@@ -42,10 +42,10 @@ use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldS
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_MAPPED_FIELD_ID   = 3086;
-    private const SECOND_MAPPED_FIELD_ID  = 4597;
-    private const USER_STORIES_TRACKER_ID = 76;
-    private const TASKS_TRACKER_ID        = 83;
+    private const int FIRST_MAPPED_FIELD_ID   = 3086;
+    private const int SECOND_MAPPED_FIELD_ID  = 4597;
+    private const int USER_STORIES_TRACKER_ID = 76;
+    private const int TASKS_TRACKER_ID        = 83;
     private SearchMappedFieldStub $search_mapped_field;
     private RetrieveUsedListFieldStub $field_retriever;
     private MockObject&TrackerCollectionRetriever $trackers_retriever;

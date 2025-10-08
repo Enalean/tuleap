@@ -26,9 +26,9 @@ use Project;
 
 class TaskboardUsage
 {
-    public const OPTION_CARDWALL_AND_TASKBOARD = 'both';
-    public const OPTION_CARDWALL               = 'cardwall';
-    public const OPTION_TASKBOARD              = 'taskboard';
+    public const string OPTION_CARDWALL_AND_TASKBOARD = 'both';
+    public const string OPTION_CARDWALL               = 'cardwall';
+    public const string OPTION_TASKBOARD              = 'taskboard';
 
     /**
      * @var TaskboardUsageDao

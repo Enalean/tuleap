@@ -35274,24 +35274,9 @@
     </PossiblyInvalidArrayAccess>
   </file>
   <file src="plugins/taskboard/include/Admin/ScrumBoardTypeSelectorController.php">
-    <MissingClassConstType>
-      <code><![CDATA[FIELD_NAME = 'scrum-board-type']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$board_type]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/taskboard/include/AgileDashboard/TaskboardPaneInfo.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = \taskboardPlugin::NAME]]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/taskboard/include/AgileDashboard/TaskboardUsage.php">
-    <MissingClassConstType>
-      <code><![CDATA[OPTION_CARDWALL               = 'cardwall']]></code>
-      <code><![CDATA[OPTION_CARDWALL_AND_TASKBOARD = 'both']]></code>
-      <code><![CDATA[OPTION_TASKBOARD              = 'taskboard']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/taskboard/include/Board/BoardPresenter.php">
     <InvalidOperand>
@@ -35369,23 +35354,12 @@
     <InvalidDocblock>
       <code><![CDATA[public function getChildren(int $id, int $milestone_id, int $limit = 100, int $offset = 0): array]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 100]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/taskboard/include/REST/v1/TaskboardResource.php">
     <InvalidDocblock>
       <code><![CDATA[public function getCards(int $id, int $limit = 100, int $offset = 0): array]]></code>
       <code><![CDATA[public function getColumns(int $id): array]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 100]]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/taskboard/include/Routing/TaskboardController.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'taskboard']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/taskboard/include/Tracker/AddInPlacePresenter.php">
     <RedundantCast>
@@ -35412,9 +35386,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/taskboard/include/taskboardPlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'taskboard']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>

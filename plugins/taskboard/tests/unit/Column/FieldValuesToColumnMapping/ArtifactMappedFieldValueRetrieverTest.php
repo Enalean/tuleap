@@ -40,7 +40,7 @@ use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldS
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID = 188;
+    private const int FIELD_ID = 188;
     private \Cardwall_FieldProviders_SemanticStatusFieldRetriever&Stub $status_provider;
     private RetrieveUsedListFieldStub $field_retriever;
     private Artifact $user_story_artifact;
