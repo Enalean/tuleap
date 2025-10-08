@@ -17,14 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { LocaleString } from "./constants";
-export {
-    DEFAULT_LOCALE,
-    en_US_LOCALE,
-    fr_FR_LOCALE,
-    pt_BR_LOCALE,
-    ko_KR_LOCALE,
-} from "./constants";
-export { getLocaleWithDefault } from "./dom";
-export { toBCP47 } from "./format";
-export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "./pofile-helpers";
+import { describe, expect, it } from "vitest";
+import type { LocaleString } from "./constants";
+import { en_US_LOCALE, fr_FR_LOCALE, ko_KR_LOCALE, pt_BR_LOCALE } from "./constants";
+import { toBCP47 } from "./format";
+
+describe(`format`, () => {
+    function* generateLocaleStrings(): Generator<[LocaleString, string]> {
+        yield [en_US_LOCALE, "en-US"];
+        yield [fr_FR_LOCALE, "fr-FR"];
+        yield [pt_BR_LOCALE, "pt-BR"];
+        yield [ko_KR_LOCALE, "ko-KR"];
+    }
+
+    it.each([...generateLocaleStrings()])(
+        `converts from Tuleap locale string format to BCP47 locale string`,
+        (locale_string, expected) => {
+            expect(toBCP47(locale_string)).toBe(expected);
+        },
+    );
+});

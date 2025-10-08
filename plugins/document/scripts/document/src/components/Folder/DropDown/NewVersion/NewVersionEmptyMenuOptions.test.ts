@@ -19,8 +19,9 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
+import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 import type { Empty, ItemFile, NewItemAlternativeArray } from "../../../../type";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../../../constants";
 import emitter, { default as real_emitter } from "../../../../helpers/emitter";
@@ -74,7 +75,7 @@ describe("NewVersionEmptyMenuOptions", function () {
                     create_new_item_alternatives,
                     [USER_CAN_CREATE_WIKI.valueOf()]: user_can_create_wiki,
                     [EMBEDDED_ARE_ALLOWED.valueOf()]: embedded_are_allowed,
-                    [USER_LOCALE.valueOf()]: "en_US",
+                    [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
                 },
             },
         });

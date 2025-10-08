@@ -20,7 +20,6 @@
 import "../themes/document.scss";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-
 import App from "./components/App.vue";
 import { createInitializedStore } from "./store";
 import { createInitializedRouter } from "./router/router";
@@ -30,7 +29,8 @@ import { createPinia } from "pinia";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getAttributeOrThrow } from "@tuleap/dom";
-
+import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
+import { getLocaleWithDefault, toBCP47 } from "@tuleap/locale";
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
 import {
     NEW_ITEMS_ALTERNATIVES,
@@ -38,7 +38,6 @@ import {
     SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
 } from "./injection-keys";
 import type { SearchCriterion, SearchListOption } from "./type";
-import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 import {
     CAN_USER_SWITCH_TO_OLD_UI,
     DATE_TIME_FORMAT,
@@ -75,15 +74,12 @@ interface MustacheCriterion {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    let user_locale = document.body.dataset.userLocale ?? "en_US";
-    user_locale = user_locale.replace(/_/g, "-");
-
     const vue_mount_point = document.getElementById("document-tree-view");
-
     if (!vue_mount_point) {
         return;
     }
 
+    const user_locale = getLocaleWithDefault(document);
     const project_id = Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-project-id"), 10);
     const root_id = Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-root-id"), 10);
     const project_name = getAttributeOrThrow(vue_mount_point, "data-project-name");
@@ -170,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     moment.tz(user_timezone);
-    moment.locale(user_locale);
+    moment.locale(toBCP47(user_locale));
 
     const app = createApp(App, {
         csrf_token_name,

@@ -35,6 +35,7 @@ import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter
 import { computed } from "vue";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import { toBCP47 } from "@tuleap/locale";
 import { DATE_TIME_FORMAT, RELATIVE_DATES_DISPLAY, USER_LOCALE } from "../../configuration-keys";
 
 const props = withDefaults(defineProps<{ date: string; relative_placement?: "top" | "right" }>(), {
@@ -42,7 +43,7 @@ const props = withDefaults(defineProps<{ date: string; relative_placement?: "top
 });
 
 const date_time_format = strictInject(DATE_TIME_FORMAT);
-const user_locale = strictInject(USER_LOCALE);
+const user_locale = toBCP47(strictInject(USER_LOCALE));
 const relative_dates_display = strictInject(RELATIVE_DATES_DISPLAY);
 
 const formatted_full_date = computed((): string => {

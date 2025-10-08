@@ -20,6 +20,7 @@ import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import type { LocaleString } from "@tuleap/locale";
 import type { ListOfSearchResultColumnDefinition, SearchCriteria } from "./type";
 
 export interface Project {
@@ -53,7 +54,7 @@ export const IS_CHANGELOG_PROPOSED_AFTER_DND: StrictInjectionKey<boolean> = Symb
     "is-changelog-proposed-after-dnd",
 );
 export const IS_DELETION_ALLOWED: StrictInjectionKey<boolean> = Symbol("is-deletion-allowed");
-export const USER_LOCALE: StrictInjectionKey<string> = Symbol("user-locale");
+export const USER_LOCALE: StrictInjectionKey<LocaleString> = Symbol("user-locale");
 export const RELATIVE_DATES_DISPLAY: StrictInjectionKey<RelativeDatesDisplayPreference> =
     Symbol("relative-dates-display");
 export const SEARCH_CRITERIA: StrictInjectionKey<SearchCriteria> = Symbol("search-criteria");
