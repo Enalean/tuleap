@@ -16,14 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Item } from "../../src/type";
+import type { Item, Property, User } from "../../src/type";
+import { UserBuilder } from "./UserBuilder";
 
 export class ItemBuilder {
     private readonly id: number;
     private parent_id: number | null = null;
     private type: string = "folder";
     private title: string = "";
+    private description: string = "";
     private level: number = 0;
+    private owner: User = new UserBuilder(101).build();
+    private status: string = "";
+    private properties: Array<Property> = [];
 
     constructor(id: number) {
         this.id = id;
@@ -44,8 +49,28 @@ export class ItemBuilder {
         return this;
     }
 
+    public withDescription(description: string): this {
+        this.description = description;
+        return this;
+    }
+
     public withLevel(level: number): this {
         this.level = level;
+        return this;
+    }
+
+    public withOwner(owner: User): this {
+        this.owner = owner;
+        return this;
+    }
+
+    public withStatus(status: string): this {
+        this.status = status;
+        return this;
+    }
+
+    public withProperties(properties: Array<Property>): this {
+        this.properties = properties;
         return this;
     }
 
@@ -53,24 +78,17 @@ export class ItemBuilder {
         return {
             can_user_manage: false,
             creation_date: "",
-            description: "",
+            description: this.description,
             id: this.id,
             last_update_date: "",
             lock_info: null,
             move_uri: "",
             obsolescence_date: null,
-            owner: {
-                id: 0,
-                display_name: "",
-                has_avatar: false,
-                avatar_url: "",
-                user_url: "",
-                is_anonymous: false,
-            },
+            owner: this.owner,
             parent_id: this.parent_id,
             post_processed_description: "",
-            properties: [],
-            status: "",
+            properties: this.properties,
+            status: this.status,
             title: this.title,
             type: this.type,
             user_can_delete: false,

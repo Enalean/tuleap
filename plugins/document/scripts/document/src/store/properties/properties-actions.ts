@@ -18,34 +18,12 @@
  *
  */
 
-import {
-    getProjectProperties,
-    putEmbeddedFileProperties,
-    putEmptyDocumentProperties,
-    putFileProperties,
-    putFolderDocumentProperties,
-    putLinkProperties,
-    putOtherTypeDocumentProperties,
-    putWikiProperties,
-} from "../../api/properties-rest-querier";
-import { getCustomProperties } from "../../helpers/properties-helpers/custom-properties-helper";
-import { getItem } from "../../api/rest-querier";
+import { getProjectProperties } from "../../api/properties-rest-querier";
 import type { ActionContext } from "vuex";
-import type { FolderStatus, Folder, Item, RootState } from "../../type";
-import {
-    isEmbedded,
-    isFile,
-    isLink,
-    isWiki,
-    isEmpty,
-    isFolder,
-    isOtherType,
-} from "../../helpers/type-check-helper";
-import emitter from "../../helpers/emitter";
+import type { RootState } from "../../type";
 
 export interface PropertiesActions {
     readonly loadProjectProperties: typeof loadProjectProperties;
-    readonly updateProperties: typeof updateProperties;
 }
 
 export const loadProjectProperties = async (
@@ -58,124 +36,5 @@ export const loadProjectProperties = async (
         context.commit("saveProjectProperties", project_properties);
     } catch (exception) {
         await context.dispatch("error/handleGlobalModalError", exception, { root: true });
-    }
-};
-
-export interface UpdatePropertiesPayload {
-    item: Item;
-    item_to_update: Item;
-    current_folder: Folder;
-    is_status_property_used: boolean;
-}
-
-export const updateProperties = async (
-    context: ActionContext<RootState, RootState>,
-    payload: UpdatePropertiesPayload,
-): Promise<void> => {
-    const item_to_update = payload.item_to_update;
-    const custom_properties = getCustomProperties(item_to_update);
-    const item_obsolescence_date = item_to_update.obsolescence_date;
-    let obsolescence_date = null;
-    if (item_obsolescence_date) {
-        obsolescence_date = item_obsolescence_date;
-    }
-    try {
-        if (isFile(item_to_update)) {
-            await putFileProperties(
-                item_to_update.id,
-                item_to_update.title,
-                item_to_update.description,
-                item_to_update.owner.id,
-                item_to_update.status,
-                obsolescence_date,
-                custom_properties,
-            );
-        } else if (isEmbedded(item_to_update)) {
-            await putEmbeddedFileProperties(
-                item_to_update.id,
-                item_to_update.title,
-                item_to_update.description,
-                item_to_update.owner.id,
-                item_to_update.status,
-                obsolescence_date,
-                custom_properties,
-            );
-        } else if (isLink(item_to_update)) {
-            await putLinkProperties(
-                item_to_update.id,
-                item_to_update.title,
-                item_to_update.description,
-                item_to_update.owner.id,
-                item_to_update.status,
-                obsolescence_date,
-                custom_properties,
-            );
-        } else if (isWiki(item_to_update)) {
-            await putWikiProperties(
-                item_to_update.id,
-                item_to_update.title,
-                item_to_update.description,
-                item_to_update.owner.id,
-                item_to_update.status,
-                obsolescence_date,
-                custom_properties,
-            );
-        } else if (isEmpty(item_to_update)) {
-            await putEmptyDocumentProperties(
-                item_to_update.id,
-                item_to_update.title,
-                item_to_update.description,
-                item_to_update.owner.id,
-                item_to_update.status,
-                obsolescence_date,
-                custom_properties,
-            );
-        } else if (isOtherType(item_to_update)) {
-            await putOtherTypeDocumentProperties(
-                item_to_update.id,
-                item_to_update.title,
-                item_to_update.description,
-                item_to_update.owner.id,
-                item_to_update.status,
-                obsolescence_date,
-                custom_properties,
-            );
-        } else if (isFolder(item_to_update)) {
-            let recursion = "none";
-            if (payload.is_status_property_used) {
-                recursion = item_to_update.status.recursion;
-            }
-            const status: FolderStatus = {
-                value: item_to_update.status.value,
-                recursion: recursion,
-            };
-
-            await putFolderDocumentProperties(
-                item_to_update.id,
-                item_to_update.title,
-                item_to_update.description,
-                item_to_update.owner.id,
-                status,
-                obsolescence_date,
-                custom_properties,
-            );
-        }
-
-        const updated_item = await getItem(payload.item.id);
-
-        emitter.emit("item-properties-have-just-been-updated");
-
-        if (payload.item.id === payload.current_folder.id) {
-            context.commit("replaceCurrentFolder", updated_item, { root: true });
-            await context.dispatch("loadFolder", payload.item.id, { root: true });
-        } else {
-            updated_item.updated = true;
-            context.commit("removeItemFromFolderContent", updated_item, { root: true });
-            context.commit("addJustCreatedItemToFolderContent", updated_item, { root: true });
-            context.commit("updateCurrentItemForQuickLokDisplay", updated_item, { root: true });
-        }
-    } catch (exception) {
-        await context.dispatch("error/handleErrorsForModal", exception, { root: true });
-        throw exception;
     }
 };

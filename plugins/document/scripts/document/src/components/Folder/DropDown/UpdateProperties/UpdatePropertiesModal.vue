@@ -76,12 +76,14 @@ import type { ErrorState } from "../../../../store/error/module";
 import { useGettext } from "vue3-gettext";
 import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { DocumentProperties } from "../../../../helpers/properties/document-properties";
 
 const { $gettext } = useGettext();
 const $store = useStore();
 
 const props = defineProps<{
     item: Item;
+    document_properties: DocumentProperties;
 }>();
 
 const emit = defineEmits<{
@@ -173,11 +175,13 @@ async function updateProperties(event: SubmitEvent): Promise<void> {
 
     item_to_update.value.properties = formatted_item_properties.value;
     try {
-        await $store.dispatch("properties/updateProperties", {
-            item: props.item,
-            item_to_update: item_to_update.value,
-            current_folder: current_folder.value,
-        });
+        await props.document_properties.updateProperties(
+            $store,
+            props.item,
+            item_to_update.value,
+            current_folder.value,
+            is_status_property_used,
+        );
         is_loading.value = false;
         if (!has_modal_error.value) {
             modal?.hide();
