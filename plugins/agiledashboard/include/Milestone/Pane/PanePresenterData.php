@@ -24,18 +24,16 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
-use AgileDashboard_Pane;
-
 /**
  * I carry data between MilestonePane factories and MilestonePresenter
  */
 class PanePresenterData
 {
-    public function __construct(private readonly AgileDashboard_Pane $active_pane, private readonly array $list_of_pane_info)
+    public function __construct(private readonly AgileDashboardPane $active_pane, private readonly array $list_of_pane_info)
     {
     }
 
-    public function getActivePane(): AgileDashboard_Pane
+    public function getActivePane(): AgileDashboardPane
     {
         return $this->active_pane;
     }

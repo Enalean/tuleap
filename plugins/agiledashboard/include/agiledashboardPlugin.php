@@ -69,7 +69,10 @@ use Tuleap\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\VisitRetriever;
 use Tuleap\AgileDashboard\Milestone\MilestoneDao;
 use Tuleap\AgileDashboard\Milestone\MilestoneReportCriterionDao;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterBuilderFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\Move\AgileDashboardMovableFieldsCollector;
 use Tuleap\AgileDashboard\Planning\BacklogHistoryEntry;
@@ -1017,7 +1020,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function cardwallUseStandardJavascriptEvent(CardwallUseStandardJavascriptEvent $event): void
     {
         $request              = HTTPRequest::instance();
-        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+        $pane_info_identifier = new AgileDashboardPaneInfoIdentifier();
         if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane'))) {
             $event->use_standard_javascript = false;
         }
@@ -1403,7 +1406,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    public function getMilestonePaneFactory(): Planning_MilestonePaneFactory
+    public function getMilestonePaneFactory(): PlanningMilestonePaneFactory
     {
         $request = HTTPRequest::instance();
 
@@ -1415,13 +1418,13 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $planning_factory,
         );
 
-        $pane_info_factory = new AgileDashboard_PaneInfoFactory(
+        $pane_info_factory = new PaneInfoFactory(
             $submilestone_finder
         );
 
         $event_manager = EventManager::instance();
 
-        return new Planning_MilestonePaneFactory(
+        return new PlanningMilestonePaneFactory(
             $request,
             $milestone_factory,
             new PanePresenterBuilderFactory(

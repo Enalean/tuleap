@@ -901,14 +901,6 @@
       <code><![CDATA[$milestone_artifact == null]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/agiledashboard/include/Planning/MilestonePaneFactory.php">
-    <MissingReturnType>
-      <code><![CDATA[buildDefaultPane]]></code>
-      <code><![CDATA[getDetailsPane]]></code>
-      <code><![CDATA[getDetailsPaneInfo]]></code>
-      <code><![CDATA[getDetailsPresenterBuilder]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/Planning/MilestonePresenter.php">
     <InvalidOperand>
       <code><![CDATA[$this->milestone->getArtifactId()]]></code>

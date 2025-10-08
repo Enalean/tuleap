@@ -28,7 +28,6 @@ use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_MilestoneController;
 use Planning_MilestoneFactory;
-use Planning_MilestonePaneFactory;
 use Planning_VirtualTopMilestone;
 use ProjectManager;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
@@ -36,6 +35,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
@@ -61,7 +61,7 @@ final class MilestoneControllerTest extends TestCase
     private Planning_Milestone $sprint;
     private Planning_Milestone $nomilestone;
     private Planning_MilestoneFactory&MockObject $milestone_factory;
-    private Planning_MilestonePaneFactory&MockObject $pane_factory;
+    private PlanningMilestonePaneFactory&MockObject $pane_factory;
     private Planning_MilestoneController $milestone_controller;
     private BreadCrumb $service_breadcrumb;
     private BreadCrumb $top_backlog_breadcrumb;
@@ -101,7 +101,7 @@ final class MilestoneControllerTest extends TestCase
         ]);
         $request->setCurrentUser(UserTestBuilder::anActiveUser()->withMemberOf($project)->build());
 
-        $this->pane_factory           = $this->createMock(Planning_MilestonePaneFactory::class);
+        $this->pane_factory           = $this->createMock(PlanningMilestonePaneFactory::class);
         $this->service_breadcrumb     = new BreadCrumb(new BreadCrumbLink('Backlog', '/plugins/agiledashboard/?group_id=102&action=show-top&pane=topplanning-v2'));
         $this->top_backlog_breadcrumb = new BreadCrumb(new BreadCrumbLink('Top backlog', '/fake_url'));
 

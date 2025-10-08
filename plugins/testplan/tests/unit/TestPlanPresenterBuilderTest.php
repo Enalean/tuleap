@@ -24,9 +24,9 @@ namespace Tuleap\TestPlan;
 
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
-use Planning_MilestonePaneFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Config;
@@ -59,7 +59,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Tuleap');
-        $pane_factory = $this->createMock(Planning_MilestonePaneFactory::class);
+        $pane_factory = $this->createMock(PlanningMilestonePaneFactory::class);
         $pane_factory->method('getPanePresenterData')->willReturn($this->createMock(PanePresenterData::class));
 
         $this->milestone = $this->createMock(Planning_ArtifactMilestone::class);

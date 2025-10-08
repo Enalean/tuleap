@@ -30,6 +30,8 @@ use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
@@ -61,7 +63,7 @@ use Tuleap\User\ProvideCurrentUser;
 class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
-     * @var Planning_MilestonePaneFactory
+     * @var PlanningMilestonePaneFactory
      */
     private $pane_factory;
     /**
@@ -79,7 +81,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
     private ProvideCurrentUser $current_user_provider;
 
     public function __construct(
-        Planning_MilestonePaneFactory $pane_factory,
+        PlanningMilestonePaneFactory $pane_factory,
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $all_bread_crumbs_for_milestone_builder,
         MilestoneBacklogFactory $backlog_factory,
@@ -130,7 +132,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->all_bread_crumbs_for_milestone_builder,
             new HeaderOptionsProvider(
                 $this->backlog_factory,
-                new AgileDashboard_PaneInfoIdentifier(),
+                new AgileDashboardPaneInfoIdentifier(),
                 $tracker_new_dropdown_link_presenter_builder,
                 new HeaderOptionsForPlanningProvider(
                     new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(

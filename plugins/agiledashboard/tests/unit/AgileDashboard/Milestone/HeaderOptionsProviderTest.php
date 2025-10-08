@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone;
 
-use AgileDashboard_PaneInfoIdentifier;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
@@ -30,6 +29,7 @@ use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
@@ -67,7 +67,7 @@ final class HeaderOptionsProviderTest extends TestCase
 
         $this->provider = new HeaderOptionsProvider(
             $backlog_factory,
-            new AgileDashboard_PaneInfoIdentifier(),
+            new AgileDashboardPaneInfoIdentifier(),
             new TrackerNewDropdownLinkPresenterBuilder(),
             $header_options_for_planning_provider,
             $this->parent_retriever,

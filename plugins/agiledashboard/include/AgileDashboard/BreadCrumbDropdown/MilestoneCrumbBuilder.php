@@ -25,9 +25,9 @@ namespace Tuleap\AgileDashboard\BreadCrumbDropdown;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
-use Planning_MilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -40,7 +40,7 @@ final readonly class MilestoneCrumbBuilder
 {
     public function __construct(
         private string $plugin_path,
-        private Planning_MilestonePaneFactory $pane_factory,
+        private PlanningMilestonePaneFactory $pane_factory,
         private Planning_MilestoneFactory $milestone_factory,
     ) {
     }

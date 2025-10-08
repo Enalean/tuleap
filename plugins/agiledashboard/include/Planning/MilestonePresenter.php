@@ -23,9 +23,9 @@ use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 /**
  * This presenter build the top view of a milestone (milestone title + switch on another milestone).
  * It delegates the display to an AgileDashboardPane for the content
- * @see AgileDashboard_Pane
+ * @see AgileDashboardPane
  */
-class AgileDashboard_MilestonePresenter
+class AgileDashboard_MilestonePresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Planning_Milestone

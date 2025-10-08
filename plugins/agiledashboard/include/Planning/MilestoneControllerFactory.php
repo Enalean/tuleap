@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 /**
@@ -35,7 +36,7 @@ class MilestoneControllerFactory
     public function __construct(
         private readonly \ProjectManager $project_manager,
         private readonly \Planning_MilestoneFactory $milestone_factory,
-        private readonly \Planning_MilestonePaneFactory $pane_factory,
+        private readonly PlanningMilestonePaneFactory $pane_factory,
         private readonly VirtualTopMilestonePresenterBuilder $top_milestone_presenter_builder,
         private readonly AgileDashboardCrumbBuilder $service_crumb_builder,
         private readonly VisitRecorder $visit_recorder,

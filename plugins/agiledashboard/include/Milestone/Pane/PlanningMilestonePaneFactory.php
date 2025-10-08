@@ -18,10 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Pane;
+
+use AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane;
+use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
+use Codendi_Request;
+use EventManager;
+use PFUser;
+use Planning_Milestone;
+use Planning_MilestoneFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPane;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
-use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterBuilderFactory;
-use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
@@ -30,55 +37,29 @@ use Tuleap\Tracker\Milestone\PaneInfo;
 /**
  * I build panes for a Planning_Milestone
  */
-class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class PlanningMilestonePaneFactory
 {
     /** @var array<int, array<PaneInfo>> */
-    private $list_of_pane_info = [];
+    private array $list_of_pane_info = [];
 
     /** @var DetailsPaneInfo[] */
-    private $list_of_default_pane_info = [];
+    private array $list_of_default_pane_info = [];
 
-    /** @var array<AgileDashboard_Pane|null> */
-    private $active_pane = [];
+    /** @var array<AgileDashboardPane|null> */
+    private array $active_pane = [];
 
-    /** @var Codendi_Request */
-    private $request;
-
-    /** @var Planning_MilestoneFactory */
-    private $milestone_factory;
-
-    /** @var PanePresenterBuilderFactory */
-    private $pane_presenter_builder_factory;
-
-    /** @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder */
-    private $submilestone_finder;
-
-    /** @var AgileDashboard_PaneInfoFactory */
-    private $pane_info_factory;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
 
     public function __construct(
-        Codendi_Request $request,
-        Planning_MilestoneFactory $milestone_factory,
-        PanePresenterBuilderFactory $pane_presenter_builder_factory,
-        AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
-        AgileDashboard_PaneInfoFactory $pane_info_factory,
-        EventManager $event_manager,
+        private readonly Codendi_Request $request,
+        private readonly Planning_MilestoneFactory $milestone_factory,
+        private readonly PanePresenterBuilderFactory $pane_presenter_builder_factory,
+        private readonly AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
+        private readonly PaneInfoFactory $pane_info_factory,
+        private readonly EventManager $event_manager,
     ) {
-        $this->request                        = $request;
-        $this->milestone_factory              = $milestone_factory;
-        $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
-        $this->submilestone_finder            = $submilestone_finder;
-        $this->pane_info_factory              = $pane_info_factory;
-        $this->event_manager                  = $event_manager;
     }
 
-    /** @return PanePresenterData */
-    public function getPanePresenterData(Planning_Milestone $milestone)
+    public function getPanePresenterData(Planning_Milestone $milestone): PanePresenterData
     {
         return new PanePresenterData(
             $this->getActivePane($milestone, $this->request->getCurrentUser()),
@@ -86,7 +67,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         );
     }
 
-    public function getActivePane(Planning_Milestone $milestone, PFUser $user): AgileDashboard_Pane
+    public function getActivePane(Planning_Milestone $milestone, PFUser $user): AgileDashboardPane
     {
         $artifact_id = $milestone->getArtifactId() ?? 0;
         if (! isset($this->list_of_pane_info[$artifact_id])) {
@@ -131,7 +112,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
     }
 
-    private function getDetailsPaneInfo(Planning_Milestone $milestone)
+    private function getDetailsPaneInfo(Planning_Milestone $milestone): DetailsPaneInfo
     {
         $pane_info = $this->pane_info_factory->getDetailsPaneInfo($milestone);
         if ($this->request->get('pane') == DetailsPaneInfo::IDENTIFIER) {
@@ -141,7 +122,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $pane_info;
     }
 
-    private function getDetailsPane(DetailsPaneInfo $pane_info, Planning_Milestone $milestone)
+    private function getDetailsPane(DetailsPaneInfo $pane_info, Planning_Milestone $milestone): DetailsPane
     {
         return new DetailsPane(
             $pane_info,
@@ -149,7 +130,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         );
     }
 
-    private function buildDefaultPane(Planning_Milestone $milestone)
+    private function buildDefaultPane(Planning_Milestone $milestone): void
     {
         if (! isset($this->list_of_default_pane_info[$milestone->getArtifactId() ?? 0])) {
             $pane_info                                                         = $this->pane_info_factory->getDetailsPaneInfo($milestone);
@@ -220,7 +201,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
     }
 
-    private function getDetailsPresenterBuilder()
+    private function getDetailsPresenterBuilder(): Details\DetailsPresenterBuilder
     {
         return $this->pane_presenter_builder_factory->getDetailsPresenterBuilder();
     }

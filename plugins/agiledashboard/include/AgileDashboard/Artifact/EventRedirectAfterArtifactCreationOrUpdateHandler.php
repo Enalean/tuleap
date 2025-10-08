@@ -28,10 +28,10 @@ use PFUser;
 use Planning;
 use Planning_ArtifactLinker;
 use Planning_MilestoneFactory;
-use Planning_MilestonePaneFactory;
 use PlanningFactory;
 use Project;
 use Tracker_Artifact_Redirect;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Milestone\PaneInfo;
@@ -45,7 +45,7 @@ final readonly class EventRedirectAfterArtifactCreationOrUpdateHandler
         private PlanningFactory $planning_factory,
         private RedirectParameterInjector $injector,
         private Planning_MilestoneFactory $milestone_factory,
-        private Planning_MilestonePaneFactory $pane_factory,
+        private PlanningMilestonePaneFactory $pane_factory,
     ) {
     }
 

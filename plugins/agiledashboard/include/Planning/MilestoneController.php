@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PlanningMilestonePaneFactory;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -31,7 +32,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 /**
  * Handles the HTTP actions related to a planning milestone.
  */
-class Planning_MilestoneController extends BaseController
+class Planning_MilestoneController extends BaseController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Planning_MilestoneFactory
@@ -43,7 +44,7 @@ class Planning_MilestoneController extends BaseController
      */
     private $milestone;
 
-    /** @var Planning_MilestonePaneFactory */
+    /** @var PlanningMilestonePaneFactory */
     private $pane_factory;
 
     /** @var Project */
@@ -65,7 +66,7 @@ class Planning_MilestoneController extends BaseController
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
-        Planning_MilestonePaneFactory $pane_factory,
+        PlanningMilestonePaneFactory $pane_factory,
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
         HeaderOptionsProvider $header_options_provider,

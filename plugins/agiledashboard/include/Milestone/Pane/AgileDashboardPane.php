@@ -18,26 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+namespace Tuleap\AgileDashboard\Milestone\Pane;
 
 /**
  * Base interface to display a content pane in the agiledashboard next to a
  * milestone
  */
-abstract class AgileDashboard_Pane
+abstract class AgileDashboardPane
 {
     /**
      * @see PaneInfo::getIdentifier()
      * @return string eg: 'cardwall'
      */
-    abstract public function getIdentifier();
+    abstract public function getIdentifier(): string;
 
     /**
      * Return the content when displayed as a Pane
      *
      * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
-    abstract public function getFullContent();
+    abstract public function getFullContent(): string;
 
     /**
      * Return the content when displayed on the agile dashboard front page
@@ -45,7 +45,7 @@ abstract class AgileDashboard_Pane
      *
      * @return string eg: '<table>...</table>'
      */
-    abstract public function getMinimalContent();
+    abstract public function getMinimalContent(): string;
 
     /**
      * @return list<string>

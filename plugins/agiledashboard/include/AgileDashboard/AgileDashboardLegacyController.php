@@ -27,6 +27,7 @@ use AgileDashboardRouterBuilder;
 use Feedback;
 use HTTPRequest;
 use Override;
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
@@ -91,7 +92,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
 
     public static function isPlanningV2URL(HTTPRequest $request): bool
     {
-        $pane_info_identifier = new \AgileDashboard_PaneInfoIdentifier();
+        $pane_info_identifier = new AgileDashboardPaneInfoIdentifier();
 
         return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
     }

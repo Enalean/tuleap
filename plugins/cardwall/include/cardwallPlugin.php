@@ -22,6 +22,7 @@ require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
+use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResource;
@@ -60,7 +61,7 @@ use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
-class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Cardwall_OnTop_ConfigFactory
@@ -438,7 +439,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         if ($active_pane_context && $active_pane_context->getRequest()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
             $collector->setActivePaneBuilder(
-                function () use ($pane_info, $collector, $active_pane_context): AgileDashboard_Pane {
+                function () use ($pane_info, $collector, $active_pane_context): AgileDashboardPane {
                     return $this->getCardwallPane(
                         $pane_info,
                         $collector->getMilestone(),
