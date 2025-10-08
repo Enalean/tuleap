@@ -21,12 +21,25 @@
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import DateFlatPicker from "./DateFlatPicker.vue";
+import { USER_LOCALE } from "../../../../configuration-keys";
+
+interface DateProps {
+    readonly id: string;
+    readonly value: string;
+    readonly required: boolean;
+}
 
 describe("DateFlatPicker", () => {
-    function createWrapper(props = {}): VueWrapper<InstanceType<typeof DateFlatPicker>> {
+    function createWrapper(props: DateProps): VueWrapper<InstanceType<typeof DateFlatPicker>> {
         return shallowMount(DateFlatPicker, {
             props: { ...props },
+            global: {
+                provide: {
+                    [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
+                },
+            },
         });
     }
 
@@ -34,10 +47,7 @@ describe("DateFlatPicker", () => {
         const wrapper = createWrapper({ id: "input-date", value: "2019-01-01", required: false });
 
         const input = wrapper.get("input");
-        if (!(wrapper.vm.$el instanceof HTMLInputElement)) {
-            throw new Error("Date element is not an input");
-        }
-        wrapper.vm.$el.value = "";
+        input.element.value = "";
         input.trigger("input");
         expect(wrapper.emitted().input).toEqual([[""]]);
     });
@@ -46,10 +56,7 @@ describe("DateFlatPicker", () => {
         const wrapper = createWrapper({ id: "input-date", value: "", required: false });
 
         const input = wrapper.get("input");
-        if (!(wrapper.vm.$el instanceof HTMLInputElement)) {
-            throw new Error("Date element is not an input");
-        }
-        wrapper.vm.$el.value = "2019-06-30";
+        input.element.value = "2019-06-30";
         input.trigger("input");
 
         expect(wrapper.emitted().input).toBeTruthy();
