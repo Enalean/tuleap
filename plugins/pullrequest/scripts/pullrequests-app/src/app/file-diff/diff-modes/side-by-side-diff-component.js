@@ -48,8 +48,8 @@ import { collapseCommonSectionsSideBySide } from "../code-collapse/code-mirror-c
 
 export default {
     template: `
-        <div class="pull-request-side-by-side-diff" resize></div>
-        <div class="pull-request-side-by-side-diff" resize></div>
+        <div class="pull-request-side-by-side-diff" data-test="pull-request-side-by-side-diff" resize></div>
+        <div class="pull-request-side-by-side-diff" data-test="pull-request-side-by-side-diff" resize></div>
     `,
     controller,
     bindings: {
