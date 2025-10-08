@@ -35,7 +35,7 @@ use Tuleap\SVN\SVNAccessFileReader;
 
 final class SVNCheckRepositoriesWithDuplicatedAccessFileSections extends Command
 {
-    public const NAME = 'svn:repositories-with-duplicated-sections-access-file';
+    public const string NAME = 'svn:repositories-with-duplicated-sections-access-file';
 
     public function __construct(
         private readonly RepositoryManager $repository_manager,

@@ -35,7 +35,7 @@ use Tuleap\SVN\Commit\FileSizeValidator;
 
 final class DisplayMaxFileSizeController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/plugins/svn/admin/max-file-size';
+    public const string URL = '/plugins/svn/admin/max-file-size';
     /**
      * @var AdminPageRenderer
      */

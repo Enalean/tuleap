@@ -31,7 +31,7 @@ class ImmutableTagPresenter extends BaseAdminPresenter
     // Should be a const, waiting for PHP 5.6+
     public static $SO_MUCH_FOLDERS = [];
 
-    public const MAX_NUMBER_OF_FOLDERS = 10000;
+    public const int MAX_NUMBER_OF_FOLDERS = 10000;
 
     public readonly int $max_number_of_folders;
 

@@ -27,7 +27,7 @@ use WrapperLogger;
 
 class DBWriter
 {
-    public const YESTERDAY_LOG_FILE = '/var/log/httpd/svn_log.1';
+    public const string YESTERDAY_LOG_FILE = '/var/log/httpd/svn_log.1';
 
     private $db_writer_plugin;
     private $db_writer_core;

@@ -40,10 +40,10 @@ use Tuleap\URI\URIModifier;
 
 class BackendSVN extends Backend
 {
-    public const PRE_COMMIT_HOOK          = 'pre-commit';
-    public const POST_COMMIT_HOOK         = 'post-commit';
-    public const PRE_REVPROP_CHANGE_HOOK  = 'pre-revprop-change';
-    public const POST_REVPROP_CHANGE_HOOK = 'post-revprop-change';
+    public const string PRE_COMMIT_HOOK          = 'pre-commit';
+    public const string POST_COMMIT_HOOK         = 'post-commit';
+    public const string PRE_REVPROP_CHANGE_HOOK  = 'pre-revprop-change';
+    public const string POST_REVPROP_CHANGE_HOOK = 'post-revprop-change';
 
     protected $SVNApacheConfNeedUpdate;
 

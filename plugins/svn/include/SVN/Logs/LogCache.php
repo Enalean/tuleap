@@ -25,8 +25,8 @@ use DateTime;
 
 class LogCache
 {
-    public const WRITE = 'write';
-    public const READ  = 'read';
+    public const string WRITE = 'write';
+    public const string READ  = 'read';
 
     private $cache                  = [];
     private $cache_core             = [];

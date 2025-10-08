@@ -29,7 +29,7 @@ use Tuleap\SVN\Repository;
 
 final class CoreRepository implements Repository
 {
-    public const TO_BE_CREATED_REPOSITORY_ID = -1;
+    public const int TO_BE_CREATED_REPOSITORY_ID = -1;
 
     private function __construct(private readonly \Project $project, private int $id, private bool $has_default_permissions)
     {

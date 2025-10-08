@@ -28,9 +28,9 @@ use Tuleap\SVN\Repository;
 
 final class SvnCoreAccess
 {
-    private const CORE_VIEWVC_URI_BASE_PATH = '/svn/viewvc.php/';
+    private const string CORE_VIEWVC_URI_BASE_PATH = '/svn/viewvc.php/';
 
-    private const ADMIN_URI_MATCH = [
+    private const array ADMIN_URI_MATCH = [
         'general_settings' => 'settings',
         'immutable_tags'   => 'display-immutable-tag',
         'access_control'   => 'access-control',

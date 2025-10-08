@@ -30,7 +30,7 @@ use Tuleap\SVN\Repository;
 
 class ImmutableTagCreator
 {
-    private const MAX_LIST_SIZE = 65535;
+    private const int MAX_LIST_SIZE = 65535;
 
     /**
      * @var ProjectHistoryFormatter

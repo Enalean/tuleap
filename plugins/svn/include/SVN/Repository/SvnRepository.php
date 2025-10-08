@@ -26,7 +26,7 @@ use Tuleap\SVN\Repository;
 
 final class SvnRepository implements Repository
 {
-    private const TO_BE_CREATED_REPOSITORY_ID = -1;
+    private const int TO_BE_CREATED_REPOSITORY_ID = -1;
 
     private function __construct(
         private int $id,

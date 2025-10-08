@@ -44,7 +44,7 @@ use Tuleap\SVN\SVNAccessFileDefaultBlockGenerator;
 
 class RepositoryManager
 {
-    public const PREFIX = 'svn';
+    public const string PREFIX = 'svn';
 
     /** @var Dao */
     private $dao;

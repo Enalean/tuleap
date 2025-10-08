@@ -158,8 +158,8 @@ use Tuleap\SystemEvent\RootPostEventsActionsEvent;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
-    public const SERVICE_SHORTNAME  = 'plugin_svn';
-    public const SYSTEM_NATURE_NAME = ReferenceManager::REFERENCE_NATURE_SVNREVISION;
+    public const string SERVICE_SHORTNAME  = 'plugin_svn';
+    public const string SYSTEM_NATURE_NAME = ReferenceManager::REFERENCE_NATURE_SVNREVISION;
 
     /** @var Tuleap\SVN\Repository\RepositoryManager */
     private $repository_manager;
