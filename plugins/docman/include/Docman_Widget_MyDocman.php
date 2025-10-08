@@ -47,29 +47,7 @@ class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDec
     #[\Override]
     public function getContent(): string
     {
-        $html  = '';
-        $html .= '<script type="text/javascript">';
-        $html .= "
-        function plugin_docman_approval_toggle(what, save) {
-            if ($(what).visible()) {
-                $(what+'_icon').src = '" . util_get_dir_image_theme() . "pointer_right.png';
-                $(what).hide();
-                if (save) {
-                    new Ajax.Request('/plugins/docman/?action='+what+'&hide=1');
-                }
-            } else {
-                $(what+'_icon').src = '" . util_get_dir_image_theme() . "pointer_down.png';
-                $(what).show();
-                if (save) {
-                    new Ajax.Request('/plugins/docman/?action='+what+'&hide=0');
-                }
-            }
-        }
-        </script>";
-        $html .= $this->getReviews(true);
-        $html .= $this->getReviews(false);
-
-        return $html;
+        return $this->getReviews(true) . $this->getReviews(false);
     }
 
     private function getReviews($reviewer = true): string
@@ -168,15 +146,6 @@ class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDec
             }
         }
         $html .= '</div>';
-        if (user_get_preference('hide_plugin_docman_approval_' . ($reviewer ? 'reviewer' : 'requester'))) {
-            $html .= '<script type="text/javascript">';
-            $html .= "document.observe('dom:loaded', function()
-                {
-                    plugin_docman_approval_toggle('$content_html_id', false);
-                }
-            );
-            </script>";
-        }
         return $html;
     }
 
