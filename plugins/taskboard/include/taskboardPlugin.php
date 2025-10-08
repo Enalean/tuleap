@@ -63,7 +63,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class taskboardPlugin extends Plugin
 {
-    public const NAME = 'taskboard';
+    public const string NAME = 'taskboard';
 
     public function __construct($id)
     {

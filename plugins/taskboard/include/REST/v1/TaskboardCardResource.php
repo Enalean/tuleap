@@ -56,7 +56,7 @@ use UserManager;
 
 class TaskboardCardResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 100;
+    private const int MAX_LIMIT = 100;
 
     /**
      * @var UserManager

@@ -30,18 +30,18 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegrationTestCase
 {
-    private const TODO_COLUMN_ID                 = 46;
-    private const ONGOING_COLUMN_ID              = 47;
-    private const RELEASE_TRACKER_ID             = 51;
-    private const USER_STORIES_TRACKER_ID        = 628;
-    private const USER_STORIES_STATUS_FIELD_ID   = 581;
-    private const USER_STORIES_STATUS_TODO_ID    = 1689;
-    private const USER_STORIES_STATUS_ONGOING_ID = 1690;
-    private const USER_STORIES_STATUS_WAITING_ID = 1691;
-    private const TASKS_TRACKER_ID               = 629;
-    private const TASKS_STATUS_FIELD_ID          = 623;
-    private const TASKS_STATUS_TODO_ID           = 1955;
-    private const TASKS_STATUS_ONGOING_ID        = 1956;
+    private const int TODO_COLUMN_ID                 = 46;
+    private const int ONGOING_COLUMN_ID              = 47;
+    private const int RELEASE_TRACKER_ID             = 51;
+    private const int USER_STORIES_TRACKER_ID        = 628;
+    private const int USER_STORIES_STATUS_FIELD_ID   = 581;
+    private const int USER_STORIES_STATUS_TODO_ID    = 1689;
+    private const int USER_STORIES_STATUS_ONGOING_ID = 1690;
+    private const int USER_STORIES_STATUS_WAITING_ID = 1691;
+    private const int TASKS_TRACKER_ID               = 629;
+    private const int TASKS_STATUS_FIELD_ID          = 623;
+    private const int TASKS_STATUS_TODO_ID           = 1955;
+    private const int TASKS_STATUS_ONGOING_ID        = 1956;
 
     private FreestyleMappingDao $dao;
     private \Tuleap\Tracker\Tracker $release;

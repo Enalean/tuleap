@@ -60,10 +60,10 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;
 
-    private const MAPPED_FIELD_ID        = 789;
-    private const DONE_COLUMN_ID         = 9;
-    private const DONE_BIND_VALUE_ID     = 1024;
-    private const FINISHED_BIND_VALUE_ID = 2048;
+    private const int MAPPED_FIELD_ID        = 789;
+    private const int DONE_COLUMN_ID         = 9;
+    private const int DONE_BIND_VALUE_ID     = 1024;
+    private const int FINISHED_BIND_VALUE_ID = 2048;
     private MockObject&ColumnFactory $column_factory;
     private MockObject&MilestoneTrackerRetriever $milestone_tracker_retriever;
     private MockObject&AddValidator $add_validator;

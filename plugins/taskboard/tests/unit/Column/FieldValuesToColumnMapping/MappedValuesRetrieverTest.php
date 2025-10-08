@@ -36,7 +36,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ON_GOING_COLUMN_LABEL = 'On Going';
+    private const string ON_GOING_COLUMN_LABEL = 'On Going';
     private \Cardwall_FieldProviders_SemanticStatusFieldRetriever&MockObject $status_retriever;
     private VerifyMappingExistsStub $verify_mapping_exists;
     private SearchMappedFieldValuesForColumnStub $search_values;

@@ -41,7 +41,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 class TaskboardController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
-    private const IDENTIFIER = 'taskboard';
+    private const string IDENTIFIER = 'taskboard';
     /**
      * @var MilestoneExtractor
      */

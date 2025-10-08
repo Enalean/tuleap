@@ -49,13 +49,13 @@ use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldS
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardColumnFinderTest extends TestCase
 {
-    private const ONGOING_COLUMN_ID       = 60;
-    private const TODO_BIND_VALUE_ID      = 1896;
-    private const ON_GOING_BIND_VALUE_ID  = 1555;
-    private const IN_REVIEW_BIND_VALUE_ID = 1083;
-    private const DONE_BIND_VALUE_ID      = 1758;
-    private const CANCELLED_BIND_VALUE_ID = 3116;
-    private const MAPPED_FIELD_ID         = 1311;
+    private const int ONGOING_COLUMN_ID       = 60;
+    private const int TODO_BIND_VALUE_ID      = 1896;
+    private const int ON_GOING_BIND_VALUE_ID  = 1555;
+    private const int IN_REVIEW_BIND_VALUE_ID = 1083;
+    private const int DONE_BIND_VALUE_ID      = 1758;
+    private const int CANCELLED_BIND_VALUE_ID = 3116;
+    private const int MAPPED_FIELD_ID         = 1311;
     private ColumnFactory&Stub $column_factory;
     private \PFUser $user;
     private \Tuleap\Tracker\FormElement\Field\List\SelectboxField $mapped_list_field;

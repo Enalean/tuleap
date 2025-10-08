@@ -28,7 +28,7 @@ use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDao;
 
 class ScrumBoardTypeSelectorController implements IScrumAdminSectionControllers
 {
-    private const FIELD_NAME = 'scrum-board-type';
+    private const string FIELD_NAME = 'scrum-board-type';
 
     /**
      * @var String
