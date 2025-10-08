@@ -80,6 +80,7 @@
         <update-properties-modal
             v-if="show_update_properties_modal"
             v-bind:item="embedded_file"
+            v-bind:document_properties="document_properties"
             v-on:update-properties-modal-closed="hideUpdatePropertiesModal"
         />
         <permissions-update-modal
@@ -100,6 +101,7 @@ import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import ActionsHeader from "./ActionsHeader.vue";
+import { getDocumentProperties } from "../../helpers/properties/document-properties";
 
 const PermissionsUpdateModal = defineAsyncComponent(
     () => import("../Folder/Permissions/PermissionsUpdateModal.vue"),
@@ -127,6 +129,8 @@ const props = withDefaults(
     }>(),
     { specific_version_number: null },
 );
+
+const document_properties = getDocumentProperties();
 
 const { is_embedded_in_large_view } = useNamespacedState<PreferenciesState>("preferencies", [
     "is_embedded_in_large_view",
