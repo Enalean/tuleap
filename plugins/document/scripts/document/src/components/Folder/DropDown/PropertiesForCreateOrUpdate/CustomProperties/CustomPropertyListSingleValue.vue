@@ -53,16 +53,13 @@
 <script setup lang="ts">
 import type { ListValue, Property } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { PropertiesState } from "../../../../../store/properties/module";
 import { computed, onMounted, ref } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_PROPERTIES } from "../../../../../injection-keys";
 
 const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
 
-const { project_properties } = useNamespacedState<Pick<PropertiesState, "project_properties">>(
-    "properties",
-    ["project_properties"],
-);
+const project_properties = strictInject(PROJECT_PROPERTIES);
 
 const value = computed({
     get() {
@@ -79,7 +76,7 @@ const value = computed({
 const project_properties_list_possible_values = ref<Array<ListValue> | null>([]);
 
 onMounted((): void => {
-    const values = project_properties.value.find(
+    const values = project_properties.value?.find(
         ({ short_name }) => short_name === props.currentlyUpdatedItemProperty.short_name,
     )?.allowed_list_values;
     if (!values) {

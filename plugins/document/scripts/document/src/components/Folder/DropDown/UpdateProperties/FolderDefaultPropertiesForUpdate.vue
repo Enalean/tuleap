@@ -22,7 +22,7 @@
         <hr class="tlp-modal-separator" />
         <div class="document-modal-other-information-title-container">
             <div
-                v-if="!has_loaded_properties"
+                v-if="project_properties === null"
                 class="document-modal-other-information-title-container-spinner"
                 data-test="document-folder-default-properties-spinner"
             >
@@ -32,7 +32,7 @@
                 {{ $gettext("Default properties") }}
             </h2>
         </div>
-        <template v-if="has_loaded_properties">
+        <template v-if="project_properties !== null">
             <p>
                 {{
                     $gettext(
@@ -97,17 +97,20 @@ import RecursionOptions from "../PropertiesForCreateOrUpdate/RecursionOptions.vu
 import emitter from "../../../../helpers/emitter";
 import type { Item, Property } from "../../../../type";
 import { computed, onMounted, ref } from "vue";
-import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
-import type { PropertiesState } from "../../../../store/properties/module";
-import type { PropertiesActions } from "../../../../store/properties/properties-actions";
+import { useStore } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../configuration-keys";
+import { PROJECT_PROPERTIES } from "../../../../injection-keys";
+import type { DocumentProperties } from "../../../../helpers/properties/document-properties";
+
+const $store = useStore();
 
 const props = defineProps<{
     itemProperty: Array<Property>;
     currentlyUpdatedItem: Item;
     status_value: string;
     recursion_option: string;
+    document_properties: DocumentProperties;
 }>();
 
 let list_of_properties_to_update: Array<string> = [];
@@ -116,22 +119,18 @@ let status_input = ref<InstanceType<typeof HTMLInputElement>>();
 
 const project = strictInject(PROJECT);
 const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
-
-const { has_loaded_properties } = useNamespacedState<
-    Pick<PropertiesState, "has_loaded_properties">
->("properties", ["has_loaded_properties"]);
-
-const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("properties", [
-    "loadProjectProperties",
-]);
+const project_properties = strictInject(PROJECT_PROPERTIES);
 
 const has_recursion_property = computed((): boolean => {
     return is_status_property_used || props.itemProperty.length > 0;
 });
 
 onMounted((): void => {
-    if (!has_loaded_properties.value) {
-        loadProjectProperties(project.id);
+    if (project_properties.value === null) {
+        props.document_properties.loadProjectProperties($store, project.id).map((properties) => {
+            project_properties.value = properties;
+            return null;
+        });
     }
 });
 

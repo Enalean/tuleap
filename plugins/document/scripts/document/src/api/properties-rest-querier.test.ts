@@ -20,6 +20,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
+import * as fetch_result from "@tuleap/fetch-result";
 import {
     getProjectProperties,
     putEmbeddedFileProperties,
@@ -29,6 +30,10 @@ import {
     putLinkProperties,
     putOtherTypeDocumentProperties,
 } from "./properties-rest-querier";
+import { errAsync, okAsync } from "neverthrow";
+import { PropertyBuilder } from "../../tests/builders/PropertyBuilder";
+import { Fault } from "@tuleap/fault";
+import { uri } from "@tuleap/fetch-result";
 
 describe("properties rest querier", () => {
     const id = 1234;
@@ -201,21 +206,49 @@ describe("properties rest querier", () => {
         });
     });
 
-    it("get project properties", async () => {
-        const tlpRecursiveGet = vi.spyOn(tlp_fetch, "recursiveGet");
-        mockFetchSuccess(tlpRecursiveGet);
+    describe("getProjectProperties", () => {
+        it("get project properties", async () => {
+            const property1 = new PropertyBuilder().withShortName("my first property").build();
+            const property2 = new PropertyBuilder().withShortName("my second property").build();
+            const property3 = new PropertyBuilder().withShortName("my third property").build();
+            const getAllJSON = vi
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync([[property1, property2], [property3]]));
 
-        const project_id = 101;
-        await getProjectProperties(project_id);
+            const project_id = 101;
+            const result = await getProjectProperties(project_id);
 
-        expect(tlpRecursiveGet).toHaveBeenCalledWith(
-            `/api/projects/${project_id}/docman_metadata`,
-            {
-                params: {
-                    limit: 50,
-                    offset: 0,
+            expect(getAllJSON).toHaveBeenCalledWith(
+                uri`/api/projects/${project_id}/docman_metadata`,
+                {
+                    params: {
+                        limit: 50,
+                        offset: 0,
+                    },
                 },
-            },
-        );
+            );
+            expect(result.isOk()).toBe(true);
+            expect(result.unwrapOr(null)).toStrictEqual([property1, property2, property3]);
+        });
+
+        it("returns a Fault when fetch failed", async () => {
+            const getAllJSON = vi
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(errAsync(Fault.fromMessage("Oh no!")));
+
+            const project_id = 101;
+            const result = await getProjectProperties(project_id);
+
+            expect(getAllJSON).toHaveBeenCalledWith(
+                uri`/api/projects/${project_id}/docman_metadata`,
+                {
+                    params: {
+                        limit: 50,
+                        offset: 0,
+                    },
+                },
+            );
+            expect(result.isErr()).toBe(true);
+        });
     });
 });

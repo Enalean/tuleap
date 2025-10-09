@@ -45,12 +45,6 @@ describe("UpdateFolderPropertiesModal", () => {
                             },
                             namespaced: true,
                         },
-                        properties: {
-                            state: {
-                                has_loaded_properties: false,
-                            },
-                            namespaced: true,
-                        },
                     },
                     state: {
                         current_folder: {

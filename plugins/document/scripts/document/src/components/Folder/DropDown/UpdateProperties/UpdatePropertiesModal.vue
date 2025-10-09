@@ -41,6 +41,7 @@
                 v-bind:currently-updated-item="item_to_update"
                 v-bind:property-to-update="formatted_item_properties"
                 v-bind:value="obsolescence_date_value"
+                v-bind:document_properties="document_properties"
             />
         </div>
         <modal-footer

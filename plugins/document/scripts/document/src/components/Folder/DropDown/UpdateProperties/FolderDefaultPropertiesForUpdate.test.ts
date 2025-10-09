@@ -17,20 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
 import { TYPE_FOLDER } from "../../../../constants";
-import type { Folder, Property, ListValue } from "../../../../type";
-import type { PropertiesState } from "../../../../store/properties/module";
+import type { Folder, ListValue, Property } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
 import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../configuration-keys";
 import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
+import { PROJECT_PROPERTIES } from "../../../../injection-keys";
+import { ref } from "vue";
+import { okAsync } from "neverthrow";
 
 describe("FolderDefaultPropertiesForUpdate", () => {
-    let load_properties: vi.Mock;
+    let load_properties: MockInstance;
 
     beforeEach(() => {
         load_properties = vi.fn();
@@ -48,24 +51,14 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 itemProperty,
                 status_value: "",
                 recursion_option: "",
+                document_properties: { loadProjectProperties: load_properties },
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        properties: {
-                            state: {
-                                has_loaded_properties,
-                            } as unknown as PropertiesState,
-                            actions: {
-                                loadProjectProperties: load_properties,
-                            },
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 provide: {
                     [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                     [IS_STATUS_PROPERTY_USED.valueOf()]: is_status_property_used,
+                    [PROJECT_PROPERTIES.valueOf()]: ref(has_loaded_properties ? [] : null),
                 },
             },
         });
@@ -78,6 +71,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 type: TYPE_FOLDER,
                 title: "title",
             } as Folder;
+            load_properties.mockReturnValue(okAsync([]));
             createWrapper(true, false, item, []);
 
             expect(load_properties).toHaveBeenCalled();
@@ -90,6 +84,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 type: TYPE_FOLDER,
                 title: "title",
             } as Folder;
+            load_properties.mockReturnValue(okAsync([]));
             const wrapper = createWrapper(true, false, item, []);
 
             expect(

@@ -20,7 +20,6 @@
 import type { RootState } from "../type";
 
 export const state: RootState = {
-    configuration: {},
     error: {
         has_document_permission_error: false,
         has_document_loading_error: false,
@@ -37,10 +36,6 @@ export const state: RootState = {
     },
     permissions: {
         project_ugroups: null,
-    },
-    properties: {
-        project_properties: [],
-        has_loaded_properties: false,
     },
     project_ugroups: null,
     is_loading_folder: true,

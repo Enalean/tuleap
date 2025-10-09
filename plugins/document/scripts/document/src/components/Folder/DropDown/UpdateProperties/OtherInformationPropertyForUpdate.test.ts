@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -24,17 +25,20 @@ import OtherInformationPropertiesForUpdate from "./OtherInformationPropertiesFor
 import { TYPE_FILE } from "../../../../constants";
 import type { Item, ItemFile, ListValue, Property } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import type { PropertiesState } from "../../../../store/properties/module";
 import { IS_OBSOLESCENCE_DATE_PROPERTY_USED, PROJECT } from "../../../../configuration-keys";
 import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
+import { PROJECT_PROPERTIES } from "../../../../injection-keys";
+import { ref } from "vue";
+import { okAsync } from "neverthrow";
 
 vi.mock("../../../../helpers/emitter");
 
 describe("OtherInformationPropertiesForUpdate", () => {
-    let load_properties: vi.Mock;
+    let load_properties: MockInstance;
 
     beforeEach(() => {
         load_properties = vi.fn();
+        load_properties.mockReset();
     });
 
     function createWrapper(
@@ -43,27 +47,20 @@ describe("OtherInformationPropertiesForUpdate", () => {
         item: Item,
         propertyToUpdate: Array<Property>,
     ): VueWrapper<InstanceType<typeof OtherInformationPropertiesForUpdate>> {
-        load_properties.mockReset();
         return shallowMount(OtherInformationPropertiesForUpdate, {
-            props: { currentlyUpdatedItem: item, value: "", propertyToUpdate },
+            props: {
+                currentlyUpdatedItem: item,
+                value: "",
+                propertyToUpdate,
+                document_properties: { loadProjectProperties: load_properties },
+            },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        properties: {
-                            state: {
-                                has_loaded_properties,
-                            } as unknown as PropertiesState,
-                            actions: {
-                                loadProjectProperties: load_properties,
-                            },
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 provide: {
                     [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                     [IS_OBSOLESCENCE_DATE_PROPERTY_USED.valueOf()]:
                         is_obsolescence_date_property_used,
+                    [PROJECT_PROPERTIES.valueOf()]: ref(has_loaded_properties ? [] : null),
                 },
             },
         });
@@ -78,6 +75,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
                 type: TYPE_FILE,
                 title: "title",
             } as ItemFile;
+            load_properties.mockReturnValue(okAsync([]));
             const wrapper = createWrapper(true, false, item, []);
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
@@ -93,6 +91,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
                 type: TYPE_FILE,
                 title: "title",
             } as ItemFile;
+            load_properties.mockReturnValue(okAsync([]));
             createWrapper(true, false, item, []);
 
             expect(load_properties).toHaveBeenCalled();

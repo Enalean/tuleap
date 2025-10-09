@@ -17,8 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { put, recursiveGet } from "@tuleap/tlp-fetch";
+import { put } from "@tuleap/tlp-fetch";
 import type { FolderStatus, Property } from "../type";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { getAllJSON, uri } from "@tuleap/fetch-result";
 
 export function putFileProperties(
     id: number,
@@ -188,12 +191,11 @@ export function putFolderDocumentProperties(
     });
 }
 
-export function getProjectProperties(project_id: number): Promise<Array<Property>> {
-    const escaped_project_id = encodeURIComponent(project_id);
-    return recursiveGet(`/api/projects/${escaped_project_id}/docman_metadata`, {
+export function getProjectProperties(project_id: number): ResultAsync<Array<Property>, Fault> {
+    return getAllJSON<Property[]>(uri`/api/projects/${project_id}/docman_metadata`, {
         params: {
             limit: 50,
             offset: 0,
         },
-    });
+    }).map((properties) => properties.flat());
 }

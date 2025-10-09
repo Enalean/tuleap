@@ -86,12 +86,6 @@ describe("NewFolderModal", () => {
                                 loadProjectUserGroupsIfNeeded: load_projects_ugroups,
                             },
                         },
-                        configuration: {
-                            state: {
-                                has_loaded_properties: true,
-                            },
-                            namespaced: true,
-                        },
                     },
                     state: {
                         current_folder,

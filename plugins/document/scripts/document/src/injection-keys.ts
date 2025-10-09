@@ -17,8 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
-import type { FeedbackHandler, NewItemAlternativeArray, OtherItemTypeCollection } from "./type";
+import type { InjectionKey, Ref } from "vue";
+import type {
+    FeedbackHandler,
+    NewItemAlternativeArray,
+    OtherItemTypeCollection,
+    Property,
+} from "./type";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
 export const FEEDBACK: InjectionKey<FeedbackHandler> = Symbol("feedback");
@@ -31,3 +36,6 @@ export const NEW_ITEMS_ALTERNATIVES: StrictInjectionKey<NewItemAlternativeArray>
 
 export const OTHER_ITEM_TYPES: StrictInjectionKey<OtherItemTypeCollection> =
     Symbol("other_item_types");
+
+export const PROJECT_PROPERTIES: StrictInjectionKey<Ref<Property[] | null>> =
+    Symbol("project-properties");
