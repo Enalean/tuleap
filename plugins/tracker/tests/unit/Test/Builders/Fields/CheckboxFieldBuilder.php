@@ -27,6 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class CheckboxFieldBuilder
 {
     private string $name      = 'checkbox';
+    private string $label     = 'A checkbox';
     private bool $is_required = false;
     private \Tuleap\Tracker\Tracker $tracker;
     /** @var list<\PFUser> */
@@ -47,6 +48,12 @@ final class CheckboxFieldBuilder
     public function withName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function withLabel(string $label): self
+    {
+        $this->label = $label;
         return $this;
     }
 
@@ -71,7 +78,7 @@ final class CheckboxFieldBuilder
             $this->tracker->getId(),
             15,
             $this->name,
-            'A checkbox',
+            $this->label,
             '',
             true,
             'P',

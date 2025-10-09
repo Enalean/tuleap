@@ -28,7 +28,7 @@ use HTML_Element_Selectbox;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
-use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesV5;
+use Tuleap\GraphOnTrackersV5\Common\HTMLSelectboxElementWithTrackerListFieldsV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\ChartDataBuilderV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_CumulativeFlow_DataBuilder;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine;
@@ -265,7 +265,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart //p
         return array_merge(
             parent::getProperties(),
             [
-                'field_id'   => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
+                'field_id'   => new HTMLSelectboxElementWithTrackerListFieldsV5(
                     $this->getTracker(),
                     dgettext('tuleap-graphontrackersv5', 'Source data'),
                     'chart[field_id]',

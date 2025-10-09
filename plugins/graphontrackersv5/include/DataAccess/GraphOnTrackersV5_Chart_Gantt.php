@@ -30,11 +30,11 @@ use Tracker_FormElementFactory;
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_DatesV5;
 use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5;
-use Tuleap\GraphOnTrackersV5\Common\HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5;
+use Tuleap\GraphOnTrackersV5\Common\HTMLSelectboxElementWithTrackerListAndTextFieldsV5;
 use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Chart_GanttDataBuilder;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Gantt;
 
-class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
+class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
     protected $field_start;
     protected $field_due;
@@ -126,52 +126,52 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         //TODO
     }
 
-    public function getField_start()
+    public function getField_start() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_start;
     }
 
-    public function setField_start($field_start)
+    public function setField_start($field_start) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_start = $field_start;
     }
 
-    public function getField_due()
+    public function getField_due() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_due;
     }
 
-    public function setField_due($field_due)
+    public function setField_due($field_due) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_due = $field_due;
     }
 
-    public function getField_finish()
+    public function getField_finish() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_finish;
     }
 
-    public function setField_finish($field_finish)
+    public function setField_finish($field_finish) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_finish = $field_finish;
     }
 
-    public function getField_percentage()
+    public function getField_percentage() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_percentage;
     }
 
-    public function setField_percentage($field_percentage)
+    public function setField_percentage($field_percentage) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_percentage = $field_percentage;
     }
 
-    public function getField_righttext()
+    public function getField_righttext() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_righttext;
     }
 
-    public function setField_righttext($field_righttext)
+    public function setField_righttext($field_righttext) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->field_righttext = $field_righttext;
     }
@@ -186,12 +186,12 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         return $this->scale = $scale;
     }
 
-    public function getAs_of_date()
+    public function getAs_of_date() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->as_of_date;
     }
 
-    public function setAs_of_date($as_of_date)
+    public function setAs_of_date($as_of_date) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->as_of_date = $as_of_date;
     }
@@ -244,14 +244,14 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
                     new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Finish Date'), 'chart[field_finish]', $this->getField_finish())
                 ),
                 new HTML_Element_Columns(
-                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Summary'), 'chart[summary]', $this->getSummary()),
+                    new HTMLSelectboxElementWithTrackerListAndTextFieldsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Summary'), 'chart[summary]', $this->getSummary()),
                     new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Progress'), 'chart[field_percentage]', $this->getField_percentage(), true),
                     new HTML_Element_Selectbox_Scale(dgettext('tuleap-graphontrackersv5', 'Time Scale'), 'chart[scale]', $this->getScale())
                 ),
 
                 new HTML_Element_Columns(
                     new HTML_Element_Input_Date(dgettext('tuleap-graphontrackersv5', 'As of date'), 'chart[as_of_date]', strtotime($this->getAs_of_date())),
-                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Informations at the right of the bars'), 'chart[field_righttext]', $this->getField_righttext(), true)
+                    new HTMLSelectboxElementWithTrackerListAndTextFieldsV5($this->getTracker(), dgettext('tuleap-graphontrackersv5', 'Informations at the right of the bars'), 'chart[field_righttext]', $this->getField_righttext(), true)
                 ),
             ]
         );

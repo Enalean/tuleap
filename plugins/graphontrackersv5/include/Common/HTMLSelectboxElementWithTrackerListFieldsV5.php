@@ -27,19 +27,26 @@ namespace Tuleap\GraphOnTrackersV5\Common;
 use HTML_Element_Option;
 use HTML_Element_Selectbox;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 
 /**
- * Define an html selectbox field for selectbox fields provided by the tracker
+ * Define an HTML selectbox element for list fields provided by the tracker
+ *
+ * Open list fields are ignored
  */
-final class HTML_Element_Selectbox_TrackerFields_SelectboxesV5 extends HTML_Element_Selectbox
+final class HTMLSelectboxElementWithTrackerListFieldsV5 extends HTML_Element_Selectbox
 {
-    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = '', $with_user = true, $desc = '')
+    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = '', $desc = '')
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
-        $aff = Tracker_FormElementFactory::instance();
+        $form_element_factory = Tracker_FormElementFactory::instance();
 
-        foreach ($aff->getUsedListFields($tracker) as $field) {
+        foreach ($form_element_factory->getUsedListFields($tracker) as $field) {
+            if ($field instanceof OpenListField) {
+                continue;
+            }
+
             if ($field->userCanRead()) {
                 if ($field->getName() != 'comment_type_id') {
                     $selected = $this->value == $field->id;
