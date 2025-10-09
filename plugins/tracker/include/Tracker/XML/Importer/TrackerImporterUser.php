@@ -26,5 +26,5 @@ use PFUser;
 
 class TrackerImporterUser extends PFUser
 {
-    public const ID = 91;
+    public const int ID = 91;
 }

@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class TrackerReportDeleted implements Dispatchable
 {
-    public const NAME = 'trackerReportDeleted';
+    public const string NAME = 'trackerReportDeleted';
 
     /**
      * @var Tracker_Report

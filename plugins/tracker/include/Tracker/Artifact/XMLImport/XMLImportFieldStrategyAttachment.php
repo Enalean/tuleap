@@ -26,8 +26,8 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const FILE_INFO_COPY_OPTION = 'is_migrated';
-    public const FILE_INFO_MOVE_OPTION = 'is_moved';
+    public const string FILE_INFO_COPY_OPTION = 'is_migrated';
+    public const string FILE_INFO_MOVE_OPTION = 'is_moved';
 
     public function __construct(private readonly string $extraction_path, private readonly Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer, private readonly \Psr\Log\LoggerInterface $logger)
     {

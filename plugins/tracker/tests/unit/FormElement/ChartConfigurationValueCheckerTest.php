@@ -46,8 +46,8 @@ use Tuleap\Tracker\Tracker;
 #[DisableReturnValueGenerationForTestDoubles]
 final class ChartConfigurationValueCheckerTest extends TestCase
 {
-    private const DURATION_VALUE       = 10;
-    private const START_DATE_TIMESTAMP = 1488470204;
+    private const int DURATION_VALUE       = 10;
+    private const int START_DATE_TIMESTAMP = 1488470204;
 
     public IntegerField $duration_field;
     private Tracker_Artifact_Changeset $new_changeset;

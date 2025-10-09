@@ -30,8 +30,8 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StoredReverseLinkTest extends TestCase
 {
-    private const ARTIFACT_ID = 1045;
-    private const TYPE        = '_is_child';
+    private const int ARTIFACT_ID = 1045;
+    private const string TYPE     = '_is_child';
 
     public function testItReturnsNullIfTheSourceArtifactCannotBeRetrieved(): void
     {

@@ -30,7 +30,7 @@ use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 
 final class FileToUploadCreator
 {
-    private const EXPIRATION_DELAY_IN_HOURS = 4;
+    private const int EXPIRATION_DELAY_IN_HOURS = 4;
 
     /**
      * @var FileOngoingUploadDao

@@ -38,7 +38,7 @@ final class ListFormElementTypeUpdaterTest extends TestCase
 {
     use GlobalResponseMock;
 
-    private const SIMPLE_LIST_ELEMENT_ID = 20000;
+    private const int SIMPLE_LIST_ELEMENT_ID = 20000;
 
     private ListFormElementTypeUpdater $updater;
     private Tracker_FormElementFactory&MockObject $form_element_factory;

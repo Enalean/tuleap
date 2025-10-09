@@ -33,10 +33,10 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\ArtifactLinkFieldSpecific
 
 final readonly class ArtifactLinkConfigController
 {
-    private const TEMPLATE = 'siteadmin-config/artifact-links';
-    private const URL      = '/plugins/tracker/config.php?action=artifact-links';
+    private const string TEMPLATE = 'siteadmin-config/artifact-links';
+    private const string URL      = '/plugins/tracker/config.php?action=artifact-links';
 
-    public const ACTION_ACTIVATE_NEW_INTERFACE = 'activate-new-artifact-links-interface';
+    public const string ACTION_ACTIVATE_NEW_INTERFACE = 'activate-new-artifact-links-interface';
 
     public function __construct(
         private TypeCreator $creator,

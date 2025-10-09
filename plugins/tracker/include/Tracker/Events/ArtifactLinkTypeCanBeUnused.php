@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 class ArtifactLinkTypeCanBeUnused implements Dispatchable
 {
-    public const NAME = 'tracker_artifact_link_can_be_unused';
+    public const string NAME = 'tracker_artifact_link_can_be_unused';
 
     /**
      * @var Project

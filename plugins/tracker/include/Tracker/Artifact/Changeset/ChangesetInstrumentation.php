@@ -26,7 +26,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 
 final class ChangesetInstrumentation
 {
-    private const METRIC_NAME = 'tracker_artifact_changesets_total';
+    private const string METRIC_NAME = 'tracker_artifact_changesets_total';
 
     public static function increment(): void
     {

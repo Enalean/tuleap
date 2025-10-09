@@ -27,7 +27,7 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
  */
 final class DeletionContext
 {
-    public const MOVE_TYPE = 'move';
+    public const string MOVE_TYPE = 'move';
 
     private function __construct(private readonly bool $is_in_move_context, private readonly int $source_project_id, private readonly int $destination_project_id)
     {

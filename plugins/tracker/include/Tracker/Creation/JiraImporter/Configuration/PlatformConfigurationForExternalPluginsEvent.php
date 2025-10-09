@@ -29,7 +29,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class PlatformConfigurationForExternalPluginsEvent implements Dispatchable
 {
-    public const NAME = 'platformConfigurationForExternalPluginsEvent';
+    public const string NAME = 'platformConfigurationForExternalPluginsEvent';
 
     /**
      * @var JiraClient

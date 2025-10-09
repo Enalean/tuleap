@@ -68,8 +68,8 @@ use XMLImportHelper;
 #[DisableReturnValueGenerationForTestDoubles]
 final class XmlImportTest extends TestCase
 {
-    private const SUMMARY_FIELD_ID = 50;
-    private const TRACKER_ID       = 100;
+    private const int SUMMARY_FIELD_ID = 50;
+    private const int TRACKER_ID       = 100;
 
     private TrackerXmlImportConfig $import_config;
     private string $extraction_path;

@@ -38,8 +38,8 @@ use UserHelper;
 
 final class EmailNotificationTask implements PostCreationTask
 {
-    public const DEFAULT_MAIL_SENDER           = 'forge__artifacts';
-    public const DEFAULT_SENDER_EXPOSED_FIELDS = [
+    public const string DEFAULT_MAIL_SENDER          = 'forge__artifacts';
+    public const array DEFAULT_SENDER_EXPOSED_FIELDS = [
         'username' => 'user_name',
         'realname' => 'realname',
     ];

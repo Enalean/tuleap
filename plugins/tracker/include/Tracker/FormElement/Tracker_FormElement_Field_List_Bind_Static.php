@@ -36,7 +36,7 @@ use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind
 {
-    public const TYPE = 'static';
+    public const string TYPE = 'static';
 
     /**
      * @var Tracker_FormElement_Field_List_Bind_StaticValue[]

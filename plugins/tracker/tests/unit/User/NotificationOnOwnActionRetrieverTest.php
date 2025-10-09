@@ -29,7 +29,7 @@ use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotificationOnOwnActionRetrieverTest extends TestCase
 {
-    private const USER_ID = 120;
+    private const int USER_ID = 120;
     private StoreUserPreferenceStub $dao;
 
     #[\Override]

@@ -25,7 +25,7 @@ use Workflow;
 
 class WorkflowDeletionEvent implements Dispatchable
 {
-    public const NAME = 'workflowDeletionEvent';
+    public const string NAME = 'workflowDeletionEvent';
 
     /**
      * @var Workflow

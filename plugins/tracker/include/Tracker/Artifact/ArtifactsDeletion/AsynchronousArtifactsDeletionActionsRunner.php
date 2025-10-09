@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class AsynchronousArtifactsDeletionActionsRunner
 {
-    public const TOPIC = 'tuleap.tracker.artifact.deletion';
+    public const string TOPIC = 'tuleap.tracker.artifact.deletion';
 
 
     public function __construct(

@@ -29,7 +29,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class FieldContentIndexer
 {
-    public const INDEX_TYPE_FIELD_CONTENT = 'plugin_artifact_field';
+    public const string INDEX_TYPE_FIELD_CONTENT = 'plugin_artifact_field';
 
     public function __construct(
         private ItemToIndexQueue $index_queue,

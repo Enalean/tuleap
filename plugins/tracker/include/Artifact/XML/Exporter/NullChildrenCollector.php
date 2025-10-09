@@ -24,7 +24,7 @@ use Tracker_XML_ChildrenCollector;
 
 class NullChildrenCollector extends Tracker_XML_ChildrenCollector
 {
-    public const MAX = 50;
+    public const int MAX = 50;
 
     #[\Override]
     public function addChild($artifact_id, $parent_id)

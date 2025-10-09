@@ -27,11 +27,11 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TrackerFieldsTest extends TrackerBase
 {
-    private const FIELD_STATIC_SELECTBOX_SHOTNAME       = 'staticsb';
-    private const FIELD_STATIC_RADIOBUTTON_SHOTNAME     = 'staticrb';
-    private const FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME = 'staticmsb';
-    private const FIELD_USER_SELECTBOX_SHOTNAME         = 'userssb';
-    private const FIELD_FILE                            = 'attachment';
+    private const string FIELD_STATIC_SELECTBOX_SHOTNAME       = 'staticsb';
+    private const string FIELD_STATIC_RADIOBUTTON_SHOTNAME     = 'staticrb';
+    private const string FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME = 'staticmsb';
+    private const string FIELD_USER_SELECTBOX_SHOTNAME         = 'userssb';
+    private const string FIELD_FILE                            = 'attachment';
 
     public function testOPTIONSId()
     {

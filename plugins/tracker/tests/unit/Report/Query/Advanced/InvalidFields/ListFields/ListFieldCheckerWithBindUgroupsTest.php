@@ -43,7 +43,7 @@ final class ListFieldCheckerWithBindUgroupsTest extends TestCase
     use GlobalLanguageMock;
     use LegacyTabTranslationsSupport;
 
-    private const FIELD_NAME = 'a_field';
+    private const string FIELD_NAME = 'a_field';
     private Comparison $comparison;
 
     #[\Override]

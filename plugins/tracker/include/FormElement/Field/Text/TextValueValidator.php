@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreation;
 
 final class TextValueValidator
 {
-    public const MAX_TEXT_SIZE = 65535;
+    public const int MAX_TEXT_SIZE = 65535;
 
     /**
      * @return Ok<true> | Err<Fault>

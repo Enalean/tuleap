@@ -58,7 +58,7 @@ use Tuleap\XML\SimpleXMLElementBuilder;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerXmlImport
 {
-    public const DEFAULT_NOTIFICATIONS_LEVEL = 0;
+    public const int DEFAULT_NOTIFICATIONS_LEVEL = 0;
 
     /** @var TrackerFactory */
     private $tracker_factory;

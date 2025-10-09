@@ -24,7 +24,7 @@ use DateTime;
 
 final class CurrentDateTimeValueWrapper implements ValueWrapper
 {
-    private const MINUS_SIGN = '-';
+    private const string MINUS_SIGN = '-';
 
     private DateTime $value;
 

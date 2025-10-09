@@ -29,7 +29,7 @@ use Tuleap\Tracker\Tracker;
 
 final class CanSubmitNewArtifact implements Dispatchable
 {
-    public const NAME = 'canSubmitNewArtifact';
+    public const string NAME = 'canSubmitNewArtifact';
 
     /**
      * @psalm-readonly

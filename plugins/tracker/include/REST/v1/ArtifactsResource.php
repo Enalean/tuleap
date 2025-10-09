@@ -211,23 +211,23 @@ use XMLImportHelper;
  */
 class ArtifactsResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT          = 50;
-    public const DEFAULT_LIMIT      = 10;
-    public const DEFAULT_OFFSET     = 0;
-    public const MAX_ARTIFACT_BATCH = 100;
-    public const ORDER_ASC          = 'asc';
-    public const ORDER_DESC         = 'desc';
+    public const int MAX_LIMIT          = 50;
+    public const int DEFAULT_LIMIT      = 10;
+    public const int DEFAULT_OFFSET     = 0;
+    public const int MAX_ARTIFACT_BATCH = 100;
+    public const string ORDER_ASC       = 'asc';
+    public const string ORDER_DESC      = 'desc';
 
-    public const VALUES_FORMAT_COLLECTION = 'collection';
-    public const VALUES_FORMAT_BY_FIELD   = 'by_field';
-    public const VALUES_FORMAT_ALL        = 'all';
-    public const VALUES_DEFAULT           = null;
+    public const string VALUES_FORMAT_COLLECTION = 'collection';
+    public const string VALUES_FORMAT_BY_FIELD   = 'by_field';
+    public const string VALUES_FORMAT_ALL        = 'all';
+    public const null VALUES_DEFAULT             = null;
 
-    public const DEFAULT_TRACKER_STRUCTURE  = self::MINIMAL_TRACKER_STRUCTURE;
-    public const MINIMAL_TRACKER_STRUCTURE  = 'minimal';
-    public const COMPLETE_TRACKER_STRUCTURE = 'complete';
+    public const string DEFAULT_TRACKER_STRUCTURE  = self::MINIMAL_TRACKER_STRUCTURE;
+    public const string MINIMAL_TRACKER_STRUCTURE  = 'minimal';
+    public const string COMPLETE_TRACKER_STRUCTURE = 'complete';
 
-    public const EMPTY_TYPE = '';
+    public const string EMPTY_TYPE = '';
 
     private PostMoveArtifactRESTAddFeedback $post_move_action;
     private UserManager $user_manager;

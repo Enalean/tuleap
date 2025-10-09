@@ -31,7 +31,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class NewArtifactLinkInitialChangesetValueBuilder
 {
-    private const LINKS_KEY = 'links';
+    private const string LINKS_KEY = 'links';
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException

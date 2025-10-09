@@ -324,17 +324,17 @@ require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../include/manual_autoload.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
-    public final const TRACKER_EVENT_INCLUDE_CSS_FILE = 'tracker_event_include_css_file';
+    public final const string TRACKER_EVENT_INCLUDE_CSS_FILE = 'tracker_event_include_css_file';
 
-    public const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
-    public const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
-    public const EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
-    public const SERVICE_SHORTNAME                       = 'plugin_tracker';
-    public const TRUNCATED_SERVICE_NAME                  = 'Trackers';
-    public const DELETED_TRACKERS_TEMPLATE_NAME          = 'deleted_trackers';
+    public const string EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
+    public const string EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
+    public const string EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
+    public const string SERVICE_SHORTNAME                       = 'plugin_tracker';
+    public const string TRUNCATED_SERVICE_NAME                  = 'Trackers';
+    public const string DELETED_TRACKERS_TEMPLATE_NAME          = 'deleted_trackers';
 
     public function __construct($id)
     {

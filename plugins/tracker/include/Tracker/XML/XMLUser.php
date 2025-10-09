@@ -25,10 +25,10 @@ namespace Tuleap\Tracker\XML;
 
 final class XMLUser
 {
-    private const FORMAT_USERNAME = 'username';
-    private const FORMAT_LDAP     = 'ldap';
-    private const FORMAT_ID       = 'id';
-    private const FORMAT_EMAIL    = 'email';
+    private const string FORMAT_USERNAME = 'username';
+    private const string FORMAT_LDAP     = 'ldap';
+    private const string FORMAT_ID       = 'id';
+    private const string FORMAT_EMAIL    = 'email';
 
     /**
      * @var self::FORMAT_*

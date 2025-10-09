@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\XML;
 
 final class XMLFieldPermission
 {
-    private const SCOPE = 'field';
+    private const string SCOPE = 'field';
     /**
      * @var string
      * @readonly

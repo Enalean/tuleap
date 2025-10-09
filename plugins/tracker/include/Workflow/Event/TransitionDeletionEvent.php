@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class TransitionDeletionEvent implements Dispatchable
 {
-    public const NAME = 'transitionDeletionEvent';
+    public const string NAME = 'transitionDeletionEvent';
 
     /**
      * @var Transition

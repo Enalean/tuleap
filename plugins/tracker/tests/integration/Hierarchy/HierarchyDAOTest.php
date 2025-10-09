@@ -27,8 +27,8 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HierarchyDAOTest extends TestIntegrationTestCase
 {
-    private const CHILD_TRACKER_ID  = 116;
-    private const PARENT_TRACKER_ID = 253;
+    private const int CHILD_TRACKER_ID  = 116;
+    private const int PARENT_TRACKER_ID = 253;
     private HierarchyDAO $dao;
 
     #[\Override]

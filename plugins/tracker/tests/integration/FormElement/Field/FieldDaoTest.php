@@ -28,8 +28,8 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldDaoTest extends TestIntegrationTestCase
 {
-    private const TRACKER_ID = 51;
-    private const SCOPE      = 'P';
+    private const int TRACKER_ID = 51;
+    private const string SCOPE   = 'P';
     private FieldDao $field_dao;
 
     #[\Override]

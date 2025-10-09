@@ -41,7 +41,7 @@ use Tuleap\Tracker\Tracker;
 
 class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
 {
-    public const NAME = 'progress';
+    public const string NAME = 'progress';
     /**
      * @var IComputeProgression
      */

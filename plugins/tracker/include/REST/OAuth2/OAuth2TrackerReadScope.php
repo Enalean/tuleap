@@ -34,7 +34,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
  */
 final class OAuth2TrackerReadScope implements AuthenticationScope
 {
-    private const IDENTIFIER_KEY = 'read:tracker';
+    private const string IDENTIFIER_KEY = 'read:tracker';
 
     /**
      * @var OAuth2ScopeIdentifier

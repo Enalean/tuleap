@@ -48,8 +48,8 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalResponseMock;
 
-    private const NEW_CHANGESET_ID     = 456;
-    private const SUBMISSION_TIMESTAMP = 1234567890;
+    private const int NEW_CHANGESET_ID     = 456;
+    private const int SUBMISSION_TIMESTAMP = 1234567890;
 
     private ArtifactChangesetSaver&MockObject $changeset_saver;
     private Artifact $artifact;

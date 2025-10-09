@@ -47,9 +47,9 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID  = 34;
-    private const FIELD_ID    = 652;
-    private const FIELD_VALUE = 'osteolite';
+    private const int TRACKER_ID     = 34;
+    private const int FIELD_ID       = 652;
+    private const string FIELD_VALUE = 'osteolite';
 
     private NewChangesetCreator&MockObject $changeset_creator;
     private RetrieveUsedFieldsStub $fields_retriever;

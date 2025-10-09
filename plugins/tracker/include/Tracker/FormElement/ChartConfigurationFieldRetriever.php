@@ -30,8 +30,8 @@ use Tuleap\Tracker\Tracker;
 
 class ChartConfigurationFieldRetriever
 {
-    public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
-    public const CAPACITY_FIELD_NAME         = 'capacity';
+    public const string REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    public const string CAPACITY_FIELD_NAME         = 'capacity';
 
     /**
      * @var Tracker_FormElementFactory

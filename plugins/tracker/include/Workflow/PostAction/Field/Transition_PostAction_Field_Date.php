@@ -25,21 +25,21 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
  * Set the date of a field
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Transition_PostAction_Field_Date extends Transition_PostAction_Field
 {
     /**
      * @const Clear the date.
      */
-    public const CLEAR_DATE = 1;
+    public const int CLEAR_DATE = 1;
 
     /**
      * @const Fill the date to the current time
      */
-    public const FILL_CURRENT_TIME = 2;
+    public const int FILL_CURRENT_TIME = 2;
 
-    public const SHORT_NAME   = 'field_date';
-    public const XML_TAG_NAME = 'postaction_field_date';
+    public const string SHORT_NAME   = 'field_date';
+    public const string XML_TAG_NAME = 'postaction_field_date';
 
     /**
      * @var int the type of the value. CLEAR_DATE | FILL_CURRENT_TIME

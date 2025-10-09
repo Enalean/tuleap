@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 class RedirectAfterArtifactCreationOrUpdateEvent implements Dispatchable
 {
-    public const NAME = 'redirectAfterArtifactCreationOrUpdateEvent';
+    public const string NAME = 'redirectAfterArtifactCreationOrUpdateEvent';
 
     /**
      * @var Codendi_Request

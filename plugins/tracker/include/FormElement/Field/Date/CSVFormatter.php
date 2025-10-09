@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\FormElement\Field\Date;
 
 class CSVFormatter
 {
-    public const MONTH_DAY_YEAR = 'month_day_year';
-    public const DAY_MONTH_YEAR = 'day_month_year';
+    public const string MONTH_DAY_YEAR = 'month_day_year';
+    public const string DAY_MONTH_YEAR = 'day_month_year';
 
     /**
      * @param int     $date

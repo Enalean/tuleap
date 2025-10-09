@@ -29,9 +29,9 @@ use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const CHANGESET_ID         = 4950;
-    private const BODY                 = 'linolate _cysteinic_';
-    private const SUBMISSION_TIMESTAMP = 1473016822;
+    private const int CHANGESET_ID         = 4950;
+    private const string BODY              = 'linolate _cysteinic_';
+    private const int SUBMISSION_TIMESTAMP = 1473016822;
     private \PFUser $submitter;
     /**
      * @var \ProjectUGroup[]

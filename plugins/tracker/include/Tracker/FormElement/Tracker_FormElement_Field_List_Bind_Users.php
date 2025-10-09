@@ -36,12 +36,12 @@ use Tuleap\User\REST\UserRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const TYPE = 'users';
+    public const string TYPE = 'users';
 
-    public const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
+    public const string REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
 
-    public const REST_BINDING_LIST_ID    = 'ugroup_id';
-    public const REST_BINDING_LIST_LABEL = 'name';
+    public const string REST_BINDING_LIST_ID    = 'ugroup_id';
+    public const string REST_BINDING_LIST_LABEL = 'name';
 
     /** @var UserManager */
     protected $userManager;

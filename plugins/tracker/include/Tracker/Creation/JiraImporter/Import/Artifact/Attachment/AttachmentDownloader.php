@@ -29,7 +29,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class AttachmentDownloader
 {
-    public const JIRA_TEMP_FOLDER = 'jira_import';
+    public const string JIRA_TEMP_FOLDER = 'jira_import';
 
     public function __construct(private JiraClient $client, private LoggerInterface $logger, private AttachmentNameGenerator $name_generator)
     {

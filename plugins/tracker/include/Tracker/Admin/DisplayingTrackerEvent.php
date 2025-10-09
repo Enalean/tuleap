@@ -27,7 +27,7 @@ use Tuleap\Tracker\Tracker;
 
 class DisplayingTrackerEvent implements Dispatchable
 {
-    public const NAME = 'displayingTrackerEvent';
+    public const string NAME = 'displayingTrackerEvent';
 
     /**
      * @var Tracker

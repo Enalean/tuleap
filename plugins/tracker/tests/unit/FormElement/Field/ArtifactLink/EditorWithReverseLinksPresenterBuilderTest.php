@@ -40,14 +40,14 @@ use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EditorWithReverseLinksPresenterBuilderTest extends TestCase
 {
-    private const LINK_FIELD_ID             = 865;
-    private const LINK_FIELD_LABEL          = 'My Artifact Links';
-    private const CURRENT_ARTIFACT_ID       = 891;
-    private const CURRENT_TRACKER_ID        = 611;
-    private const CURRENT_TRACKER_COLOR     = ColorName::DEEP_BLUE;
-    private const CURRENT_TRACKER_SHORTNAME = 'story';
-    private const PARENT_TRACKER_ID         = 487;
-    private const CURRENT_PROJECT_ID        = 565;
+    private const int LINK_FIELD_ID                = 865;
+    private const string LINK_FIELD_LABEL          = 'My Artifact Links';
+    private const int CURRENT_ARTIFACT_ID          = 891;
+    private const int CURRENT_TRACKER_ID           = 611;
+    private const ColorName CURRENT_TRACKER_COLOR  = ColorName::DEEP_BLUE;
+    private const string CURRENT_TRACKER_SHORTNAME = 'story';
+    private const int PARENT_TRACKER_ID            = 487;
+    private const int CURRENT_PROJECT_ID           = 565;
     private SearchParentTrackerStub $search_parent_tracker;
     private RetrieveUserPermissionOnTrackersStub $tracker_permissions_retriever;
 

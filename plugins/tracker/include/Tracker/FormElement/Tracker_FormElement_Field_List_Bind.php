@@ -39,12 +39,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements // phpcs:ignore PS
     Tracker_IProvideJsonFormatOfMyself,
     BindVisitable
 {
-    public const REST_ID_KEY    = 'bind_value_id';
-    public const REST_LABEL_KEY = 'bind_value_label';
-    public const REST_TYPE_KEY  = 'bind_type';
-    public const REST_LIST_KEY  = 'bind_list';
+    public const string REST_ID_KEY    = 'bind_value_id';
+    public const string REST_LABEL_KEY = 'bind_value_label';
+    public const string REST_TYPE_KEY  = 'bind_type';
+    public const string REST_LIST_KEY  = 'bind_list';
 
-    public const NONE_VALUE = 100;
+    public const int NONE_VALUE = 100;
 
     /**
      * @var BindDefaultValueDao

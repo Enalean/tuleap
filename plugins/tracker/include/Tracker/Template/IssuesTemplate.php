@@ -68,15 +68,15 @@ use Tuleap\Widget\XML\XMLWidget;
  */
 final class IssuesTemplate
 {
-    public const PRIORITY_FIELD_NAME    = 'priority';
-    public const STATUS_FIELD_NAME      = 'status';
-    public const ASSIGNED_TO_FIELD_NAME = 'assigned_to';
+    public const string PRIORITY_FIELD_NAME    = 'priority';
+    public const string STATUS_FIELD_NAME      = 'status';
+    public const string ASSIGNED_TO_FIELD_NAME = 'assigned_to';
 
-    private const ISSUE_NUMBER_FIELD_NAME     = 'issue_number';
-    private const TITLE_FIELD_NAME            = 'title';
-    private const SUBMITTED_ON_FIELD_NAME     = 'submitted_on';
-    private const OPEN_ISSUES_RENDERER_ID     = 'Open_Issues_Table_Renderer';
-    private const CRITICAL_ISSUES_RENDERER_ID = 'Critical_Issues_Table_Renderer';
+    private const string ISSUE_NUMBER_FIELD_NAME     = 'issue_number';
+    private const string TITLE_FIELD_NAME            = 'title';
+    private const string SUBMITTED_ON_FIELD_NAME     = 'submitted_on';
+    private const string OPEN_ISSUES_RENDERER_ID     = 'Open_Issues_Table_Renderer';
+    private const string CRITICAL_ISSUES_RENDERER_ID = 'Critical_Issues_Table_Renderer';
 
     public static function defineTemplate(
         SimpleXMLElement $project_template,

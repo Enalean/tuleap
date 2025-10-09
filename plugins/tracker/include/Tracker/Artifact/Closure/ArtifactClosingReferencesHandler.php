@@ -35,7 +35,7 @@ use Tuleap\User\UserName;
 
 final class ArtifactClosingReferencesHandler
 {
-    private const REFERENCE_HANDLING_LIMIT = 50;
+    private const int REFERENCE_HANDLING_LIMIT = 50;
 
     public function __construct(
         private LoggerInterface $logger,

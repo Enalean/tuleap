@@ -45,11 +45,11 @@ use UserManager;
 
 class ArtifactTemporaryFilesResource
 {
-    public const PAGINATION_MAX_LIMIT      = 50;
-    public const PAGINATION_DEFAULT_LIMIT  = 10;
-    public const PAGINATION_DEFAULT_OFFSET = 0;
+    public const int PAGINATION_MAX_LIMIT      = 50;
+    public const int PAGINATION_DEFAULT_LIMIT  = 10;
+    public const int PAGINATION_DEFAULT_OFFSET = 0;
 
-    public const DEFAULT_LIMIT = 1048576; // 1Mo
+    public const int DEFAULT_LIMIT = 1048576; // 1Mo
 
     /** @var PFUser */
     private $user;

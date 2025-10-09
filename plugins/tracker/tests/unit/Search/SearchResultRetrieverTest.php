@@ -39,10 +39,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchResultRetrieverTest extends TestCase
 {
-    private const TRACKER_COLOR   = ColorName::TEDDY_BROWN;
-    private const ARTIFACT_ID     = 123;
-    private const ARTIFACT_TITLE  = 'title';
-    private const CROPPED_CONTENT = '... excerpt ...';
+    private const ColorName TRACKER_COLOR = ColorName::TEDDY_BROWN;
+    private const int ARTIFACT_ID         = 123;
+    private const string ARTIFACT_TITLE   = 'title';
+    private const string CROPPED_CONTENT  = '... excerpt ...';
 
     /**
      * @var \Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\Stub

@@ -39,8 +39,8 @@ use WorkflowFactory;
 
 final class TrackerStructureXMLExporter
 {
-    private const TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML          = '0';
-    private const TRACKER_SHOULD_SEND_EVENT_IN_NOTIFICATION_EXPORT_XML = '1';
+    private const string TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML          = '0';
+    private const string TRACKER_SHOULD_SEND_EVENT_IN_NOTIFICATION_EXPORT_XML = '1';
 
     public function __construct(
         private readonly PromotedTrackerDao $promoted_tracker_dao,

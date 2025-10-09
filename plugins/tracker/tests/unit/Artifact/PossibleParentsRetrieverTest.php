@@ -38,8 +38,8 @@ use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PossibleParentsRetrieverTest extends TestCase
 {
-    private const PARENT_TRACKER_ID         = 567;
-    private const PARENT_TRACKER_SHORT_NAME = 'epic';
+    private const int PARENT_TRACKER_ID            = 567;
+    private const string PARENT_TRACKER_SHORT_NAME = 'epic';
     private int $limit;
     private int $offset;
     private bool $can_create;

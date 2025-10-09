@@ -191,12 +191,12 @@ use Workflow_Transition_ConditionFactory;
 
 class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface
 {
-    public const REST_ROUTE        = 'artifacts';
-    public const NO_PARENT         = -1;
-    public const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
-    public const REFERENCE_NATURE  = 'plugin_tracker_artifact';
-    public const STATUS_OPEN       = 'open';
-    public const STATUS_CLOSED     = 'closed';
+    public const string REST_ROUTE        = 'artifacts';
+    public const int NO_PARENT            = -1;
+    public const string PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
+    public const string REFERENCE_NATURE  = 'plugin_tracker_artifact';
+    public const string STATUS_OPEN       = 'open';
+    public const string STATUS_CLOSED     = 'closed';
     public $id;
     public $tracker_id;
     public $use_artifact_permissions;

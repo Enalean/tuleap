@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class ArtifactDeleted implements Dispatchable
 {
-    public const NAME = 'trackerArtifactDeleted';
+    public const string NAME = 'trackerArtifactDeleted';
 
     /**
      * @var Artifact

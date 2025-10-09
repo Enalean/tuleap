@@ -28,7 +28,7 @@ use Tuleap\Tracker\Tracker;
 
 class GetExternalPostActionPluginsEvent implements Dispatchable
 {
-    public const NAME = 'getExternalPostActionPluginsEvent';
+    public const string NAME = 'getExternalPostActionPluginsEvent';
 
     /**
      * @var string[]

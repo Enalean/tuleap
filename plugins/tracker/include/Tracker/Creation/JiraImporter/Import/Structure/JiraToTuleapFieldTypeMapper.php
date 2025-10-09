@@ -45,12 +45,12 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 class JiraToTuleapFieldTypeMapper
 {
-    public const JIRA_FIELD_VERSIONS               = 'versions';
-    public const JIRA_FIELD_FIXEDVERSIONS          = 'fixVersions';
-    public const JIRA_FIELD_COMPONENTS             = 'components';
-    public const JIRA_FIELD_CUSTOM_MULTIVERSION    = 'com.atlassian.jira.plugin.system.customfieldtypes:multiversion';
-    public const JIRA_FIELD_CUSTOM_VERSION         = 'com.atlassian.jira.plugin.system.customfieldtypes:version';
-    public const JIRA_FIELD_CUSTOM_MULTICHECKBOXES = 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes';
+    public const string JIRA_FIELD_VERSIONS               = 'versions';
+    public const string JIRA_FIELD_FIXEDVERSIONS          = 'fixVersions';
+    public const string JIRA_FIELD_COMPONENTS             = 'components';
+    public const string JIRA_FIELD_CUSTOM_MULTIVERSION    = 'com.atlassian.jira.plugin.system.customfieldtypes:multiversion';
+    public const string JIRA_FIELD_CUSTOM_VERSION         = 'com.atlassian.jira.plugin.system.customfieldtypes:version';
+    public const string JIRA_FIELD_CUSTOM_MULTICHECKBOXES = 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes';
 
     public function __construct(
         private ErrorCollector $error_collector,

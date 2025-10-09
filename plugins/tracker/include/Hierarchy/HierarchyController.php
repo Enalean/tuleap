@@ -39,7 +39,7 @@ use Valid_UInt;
 
 final readonly class HierarchyController
 {
-    final public const HIERARCHY_VIEW = 'admin-hierarchy';
+    final public const string HIERARCHY_VIEW = 'admin-hierarchy';
     private TemplateRenderer $renderer;
 
     public function __construct(

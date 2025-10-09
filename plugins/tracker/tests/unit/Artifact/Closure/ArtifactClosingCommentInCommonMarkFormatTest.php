@@ -29,9 +29,9 @@ use Tuleap\Test\Stubs\ReferenceStringStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactClosingCommentInCommonMarkFormatTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USERNAME_CLOSING_THE_ARTIFACT = 'lgilhooly';
-    private const TRACKER_SHORTNAME             = 'tracker_isetta';
-    private const ORIGIN_REFERENCE              = 'git #pyronomics/614b83';
+    private const string USERNAME_CLOSING_THE_ARTIFACT = 'lgilhooly';
+    private const string TRACKER_SHORTNAME             = 'tracker_isetta';
+    private const string ORIGIN_REFERENCE              = 'git #pyronomics/614b83';
 
     private function buildComment(?ClosingKeyword $keyword): ArtifactClosingCommentInCommonMarkFormat
     {

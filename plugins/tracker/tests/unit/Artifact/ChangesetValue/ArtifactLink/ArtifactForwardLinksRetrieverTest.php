@@ -31,8 +31,8 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ARTIFACT_ID  = 103;
-    private const SECOND_ARTIFACT_ID = 104;
+    private const int FIRST_ARTIFACT_ID  = 103;
+    private const int SECOND_ARTIFACT_ID = 104;
     /**
      * @var ChangesetValueArtifactLinkDao & MockObject
      */

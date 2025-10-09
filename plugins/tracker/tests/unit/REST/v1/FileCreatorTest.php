@@ -34,10 +34,10 @@ use Tuleap\Tracker\FormElement\Field\Files\Upload\NewFileUpload;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const NEW_FILE_UPLOAD_ID = 147;
-    private const FILE_NAME          = 'cryptonema.png';
-    private const FILE_SIZE          = 667193;
-    private const MAX_UPLOAD_SIZE    = 1000000;
+    private const int NEW_FILE_UPLOAD_ID = 147;
+    private const string FILE_NAME       = 'cryptonema.png';
+    private const int FILE_SIZE          = 667193;
+    private const int MAX_UPLOAD_SIZE    = 1000000;
     /**
      * @var FileOngoingUploadDao & MockObject
      */

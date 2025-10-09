@@ -38,8 +38,8 @@ require_once __DIR__ . '/../../../../../src/www/include/utils.php';
 
 class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const FIELDS_ALL      = 'all';
-    public const FIELDS_COMMENTS = 'comments';
+    public const string FIELDS_ALL      = 'all';
+    public const string FIELDS_COMMENTS = 'comments';
 
     public $artifact;
     public $submitted_by;

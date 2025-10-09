@@ -38,7 +38,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
  */
 final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
 {
-    private const INVALID_ARTIFACT_ID = -1;
+    private const int INVALID_ARTIFACT_ID = -1;
 
     public function __construct(private readonly RetrieveViewableArtifact $artifact_factory)
     {

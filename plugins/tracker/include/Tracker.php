@@ -266,34 +266,34 @@ use XMLImportHelper;
 
 class Tracker implements Tracker_Dispatchable_Interface
 {
-    public const PERMISSION_ADMIN          = 'PLUGIN_TRACKER_ADMIN';
-    public const PERMISSION_FULL           = 'PLUGIN_TRACKER_ACCESS_FULL';
-    public const PERMISSION_ASSIGNEE       = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
-    public const PERMISSION_SUBMITTER      = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
-    public const PERMISSION_NONE           = 'PLUGIN_TRACKER_NONE';
-    public const PERMISSION_SUBMITTER_ONLY = 'PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY';
+    public const string PERMISSION_ADMIN          = 'PLUGIN_TRACKER_ADMIN';
+    public const string PERMISSION_FULL           = 'PLUGIN_TRACKER_ACCESS_FULL';
+    public const string PERMISSION_ASSIGNEE       = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
+    public const string PERMISSION_SUBMITTER      = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
+    public const string PERMISSION_NONE           = 'PLUGIN_TRACKER_NONE';
+    public const string PERMISSION_SUBMITTER_ONLY = 'PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY';
 
-    public const NOTIFICATIONS_LEVEL_DEFAULT       = 0;
-    public const NOTIFICATIONS_LEVEL_DISABLED      = 1;
-    public const NOTIFICATIONS_LEVEL_STATUS_CHANGE = 2;
+    public const int NOTIFICATIONS_LEVEL_DEFAULT       = 0;
+    public const int NOTIFICATIONS_LEVEL_DISABLED      = 1;
+    public const int NOTIFICATIONS_LEVEL_STATUS_CHANGE = 2;
 
-    public const NOTIFICATIONS_LEVEL_DEFAULT_LABEL       = 'notifications_level_default';
-    public const NOTIFICATIONS_LEVEL_DISABLED_LABEL      = 'notifications_level_disabled';
-    public const NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL = 'notifications_level_status_change';
+    public const string NOTIFICATIONS_LEVEL_DEFAULT_LABEL       = 'notifications_level_default';
+    public const string NOTIFICATIONS_LEVEL_DISABLED_LABEL      = 'notifications_level_disabled';
+    public const string NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL = 'notifications_level_status_change';
 
-    public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
-    public const TYPE_FIELD_NAME             = 'type';
-    public const NO_PARENT                   = null;
+    public const string REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    public const string TYPE_FIELD_NAME             = 'type';
+    public const null NO_PARENT                     = null;
 
     // The limit to 25 char is due to cross references
     // extraction fails if length is more than 25
-    public const MAX_TRACKER_SHORTNAME_LENGTH = 25;
+    public const int MAX_TRACKER_SHORTNAME_LENGTH = 25;
 
-    public const XML_ID_PREFIX = 'T';
+    public const string XML_ID_PREFIX = 'T';
 
-    public const MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY = 6;
+    public const int MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY = 6;
 
-    public const GLOBAL_ADMIN_URL = 'global-admin';
+    public const string GLOBAL_ADMIN_URL = 'global-admin';
 
     /**
      * Event emitted to check if a tracker can be deleted
@@ -302,7 +302,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *   'tracker'                Tracker (IN)
      *   'result'                 Array (OUT)
      */
-    public final const TRACKER_USAGE = 'tracker_usage';
+    public final const string TRACKER_USAGE = 'tracker_usage';
 
     /**
      * Event emitted to display tracker admin buttons
@@ -310,13 +310,13 @@ class Tracker implements Tracker_Dispatchable_Interface
      * Parameters:
      *  'tracker_id'      int (IN)
      */
-    public final const TRACKER_EVENT_FETCH_ADMIN_BUTTONS = 'tracker_event_fetch_admin_buttons';
-    private const      PROMOTED_ITEM_PREFIX              = 'tracker-';
+    public final const string TRACKER_EVENT_FETCH_ADMIN_BUTTONS = 'tracker_event_fetch_admin_buttons';
+    private const      string PROMOTED_ITEM_PREFIX              = 'tracker-';
 
-    public final const TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW = 'admin-formElement-update-view';
-    public final const TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE      = 'admin-formElement-update';
-    public final const TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE      = 'admin-formElement-remove';
-    public final const TRACKER_ACTION_NAME_FORM_ELEMENT_DELETE      = 'admin-formElement-delete';
+    public final const string TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW = 'admin-formElement-update-view';
+    public final const string TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE      = 'admin-formElement-update';
+    public final const string TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE      = 'admin-formElement-remove';
+    public final const string TRACKER_ACTION_NAME_FORM_ELEMENT_DELETE      = 'admin-formElement-delete';
 
     public $id;
     public $group_id;

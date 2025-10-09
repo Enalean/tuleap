@@ -28,7 +28,7 @@ use Tuleap\QuickLink\SwitchToQuickLink;
 
 class SwitchToLinksCollection implements Dispatchable
 {
-    public const NAME = 'getSwitchToQuickLinkCollection';
+    public const string NAME = 'getSwitchToQuickLinkCollection';
 
     /**
      * @var SwitchToQuickLink[]

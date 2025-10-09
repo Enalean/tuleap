@@ -47,8 +47,8 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
 readonly class ArtifactViewEdit extends TrackerArtifactView
 {
-    public const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
-    public const USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder';
+    public const string USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
+    public const string USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder';
 
     public function __construct(
         Artifact $artifact,

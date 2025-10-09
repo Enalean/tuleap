@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ValidateArtifactLinkValueEvent implements Dispatchable
 {
-    public const NAME = 'validateArtifactLinkValueEvent';
+    public const string NAME = 'validateArtifactLinkValueEvent';
 
     private bool $is_valid        = true;
     private string $error_message = '';

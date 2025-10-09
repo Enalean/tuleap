@@ -30,9 +30,9 @@ use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
 use Tuleap\Tracker\Widget\WidgetWithAssetDependencies;
 use Tuleap\Widget\WidgetFactory;
 
-abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const XML_ID_PREFIX = 'R';
+    public const string XML_ID_PREFIX = 'R';
 
     /**
      * @var mixed
@@ -50,12 +50,12 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //
     /**
      * A table renderer. This is the legacy display of the results
      */
-    public const TABLE = 'table';
+    public const string TABLE = 'table';
 
     /**
      * A "Board" renderer. Display artifacts grouped by columns.
      */
-    public const BOARD = 'board';
+    public const string BOARD = 'board';
 
     /**
      * Constructor

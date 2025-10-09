@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_MailGateway_CitationStripper
+class Tracker_Artifact_MailGateway_CitationStripper //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const TEXT_CITATION_PATTERN = '/(\n>\s+.*)+/';
-    public const HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
-    public const DEFAULT_REPLACEMENT   = "\n[citation removed]";
+    public const string TEXT_CITATION_PATTERN = '/(\n>\s+.*)+/';
+    public const string HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
+    public const string DEFAULT_REPLACEMENT   = "\n[citation removed]";
 
     private $outlook_header = [
         'en' => [

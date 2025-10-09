@@ -30,7 +30,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 class ImportExternalElement implements Dispatchable
 {
-    public const NAME = 'importExternalElement';
+    public const string NAME = 'importExternalElement';
 
     /**
      * @var SimpleXMLElement

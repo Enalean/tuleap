@@ -70,12 +70,12 @@ use UserManager;
  */
 class ReportsResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT             = 50;
-    public const DEFAULT_LIMIT         = 10;
-    public const DEFAULT_OFFSET        = 0;
-    public const DEFAULT_VALUES        = null;
-    public const ALL_VALUES            = 'all';
-    public const TABLE_RENDERER_VALUES = 'from_table_renderer';
+    public const int MAX_LIMIT                = 50;
+    public const int DEFAULT_LIMIT            = 10;
+    public const int DEFAULT_OFFSET           = 0;
+    public const null DEFAULT_VALUES          = null;
+    public const string ALL_VALUES            = 'all';
+    public const string TABLE_RENDERER_VALUES = 'from_table_renderer';
 
     /** @var ReportArtifactFactory */
     private $report_artifact_factory;

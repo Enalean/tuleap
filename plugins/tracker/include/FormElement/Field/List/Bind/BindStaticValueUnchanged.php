@@ -25,7 +25,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 
 final class BindStaticValueUnchanged extends Tracker_FormElement_Field_List_Bind_StaticValue
 {
-    public const VALUE_ID = -1;
+    public const int VALUE_ID = -1;
 
     public function __construct()
     {

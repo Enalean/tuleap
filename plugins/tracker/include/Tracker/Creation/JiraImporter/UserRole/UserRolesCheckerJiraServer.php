@@ -29,8 +29,8 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 final class UserRolesCheckerJiraServer implements UserRolesCheckerInterface
 {
-    private const PERMISSIONS_KEY  = 'permissions';
-    private const PERMISSION_NAMES = [
+    private const string PERMISSIONS_KEY = 'permissions';
+    private const array PERMISSION_NAMES = [
         'PROJECT_ADMIN',
         'ADMINISTER_PROJECTS',
     ];

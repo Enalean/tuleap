@@ -27,7 +27,7 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerMasschangeProcessExternalActionsEvent implements Dispatchable
 {
-    public const NAME = 'trackerMasschangeProcessExternalActionsEvent';
+    public const string NAME = 'trackerMasschangeProcessExternalActionsEvent';
 
     /**
      * @var Codendi_Request

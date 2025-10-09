@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Artifact\MailGateway;
 
 class MailGatewayConfig
 {
-    public const DISABLED = 'disabled';
-    public const TOKEN    = 'token';
-    public const INSECURE = 'insecure';
+    public const string DISABLED = 'disabled';
+    public const string TOKEN    = 'token';
+    public const string INSECURE = 'insecure';
 
     private string $cache_emailgateway_mode;
 

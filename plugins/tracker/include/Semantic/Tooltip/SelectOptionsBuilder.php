@@ -26,7 +26,7 @@ use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
 
 final class SelectOptionsBuilder
 {
-    private const SEPARATOR = '::';
+    private const string SEPARATOR = '::';
 
     public function __construct(
         private readonly RetrieveFormElementsForTracker $retriever,

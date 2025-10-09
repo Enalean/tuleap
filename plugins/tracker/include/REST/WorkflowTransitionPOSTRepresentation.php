@@ -28,7 +28,7 @@ use Tuleap\REST\JsonCast;
  */
 class WorkflowTransitionPOSTRepresentation
 {
-    public const ROUTE = 'tracker_workflow_transitions';
+    public const string ROUTE = 'tracker_workflow_transitions';
 
     /**
      * @var int ID of the transition {@type int} {@required true}

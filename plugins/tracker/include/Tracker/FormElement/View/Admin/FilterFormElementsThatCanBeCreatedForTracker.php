@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
 
 class FilterFormElementsThatCanBeCreatedForTracker implements Dispatchable
 {
-    public const NAME = 'filterFormElementsThatCanBeCreatedForTracker';
+    public const string NAME = 'filterFormElementsThatCanBeCreatedForTracker';
 
     /**
      * @var array

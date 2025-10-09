@@ -30,7 +30,7 @@ use Tuleap\Tracker\Tracker;
  */
 class MinimalTrackerRepresentation implements TrackerRepresentation
 {
-    public const MINIMAL_REPRESENTATION = 'minimal';
+    public const string MINIMAL_REPRESENTATION = 'minimal';
 
     /**
      * @var int ID of the tracker {@type int} {@required true}

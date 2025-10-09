@@ -30,8 +30,8 @@ use UserHelper;
 
 class BindListUserValueGetter
 {
-    private const WEB_PAYLOAD_UGROUP_PREFIX   = 'ugroup_';
-    private const UGROUP_FOR_REGISTERED_USERS = self::WEB_PAYLOAD_UGROUP_PREFIX . ProjectUGroup::REGISTERED;
+    private const string WEB_PAYLOAD_UGROUP_PREFIX   = 'ugroup_';
+    private const string UGROUP_FOR_REGISTERED_USERS = self::WEB_PAYLOAD_UGROUP_PREFIX . ProjectUGroup::REGISTERED;
 
     public function __construct(
         private BindDefaultValueDao $bind_defaultvalue_dao,

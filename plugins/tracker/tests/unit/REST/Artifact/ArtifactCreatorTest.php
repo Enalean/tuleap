@@ -63,14 +63,14 @@ final class ArtifactCreatorTest extends TestCase
 {
     use GlobalResponseMock;
 
-    private const FORMAT_NOT_BY_FIELD = '';
-    private const FORMAT_BY_FIELD     = 'by_field';
+    private const string FORMAT_NOT_BY_FIELD = '';
+    private const string FORMAT_BY_FIELD     = 'by_field';
 
-    private const ARTIFACT_LINK_FIELD_ID   = 496;
-    private const ARTIFACT_LINK_FIELD_NAME = 'artlink';
+    private const int ARTIFACT_LINK_FIELD_ID      = 496;
+    private const string ARTIFACT_LINK_FIELD_NAME = 'artlink';
 
-    private const STRING_FIELD_ID   = 497;
-    private const STRING_FIELD_NAME = 'stringfield';
+    private const int STRING_FIELD_ID      = 497;
+    private const string STRING_FIELD_NAME = 'stringfield';
 
     /**
      * @param \Closure(VerifySubmissionPermissions $submission_permission_verifier, RetrieveUsedFields $all_fields_retriever, TrackerArtifactCreator $artifact_creator, RetrieveTracker $tracker_factory, array $values): ArtifactReference $create

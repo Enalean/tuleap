@@ -25,7 +25,7 @@ use Tuleap\Layout\JavascriptAssetGeneric;
 
 class GetExportOptionsMenuItemsEvent implements Dispatchable
 {
-    public const NAME = 'getExportOptionsMenuItems';
+    public const string NAME = 'getExportOptionsMenuItems';
     /**
      * @var \Tracker_Report_Renderer_Table
      */

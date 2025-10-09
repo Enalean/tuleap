@@ -25,7 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 final class InComparisonChecker implements ICheckMetadataForAComparison
 {
-    public const OPERATOR = 'in()';
+    public const string OPERATOR = 'in()';
 
     #[\Override]
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)

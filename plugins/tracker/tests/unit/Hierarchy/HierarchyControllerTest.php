@@ -44,7 +44,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 3;
+    private const int TRACKER_ID = 3;
     private Tracker_Hierarchy_HierarchicalTracker $hierarchical_tracker;
     private Tracker_Hierarchy_HierarchicalTrackerFactory&MockObject $factory;
     private HierarchyDAO&MockObject $dao;

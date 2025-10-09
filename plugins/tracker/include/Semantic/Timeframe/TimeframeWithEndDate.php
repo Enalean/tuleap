@@ -28,7 +28,7 @@ use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 
 class TimeframeWithEndDate implements IComputeTimeframes
 {
-    private const NAME = 'timeframe-with-end-date';
+    private const string NAME = 'timeframe-with-end-date';
 
     /**
      * @var \Tuleap\Tracker\FormElement\Field\Date\DateField

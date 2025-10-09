@@ -29,8 +29,8 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DescriptionSemanticDAOTest extends TestIntegrationTestCase
 {
-    private const TRACKER_ID = 60;
-    private const FIELD_ID   = 2404;
+    private const int TRACKER_ID = 60;
+    private const int FIELD_ID   = 2404;
     private DescriptionSemanticDAO $dao;
 
     #[\Override]

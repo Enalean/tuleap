@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class ArtifactUpdated implements Dispatchable
 {
-    public const NAME = 'trackerArtifactUpdated';
+    public const string NAME = 'trackerArtifactUpdated';
 
     /**
      * @psalm-readonly

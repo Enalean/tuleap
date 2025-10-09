@@ -31,9 +31,9 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 
 class TrackerCrumbInContext implements Dispatchable
 {
-    public const NAME = 'trackerCrumbInContext';
+    public const string NAME = 'trackerCrumbInContext';
 
-    public const TRACKER_CRUMB_IDENTIFIER = 'tracker';
+    public const string TRACKER_CRUMB_IDENTIFIER = 'tracker';
 
     /**
      * @var \Tuleap\Tracker\Tracker

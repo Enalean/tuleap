@@ -23,10 +23,10 @@ use Tuleap\Tracker\Tracker;
 /**
  * I am responsible of reading the content of a zip archive to import artifacts history
  */
-class Tracker_Artifact_XMLImport_XMLImportZipArchive
+class Tracker_Artifact_XMLImport_XMLImportZipArchive //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const RESOURCE_NAME          = 'tv5';
-    public const ARTIFACTS_XML_FILENAME = 'artifacts.xml';
+    public const string RESOURCE_NAME          = 'tv5';
+    public const string ARTIFACTS_XML_FILENAME = 'artifacts.xml';
 
     /** @var ZipArchive */
     private $zip;

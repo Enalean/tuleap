@@ -43,11 +43,11 @@ use Workflow_Transition_ConditionFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FirstPossibleValueInListRetrieverTest extends TestCase
 {
-    private const FIRST_VALUE_ID                  = 101;
-    private const SECOND_VALUE_ID                 = 102;
-    private const THIRD_VALUE_ID                  = 103;
-    private const FOURTH_VALUE_ID                 = 104;
-    private const ORIGINAL_FIELD_CHANGED_VALUE_ID = 108;
+    private const int FIRST_VALUE_ID                  = 101;
+    private const int SECOND_VALUE_ID                 = 102;
+    private const int THIRD_VALUE_ID                  = 103;
+    private const int FOURTH_VALUE_ID                 = 104;
+    private const int ORIGINAL_FIELD_CHANGED_VALUE_ID = 108;
 
     private \Tracker_FormElementFactory|Stub $form_element_factory;
     private Stub|Artifact $artifact;

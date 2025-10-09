@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class BeforeEvent implements Dispatchable
 {
-    public const NAME = 'beforeEvent';
+    public const string NAME = 'beforeEvent';
 
     /**
      * @var bool[]

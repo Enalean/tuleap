@@ -32,7 +32,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const STORY_TRACKER_ID = 42;
+    private const int STORY_TRACKER_ID = 42;
 
     private MockObject|SemanticTimeframeDao $dao;
     private MockObject|Tracker_FormElementFactory $form_element_factory;

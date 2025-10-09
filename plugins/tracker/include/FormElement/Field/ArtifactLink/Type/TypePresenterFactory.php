@@ -34,7 +34,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
      * Parameters:
      *  - types: List of existing types
      */
-    public const EVENT_GET_ARTIFACTLINK_TYPES = 'event_get_artifactlink_types';
+    public const string EVENT_GET_ARTIFACTLINK_TYPES = 'event_get_artifactlink_types';
 
     /**
      * Return presenter from type shortname
@@ -42,7 +42,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
      * Parameters:
      *  - type: input type shortname
      */
-    public const EVENT_GET_TYPE_PRESENTER = 'event_get_type_presenter';
+    public const string EVENT_GET_TYPE_PRESENTER = 'event_get_type_presenter';
 
 
     public function __construct(private readonly TypeDao $dao, private readonly ArtifactLinksUsageDao $artifact_links_usage_dao, private readonly RetrieveSystemTypePresenter $retrieve_system_type_presenter)

@@ -34,9 +34,9 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const CHANGESET_ID         = 3338;
-    private const SUBMISSION_TIMESTAMP = 1417430951;
-    private const SUBMITTER_USER_ID    = 156;
+    private const int CHANGESET_ID         = 3338;
+    private const int SUBMISSION_TIMESTAMP = 1417430951;
+    private const int SUBMITTER_USER_ID    = 156;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject & \Tracker_Artifact_Changeset_CommentDao

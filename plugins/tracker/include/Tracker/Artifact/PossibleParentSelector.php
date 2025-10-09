@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 final class PossibleParentSelector implements Dispatchable
 {
-    public const NAME = 'trackerArtifactPossibleParentSelector';
+    public const string NAME = 'trackerArtifactPossibleParentSelector';
 
     /**
      * @readonly

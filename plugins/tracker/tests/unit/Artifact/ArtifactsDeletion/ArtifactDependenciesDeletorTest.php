@@ -35,7 +35,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactDependenciesDeletorTest extends TestCase
 {
-    private const PROJECT_ID = 109;
+    private const int PROJECT_ID = 109;
     private ArtifactDependenciesCleaner $deletor;
     private \Tuleap\Tracker\Tracker|\PHPUnit\Framework\MockObject\Stub $tracker;
     private \Tuleap\Tracker\FormElement\Field\Files\FilesField $file_field;

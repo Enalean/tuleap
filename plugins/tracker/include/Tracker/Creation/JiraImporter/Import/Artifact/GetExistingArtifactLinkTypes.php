@@ -25,7 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 interface GetExistingArtifactLinkTypes
 {
-    public const FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN = '___FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN';
+    public const string FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN = '___FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN';
 
     public function getExistingArtifactLinkTypes(array $json_representation): ?TypePresenter;
 }

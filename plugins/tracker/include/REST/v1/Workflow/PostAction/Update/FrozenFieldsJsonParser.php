@@ -28,7 +28,7 @@ use Workflow;
 
 class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
 {
-    public const POSTACTION_TYPE = 'frozen_fields';
+    public const string POSTACTION_TYPE = 'frozen_fields';
 
     #[\Override]
     public function accept(array $json): bool

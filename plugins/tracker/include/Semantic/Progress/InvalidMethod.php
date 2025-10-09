@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class InvalidMethod implements IComputeProgression
 {
-    private const METHOD_NAME = 'invalid';
+    private const string METHOD_NAME = 'invalid';
 
     /**
      * @var string

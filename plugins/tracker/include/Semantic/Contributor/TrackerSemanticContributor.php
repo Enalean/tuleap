@@ -36,7 +36,7 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticContributor extends TrackerSemantic
 {
-    public const CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
+    public const string CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
 
     /**
      * @var ListField

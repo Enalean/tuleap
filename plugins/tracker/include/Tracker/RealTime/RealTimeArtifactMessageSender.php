@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class RealTimeArtifactMessageSender
 {
-    public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    public const string HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var  NodeJSClient */
     private $node_js_client;

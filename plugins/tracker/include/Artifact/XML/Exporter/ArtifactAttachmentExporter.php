@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactAttachmentExporter
 {
-    public const FILE_PREFIX = 'Artifact';
+    public const string FILE_PREFIX = 'Artifact';
 
     public function __construct(private readonly Tracker_FormElementFactory $form_element_factory)
     {

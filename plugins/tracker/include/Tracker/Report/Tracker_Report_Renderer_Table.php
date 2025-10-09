@@ -51,8 +51,8 @@ use Tuleap\Tracker\Tracker;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable
 {
-    public const EXPORT_LIGHT = 1;
-    public const EXPORT_FULL  = 0;
+    public const int EXPORT_LIGHT = 1;
+    public const int EXPORT_FULL  = 0;
 
     public $chunksz;
     public $multisort;
@@ -882,10 +882,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $columns_sort;
     }
 
-    public const NO_EXTRACOLUMN         = 0;
-    public const EXTRACOLUMN_MASSCHANGE = 1;
-    public const EXTRACOLUMN_LINK       = 2;
-    public const EXTRACOLUMN_UNLINK     = 3;
+    public const int NO_EXTRACOLUMN         = 0;
+    public const int EXTRACOLUMN_MASSCHANGE = 1;
+    public const int EXTRACOLUMN_LINK       = 2;
+    public const int EXTRACOLUMN_UNLINK     = 3;
 
     private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true, $is_type_col = false)
     {

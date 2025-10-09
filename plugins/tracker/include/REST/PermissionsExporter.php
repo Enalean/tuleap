@@ -30,7 +30,7 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class PermissionsExporter
 {
-    public const READ_ONLY_PRESERVED_PERMISSIONS = [
+    public const array READ_ONLY_PRESERVED_PERMISSIONS = [
         TrackerFormElement::REST_PERMISSION_READ,
         TrackerFormElement::REST_PERMISSION_SUBMIT,
     ];

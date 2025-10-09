@@ -29,11 +29,11 @@ use Tuleap\Widget\Event\ConfigureAtXMLImport;
 
 class ProjectRendererWidgetXMLImporter
 {
-    private const RENDERER_PREFERENCE_NAME   = 'renderer';
-    private const RENDERER_ID_REFERENCE_NAME = 'id';
-    private const RENDERER_TITLE_VALUE_NAME  = 'title';
-    private const RENDERER_ID_REQUEST_KEY    = 'renderer_id';
-    private const RENDERER_TITLE_REQUEST_KEY = 'title';
+    private const string RENDERER_PREFERENCE_NAME   = 'renderer';
+    private const string RENDERER_ID_REFERENCE_NAME = 'id';
+    private const string RENDERER_TITLE_VALUE_NAME  = 'title';
+    private const string RENDERER_ID_REQUEST_KEY    = 'renderer_id';
+    private const string RENDERER_TITLE_REQUEST_KEY = 'title';
 
     public function import(ConfigureAtXMLImport $event)
     {

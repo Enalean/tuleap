@@ -26,7 +26,7 @@ use Tuleap\Tracker\Tracker;
 
 class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
 {
-    public const NAME = 'moveArtifactActionAllowedByPluginRetriever';
+    public const string NAME = 'moveArtifactActionAllowedByPluginRetriever';
 
     private Tracker $tracker;
     private string $error                       = '';

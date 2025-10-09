@@ -29,7 +29,7 @@ use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewArtifactLinkInitialChangesetValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID = 675;
+    private const int FIELD_ID = 675;
     private CollectionOfForwardLinks $new_links;
     /** @var Option<NewParentLink> */
     private Option $parent;

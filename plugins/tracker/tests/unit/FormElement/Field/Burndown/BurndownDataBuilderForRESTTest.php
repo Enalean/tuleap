@@ -50,7 +50,7 @@ final class BurndownDataBuilderForRESTTest extends TestCase
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
-    private const FIELD_ID = 10;
+    private const int FIELD_ID = 10;
 
     private string $original_timezone;
     private PFUser $user;

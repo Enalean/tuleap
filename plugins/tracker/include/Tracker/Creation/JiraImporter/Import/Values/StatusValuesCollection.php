@@ -31,7 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedVal
 
 class StatusValuesCollection
 {
-    private const DONE_STATUS_CATEGORY = 'done';
+    private const string DONE_STATUS_CATEGORY = 'done';
 
     /**
      * @var JiraFieldAPIAllowedValueRepresentation[]

@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 final readonly class Metadata implements Searchable, Selectable
 {
-    public const PREFIX = '@';
+    public const string PREFIX = '@';
 
     private string $name;
 

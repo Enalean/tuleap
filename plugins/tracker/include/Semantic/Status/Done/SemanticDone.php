@@ -46,7 +46,7 @@ use XML_SimpleXMLCDATAFactory;
 
 class SemanticDone extends TrackerSemantic
 {
-    public const NAME = 'done';
+    public const string NAME = 'done';
 
     /**
      * @var TrackerSemanticStatus

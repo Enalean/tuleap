@@ -34,7 +34,7 @@ use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 
 class PermissionsOnFieldsUpdateController implements DispatchableWithRequest
 {
-    public const URL = '/permissions/fields';
+    public const string URL = '/permissions/fields';
 
     /**
      * @var \TrackerFactory

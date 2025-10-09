@@ -32,7 +32,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const SUBMISSION_TIMESTAMP = 1908282639;
+    private const int SUBMISSION_TIMESTAMP = 1908282639;
     private Artifact $artifact;
     private \PFUser $submitter;
     private array $fields_data;

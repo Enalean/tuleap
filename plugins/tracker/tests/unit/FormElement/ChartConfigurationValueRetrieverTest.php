@@ -40,7 +40,7 @@ use Tuleap\Tracker\Tracker;
 #[DisableReturnValueGenerationForTestDoubles]
 final class ChartConfigurationValueRetrieverTest extends TestCase
 {
-    private const CAPACITY = 20;
+    private const int CAPACITY = 20;
 
     private ChartConfigurationFieldRetriever&MockObject $field_retriever;
     private Tracker $tracker;

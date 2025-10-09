@@ -21,13 +21,13 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_DateReminder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_DateReminder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const BEFORE = 0;
-    public const AFTER  = 1;
+    public const int BEFORE = 0;
+    public const int AFTER  = 1;
 
-    public const DISABLED = 0;
-    public const ENABLED  = 1;
+    public const int DISABLED = 0;
+    public const int ENABLED  = 1;
 
     protected $reminderId;
     protected $trackerId;

@@ -40,7 +40,7 @@ final class ListFieldCheckerWithBindStaticTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
 
-    private const FIELD_NAME = 'a_field';
+    private const string FIELD_NAME = 'a_field';
     private Comparison $comparison;
 
     /**

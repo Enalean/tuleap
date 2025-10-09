@@ -26,7 +26,7 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionRepresentation;
 
 class PostActionVisitExternalActionsEvent implements Dispatchable
 {
-    public const NAME = 'postActionVisitExternalActionsEvent';
+    public const string NAME = 'postActionVisitExternalActionsEvent';
 
     /**
      * @var Transition_PostAction

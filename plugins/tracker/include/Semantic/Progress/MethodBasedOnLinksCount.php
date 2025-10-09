@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class MethodBasedOnLinksCount implements IComputeProgression
 {
-    private const METHOD_NAME = 'artifacts-links-count-based';
+    private const string METHOD_NAME = 'artifacts-links-count-based';
 
     /**
      * @var SemanticProgressDao

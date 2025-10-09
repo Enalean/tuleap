@@ -38,11 +38,11 @@ use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const COMMENT_BODY         = 'roisteringly reconvalescent';
-    private const SUBMISSION_TIMESTAMP = 1411230972; // 2014-09-20T18:36:12
-    private const NEW_CHANGESET_ID     = 6901;
-    private const ARTIFACT_ID          = 84;
-    private const USER_ID              = 102;
+    private const string COMMENT_BODY      = 'roisteringly reconvalescent';
+    private const int SUBMISSION_TIMESTAMP = 1411230972; // 2014-09-20T18:36:12
+    private const int NEW_CHANGESET_ID     = 6901;
+    private const int ARTIFACT_ID          = 84;
+    private const int USER_ID              = 102;
 
     private CreateNewChangesetStub $inner_creator;
 

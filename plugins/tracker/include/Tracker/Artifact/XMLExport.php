@@ -28,7 +28,7 @@ use Tuleap\Tracker\Tracker;
 
 class Tracker_Artifact_XMLExport
 {
-    public const THRESHOLD = 9000;
+    public const int THRESHOLD = 9000;
 
     /**
      * @var Tracker_ArtifactFactory

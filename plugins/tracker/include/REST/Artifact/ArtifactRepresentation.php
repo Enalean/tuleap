@@ -36,7 +36,7 @@ use Tuleap\User\RetrieveUserById;
  */
 class ArtifactRepresentation
 {
-    public const ROUTE = 'artifacts';
+    public const string ROUTE = 'artifacts';
 
     /**
      * @var int ID of the artifact {@type int} {@required true}

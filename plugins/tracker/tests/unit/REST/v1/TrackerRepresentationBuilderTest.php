@@ -41,9 +41,9 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRepresentationBuilderTest extends TestCase
 {
-    private const PROJECT_ID        = 205;
-    private const FIRST_TRACKER_ID  = 1;
-    private const SECOND_TRACKER_ID = 2;
+    private const int PROJECT_ID        = 205;
+    private const int FIRST_TRACKER_ID  = 1;
+    private const int SECOND_TRACKER_ID = 2;
 
     private CollectionOfCreationSemanticToCheck $semantics_to_check;
     /**

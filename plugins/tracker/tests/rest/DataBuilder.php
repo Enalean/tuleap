@@ -28,13 +28,13 @@ require_once __DIR__ . '/TrackerBase.php';
 
 class DataBuilder extends RESTTestDataBuilder
 {
-    public const USER_TESTER_NAME                   = 'rest_api_tracker_admin_1';
-    public const MY_ARTIFACTS_USER_NAME             = 'rest_my_artifacts';
-    public const PRIVATE_COMMENT_PROJECT_ADMIN_NAME = 'rest_private_comment_admin';
-    public const PRIVATE_COMMENT_MEMBER_NAME        = 'rest_private_comment_member';
-    public const PRIVATE_COMMENT_TRACKER_ADMIN_NAME = 'rest_private_comment_tracker_admin';
-    public const PRIVATE_COMMENT_JOHN_SNOW_NAME     = 'rest_private_comment_john_snow';
-    public const PRIVATE_COMMENT_DAENERYS_NAME      = 'rest_private_comment_daenerys';
+    public const string USER_TESTER_NAME                   = 'rest_api_tracker_admin_1';
+    public const string MY_ARTIFACTS_USER_NAME             = 'rest_my_artifacts';
+    public const string PRIVATE_COMMENT_PROJECT_ADMIN_NAME = 'rest_private_comment_admin';
+    public const string PRIVATE_COMMENT_MEMBER_NAME        = 'rest_private_comment_member';
+    public const string PRIVATE_COMMENT_TRACKER_ADMIN_NAME = 'rest_private_comment_tracker_admin';
+    public const string PRIVATE_COMMENT_JOHN_SNOW_NAME     = 'rest_private_comment_john_snow';
+    public const string PRIVATE_COMMENT_DAENERYS_NAME      = 'rest_private_comment_daenerys';
 
     /**
      * @var ArtifactsDeletionConfigDAO

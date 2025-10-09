@@ -37362,19 +37362,10 @@
       <code><![CDATA[TrackerArtifactView]]></code>
     </InvalidFalsableReturnType>
   </file>
-  <file src="plugins/tracker/include/Artifact/View/ArtifactViewEdit.php">
-    <MissingClassConstType>
-      <code><![CDATA[USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes']]></code>
-      <code><![CDATA[USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Artifact/XML/Exporter/ArtifactAttachmentExporter.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$value]]></code>
     </ArgumentTypeCoercion>
-    <MissingClassConstType>
-      <code><![CDATA[FILE_PREFIX = 'Artifact']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Artifact/XML/Exporter/ArtifactXMLExporter.php">
     <InvalidScalarArgument>
@@ -37489,20 +37480,7 @@
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValue/GetExternalExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExternalExporter']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetValuesXMLExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[ARTIFACT_KEY      = 'artifact']]></code>
-      <code><![CDATA[ARTIFACT_XML_KEY  = 'artifact_xml']]></code>
-      <code><![CDATA[CHANGESET_XML_KEY = 'changeset_xml']]></code>
-      <code><![CDATA[EXPORT_CHANGES    = false]]></code>
-      <code><![CDATA[EXPORT_MODE_KEY   = 'export_mode']]></code>
-      <code><![CDATA[EXPORT_SNAPSHOT   = true]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$export_mode]]></code>
       <code><![CDATA[$export_mode]]></code>
@@ -37512,9 +37490,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Artifact/XML/Exporter/ChangesetXMLExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[PREFIX = 'CHANGESET_']]></code>
-    </MissingClassConstType>
     <PossiblyNullArgument>
       <code><![CDATA[$changeset_xml]]></code>
       <code><![CDATA[$comments_node]]></code>
@@ -37586,9 +37561,6 @@
     <InvalidReturnType>
       <code><![CDATA[pop]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[MAX = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$parent_id]]></code>
@@ -37599,16 +37571,6 @@
       <code><![CDATA[getAllParents]]></code>
       <code><![CDATA[getChildrenForParent]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Artifact/XML/Exporter/TrackerEventExportFullXML.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerEventExportFullXML']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/CreateTrackerFromXMLEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'createTrackerFromXMLEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/FormElement/Container/Column/ColumnContainer.php">
     <MissingParamType>
@@ -37712,15 +37674,7 @@
       <code><![CDATA[hasBeenDisplayed]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/FormElement/Event/ImportExternalElement.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'importExternalElement']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/FormElement/Event/MessageFetcherAdditionalWarnings.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getMessageFetcherAdditionalWarnings']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[setWarnings]]></code>
     </MissingReturnType>
@@ -37893,9 +37847,6 @@
     </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ArtifactLinkValueSaver.php">
-    <MissingClassConstType>
-      <code><![CDATA[TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED = 'tracker_event_artifact_link_type_requested']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$existing_type]]></code>
       <code><![CDATA[$existing_type]]></code>
@@ -37946,11 +37897,6 @@
       <code><![CDATA[groupPerTypeWithPresenter]]></code>
       <code><![CDATA[hasArtifactLinksToDisplay]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/DisplayArtifactLinkEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'displayArtifactLinkEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/FieldDataBuilder.php">
     <MissingParamType>
@@ -38202,10 +38148,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypePresenterFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[EVENT_GET_ARTIFACTLINK_TYPES = 'event_get_artifactlink_types']]></code>
-      <code><![CDATA[EVENT_GET_TYPE_PRESENTER = 'event_get_type_presenter']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$row]]></code>
     </MissingParamType>
@@ -38226,9 +38168,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeTablePresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[TABLE_ID_PREFIX = 'tracker_report_table_type_']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$type]]></code>
     </MissingParamType>
@@ -38260,9 +38199,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/Type/TypeValidator.php">
-    <MissingClassConstType>
-      <code><![CDATA[SHORTNAME_PATTERN = '[a-zA-Z][a-zA-Z_]*']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$forward_label]]></code>
       <code><![CDATA[$reverse_label]]></code>
@@ -38275,11 +38211,6 @@
       <code><![CDATA[checkReverseLabel]]></code>
       <code><![CDATA[checkShortname]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/FormElement/Field/ArtifactLink/ValidateArtifactLinkValueEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'validateArtifactLinkValueEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/Burndown/BurndownCacheGenerationChecker.php">
     <MissingParamType>
@@ -38609,10 +38540,6 @@
     </NullableReturnStatement>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/Date/CSVFormatter.php">
-    <MissingClassConstType>
-      <code><![CDATA[DAY_MONTH_YEAR = 'day_month_year']]></code>
-      <code><![CDATA[MONTH_DAY_YEAR = 'month_day_year']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$is_time_shown]]></code>
       <code><![CDATA[$user_preferred_date_format]]></code>
@@ -39001,11 +38928,6 @@
       <code><![CDATA[! $row]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/FormElement/Field/Files/FileURLSubstitutor.php">
-    <MissingClassConstType>
-      <code><![CDATA[LIBXML_HTML_NODEFDTD = 4]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/FormElement/Field/Files/FilesField.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
@@ -39100,11 +39022,6 @@
       <code><![CDATA[getFiles]]></code>
       <code><![CDATA[getFiles]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/FormElement/Field/Files/IdForXMLImportExportConvertor.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID_PREFIX = 'fileinfo_']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/Files/Upload/FileOngoingUploadDao.php">
     <UndefinedVariable>
@@ -39426,10 +39343,6 @@
       <code><![CDATA[getDa]]></code>
       <code><![CDATA[retrieve]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[UGROUP_FOR_REGISTERED_USERS = self::WEB_PAYLOAD_UGROUP_PREFIX . ProjectUGroup::REGISTERED]]></code>
-      <code><![CDATA[WEB_PAYLOAD_UGROUP_PREFIX   = 'ugroup_']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$ugroup_name]]></code>
     </MissingParamType>
@@ -39536,10 +39449,6 @@
       <code><![CDATA[updateAndGetLastId]]></code>
       <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[COPY_BY_REFERENCE = true]]></code>
-      <code><![CDATA[COPY_BY_VALUE     = false]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$by_reference]]></code>
       <code><![CDATA[$changeset_id]]></code>
@@ -40521,9 +40430,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'SystemEvent_BURNDOWN_DAILY']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[injectDependencies]]></code>
       <code><![CDATA[process]]></code>
@@ -40533,9 +40439,6 @@
     </PossiblyFalseIterator>
   </file>
   <file src="plugins/tracker/include/FormElement/SystemEvent/SystemEvent_BURNDOWN_GENERATE.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'SystemEvent_BURNDOWN_GENERATE']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getArtifactIdFromParameters]]></code>
       <code><![CDATA[injectDependencies]]></code>
@@ -40815,11 +40718,6 @@
       <code><![CDATA[getArtifact]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/REST/Artifact/ArtifactRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'artifacts']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactRepresentationBuilder.php">
     <MissingParamType>
       <code><![CDATA[$direction]]></code>
@@ -40864,9 +40762,6 @@
       <code><![CDATA[public $points = [];]]></code>
       <code><![CDATA[public $points_with_date = [];]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'burndown']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$opening_days]]></code>
       <code><![CDATA[$points]]></code>
@@ -40902,9 +40797,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/UsersArtifactsResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 250]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[options]]></code>
       <code><![CDATA[sendGetArtifactsAllowHeaders]]></code>
@@ -40922,10 +40814,6 @@
     <InvalidOperand>
       <code><![CDATA[$this->id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[FULL_REPRESENTATION = 'full']]></code>
-      <code><![CDATA[ROUTE = 'trackers']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$fields]]></code>
       <code><![CDATA[$structure]]></code>
@@ -40989,15 +40877,6 @@
     <InvalidDocblock>
       <code><![CDATA[public $permissions = [];]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[BIND_ID    = 'id']]></code>
-      <code><![CDATA[BIND_LABEL = 'label']]></code>
-      <code><![CDATA[BIND_LIST = 'list']]></code>
-      <code><![CDATA[BIND_TYPE = 'type']]></code>
-      <code><![CDATA[PERM_CREATE = 'create']]></code>
-      <code><![CDATA[PERM_READ   = 'read']]></code>
-      <code><![CDATA[PERM_UPDATE = 'update']]></code>
-    </MissingClassConstType>
     <MissingClosureParamType>
       <code><![CDATA[$binding]]></code>
     </MissingClosureParamType>
@@ -41013,19 +40892,6 @@
       <code><![CDATA[is_array($this->ids)]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/tracker/include/REST/MinimalTrackerRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[MINIMAL_REPRESENTATION = 'minimal']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/REST/PermissionsExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[READ_ONLY_PRESERVED_PERMISSIONS = [
-        TrackerFormElement::REST_PERMISSION_READ,
-        TrackerFormElement::REST_PERMISSION_SUBMIT,
-    ]]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/REST/ReportRepresentation.php">
     <ImpureMethodCall>
       <code><![CDATA[getName]]></code>
@@ -41033,9 +40899,6 @@
     <InvalidOperand>
       <code><![CDATA[$this->id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'tracker_reports']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/REST/ResourcesInjector.php">
     <MissingReturnType>
@@ -41119,9 +40982,6 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getId]]></code>
     </ImpureMethodCall>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'tracker_workflow_transitions']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/REST/WorkflowTransitionRepresentation.php">
     <MissingParamType>
@@ -41134,9 +40994,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactFilesResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_LIMIT = 1048576]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$limit]]></code>
@@ -41166,12 +41023,6 @@
     <InvalidDocblock>
       <code><![CDATA[protected function get($limit = self::PAGINATION_DEFAULT_LIMIT, $offset = self::PAGINATION_DEFAULT_OFFSET)]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_LIMIT = 1048576]]></code>
-      <code><![CDATA[PAGINATION_DEFAULT_LIMIT  = 10]]></code>
-      <code><![CDATA[PAGINATION_DEFAULT_OFFSET = 0]]></code>
-      <code><![CDATA[PAGINATION_MAX_LIMIT      = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -41215,22 +41066,6 @@
     <InvalidParamDefault>
       <code><![CDATA[string]]></code>
     </InvalidParamDefault>
-    <MissingClassConstType>
-      <code><![CDATA[COMPLETE_TRACKER_STRUCTURE = 'complete']]></code>
-      <code><![CDATA[DEFAULT_LIMIT      = 10]]></code>
-      <code><![CDATA[DEFAULT_OFFSET     = 0]]></code>
-      <code><![CDATA[DEFAULT_TRACKER_STRUCTURE  = self::MINIMAL_TRACKER_STRUCTURE]]></code>
-      <code><![CDATA[EMPTY_TYPE = '']]></code>
-      <code><![CDATA[MAX_ARTIFACT_BATCH = 100]]></code>
-      <code><![CDATA[MAX_LIMIT          = 50]]></code>
-      <code><![CDATA[MINIMAL_TRACKER_STRUCTURE  = 'minimal']]></code>
-      <code><![CDATA[ORDER_ASC          = 'asc']]></code>
-      <code><![CDATA[ORDER_DESC         = 'desc']]></code>
-      <code><![CDATA[VALUES_DEFAULT           = null]]></code>
-      <code><![CDATA[VALUES_FORMAT_ALL        = 'all']]></code>
-      <code><![CDATA[VALUES_FORMAT_BY_FIELD   = 'by_field']]></code>
-      <code><![CDATA[VALUES_FORMAT_COLLECTION = 'collection']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$from_artifact]]></code>
       <code><![CDATA[$tracker_id]]></code>
@@ -41267,15 +41102,7 @@
       <code><![CDATA[getArtifactId]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/REST/v1/Event/GetExternalPostActionJsonParserEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExternalPostActionJsonParserEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/REST/v1/Event/GetTrackersWithCriteria.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getTrackersWithCriteria']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$offset]]></code>
@@ -41285,11 +41112,6 @@
       <code><![CDATA[addTrackersWithCriteria]]></code>
       <code><![CDATA[setTotalTrackers]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/REST/v1/Event/PostActionVisitExternalActionsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'postActionVisitExternalActionsEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/REST/v1/GetTrackersQueryChecker.php">
     <MissingParamType>
@@ -41314,9 +41136,6 @@
     <InvalidDocblock>
       <code><![CDATA[public function getTrackers(int $id, string $representation = CompleteTrackerRepresentation::FULL_REPRESENTATION, int $limit = 10, int $offset = 0, string $query = '', array $with_creation_semantic_check = [])]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$json_query]]></code>
       <code><![CDATA[$limit]]></code>
@@ -41331,14 +41150,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/v1/ReportsResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[ALL_VALUES            = 'all']]></code>
-      <code><![CDATA[DEFAULT_LIMIT         = 10]]></code>
-      <code><![CDATA[DEFAULT_OFFSET        = 0]]></code>
-      <code><![CDATA[DEFAULT_VALUES        = null]]></code>
-      <code><![CDATA[MAX_LIMIT             = 50]]></code>
-      <code><![CDATA[TABLE_RENDERER_VALUES = 'from_table_renderer']]></code>
-    </MissingClassConstType>
     <MissingClosureReturnType>
       <code><![CDATA[function (?Artifact $artifact) use (]]></code>
     </MissingClosureReturnType>
@@ -41367,9 +41178,6 @@
     <InvalidArgument>
       <code><![CDATA[$id]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'tracker_fields']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[optionsId]]></code>
     </MissingReturnType>
@@ -41400,17 +41208,6 @@
     <InvalidParamDefault>
       <code><![CDATA[string]]></code>
     </InvalidParamDefault>
-    <MissingClassConstType>
-      <code><![CDATA[ALL_VALUES           = 'all']]></code>
-      <code><![CDATA[DEFAULT_CRITERIA     = '']]></code>
-      <code><![CDATA[DEFAULT_EXPERT_QUERY = '']]></code>
-      <code><![CDATA[DEFAULT_LIMIT        = 100]]></code>
-      <code><![CDATA[DEFAULT_OFFSET       = 0]]></code>
-      <code><![CDATA[DEFAULT_VALUES       = null]]></code>
-      <code><![CDATA[MAX_LIMIT            = 1000]]></code>
-      <code><![CDATA[ORDER_ASC            = 'asc']]></code>
-      <code><![CDATA[ORDER_DESC           = 'desc']]></code>
-    </MissingClassConstType>
     <MissingClosureReturnType>
       <code><![CDATA[function (?Artifact $artifact) use (]]></code>
     </MissingClosureReturnType>
@@ -41460,11 +41257,6 @@
       <code><![CDATA[replicatePerState]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/REST/v1/Workflow/PostAction/CheckPostActionsForTracker.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'checkPostActionsForTracker']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/REST/v1/Workflow/PostAction/FrozenFieldsRepresentation.php">
     <PossiblyNullArgument>
       <code><![CDATA[JsonCast::toArrayOfInts($field_ids)]]></code>
@@ -41505,17 +41297,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/REST/v1/Workflow/PostAction/SetFieldValueRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[CURRENT_DATE_VALUE = 'current']]></code>
-      <code><![CDATA[DATE_VALUE_MAPPING = [
-        0 => self::UNSET_DATE_VALUE,
-        Transition_PostAction_Field_Date::CLEAR_DATE => self::EMPTY_DATE_VALUE,
-        Transition_PostAction_Field_Date::FILL_CURRENT_TIME => self::CURRENT_DATE_VALUE,
-    ]]]></code>
-      <code><![CDATA[EMPTY_DATE_VALUE   = '']]></code>
-      <code><![CDATA[TYPE = 'set_field_value']]></code>
-      <code><![CDATA[UNSET_DATE_VALUE   = null]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_type]]></code>
@@ -41532,16 +41313,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$value]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/REST/v1/Workflow/PostAction/Update/FrozenFieldsJsonParser.php">
-    <MissingClassConstType>
-      <code><![CDATA[POSTACTION_TYPE = 'frozen_fields']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/REST/v1/Workflow/PostAction/Update/HiddenFieldsetsJsonParser.php">
-    <MissingClassConstType>
-      <code><![CDATA[POSTACTION_TYPE = 'hidden_fieldsets']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/REST/v1/Workflow/PostAction/Update/PostActionCollectionJsonParser.php">
     <PossiblyFalseArgument>
@@ -41610,9 +41381,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$field]]></code>
     </ArgumentTypeCoercion>
-    <MissingClassConstType>
-      <code><![CDATA[CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[clearInstances]]></code>
       <code><![CDATA[delete]]></code>
@@ -41678,9 +41446,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Semantic/Description/TrackerSemanticDescription.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'description']]></code>
-    </MissingClassConstType>
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
     </PossiblyFalseArgument>
@@ -41698,23 +41463,10 @@
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
     </PossiblyNullArrayAccess>
   </file>
-  <file src="plugins/tracker/include/Semantic/Progress/Events/GetSemanticProgressUsageEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getSemanticProgressUsageEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Semantic/Progress/InvalidMethod.php">
-    <MissingClassConstType>
-      <code><![CDATA[METHOD_NAME = 'invalid']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Semantic/Progress/MethodBasedOnEffort.php">
     <InvalidOperand>
       <code><![CDATA[1 - ($remaining_effort / $total_effort)]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[METHOD_NAME = 'effort-based']]></code>
-    </MissingClassConstType>
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
@@ -41730,28 +41482,12 @@
     <DeprecatedMethod>
       <code><![CDATA[getAnArtifactLinkField]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[METHOD_NAME = 'artifacts-links-count-based']]></code>
-    </MissingClassConstType>
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Semantic/Progress/MethodNotConfigured.php">
-    <MissingClassConstType>
-      <code><![CDATA[METHOD_NAME = 'not-configured']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Semantic/Progress/SemanticProgress.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'progress']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Semantic/Status/Done/SemanticDone.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'done']]></code>
-    </MissingClassConstType>
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
@@ -41768,11 +41504,6 @@
       <code><![CDATA[! $xml_semantic_status]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/Semantic/Status/Done/SemanticDoneUsedExternalServiceEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'semanticDoneUsedExternalServiceEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Semantic/Status/Done/XML/XMLDoneSemantic.php">
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
@@ -41788,11 +41519,6 @@
     </InvalidFalsableReturnType>
   </file>
   <file src="plugins/tracker/include/Semantic/Status/TrackerSemanticStatus.php">
-    <MissingClassConstType>
-      <code><![CDATA[CLOSED = 'Closed']]></code>
-      <code><![CDATA[NAME   = 'status']]></code>
-      <code><![CDATA[OPEN   = 'Open']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$label]]></code>
       <code><![CDATA[$value]]></code>
@@ -41849,20 +41575,7 @@
       <code><![CDATA[! $semantics_implied_from_tracker]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/Semantic/Timeframe/Events/DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Semantic/Timeframe/Events/GetSemanticTimeframeUsageEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getSemanticTimeframeUsageEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Semantic/Timeframe/SemanticTimeframe.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timeframe']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[redirectToSemanticTimeframeAdmin]]></code>
     </MissingReturnType>
@@ -41872,11 +41585,6 @@
       <code><![CDATA[(int) $row['duration_field_id']]]></code>
       <code><![CDATA[(int) $row['end_date_field_id']]]></code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/tracker/include/Semantic/Timeframe/SemanticTimeframeDao.php">
-    <MissingClassConstType>
-      <code><![CDATA[SQL_TRUE_VALUE = 1]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Semantic/Timeframe/SemanticTimeframeFromXMLBuilder.php">
     <PossiblyNullArrayAccess>
@@ -41901,29 +41609,13 @@
       <code><![CDATA[! $start_date_field_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/Semantic/Timeframe/TimeframeConfigInvalid.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timeframe-config-invalid']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Semantic/Timeframe/TimeframeImpliedFromAnotherTracker.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timeframe-implied-from-another-tracker']]></code>
-    </MissingClassConstType>
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Semantic/Timeframe/TimeframeNotConfigured.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timeframe-not-configured']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Semantic/Timeframe/TimeframeWithDuration.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timeframe-with-duration']]></code>
-    </MissingClassConstType>
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
@@ -41936,9 +41628,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Semantic/Timeframe/TimeframeWithEndDate.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timeframe-with-end-date']]></code>
-    </MissingClassConstType>
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addAttribute]]></code>
@@ -41957,9 +41646,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Semantic/Title/TrackerSemanticTitle.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'title']]></code>
-    </MissingClassConstType>
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
     </PossiblyFalseArgument>
@@ -41992,9 +41678,6 @@
     <InvalidReturnType>
       <code><![CDATA[bool]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'tooltip']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$fields]]></code>
     </MissingParamType>
@@ -42078,10 +41761,6 @@
     </MissingTemplateParam>
   </file>
   <file src="plugins/tracker/include/Semantic/TrackerSemanticFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS = 'tracker_event_get_semantic_duplicators']]></code>
-      <code><![CDATA[TRACKER_EVENT_SEMANTIC_FROM_XML = 'tracker_event_semantic_from_xml']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$type]]></code>
     </MissingParamType>
@@ -42093,10 +41772,6 @@
     </PossiblyNullArrayAccess>
   </file>
   <file src="plugins/tracker/include/Semantic/TrackerSemanticManager.php">
-    <MissingClassConstType>
-      <code><![CDATA[TRACKER_EVENT_GET_SEMANTICS_NAMES = 'tracker_event_get_semantics_names']]></code>
-      <code><![CDATA[TRACKER_EVENT_MANAGE_SEMANTICS = 'tracker_event_manage_semantics']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$current_user]]></code>
       <code><![CDATA[$current_user]]></code>
@@ -42130,9 +41805,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/ServiceTracker.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'tracker']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$breadcrumbs]]></code>
       <code><![CDATA[$project]]></code>
@@ -42200,34 +41872,6 @@
       <code><![CDATA[int]]></code>
       <code><![CDATA[void]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[GLOBAL_ADMIN_URL = 'global-admin']]></code>
-      <code><![CDATA[MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY = 6]]></code>
-      <code><![CDATA[MAX_TRACKER_SHORTNAME_LENGTH = 25]]></code>
-      <code><![CDATA[NOTIFICATIONS_LEVEL_DEFAULT       = 0]]></code>
-      <code><![CDATA[NOTIFICATIONS_LEVEL_DEFAULT_LABEL       = 'notifications_level_default']]></code>
-      <code><![CDATA[NOTIFICATIONS_LEVEL_DISABLED      = 1]]></code>
-      <code><![CDATA[NOTIFICATIONS_LEVEL_DISABLED_LABEL      = 'notifications_level_disabled']]></code>
-      <code><![CDATA[NOTIFICATIONS_LEVEL_STATUS_CHANGE = 2]]></code>
-      <code><![CDATA[NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL = 'notifications_level_status_change']]></code>
-      <code><![CDATA[NO_PARENT                   = null]]></code>
-      <code><![CDATA[PERMISSION_ADMIN          = 'PLUGIN_TRACKER_ADMIN']]></code>
-      <code><![CDATA[PERMISSION_ASSIGNEE       = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE']]></code>
-      <code><![CDATA[PERMISSION_FULL           = 'PLUGIN_TRACKER_ACCESS_FULL']]></code>
-      <code><![CDATA[PERMISSION_NONE           = 'PLUGIN_TRACKER_NONE']]></code>
-      <code><![CDATA[PERMISSION_SUBMITTER      = 'PLUGIN_TRACKER_ACCESS_SUBMITTER']]></code>
-      <code><![CDATA[PERMISSION_SUBMITTER_ONLY = 'PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY']]></code>
-      <code><![CDATA[PROMOTED_ITEM_PREFIX              = 'tracker-']]></code>
-      <code><![CDATA[REMAINING_EFFORT_FIELD_NAME = 'remaining_effort']]></code>
-      <code><![CDATA[TRACKER_ACTION_NAME_FORM_ELEMENT_DELETE      = 'admin-formElement-delete']]></code>
-      <code><![CDATA[TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE      = 'admin-formElement-remove']]></code>
-      <code><![CDATA[TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE      = 'admin-formElement-update']]></code>
-      <code><![CDATA[TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW = 'admin-formElement-update-view']]></code>
-      <code><![CDATA[TRACKER_EVENT_FETCH_ADMIN_BUTTONS = 'tracker_event_fetch_admin_buttons']]></code>
-      <code><![CDATA[TRACKER_USAGE = 'tracker_usage']]></code>
-      <code><![CDATA[TYPE_FIELD_NAME             = 'type']]></code>
-      <code><![CDATA[XML_ID_PREFIX = 'T']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$allow_copy]]></code>
       <code><![CDATA[$breadcrumbs]]></code>
@@ -42399,11 +42043,6 @@
       <code><![CDATA[getFieldDataFromCSVValue]]></code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/Action/AfterArtifactCopiedEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'afterArtifactCopiedEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Action/CopyArtifact.php">
     <DeprecatedMethod>
       <code><![CDATA[createNewChangesetWithoutRequiredValidation]]></code>
@@ -42473,9 +42112,6 @@
     </UndefinedClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Admin/ArtifactsDeletion/ArtifactsDeletionConfigDAO.php">
-    <MissingClassConstType>
-      <code><![CDATA[CONFIG_NAME = 'artifacts_deletion_limit']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$new_artifacts_limit]]></code>
     </MissingParamType>
@@ -42490,16 +42126,6 @@
       <code><![CDATA[$is_archiving_enabled]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Admin/DisplayingTrackerEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'displayingTrackerEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Admin/GlobalAdmin/ArtifactLinks/ArtifactLinksController.php">
-    <MissingClassConstType>
-      <code><![CDATA[URL = 'artifact-links']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Admin/GlobalAdmin/GlobalAdminPermissionsChecker.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
@@ -42513,10 +42139,6 @@
     <InvalidReturnType>
       <code><![CDATA[process]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_HISTORY_ENTRY = 'tracker_promotion']]></code>
-      <code><![CDATA[URL = 'promote-trackers']]></code>
-    </MissingClassConstType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
       <code><![CDATA[$project->getID()]]></code>
@@ -42536,11 +42158,6 @@
     <MissingReturnType>
       <code><![CDATA[defineActiveTabBasedOnItem]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/AdditionalArtifactActionButtonsFetcher.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'additionalArtifactActionButtonsFetcher']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/AdditionalArtifactActionButtonsPresenterBuilder.php">
     <MissingReturnType>
@@ -42612,11 +42229,6 @@
       <code><![CDATA[$artifact_original_email_button_presenter]]></code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/MoveArtifactActionAllowedByPluginRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'moveArtifactActionAllowedByPluginRetriever']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Artifact.php">
     <DeprecatedFunction>
       <code><![CDATA[db_fetch_array($res)]]></code>
@@ -42653,14 +42265,6 @@
     <LessSpecificReturnStatement>
       <code><![CDATA[TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')]]></code>
     </LessSpecificReturnStatement>
-    <MissingClassConstType>
-      <code><![CDATA[NO_PARENT         = -1]]></code>
-      <code><![CDATA[PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS']]></code>
-      <code><![CDATA[REFERENCE_NATURE  = 'plugin_tracker_artifact']]></code>
-      <code><![CDATA[REST_ROUTE        = 'artifacts']]></code>
-      <code><![CDATA[STATUS_CLOSED     = 'closed']]></code>
-      <code><![CDATA[STATUS_OPEN       = 'open']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$comment]]></code>
       <code><![CDATA[$fields_data]]></code>
@@ -42808,9 +42412,6 @@
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[startTransaction]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_HISTORY_ARTIFACT_DELETED = 'tracker_artifact_delete']]></code>
-    </MissingClassConstType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$artifact->getTracker()->getGroupId()]]></code>
     </PossiblyInvalidArgument>
@@ -42833,11 +42434,6 @@
     <MissingReturnType>
       <code><![CDATA[deleteOutdatedArtifactsDeletions]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ArtifactsDeletion/AsynchronousArtifactsDeletionActionsRunner.php">
-    <MissingClassConstType>
-      <code><![CDATA[TOPIC = 'tuleap.tracker.artifact.deletion']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ArtifactsDeletion/PendingArtifactRemovalDao.php">
     <MissingParamType>
@@ -42973,9 +42569,6 @@
     <DeprecatedMethod>
       <code><![CDATA[foundRows]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[TEMP_FILE_PREFIX = 'rest_attachement_temp_']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$attachment_name]]></code>
       <code><![CDATA[$attachment_name]]></code>
@@ -43037,11 +42630,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $changeset_import_data]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/Comment/ChangesetCommentIndexer.php">
-    <MissingClassConstType>
-      <code><![CDATA[INDEX_TYPE_CHANGESET_COMMENT = 'plugin_artifact_changeset_comment']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/Comment/PrivateComment/XMLImport/TrackerPrivateCommentUGroupExtractor.php">
     <TypeDoesNotContainType>
@@ -43250,16 +42838,6 @@
       <code><![CDATA[EasyStatement::open()->in('linked_art.id NOT IN (?*)', $excluded_ids)]]></code>
     </ImplicitToStringCast>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Event/ArtifactsReordered.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerArtifactsReordered']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Event/ExternalStrategiesGetter.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExternalStrategies']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Exception/CannotCreateChangeset.php">
     <MissingParamType>
       <code><![CDATA[$message]]></code>
@@ -43281,11 +42859,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/CitationStripper.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_REPLACEMENT   = "\n[citation removed]"]]></code>
-      <code><![CDATA[HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%']]></code>
-      <code><![CDATA[TEXT_CITATION_PATTERN = '/(\n>\s+.*)+/']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$body]]></code>
       <code><![CDATA[$body]]></code>
@@ -43390,11 +42963,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/MailGatewayConfig.php">
-    <MissingClassConstType>
-      <code><![CDATA[DISABLED = 'disabled']]></code>
-      <code><![CDATA[INSECURE = 'insecure']]></code>
-      <code><![CDATA[TOKEN    = 'token']]></code>
-    </MissingClassConstType>
     <RedundantPropertyInitializationCheck>
       <code><![CDATA[isset($this->cache_emailgateway_mode)]]></code>
     </RedundantPropertyInitializationCheck>
@@ -43475,24 +43043,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/RecipientFactory.php">
-    <MissingClassConstType>
-      <code><![CDATA[ARTIFACT_ID_INDEX = 'artifact_id']]></code>
-      <code><![CDATA[EMAIL_PATTERN     = '/
-        <
-        (?P<artifact_id>\d+)
-        -
-        (?P<hash>[^-]+)
-        -
-        (?P<user_id>\d+)
-        -
-        (?P<changeset_id>\d+)
-        @
-        (?P<domain>.*)
-        >
-        /x']]></code>
-      <code><![CDATA[HASH_INDEX        = 'hash']]></code>
-      <code><![CDATA[USER_ID_INDEX     = 'user_id']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$host]]></code>
@@ -43605,11 +43155,6 @@
       <code><![CDATA[no_comment]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/RecentlyVisited/SwitchToLinksCollection.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getSwitchToQuickLinkCollection']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/RecentlyVisited/VisitRecorder.php">
     <PossiblyNullArgument>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
@@ -43622,11 +43167,6 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(string) $this->base_url]]></code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/RedirectAfterArtifactCreationOrUpdateEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'redirectAfterArtifactCreationOrUpdateEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/ArtifactRenderer.php">
     <MissingParamType>
@@ -43647,11 +43187,6 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Renderer/BuildArtifactFormActionEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'buildArtifactFormActionEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/CopyRenderer.php">
     <MissingReturnType>
@@ -43718,9 +43253,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/EditRenderer.php">
-    <MissingClassConstType>
-      <code><![CDATA[EVENT_ADD_VIEW_IN_COLLECTION = 'tracker_artifact_editrenderer_add_view_in_collection']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$number]]></code>
     </MissingParamType>
@@ -43832,9 +43364,6 @@
     </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_BatchIterator.php">
-    <MissingClassConstType>
-      <code><![CDATA[ITEMS_PER_BATCH = 100]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$tracker_id]]></code>
     </MissingParamType>
@@ -43855,10 +43384,6 @@
       <code><![CDATA[$result]]></code>
       <code><![CDATA[$result]]></code>
     </FalseOperand>
-    <MissingClassConstType>
-      <code><![CDATA[FIELDS_ALL      = 'all']]></code>
-      <code><![CDATA[FIELDS_COMMENTS = 'comments']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$body]]></code>
       <code><![CDATA[$changes]]></code>
@@ -44214,11 +43739,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[COMMONMARK_CONTENT = 'commonmark']]></code>
-      <code><![CDATA[HTML_CONTENT = 'html']]></code>
-      <code><![CDATA[TEXT_CONTENT = 'text']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
@@ -44340,9 +43860,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_PriorityHistoryChange.php">
-    <MissingClassConstType>
-      <code><![CDATA[NO_CONTEXT = '-1']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$context]]></code>
       <code><![CDATA[$diff_to_previous]]></code>
@@ -44381,9 +43898,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLExport.php">
-    <MissingClassConstType>
-      <code><![CDATA[THRESHOLD = 9000]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$can_bypass_threshold]]></code>
       <code><![CDATA[$nb_artifacts]]></code>
@@ -44428,19 +43942,6 @@
     <InvalidArgument>
       <code><![CDATA[-1]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[FIELDTYPE_ARTIFACT_LINK     = 'art_link']]></code>
-      <code><![CDATA[FIELDTYPE_ATTACHEMENT       = 'file']]></code>
-      <code><![CDATA[FIELDTYPE_COMPUTED          = 'computed']]></code>
-      <code><![CDATA[FIELDTYPE_DATE              = 'date']]></code>
-      <code><![CDATA[FIELDTYPE_FLOAT             = 'float']]></code>
-      <code><![CDATA[FIELDTYPE_INT               = 'int']]></code>
-      <code><![CDATA[FIELDTYPE_LIST              = 'list']]></code>
-      <code><![CDATA[FIELDTYPE_OPENLIST          = 'open_list']]></code>
-      <code><![CDATA[FIELDTYPE_PERMS_ON_ARTIFACT = 'permissions_on_artifact']]></code>
-      <code><![CDATA[FIELDTYPE_STRING            = Tracker_FormElementFactory::FIELD_STRING_TYPE]]></code>
-      <code><![CDATA[FIELDTYPE_TEXT              = 'text']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$extraction_path]]></code>
     </MissingParamType>
@@ -44474,9 +43975,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/XMLImportFieldStrategyArtifactLink.php">
-    <MissingClassConstType>
-      <code><![CDATA[TRACKER_ADD_SYSTEM_TYPES = 'tracker_add_system_types']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$linked_artifact_id]]></code>
       <code><![CDATA[$linked_type]]></code>
@@ -44492,10 +43990,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/XMLImportFieldStrategyAttachment.php">
-    <MissingClassConstType>
-      <code><![CDATA[FILE_INFO_COPY_OPTION = 'is_migrated']]></code>
-      <code><![CDATA[FILE_INFO_MOVE_OPTION = 'is_moved']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$files_infos]]></code>
       <code><![CDATA[$values]]></code>
@@ -44518,11 +44012,6 @@
     </ImplicitToStringCast>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/XMLImportFieldStrategyList.php">
-    <MissingClassConstType>
-      <code><![CDATA[BIND_STATIC  = 'static']]></code>
-      <code><![CDATA[BIND_UGROUPS = 'ugroups']]></code>
-      <code><![CDATA[FORMAT_ID    = 'id']]></code>
-    </MissingClassConstType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $value]]></code>
       <code><![CDATA[! $value]]></code>
@@ -44532,12 +44021,6 @@
     <InvalidOperand>
       <code><![CDATA[$value_id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[BIND_USERS      = 'users']]></code>
-      <code><![CDATA[FORMAT_ID       = 'id']]></code>
-      <code><![CDATA[FORMAT_LDAP     = 'ldap']]></code>
-      <code><![CDATA[FORMAT_USERNAME = 'username']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
@@ -44548,10 +44031,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/XMLImportZipArchive.php">
-    <MissingClassConstType>
-      <code><![CDATA[ARTIFACTS_XML_FILENAME = 'artifacts.xml']]></code>
-      <code><![CDATA[RESOURCE_NAME          = 'tv5']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$extraction_path]]></code>
     </MissingParamType>
@@ -44705,11 +44184,6 @@
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
     </InvalidFalsableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_RETRY_CREATION = 10]]></code>
-      <code><![CDATA[STATUS_CLOSED      = 'closed']]></code>
-      <code><![CDATA[STATUS_OPEN        = 'open']]></code>
-    </MissingClassConstType>
     <MissingClosureReturnType>
       <code><![CDATA[function () use ($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {]]></code>
     </MissingClosureReturnType>
@@ -45203,19 +44677,6 @@
       <code><![CDATA[$format]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/ConfigNotificationEmailCustomSenderFormatter.php">
-    <MissingClassConstType>
-      <code><![CDATA[SLUGIFY_ARGS = [
-        'separator' => ' ',
-        'lowercase' => false,
-    ]]]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/DefaultTemplatesCollection.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'defaultTemplatesCollection']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Creation/DefaultTemplatesCollectionBuilder.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$xml->color]]></code>
@@ -45227,25 +44688,7 @@
       <code><![CDATA[\file_get_contents($filepath)]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/Creation/DefaultTemplatesXMLFileCollection.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'defaultTemplatesXMLFileCollection']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/AsynchronousJiraRunner.php">
-    <MissingClassConstType>
-      <code><![CDATA[TOPIC = 'tuleap.tracker.creation.jira']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/ClientWrapper.php">
-    <MissingClassConstType>
-      <code><![CDATA[CONFIG_KEY_DEBUG_DIRECTORY = 'tracker_jira_debug_directory']]></code>
-      <code><![CDATA[CONFIG_KEY_FORCE_BASIC_AUTH = 'tracker_jira_force_basic_auth']]></code>
-      <code><![CDATA[DEBUG_MARKER_BODY = 'Body content:']]></code>
-      <code><![CDATA[DEFAULT_TIMEOUT       = 30]]></code>
-      <code><![CDATA[DEPLOYMENT_TYPE_CLOUD = 'Cloud']]></code>
-      <code><![CDATA[JIRA_CORE_BASE_URL = '/rest/api/2']]></code>
-    </MissingClassConstType>
     <RedundantCast>
       <code><![CDATA[(int) $e->getCode()]]></code>
     </RedundantCast>
@@ -45257,69 +44700,10 @@
       <code><![CDATA[$this->log_file]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Configuration/PlatformConfigurationForExternalPluginsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'platformConfigurationForExternalPluginsEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/FromJiraTrackerCreator.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_IMPORT_MODE = 'multi-trackers']]></code>
-      <code><![CDATA[LOG_IDENTIFIER     = 'jira_import_syslog']]></code>
-    </MissingClassConstType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$trackers]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/AlwaysThereFieldsExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[ATTACHMENT_FIELDSET_NAME = 'attachment_fieldset']]></code>
-      <code><![CDATA[CUSTOM_FIELDSET_NAME     = 'custom_fieldset']]></code>
-      <code><![CDATA[DETAILS_FIELDSET_NAME    = 'details_fieldset']]></code>
-      <code><![CDATA[JIRA_ARTIFACT_ID_FIELD_ID = 'artifact_id']]></code>
-      <code><![CDATA[JIRA_ARTIFACT_ID_RANK     = 7]]></code>
-      <code><![CDATA[JIRA_ASSIGNEE_NAME          = 'assignee']]></code>
-      <code><![CDATA[JIRA_ASSIGNEE_RANK        = 9]]></code>
-      <code><![CDATA[JIRA_ATTACHMENT_NAME        = 'attachment']]></code>
-      <code><![CDATA[JIRA_ATTACHMENT_RANK  = 1]]></code>
-      <code><![CDATA[JIRA_CREATED_BY      = 'creator']]></code>
-      <code><![CDATA[JIRA_CREATED_NAME    = 'created']]></code>
-      <code><![CDATA[JIRA_CREATED_RANK         = 3]]></code>
-      <code><![CDATA[JIRA_CREATOR_RANK         = 2]]></code>
-      <code><![CDATA[JIRA_CROSS_REFERENCES_NAME = 'orgtuleapcrossreferences']]></code>
-      <code><![CDATA[JIRA_CROSS_REFERENCES_RANK = 2]]></code>
-      <code><![CDATA[JIRA_DESCRIPTION_FIELD_NAME = 'description']]></code>
-      <code><![CDATA[JIRA_DESCRIPTION_RANK = 2]]></code>
-      <code><![CDATA[JIRA_ISSUE_LINKS_NAME      = 'issuelinks']]></code>
-      <code><![CDATA[JIRA_ISSUE_LINKS_RANK      = 1]]></code>
-      <code><![CDATA[JIRA_ISSUE_TYPE_NAME        = 'issuetype']]></code>
-      <code><![CDATA[JIRA_LINK_FIELD_ID        = 'jira_issue_url']]></code>
-      <code><![CDATA[JIRA_LINK_FIELD_NAME        = 'jira_issue_url']]></code>
-      <code><![CDATA[JIRA_LINK_RANK            = 8]]></code>
-      <code><![CDATA[JIRA_PRIORITY_NAME          = 'priority']]></code>
-      <code><![CDATA[JIRA_PRIORITY_RANK        = 6]]></code>
-      <code><![CDATA[JIRA_REPORTER_NAME          = 'reporter']]></code>
-      <code><![CDATA[JIRA_REPORTER_RANK        = 10]]></code>
-      <code><![CDATA[JIRA_RESOLUTION_DATE_NAME = 'resolutiondate']]></code>
-      <code><![CDATA[JIRA_RESOLUTION_DATE_RANK = 5]]></code>
-      <code><![CDATA[JIRA_STATUS_NAME            = 'status']]></code>
-      <code><![CDATA[JIRA_STATUS_RANK          = 1]]></code>
-      <code><![CDATA[JIRA_STORY_POINTS_NAME      = 'story_points']]></code>
-      <code><![CDATA[JIRA_STORY_POINTS_RANK    = 11]]></code>
-      <code><![CDATA[JIRA_SUB_TASKS_NAME        = 'subtasks']]></code>
-      <code><![CDATA[JIRA_SUMMARY_FIELD_NAME     = 'summary']]></code>
-      <code><![CDATA[JIRA_SUMMARY_RANK     = 1]]></code>
-      <code><![CDATA[JIRA_UPDATED_ON_NAME = 'updated']]></code>
-      <code><![CDATA[JIRA_UPDATED_ON_RANK      = 4]]></code>
-      <code><![CDATA[LEFT_COLUMN_NAME  = 'left_column']]></code>
-      <code><![CDATA[LINKS_FIELDSET_NAME      = 'links_fieldset']]></code>
-      <code><![CDATA[RIGHT_COLUMN_NAME = 'right_column']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Attachment/AttachmentDownloader.php">
-    <MissingClassConstType>
-      <code><![CDATA[JIRA_TEMP_FOLDER = 'jira_import']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Attachment/AttachmentXMLExporter.php">
     <PossiblyNullReference>
@@ -45373,11 +44757,6 @@
       <code><![CDATA[$changeset_node]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/GetExistingArtifactLinkTypes.php">
-    <MissingClassConstType>
-      <code><![CDATA[FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN = '___FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Snapshot/ArtifactLinkValue.php">
     <PropertyTypeCoercion>
       <code><![CDATA[$issuelinks]]></code>
@@ -45401,18 +44780,6 @@
     <PossiblyFalseArgument>
       <code><![CDATA[DateInterval::createFromDateString('1 second')]]></code>
     </PossiblyFalseArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/JiraAllIssuesMonoTrackersInXmlExporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[MONO_TRACKER_NAME      = 'Issues']]></code>
-      <code><![CDATA[MONO_TRACKER_SHORTNAME = 'issue']]></code>
-      <code><![CDATA[MONO_TRACKER_XML_ID    = Tracker::XML_ID_PREFIX . '1']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/JiraImporterExternalPluginsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'jiraImporterExternalPluginsEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Reports/XmlReportDoneIssuesExporter.php">
     <PossiblyNullReference>
@@ -45473,37 +44840,14 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Structure/JiraFieldRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[PRIORITY_URL = ClientWrapper::JIRA_CORE_BASE_URL . '/priority']]></code>
-    </MissingClassConstType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $payload]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Structure/JiraToTuleapFieldTypeMapper.php">
-    <MissingClassConstType>
-      <code><![CDATA[JIRA_FIELD_COMPONENTS             = 'components']]></code>
-      <code><![CDATA[JIRA_FIELD_CUSTOM_MULTICHECKBOXES = 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes']]></code>
-      <code><![CDATA[JIRA_FIELD_CUSTOM_MULTIVERSION    = 'com.atlassian.jira.plugin.system.customfieldtypes:multiversion']]></code>
-      <code><![CDATA[JIRA_FIELD_CUSTOM_VERSION         = 'com.atlassian.jira.plugin.system.customfieldtypes:version']]></code>
-      <code><![CDATA[JIRA_FIELD_FIXEDVERSIONS          = 'fixVersions']]></code>
-      <code><![CDATA[JIRA_FIELD_VERSIONS               = 'versions']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/User/JiraUser.php">
-    <MissingClassConstType>
-      <code><![CDATA[NO_EMAIL_ADDRESS_SHARED = '']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/User/JiraUserBuilder.php">
     <InvalidArgument>
       <code><![CDATA[$user_payload]]></code>
     </InvalidArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Values/StatusValuesCollection.php">
-    <MissingClassConstType>
-      <code><![CDATA[DONE_STATUS_CATEGORY = 'done']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/XML/JiraXMLNodeBuilder.php">
     <TypeDoesNotContainType>
@@ -45584,12 +44928,6 @@
     </ArgumentTypeCoercion>
   </file>
   <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminder.php">
-    <MissingClassConstType>
-      <code><![CDATA[AFTER  = 1]]></code>
-      <code><![CDATA[BEFORE = 0]]></code>
-      <code><![CDATA[DISABLED = 0]]></code>
-      <code><![CDATA[ENABLED  = 1]]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$distance]]></code>
       <code><![CDATA[$fieldId]]></code>
@@ -45684,47 +45022,18 @@
       <code><![CDATA[$ugroup]]></code>
     </UndefinedVariable>
   </file>
-  <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminder_Role_Assignee.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = '2']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminder_Role_Commenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = '3']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminder_Role_Submitter.php">
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = '1']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Events/AllowedFieldTypeChangesRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'semanticAllowedFieldTypeRetriever']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[setAllowedTypes]]></code>
       <code><![CDATA[setField]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Events/ArtifactLinkTypeCanBeUnused.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'tracker_artifact_link_can_be_unused']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Events/GetEditableTypesInProject.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'tracker_get_editable_type_in_project']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[addType]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Events/SystemEvent_TRACKER_V3_MIGRATION.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'TRACKER_V3_MIGRATION']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$parameters]]></code>
     </MissingParamType>
@@ -45735,9 +45044,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Events/XMLImportArtifactLinkTypeCanBeDisabled.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'tracker_xml_import_artifact_link_can_be_disabled']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$message]]></code>
       <code><![CDATA[$type_name]]></code>
@@ -45781,11 +45087,6 @@
       <code><![CDATA[buildFileInfoData]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/ForgeUserGroupPermission/TrackerAdminAllProjects.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 2]]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ArtifactLinkValidator.php">
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
@@ -45808,12 +45109,6 @@
       <code><![CDATA[$locale]]></code>
       <code><![CDATA[$warning]]></code>
     </MissingPropertyType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/ChartConfigurationFieldRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[CAPACITY_FIELD_NAME         = 'capacity']]></code>
-      <code><![CDATA[REMAINING_EFFORT_FIELD_NAME = 'remaining_effort']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ChartConfigurationValueChecker.php">
     <MissingReturnType>
@@ -45890,9 +45185,6 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/DateTimeFormatter.php">
-    <MissingClassConstType>
-      <code><![CDATA[DATE_TIME_FORMAT = 'Y-m-d H:i']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$timestamp]]></code>
       <code><![CDATA[$timestamp]]></code>
@@ -45914,11 +45206,6 @@
     <MissingReturnType>
       <code><![CDATA[calculate]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/FieldContentIndexer.php">
-    <MissingClassConstType>
-      <code><![CDATA[INDEX_TYPE_FIELD_CONTENT = 'plugin_artifact_field']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/FieldNameFormatter.php">
     <PossiblyNullArgument>
@@ -45989,35 +45276,6 @@
       <code><![CDATA[$form_element]]></code>
       <code><![CDATA[$this->getCachedInstanceFromRow($row)]]></code>
     </LessSpecificReturnStatement>
-    <MissingClassConstType>
-      <code><![CDATA[CONTAINER_COLUMN_TYPE   = 'column']]></code>
-      <code><![CDATA[CONTAINER_FIELDSET_TYPE = 'fieldset']]></code>
-      <code><![CDATA[FIELD_ARTIFACT_ID_TYPE            = 'aid']]></code>
-      <code><![CDATA[FIELD_ARTIFACT_IN_TRACKER         = 'atid']]></code>
-      <code><![CDATA[FIELD_ARTIFACT_LINKS              = 'art_link']]></code>
-      <code><![CDATA[FIELD_BURNDOWN                    = 'burndown']]></code>
-      <code><![CDATA[FIELD_CHECKBOX_TYPE               = 'cb']]></code>
-      <code><![CDATA[FIELD_COMPUTED                    = 'computed']]></code>
-      <code><![CDATA[FIELD_CROSS_REFERENCES            = 'cross']]></code>
-      <code><![CDATA[FIELD_DATE_TYPE                   = 'date']]></code>
-      <code><![CDATA[FIELD_FILE_TYPE                   = 'file']]></code>
-      <code><![CDATA[FIELD_FLOAT_TYPE                  = 'float']]></code>
-      <code><![CDATA[FIELD_INTEGER_TYPE                = 'int']]></code>
-      <code><![CDATA[FIELD_LAST_MODIFIED_BY            = 'luby']]></code>
-      <code><![CDATA[FIELD_LAST_UPDATE_DATE_TYPE       = 'lud']]></code>
-      <code><![CDATA[FIELD_MULTI_SELECT_BOX_TYPE       = 'msb']]></code>
-      <code><![CDATA[FIELD_OPEN_LIST_TYPE              = 'tbl']]></code>
-      <code><![CDATA[FIELD_PERMISSION_ON_ARTIFACT_TYPE = 'perm']]></code>
-      <code><![CDATA[FIELD_RADIO_BUTTON_TYPE           = 'rb']]></code>
-      <code><![CDATA[FIELD_RANK                        = 'priority']]></code>
-      <code><![CDATA[FIELD_SELECT_BOX_TYPE             = 'sb']]></code>
-      <code><![CDATA[FIELD_SHARED                      = 'shared']]></code>
-      <code><![CDATA[FIELD_STRING_TYPE                 = 'string']]></code>
-      <code><![CDATA[FIELD_SUBMITTED_BY_TYPE           = 'subby']]></code>
-      <code><![CDATA[FIELD_SUBMITTED_ON_TYPE           = 'subon']]></code>
-      <code><![CDATA[FIELD_TEXT_TYPE                   = 'text']]></code>
-      <code><![CDATA[GET_CLASSNAMES = 'tracker_formelement_get_classnames']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$elmtId]]></code>
@@ -46236,13 +45494,6 @@
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->field]]></code>
     </LessSpecificReturnStatement>
-    <MissingClassConstType>
-      <code><![CDATA[NONE_VALUE = 100]]></code>
-      <code><![CDATA[REST_ID_KEY    = 'bind_value_id']]></code>
-      <code><![CDATA[REST_LABEL_KEY = 'bind_value_label']]></code>
-      <code><![CDATA[REST_LIST_KEY  = 'bind_list']]></code>
-      <code><![CDATA[REST_TYPE_KEY  = 'bind_type']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$changesetvalue_table]]></code>
@@ -46356,11 +45607,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[Tracker_FormElement_Field_List_Bind_UgroupsValue]]></code>
     </InvalidNullableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[STATIK  = 'static']]></code>
-      <code><![CDATA[UGROUPS = 'ugroups']]></code>
-      <code><![CDATA[USERS   = 'users']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$b]]></code>
       <code><![CDATA[$bind]]></code>
@@ -46394,9 +45640,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindValue.php">
-    <MissingClassConstType>
-      <code><![CDATA[BIND_PREFIX = 'b']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getJsonId]]></code>
     </MissingReturnType>
@@ -46408,9 +45651,6 @@
     <LessSpecificImplementedReturnType>
       <code><![CDATA[array]]></code>
     </LessSpecificImplementedReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[TYPE = 'null']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$field]]></code>
@@ -46452,9 +45692,6 @@
     <InvalidReturnType>
       <code><![CDATA[void]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[TYPE = 'static']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$changesetvalue_table]]></code>
@@ -46557,9 +45794,6 @@
     <LessSpecificImplementedReturnType>
       <code><![CDATA[array]]></code>
     </LessSpecificImplementedReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[TYPE = 'ugroups']]></code>
-    </MissingClassConstType>
     <MissingClosureParamType>
       <code><![CDATA[$value]]></code>
     </MissingClosureParamType>
@@ -46658,12 +45892,6 @@
     <InvalidReturnType>
       <code><![CDATA[void]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[REGISTERED_USERS_UGROUP_NAME = 'ugroup_2']]></code>
-      <code><![CDATA[REST_BINDING_LIST_ID    = 'ugroup_id']]></code>
-      <code><![CDATA[REST_BINDING_LIST_LABEL = 'name']]></code>
-      <code><![CDATA[TYPE = 'users']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$changeset_id]]></code>
       <code><![CDATA[$decorators]]></code>
@@ -46788,9 +46016,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Value.php">
-    <MissingClassConstType>
-      <code><![CDATA[XML_ID_PREFIX = 'V']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -46918,11 +46143,6 @@
       <code><![CDATA[(int) $this->element->getTracker()->getId()]]></code>
     </RedundantCast>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/DisplayAdminFormElementsWarningsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'displayAdminFormElementsWarningsEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field.php">
     <UndefinedMethod>
       <code><![CDATA[isNotificationsSupported]]></code>
@@ -46934,9 +46154,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Computed.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_VALUE_KEY = 'default_value']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[canUpgrade]]></code>
       <code><![CDATA[isMigrated]]></code>
@@ -47000,9 +46217,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/FilterFormElementsThatCanBeCreatedForTracker.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'filterFormElementsThatCanBeCreatedForTracker']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$type]]></code>
     </MissingParamType>
@@ -47040,10 +46254,6 @@
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$element]]></code>
     </InvalidPropertyAssignmentValue>
-    <MissingClassConstType>
-      <code><![CDATA[SUBMIT_CREATE = 'docreate-formElement']]></code>
-      <code><![CDATA[SUBMIT_UPDATE = 'update-formElement']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$form]]></code>
       <code><![CDATA[$form]]></code>
@@ -47202,11 +46412,6 @@
       <code><![CDATA[setInstance]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Hierarchy/TrackerHierarchyUpdateEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerHierarchyUpdateEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Import/Spotter.php">
     <MissingReturnType>
       <code><![CDATA[clearInstance]]></code>
@@ -47225,16 +46430,6 @@
     <MissingReturnType>
       <code><![CDATA[inheritFromLegacy]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Masschange/TrackerMasschangeGetExternalActionsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerMasschangeGetExternalActionsEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Masschange/TrackerMasschangeProcessExternalActionsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerMasschangeProcessExternalActionsEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Masschange_Presenter.php">
     <InvalidOperand>
@@ -47277,9 +46472,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[file_get_contents(__DIR__ . '/../../../../../src/utils/xml/indent.xsl')]]></code>
     </ArgumentTypeCoercion>
-    <MissingClassConstType>
-      <code><![CDATA[LOG_FILE = 'tv3_tv5_migration_syslog']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$name]]></code>
@@ -47914,11 +47106,6 @@
       <code><![CDATA[createTooltip]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Milestone/PaneInfo.php">
-    <MissingClassConstType>
-      <code><![CDATA[ACTION = 'show']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Notifications/CollectionOfUgroupToBeNotifiedPresenterBuilder.php">
     <MissingParamType>
       <code><![CDATA[$presenters]]></code>
@@ -48200,17 +47387,6 @@
       <code><![CDATA[(int) $tracker->getId()]]></code>
     </RedundantCast>
   </file>
-  <file src="plugins/tracker/include/Tracker/Notifications/TrackerForceNotificationsLevelCommand.php">
-    <MissingClassConstType>
-      <code><![CDATA[AUTHORIZED_CONFIGURATION_LEVEL
-        = [
-            Tracker::NOTIFICATIONS_LEVEL_DEFAULT_LABEL,
-            Tracker::NOTIFICATIONS_LEVEL_DISABLED_LABEL,
-            Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE_LABEL,
-        ]]]></code>
-      <code><![CDATA[NAME = 'tracker:force-notifications-level']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Notifications/UgroupsToNotifyDao.php">
     <DeprecatedMethod>
       <code><![CDATA[DataAccessObject]]></code>
@@ -48374,16 +47550,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/ChainOfResponsibility/Command.php">
-    <MissingClassConstType>
-      <code><![CDATA[PERMISSION_ADMIN                  = 'ADMIN']]></code>
-      <code><![CDATA[PERMISSION_ASSIGNEE               = 'ASSIGNEE']]></code>
-      <code><![CDATA[PERMISSION_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE']]></code>
-      <code><![CDATA[PERMISSION_FULL                   = 'FULL']]></code>
-      <code><![CDATA[PERMISSION_NONE                   = 'NONE']]></code>
-      <code><![CDATA[PERMISSION_PREFIX = 'permissions_']]></code>
-      <code><![CDATA[PERMISSION_SUBMITTER              = 'SUBMITTER']]></code>
-      <code><![CDATA[PERMISSION_SUBMITTER_ONLY         = 'SUBMITTER_ONLY']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$ugroup_id]]></code>
       <code><![CDATA[$ugroup_id]]></code>
@@ -48418,11 +47584,6 @@
       <code><![CDATA[warnAlreadyHaveFullAccess]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Permission/Fields/ByField/ByFieldController.php">
-    <MissingClassConstType>
-      <code><![CDATA[URL = '/permissions/fields-by-field']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Permission/Fields/ByField/ByFieldGroupPermissions.php">
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $this->field->getId()]]></code>
@@ -48432,11 +47593,6 @@
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$tracker->getGroupId()]]></code>
     </PossiblyInvalidPropertyAssignmentValue>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Permission/Fields/ByGroup/ByGroupController.php">
-    <MissingClassConstType>
-      <code><![CDATA[URL = '/permissions/fields-by-group']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/Fields/ByGroup/ByGroupFieldsPermissions.php">
     <MissingPropertyType>
@@ -48454,9 +47610,6 @@
     </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/Fields/PermissionsOnFieldsUpdateController.php">
-    <MissingClassConstType>
-      <code><![CDATA[URL = '/permissions/fields']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getUrl]]></code>
     </MissingReturnType>
@@ -48653,9 +47806,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/ProjectDeletionEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerProjectDeletion']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$project_id]]></code>
     </MissingParamType>
@@ -48676,9 +47826,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/Tracker/RealTime/RealTimeArtifactMessageSender.php">
-    <MissingClassConstType>
-      <code><![CDATA[HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$event_name]]></code>
       <code><![CDATA[$room_id]]></code>
@@ -48742,21 +47889,6 @@
       <code><![CDATA[getKey]]></code>
       <code><![CDATA[getValue]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Event/TrackerReportDeleted.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerReportDeleted']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Event/TrackerReportProcessAdditionalQuery.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerReportProcessAdditionalQuery']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/Event/TrackerReportSetToPrivate.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerReportSetToPrivate']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/ExpertModePresenter.php">
     <MissingParamType>
@@ -49678,9 +48810,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Renderer/ImportRendererFromXmlEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'importRendererFromXmlEvent']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$type]]></code>
     </MissingParamType>
@@ -49695,9 +48824,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Renderer/Table/GetExportOptionsMenuItemsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExportOptionsMenuItems']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$additional_content_as_html]]></code>
       <code><![CDATA[$item_as_html]]></code>
@@ -49709,9 +48835,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Renderer/Table/ProcessExportEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'processExport']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$key]]></code>
       <code><![CDATA[$server_url]]></code>
@@ -49740,9 +48863,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/TrackerReportConfigController.php">
-    <MissingClassConstType>
-      <code><![CDATA[EXPERT_QUERY_LIMIT_MAX = 80]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[display]]></code>
       <code><![CDATA[update]]></code>
@@ -49805,22 +48925,6 @@
       <code><![CDATA[Option<IProvideParametrizedFromAndWhereSQLFragments>]]></code>
       <code><![CDATA[ReportRenderer]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[ACTION_CLEANSESSION    = 'clean-session']]></code>
-      <code><![CDATA[ACTION_DEFAULT         = 'report-default']]></code>
-      <code><![CDATA[ACTION_DELETE          = 'report-delete']]></code>
-      <code><![CDATA[ACTION_REPLACE         = 'report-replace']]></code>
-      <code><![CDATA[ACTION_SAVE            = 'report-save']]></code>
-      <code><![CDATA[ACTION_SAVEAS          = 'report-saveas']]></code>
-      <code><![CDATA[ACTION_SCOPE           = 'report-scope']]></code>
-      <code><![CDATA[COMMENT_CRITERION_NAME = 'comment']]></code>
-      <code><![CDATA[TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA = 'tracker_event_report_display_additional_criteria']]></code>
-      <code><![CDATA[TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA = 'tracker_event_report_load_additional_criteria']]></code>
-      <code><![CDATA[TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA = 'tracker_event_report_save_additional_criteria']]></code>
-      <code><![CDATA[TYPE_CRITERIA          = 'criteria']]></code>
-      <code><![CDATA[TYPE_TABLE             = 'table']]></code>
-      <code><![CDATA[XML_ID_PREFIX          = 'REPORT_']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$additional_criteria_values]]></code>
       <code><![CDATA[$current_renderer]]></code>
@@ -49975,9 +49079,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[Tracker_Report]]></code>
     </InvalidNullableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[MAPPING_KEY = 'plugin_tracker_report']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$current_user_id]]></code>
       <code><![CDATA[$field_mapping]]></code>
@@ -50131,16 +49232,6 @@
       <code><![CDATA[$is_default]]></code>
       <code><![CDATA[$name]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_OPERATOR       = 'contains']]></code>
-      <code><![CDATA[OPERATOR_BETWEEN       = 'between']]></code>
-      <code><![CDATA[OPERATOR_CONTAINS      = 'contains']]></code>
-      <code><![CDATA[OPERATOR_EQUALS        = '=']]></code>
-      <code><![CDATA[OPERATOR_GREATER_THAN  = '>']]></code>
-      <code><![CDATA[OPERATOR_LESS_THAN     = '<']]></code>
-      <code><![CDATA[OPERATOR_PROPERTY_NAME = 'operator']]></code>
-      <code><![CDATA[VALUE_PROPERTY_NAME    = 'value']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$criteria]]></code>
       <code><![CDATA[$criterion]]></code>
@@ -50162,11 +49253,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_Renderer.php">
-    <MissingClassConstType>
-      <code><![CDATA[BOARD = 'board']]></code>
-      <code><![CDATA[TABLE = 'table']]></code>
-      <code><![CDATA[XML_ID_PREFIX = 'R']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$current_user]]></code>
       <code><![CDATA[$current_user]]></code>
@@ -50204,9 +49290,6 @@
     <InvalidReturnType>
       <code><![CDATA[bool]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[MAPPING_KEY = 'plugin_tracker_renderer']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$field_mapping]]></code>
@@ -50297,14 +49380,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[EXPORT_FULL  = 0]]></code>
-      <code><![CDATA[EXPORT_LIGHT = 1]]></code>
-      <code><![CDATA[EXTRACOLUMN_LINK       = 2]]></code>
-      <code><![CDATA[EXTRACOLUMN_MASSCHANGE = 1]]></code>
-      <code><![CDATA[EXTRACOLUMN_UNLINK     = 3]]></code>
-      <code><![CDATA[NO_EXTRACOLUMN         = 0]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$additionnal_html]]></code>
       <code><![CDATA[$aggregates]]></code>
@@ -50654,9 +49729,6 @@
       <code><![CDATA[updateAndGetLastId]]></code>
       <code><![CDATA[updateAndGetLastId]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_ARTIFACTS_IN_REPORT = 'max_artifacts_in_report']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$current_renderer_id]]></code>
       <code><![CDATA[$current_renderer_id]]></code>
@@ -51167,14 +50239,6 @@
       <code><![CDATA[$matches[4]]]></code>
       <code><![CDATA[$matches[5]]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[COMPARATOR_EQUALS                 = '=']]></code>
-      <code><![CDATA[COMPARATOR_GREATER_THAN           = '>']]></code>
-      <code><![CDATA[COMPARATOR_GREATER_THAN_OR_EQUALS = '≥']]></code>
-      <code><![CDATA[COMPARATOR_LESS_THAN              = '<']]></code>
-      <code><![CDATA[COMPARATOR_LESS_THAN_OR_EQUALS    = '≤']]></code>
-      <code><![CDATA[COMPARATOR_NOT_EQUALS             = '≠']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$date]]></code>
       <code><![CDATA[$date_only]]></code>
@@ -51380,13 +50444,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/Tracker_Rule.php">
-    <MissingClassConstType>
-      <code><![CDATA[RULETYPE_DATE      = 5]]></code>
-      <code><![CDATA[RULETYPE_DISABLED  = 2]]></code>
-      <code><![CDATA[RULETYPE_HIDDEN    = 1]]></code>
-      <code><![CDATA[RULETYPE_MANDATORY = 3]]></code>
-      <code><![CDATA[RULETYPE_VALUE     = 4]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
     </MissingParamType>
@@ -51629,11 +50686,6 @@
       <code><![CDATA[searchInvolvedFieldsByTrackerId]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Search/SearchResultRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[TYPE = 'artifact']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Service/ServiceActivator.php">
     <MissingReturnType>
       <code><![CDATA[atLeastOneTrackerServiceIsUsedInTemplate]]></code>
@@ -51650,19 +50702,12 @@
     </RedundantCast>
   </file>
   <file src="plugins/tracker/include/Tracker/SystemEvent/Tv3TvQueue.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'tv3_tv5_migration']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getName]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerCrumbInContext.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'trackerCrumbInContext']]></code>
-      <code><![CDATA[TRACKER_CRUMB_IDENTIFIER = 'tracker']]></code>
-    </MissingClassConstType>
     <NullArgument>
       <code><![CDATA[$link_collection]]></code>
     </NullArgument>
@@ -51687,11 +50732,6 @@
     <InvalidReturnType>
       <code><![CDATA[Hierarchy]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[LEGACY_SUFFIX       = '_from_tv3']]></code>
-      <code><![CDATA[TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED = 'tracker_event_project_creation_trackers_required']]></code>
-      <code><![CDATA[TRACKER_MAPPING_KEY = 'plugin_tracker_tracker']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$description]]></code>
@@ -51813,10 +50853,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$this->getFilesize()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[THUMBNAILS_MAX_HEIGHT = 112]]></code>
-      <code><![CDATA[THUMBNAILS_MAX_WIDTH  = 150]]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$field]]></code>
@@ -51968,9 +51004,6 @@
     </RiskyCast>
   </file>
   <file src="plugins/tracker/include/Tracker/Webhook/Actions/AdminWebhooks.php">
-    <MissingClassConstType>
-      <code><![CDATA[FUNC_ADMIN_WEBHOOKS = 'admin-webhooks']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[process]]></code>
     </MissingReturnType>
@@ -52096,13 +51129,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/ProjectRendererWidgetXMLImporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[RENDERER_ID_REFERENCE_NAME = 'id']]></code>
-      <code><![CDATA[RENDERER_ID_REQUEST_KEY    = 'renderer_id']]></code>
-      <code><![CDATA[RENDERER_PREFERENCE_NAME   = 'renderer']]></code>
-      <code><![CDATA[RENDERER_TITLE_REQUEST_KEY = 'title']]></code>
-      <code><![CDATA[RENDERER_TITLE_VALUE_NAME  = 'title']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$reference]]></code>
     </MissingParamType>
@@ -52115,10 +51141,6 @@
       <code><![CDATA[user_set_preference(self::PREF_SHOW, $this->artifact_show)]]></code>
       <code><![CDATA[user_set_preference(self::PREF_SHOW, $this->artifact_show)]]></code>
     </DeprecatedFunction>
-    <MissingClassConstType>
-      <code><![CDATA[ID        = 'plugin_tracker_myartifacts']]></code>
-      <code><![CDATA[PREF_SHOW = 'plugin_tracker_myartifacts_show']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$dashboard_id]]></code>
       <code><![CDATA[$owner_id]]></code>
@@ -52139,17 +51161,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/Tracker_Widget_MyRenderer.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 'plugin_tracker_myrenderer']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[isAjax]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/Tracker_Widget_ProjectRenderer.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 'plugin_tracker_projectrenderer']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$owner_id]]></code>
@@ -52243,9 +51259,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[int]]></code>
     </InvalidNullableReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[MAX = 30]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$artifact_id]]></code>
@@ -52286,20 +51299,10 @@
       <code><![CDATA[getAllLogs]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/XML/Importer/ImportXMLProjectTrackerDone.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'importXMLProjectTrackerDone']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Tracker/XML/Importer/TrackerExtraConfiguration.php">
     <MissingReturnType>
       <code><![CDATA[getServiceName]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Importer/TrackerImporterUser.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 91]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Updater/BindOpenValueForDuckTypingUpdater.php">
     <RiskyTruthyFalsyComparison>
@@ -52361,11 +51364,6 @@
     <UndefinedPropertyAssignment>
       <code><![CDATA[$field_change_xml->value]]></code>
     </UndefinedPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/Updater/FieldChange/FieldChangeExternalFieldXMLUpdateEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'fieldChangeExternalFieldXMLUpdateEvent']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Updater/FieldChange/FieldChangeFloatXMLUpdater.php">
     <MissingReturnType>
@@ -53022,9 +52020,6 @@
       <code><![CDATA[$project->getID()]]></code>
       <code><![CDATA[$project->getID()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_NOTIFICATIONS_LEVEL = 0]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$extraction_path]]></code>
     </MissingParamType>
@@ -53060,14 +52055,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Workflow/Action/Rules/EditRules.php">
-    <MissingClassConstType>
-      <code><![CDATA[PARAMETER_ADD_RULE     = 'add_rule']]></code>
-      <code><![CDATA[PARAMETER_COMPARATOR   = 'comparator']]></code>
-      <code><![CDATA[PARAMETER_REMOVE_RULES = 'remove_rules']]></code>
-      <code><![CDATA[PARAMETER_SOURCE_FIELD = 'source_date_field']]></code>
-      <code><![CDATA[PARAMETER_TARGET_FIELD = 'target_date_field']]></code>
-      <code><![CDATA[PARAMETER_UPDATE_RULES = 'update_rules']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$comparator]]></code>
       <code><![CDATA[$name]]></code>
@@ -53146,9 +52133,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Workflow/BeforeEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'beforeEvent']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$value]]></code>
@@ -53158,42 +52142,12 @@
       <code><![CDATA[shouldBypassPermissions]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Workflow/Event/GetWorkflowExternalPostActionsValueUpdater.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getWorkflowExternalPostActionsValueUpdater']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Event/GetWorkflowExternalPostActionsValuesForUpdate.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getWorkflowExternalPostActionsValuesForUpdate']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Event/TransitionDeletionEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'transitionDeletionEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Event/WorkflowDeletionEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'workflowDeletionEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Workflow/FirstPossibleValueInListRetriever.php">
     <DeprecatedMethod>
       <code><![CDATA[getWorkflow]]></code>
     </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.php">
-    <MissingClassConstType>
-      <code><![CDATA[BUILD_PARAMETER_ARTIFACT_ID         = 'artifactId']]></code>
-      <code><![CDATA[BUILD_PARAMETER_PROJECT_ID          = 'projectId']]></code>
-      <code><![CDATA[BUILD_PARAMETER_TRACKER_ID          = 'trackerId']]></code>
-      <code><![CDATA[BUILD_PARAMETER_TRIGGER_FIELD_VALUE = 'triggerFieldValue']]></code>
-      <code><![CDATA[BUILD_PARAMETER_USER                = 'userId']]></code>
-      <code><![CDATA[JOB_URL_PATTERN = '^https?://.+']]></code>
-      <code><![CDATA[SHORT_NAME                          = 'ci_build']]></code>
-      <code><![CDATA[XML_TAG_NAME                        = 'postaction_ci_build']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
     </MissingReturnType>
@@ -53246,11 +52200,6 @@
       <code><![CDATA[getJobUrl]]></code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/ExternalPostActionSaveObjectEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'externalPostActionSaveObjectEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Field/Transition_PostAction_Field.php">
     <UndefinedMethod>
       <code><![CDATA[getDao]]></code>
@@ -53292,12 +52241,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$this->getValueType()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[CLEAR_DATE = 1]]></code>
-      <code><![CDATA[FILL_CURRENT_TIME = 2]]></code>
-      <code><![CDATA[SHORT_NAME   = 'field_date']]></code>
-      <code><![CDATA[XML_TAG_NAME = 'postaction_field_date']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
     </MissingReturnType>
@@ -53316,10 +52259,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$this->getValue()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[SHORT_NAME   = 'field_float']]></code>
-      <code><![CDATA[XML_TAG_NAME = 'postaction_field_float']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
     </MissingReturnType>
@@ -53335,10 +52274,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$this->getValue()]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[SHORT_NAME   = 'field_int']]></code>
-      <code><![CDATA[XML_TAG_NAME = 'postaction_field_int']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
     </MissingReturnType>
@@ -53447,10 +52382,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/FrozenFields/FrozenFields.php">
-    <MissingClassConstType>
-      <code><![CDATA[SHORT_NAME   = 'frozen_fields']]></code>
-      <code><![CDATA[XML_TAG_NAME = 'postaction_frozen_fields']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
     </MissingReturnType>
@@ -53481,31 +52412,7 @@
       <code><![CDATA[getFieldIds]]></code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/GetExternalPostActionPluginsEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExternalPostActionPluginsEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/GetExternalSubFactoriesEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExternalSubFactoriesEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/GetExternalSubFactoryByNameEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getExternalSubFactoryByNameEvent']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/GetPostActionShortNameFromXmlTagNameEvent.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getPostActionShortNameFromXmlTagNameEvent']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/tracker/include/Workflow/PostAction/HiddenFieldsets/HiddenFieldsets.php">
-    <MissingClassConstType>
-      <code><![CDATA[SHORT_NAME   = 'hidden_fieldsets']]></code>
-      <code><![CDATA[XML_TAG_NAME = 'postaction_hidden_fieldsets']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
     </MissingReturnType>
@@ -53802,9 +52709,6 @@
       <code><![CDATA[Workflow_Transition_ConditionsCollection]]></code>
       <code><![CDATA[int]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[EXPORT_XML_FROM_NEW_VALUE = 'null']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$transition_id]]></code>
       <code><![CDATA[$workflow_id]]></code>
@@ -53974,9 +52878,6 @@
       <code><![CDATA[$transition_ugroups]]></code>
       <code><![CDATA[$transition_ugroups]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$authorized_ugroups_keyname]]></code>
       <code><![CDATA[$fields_data]]></code>
@@ -54143,10 +53044,6 @@
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$targets]]></code>
     </InvalidPropertyAssignmentValue>
-    <MissingClassConstType>
-      <code><![CDATA[CONDITION_ALL_OFF      = 'all_of']]></code>
-      <code><![CDATA[CONDITION_AT_LEAST_ONE = 'at_least_one']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$fields]]></code>
     </MissingParamType>
@@ -54337,17 +53234,6 @@
     <InvalidArgument>
       <code><![CDATA[$this->getFieldId()]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[BASE_PATH       = '/workflow']]></code>
-      <code><![CDATA[FUNC_ADMIN_ADD_TRIGGER                     = 'admin-workflow-add-trigger']]></code>
-      <code><![CDATA[FUNC_ADMIN_CROSS_TRACKER_TRIGGERS          = 'admin-workflow-triggers']]></code>
-      <code><![CDATA[FUNC_ADMIN_DELETE_TRIGGER                  = 'admin-workflow-delete-trigger']]></code>
-      <code><![CDATA[FUNC_ADMIN_DEPENDENCIES                    = 'admin-dependencies']]></code>
-      <code><![CDATA[FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA = 'admin-get-triggers-rules-builder-data']]></code>
-      <code><![CDATA[FUNC_ADMIN_RULES                           = 'admin-workflow']]></code>
-      <code><![CDATA[FUNC_ADMIN_TRANSITIONS                     = 'admin-workflow-transitions']]></code>
-      <code><![CDATA[TRANSITION_PATH = '/transitions']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$fields_data]]></code>
@@ -54446,11 +53332,6 @@
       <code><![CDATA[$submitted_value]]></code>
       <code><![CDATA[$submitted_value]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Workflow/WorkflowUser.php">
-    <MissingClassConstType>
-      <code><![CDATA[ID = 90]]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/tracker/include/Workflow/WorkflowWithoutTransition.php">
     <MissingParamType>
@@ -54600,15 +53481,6 @@
     <InvalidArgument>
       <code><![CDATA[$project_with_tracker_administration]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[DELETED_TRACKERS_TEMPLATE_NAME          = 'deleted_trackers']]></code>
-      <code><![CDATA[EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker']]></code>
-      <code><![CDATA[EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact']]></code>
-      <code><![CDATA[EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts']]></code>
-      <code><![CDATA[SERVICE_SHORTNAME                       = 'plugin_tracker']]></code>
-      <code><![CDATA[TRACKER_EVENT_INCLUDE_CSS_FILE = 'tracker_event_include_css_file']]></code>
-      <code><![CDATA[TRUNCATED_SERVICE_NAME                  = 'Trackers']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$can_bypass_threshold]]></code>
       <code><![CDATA[$can_bypass_threshold]]></code>
@@ -55032,15 +53904,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/tracker/tests/rest/DataBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[MY_ARTIFACTS_USER_NAME             = 'rest_my_artifacts']]></code>
-      <code><![CDATA[PRIVATE_COMMENT_DAENERYS_NAME      = 'rest_private_comment_daenerys']]></code>
-      <code><![CDATA[PRIVATE_COMMENT_JOHN_SNOW_NAME     = 'rest_private_comment_john_snow']]></code>
-      <code><![CDATA[PRIVATE_COMMENT_MEMBER_NAME        = 'rest_private_comment_member']]></code>
-      <code><![CDATA[PRIVATE_COMMENT_PROJECT_ADMIN_NAME = 'rest_private_comment_admin']]></code>
-      <code><![CDATA[PRIVATE_COMMENT_TRACKER_ADMIN_NAME = 'rest_private_comment_tracker_admin']]></code>
-      <code><![CDATA[USER_TESTER_NAME                   = 'rest_api_tracker_admin_1']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[createUser]]></code>
       <code><![CDATA[setUp]]></code>
@@ -55295,9 +54158,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/tests/rest/TQL/TQLTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_NAME = 'tql']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$query]]></code>
     </MissingParamType>
@@ -55375,47 +54235,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/tests/rest/TrackerBase.php">
-    <MissingClassConstType>
-      <code><![CDATA[BASE_TRACKER_SHORTNAME                           = 'tracker_source']]></code>
-      <code><![CDATA[COMPUTED_VALUE_PROJECT_NAME                = 'computed-fields-default-value']]></code>
-      <code><![CDATA[COMPUTED_VALUE_TRACKER_SHORTNAME                = 'ComputedFieldsDefaultValues']]></code>
-      <code><![CDATA[DELETE_PROJECT_NAME                         = 'test-delete-artifacts']]></code>
-      <code><![CDATA[DELETE_TRACKER_SHORTNAME                         = 'diasabled_delete_artifacts_testing_2']]></code>
-      <code><![CDATA[FILE_FIELD_ARTIFACT_CHANGESET_PROJECT_NAME = 'file-field-artifact-changeset']]></code>
-      <code><![CDATA[MOVE_DESTINATION_TRACKER_SHORTNAME               = 'destination_tracker']]></code>
-      <code><![CDATA[MOVE_FORBIDDEN_PROJECT_NAME                 = 'tracker-move-forbidden']]></code>
-      <code><![CDATA[MOVE_PROJECT_NAME                           = 'move-artifact']]></code>
-      <code><![CDATA[MOVE_TRACKER_FORBIDDEN_SHORTNAME                 = 'move_tracker_forbidden']]></code>
-      <code><![CDATA[MOVE_TRACKER_SHORTNAME                           = 'tracker_destination']]></code>
-      <code><![CDATA[OPEN_LIST_PROJECT_NAME                     = 'openlistxml']]></code>
-      <code><![CDATA[OPEN_LIST_TRACKER_SHORTNAME                     = 'openlisttracker']]></code>
-      <code><![CDATA[PRIVATE_COMMENT_PROJECT_NAME                = 'tracker-private-comment']]></code>
-      <code><![CDATA[PRIVATE_COMMENT_TRACKER_SHORTNAME               = 'bug']]></code>
-      <code><![CDATA[REST_XML_API_PROJECT_NAME                  = 'rest-xml-api']]></code>
-      <code><![CDATA[REST_XML_API_TRACKER_SHORTNAME                  = 'epic']]></code>
-      <code><![CDATA[SIMPLE_01_TRACKER_SHORTNAME                      = 'simple_tracker_01']]></code>
-      <code><![CDATA[SIMPLE_02_TRACKER_SHORTNAME                      = 'simple_tracker_02']]></code>
-      <code><![CDATA[TRACKER_ADMINISTRATOR_PROJECT_NAME          = 'test-tracker-project-filter']]></code>
-      <code><![CDATA[TRACKER_ALL_FIELDS_PROJECT_NAME            = 'tracker-all-fields']]></code>
-      <code><![CDATA[TRACKER_ALL_FIELDS_TRACKER_SHORTNAME            = 'all_fields']]></code>
-      <code><![CDATA[TRACKER_ARTIFACTS_PROJECT_NAME              = 'test-tracker-artifacts']]></code>
-      <code><![CDATA[TRACKER_ARTIFACTS_TRACKER_SHORTNAME              = 'tracker_artifacts_test']]></code>
-      <code><![CDATA[TRACKER_FIELDS_PROJECT_NAME                 = 'test-tracker-fields']]></code>
-      <code><![CDATA[TRACKER_FIELDS_TRACKER_SHORTNAME                 = 'tracker_fields_tracker']]></code>
-      <code><![CDATA[TRACKER_FILE_AND_TITLE_FIELDS_TRACKER_SHORTNAME = 'file_and_title_fields']]></code>
-      <code><![CDATA[TRACKER_FILE_URL_PROJECT_NAME              = 'test-tracker-file-url']]></code>
-      <code><![CDATA[TRACKER_FILE_URL_SHORTNAME                      = 'image']]></code>
-      <code><![CDATA[TRACKER_REPORTS_PROJECT_NAME               = 'tracker-reports']]></code>
-      <code><![CDATA[TRACKER_REPORTS_TRACKER_SHORTNAME               = 'report_renderers']]></code>
-      <code><![CDATA[TRACKER_SEMANTICS_PROJECT_NAME              = 'test-tracker-semantics']]></code>
-      <code><![CDATA[TRACKER_WITH_TIMEFRAME_SEMANTIC_SHORTNAME        = 'tracker_semantic_timeframe']]></code>
-      <code><![CDATA[TRACKER_WITH_WORKFLOWS_SHORTNAME                 = 'workflows_tracker']]></code>
-      <code><![CDATA[TRACKER_WORKFLOWS_PROJECT_NAME              = 'test-tracker-workflows']]></code>
-      <code><![CDATA[TRACKER_WORKFLOW_SIMPLE_MODE_FROM_XML_SHORTNAME  = 'workflow_simple_mode_from_xml']]></code>
-      <code><![CDATA[TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME           = 'workflow_simple_mode']]></code>
-      <code><![CDATA[TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME = 'simple_workflow_to_switch']]></code>
-      <code><![CDATA[TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME      = 'workflows_tracker_transitions']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$base_artifact_ids]]></code>
       <code><![CDATA[$base_tracker_id]]></code>
@@ -55456,13 +54275,6 @@
     </UnevaluatedCode>
   </file>
   <file src="plugins/tracker/tests/rest/TrackerFields/TrackerFieldsTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[FIELD_FILE                            = 'attachment']]></code>
-      <code><![CDATA[FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME = 'staticmsb']]></code>
-      <code><![CDATA[FIELD_STATIC_RADIOBUTTON_SHOTNAME     = 'staticrb']]></code>
-      <code><![CDATA[FIELD_STATIC_SELECTBOX_SHOTNAME       = 'staticsb']]></code>
-      <code><![CDATA[FIELD_USER_SELECTBOX_SHOTNAME         = 'userssb']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
@@ -57953,13 +56765,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/tracker/tests/unit/Notifications/ConfigNotificationEmailCustomSenderFormatterTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[FIELD1_DATA = '123456']]></code>
-      <code><![CDATA[FIELD2_DATA = 'abcdef']]></code>
-      <code><![CDATA[FORMAT_DATA = '%field1']]></code>
-      <code><![CDATA[NO_SLUGIFY  = '@ slugify.']]></code>
-      <code><![CDATA[SLUGIFY     = 'at slugify']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[testCorrectlyFormatsKnownFields]]></code>
       <code><![CDATA[testDoesNotParseRecursively]]></code>
@@ -58742,9 +57547,6 @@
     </UndefinedPropertyFetch>
   </file>
   <file src="plugins/tracker/tests/unit/Semantic/CollectionOfSemanticsUsingAParticularTrackerFieldTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[TRACKER_ID = 10]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[getMockedSemantic]]></code>
     </MissingReturnType>
@@ -58912,10 +57714,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/tracker/tests/unit/Semantic/Timeframe/Administration/SemanticTimeframeCurrentConfigurationPresenterBuilderTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[ANOTHER_TRACKER_ID = 150]]></code>
-      <code><![CDATA[CURRENT_TRACKER_ID = 160]]></code>
-    </MissingClassConstType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$this->current_tracker]]></code>
       <code><![CDATA[$this->current_tracker]]></code>
@@ -59576,9 +58374,6 @@
       <code><![CDATA[date('j')]]></code>
       <code><![CDATA[date('n')]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[TRACKER_ID = 158]]></code>
-    </MissingClassConstType>
     <PossiblyFalseArgument>
       <code><![CDATA[$this->today_at_midnight]]></code>
       <code><![CDATA[$this->today_at_midnight]]></code>

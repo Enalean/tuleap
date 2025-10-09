@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class CreateTrackerFromXMLEvent implements Dispatchable
 {
-    public const NAME = 'createTrackerFromXMLEvent';
+    public const string NAME = 'createTrackerFromXMLEvent';
 
     /**
      * @var Project

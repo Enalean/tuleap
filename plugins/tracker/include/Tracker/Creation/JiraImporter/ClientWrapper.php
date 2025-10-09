@@ -40,10 +40,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 abstract class ClientWrapper implements JiraClient
 {
     #[ConfigKey('Jira importer will record all request being made and all responses sent back by the client in this directory')]
-    public const CONFIG_KEY_DEBUG_DIRECTORY = 'tracker_jira_debug_directory';
+    public const string CONFIG_KEY_DEBUG_DIRECTORY = 'tracker_jira_debug_directory';
 
     #[ConfigKey('Jira importer will always use basic auth with given credentials')]
-    public const CONFIG_KEY_FORCE_BASIC_AUTH = 'tracker_jira_force_basic_auth';
+    public const string CONFIG_KEY_FORCE_BASIC_AUTH = 'tracker_jira_force_basic_auth';
 
     /**
      * According to [1] the v3 API is only available on Jira Cloud with no forseen implementation on Jira Server (on prem)
@@ -51,12 +51,12 @@ abstract class ClientWrapper implements JiraClient
      *
      * [1] https://community.atlassian.com/t5/Jira-questions/When-will-Jira-Server-support-REST-API-v3/qaq-p/1303614
      */
-    public const JIRA_CORE_BASE_URL = '/rest/api/2';
+    public const string JIRA_CORE_BASE_URL = '/rest/api/2';
 
-    public const DEBUG_MARKER_BODY = 'Body content:';
+    public const string DEBUG_MARKER_BODY = 'Body content:';
 
-    private const DEPLOYMENT_TYPE_CLOUD = 'Cloud';
-    private const DEFAULT_TIMEOUT       = 30;
+    private const string DEPLOYMENT_TYPE_CLOUD = 'Cloud';
+    private const int DEFAULT_TIMEOUT          = 30;
 
     private ?string $debug_directory = null;
     private ?string $log_file        = null;

@@ -24,9 +24,9 @@ use Tuleap\Tracker\PromotedTrackersRetriever;
 use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\SidebarPromotedTrackerRetriever;
 
-class ServiceTracker extends Service
+class ServiceTracker extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const NAME = 'tracker';
+    public const string NAME = 'tracker';
 
     #[\Override]
     public function getIconName(): string

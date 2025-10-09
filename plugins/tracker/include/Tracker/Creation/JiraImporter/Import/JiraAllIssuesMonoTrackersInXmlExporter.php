@@ -38,9 +38,9 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 class JiraAllIssuesMonoTrackersInXmlExporter implements JiraAllIssuesInXmlExporter
 {
-    public const MONO_TRACKER_NAME      = 'Issues';
-    public const MONO_TRACKER_SHORTNAME = 'issue';
-    public const MONO_TRACKER_XML_ID    = Tracker::XML_ID_PREFIX . '1';
+    public const string MONO_TRACKER_NAME      = 'Issues';
+    public const string MONO_TRACKER_SHORTNAME = 'issue';
+    public const string MONO_TRACKER_XML_ID    = Tracker::XML_ID_PREFIX . '1';
 
     public function __construct(
         private readonly LoggerInterface $logger,

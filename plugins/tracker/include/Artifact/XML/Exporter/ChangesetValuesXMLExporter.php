@@ -27,12 +27,12 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 
 class ChangesetValuesXMLExporter
 {
-    public const ARTIFACT_XML_KEY  = 'artifact_xml';
-    public const CHANGESET_XML_KEY = 'changeset_xml';
-    public const ARTIFACT_KEY      = 'artifact';
-    public const EXPORT_MODE_KEY   = 'export_mode';
-    public const EXPORT_SNAPSHOT   = true;
-    public const EXPORT_CHANGES    = false;
+    public const string ARTIFACT_XML_KEY  = 'artifact_xml';
+    public const string CHANGESET_XML_KEY = 'changeset_xml';
+    public const string ARTIFACT_KEY      = 'artifact';
+    public const string EXPORT_MODE_KEY   = 'export_mode';
+    public const true EXPORT_SNAPSHOT     = true;
+    public const false EXPORT_CHANGES     = false;
 
     public function __construct(
         private readonly ChangesetValueXMLExporterVisitor $visitor,

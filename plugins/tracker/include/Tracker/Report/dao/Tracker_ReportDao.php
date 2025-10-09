@@ -22,7 +22,7 @@
 use Tuleap\Config\ConfigKeyCategory;
 
 #[ConfigKeyCategory('Tracker')]
-class Tracker_ReportDao extends DataAccessObject
+class Tracker_ReportDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Tuleap\Config\ConfigKey('Define the maximum number of artifacts a report can render')]
     #[\Tuleap\Config\ConfigKeyHelp(<<<EOT
@@ -33,7 +33,7 @@ class Tracker_ReportDao extends DataAccessObject
     The default is 0 and means 'no limit'
     EOT)]
     #[\Tuleap\Config\ConfigKeyInt(0)]
-    public const MAX_ARTIFACTS_IN_REPORT = 'max_artifacts_in_report';
+    public const string MAX_ARTIFACTS_IN_REPORT = 'max_artifacts_in_report';
 
     public function __construct()
     {

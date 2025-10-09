@@ -31,8 +31,8 @@ final class ArtifactNotificationSubscriberTest extends \Tuleap\Test\PHPUnit\Test
 {
     use \Tuleap\GlobalResponseMock;
 
-    private const USER_ID     = 101;
-    private const ARTIFACT_ID = 201;
+    private const int USER_ID     = 101;
+    private const int ARTIFACT_ID = 201;
 
     private Tracker_ArtifactNotificationSubscriber $artifact_subscriber;
 

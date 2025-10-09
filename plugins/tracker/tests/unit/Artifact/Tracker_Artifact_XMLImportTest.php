@@ -88,7 +88,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     use TemporaryTestDirectory;
     use GlobalResponseMock;
 
-    private const TRACKER_ID = 12;
+    private const int TRACKER_ID = 12;
 
     private TrackerXmlImportConfig $tracker_xml_config;
     private Tracker $tracker;

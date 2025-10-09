@@ -25,7 +25,7 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class MessageFetcherAdditionalWarnings implements Dispatchable
 {
-    public const NAME = 'getMessageFetcherAdditionalWarnings';
+    public const string NAME = 'getMessageFetcherAdditionalWarnings';
 
     /**
      * @var TrackerField

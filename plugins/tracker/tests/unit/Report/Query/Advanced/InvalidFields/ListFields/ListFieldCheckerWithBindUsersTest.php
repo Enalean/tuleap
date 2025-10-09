@@ -45,8 +45,8 @@ final class ListFieldCheckerWithBindUsersTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
 
-    private const FIELD_NAME = 'a_field';
-    private const USER_NAME  = 'admin';
+    private const string FIELD_NAME = 'a_field';
+    private const string USER_NAME  = 'admin';
     private Comparison $comparison;
 
     /**

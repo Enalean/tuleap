@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class DefaultTemplatesXMLFileCollection implements Dispatchable
 {
-    public const NAME = 'defaultTemplatesXMLFileCollection';
+    public const string NAME = 'defaultTemplatesXMLFileCollection';
 
     /**
      * @var string[]

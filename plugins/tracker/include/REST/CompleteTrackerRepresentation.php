@@ -31,9 +31,9 @@ use Tuleap\Tracker\Tracker;
  */
 class CompleteTrackerRepresentation implements TrackerRepresentation
 {
-    public const ROUTE = 'trackers';
+    public const string ROUTE = 'trackers';
 
-    public const FULL_REPRESENTATION = 'full';
+    public const string FULL_REPRESENTATION = 'full';
 
     /**
      * @var int

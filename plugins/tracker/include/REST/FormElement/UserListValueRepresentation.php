@@ -25,7 +25,7 @@ use Tracker_FormElement_Field_List_Bind_UsersValue;
 
 final class UserListValueRepresentation
 {
-    private const ROUTE = 'users';
+    private const string ROUTE = 'users';
 
     /**
      * @var int

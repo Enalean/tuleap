@@ -28,7 +28,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 class DisplayArtifactLinkEvent implements Dispatchable
 {
-    public const NAME = 'displayArtifactLinkEvent';
+    public const string NAME = 'displayArtifactLinkEvent';
 
     private bool $can_link_be_modified = true;
 

@@ -72,7 +72,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
 class ProjectTrackersResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     /**
      * Get trackers

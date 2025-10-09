@@ -20,9 +20,9 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-class Tracker_Artifact_BatchIterator
+class Tracker_Artifact_BatchIterator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const ITEMS_PER_BATCH = 100;
+    public const int ITEMS_PER_BATCH = 100;
 
     private $batches_processed;
 

@@ -31,9 +31,9 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const STATIK  = 'static';
-    public const USERS   = 'users';
-    public const UGROUPS = 'ugroups';
+    public const string STATIK  = 'static';
+    public const string USERS   = 'users';
+    public const string UGROUPS = 'ugroups';
 
     /**
      * @var UGroupManager

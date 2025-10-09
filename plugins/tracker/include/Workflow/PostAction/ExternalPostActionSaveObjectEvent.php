@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class ExternalPostActionSaveObjectEvent implements Dispatchable
 {
-    public const NAME = 'externalPostActionSaveObjectEvent';
+    public const string NAME = 'externalPostActionSaveObjectEvent';
 
     /**
      * @var Transition_PostAction

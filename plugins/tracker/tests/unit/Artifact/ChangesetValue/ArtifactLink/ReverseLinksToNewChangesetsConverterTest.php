@@ -41,17 +41,17 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReverseLinksToNewChangesetsConverterTest extends TestCase
 {
-    private const ADDED_ARTIFACT_ID     = 245;
-    private const ADDED_TYPE            = ArtifactLinkField::TYPE_IS_CHILD;
-    private const ADDED_ARTIFACT_ID_2   = 271;
-    private const CHANGED_ARTIFACT_ID   = 857;
-    private const CHANGED_TYPE          = 'custom';
-    private const REMOVED_ARTIFACT_ID   = 269;
-    private const SUBMISSION_TIMESTAMP  = 1826140922;
-    private const ADDED_LINK_FIELD_ID   = 500;
-    private const CHANGED_LINK_FIELD_ID = 285;
-    private const REMOVED_LINK_FIELD_ID = 578;
-    private const TARGET_ARTIFACT_ID    = 186;
+    private const int ADDED_ARTIFACT_ID     = 245;
+    private const string ADDED_TYPE         = ArtifactLinkField::TYPE_IS_CHILD;
+    private const int ADDED_ARTIFACT_ID_2   = 271;
+    private const int CHANGED_ARTIFACT_ID   = 857;
+    private const string CHANGED_TYPE       = 'custom';
+    private const int REMOVED_ARTIFACT_ID   = 269;
+    private const int SUBMISSION_TIMESTAMP  = 1826140922;
+    private const int ADDED_LINK_FIELD_ID   = 500;
+    private const int CHANGED_LINK_FIELD_ID = 285;
+    private const int REMOVED_LINK_FIELD_ID = 578;
+    private const int TARGET_ARTIFACT_ID    = 186;
     private RetrieveViewableArtifactStub $artifact_retriever;
     private RetrieveUsedArtifactLinkFieldsStub $field_retriever;
     private Artifact $target_artifact;

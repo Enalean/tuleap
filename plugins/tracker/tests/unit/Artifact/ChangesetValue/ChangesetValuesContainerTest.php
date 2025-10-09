@@ -33,9 +33,9 @@ use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID               = 170;
-    private const FIELD_VALUE            = 'whatever';
-    private const ARTIFACT_LINK_FIELD_ID = 219;
+    private const int FIELD_ID               = 170;
+    private const string FIELD_VALUE         = 'whatever';
+    private const int ARTIFACT_LINK_FIELD_ID = 219;
     /** @var Option<NewArtifactLinkChangesetValue> $artifact_links */
     private Option $artifact_links;
     private array $fields_data;

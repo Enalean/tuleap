@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 
 class SemanticTimeframeDao extends DataAccessObject
 {
-    private const SQL_TRUE_VALUE = 1;
+    private const int SQL_TRUE_VALUE = 1;
 
     /**
      * @psalm-return array{start_date_field_id: ?int, duration_field_id: ?int, end_date_field_id: ?int, implied_from_tracker_id: ?int}|null

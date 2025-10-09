@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 #[\PHPUnit\Framework\Attributes\Group('TrackerTests')]
 class TQLTest extends RestBase
 {
-    public const PROJECT_NAME = 'tql';
+    public const string PROJECT_NAME = 'tql';
 
     private $tracker_id;
 

@@ -53,10 +53,10 @@ final readonly class MarkTrackerAsDeletedController implements DispatchableWithR
      *  'tracker_id'      int (IN)
      *  'key'             string  (IN)
      */
-    public final const TRACKER_EVENT_DELETE_TRACKER = 'tracker_event_delete_tracker';
+    public final const string TRACKER_EVENT_DELETE_TRACKER = 'tracker_event_delete_tracker';
 
-    public const DELETION_URL                         = 'delete-tracker';
-    public const PROJECT_HISTORY_TRACKER_DELETION_KEY = 'plugin_tracker_tracker_deletion';
+    public const string DELETION_URL                         = 'delete-tracker';
+    public const string PROJECT_HISTORY_TRACKER_DELETION_KEY = 'plugin_tracker_tracker_deletion';
 
     public function __construct(
         private TrackerFactory $tracker_factory,

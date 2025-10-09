@@ -25,7 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 final class LesserThanOrEqualComparisonChecker implements ICheckMetadataForAComparison
 {
-    public const OPERATOR = '<=';
+    public const string OPERATOR = '<=';
 
     #[\Override]
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)

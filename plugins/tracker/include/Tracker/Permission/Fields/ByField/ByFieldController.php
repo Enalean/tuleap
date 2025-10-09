@@ -34,7 +34,7 @@ use Tuleap\Request\NotFoundException;
 
 class ByFieldController implements DispatchableWithRequest
 {
-    public const URL = '/permissions/fields-by-field';
+    public const string URL = '/permissions/fields-by-field';
 
     /**
      * @var \TrackerFactory

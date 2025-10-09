@@ -34,7 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class JiraImporterExternalPluginsEvent implements Dispatchable
 {
-    public const NAME = 'jiraImporterExternalPluginsEvent';
+    public const string NAME = 'jiraImporterExternalPluginsEvent';
 
     /**
      * @var SimpleXMLElement

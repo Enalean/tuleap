@@ -23,11 +23,11 @@ namespace Tuleap\Tracker\Notifications;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ConfigNotificationEmailCustomSenderFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public const FIELD1_DATA = '123456';
-    public const FIELD2_DATA = 'abcdef';
-    public const FORMAT_DATA = '%field1';
-    public const NO_SLUGIFY  = '@ slugify.';
-    public const SLUGIFY     = 'at slugify';
+    public const string FIELD1_DATA = '123456';
+    public const string FIELD2_DATA = 'abcdef';
+    public const string FORMAT_DATA = '%field1';
+    public const string NO_SLUGIFY  = '@ slugify.';
+    public const string SLUGIFY     = 'at slugify';
 
     /**
      * @var ConfigNotificationEmailCustomSenderFormatter

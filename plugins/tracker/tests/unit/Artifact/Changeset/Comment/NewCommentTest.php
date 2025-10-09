@@ -28,7 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const SUBMISSION_TIMESTAMP = 1680808942;
+    private const int SUBMISSION_TIMESTAMP = 1680808942;
     private \PFUser $submitter;
     /**
      * @var \ProjectUGroup[]

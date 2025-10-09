@@ -30,8 +30,8 @@ final class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TransitionValidator $validator;
 
-    private const FROM_ID = 516;
-    private const TO_ID   = 137;
+    private const int FROM_ID = 516;
+    private const int TO_ID   = 137;
 
     #[\Override]
     protected function setUp(): void

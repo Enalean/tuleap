@@ -36,7 +36,7 @@ use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 class SearchResultRetriever
 {
-    public const TYPE = 'artifact';
+    public const string TYPE = 'artifact';
 
     public function __construct(
         private \Tracker_ArtifactFactory $artifact_factory,
