@@ -32,14 +32,18 @@
 </template>
 <script setup lang="ts">
 import type { DatePickerInstance } from "@tuleap/tlp-date-picker";
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker } from "@tuleap/tlp-date-picker";
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { USER_LOCALE } from "../../../../configuration-keys";
 
 const props = defineProps<{
     id: string;
     required: boolean;
     value: string;
 }>();
+
+const user_locale = strictInject(USER_LOCALE);
 
 const datepicker = ref<DatePickerInstance | null>(null);
 const input_value = ref(props.value);
@@ -61,7 +65,7 @@ watch(
 onMounted((): void => {
     const element = root.value;
     if (element instanceof HTMLInputElement) {
-        datepicker.value = datePicker(element, {
+        datepicker.value = createDatePicker(element, user_locale, {
             defaultDate: props.value,
             onChange: onDatePickerChange,
             allowInput: true,
