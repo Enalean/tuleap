@@ -25,11 +25,12 @@ namespace Tuleap\Layout;
 use Tuleap\Layout\HeaderConfiguration\InProject;
 use Tuleap\Layout\HeaderConfiguration\InSiteAdministration;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\OpenGraph\OpenGraphPresenter;
 
 /**
  * @psalm-immutable
  */
-final class HeaderConfiguration
+final readonly class HeaderConfiguration
 {
     /**
      * @param string[] $body_class
@@ -37,14 +38,15 @@ final class HeaderConfiguration
      * @psalm-internal \Tuleap\Layout
      */
     public function __construct(
-        public readonly string $title,
-        public readonly ?InProject $in_project,
-        public readonly array $body_class,
-        public readonly array $main_class,
-        public readonly int $printer_version,
-        public readonly ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter,
-        public readonly bool $include_fat_combined,
-        public readonly ?InSiteAdministration $in_site_administration,
+        public string $title,
+        public ?InProject $in_project,
+        public array $body_class,
+        public array $main_class,
+        public int $printer_version,
+        public ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter,
+        public bool $include_fat_combined,
+        public ?InSiteAdministration $in_site_administration,
+        private ?OpenGraphPresenter $open_graph,
     ) {
     }
 
@@ -64,6 +66,7 @@ final class HeaderConfiguration
             'title'                                => $this->title,
             'body_class'                           => $this->body_class,
             'main_classes'                         => $this->main_class,
+            'open_graph'                           => $this->open_graph,
             'pv'                                   => $this->printer_version,
             'new_dropdown_current_context_section' => $this->new_dropdown_link_section_presenter,
             ...($this->include_fat_combined ? ['include_fat_combined' => true] : []),

@@ -45,6 +45,7 @@ use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -120,6 +121,11 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
             HeaderConfigurationBuilder::get($title)
                 ->inProject($service->getProject(), \DocmanPlugin::SERVICE_SHORTNAME)
                 ->withBodyClass(['has-sidebar-with-pinned-header', 'reduce-help-button'])
+                ->withOpenGraph(new OpenGraphPresenter(
+                    '/artidoc/' . $document_information->document->getId() . '/',
+                    $document_information->document->getTitle(),
+                    $document_information->document->getDescription(),
+                ))
                 ->build()
         );
 

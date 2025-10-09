@@ -27,6 +27,8 @@ interface Artidoc
 {
     public function getId(): int;
 
+    public function getDescription(): string;
+
     public function getTitle(): string;
 
     public function getParentId(): int;
