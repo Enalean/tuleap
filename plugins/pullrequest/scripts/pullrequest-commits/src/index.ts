@@ -22,10 +22,18 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { selectOrThrow, getAttributeOrThrow } from "@tuleap/dom";
+import { getTimezoneOrThrow } from "@tuleap/date-helper";
+import { getLocaleWithDefault } from "@tuleap/locale";
+import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 import { buildBaseUrl, buildCommitsTabUrl } from "./router/base-url-builders";
 import CommitListApp from "./components/App.vue";
 import { createCommitsRouter } from "./router/router";
-import { COMMITS_APP_BASE_URL_KEY } from "./constants";
+import {
+    COMMITS_APP_BASE_URL_KEY,
+    USER_LOCALE_KEY,
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    USER_TIMEZONE_KEY,
+} from "./constants";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = selectOrThrow(document, ".vue-commits-mount-point");
@@ -35,6 +43,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     createApp(CommitListApp)
         .provide(COMMITS_APP_BASE_URL_KEY, base_url)
+        .provide(USER_LOCALE_KEY, getLocaleWithDefault(document))
+        .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
+        .provide(
+            USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+            getRelativeDateUserPreferenceOrThrow(mount_point, "data-relative-date-display"),
+        )
         .use(createCommitsRouter(buildCommitsTabUrl(base_url)))
         .use(VueDOMPurifyHTML)
         .use(

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { User, ProjectLabel, ProjectLabelsCollection } from "@tuleap/core-rest-api-types";
+import type { User } from "@tuleap/core-rest-api-types";
+import type { CommitBuildStatus } from "@tuleap/plugin-pullrequest-constants";
 
-export * from "./pull-request";
-export * from "./timeline";
-export * from "./post-comments";
-export * from "./patch-comments";
-export * from "./labels";
-export * from "./branches";
-export * from "./commits";
+export type CommitStatus = {
+    readonly name: CommitBuildStatus;
+    readonly date: string;
+};
+
+export type PullRequestCommit = {
+    readonly id: string;
+    readonly html_url: string;
+    readonly title: string;
+    readonly author_name: string;
+    readonly authored_date: string;
+    readonly committed_date: string;
+    readonly message: string;
+    readonly author_email: string;
+    readonly author: User | null;
+    readonly commit_status: CommitStatus | null;
+};

@@ -19,9 +19,20 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { uri, getJSON } from "@tuleap/fetch-result";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { uri, getJSON, getAllJSON } from "@tuleap/fetch-result";
+import type { PullRequest, PullRequestCommit } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export const fetchPullRequestInfo = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
     return getJSON(uri`/api/v1/pull_requests/${pull_request_id}`);
+};
+
+export const fetchPullRequestCommits = (
+    pull_request_id: number,
+): ResultAsync<readonly PullRequestCommit[], Fault> => {
+    return getAllJSON<PullRequestCommit, PullRequestCommit[]>(
+        uri`/api/v1/pull_requests/${pull_request_id}/commits`,
+        {
+            params: { limit: 50 },
+        },
+    );
 };

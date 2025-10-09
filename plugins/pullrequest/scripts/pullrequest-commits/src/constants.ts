@@ -18,7 +18,13 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import type { LocaleString } from "@tuleap/date-helper";
 
 export const COMMITS_APP_BASE_URL_KEY: StrictInjectionKey<URL> = Symbol("commits_app_base_url");
 export const PULL_REQUEST_ID_KEY: StrictInjectionKey<number> = Symbol("pull_request_id");
 export const VIEW_COMMITS_NAME = "commits";
+export const USER_LOCALE_KEY: StrictInjectionKey<LocaleString> = Symbol();
+export const USER_TIMEZONE_KEY: StrictInjectionKey<string> = Symbol();
+export const USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY: StrictInjectionKey<RelativeDatesDisplayPreference> =
+    Symbol("user_relative_date_display_preference");

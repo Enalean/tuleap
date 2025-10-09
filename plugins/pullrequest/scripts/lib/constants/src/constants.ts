@@ -24,6 +24,12 @@ export const BUILD_STATUS_PENDING: BuildStatus = "pending";
 export const BUILD_STATUS_FAILED: BuildStatus = "fail";
 export const BUILD_STATUS_SUCCESS: BuildStatus = "success";
 
+export type CommitBuildStatus = "success" | "failure" | "pending";
+
+export const COMMIT_BUILD_STATUS_PENDING: CommitBuildStatus = "pending";
+export const COMMIT_BUILD_STATUS_SUCCESS: CommitBuildStatus = "success";
+export const COMMIT_BUILD_STATUS_FAILURE: CommitBuildStatus = "failure";
+
 export type InlineCommentPosition = "left" | "right";
 
 export const INLINE_COMMENT_POSITION_LEFT: InlineCommentPosition = "left";
