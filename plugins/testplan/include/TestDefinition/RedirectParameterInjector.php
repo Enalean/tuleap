@@ -31,8 +31,8 @@ use Tuleap\AgileDashboard\BacklogItem\BacklogItemCreationUpdateInformationLinkPr
 
 class RedirectParameterInjector
 {
-    public const TTM_BACKLOG_ITEM_ID_KEY = 'ttm_backlog_item_id';
-    public const TTM_MILESTONE_ID_KEY    = 'ttm_milestone_id';
+    public const string TTM_BACKLOG_ITEM_ID_KEY = 'ttm_backlog_item_id';
+    public const string TTM_MILESTONE_ID_KEY    = 'ttm_milestone_id';
 
     /**
      * @var Tracker_ArtifactFactory

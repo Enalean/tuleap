@@ -28,9 +28,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ExecutionChangesExtractor
 {
-    public const FIELD_RESULTS = 'results';
-    public const FIELD_STATUS  = 'status';
-    public const FIELD_TIME    = 'time';
+    public const string FIELD_RESULTS = 'results';
+    public const string FIELD_STATUS  = 'status';
+    public const string FIELD_TIME    = 'time';
 
     /**
      * @var FormattedChangesetValueForFileFieldRetriever

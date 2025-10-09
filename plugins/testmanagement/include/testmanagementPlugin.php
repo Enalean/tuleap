@@ -129,10 +129,10 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
-class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\Config\PluginWithConfigKeys //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\Config\PluginWithConfigKeys //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const NAME              = 'testmanagement';
-    public const SERVICE_SHORTNAME = 'plugin_testmanagement';
+    public const string NAME              = 'testmanagement';
+    public const string SERVICE_SHORTNAME = 'plugin_testmanagement';
 
     public function __construct(?int $id)
     {

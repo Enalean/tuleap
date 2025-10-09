@@ -30,9 +30,9 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GetURIForMilestoneFromTTMTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID   = 1;
-    private const PLANNING_ID  = 2;
-    private const MILESTONE_ID = 3;
+    private const int PROJECT_ID   = 1;
+    private const int PLANNING_ID  = 2;
+    private const int MILESTONE_ID = 3;
 
     private function getMilestone(): \Planning_Milestone
     {

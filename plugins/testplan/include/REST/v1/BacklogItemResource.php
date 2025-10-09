@@ -38,7 +38,7 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 final class BacklogItemResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 30;
+    private const int MAX_LIMIT = 30;
 
     /**
      * @url OPTIONS {id}

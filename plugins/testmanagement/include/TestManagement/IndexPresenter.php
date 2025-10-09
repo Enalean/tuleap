@@ -36,7 +36,7 @@ use Tuleap\User\REST\UserRepresentation;
 class IndexPresenter
 {
     #[FeatureFlagConfigKey('Order test executions by test definition ranks')]
-    public const FEATURE_FLAG_ORDER_BY_TEST_DEF_RANK = 'ttm_test_exec_order_by_test_def_rank';
+    public const string FEATURE_FLAG_ORDER_BY_TEST_DEF_RANK = 'ttm_test_exec_order_by_test_def_rank';
 
     /** @var int */
     public $project_id;

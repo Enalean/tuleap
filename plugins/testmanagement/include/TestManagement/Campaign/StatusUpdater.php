@@ -29,8 +29,8 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
 class StatusUpdater
 {
-    public const STATUS_CHANGE_CLOSED_VALUE = 'closed';
-    public const STATUS_CHANGE_OPEN_VALUE   = 'open';
+    public const string STATUS_CHANGE_CLOSED_VALUE = 'closed';
+    public const string STATUS_CHANGE_OPEN_VALUE   = 'open';
 
     /**
      * @var StatusValueRetriever

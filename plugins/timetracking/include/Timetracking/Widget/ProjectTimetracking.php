@@ -32,7 +32,7 @@ use Widget;
 
 class ProjectTimetracking extends Widget
 {
-    public const NAME = 'project-timetracking';
+    public const string NAME = 'project-timetracking';
 
     /**
      * @var string

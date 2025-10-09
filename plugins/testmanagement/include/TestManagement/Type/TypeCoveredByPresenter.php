@@ -25,7 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class TypeCoveredByPresenter extends TypePresenter
 {
-    final public const TYPE_COVERED_BY = '_covered_by';
+    final public const string TYPE_COVERED_BY = '_covered_by';
 
     public function __construct()
     {

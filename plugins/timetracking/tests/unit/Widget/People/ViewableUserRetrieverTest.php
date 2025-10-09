@@ -36,7 +36,7 @@ use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPerm
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ViewableUserRetrieverTest extends TestCase
 {
-    public const ALICE_ID = 102;
+    public const int ALICE_ID = 102;
 
     public function testItReturnsFaultWhenCurrentUserIsAnonymous(): void
     {

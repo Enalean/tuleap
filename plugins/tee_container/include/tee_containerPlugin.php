@@ -26,7 +26,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class tee_containerPlugin extends Plugin
 {
-    public const NAME = 'tee_container';
+    public const string NAME = 'tee_container';
 
     public function __construct($id)
     {

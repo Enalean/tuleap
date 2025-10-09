@@ -25,8 +25,8 @@ use Tuleap\Tracker\Milestone\PaneInfo;
 
 final class TestPlanPaneInfo extends PaneInfo
 {
-    public const NAME = 'testplan';
-    public const URL  = '/testplan';
+    public const string NAME = 'testplan';
+    public const string URL  = '/testplan';
 
     /**
      * @var int

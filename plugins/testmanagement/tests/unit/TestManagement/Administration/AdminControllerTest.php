@@ -43,15 +43,15 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private FieldUsageDetector&MockObject $field_usage_detector;
     private TrackerChecker&MockObject $tracker_checker;
 
-    public const PROJECT_ID                     = 104;
-    public const ORIGINAL_CAMPAIGN_TRACKER_ID   = 531;
-    public const ORIGINAL_DEFINITION_TRACKER_ID = 532;
-    public const ORIGINAL_EXECUTION_TRACKER_ID  = 533;
-    public const ORIGINAL_ISSUE_TRACKER_ID      = 534;
-    public const NEW_CAMPAIGN_TRACKER_ID        = 535;
-    public const NEW_DEFINITION_TRACKER_ID      = 536;
-    public const NEW_EXECUTION_TRACKER_ID       = 537;
-    public const NEW_ISSUE_TRACKER_ID           = 538;
+    public const int PROJECT_ID                     = 104;
+    public const int ORIGINAL_CAMPAIGN_TRACKER_ID   = 531;
+    public const int ORIGINAL_DEFINITION_TRACKER_ID = 532;
+    public const int ORIGINAL_EXECUTION_TRACKER_ID  = 533;
+    public const int ORIGINAL_ISSUE_TRACKER_ID      = 534;
+    public const int NEW_CAMPAIGN_TRACKER_ID        = 535;
+    public const int NEW_DEFINITION_TRACKER_ID      = 536;
+    public const int NEW_EXECUTION_TRACKER_ID       = 537;
+    public const int NEW_ISSUE_TRACKER_ID           = 538;
 
     #[\Override]
     public function setUp(): void

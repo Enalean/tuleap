@@ -35495,9 +35495,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tee_container/include/tee_containerPlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'tee_container']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
@@ -35508,16 +35505,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/testmanagement/include/RealTime/RealTimeMessageSender.php">
-    <MissingClassConstType>
-      <code><![CDATA[EVENT_NAME_ARTIFACT_LINKED   = 'testmanagement_execution:link_artifact']]></code>
-      <code><![CDATA[EVENT_NAME_CAMPAIGN_UPDATED  = 'testmanagement_campaign:update']]></code>
-      <code><![CDATA[EVENT_NAME_EXECUTION_CREATED = 'testmanagement_execution:create']]></code>
-      <code><![CDATA[EVENT_NAME_EXECUTION_DELETED = 'testmanagement_execution:delete']]></code>
-      <code><![CDATA[EVENT_NAME_EXECUTION_UPDATED = 'testmanagement_execution:update']]></code>
-      <code><![CDATA[EVENT_NAME_USER_PRESENCE     = 'testmanagement_user:presence']]></code>
-      <code><![CDATA[HTTP_CLIENT_UUID             = 'HTTP_X_CLIENT_UUID']]></code>
-      <code><![CDATA[TEST_MANAGEMENT_TOPIC = 'TestManagement']]></code>
-    </MissingClassConstType>
     <PossiblyFalseArgument>
       <code><![CDATA[json_encode($data)]]></code>
       <code><![CDATA[json_encode($data)]]></code>
@@ -35599,10 +35586,6 @@
     <DeprecatedMethod>
       <code><![CDATA[createNewChangeset]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[STATUS_CHANGE_CLOSED_VALUE = 'closed']]></code>
-      <code><![CDATA[STATUS_CHANGE_OPEN_VALUE   = 'open']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Config.php">
     <DeprecatedMethod>
@@ -35642,26 +35625,11 @@
       <code><![CDATA[$issue_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/testmanagement/include/TestManagement/Event/GetItemsFromMilestone.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'testmanagement_get_items_from_milestone']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/Event/GetMilestone.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'testmanagement_get_milestone']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/testmanagement/include/TestManagement/FirstConfigCreator.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getId()]]></code>
       <code><![CDATA[$project->getId()]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/GetURIForMilestoneFromTTM.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'getURIForMilestoneFromTTM']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Heartbeat/LatestHeartbeatsCollector.php">
     <RedundantCastGivenDocblockType>
@@ -35678,9 +35646,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/IndexPresenter.php">
-    <MissingClassConstType>
-      <code><![CDATA[FEATURE_FLAG_ORDER_BY_TEST_DEF_RANK = 'ttm_test_exec_order_by_test_def_rank']]></code>
-    </MissingClassConstType>
     <PossiblyFalsePropertyAssignmentValue>
       <code><![CDATA[json_encode(
             [
@@ -35701,13 +35666,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$issue_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/ExecutionChangesExtractor.php">
-    <MissingClassConstType>
-      <code><![CDATA[FIELD_RESULTS = 'results']]></code>
-      <code><![CDATA[FIELD_STATUS  = 'status']]></code>
-      <code><![CDATA[FIELD_TIME    = 'time']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/FormattedChangesetValueForFileFieldRetriever.php">
     <RedundantCastGivenDocblockType>
@@ -35756,12 +35714,6 @@
       <code><![CDATA[retrieve]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/v1/CampaignArtifactUpdateFieldValuesBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[STATUS_CHANGE_CLOSED_VALUE = 'closed']]></code>
-      <code><![CDATA[STATUS_CHANGE_OPEN_VALUE   = 'open']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/CampaignCreator.php">
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $label_field->getId()]]></code>
@@ -35772,18 +35724,6 @@
       <code><![CDATA[! $campaign_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/v1/CampaignRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[FIELD_ARTIFACT_LINKS = 'artifact_links']]></code>
-      <code><![CDATA[FIELD_NAME           = 'label']]></code>
-      <code><![CDATA[FIELD_STATUS         = 'status']]></code>
-      <code><![CDATA[ROUTE = 'testmanagement_campaigns']]></code>
-      <code><![CDATA[STATUS_BLOCKED = 'blocked']]></code>
-      <code><![CDATA[STATUS_FAILED  = 'failed']]></code>
-      <code><![CDATA[STATUS_NOT_RUN = 'notrun']]></code>
-      <code><![CDATA[STATUS_PASSED  = 'passed']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/CampaignsResource.php">
     <InvalidDocblock>
       <code><![CDATA[protected function patchExecutions($id, $definition_ids_to_add, $execution_ids_to_remove)]]></code>
@@ -35791,9 +35731,6 @@
     <InvalidScalarArgument>
       <code><![CDATA[$project_id]]></code>
     </InvalidScalarArgument>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 50]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[patchExecutions]]></code>
     </MissingReturnType>
@@ -35811,16 +35748,6 @@
       <code><![CDATA[$all_requirements]]></code>
       <code><![CDATA[$steps]]></code>
     </MissingPropertyType>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/v1/DefinitionRepresentations/DefinitionRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[FIELD_AUTOMATED_TESTS = 'automated_tests']]></code>
-      <code><![CDATA[FIELD_CATEGORY        = 'category']]></code>
-      <code><![CDATA[FIELD_DESCRIPTION     = 'details']]></code>
-      <code><![CDATA[FIELD_STEPS           = 'steps']]></code>
-      <code><![CDATA[FIELD_SUMMARY         = 'summary']]></code>
-      <code><![CDATA[ROUTE = 'testmanagement_definitions']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/DefinitionRepresentations/DefinitionTextOrHTMLRepresentation.php">
     <InvalidDocblock>
@@ -35844,12 +35771,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/DefinitionSelector.php">
-    <MissingClassConstType>
-      <code><![CDATA[ALL = 'all']]></code>
-      <code><![CDATA[MILESTONE = 'milestone']]></code>
-      <code><![CDATA[NONE = 'none']]></code>
-      <code><![CDATA[REPORT = 'report']]></code>
-    </MissingClassConstType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
@@ -35877,15 +35798,6 @@
     <InvalidOperand>
       <code><![CDATA[$this->id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[FIELD_ARTIFACT_LINKS = 'artifact_links']]></code>
-      <code><![CDATA[FIELD_ASSIGNED_TO    = 'assigned_to']]></code>
-      <code><![CDATA[FIELD_RESULTS        = 'results']]></code>
-      <code><![CDATA[FIELD_STATUS         = 'status']]></code>
-      <code><![CDATA[FIELD_STEPS_RESULTS  = 'steps_results']]></code>
-      <code><![CDATA[FIELD_TIME           = 'time']]></code>
-      <code><![CDATA[ROUTE = 'testmanagement_executions']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$attachments]]></code>
       <code><![CDATA[$linked_bugs]]></code>
@@ -35925,10 +35837,6 @@
     <InvalidOperand>
       <code><![CDATA[$this->id]]></code>
     </InvalidOperand>
-    <MissingClassConstType>
-      <code><![CDATA[NATURE_ARTIFACT = 'artifact']]></code>
-      <code><![CDATA[ROUTE = 'testmanagement_nodes']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/ProjectResource.php">
     <InvalidArgument>
@@ -35956,9 +35864,6 @@
             'total'       => $artifacts_count,
         ]]]></code>
     </LessSpecificReturnStatement>
-    <MissingClassConstType>
-      <code><![CDATA[MAX_LIMIT = 1000]]></code>
-    </MissingClassConstType>
     <MoreSpecificReturnType>
       <code><![CDATA[array {Tracker_Artifact}]]></code>
       <code><![CDATA[array {Tracker_Artifact}]]></code>
@@ -35983,12 +35888,6 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $status_field->getId()]]></code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/REST/v1/TestsDataJUnitExtraction/TestsDataFromJunitExtractor.php">
-    <MissingClassConstType>
-      <code><![CDATA[STATUS_FAILURE = 'failed']]></code>
-      <code><![CDATA[STATUS_SUCCESS = 'passed']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Router.php">
     <PossiblyInvalidArgument>
@@ -36025,31 +35924,12 @@
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="plugins/testmanagement/include/TestManagement/TestManagementController.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'testmanagement']]></code>
-    </MissingClassConstType>
-  </file>
-  <file src="plugins/testmanagement/include/TestManagement/TestmanagementTrackersConfigurator.php">
-    <MissingClassConstType>
-      <code><![CDATA[CAMPAIGN_TRACKER_NAME   = 'Validation Campaign']]></code>
-      <code><![CDATA[DEFINITION_TRACKER_NAME = 'Test Cases']]></code>
-      <code><![CDATA[EXECUTION_TRACKER_NAME  = 'Test Execution']]></code>
-      <code><![CDATA[ISSUE_TRACKER_NAME      = 'bugs']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/testmanagement/include/TestManagement/TestmanagementTrackersCreator.php">
     <PossiblyInvalidOperand>
       <code><![CDATA[$project->getId()]]></code>
     </PossiblyInvalidOperand>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/XML/Exporter.php">
-    <MissingClassConstType>
-      <code><![CDATA[CAMPAIGNS   = 'campaigns']]></code>
-      <code><![CDATA[DEFINITIONS = 'definitions']]></code>
-      <code><![CDATA[EXECUTIONS  = 'executions']]></code>
-      <code><![CDATA[ISSUES      = 'issues']]></code>
-    </MissingClassConstType>
     <PossiblyFalseArgument>
       <code><![CDATA[$rng_path]]></code>
     </PossiblyFalseArgument>
@@ -36090,12 +35970,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/XML/XMLImport.php">
-    <MissingClassConstType>
-      <code><![CDATA[CAMPAIGNS   = 'campaigns']]></code>
-      <code><![CDATA[DEFINITIONS = 'definitions']]></code>
-      <code><![CDATA[EXECUTIONS  = 'executions']]></code>
-      <code><![CDATA[ISSUES      = 'issues']]></code>
-    </MissingClassConstType>
     <PossiblyFalseArgument>
       <code><![CDATA[$rng_path]]></code>
       <code><![CDATA[file_get_contents($xml_path)]]></code>
@@ -36114,10 +35988,6 @@
     </PossiblyFalseOperand>
   </file>
   <file src="plugins/testmanagement/include/testmanagementPlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME              = 'testmanagement']]></code>
-      <code><![CDATA[SERVICE_SHORTNAME = 'plugin_testmanagement']]></code>
-    </MissingClassConstType>
     <PossiblyInvalidOperand>
       <code><![CDATA[$to_project->getID()]]></code>
     </PossiblyInvalidOperand>
@@ -36576,12 +36446,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/testmanagement/tests/unit/TestManagement/REST/v1/TestStatusAccordingToStepsStatusChangesBuilderTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[BLOCKED_ID = 104]]></code>
-      <code><![CDATA[FAILED_ID  = 103]]></code>
-      <code><![CDATA[NOT_RUN_ID = 101]]></code>
-      <code><![CDATA[PASSED_ID  = 102]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$expected_status]]></code>
     </MissingParamType>
@@ -36690,10 +36554,6 @@
     </InvalidDocblock>
   </file>
   <file src="plugins/testplan/include/TestDefinition/RedirectParameterInjector.php">
-    <MissingClassConstType>
-      <code><![CDATA[TTM_BACKLOG_ITEM_ID_KEY = 'ttm_backlog_item_id']]></code>
-      <code><![CDATA[TTM_MILESTONE_ID_KEY    = 'ttm_milestone_id']]></code>
-    </MissingClassConstType>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $backlog_item->getId()]]></code>
     </RedundantCastGivenDocblockType>
@@ -36719,9 +36579,6 @@
     <DeprecatedMethod>
       <code><![CDATA[userCanSubmitArtifact]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[IDENTIFIER = 'testplan']]></code>
-    </MissingClassConstType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $campaign_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
@@ -36780,10 +36637,6 @@
       <code><![CDATA[groupAddHistory]]></code>
       <code><![CDATA[groupAddHistory]]></code>
     </DeprecatedMethod>
-    <MissingClassConstType>
-      <code><![CDATA[READ_ACCESS  = 'PLUGIN_TIMETRACKING_READ']]></code>
-      <code><![CDATA[WRITE_ACCESS = 'PLUGIN_TIMETRACKING_WRITE']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$selected_read_ugroup]]></code>
       <code><![CDATA[$selected_write_ugroup]]></code>
@@ -36880,12 +36733,6 @@
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/timetracking/include/Timetracking/JiraImporter/Configuration/JiraTimetrackingConfigurationRetriever.php">
-    <MissingClassConstType>
-      <code><![CDATA[CONFIGURATION_KEY = 'jira_timetracking']]></code>
-      <code><![CDATA[TIMETRACKING_KEY = 'timeTrackingEnabled']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/timetracking/include/Timetracking/JiraImporter/JiraXMLExport.php">
     <PossiblyNullArgument>
       <code><![CDATA[$xml_timetracking_permission_write]]></code>
@@ -36918,15 +36765,7 @@
       <code><![CDATA[getArtifactTime]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/timetracking/include/Timetracking/REST/v1/MinimalArtifactRepresentation.php">
-    <MissingClassConstType>
-      <code><![CDATA[ROUTE = 'artifacts']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="plugins/timetracking/include/Timetracking/REST/v1/ProjectResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[TIMETRACKING_CRITERION = 'with_time_tracking']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[checkQuery]]></code>
     </MissingReturnType>
@@ -36961,19 +36800,12 @@
       <code><![CDATA[public $invalid_trackers = [];]]></code>
       <code><![CDATA[public $trackers = [];]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timetracking_reports']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$invalid_trackers]]></code>
       <code><![CDATA[$trackers]]></code>
     </MissingPropertyType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingReportResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_OFFSET = 0]]></code>
-      <code><![CDATA[MAX_LIMIT      = 50]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$query]]></code>
@@ -36988,11 +36820,6 @@
     <InvalidDocblock>
       <code><![CDATA[protected function getTrackedTimeOnArtifact($query)]]></code>
     </InvalidDocblock>
-    <MissingClassConstType>
-      <code><![CDATA[DEFAULT_OFFSET  = 0]]></code>
-      <code><![CDATA[MAX_LIMIT       = 50]]></code>
-      <code><![CDATA[MAX_TIMES_BATCH = 100]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$artifact_id]]></code>
       <code><![CDATA[$time_id]]></code>
@@ -37015,9 +36842,6 @@
     </RedundantCast>
   </file>
   <file src="plugins/timetracking/include/Timetracking/REST/v1/UserResource.php">
-    <MissingClassConstType>
-      <code><![CDATA[MAX_TIMES_BATCH = 100]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
@@ -37072,9 +36896,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Time/TimeChecker.php">
-    <MissingClassConstType>
-      <code><![CDATA[TIME_PATTERN = '^[0-9]{2}[:][0-9]{2}$']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$date]]></code>
       <code><![CDATA[$time_value]]></code>
@@ -37199,9 +37020,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Widget/ProjectTimetracking.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'project-timetracking']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$content_id]]></code>
       <code><![CDATA[$id]]></code>
@@ -37221,9 +37039,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Widget/UserWidget.php">
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'timetracking']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$widget_id]]></code>
     </MissingParamType>
@@ -37390,10 +37205,6 @@
     <AssignmentToVoid>
       <code><![CDATA[$this->timetracking_user_test]]></code>
     </AssignmentToVoid>
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_NAME = 'test-timetracking']]></code>
-      <code><![CDATA[TRACKER_NAME = 'timetracking_testing']]></code>
-    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$timetracking_artifact_ids]]></code>
       <code><![CDATA[$timetracking_project_id]]></code>
@@ -37402,11 +37213,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/timetracking/tests/rest/TimetrackingDataBuilder.php">
-    <MissingClassConstType>
-      <code><![CDATA[PROJECT_TEST_TIMETRACKING_SHORTNAME = 'test-timetracking']]></code>
-      <code><![CDATA[USER_TESTER_NAME                    = 'rest_api_timetracking_1']]></code>
-      <code><![CDATA[USER_TESTER_PASS                    = 'welcome0']]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[addTimeOnLastMonthPeriod]]></code>
       <code><![CDATA[createUser]]></code>

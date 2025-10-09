@@ -29,8 +29,8 @@ use Tuleap\Timetracking\REST\v1\UserResource;
 
 final class TimetrackingUserResource extends AuthenticatedResource
 {
-    private const MAX_TIMES_BATCH = 100;
-    private const DEFAULT_OFFSET  = 0;
+    private const int MAX_TIMES_BATCH = 100;
+    private const int DEFAULT_OFFSET  = 0;
 
     /**
      * @url OPTIONS /{id}/timetracking
