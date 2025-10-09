@@ -244,7 +244,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     #[\Override]
     public function includeCalendarScripts()
     {
-        $this->includeJavascriptSnippet("var useLanguage = '" . Codendi_HTMLPurifier::instance()->purify(substr($this->getUser()->getLocale(), 0, 2), CODENDI_PURIFIER_JS_QUOTE) . "';");
         $this->includeJavascriptFile('/scripts/datepicker/datepicker.js');
         return $this;
     }

@@ -26,34 +26,19 @@
 */
 var datePickerController;
 
-(function() {
+const load = (function() {
 
 // Detect the browser language
-datePicker.languageinfo = navigator.language ? navigator.language : navigator.userLanguage;
-datePicker.languageinfo = useLanguage ? useLanguage : navigator.language ? navigator.language : navigator.userLanguage;
-datePicker.languageinfo = datePicker.languageinfo ? datePicker.languageinfo.toLowerCase().replace(/-[a-z]+$/, "") : 'en';
+const locale = document.body.dataset.userLocale.split('_')[0];
 
 // Load the appropriate language file
-var scriptFiles = document.getElementsByTagName('head')[0].getElementsByTagName('script');
-var loc = scriptFiles[scriptFiles.length - 1].src.substr(0, scriptFiles[scriptFiles.length - 1].src.lastIndexOf("/")) + "/lang/" + datePicker.languageinfo + ".js";
-
-var script  = document.createElement('script');
-script.type = "text/javascript";
-script.src  = loc;
-script.setAttribute("charset", "utf-8");
-/*@cc_on
-/*@if(@_win32)
-        var bases = document.getElementsByTagName('base');
-        if (bases.length && bases[0].childNodes.length) {
-                bases[0].appendChild(script);
-        } else {
-                document.getElementsByTagName('head')[0].appendChild(script);
-        };
-@else @*/
-document.getElementsByTagName('head')[0].appendChild(script);
-/*@end
-@*/
-script  = null;
+if (['fr', 'pt'].includes(locale)) {
+    const script  = document.createElement('script');
+    script.type = "text/javascript";
+    script.src  = '/scripts/datepicker/lang/' + locale + '.js';
+    script.setAttribute("charset", "utf-8");
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
 
 // Defaults should the locale file not load
 datePicker.months       = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -1440,7 +1425,11 @@ datePickerController = function() {
         };
 }();
 
-})();
+});
 
-datePickerController.addEvent(window, 'load', datePickerController.create);
-datePickerController.addEvent(window, 'unload', datePickerController.destroy);
+document.addEventListener('DOMContentLoaded', function() {
+    load();
+    datePickerController.addEvent(window, 'load', datePickerController.create);
+    datePickerController.addEvent(window, 'unload', datePickerController.destroy);
+});
+
