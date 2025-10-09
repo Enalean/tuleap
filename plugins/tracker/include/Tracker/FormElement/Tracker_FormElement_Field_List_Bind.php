@@ -21,12 +21,12 @@
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitable;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BoundDecoratorEditor;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BoundDecoratorSaver;
 use Tuleap\Tracker\FormElement\Field\ListField;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitable;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorEditor;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorSaver;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\FieldValueRepresentation;
@@ -34,7 +34,7 @@ use Tuleap\Tracker\REST\FieldValueRepresentation;
 /**
  * @template ListValueBinding of Tracker_FormElement_Field_List_Value
  */
-abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+abstract class Tracker_FormElement_Field_List_Bind implements // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
     Tracker_FormElement_Field_Shareable,
     Tracker_IProvideJsonFormatOfMyself,
     BindVisitable

@@ -174,7 +174,7 @@ class TrackerConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '$tracker = new \Tuleap\Tracker\XML\XMLTracker(\'T448\', \'issue\');' . PHP_EOL .
-            '$my_awesome_tracker = $tracker->withFormElement(\Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField::fromTrackerAndName($tracker, \'status\'))->withWorkflow(' .
+            '$my_awesome_tracker = $tracker->withFormElement(\Tuleap\Tracker\FormElement\Field\List\XML\XMLSelectBoxField::fromTrackerAndName($tracker, \'status\'))->withWorkflow(' .
             '(new \Tuleap\Tracker\Workflow\XML\XMLSimpleWorkflow())->withField(new \Tuleap\Tracker\FormElement\XML\XMLReferenceByName(\'status\'))->withIsUsed());',
             $printer->prettyPrint($nodes)
         );

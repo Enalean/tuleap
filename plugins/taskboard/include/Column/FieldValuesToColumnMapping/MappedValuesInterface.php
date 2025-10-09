@@ -20,7 +20,7 @@
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindValueIdCollection;
 
 interface MappedValuesInterface extends BindValueIdCollection
 {

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use SimpleXMLElement;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorExporter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindDecoratorExporterTest extends \Tuleap\Test\PHPUnit\TestCase

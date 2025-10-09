@@ -28,7 +28,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tools\Xml2Php\Tracker\FormElement\IdToNameMapping;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById;
+use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByName;
 use Tuleap\Tracker\Semantic\Contributor\XML\XMLContributorSemantic;
 use Tuleap\Tracker\Semantic\Description\XML\XMLDescriptionSemantic;

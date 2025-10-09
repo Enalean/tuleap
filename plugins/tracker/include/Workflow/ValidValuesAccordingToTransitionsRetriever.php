@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Workflow;
 
 use PFUser;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindValueIdCollection;
 use Workflow;
 use Workflow_Transition_ConditionFactory;
 

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\SearchUserGroupsValuesByFieldIdAndUserGroupId;
+use Tuleap\Tracker\FormElement\Field\List\Bind\SearchUserGroupsValuesByFieldIdAndUserGroupId;
 
 final class SearchUserGroupsValuesByFieldIdAndUserGroupIdStub implements SearchUserGroupsValuesByFieldIdAndUserGroupId
 {

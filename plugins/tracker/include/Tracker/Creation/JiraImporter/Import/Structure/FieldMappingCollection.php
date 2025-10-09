@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
+use Tuleap\Tracker\FormElement\Field\List\XML\XMLListField;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 class FieldMappingCollection

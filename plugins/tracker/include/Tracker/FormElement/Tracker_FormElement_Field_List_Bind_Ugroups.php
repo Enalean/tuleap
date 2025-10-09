@@ -21,11 +21,11 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\UGroupRetriever;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
-use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\List\OpenListValueDao;
 use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 

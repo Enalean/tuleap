@@ -90,7 +90,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\Config\GeneralSettingsEvent;
 use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
 use Tuleap\Tracker\Events\CollectTrackerDependantServices;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;

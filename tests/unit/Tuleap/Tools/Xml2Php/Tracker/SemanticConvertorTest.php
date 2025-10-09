@@ -134,8 +134,8 @@ class SemanticConvertorTest extends TestCase
         self::assertEquals(
             '(new \Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic(new \Tuleap\Tracker\FormElement\XML\XMLReferenceByName(\'Status\')))' .
             '->withOpenValues(' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById(\'V1\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById(\'V2\'))',
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById(\'V1\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById(\'V2\'))',
             $printer->prettyPrint([$node])
         );
     }
@@ -165,8 +165,8 @@ class SemanticConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '(new \Tuleap\Tracker\Semantic\Status\Done\XML\XMLDoneSemantic())->withDoneValues(' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById(\'V1\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById(\'V2\'))',
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById(\'V1\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById(\'V2\'))',
             $printer->prettyPrint([$node])
         );
     }

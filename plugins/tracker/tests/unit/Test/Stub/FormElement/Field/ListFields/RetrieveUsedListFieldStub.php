@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
+use Tuleap\Tracker\FormElement\Field\List\RetrieveUsedListField;
 
 final class RetrieveUsedListFieldStub implements RetrieveUsedListField
 {

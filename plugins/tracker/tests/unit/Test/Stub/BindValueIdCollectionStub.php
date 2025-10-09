@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindValueIdCollection;
 
 final class BindValueIdCollectionStub implements BindValueIdCollection
 {

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
+use Tuleap\Tracker\FormElement\Field\List\RetrieveMatchingValueByDuckTyping;
 use Tuleap\Tracker\FormElement\Field\ListField;
 
 final class RetrieveMatchingValueByDuckTypingStub implements RetrieveMatchingValueByDuckTyping

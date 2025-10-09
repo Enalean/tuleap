@@ -32,7 +32,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_IComputeValues;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListField;
 use WorkflowFactory;
 

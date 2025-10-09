@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
+use Tuleap\Tracker\FormElement\Field\List\RetrieveMatchingValueByDuckTyping;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 final class BindOpenValueForDuckTypingUpdater implements UpdateBindOpenValueByDuckTyping

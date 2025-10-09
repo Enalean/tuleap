@@ -34,7 +34,7 @@ use Tuleap\Tracker\Action\IsArtifactLinkFieldVerifier;
 use Tuleap\Tracker\Action\IsPermissionsOnArtifactFieldVerifier;
 use Tuleap\Tracker\Action\OpenListFieldVerifier;
 use Tuleap\Tracker\Action\UserGroupOpenListFieldVerifier;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\FormElement\Field\List\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionDuckTypingMatcher;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;

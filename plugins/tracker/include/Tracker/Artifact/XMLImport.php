@@ -34,7 +34,7 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 use Tuleap\XML\SimpleXMLElementBuilder;

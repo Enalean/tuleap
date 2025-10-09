@@ -27,7 +27,7 @@ use Feedback;
 use Tracker_FormElementFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 
 class ListFormElementTypeUpdater
 {

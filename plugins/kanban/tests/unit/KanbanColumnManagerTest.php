@@ -80,7 +80,7 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->kanban_column_manager = new KanbanColumnManager(
             $this->column_dao,
             $this->createMock(
-                \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao::class
+                \Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao::class
             ),
             $this->kanban_actions_checker
         );

@@ -20,13 +20,13 @@
  */
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsersDao;
 use Tuleap\Tracker\FormElement\Field\ListField;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\IDGenerator;
 

@@ -26,6 +26,7 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetValue_Float;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Float\ChangesChecker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ChangesCheckerTest extends TestCase

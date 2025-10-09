@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\XML;
 
 use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
-use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\List\XML\XMLSelectBoxField;
 
 /**
  * @psalm-immutable

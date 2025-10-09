@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status\Done\XML;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReference;
+use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReference;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;

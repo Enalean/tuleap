@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Kanban;
 
 use PFUser;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 

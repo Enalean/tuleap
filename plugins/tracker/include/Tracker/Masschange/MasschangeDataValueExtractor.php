@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\Masschange;
 
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListField;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 class MasschangeDataValueExtractor

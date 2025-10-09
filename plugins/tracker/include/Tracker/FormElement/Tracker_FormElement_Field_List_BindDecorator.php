@@ -20,10 +20,10 @@
  */
 
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorExporter;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorExporter;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_Field_List_BindDecorator
 {
     /**

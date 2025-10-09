@@ -32,8 +32,6 @@ use Tracker_Report_Criteria;
 use Tracker_Report_Criteria_Float_ValueDao;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
-use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;

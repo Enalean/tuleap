@@ -163,8 +163,8 @@ class SelectboxConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '\XMLSelectbox::fromTrackerAndName($tracker, \'assigned_to\')->withUsersValues(' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsers\XML\XMLBindUsersValue(\'group_members\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsers\XML\XMLBindUsersValue(\'group_admins\'))',
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue(\'group_members\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue(\'group_admins\'))',
             $printer->prettyPrint([$node])
         );
         self::assertEquals('assigned_to', $id_to_name_mapping->get('F123'));
@@ -197,9 +197,9 @@ class SelectboxConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '\XMLSelectbox::fromTrackerAndName($tracker, \'status\')->withStaticValues(' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13625\', \'Major impact\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13626\', \'Critical impact\'))',
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13625\', \'Major impact\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13626\', \'Critical impact\'))',
             $printer->prettyPrint([$node])
         );
         self::assertEquals('status', $id_to_name_mapping->get('F123'));
@@ -235,9 +235,9 @@ class SelectboxConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '\XMLSelectbox::fromTrackerAndName($tracker, \'status\')->withStaticValues(' .
-            '(new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'))->withIsDefault(), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13625\', \'Major impact\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13626\', \'Critical impact\'))',
+            '(new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'))->withIsDefault(), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13625\', \'Major impact\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13626\', \'Critical impact\'))',
             $printer->prettyPrint([$node])
         );
         self::assertEquals('status', $id_to_name_mapping->get('F123'));
@@ -270,9 +270,9 @@ class SelectboxConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '\XMLSelectbox::fromTrackerAndName($tracker, \'status\')->withAlphanumericRank()->withStaticValues(' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13625\', \'Major impact\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13626\', \'Critical impact\'))',
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13625\', \'Major impact\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13626\', \'Critical impact\'))',
             $printer->prettyPrint([$node])
         );
         self::assertEquals('status', $id_to_name_mapping->get('F123'));
@@ -305,7 +305,7 @@ class SelectboxConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '\XMLSelectbox::fromTrackerAndName($tracker, \'status\')->withStaticValues(' .
-            '(new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'))->withDescription(\'Very low, such wow\'))',
+            '(new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'))->withDescription(\'Very low, such wow\'))',
             $printer->prettyPrint([$node])
         );
         self::assertEquals('status', $id_to_name_mapping->get('F123'));
@@ -339,7 +339,7 @@ class SelectboxConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '\XMLSelectbox::fromTrackerAndName($tracker, \'status\')->withStaticValues(' .
-            '(new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'))->withDecorator(\'graffiti-yellow\'))',
+            '(new \Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue(\'V13624\', \'Low impact\'))->withDecorator(\'graffiti-yellow\'))',
             $printer->prettyPrint([$node])
         );
         self::assertEquals('status', $id_to_name_mapping->get('F123'));

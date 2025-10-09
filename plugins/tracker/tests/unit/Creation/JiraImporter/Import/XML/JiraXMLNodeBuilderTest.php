@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\XML;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
+use Tuleap\Tracker\FormElement\Field\String\XML\XMLStringField;
 use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
 use Tuleap\Tracker\XML\XMLTracker;
 
