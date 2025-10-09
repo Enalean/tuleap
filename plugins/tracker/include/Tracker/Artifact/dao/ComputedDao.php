@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\DAO;
 
-use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
+use Tuleap\Tracker\FormElement\Field\Float\FloatValueDao;
 
 class ComputedDao extends FloatValueDao
 {

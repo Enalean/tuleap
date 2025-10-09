@@ -30,7 +30,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListField;
 
 #[DisableReturnValueGenerationForTestDoubles]

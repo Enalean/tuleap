@@ -32,12 +32,12 @@ class FormElementConvertorBuilder
         LoggerInterface $output,
     ): ?FormElementConvertor {
         $mapping = [
-            'string'   => \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField::class,
+            'string'   => \Tuleap\Tracker\FormElement\Field\String\XML\XMLStringField::class,
             'text'     => \Tuleap\Tracker\FormElement\Field\Text\XML\XMLTextField::class,
-            'float'    => \Tuleap\Tracker\FormElement\Field\FloatingPointNumber\XML\XMLFloatField::class,
+            'float'    => \Tuleap\Tracker\FormElement\Field\Float\XML\XMLFloatField::class,
             'int'      => \Tuleap\Tracker\FormElement\Field\Integer\XML\XMLIntegerField::class,
             'date'     => \Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField::class,
-            'sb'       => \Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField::class,
+            'sb'       => \Tuleap\Tracker\FormElement\Field\List\XML\XMLSelectBoxField::class,
             'file'     => \Tuleap\Tracker\FormElement\Field\Files\XML\XMLFileField::class,
             'lud'      => \Tuleap\Tracker\FormElement\Field\LastUpdateDate\XML\XMLLastUpdateDateField::class,
             'subon'    => \Tuleap\Tracker\FormElement\Field\SubmittedOn\XML\XMLSubmittedOnField::class,

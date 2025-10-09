@@ -25,6 +25,8 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BoundDecoratorSaver;
 use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 

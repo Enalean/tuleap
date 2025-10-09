@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingBindValueByDuckTyping;
+use Tuleap\Tracker\FormElement\Field\List\RetrieveMatchingBindValueByDuckTyping;
 
 final class RetrieveMatchingBindValueByDuckTypingStub implements RetrieveMatchingBindValueByDuckTyping
 {

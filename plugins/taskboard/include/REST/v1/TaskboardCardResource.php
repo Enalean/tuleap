@@ -46,9 +46,9 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappin
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\REST\v1\Card\CardPatcher;
 use Tuleap\Taskboard\REST\v1\Card\CardPatchRepresentation;
-use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\Artifact\PriorityManager;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;

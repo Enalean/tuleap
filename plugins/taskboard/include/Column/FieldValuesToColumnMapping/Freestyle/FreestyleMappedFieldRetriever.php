@@ -24,7 +24,7 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Tuleap\Option\Option;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
-use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
+use Tuleap\Tracker\FormElement\Field\List\RetrieveUsedListField;
 
 final readonly class FreestyleMappedFieldRetriever
 {

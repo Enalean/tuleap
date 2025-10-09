@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
 
 final class ListUserGroupBindBuilder
 {

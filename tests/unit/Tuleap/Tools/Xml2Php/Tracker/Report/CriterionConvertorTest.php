@@ -99,8 +99,8 @@ class CriterionConvertorTest extends TestCase
         self::assertEquals(
             '(new \Tuleap\Tracker\Report\XML\XMLReportCriterion(new \Tuleap\Tracker\FormElement\XML\XMLReferenceByName(\'Status\')))->withRank(0)' .
             '->withSelectedValues(' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById(\'V1\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById(\'V2\'))',
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById(\'V1\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById(\'V2\'))',
             $printer->prettyPrint([$node])
         );
     }
@@ -130,8 +130,8 @@ class CriterionConvertorTest extends TestCase
         self::assertEquals(
             '(new \Tuleap\Tracker\Report\XML\XMLReportCriterion(new \Tuleap\Tracker\FormElement\XML\XMLReferenceByName(\'Status\')))->withRank(0)' .
             '->withNoneSelected()->withSelectedValues(' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById(\'V1\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById(\'V2\'))',
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById(\'V1\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceById(\'V2\'))',
             $printer->prettyPrint([$node])
         );
     }

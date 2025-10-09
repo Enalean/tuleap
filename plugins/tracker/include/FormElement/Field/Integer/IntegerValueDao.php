@@ -22,7 +22,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Integer;
 
-use Tuleap\Tracker\FormElement\Field\NumericField\NumericFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\NumericFieldValueDao;
 
 class IntegerValueDao extends NumericFieldValueDao
 {

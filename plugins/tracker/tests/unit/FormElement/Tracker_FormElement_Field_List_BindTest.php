@@ -31,7 +31,7 @@ use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;

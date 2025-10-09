@@ -24,7 +24,7 @@ namespace Tuleap\Tracker;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;

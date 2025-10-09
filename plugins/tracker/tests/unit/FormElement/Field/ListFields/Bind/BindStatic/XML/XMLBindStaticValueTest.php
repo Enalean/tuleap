@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\List\XML\XMLSelectBoxField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class XMLBindStaticValueTest extends TestCase

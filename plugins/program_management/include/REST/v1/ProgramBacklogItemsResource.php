@@ -45,7 +45,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\UserStoryRetri
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 final class ProgramBacklogItemsResource extends AuthenticatedResource

@@ -30,8 +30,8 @@ use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\FormElement\Field\List\Bind\NoBindDecoratorException;
 use Tuleap\Tracker\FormElement\Field\ListField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

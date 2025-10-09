@@ -24,9 +24,9 @@ namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use SimpleXMLElement;
 use Tuleap\Project\UGroupRetriever;
+use Tuleap\Tracker\FormElement\Field\List\Bind\SearchUserGroupsValuesByFieldIdAndUserGroupId;
+use Tuleap\Tracker\FormElement\Field\List\Bind\SearchUserGroupsValuesById;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\SearchUserGroupsValuesByFieldIdAndUserGroupId;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\SearchUserGroupsValuesById;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 final class OpenListUserGroupsByDuckTypingUpdater implements UpdateOpenListUserGroupsByDuckTyping

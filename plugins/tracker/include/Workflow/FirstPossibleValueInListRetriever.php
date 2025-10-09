@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Workflow;
 use PFUser;
 use Tracker_Rule_List;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindValueIdCollection;
 use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 

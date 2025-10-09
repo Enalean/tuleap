@@ -26,7 +26,7 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
-use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
+use Tuleap\Tracker\FormElement\Field\Float\FloatValueDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 

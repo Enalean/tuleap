@@ -44,7 +44,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
+use Tuleap\Tracker\FormElement\Field\List\ListValueDao;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;

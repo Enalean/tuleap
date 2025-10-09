@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Action;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingBindValueByDuckTyping;
+use Tuleap\Tracker\FormElement\Field\List\RetrieveMatchingBindValueByDuckTyping;
 
 final class CanStaticFieldValuesBeFullyMovedVerifier implements VerifyStaticFieldValuesCanBeFullyMoved
 {

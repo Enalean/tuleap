@@ -20,13 +20,13 @@
  */
 
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticXmlExporter;
+use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticXmlExporter;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
-use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\List\OpenListValueDao;
 use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;

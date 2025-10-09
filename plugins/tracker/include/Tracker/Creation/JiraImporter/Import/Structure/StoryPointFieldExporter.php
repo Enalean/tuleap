@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
-use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\XML\XMLFloatField;
+use Tuleap\Tracker\FormElement\Field\Float\XML\XMLFloatField;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLTracker;
 
