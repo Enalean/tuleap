@@ -51,15 +51,18 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
         $actions = new Docman_Actions($this->_controller);
         $actions->doPaste($params['itemToPaste'], $params['item'], $params['rank'], $params['importMd'], $params['srcMode']);
 
+        $purifier  = Codendi_HTMLPurifier::instance();
+        $csp_nonce = \Tuleap\ContentSecurityPolicy\CSPNonce::build();
+
         // Remove wait mesage and the spinner
-        echo '<script type="text/javascript">$("paste_' . $params['itemToPaste']->getId() . '").hide();</script>';
+        echo '<script type="text/javascript" nonce="' . $purifier->purify($csp_nonce->value) . '">$("paste_' . $params['itemToPaste']->getId() . '").hide();</script>';
 
         //Display paste sucessfully complete.
         echo dgettext('tuleap-docman', '<p>Paste operation successfully completed.</p>');
 
         $url = $this->_controller->getDefaultUrl() . 'action=show&id=' . $params['item']->getId();
         echo sprintf(dgettext('tuleap-docman', '<p>You will be redirected to <a href="%1$s"> %2$s </a> in %3$s seconds</p>'), $url, $url, 5);
-        echo '<script type="text/javascript">setTimeout(function () {location.href="' . $url . '";}, 5000);</script>';
+        echo '<script type="text/javascript" nonce="' . $purifier->purify($csp_nonce->value) . '">setTimeout(function () {location.href="' . $url . '";}, 5000);</script>';
     }
 
     #[\Override]

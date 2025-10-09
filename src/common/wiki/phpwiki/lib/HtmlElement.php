@@ -199,10 +199,12 @@ class HTML extends HtmlElement
         return $el->_init2(func_get_args());
     }
 
-    public static function script(/*...*/)
+    public static function script(array $attributes, string ...$content)
     {
-        $el = new HtmlElement('script');
-        return $el->_init2(func_get_args());
+        $el         = new HtmlElement('script');
+        $purifier   = Codendi_HTMLPurifier::instance();
+        $attributes = [...$attributes, 'nonce' => $purifier->purify(\Tuleap\ContentSecurityPolicy\CSPNonce::build()->value)];
+        return $el->_init2([$attributes, ...$content]);
     }
 
     public static function noscript(/*...*/)

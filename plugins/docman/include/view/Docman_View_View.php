@@ -97,7 +97,9 @@
     /* protected */ public function _javascript($params)
     {
         if ($this->javascript != '') {
-            echo "<script type=\"text/javascript\">\n" .
+            $purifier  = Codendi_HTMLPurifier::instance();
+            $csp_nonce = \Tuleap\ContentSecurityPolicy\CSPNonce::build();
+            echo '<script type="text/javascript" nonce="' . $purifier->purify($csp_nonce->value) . '">' . "\n" .
             "//<!--\n" .
             $this->javascript .
             "//-->\n" .
