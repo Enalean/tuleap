@@ -175,7 +175,7 @@ use WrapperLogger;
  */
 class CampaignsResource
 {
-    public const MAX_LIMIT = 50;
+    public const int MAX_LIMIT = 50;
 
     /**
      * @var CampaignCreator

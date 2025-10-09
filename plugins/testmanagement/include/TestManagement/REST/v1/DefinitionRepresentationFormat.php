@@ -25,7 +25,7 @@ enum DefinitionRepresentationFormat: string
     case MINIMAL = 'minimal';
     case FULL    = 'full';
 
-    public const DEFAULT = self::MINIMAL;
+    public const DefinitionRepresentationFormat DEFAULT = self::MINIMAL;
 
     public static function buildFromName(string $format): self
     {

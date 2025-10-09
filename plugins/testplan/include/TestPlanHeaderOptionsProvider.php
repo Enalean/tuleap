@@ -32,7 +32,7 @@ use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class TestPlanHeaderOptionsProvider
 {
-    private const IDENTIFIER = 'testplan';
+    private const string IDENTIFIER = 'testplan';
 
     public function __construct(
         private readonly HeaderOptionsProvider $header_options_provider,

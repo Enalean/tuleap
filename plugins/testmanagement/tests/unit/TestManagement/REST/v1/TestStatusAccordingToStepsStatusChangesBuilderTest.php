@@ -31,10 +31,10 @@ require_once __DIR__ . '/../../../bootstrap.php';
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const NOT_RUN_ID = 101;
-    private const PASSED_ID  = 102;
-    private const FAILED_ID  = 103;
-    private const BLOCKED_ID = 104;
+    private const int NOT_RUN_ID = 101;
+    private const int PASSED_ID  = 102;
+    private const int FAILED_ID  = 103;
+    private const int BLOCKED_ID = 104;
 
     /**
      * @var TestStatusAccordingToStepsStatusChangesBuilder

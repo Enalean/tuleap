@@ -30,8 +30,8 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class JiraTimetrackingConfigurationRetriever
 {
-    public const CONFIGURATION_KEY = 'jira_timetracking';
-    private const TIMETRACKING_KEY = 'timeTrackingEnabled';
+    public const string CONFIGURATION_KEY = 'jira_timetracking';
+    private const string TIMETRACKING_KEY = 'timeTrackingEnabled';
 
     public function __construct(private JiraClient $jira_client, private LoggerInterface $logger)
     {

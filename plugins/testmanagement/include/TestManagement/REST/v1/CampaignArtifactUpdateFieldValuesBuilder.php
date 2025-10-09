@@ -40,8 +40,8 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
  */
 class CampaignArtifactUpdateFieldValuesBuilder
 {
-    public const STATUS_CHANGE_CLOSED_VALUE = 'closed';
-    public const STATUS_CHANGE_OPEN_VALUE   = 'open';
+    public const string STATUS_CHANGE_CLOSED_VALUE = 'closed';
+    public const string STATUS_CHANGE_OPEN_VALUE   = 'open';
 
     public function __construct(
         private readonly Tracker_FormElementFactory $formelement_factory,

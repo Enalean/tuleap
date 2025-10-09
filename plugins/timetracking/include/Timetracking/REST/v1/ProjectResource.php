@@ -72,7 +72,7 @@ use UserManager;
 
 class ProjectResource
 {
-    public const TIMETRACKING_CRITERION = 'with_time_tracking';
+    public const string TIMETRACKING_CRITERION = 'with_time_tracking';
 
     /** @var UserManager */
     private $user_manager;

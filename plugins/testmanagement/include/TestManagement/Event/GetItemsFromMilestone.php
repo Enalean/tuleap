@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetItemsFromMilestone implements Dispatchable
 {
-    public const NAME = 'testmanagement_get_items_from_milestone';
+    public const string NAME = 'testmanagement_get_items_from_milestone';
 
     /**
      * @var PFUser

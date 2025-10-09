@@ -50,8 +50,8 @@ use UserManager;
 
 class TimetrackingReportResource extends AuthenticatedResource
 {
-    public const DEFAULT_OFFSET = 0;
-    public const MAX_LIMIT      = 50;
+    public const int DEFAULT_OFFSET = 0;
+    public const int MAX_LIMIT      = 50;
 
     /**
      * @var UserManager

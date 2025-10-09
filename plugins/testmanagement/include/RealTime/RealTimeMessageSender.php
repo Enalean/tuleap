@@ -36,15 +36,15 @@ use Tuleap\User\REST\UserRepresentation;
 
 class RealTimeMessageSender
 {
-    public const HTTP_CLIENT_UUID             = 'HTTP_X_CLIENT_UUID';
-    public const EVENT_NAME_EXECUTION_CREATED = 'testmanagement_execution:create';
-    public const EVENT_NAME_EXECUTION_DELETED = 'testmanagement_execution:delete';
-    public const EVENT_NAME_EXECUTION_UPDATED = 'testmanagement_execution:update';
-    public const EVENT_NAME_ARTIFACT_LINKED   = 'testmanagement_execution:link_artifact';
-    public const EVENT_NAME_CAMPAIGN_UPDATED  = 'testmanagement_campaign:update';
-    public const EVENT_NAME_USER_PRESENCE     = 'testmanagement_user:presence';
+    public const string HTTP_CLIENT_UUID             = 'HTTP_X_CLIENT_UUID';
+    public const string EVENT_NAME_EXECUTION_CREATED = 'testmanagement_execution:create';
+    public const string EVENT_NAME_EXECUTION_DELETED = 'testmanagement_execution:delete';
+    public const string EVENT_NAME_EXECUTION_UPDATED = 'testmanagement_execution:update';
+    public const string EVENT_NAME_ARTIFACT_LINKED   = 'testmanagement_execution:link_artifact';
+    public const string EVENT_NAME_CAMPAIGN_UPDATED  = 'testmanagement_campaign:update';
+    public const string EVENT_NAME_USER_PRESENCE     = 'testmanagement_user:presence';
 
-    public const TEST_MANAGEMENT_TOPIC = 'TestManagement';
+    public const string TEST_MANAGEMENT_TOPIC = 'TestManagement';
 
     public function __construct(
         private readonly NodeJSClient $node_js_client,

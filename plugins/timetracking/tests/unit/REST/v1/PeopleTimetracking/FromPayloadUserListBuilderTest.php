@@ -30,9 +30,9 @@ use Tuleap\Timetracking\Tests\Stub\GetViewableUserStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FromPayloadUserListBuilderTest extends TestCase
 {
-    private const ALICE_ID   = 101;
-    private const BOB_ID     = 102;
-    private const CHARLIE_ID = 103;
+    private const int ALICE_ID   = 101;
+    private const int BOB_ID     = 102;
+    private const int CHARLIE_ID = 103;
 
     private \PFUser $alice;
     private \PFUser $bob;

@@ -24,9 +24,9 @@ use Tuleap\REST\JsonCast;
 
 class NodeReferenceRepresentation
 {
-    public const ROUTE = 'testmanagement_nodes';
+    public const string ROUTE = 'testmanagement_nodes';
 
-    public const NATURE_ARTIFACT = 'artifact';
+    public const string NATURE_ARTIFACT = 'artifact';
 
     /**
      * @var int Id of node

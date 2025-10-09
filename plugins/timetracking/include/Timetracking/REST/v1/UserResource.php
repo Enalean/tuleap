@@ -42,7 +42,7 @@ use UserManager;
 
 class UserResource extends AuthenticatedResource
 {
-    public const MAX_TIMES_BATCH = 100;
+    public const int MAX_TIMES_BATCH = 100;
 
     /** @var UserManager */
     private $user_manager;

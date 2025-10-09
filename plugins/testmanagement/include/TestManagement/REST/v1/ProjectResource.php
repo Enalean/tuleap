@@ -66,7 +66,7 @@ use Workflow_Transition_ConditionFactory;
 
 class ProjectResource
 {
-    public const MAX_LIMIT = 1000;
+    public const int MAX_LIMIT = 1000;
 
     /** @var PFUser */
     private $user;

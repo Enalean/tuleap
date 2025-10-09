@@ -50,7 +50,7 @@ use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 
 final class StartContainerCommand extends Command
 {
-    private const PERSISTENT_DATA = [
+    private const array PERSISTENT_DATA = [
         '/etc/pki/tls/private/localhost.key.pem',
         '/etc/pki/tls/certs/localhost.cert.pem',
         '/etc/tuleap',
@@ -59,9 +59,9 @@ final class StartContainerCommand extends Command
         '/var/lib/tuleap',
     ];
 
-    private const OPTION_NO_SUPERVISORD = 'no-supervisord';
-    private const OPTION_EXEC           = 'exec';
-    private const OPTION_DEBUG          = 'debug';
+    private const string OPTION_NO_SUPERVISORD = 'no-supervisord';
+    private const string OPTION_EXEC           = 'exec';
+    private const string OPTION_DEBUG          = 'debug';
 
     private DataPersistence $data_persistence;
 

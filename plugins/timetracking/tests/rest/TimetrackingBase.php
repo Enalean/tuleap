@@ -24,8 +24,8 @@ use Tuleap\REST\RestBase;
 
 class TimetrackingBase extends RestBase
 {
-    public const PROJECT_NAME = 'test-timetracking';
-    public const TRACKER_NAME = 'timetracking_testing';
+    public const string PROJECT_NAME = 'test-timetracking';
+    public const string TRACKER_NAME = 'timetracking_testing';
 
     protected $tracker_timetracking;
     protected $timetracking_project_id;

@@ -34,7 +34,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostActionCheckerTest extends TestCase
 {
-    private const TRACKER_ID = 101;
+    private const int TRACKER_ID = 101;
     private \PHPUnit\Framework\MockObject\MockObject|Config $config;
     private \Tracker_FormElementFactory|\PHPUnit\Framework\MockObject\MockObject $form_element_factory;
     private PostActionChecker $checker;

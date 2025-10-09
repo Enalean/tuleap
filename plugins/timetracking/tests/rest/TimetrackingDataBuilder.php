@@ -41,9 +41,9 @@ use User_ForgeUserGroupPermissionsManager;
 
 class TimetrackingDataBuilder extends RESTTestDataBuilder
 {
-    public const PROJECT_TEST_TIMETRACKING_SHORTNAME = 'test-timetracking';
-    public const USER_TESTER_NAME                    = 'rest_api_timetracking_1';
-    public const USER_TESTER_PASS                    = 'welcome0';
+    public const string PROJECT_TEST_TIMETRACKING_SHORTNAME = 'test-timetracking';
+    public const string USER_TESTER_NAME                    = 'rest_api_timetracking_1';
+    public const string USER_TESTER_PASS                    = 'welcome0';
 
     public function __construct()
     {

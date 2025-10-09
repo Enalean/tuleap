@@ -35,8 +35,8 @@ use User_ForgeUserGroupFactory;
 
 class AdminController
 {
-    public const WRITE_ACCESS = 'PLUGIN_TIMETRACKING_WRITE';
-    public const READ_ACCESS  = 'PLUGIN_TIMETRACKING_READ';
+    public const string WRITE_ACCESS = 'PLUGIN_TIMETRACKING_WRITE';
+    public const string READ_ACCESS  = 'PLUGIN_TIMETRACKING_READ';
 
     /**
      * @var TrackerManager

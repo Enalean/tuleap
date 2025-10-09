@@ -32,7 +32,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class MinimalArtifactRepresentation
 {
-    public const ROUTE = 'artifacts';
+    public const string ROUTE = 'artifacts';
 
     /**
      * @var int

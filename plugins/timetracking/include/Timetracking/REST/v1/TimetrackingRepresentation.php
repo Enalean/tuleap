@@ -34,7 +34,7 @@ use Tuleap\Timetracking\Time\Time;
  */
 final class TimetrackingRepresentation
 {
-    public const NAME = 'timetracking';
+    public const string NAME = 'timetracking';
 
     /**
      * @var MinimalArtifactRepresentation

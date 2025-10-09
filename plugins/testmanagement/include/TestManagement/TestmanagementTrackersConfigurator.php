@@ -24,10 +24,10 @@ namespace Tuleap\TestManagement;
 
 class TestmanagementTrackersConfigurator
 {
-    public const CAMPAIGN_TRACKER_NAME   = 'Validation Campaign';
-    public const DEFINITION_TRACKER_NAME = 'Test Cases';
-    public const EXECUTION_TRACKER_NAME  = 'Test Execution';
-    public const ISSUE_TRACKER_NAME      = 'bugs';
+    public const string CAMPAIGN_TRACKER_NAME   = 'Validation Campaign';
+    public const string DEFINITION_TRACKER_NAME = 'Test Cases';
+    public const string EXECUTION_TRACKER_NAME  = 'Test Execution';
+    public const string ISSUE_TRACKER_NAME      = 'bugs';
 
     /**
      * @var TestmanagementTrackersConfiguration

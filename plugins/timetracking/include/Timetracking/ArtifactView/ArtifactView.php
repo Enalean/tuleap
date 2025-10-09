@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
 
 final readonly class ArtifactView extends TrackerArtifactView
 {
-    public const IDENTIFIER = 'timetracking';
+    public const string IDENTIFIER = 'timetracking';
 
     public function __construct(
         Artifact $artifact,

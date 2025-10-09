@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetURIForMilestoneFromTTM implements Dispatchable
 {
-    public const NAME = 'getURIForMilestoneFromTTM';
+    public const string NAME = 'getURIForMilestoneFromTTM';
 
     /**
      * @var \Planning_Milestone
