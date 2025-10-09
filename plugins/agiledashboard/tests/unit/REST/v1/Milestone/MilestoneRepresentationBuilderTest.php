@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use EventManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
@@ -34,6 +33,7 @@ use Tracker_Artifact_Changeset;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklog;
 use Tuleap\AgileDashboard\Milestone\Backlog\MilestoneBacklogFactory;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
@@ -55,7 +55,7 @@ final class MilestoneRepresentationBuilderTest extends TestCase
     private MilestoneBacklogFactory&MockObject $backlog_factory;
     private EventManager&MockObject $event_manager;
     private ParentTrackerRetriever&MockObject $parent_tracker_retriever;
-    private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder&MockObject $sub_milestone_finder;
+    private SubmilestoneFinder&MockObject $sub_milestone_finder;
     private PlanningFactory&MockObject $planning_factory;
 
     #[\Override]
@@ -65,7 +65,7 @@ final class MilestoneRepresentationBuilderTest extends TestCase
         $this->backlog_factory          = $this->createMock(MilestoneBacklogFactory::class);
         $this->event_manager            = $this->createMock(EventManager::class);
         $this->parent_tracker_retriever = $this->createMock(ParentTrackerRetriever::class);
-        $this->sub_milestone_finder     = $this->createMock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
+        $this->sub_milestone_finder     = $this->createMock(SubmilestoneFinder::class);
         $this->planning_factory         = $this->createMock(PlanningFactory::class);
         $this->builder                  = new MilestoneRepresentationBuilder(
             $this->milestone_factory,

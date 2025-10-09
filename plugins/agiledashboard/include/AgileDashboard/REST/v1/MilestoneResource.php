@@ -235,7 +235,7 @@ class MilestoneResource extends AuthenticatedResource
 
         $parent_tracker_retriever = new ParentTrackerRetriever($planning_factory);
 
-        $sub_milestone_finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+        $sub_milestone_finder = new \Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder(
             \Tracker_HierarchyFactory::instance(),
             $planning_factory,
         );

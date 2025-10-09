@@ -22,27 +22,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
+
+use PFUser;
+use Planning_Milestone;
+use PlanningFactory;
+use Tracker_HierarchyFactory;
 use Tuleap\Tracker\Tracker;
 
 /**
  * I find the suitable submilestone for planning
  */
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
-class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
+readonly class SubmilestoneFinder
 {
-    /** @var PlanningFactory */
-    private $planning_factory;
-
-    /** @var Tracker_HierarchyFactory */
-    private $hierarchy_factory;
-
     public function __construct(
-        Tracker_HierarchyFactory $hierarchy_factory,
-        PlanningFactory $planning_factory,
+        private Tracker_HierarchyFactory $hierarchy_factory,
+        private PlanningFactory $planning_factory,
     ) {
-        $this->hierarchy_factory = $hierarchy_factory;
-        $this->planning_factory  = $planning_factory;
     }
 
     public function findFirstSubmilestoneTracker(PFUser $user, Planning_Milestone $milestone): ?Tracker

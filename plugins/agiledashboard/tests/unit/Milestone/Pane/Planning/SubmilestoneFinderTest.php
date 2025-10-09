@@ -1,10 +1,6 @@
 <?php
-/**
- * Copyright Enalean (c) 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
 
-use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_ArtifactMilestone;
@@ -44,7 +39,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmilestoneFinderTest extends TestCase
 {
-    private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $finder;
+    private SubmilestoneFinder $finder;
     private Tracker $user_story_tracker;
     private Tracker $sprint_tracker;
     private Tracker $epic_tracker;
@@ -101,7 +96,7 @@ final class SubmilestoneFinderTest extends TestCase
 
         $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+        $this->finder = new SubmilestoneFinder(
             $this->tracker_hierarchy_factory,
             $this->planning_factory,
         );

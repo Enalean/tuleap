@@ -18,28 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
+
+use Override;
+use TemplateRendererFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPane;
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 
 /**
  * I facilitate the association of Backlog Elements with sub-milestones
  *
  */
-class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboardPane //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class PlanningV2Pane extends AgileDashboardPane
 {
-    /** @var PlanningV2PaneInfo */
-    private $info;
-
-    /** @var PlanningV2Presenter */
-    private $presenter;
-
     public function __construct(
-        PlanningV2PaneInfo $info,
-        PlanningV2Presenter $presenter,
+        private readonly PlanningV2PaneInfo $info,
+        private readonly PlanningV2Presenter $presenter,
     ) {
-        $this->info      = $info;
-        $this->presenter = $presenter;
     }
 
     #[Override]

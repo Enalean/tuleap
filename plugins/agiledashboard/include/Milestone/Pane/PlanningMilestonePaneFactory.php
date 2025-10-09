@@ -20,8 +20,6 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
-use AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane;
-use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use Codendi_Request;
 use EventManager;
 use PFUser;
@@ -29,6 +27,8 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPane;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Pane;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
@@ -53,7 +53,7 @@ class PlanningMilestonePaneFactory
         private readonly Codendi_Request $request,
         private readonly Planning_MilestoneFactory $milestone_factory,
         private readonly PanePresenterBuilderFactory $pane_presenter_builder_factory,
-        private readonly AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
+        private readonly SubmilestoneFinder $submilestone_finder,
         private readonly PaneInfoFactory $pane_info_factory,
         private readonly EventManager $event_manager,
     ) {
@@ -161,13 +161,13 @@ class PlanningMilestonePaneFactory
     private function getPlanningV2Pane(
         PlanningV2PaneInfo $info,
         Planning_Milestone $milestone,
-    ): AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane {
+    ): PlanningV2Pane {
         $allowed_additional_panes_to_display_collector = new AllowedAdditionalPanesToDisplayCollector();
         $this->event_manager->processEvent($allowed_additional_panes_to_display_collector);
 
         $project = $this->request->getProject();
 
-        return new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
+        return new PlanningV2Pane(
             $info,
             new PlanningV2Presenter(
                 $this->request->getCurrentUser(),

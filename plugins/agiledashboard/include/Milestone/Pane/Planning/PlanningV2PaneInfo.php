@@ -29,23 +29,19 @@ class PlanningV2PaneInfo extends PaneInfo
 {
     public const string IDENTIFIER = 'planning-v2';
 
-    /** @var Tracker */
-    private $submilestone_tracker;
-
-    public function __construct(private Planning_Milestone $milestone, Tracker $submilestone_tracker)
+    public function __construct(private Planning_Milestone $milestone, private Tracker $submilestone_tracker)
     {
         parent::__construct();
-        $this->submilestone_tracker = $submilestone_tracker;
     }
 
     #[Override]
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return self::IDENTIFIER;
     }
 
     #[Override]
-    public function getTitle()
+    public function getTitle(): string
     {
         return sprintf(dgettext('tuleap-agiledashboard', '%1$s Planning'), $this->submilestone_tracker->getName());
     }

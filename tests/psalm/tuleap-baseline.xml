@@ -44,11 +44,6 @@
       <code><![CDATA[$first_tracker_id]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Planning/SubmilestoneFinder.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$tracker_id]]></code>
-    </PossiblyNullArgument>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Planning/NearestPlanningTrackerProvider.php">
     <DeprecatedMethod>
       <code><![CDATA[getParent]]></code>
@@ -744,6 +739,11 @@
       <code><![CDATA[Iterator]]></code>
     </MissingTemplateParam>
   </file>
+  <file src="plugins/agiledashboard/include/Milestone/Pane/Planning/SubmilestoneFinder.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$tracker_id]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/agiledashboard/include/PaneRedirectionExtractor.php">
     <InvalidNullableReturnType>
       <code><![CDATA[array]]></code>
@@ -1369,15 +1369,6 @@
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
   </file>
-  <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Pane/Planning/SubmilestoneFinderTest.php">
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
-    <MissingClosureParamType>
-      <code><![CDATA[$parameters]]></code>
-    </MissingClosureParamType>
-  </file>
   <file src="plugins/agiledashboard/tests/unit/AgileDashboard/Milestone/Sidebar/PromotedMilestoneBuilderTest.php">
     <ImpureMethodCall>
       <code><![CDATA[aChangeset]]></code>
@@ -1888,6 +1879,15 @@
       <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
     </NullArgument>
+  </file>
+  <file src="plugins/agiledashboard/tests/unit/Milestone/Pane/Planning/SubmilestoneFinderTest.php">
+    <InternalMethod>
+      <code><![CDATA[numberOfInvocations]]></code>
+      <code><![CDATA[numberOfInvocations]]></code>
+    </InternalMethod>
+    <MissingClosureParamType>
+      <code><![CDATA[$parameters]]></code>
+    </MissingClosureParamType>
   </file>
   <file src="plugins/agiledashboard/tests/unit/Planning/Planning_RequestValidatorTest.php">
     <PossiblyUndefinedMethod>

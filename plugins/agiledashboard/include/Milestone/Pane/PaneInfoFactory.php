@@ -20,10 +20,10 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
-use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use PFUser;
 use Planning_Milestone;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\SubmilestoneFinder;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 
 /**
@@ -32,7 +32,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 class PaneInfoFactory
 {
     public function __construct(
-        private readonly AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
+        private readonly SubmilestoneFinder $submilestone_finder,
     ) {
     }
 
