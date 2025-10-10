@@ -148,61 +148,32 @@ class Request
         return (float) $m[1];
     }
 
-    /* Redirects after edit may fail if no theme signature image is defined.
-     * Set DISABLE_HTTP_REDIRECT = true then.
-     */
-    public function redirect($url, $noreturn = true)
+    public function redirect($url): never
     {
-        $bogus = defined('DISABLE_HTTP_REDIRECT') && DISABLE_HTTP_REDIRECT;
-
-        if (! $bogus) {
-            header("Location: $url");
-            /*
-             * "302 Found" is not really meant to be sent in response
-             * to a POST.  Worse still, according to (both HTTP 1.0
-             * and 1.1) spec, the user, if it is sent, the user agent
-             * is supposed to use the same method to fetch the
-             * redirected URI as the original.
-             *
-             * That means if we redirect from a POST, the user-agent
-             * supposed to generate another POST.  Not what we want.
-             * (We do this after a page save after all.)
-             *
-             * Fortunately, most/all browsers don't do that.
-             *
-             * "303 See Other" is what we really want.  But it only
-             * exists in HTTP/1.1
-             *
-             * FIXME: this is still not spec compliant for HTTP
-             * version < 1.1.
-             */
-            $status = $this->httpVersion() >= 1.1 ? 303 : 302;
-            $this->setStatus($status);
-        }
-
-        if ($noreturn) {
-            $this->discardOutput(); // This might print the gzip headers. Not good.
-            $this->buffer_output(false);
-
-            include_once('lib/Template.php');
-            $tmpl = new Template('redirect', $this, ['REDIRECT_URL' => $url]);
-            $tmpl->printXML();
-            $this->finish();
-        } elseif ($bogus) {
-            // Safari needs window.location.href = targeturl
-            return JavaScript("
-              function redirect(url) {
-                if (typeof location.replace == 'function')
-                  location.replace(url);
-                else if (typeof location.assign == 'function')
-                  location.assign(url);
-                else if (self.location.href)
-                  self.location.href = url;
-                else
-                  window.location = url;
-              }
-              redirect('" . addslashes($url) . "')");
-        }
+        header("Location: $url");
+        /*
+         * "302 Found" is not really meant to be sent in response
+         * to a POST.  Worse still, according to (both HTTP 1.0
+         * and 1.1) spec, the user, if it is sent, the user agent
+         * is supposed to use the same method to fetch the
+         * redirected URI as the original.
+         *
+         * That means if we redirect from a POST, the user-agent
+         * supposed to generate another POST.  Not what we want.
+         * (We do this after a page save after all.)
+         *
+         * Fortunately, most/all browsers don't do that.
+         *
+         * "303 See Other" is what we really want.  But it only
+         * exists in HTTP/1.1
+         *
+         * FIXME: this is still not spec compliant for HTTP
+         * version < 1.1.
+         */
+        $status = $this->httpVersion() >= 1.1 ? 303 : 302;
+        $this->setStatus($status);
+        $this->finish();
+        exit;
     }
 
     /** Set validators for this response.
