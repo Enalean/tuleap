@@ -27,6 +27,7 @@ use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Validation\Validator;
 use Override;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 
@@ -39,13 +40,13 @@ final class CachedLicenseBuilder implements BuildLicense
     {
     }
 
-    public static function instance(): self
+    public static function instance(?LoggerInterface $logger = null): self
     {
         if (self::$instance === null) {
             self::$instance = new self(new LicenseBuilder(
                 new PublicKeyPresenceChecker(),
                 new LicenseSignatureChecker(
-                    BackendLogger::getDefaultLogger(),
+                    $logger ?? BackendLogger::getDefaultLogger(),
                     new Parser(new JoseEncoder()),
                     new Validator(),
                     ValinorMapperBuilderFactory::mapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),

@@ -73,7 +73,7 @@ final class LogToGraylog2
 
         $logger->pushProcessor(new IntrospectionProcessor());
         $logger->pushProcessor(new IncludeBacktraceProcessor());
-        $logger->pushProcessor(new TuleapIdentifierProcessor(VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()))));
+        $logger->pushProcessor(new TuleapIdentifierProcessor(VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance($logger)))));
 
         return $logger;
     }
