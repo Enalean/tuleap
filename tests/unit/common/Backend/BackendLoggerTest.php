@@ -94,6 +94,16 @@ class BackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertInstanceOf(TruncateLevelLogger::class, $logger);
     }
 
+    public function testReturnsAGraylog2BaseLogger(): void
+    {
+        ForgeConfig::set('sys_logger', 'graylog2');
+        ForgeConfig::set('graylog2_server', 'localhost');
+        ForgeConfig::set('graylog2_port', '9200');
+        $logger = BackendLogger::getDefaultLogger();
+
+        self::assertInstanceOf(\Monolog\Logger::class, $logger);
+    }
+
     public function testItReturnsFileLoggerWhenCannotConfigure(): void
     {
         ForgeConfig::set('sys_logger', 'graylog2');
