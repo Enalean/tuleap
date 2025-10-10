@@ -35,10 +35,7 @@ vi.mock("@tuleap/autocomplete-for-select2", () => {
 });
 
 describe("UpdatePropertiesModal", () => {
-    function factory(
-        item: Item,
-        has_loaded_properties: boolean,
-    ): VueWrapper<InstanceType<typeof UpdatePropertiesModal>> {
+    function factory(item: Item): VueWrapper<InstanceType<typeof UpdatePropertiesModal>> {
         return shallowMount(UpdatePropertiesModal, {
             props: {
                 item,
@@ -47,12 +44,6 @@ describe("UpdatePropertiesModal", () => {
             global: {
                 ...getGlobalTestOptions({
                     modules: {
-                        properties: {
-                            state: {
-                                has_loaded_properties,
-                            },
-                            namespaced: true,
-                        },
                         error: {
                             state: {
                                 has_global_modal_error: false,
@@ -120,7 +111,7 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory(item, true);
+        const wrapper = factory(item);
 
         expect(wrapper.vm.item_to_update.owner.id).toBe(101);
 
@@ -166,7 +157,7 @@ describe("UpdatePropertiesModal", () => {
             value: 103,
         };
 
-        const wrapper = factory(item, false);
+        const wrapper = factory(item);
 
         expect(wrapper.vm.formatted_item_properties).toEqual([properties_in_rest_format]);
     });
@@ -187,7 +178,7 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory(item, true);
+        const wrapper = factory(item);
 
         expect(wrapper.vm.item_to_update.status).toBe("rejected");
 
@@ -212,7 +203,7 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory(item, true);
+        const wrapper = factory(item);
 
         expect(wrapper.vm.item_to_update.title).toBe("A folder");
 
@@ -237,7 +228,7 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory(item, true);
+        const wrapper = factory(item);
 
         expect(wrapper.vm.item_to_update.description).toBe("A custom description");
 

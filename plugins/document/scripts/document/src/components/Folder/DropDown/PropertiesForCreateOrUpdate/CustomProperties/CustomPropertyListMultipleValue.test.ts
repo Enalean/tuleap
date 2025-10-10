@@ -25,7 +25,9 @@ import CustomPropertyListMultipleValue from "./CustomPropertyListMultipleValue.v
 import emitter from "../../../../../helpers/emitter";
 import type { ListValue, Property } from "../../../../../type";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
-import type { PropertiesState } from "../../../../../store/properties/module";
+import { PROJECT_PROPERTIES } from "../../../../../injection-keys";
+import { ref } from "vue";
+import { PropertyBuilder } from "../../../../../../tests/builders/PropertyBuilder";
 
 vi.mock("../../../../../helpers/emitter");
 
@@ -42,25 +44,19 @@ describe("CustomPropertyListMultipleValue", () => {
         return shallowMount(CustomPropertyListMultipleValue, {
             props: { currentlyUpdatedItemProperty: property },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        properties: {
-                            state: {
-                                project_properties: [
-                                    {
-                                        short_name: "list",
-                                        allowed_list_values,
-                                    } as Property,
-                                    {
-                                        short_name: "an other list",
-                                        allowed_list_values: [{ id: 100, name: "None" }],
-                                    } as Property,
-                                ],
-                            } as unknown as PropertiesState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [PROJECT_PROPERTIES.valueOf()]: ref([
+                        new PropertyBuilder()
+                            .withShortName("list")
+                            .withAllowedListValues(allowed_list_values)
+                            .build(),
+                        new PropertyBuilder()
+                            .withShortName("an other list")
+                            .withAllowedListValues([{ id: 100, name: "None" }])
+                            .build(),
+                    ]),
+                },
             },
         });
     }

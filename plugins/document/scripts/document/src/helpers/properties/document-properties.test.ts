@@ -37,6 +37,8 @@ import {
     TYPE_WIKI,
 } from "../../constants";
 import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 
 vi.mock("../../helpers/emitter");
 
@@ -679,6 +681,36 @@ describe("document-properties", () => {
             expect(context.dispatch).toHaveBeenCalledWith("loadFolder", current_folder.id, {
                 root: true,
             });
+        });
+    });
+
+    describe("loadProjectProperties", () => {
+        let getProjectProperties: MockInstance;
+
+        beforeEach(() => {
+            getProjectProperties = vi.spyOn(properties_rest_querier, "getProjectProperties");
+            vi.clearAllMocks();
+        });
+
+        it(`load project properties definition`, async () => {
+            const properties = [
+                new PropertyBuilder().withShortName("text").withType("text").build(),
+            ];
+
+            getProjectProperties.mockReturnValue(okAsync(properties));
+
+            const result = await document_properties.loadProjectProperties(context, 102);
+
+            expect(result.isOk()).toBe(true);
+            expect(result.unwrapOr(null)).toStrictEqual(properties);
+        });
+
+        it("Handle error when properties project load fails", async () => {
+            getProjectProperties.mockReturnValue(errAsync(Fault.fromMessage("Oh no!")));
+
+            await document_properties.loadProjectProperties(context, 102);
+
+            expect(context.dispatch).toHaveBeenCalled();
         });
     });
 });

@@ -26,7 +26,7 @@
         <hr class="tlp-modal-separator" />
         <div class="document-modal-other-information-title-container">
             <div
-                v-if="!has_loaded_properties"
+                v-if="project_properties === null"
                 class="document-modal-other-information-title-container-spinner"
                 data-test="document-other-information-spinner"
             >
@@ -34,7 +34,7 @@
             </div>
             <h2 class="tlp-modal-subtitle">{{ $gettext("Other information") }}</h2>
         </div>
-        <template v-if="has_loaded_properties">
+        <template v-if="project_properties !== null">
             <obsolescence-date-property-for-create
                 v-if="is_obsolescence_date_property_used"
                 v-bind:value="value"
@@ -47,30 +47,32 @@
 <script setup lang="ts">
 import ObsolescenceDatePropertyForCreate from "./ObsolescenceDatePropertyForCreate.vue";
 import CustomProperty from "../../PropertiesForCreateOrUpdate/CustomProperties/CustomProperty.vue";
-import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
-import type { PropertiesState } from "../../../../../store/properties/module";
+import { useStore } from "vuex-composition-helpers";
 import { computed, onMounted } from "vue";
-import type { PropertiesActions } from "../../../../../store/properties/properties-actions";
 import type { Item } from "../../../../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IS_OBSOLESCENCE_DATE_PROPERTY_USED, PROJECT } from "../../../../../configuration-keys";
+import type { DocumentProperties } from "../../../../../helpers/properties/document-properties";
+import { PROJECT_PROPERTIES } from "../../../../../injection-keys";
 
-const props = defineProps<{ currentlyUpdatedItem: Item; value: string }>();
+const $store = useStore();
+
+const props = defineProps<{
+    currentlyUpdatedItem: Item;
+    value: string;
+    document_properties: DocumentProperties;
+}>();
 
 const project = strictInject(PROJECT);
 const is_obsolescence_date_property_used = strictInject(IS_OBSOLESCENCE_DATE_PROPERTY_USED);
-
-const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("properties", [
-    "loadProjectProperties",
-]);
-
-const { has_loaded_properties } = useNamespacedState<
-    Pick<PropertiesState, "has_loaded_properties">
->("properties", ["has_loaded_properties"]);
+const project_properties = strictInject(PROJECT_PROPERTIES);
 
 onMounted((): void => {
-    if (!has_loaded_properties.value) {
-        loadProjectProperties(project.id);
+    if (project_properties.value === null) {
+        props.document_properties.loadProjectProperties($store, project.id).map((properties) => {
+            project_properties.value = properties;
+            return null;
+        });
     }
 });
 

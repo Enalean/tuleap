@@ -71,6 +71,7 @@
                 v-bind:currently-updated-item="item"
                 v-model="item.obsolescence_date"
                 v-bind:value="item.obsolescence_date"
+                v-bind:document_properties="document_properties"
             />
             <creation-modal-permissions-section
                 v-if="item.permissions_for_groups"
@@ -135,6 +136,7 @@ import type { PermissionsState } from "../../../../store/permissions/permissions
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IS_STATUS_PROPERTY_USED, PROJECT, USER_LOCALE } from "../../../../configuration-keys";
+import { getDocumentProperties } from "../../../../helpers/properties/document-properties";
 
 const { $gettext } = useGettext();
 const $store = useStore();
@@ -149,6 +151,8 @@ const alternative_badge_class = ref<string>("");
 const fake_item = ref<FakeItem>(buildFakeItem());
 const form = ref<HTMLFormElement>();
 let modal: Modal | null = null;
+
+const document_properties = getDocumentProperties();
 
 const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
 const project = strictInject(PROJECT);

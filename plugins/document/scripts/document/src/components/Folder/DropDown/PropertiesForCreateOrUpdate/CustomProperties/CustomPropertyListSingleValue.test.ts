@@ -24,8 +24,9 @@ import CustomPropertyListSingleValue from "./CustomPropertyListSingleValue.vue";
 import type { ListValue, Property } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
-import type { PropertiesState } from "../../../../../store/properties/module";
-import { nextTick } from "vue";
+import { nextTick, ref } from "vue";
+import { PROJECT_PROPERTIES } from "../../../../../injection-keys";
+import { PropertyBuilder } from "../../../../../../tests/builders/PropertyBuilder";
 
 vi.mock("../../../../../helpers/emitter");
 
@@ -38,29 +39,23 @@ describe("CustomPropertyListSingleValue.vue", () => {
         return shallowMount(CustomPropertyListSingleValue, {
             props: { currentlyUpdatedItemProperty: property },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        properties: {
-                            namespaced: true,
-                            state: {
-                                project_properties: [
-                                    {
-                                        short_name: "list",
-                                        allowed_list_values: [
-                                            { id: 100, value: "None" },
-                                            { id: 101, value: "abcde" },
-                                            { id: 102, value: "fghij" },
-                                        ],
-                                    },
-                                    {
-                                        short_name: "an other list",
-                                        allowed_list_values: [{ id: 100, name: "None" }],
-                                    },
-                                ],
-                            } as unknown as PropertiesState,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [PROJECT_PROPERTIES.valueOf()]: ref([
+                        new PropertyBuilder()
+                            .withShortName("list")
+                            .withAllowedListValues([
+                                { id: 100, name: "None" },
+                                { id: 101, name: "abcde" },
+                                { id: 102, name: "fghij" },
+                            ])
+                            .build(),
+                        new PropertyBuilder()
+                            .withShortName("an other list")
+                            .withAllowedListValues([{ id: 100, name: "None" }])
+                            .build(),
+                    ]),
+                },
             },
         });
     }

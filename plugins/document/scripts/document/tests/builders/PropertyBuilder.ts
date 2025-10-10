@@ -21,6 +21,8 @@ import type { ListValue, Property } from "../../src/type";
 export class PropertyBuilder {
     private short_name: string = "";
     private list_value: Array<ListValue> = [];
+    private type: string = "";
+    private allowed_list_values: Array<ListValue> | null = null;
 
     constructor() {}
 
@@ -34,9 +36,19 @@ export class PropertyBuilder {
         return this;
     }
 
+    public withType(type: string): this {
+        this.type = type;
+        return this;
+    }
+
+    public withAllowedListValues(allowed_list_values: Array<ListValue>): this {
+        this.allowed_list_values = allowed_list_values;
+        return this;
+    }
+
     public build(): Property {
         return {
-            allowed_list_values: null,
+            allowed_list_values: this.allowed_list_values,
             description: "",
             is_multiple_value_allowed: false,
             is_required: false,
@@ -44,7 +56,7 @@ export class PropertyBuilder {
             list_value: this.list_value,
             name: "",
             short_name: this.short_name,
-            type: "",
+            type: this.type,
             value: null,
         };
     }

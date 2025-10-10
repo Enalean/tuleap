@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Folder, FolderProperties, FolderStatus, Item, RootState } from "../../type";
+import type { Folder, FolderProperties, FolderStatus, Item, Property, RootState } from "../../type";
 import type { ActionContext } from "vuex";
 import { getItem, getItemWithSize } from "../../api/rest-querier";
 import { formatCustomPropertiesForFolderUpdate } from "../properties-helpers/update-data-transformatter-helper";
@@ -31,6 +31,7 @@ import {
     isWiki,
 } from "../type-check-helper";
 import {
+    getProjectProperties,
     putEmbeddedFileProperties,
     putEmptyDocumentProperties,
     putFileProperties,
@@ -40,6 +41,8 @@ import {
     putWikiProperties,
 } from "../../api/properties-rest-querier";
 import emitter from "../emitter";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 
 export type DocumentProperties = {
     getFolderProperties(
@@ -62,6 +65,10 @@ export type DocumentProperties = {
         current_folder: Folder,
         is_status_property_used: boolean,
     ): Promise<void>;
+    loadProjectProperties(
+        context: ActionContext<RootState, RootState>,
+        project_id: number,
+    ): ResultAsync<Array<Property>, Fault>;
 };
 
 export const getDocumentProperties = (): DocumentProperties => {
@@ -215,5 +222,14 @@ export const getDocumentProperties = (): DocumentProperties => {
             );
         },
         updateProperties,
+        loadProjectProperties(
+            context: ActionContext<RootState, RootState>,
+            project_id: number,
+        ): ResultAsync<Array<Property>, Fault> {
+            return getProjectProperties(project_id).mapErr((fault) => {
+                context.dispatch("error/handleGlobalModalError", fault, { root: true });
+                return fault;
+            });
+        },
     };
 };

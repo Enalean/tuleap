@@ -31,6 +31,7 @@
         <folder-default-properties-for-create
             v-bind:properties="properties"
             v-bind:status_value="status_value"
+            v-bind:document_properties="document_properties"
         />
     </div>
 </template>
@@ -40,6 +41,7 @@ import TitleProperty from "../../PropertiesForCreateOrUpdate/AlwaysThereProperti
 import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
 import DescriptionProperty from "../../PropertiesForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
 import type { Folder, Item, Property } from "../../../../../type";
+import { getDocumentProperties } from "../../../../../helpers/properties/document-properties";
 
 defineProps<{
     currentlyUpdatedItem: Item;
@@ -47,4 +49,6 @@ defineProps<{
     status_value: string;
     properties: Array<Property>;
 }>();
+
+const document_properties = getDocumentProperties();
 </script>

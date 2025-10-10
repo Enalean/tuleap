@@ -22,16 +22,22 @@ import type { RootState, State } from "../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ErrorState } from "./module";
 import { getErrorMessage } from "../../helpers/properties-helpers/error-handler-helper";
+import type { Fault } from "@tuleap/fault";
+import { isFault } from "@tuleap/fault";
 
 const message = "Internal server error";
 
 export async function handleGlobalModalError(
     context: ActionContext<State, State>,
-    rest_error: FetchWrapperError,
+    rest_error: FetchWrapperError | Fault,
 ): Promise<void> {
     try {
-        const { error } = await rest_error.response.json();
-        context.commit("setGlobalModalErrorMessage", error.code + " " + error.message);
+        if (isFault(rest_error)) {
+            context.commit("setGlobalModalErrorMessage", rest_error.toString());
+        } else {
+            const { error } = await rest_error.response.json();
+            context.commit("setGlobalModalErrorMessage", error.code + " " + error.message);
+        }
     } catch (_e) {
         context.commit("setGlobalModalErrorMessage", "");
     }

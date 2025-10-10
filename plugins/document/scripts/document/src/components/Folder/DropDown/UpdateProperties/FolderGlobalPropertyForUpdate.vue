@@ -33,6 +33,7 @@
             v-bind:item-property="itemProperty"
             v-bind:status_value="status_value"
             v-bind:recursion_option="`none`"
+            v-bind:document_properties="document_properties"
         />
     </div>
 </template>
@@ -42,6 +43,7 @@ import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate
 import DescriptionProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
 import TitleProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/TitleProperty.vue";
 import type { Folder, Item, Property } from "../../../../type";
+import { getDocumentProperties } from "../../../../helpers/properties/document-properties";
 
 defineProps<{
     currentlyUpdatedItem: Item;
@@ -49,4 +51,6 @@ defineProps<{
     status_value: string;
     itemProperty: Array<Property>;
 }>();
+
+const document_properties = getDocumentProperties();
 </script>
