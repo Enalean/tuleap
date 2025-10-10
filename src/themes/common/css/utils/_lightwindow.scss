@@ -87,15 +87,6 @@
     background-color: #f0f0f0;
 }
 
-#lightwindow_loading_shim {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
 #lightwindow_loading span {
     padding: 0 10px 0 0;
     float: left;
@@ -134,19 +125,6 @@
     position: absolute;
     top: 0;
     left: 0;
-
-    /* REQUIRED */
-}
-
-/* We need to shim the navigation for IE, though its more of a sub-floor */
-#lightwindow_navigation_shim {
-    /* REQUIRED */
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
 
     /* REQUIRED */
 }
