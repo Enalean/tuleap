@@ -23,6 +23,7 @@ import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue
 import { USER_LOCALE_KEY } from "./injection-symbols";
 import type { Query } from "./type";
 import { getAttributeOrThrow } from "@tuleap/dom";
+import { getLocaleWithDefault } from "@tuleap/tlp-date-picker";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
 import {
     getPeriodAccordingToSelectedPreset,
@@ -59,10 +60,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
         .use(
             /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
-            await initVueGettext(createGettext, (locale: string) => {
+            await initVueGettext(createGettext, (locale) => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             }),
         )
-        .provide(USER_LOCALE_KEY, getAttributeOrThrow(document.body, "data-user-locale"))
+        .provide(USER_LOCALE_KEY, getLocaleWithDefault(document))
         .mount(mount_point);
 });

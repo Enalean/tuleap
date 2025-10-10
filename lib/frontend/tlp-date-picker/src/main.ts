@@ -26,6 +26,7 @@ import type { DatePickerInstance } from "./flatpickr";
 import { datePicker as flatpickrDatePicker } from "./flatpickr";
 
 export { getLocaleWithDefault } from "@tuleap/locale";
+export type { LocaleString };
 export type { DatePickerInstance };
 
 export function createDatePicker(
