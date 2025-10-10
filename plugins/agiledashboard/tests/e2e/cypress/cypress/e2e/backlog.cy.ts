@@ -17,52 +17,87 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+function getCurrentTimestampInSeconds(): string {
+    return String(Date.now()).slice(0, -4);
+}
+
+function visitTopBacklog(project_id: number): void {
+    cy.visit(`/plugins/agiledashboard/?group_id=${project_id}&action=show-top&pane=topplanning-v2`);
+}
+
+function addTask(task_label: string): void {
+    cy.getContains("[data-test=backlog-item]", "story #")
+        .first()
+        .find("[data-test=backlog-item-details-link]")
+        .click();
+    cy.getContains("[data-test=backlog-add-child]", "Tasks").click();
+    cy.get("[data-test=string-field-input]").type(task_label);
+    cy.get("[data-test=artifact-modal-save-button]").click();
+}
+
+function addUserStory(user_story_label: string): void {
+    cy.get("[data-test=add-item]").click();
+    cy.getContains("[data-test-static=add-item-in-backlog]", "User Stories").click();
+    cy.get("[data-test=string-field-input]").type(user_story_label);
+    cy.get("[data-test=artifact-modal-save-button]").click();
+}
+
+function createARelease(title: string, start_date: string, end_date: string): void {
+    cy.get("[data-test=add-milestone]").click();
+    cy.get("[data-test=artifact-modal-form]").within(() => {
+        cy.get("[data-test=string-field-input]").type(title);
+        // eslint-disable-next-line cypress/no-force -- flatpickr lib sets "readonly" attribute on the input
+        cy.getContains("[data-test=date-field]", "Start Date")
+            .find("[data-test=date-field-input]")
+            .type(start_date, { force: true });
+        // eslint-disable-next-line cypress/no-force -- flatpickr lib sets "readonly" attribute on the input
+        cy.getContains("[data-test=date-field]", "End Date")
+            .find("[data-test=date-field-input]")
+            .type(end_date, { force: true });
+        cy.get("[data-test=artifact-modal-save-button]").click();
+    });
+}
+
+function hideEmptyStateSVGToNotConfuseDragAndDrop(): void {
+    cy.get("[data-test=empty-milestone]").invoke("hide");
+}
+
 describe(`Backlog`, function () {
-    let now: number;
+    let now: string, today_date: Date, today: string, next_month_date: Date, next_month: string;
 
     beforeEach(function () {
-        now = Date.now();
-        cy.projectMemberSession();
-        cy.createNewPublicProject(`backlog-${now}`, "scrum");
-        // eslint-disable-next-line cypress/require-data-selectors
-        cy.get("body").as("body");
+        now = getCurrentTimestampInSeconds();
+        today_date = new Date();
+        const month_starting_one = today_date.getMonth() + 1;
+        today = `${today_date.getFullYear()}-${month_starting_one}-${today_date.getDate()}`;
+
+        next_month_date = new Date(
+            today_date.getFullYear(),
+            month_starting_one + 1,
+            today_date.getDate(),
+        );
+        next_month = `${next_month_date.getFullYear()}-${next_month_date.getMonth()}-${next_month_date.getDate()}`;
     });
 
     it(`can be used`, function () {
-        const today_date = new Date();
-        const today = `${today_date.getFullYear()}-${today_date.getMonth()}-${today_date.getDate()}`;
-
-        const next_month_date = new Date(
-            today_date.getFullYear(),
-            today_date.getMonth() + 1,
-            today_date.getDate(),
-        );
-        const next_month = `${next_month_date.getFullYear()}-${next_month_date.getMonth() + 1}-${next_month_date.getDate()}`;
         cy.projectMemberSession();
-        cy.visitProjectService(`backlog-${now}`, "Backlog");
+        cy.createNewPublicProject(`backlog-${now}`, "scrum").then((project_id) => {
+            visitTopBacklog(project_id);
+        });
 
         cy.log("User can create new release");
-        cy.get("[data-test=add-milestone]").click();
-        cy.get("[data-test=artifact-modal-form]").within(() => {
-            cy.get("[data-test=string-field-input]").type("R1");
-            cy.getContains("[data-test=date-field]", "Start Date").within(() => {
-                cy.get("[data-test=date-field-input]").type(today, { force: true });
-            });
-            cy.getContains("[data-test=date-field]", "End Date").within(() => {
-                cy.get("[data-test=date-field-input]").type(next_month, { force: true });
-            });
-            cy.get("[data-test=artifact-modal-save-button]").click();
-        });
+        createARelease("R1", today, next_month);
 
         cy.log("Release is created empty");
         cy.get("[data-test=expand-collapse-milestone]").click();
-        cy.get("[data-test=empty-milestone]");
-        cy.get("[data-test=milestone-info-capacity-none]");
-        cy.get("[data-test=milestone-info-initial-effort-none]");
+        cy.get("[data-test=empty-milestone]").should("exist");
+        cy.get("[data-test=milestone-info-capacity-none]").should("exist");
+        cy.get("[data-test=milestone-info-initial-effort-none]").should("exist");
 
-        cy.get("[data-test=milestone-header-dates]").contains(today_date.getFullYear());
-        cy.get("[data-test=milestone-header-dates]").contains(today_date.getDate());
-        cy.get("[data-test=milestone-header-dates]").contains(next_month_date.getDate());
+        cy.get("[data-test=milestone-header-dates]")
+            .should("contain", today_date.getFullYear())
+            .should("contain", today_date.getDate())
+            .should("contain", next_month_date.getDate());
 
         cy.log("Release data can be edited");
         cy.get("[data-test=edit-milestone]").click();
@@ -71,48 +106,255 @@ describe(`Backlog`, function () {
             cy.get("[data-test=computed-field-input]").type("8");
         });
 
-        cy.get("[data-test=list-picker-selection]").first().click();
-        cy.root().within(() => {
-            cy.get("[data-test-list-picker-dropdown-open]").within(() => {
-                cy.get("[data-test=list-picker-item]").contains("In development").click();
-            });
+        cy.getContains("[data-test=selectbox-field]", "Status").within(() => {
+            cy.searchItemInListPickerDropdown("In development").click();
         });
         cy.get("[data-test=artifact-modal-save-button]").click();
 
         cy.log("Release card display updated data");
-        cy.get("[data-test=milestone-info-capacity]").contains("8");
-        cy.get("[data-test=milestone-header-status]").contains("In development");
+        cy.get("[data-test=milestone-info-capacity]").should("contain", "8");
+        cy.get("[data-test=milestone-header-status]").should("contain", "In development");
 
         cy.log("Bugs can be added to the top backlog");
-        cy.get("[data-test=add-Bugs]").click({ force: true });
+        cy.get("[data-test=add-item]").click();
+        cy.getContains("[data-test-static=add-item-in-backlog]", "Bugs").click();
         cy.get("[data-test=string-field-input]").type("My bug");
         cy.get("[data-test=artifact-modal-save-button]").click();
-        cy.get("[data-test=backlog-item]").contains("My bug");
+        cy.get("[data-test=backlog-item]").should("contain", "My bug");
 
         cy.log("User stories can be added to a release");
-        cy.get("[data-test=add-item-to-submilestone]")
-            .contains("User Stories")
-            .click({ force: true });
+        cy.get("[data-test=add-item-milestone-dropdown]").click();
+        cy.getContains("[data-test=add-item-in-milestone]", "User Stories").click();
         cy.get("[data-test=string-field-input]").type("My User Story");
-        cy.getContains("[data-test=float-field]", "Initial Effort").within(() => {
-            cy.get("[data-test=float-field-input]").type("5");
-        });
+        cy.getContains("[data-test=float-field]", "Initial Effort")
+            .find("[data-test=float-field-input]")
+            .type("5");
 
-        cy.getContains("[data-test=float-field]", "Remaining Effort").within(() => {
-            cy.get("[data-test=float-field-input]").type("2");
-        });
+        cy.getContains("[data-test=float-field]", "Remaining Effort")
+            .find("[data-test=float-field-input]")
+            .type("2");
         cy.get("[data-test=artifact-modal-save-button]").click();
 
         cy.log("User story badge display its progress");
-        cy.get("[data-test=milestone-content]")
-            .contains("My User Story")
-            .parent()
+        cy.getContains("[data-test=milestone-content]", "My User Story")
             .parent()
             .within(() => {
-                cy.get("[data-test=badge-initial-effort]").contains("5");
+                cy.get("[data-test=badge-initial-effort]").should("contain", "5");
                 cy.get("[data-test=item-progress]")
                     .should("have.attr", "style")
                     .and("include", "width: 60%");
             });
+    });
+
+    it(`Drag and drop at top backlog level`, function () {
+        cy.projectMemberSession();
+        cy.createNewPublicProject(`backlog-dnd-${now}`, "scrum").then((project_id) => {
+            visitTopBacklog(project_id);
+        });
+
+        cy.log("User can create new release");
+        createARelease("R1", today, next_month);
+
+        cy.log("create some story with some tasks");
+        addUserStory("User story 1");
+        addTask("task1");
+        addTask("task2");
+        addUserStory("User story 2");
+
+        cy.get("[data-test=backlog-item-show-children-handle]").last().click();
+        cy.getContains("[data-test=backlog-item]", "User story 1")
+            .should("contain", "task1")
+            .should("contain", "task2");
+
+        cy.log("story can be planned");
+        cy.get("[data-test=milestone]").click();
+
+        hideEmptyStateSVGToNotConfuseDragAndDrop();
+        cy.dragAndDrop(
+            "[data-test=backlog-item-handle]",
+            "User story 1",
+            "[data-test=milestone]",
+            "R1",
+            "[data-test=milestone-backlog-items]",
+        );
+        cy.log("User story 1 is now in release R1");
+        cy.getContains("[data-test=milestone]", "R1")
+            .find("[data-test=milestone-content]")
+            .should("contain", "User story 1");
+
+        cy.log("tasks can be moved from one story to another");
+        cy.intercept({ method: "PATCH", url: "/api/v1/backlog_items/*/children" }).as(
+            "saveChildren",
+        );
+        cy.dragAndDrop(
+            "[data-test=backlog-item-child]",
+            "task1",
+            "[data-test=backlog-item]",
+            "User story 2",
+        );
+        cy.wait("@saveChildren");
+
+        cy.intercept("/api/v1/backlog_items/*/children?*").as("getChildren");
+        cy.get("[data-test=backlog-item-show-children-handle]").first().click();
+        cy.wait("@getChildren");
+        cy.getContains("[data-test=backlog-item]", "User story 2").should("contain", "task1");
+
+        cy.log("story can be moved to another release");
+        createARelease("R2", today, next_month);
+        cy.getContains("[data-test=milestone]", "R2").click();
+
+        hideEmptyStateSVGToNotConfuseDragAndDrop();
+        cy.dragAndDrop(
+            "[data-test=backlog-item-handle]",
+            "User story 1",
+            "[data-test=milestone]",
+            "R2",
+            "[data-test=milestone-backlog-items]",
+        );
+
+        cy.getContains("[data-test=milestone]", "R2")
+            .find("[data-test=milestone-content]")
+            .should("contain", "User story 1");
+    });
+
+    it(`Multi drag and drop at top backlog level`, function () {
+        cy.projectMemberSession();
+        cy.createNewPublicProject(`backlog-multi-dnd-${now}`, "scrum").then((project_id) => {
+            visitTopBacklog(project_id);
+        });
+
+        createARelease("R1", today, next_month);
+        addUserStory("User story 1");
+        addUserStory("User story 2");
+
+        cy.log("story can be planned");
+        cy.get("[data-test=milestone]").click();
+
+        hideEmptyStateSVGToNotConfuseDragAndDrop();
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get("body")
+            .type("{ctrl}", { release: false })
+            .get("[data-test=backlog-item]")
+            .click({ multiple: true });
+
+        cy.dragAndDrop(
+            "[data-test=backlog-item-handle]",
+            "User story 2",
+            "[data-test=milestone]",
+            "R1",
+            "[data-test=milestone-backlog-items]",
+        );
+        cy.get("[data-test=milestone-backlog-items]")
+            .should("contain", "User story 1")
+            .should("contain", "User story 2");
+    });
+
+    it(`Drag and drop at sprint level`, function () {
+        cy.projectMemberSession();
+        cy.createNewPublicProject(`sprint-dnd-${now}`, "scrum").then((project_id) => {
+            visitTopBacklog(project_id);
+        });
+
+        createARelease("R1", today, next_month);
+        cy.get("[data-test=milestone]").click();
+        cy.get("[data-test=go-to-submilestone-planning]").click();
+        createARelease("Sprint 1", today, next_month);
+
+        cy.log("create some story with some tasks");
+        addUserStory("User story 1");
+        addTask("task1");
+        addTask("task2");
+        addUserStory("User story 2");
+
+        cy.get("[data-test=backlog-item-show-children-handle]").last().click();
+        cy.getContains("[data-test=backlog-item]", "User story 1")
+            .should("contain", "task1")
+            .should("contain", "task2");
+
+        cy.log("story can be planned");
+        cy.get("[data-test=milestone]").click();
+
+        hideEmptyStateSVGToNotConfuseDragAndDrop();
+        cy.dragAndDrop(
+            "[data-test=backlog-item-handle]",
+            "User story 1",
+            "[data-test=milestone]",
+            "Sprint 1",
+            "[data-test=milestone-backlog-items]",
+        );
+        cy.log("User story 1 is now in Sprint 1");
+        cy.getContains("[data-test=milestone]", "Sprint 1")
+            .find("[data-test=milestone-content]")
+            .should("contain", "User story 1");
+
+        cy.log("tasks can be moved from one story to another");
+        cy.intercept({ method: "PATCH", url: "/api/v1/backlog_items/*/children" }).as(
+            "saveChildren",
+        );
+        cy.dragAndDrop(
+            "[data-test=backlog-item-child]",
+            "task1",
+            "[data-test=backlog-item]",
+            "User story 2",
+        );
+        cy.wait("@saveChildren");
+
+        cy.intercept("/api/v1/backlog_items/*/children?*").as("getChildren");
+        cy.get("[data-test=backlog-item-show-children-handle]").first().click();
+        cy.wait("@getChildren");
+        cy.getContains("[data-test=backlog-item]", "User story 2").should("contain", "task1");
+
+        cy.log("story can be moved to another sprint");
+        createARelease("Sprint 2", today, next_month);
+        cy.getContains("[data-test=milestone]", "Sprint 2").click();
+
+        hideEmptyStateSVGToNotConfuseDragAndDrop();
+        cy.dragAndDrop(
+            "[data-test=backlog-item-handle]",
+            "User story 1",
+            "[data-test=milestone]",
+            "Sprint 2",
+            "[data-test=milestone-backlog-items]",
+        );
+
+        cy.getContains("[data-test=milestone]", "Sprint 2")
+            .find("[data-test=milestone-content]")
+            .should("contain", "User story 1");
+    });
+
+    it(`Multi drag and drop at sprint level`, function () {
+        cy.projectMemberSession();
+        cy.createNewPublicProject(`sprint-multi-dnd-${now}`, "scrum").then((project_id) => {
+            visitTopBacklog(project_id);
+        });
+
+        createARelease("R1", today, next_month);
+        cy.get("[data-test=milestone]").click();
+        cy.get("[data-test=go-to-submilestone-planning]").click();
+
+        createARelease("Sprint 1", today, next_month);
+        addUserStory("User story 1");
+        addUserStory("User story 2");
+
+        cy.log("story can be planned");
+        cy.get("[data-test=milestone]").click();
+
+        hideEmptyStateSVGToNotConfuseDragAndDrop();
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get("body")
+            .type("{ctrl}", { release: false })
+            .get("[data-test=backlog-item]")
+            .click({ multiple: true });
+
+        cy.dragAndDrop(
+            "[data-test=backlog-item-handle]",
+            "User story 2",
+            "[data-test=milestone]",
+            "Sprint 1",
+            "[data-test=milestone-backlog-items]",
+        );
+        cy.get("[data-test=milestone-backlog-items]")
+            .should("contain", "User story 1")
+            .should("contain", "User story 2");
     });
 });
