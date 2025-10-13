@@ -24,8 +24,10 @@
     /* protected */ #[Override]
     public function _scripts($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        $project = ProjectManager::instance()->getProject((int) $params['group_id']);
-        echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman(' . $params['group_id'] . ', ';
+        $project   = ProjectManager::instance()->getProject((int) $params['group_id']);
+        $purifier  = Codendi_HTMLPurifier::instance();
+        $csp_nonce = \Tuleap\ContentSecurityPolicy\CSPNonce::build();
+        echo '<script type="text/javascript" nonce="' . $purifier->purify($csp_nonce->value) . '"> var docman = new com.xerox.codendi.Docman(' . $params['group_id'] . ', ';
         $di = $this->_getDocmanIcons($params);
         echo json_encode(array_merge(
             [

@@ -68,13 +68,14 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $disabled      = ($this->docman->userCanWrite($folder['id'])) ? '' : 'disabled="disabled"';
         $label_classes = $selected ? 'docman_item_actual_parent' : '';
 
-        $h  = '<li  class="' . Docman_View_Browse::getItemClasses(['is_last' => $params['is_last']]) . '">';
-        $h .= '<label for="item_parent_id_' . $folder['id'] . '" class="' . $label_classes . '" >';
-        $h .= '<input type="radio" ' . $selected . ' name="' . $params['input_name'] . '" value="' . $folder['id'] . '" id="item_parent_id_' . $folder['id'] . '" ' . $disabled . ' />';
-        $h .= '<img src="' . $folder['icon_src'] . '" class="docman_item_icon" />';
-        $h .=  $hp->purify($folder['title'], CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
-        $h .= '<script type="text/javascript">docman.addParentFoldersForNewItem(' . $folder['id'] . ', ' . $folder['parent_id'] . ", '" .  $hp->purify(addslashes($folder['title']), CODENDI_PURIFIER_CONVERT_HTML) . "');</script>\n";
-        $h .= '<ul class="docman_items">';
+        $h         = '<li  class="' . Docman_View_Browse::getItemClasses(['is_last' => $params['is_last']]) . '">';
+        $h        .= '<label for="item_parent_id_' . $folder['id'] . '" class="' . $label_classes . '" >';
+        $h        .= '<input type="radio" ' . $selected . ' name="' . $params['input_name'] . '" value="' . $folder['id'] . '" id="item_parent_id_' . $folder['id'] . '" ' . $disabled . ' />';
+        $h        .= '<img src="' . $folder['icon_src'] . '" class="docman_item_icon" />';
+        $h        .=  $hp->purify($folder['title'], CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
+        $csp_nonce = \Tuleap\ContentSecurityPolicy\CSPNonce::build();
+        $h        .= '<script type="text/javascript" nonce="' . $hp->purify($csp_nonce->value) . '">docman.addParentFoldersForNewItem(' . $folder['id'] . ', ' . $folder['parent_id'] . ", '" .  $hp->purify(addslashes($folder['title']), CODENDI_PURIFIER_CONVERT_HTML) . "');</script>\n";
+        $h        .= '<ul class="docman_items">';
 
         $params['is_last'] = false;
         $nb                = count($folder['items']);

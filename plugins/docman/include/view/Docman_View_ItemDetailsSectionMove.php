@@ -34,6 +34,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
     #[\Override]
     public function getContent($params = [])
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $content  = '';
         $content .= '<dl><dt>' . dgettext('tuleap-docman', 'Move') . '</dt><dd>';
         $content .= '<form action="' . $this->url . '" method="POST">';
@@ -46,7 +47,8 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
             'input_name'   => 'id',
             'excludes'     => [$this->item->getId()],
         ]);
-        $content     .= '<script type="text/javascript">docman.options.move.item_id = ' . $this->item->getId() . ';</script>';
+        $csp_nonce    = \Tuleap\ContentSecurityPolicy\CSPNonce::build();
+        $content     .= '<script type="text/javascript" nonce="' . $purifier->purify($csp_nonce->value) . '">docman.options.move.item_id = ' . $this->item->getId() . ';</script>';
         $content     .=  '<br />';
 
         //submit
