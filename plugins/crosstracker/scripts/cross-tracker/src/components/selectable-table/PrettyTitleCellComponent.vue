@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef, onMounted } from "vue";
+import { computed, ref, useTemplateRef, onMounted, onBeforeUnmount } from "vue";
 import { useGettext } from "vue3-gettext";
 import {
     type ArtifactLinkDirection,
@@ -168,6 +168,10 @@ onMounted(() => {
 
     arrow_data_store.addEntry(props.uuid, cell_element.value, caret_element.value);
     loadTooltips(cell_element.value);
+});
+
+onBeforeUnmount(() => {
+    arrow_data_store.removeEntry(props.uuid);
 });
 </script>
 

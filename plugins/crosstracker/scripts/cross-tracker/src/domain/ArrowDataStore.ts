@@ -25,15 +25,19 @@ export type ArrowDataEntry = {
 
 export type ArrowDataStore = {
     addEntry(uuid: string, element: HTMLElement, caret: HTMLElement): void;
+    removeEntry(uuid: string): void;
     getByUUID(uuid: string): ArrowDataEntry | undefined;
 };
 
 export const ArrowDataStore = (): ArrowDataStore => {
-    const arrow_data_collection: Array<ArrowDataEntry> = [];
+    let arrow_data_collection: Array<ArrowDataEntry> = [];
 
     return {
         addEntry(uuid: string, element: HTMLElement, caret: HTMLElement): void {
             arrow_data_collection.push({ uuid, element, caret });
+        },
+        removeEntry(uuid: string): void {
+            arrow_data_collection = arrow_data_collection.filter((entry) => entry.uuid !== uuid);
         },
         getByUUID(uuid: string): ArrowDataEntry | undefined {
             return arrow_data_collection.find((item) => item.uuid === uuid);
