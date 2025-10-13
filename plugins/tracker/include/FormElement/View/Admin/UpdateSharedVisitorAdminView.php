@@ -17,11 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin;
 
 /**
  * Visit a target shared FormElement and provides an update view
  */
-class Tracker_FormElement_View_Admin_UpdateSharedVisitor extends Tracker_FormElement_View_Admin_UpdateVisitor
+class UpdateSharedVisitorAdminView extends UpdateVisitorAdminView
 {
     /**
      * Return html corresponding to FormElement update

@@ -17,11 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin;
+
+use Codendi_HTMLPurifier;
+use CSRFSynchronizerToken;
+use HTTPRequest;
+use TrackerManager;
 
 /**
  * Visit a FormElement and provides a create view
  */
-class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_View_Admin_Visitor
+class CreateVisitorAdminView extends VisitorAdminView
 {
     private $type;
     private $label;
@@ -53,7 +59,7 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = 'Create a new ' . $this->label;
-        $url   = TRACKER_BASE_URL . '/?tracker=' . (int) $this->element->getTracker()->getId() . '&amp;func=admin-formElements&amp;create-formElement[' .  $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) . ']=1';
+        $url   = TRACKER_BASE_URL . '/?tracker=' . (int) $this->element->getTracker()->getId() . '&amp;func=admin-formElements&amp;create-formElement[' . $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) . ']=1';
 
         $form_content  = $this->fetchForm();
         $form_content .= ($csrf_token ?? $this->element->getCSRFTokenForElementUpdate())->fetchHTMLInput();

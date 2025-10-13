@@ -40516,6 +40516,130 @@
       <code><![CDATA[accept]]></code>
     </UndefinedMethod>
   </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/CreateSharedVisitorAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchForm]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/CreateVisitorAdminView.php">
+    <MissingParamType>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$type]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[fetchForm]]></code>
+      <code><![CDATA[setLabel]]></code>
+      <code><![CDATA[setType]]></code>
+    </MissingReturnType>
+    <RedundantCast>
+      <code><![CDATA[(int) $this->element->getTracker()->getId()]]></code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/FieldAdminView.php">
+    <UndefinedMethod>
+      <code><![CDATA[isNotificationsSupported]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/FilterFormElementsThatCanBeCreatedForTracker.php">
+    <MissingParamType>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[removeByType]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/SharedAdminView.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$formElement]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MissingParamType>
+      <code><![CDATA[$allUsedElements]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/UpdateVisitorAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchForm]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/VisitorAdminView.php">
+    <InvalidArgument>
+      <code><![CDATA[$element]]></code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$element]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MissingParamType>
+      <code><![CDATA[$form]]></code>
+      <code><![CDATA[$form]]></code>
+      <code><![CDATA[$formContent]]></code>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$title]]></code>
+      <code><![CDATA[$url]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$allUsedElements]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[displayAjax]]></code>
+      <code><![CDATA[displayFullPage]]></code>
+      <code><![CDATA[visit]]></code>
+      <code><![CDATA[visitArtifactId]]></code>
+      <code><![CDATA[visitArtifactLink]]></code>
+      <code><![CDATA[visitBurndown]]></code>
+      <code><![CDATA[visitCheckbox]]></code>
+      <code><![CDATA[visitComputed]]></code>
+      <code><![CDATA[visitContainer]]></code>
+      <code><![CDATA[visitCrossReferences]]></code>
+      <code><![CDATA[visitDate]]></code>
+      <code><![CDATA[visitExternalField]]></code>
+      <code><![CDATA[visitField]]></code>
+      <code><![CDATA[visitFile]]></code>
+      <code><![CDATA[visitFloat]]></code>
+      <code><![CDATA[visitInteger]]></code>
+      <code><![CDATA[visitLastModifiedBy]]></code>
+      <code><![CDATA[visitLastUpdateDate]]></code>
+      <code><![CDATA[visitLineBreak]]></code>
+      <code><![CDATA[visitList]]></code>
+      <code><![CDATA[visitMultiSelectbox]]></code>
+      <code><![CDATA[visitOpenList]]></code>
+      <code><![CDATA[visitPerTrackerArtifactId]]></code>
+      <code><![CDATA[visitPermissionsOnArtifact]]></code>
+      <code><![CDATA[visitPriority]]></code>
+      <code><![CDATA[visitRadiobutton]]></code>
+      <code><![CDATA[visitSelectbox]]></code>
+      <code><![CDATA[visitSeparator]]></code>
+      <code><![CDATA[visitShared]]></code>
+      <code><![CDATA[visitStaticField]]></code>
+      <code><![CDATA[visitString]]></code>
+      <code><![CDATA[visitSubmittedBy]]></code>
+      <code><![CDATA[visitSubmittedOn]]></code>
+      <code><![CDATA[visitText]]></code>
+    </MissingReturnType>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/TrackerFormElementAdminView.php">
+    <MissingParamType>
+      <code><![CDATA[$allUsedElements]]></code>
+      <code><![CDATA[$name]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[fetchAdminButton]]></code>
+      <code><![CDATA[fetchCustomHelp]]></code>
+      <code><![CDATA[fetchNameForShared]]></code>
+      <code><![CDATA[fetchNameForUpdate]]></code>
+      <code><![CDATA[fetchRanking]]></code>
+      <code><![CDATA[fetchTypeForUpdate]]></code>
+      <code><![CDATA[fetchTypeNotModifiable]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/FormElement/XML/XMLFormElement.php">
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
@@ -46100,52 +46224,6 @@
       <code><![CDATA[checkTransition]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin.php">
-    <MissingParamType>
-      <code><![CDATA[$allUsedElements]]></code>
-      <code><![CDATA[$name]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$allUsedElements]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[fetchAdminButton]]></code>
-      <code><![CDATA[fetchCustomHelp]]></code>
-      <code><![CDATA[fetchNameForShared]]></code>
-      <code><![CDATA[fetchNameForUpdate]]></code>
-      <code><![CDATA[fetchRanking]]></code>
-      <code><![CDATA[fetchTypeForUpdate]]></code>
-      <code><![CDATA[fetchTypeNotModifiable]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/CreateSharedVisitor.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchForm]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/CreateVisitor.php">
-    <MissingParamType>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[fetchForm]]></code>
-      <code><![CDATA[setLabel]]></code>
-      <code><![CDATA[setType]]></code>
-    </MissingReturnType>
-    <RedundantCast>
-      <code><![CDATA[(int) $this->element->getTracker()->getId()]]></code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field.php">
-    <UndefinedMethod>
-      <code><![CDATA[isNotificationsSupported]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Checkbox.php">
     <MissingPropertyType>
       <code><![CDATA[$availableTypes]]></code>
@@ -46214,22 +46292,6 @@
       <code><![CDATA[fetchCustomHelp]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/FilterFormElementsThatCanBeCreatedForTracker.php">
-    <MissingParamType>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[removeByType]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Shared.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$formElement]]></code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType>
-      <code><![CDATA[$allUsedElements]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/StaticField/LineBreak.php">
     <MissingReturnType>
       <code><![CDATA[fetchCustomHelp]]></code>
@@ -46239,71 +46301,6 @@
     <MissingReturnType>
       <code><![CDATA[fetchCustomHelp]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/UpdateVisitor.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchForm]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Visitor.php">
-    <InvalidArgument>
-      <code><![CDATA[$element]]></code>
-    </InvalidArgument>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$element]]></code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType>
-      <code><![CDATA[$form]]></code>
-      <code><![CDATA[$form]]></code>
-      <code><![CDATA[$formContent]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$allUsedElements]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[displayAjax]]></code>
-      <code><![CDATA[displayFullPage]]></code>
-      <code><![CDATA[visit]]></code>
-      <code><![CDATA[visitArtifactId]]></code>
-      <code><![CDATA[visitArtifactLink]]></code>
-      <code><![CDATA[visitBurndown]]></code>
-      <code><![CDATA[visitCheckbox]]></code>
-      <code><![CDATA[visitComputed]]></code>
-      <code><![CDATA[visitContainer]]></code>
-      <code><![CDATA[visitCrossReferences]]></code>
-      <code><![CDATA[visitDate]]></code>
-      <code><![CDATA[visitExternalField]]></code>
-      <code><![CDATA[visitField]]></code>
-      <code><![CDATA[visitFile]]></code>
-      <code><![CDATA[visitFloat]]></code>
-      <code><![CDATA[visitInteger]]></code>
-      <code><![CDATA[visitLastModifiedBy]]></code>
-      <code><![CDATA[visitLastUpdateDate]]></code>
-      <code><![CDATA[visitLineBreak]]></code>
-      <code><![CDATA[visitList]]></code>
-      <code><![CDATA[visitMultiSelectbox]]></code>
-      <code><![CDATA[visitOpenList]]></code>
-      <code><![CDATA[visitPerTrackerArtifactId]]></code>
-      <code><![CDATA[visitPermissionsOnArtifact]]></code>
-      <code><![CDATA[visitPriority]]></code>
-      <code><![CDATA[visitRadiobutton]]></code>
-      <code><![CDATA[visitSelectbox]]></code>
-      <code><![CDATA[visitSeparator]]></code>
-      <code><![CDATA[visitShared]]></code>
-      <code><![CDATA[visitStaticField]]></code>
-      <code><![CDATA[visitString]]></code>
-      <code><![CDATA[visitSubmittedBy]]></code>
-      <code><![CDATA[visitSubmittedOn]]></code>
-      <code><![CDATA[visitText]]></code>
-    </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[null]]></code>
-      <code><![CDATA[null]]></code>
-    </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="plugins/tracker/include/Tracker/GeneralSettings_Presenter.php">
     <MissingParamType>
@@ -97301,10 +97298,6 @@
     </UndefinedVariable>
   </file>
   <file src="tests/unit/tuleap-cfg/Command/SetupTuleapCommandTest.php">
-    <NoInterfaceProperties>
-      <code><![CDATA[$this->key_factory->key_created]]></code>
-      <code><![CDATA[$this->key_factory->permissions_set]]></code>
-    </NoInterfaceProperties>
     <PossiblyFalseArgument>
       <code><![CDATA[$backup_file_found]]></code>
       <code><![CDATA[$full_content]]></code>

@@ -17,8 +17,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin;
 
-class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admin
+use Tuleap\Tracker\FormElement\View\TrackerFormElementAdminView;
+
+class FieldAdminView extends TrackerFormElementAdminView
 {
     /**
      * If the formElement has specific properties then this method

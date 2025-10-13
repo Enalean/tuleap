@@ -17,19 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin;
 
 /**
  * Visit a target shared element and provide a creation view
  */
-class Tracker_FormElement_View_Admin_CreateSharedVisitor extends Tracker_FormElement_View_Admin_CreateVisitor
+class CreateSharedVisitorAdminView extends CreateVisitorAdminView
 {
     #[\Override]
     protected function fetchForm()
     {
         $html  = '';
         $html .= '<p>Field id:';
-        $html .=  '<input type="text" name="formElement_data[field_id]" value="" />';
-        $html .=  '</p>';
+        $html .= '<input type="text" name="formElement_data[field_id]" value="" />';
+        $html .= '</p>';
         $html .= $this->adminElement->fetchAdminButton(self::SUBMIT_CREATE);
         return $html;
     }

@@ -18,8 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin;
 
-class Tracker_FormElement_View_Admin_Shared extends Tracker_FormElement_View_Admin
+use Tracker_FormElement_Shared;
+use Tuleap\Tracker\FormElement\View\TrackerFormElementAdminView;
+
+class SharedAdminView extends TrackerFormElementAdminView
 {
     public function __construct(Tracker_FormElement_Shared $formElement, $allUsedElements)
     {
