@@ -80,7 +80,7 @@
 
 <hr noshade="noshade" />
 
-<script language="JavaScript1.3" type="text/javascript">
+<script type="text/javascript" nonce="<?php echo \Codendi_HTMLPurifier::instance()->purify(\Tuleap\ContentSecurityPolicy\CSPNonce::build()->value); ?>">
 <!--
 function showOldMarkupRules(show) {
   if (document.getElementById) {
@@ -110,7 +110,7 @@ function showOldMarkupRules(show) {
 <?=$HIDDEN_INPUTS?>
 </form>
 
-<script language="JavaScript1.3" type="text/javascript">
+<script type="text/javascript" nonce="<?php echo \Codendi_HTMLPurifier::instance()->purify(\Tuleap\ContentSecurityPolicy\CSPNonce::build()->value); ?>">
 <!--
 if (document.getElementById) {
   showOldMarkupRules(document.getElementById('useOldMarkup').checked);
