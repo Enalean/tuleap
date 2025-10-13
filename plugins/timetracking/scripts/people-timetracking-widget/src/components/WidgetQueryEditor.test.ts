@@ -31,7 +31,7 @@ import { USER_LOCALE_KEY } from "../injection-symbols";
 import type { Query } from "../type";
 
 vi.mock("@tuleap/tlp-date-picker", () => ({
-    datePicker(): { setDate(): void } {
+    createDatePicker(): { setDate(): void } {
         return {
             setDate(): void {
                 // Do nothing

@@ -102,7 +102,7 @@
 <script setup lang="ts">
 import "@tuleap/lazybox";
 import type { Lazybox } from "@tuleap/lazybox";
-import { datePicker, type DatePickerInstance } from "@tuleap/tlp-date-picker";
+import { createDatePicker, type DatePickerInstance } from "@tuleap/tlp-date-picker";
 import { useGettext } from "vue3-gettext";
 import type { Ref } from "vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
@@ -159,10 +159,10 @@ onMounted((): void => {
     ) {
         return;
     }
-    start_date_picker = datePicker(start_date_input.value);
+    start_date_picker = createDatePicker(start_date_input.value, user_locale);
     start_date_picker.setDate(props.query.start_date);
 
-    end_date_picker = datePicker(end_date_input.value);
+    end_date_picker = createDatePicker(end_date_input.value, user_locale);
     end_date_picker.setDate(props.query.end_date);
 
     initUsersAutocompleter(
@@ -214,6 +214,7 @@ const setDatePickersValues = (
 
 <style lang="scss">
 @use "pkg:@tuleap/lazybox";
+@use "pkg:@tuleap/tlp-date-picker";
 </style>
 
 <style scoped lang="scss">
