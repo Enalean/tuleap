@@ -365,12 +365,25 @@ describe(`Artifact Modal`, function () {
 
             cy.get("[data-test=add-comment-form]").within(() => {
                 cy.get("[data-test=format]").select("Markdown");
-                cy.get("[data-test=textarea]").type("Follow-up comment");
+                cy.get("[data-test=textarea]").type("**Follow-up comment**");
+                cy.get("[data-test=button-commonmark-preview]")
+                    .should("contain", "Preview")
+                    .click();
+                cy.get("[data-test=text-field-commonmark-preview]").should("be.visible");
+                cy.get("[data-test=button-commonmark-preview]").should("contain", "Edit").click();
             });
 
             cy.get("[data-test=artifact-modal-save-button]").click();
         });
         waitForKanbanCard(`Editable Artifact ${now}`);
+        getKanbanCard(`Editable Artifact ${now}`).within(() => {
+            cy.get("[data-test=edit-link]").click();
+        });
+        cy.get("[data-test=artifact-modal-form]").within(() => {
+            cy.get("[data-test=comment-body]")
+                .first()
+                .should("have.html", "<p><strong>Follow-up comment</strong></p>\n");
+        });
     });
 });
 
