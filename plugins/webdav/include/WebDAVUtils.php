@@ -28,7 +28,7 @@ class WebDAVUtils // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     #[ConfigKey('Enable/disable write access for WebDAV plugin (default: false)')]
     #[ConfigKeyLegacyBool(false)]
-    public const CONFIG_WRITE_ACCESS_ENABLED = 'webdav_write_access_enabled';
+    public const string CONFIG_WRITE_ACCESS_ENABLED = 'webdav_write_access_enabled';
 
     protected static $instance;
 

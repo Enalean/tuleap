@@ -59806,9 +59806,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker_encryption/include/Tracker_FormElement_Field_Encrypted.php">
-    <MissingClassConstType>
-      <code><![CDATA[TYPE = 'Encrypted']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$field_type]]></code>
       <code><![CDATA[$submitted_values]]></code>
@@ -60161,9 +60158,6 @@
     <InvalidReturnType>
       <code><![CDATA[save]]></code>
     </InvalidReturnType>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'velocity']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
@@ -60284,9 +60278,6 @@
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->invalid_artifacts]]></code>
     </InvalidPropertyAssignmentValue>
-    <MissingClassConstType>
-      <code><![CDATA[NB_MAX_VELOCITIES = 7]]></code>
-    </MissingClassConstType>
     <MissingReturnType>
       <code><![CDATA[addInvalidArtifact]]></code>
       <code><![CDATA[addInvalidTracker]]></code>
@@ -60416,10 +60407,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVDocmanFolder.php">
-    <MissingClassConstType>
-      <code><![CDATA[DUPLICATE                                 = 'duplicate']]></code>
-      <code><![CDATA[ITEM_EXISTS_BUT_NOT_DISPLAYABLE_IN_WEBDAV = 'exists-not-displayed']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$item]]></code>
     </MissingParamType>
@@ -60537,9 +60524,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/webdav/include/WebDAVUtils.php">
-    <MissingClassConstType>
-      <code><![CDATA[CONFIG_WRITE_ACCESS_ENABLED = 'webdav_write_access_enabled']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$file]]></code>
       <code><![CDATA[$name]]></code>
@@ -60554,11 +60538,6 @@
       <code><![CDATA[getIncomingFileSize]]></code>
       <code><![CDATA[setInstance]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/webdav/include/webdavPlugin.php">
-    <MissingClassConstType>
-      <code><![CDATA[LOG_IDENTIFIER = 'webdav_syslog']]></code>
-    </MissingClassConstType>
   </file>
   <file src="plugins/webdav/tests/unit/WebDAVDocmanFileTest.php">
     <PossiblyFalseArgument>

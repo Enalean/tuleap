@@ -28,9 +28,9 @@ use Tuleap\Option\Option;
 
 final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, RetrieveLogsForTracker, RetrievePayloadsForChangeset, DeleteLogsPerTracker
 {
-    private const TABLE_NAME = 'plugin_tracker_functions_log';
+    private const string TABLE_NAME = 'plugin_tracker_functions_log';
 
-    private const MAX_RECORD_PER_TRACKER = 50;
+    private const int MAX_RECORD_PER_TRACKER = 50;
 
     public function __construct(private readonly Tracker_ArtifactFactory $artifact_factory)
     {

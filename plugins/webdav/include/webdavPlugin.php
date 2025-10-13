@@ -46,7 +46,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class WebDAVPlugin extends Plugin implements PluginWithConfigKeys
 {
-    public const LOG_IDENTIFIER = 'webdav_syslog';
+    public const string LOG_IDENTIFIER = 'webdav_syslog';
 
     public function __construct(?int $id)
     {

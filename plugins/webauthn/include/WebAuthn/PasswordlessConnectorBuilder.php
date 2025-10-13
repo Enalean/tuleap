@@ -26,7 +26,7 @@ use Tuleap\User\AdditionalConnector;
 
 final class PasswordlessConnectorBuilder
 {
-    private const PASSWORDLESS_BUTTON_ICON = 'key';
+    private const string PASSWORDLESS_BUTTON_ICON = 'key';
 
     public static function build(string $plugin_path, string $return_to): AdditionalConnector
     {

@@ -46,7 +46,7 @@ use UserManager;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CustomCodeExecutionTaskTest extends TestCase
 {
-    private const WASM_FILE = __FILE__;
+    private const string WASM_FILE = __FILE__;
 
     private UserManager&MockObject $user_manager;
 

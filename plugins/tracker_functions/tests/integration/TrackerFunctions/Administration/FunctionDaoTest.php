@@ -27,8 +27,8 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FunctionDaoTest extends TestIntegrationTestCase
 {
-    private const BUG_TRACKER_ID  = 1;
-    private const TASK_TRACKER_ID = 2;
+    private const int BUG_TRACKER_ID  = 1;
+    private const int TASK_TRACKER_ID = 2;
 
     private FunctionDao $dao;
 

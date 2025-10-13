@@ -30,9 +30,9 @@ use WebDAVAuthentication;
 
 final class WebdavController implements DispatchableWithRequestNoAuthz
 {
-    public const ROUTE_BASE = '/plugins/webdav';
+    public const string ROUTE_BASE = '/plugins/webdav';
 
-    public const VERBS = [
+    public const array VERBS = [
         'GET',
         'HEAD',
         'POST',

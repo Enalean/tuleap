@@ -44,7 +44,7 @@ use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
 
 final class AccountController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/plugins/webauthn/account';
+    public const string URL = '/plugins/webauthn/account';
 
     public function __construct(
         private readonly TemplateRenderer $renderer,

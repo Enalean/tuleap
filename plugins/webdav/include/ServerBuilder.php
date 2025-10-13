@@ -40,7 +40,7 @@ final class ServerBuilder
 {
     #[ConfigKey('Maximum file size allowed in bits (default: 2147583647 bit = 2^31-1 bit =2GB)')]
     #[ConfigKeyInt(2147583647)]
-    public const CONFIG_MAX_FILE_SIZE = 'webdav_max_file_size';
+    public const string CONFIG_MAX_FILE_SIZE = 'webdav_max_file_size';
 
     /**
      * @var int

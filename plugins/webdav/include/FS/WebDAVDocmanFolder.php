@@ -22,10 +22,10 @@
 use Sabre\DAV\ICollection;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 
-class WebDAVDocmanFolder implements ICollection
+class WebDAVDocmanFolder implements ICollection //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    private const DUPLICATE                                 = 'duplicate';
-    private const ITEM_EXISTS_BUT_NOT_DISPLAYABLE_IN_WEBDAV = 'exists-not-displayed';
+    private const string DUPLICATE                                 = 'duplicate';
+    private const string ITEM_EXISTS_BUT_NOT_DISPLAYABLE_IN_WEBDAV = 'exists-not-displayed';
 
     public function __construct(
         private PFUser $user,

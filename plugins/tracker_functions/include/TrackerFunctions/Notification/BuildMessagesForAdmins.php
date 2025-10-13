@@ -36,8 +36,8 @@ use Tuleap\User\TuleapFunctionsUser;
 
 final class BuildMessagesForAdmins implements MessageBuilder
 {
-    private const HTML_TEMPLATE = 'message_html';
-    private const TEXT_TEMPLATE = 'message_txt';
+    private const string HTML_TEMPLATE = 'message_html';
+    private const string TEXT_TEMPLATE = 'message_txt';
 
     public function __construct(
         private readonly TemplateRendererFactory $renderer_factory,

@@ -38,7 +38,7 @@ use Tuleap\WebAuthn\Authentication\WebAuthnAuthentication;
 
 final class LoginController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
-    public const URL = '/plugins/webauthn/login';
+    public const string URL = '/plugins/webauthn/login';
 
     public function __construct(
         private readonly TemplateRenderer $renderer,
