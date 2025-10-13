@@ -102,14 +102,13 @@ reason = "Fixed in 0.19.3 but scanner is not correctly resolving our current ver
 id = "GHSA-5pgg-2g8v-p4x9" # CVE-2024-22363
 reason = "Fixed in 0.20.2 but scanner is not correctly resolving our current version (0.20.2)"
 
-### TO BE FIXED
-
 # wasmtime
 ## instant
 [[IgnoredVulns]]
 id = "RUSTSEC-2024-0384"
 reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
-ignoreUntil = 2025-10-12
+
+### TO BE FIXED
 
 # Go standard library
 [[IgnoredVulns]]
