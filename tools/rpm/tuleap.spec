@@ -701,6 +701,10 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 %{__install} src/utils/sudoers.d/tuleap_fileforge $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_fileforge
 
+# Plugin statistics
+%{__install} plugins/statistics/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_statistics
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_statistics
+
 ## plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
 %{__install} plugins/webdav/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_webdav
@@ -1124,6 +1128,9 @@ fi
 
 # Compatibility with older version
 %attr(-,root,root) %{_datadir}/codendi
+
+# Statistics Plugin (provided by Tuleap core)
+%attr(00644,root,root) %config(noreplace) /etc/logrotate.d/tuleap_statistics
 
 #
 # Core
