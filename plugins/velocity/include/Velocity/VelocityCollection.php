@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
 
 class VelocityCollection
 {
-    public const NB_MAX_VELOCITIES = 7;
+    public const int NB_MAX_VELOCITIES = 7;
     /**
      * @var Artifact[]
      */

@@ -35,7 +35,7 @@ use Tuleap\Velocity\Semantic\XML\XMLVelocitySemantic;
 
 final class AddVelocityToScrumTemplate
 {
-    private const VELOCITY_FIELD_NAME = 'velocity';
+    private const string VELOCITY_FIELD_NAME = 'velocity';
 
     public function addVelocityToStructure(XMLTracker $tracker, IDGenerator $id_generator): XMLTracker
     {

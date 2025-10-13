@@ -24,10 +24,10 @@ namespace Tuleap\TrackerFunctions\Administration;
 
 final class CustomCodeExecutionHistorySaver implements LogFunctionRemoved, LogFunctionUploaded, LogFunctionDeactivated, LogFunctionActivated
 {
-    private const FUNCTION_REMOVED     = 'plugin_tracker_functions_function_removed';
-    private const FUNCTION_UPLOADED    = 'plugin_tracker_functions_function_uploaded';
-    private const FUNCTION_ACTIVATED   = 'plugin_tracker_functions_function_activated';
-    private const FUNCTION_DEACTIVATED = 'plugin_tracker_functions_function_deactivated';
+    private const string FUNCTION_REMOVED     = 'plugin_tracker_functions_function_removed';
+    private const string FUNCTION_UPLOADED    = 'plugin_tracker_functions_function_uploaded';
+    private const string FUNCTION_ACTIVATED   = 'plugin_tracker_functions_function_activated';
+    private const string FUNCTION_DEACTIVATED = 'plugin_tracker_functions_function_deactivated';
 
     public function __construct(private readonly \ProjectHistoryDao $dao)
     {

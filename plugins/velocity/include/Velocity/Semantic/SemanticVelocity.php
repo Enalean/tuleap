@@ -43,7 +43,7 @@ use UserManager;
 
 class SemanticVelocity extends TrackerSemantic
 {
-    public const NAME = 'velocity';
+    public const string NAME = 'velocity';
 
     /**
      * @var SemanticDone

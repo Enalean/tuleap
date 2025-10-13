@@ -34,7 +34,7 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
  */
 final class WebDAVAccessKeyScope implements AuthenticationScope
 {
-    private const IDENTIFIER_KEY = 'write:webdav';
+    private const string IDENTIFIER_KEY = 'write:webdav';
     /**
      * @var AccessKeyScopeIdentifier
      */
