@@ -57,6 +57,6 @@ final class SVNTokensPresenterBuilder
 
     public static function build(): self
     {
-        return new self(SVN_TokenHandler::build(), new KeyFactory());
+        return new self(SVN_TokenHandler::build(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem());
     }
 }

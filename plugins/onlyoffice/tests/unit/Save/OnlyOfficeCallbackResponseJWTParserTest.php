@@ -37,7 +37,6 @@ use Lcobucci\JWT\Validator;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\DB\UUID;
 use Tuleap\ForgeConfigSandbox;
@@ -63,7 +62,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
         $root = vfsStream::setup()->url();
         mkdir($root . '/conf/');
         \ForgeConfig::set('sys_custom_dir', $root);
-        $secret_key                      = (new KeyFactory())->getLegacy2025EncryptionKey();
+        $secret_key                      = (new \Tuleap\Cryptography\KeyFactoryFromFileSystem())->getLegacy2025EncryptionKey();
         $this->encrypted_secret_server_1 = base64_encode(
             SymmetricCrypto::encrypt(
                 new ConcealedString(str_repeat('A', 32)),
@@ -294,7 +293,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
                     ),
                 ),
             ),
-            new DocumentServerKeyEncryption(new KeyFactory()),
+            new DocumentServerKeyEncryption(new \Tuleap\Cryptography\KeyFactoryFromFileSystem()),
         );
     }
 

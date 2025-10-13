@@ -50,7 +50,6 @@ use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
@@ -329,7 +328,7 @@ class CampaignsResource
         );
 
         $campaign_dao = new CampaignDao();
-        $key_factory  = new KeyFactory();
+        $key_factory  = new \Tuleap\Cryptography\KeyFactoryFromFileSystem();
 
         $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao, $key_factory);
 

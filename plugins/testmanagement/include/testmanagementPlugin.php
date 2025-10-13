@@ -22,7 +22,6 @@ use FastRoute\RouteCollector;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\CrossTracker\Query\RetrievedQueryTrackerIds;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
@@ -468,7 +467,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
         $campaign_retriver = new CampaignRetriever(
             Tracker_ArtifactFactory::instance(),
             new CampaignDao(),
-            new KeyFactory(),
+            new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
         );
         return new \Tuleap\TestManagement\RealTime\MercureJWTController(
             $campaign_retriver,
@@ -488,7 +487,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             new CampaignRetriever(
                 Tracker_ArtifactFactory::instance(),
                 new CampaignDao(),
-                new KeyFactory()
+                new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
             ),
             new StatusUpdater(
                 new StatusValueRetriever(
@@ -505,7 +504,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             new CampaignRetriever(
                 Tracker_ArtifactFactory::instance(),
                 new CampaignDao(),
-                new KeyFactory()
+                new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
             ),
             new StatusUpdater(
                 new StatusValueRetriever(

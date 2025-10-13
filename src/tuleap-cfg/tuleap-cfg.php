@@ -47,7 +47,7 @@ $application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(
 ));
 $application->add(new \TuleapCfg\Command\SetupTuleapCommand(
     new ProcessFactory(),
-    new \Tuleap\Cryptography\SecretKeyFileOnFileSystem(),
+    new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
     static fn (\Psr\Log\LoggerInterface $logger) => new ForgeUpgrade(
         DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
         $logger,

@@ -22,43 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey as Legacy2025EncryptionKey;
 
-class KeyFactory
+interface KeyFactory
 {
     /**
      * @throws CannotPerformIOOperationException
      */
-    public function getEncryptionKey(): EncryptionKey
-    {
-        return new EncryptionKey($this->getKeyMaterial());
-    }
+    public function getEncryptionKey(): EncryptionKey;
 
     /**
      * @throws CannotPerformIOOperationException
      */
-    public function getLegacy2025EncryptionKey(): Legacy2025EncryptionKey
-    {
-        return new Legacy2025EncryptionKey($this->getKeyMaterial());
-    }
+    public function getLegacy2025EncryptionKey(): Legacy2025EncryptionKey;
 
-    private function getKeyMaterial(): ConcealedString
-    {
-        $encryption_key_file_path = (new SecretKeyFileOnFileSystem())->initAndGetEncryptionKeyPath();
-        $file_data                = \file_get_contents($encryption_key_file_path);
-        if ($file_data === false) {
-            throw new CannotPerformIOOperationException("Cannot read the encryption key $encryption_key_file_path");
-        }
-
-        $file_data_hex = sodium_hex2bin($file_data);
-        \sodium_memzero($file_data);
-
-        $key_material = new ConcealedString($file_data_hex);
-
-        \sodium_memzero($file_data_hex);
-
-        return $key_material;
-    }
+    public function restoreOwnership(LoggerInterface $logger): void;
 }

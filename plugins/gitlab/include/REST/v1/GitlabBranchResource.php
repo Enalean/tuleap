@@ -29,7 +29,6 @@ use Luracast\Restler\RestException;
 use PluginManager;
 use ProjectManager;
 use Tracker_ArtifactFactory;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
@@ -115,7 +114,7 @@ class GitlabBranchResource
             new CredentialsRetriever(
                 new IntegrationApiTokenRetriever(
                     new IntegrationApiTokenDao(),
-                    new KeyFactory()
+                    new \Tuleap\Cryptography\KeyFactoryFromFileSystem()
                 )
             ),
             $gitlab_api_client,

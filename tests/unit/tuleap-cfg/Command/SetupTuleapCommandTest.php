@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Process\Process;
 use Tuleap\Config\ConfigDao;
-use Tuleap\Cryptography\SecretKeyFile;
+use Tuleap\Cryptography\Stub\KeyFactoryStub;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\ForgeUpgrade\ForgeUpgradeRecordOnly;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -41,7 +40,7 @@ final class SetupTuleapCommandTest extends TestCase
     private string $base_dir;
     private CommandTester $command_tester;
     private \PHPUnit\Framework\MockObject\MockObject|ProcessFactory $process_factory;
-    private SecretKeyFile $key_factory;
+    private KeyFactoryStub $key_factory;
 
     #[\Override]
     protected function setUp(): void
@@ -50,29 +49,13 @@ final class SetupTuleapCommandTest extends TestCase
         $this->base_dir = vfsStream::setup()->url();
         mkdir($this->base_dir . '/etc/tuleap/conf', 0750, true);
         $this->process_factory = $this->createMock(ProcessFactory::class);
-        $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/bin/true']));
+        $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/usr/bin/env', 'true']));
 
         $dao = $this->createMock(ConfigDao::class);
         $dao->method('searchAll')->willReturn([]);
         \ForgeConfig::setDatabaseConfigDao($dao);
 
-        $this->key_factory = new class implements SecretKeyFile {
-            public bool $key_created     = false;
-            public bool $permissions_set = false;
-
-            #[\Override]
-            public function initAndGetEncryptionKeyPath(): string
-            {
-                $this->key_created = true;
-                return '';
-            }
-
-            #[\Override]
-            public function restoreOwnership(LoggerInterface $logger): void
-            {
-                $this->permissions_set = true;
-            }
-        };
+        $this->key_factory = new KeyFactoryStub();
 
         $forge_upgrade = new class implements ForgeUpgradeRecordOnly {
             #[\Override]

@@ -28,7 +28,6 @@ use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -144,7 +143,7 @@ class ProjectResource
             $user_manager,
         );
 
-        $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());
+        $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new \Tuleap\Cryptography\KeyFactoryFromFileSystem());
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
             $tracker_factory,

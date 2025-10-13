@@ -30,7 +30,7 @@ use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\ValidAt;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Stub\KeyFactoryStub;
 use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Err;
@@ -56,7 +56,6 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
     {
         $root = vfsStream::setup()->url();
         mkdir($root . '/conf/');
-        \ForgeConfig::set('sys_custom_dir', $root);
         \ForgeConfig::set('sys_default_domain', 'example.com');
 
         $secret   = str_repeat('A', 32);
@@ -70,7 +69,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
                 new UUIDTestContext(),
                 'https://example.com',
                 new ConcealedString(
-                    base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactory())->getLegacy2025EncryptionKey()))
+                    base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactoryStub())->getLegacy2025EncryptionKey()))
                 )
             )
         );
@@ -163,7 +162,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             ),
             new JwtFacade(),
             new Sha256(),
-            new DocumentServerKeyEncryption(new KeyFactory()),
+            new DocumentServerKeyEncryption(new KeyFactoryStub()),
         );
     }
 }

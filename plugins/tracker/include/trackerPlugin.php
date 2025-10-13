@@ -29,7 +29,6 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
@@ -2491,7 +2490,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new DefaultTemplatesCollectionBuilder(\EventManager::instance()),
             new AsyncJiraScheduler(
                 $logger,
-                new KeyFactory(),
+                new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
                 new PendingJiraImportDao(),
                 $this->getJiraRunner($logger)
             )
@@ -2703,7 +2702,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return new JiraRunner(
             $logger,
             new QueueFactory($logger),
-            new KeyFactory(),
+            new \Tuleap\Cryptography\KeyFactoryFromFileSystem(),
             FromJiraTrackerCreator::build($jira_user_on_tuleap_cache),
             new PendingJiraImportDao(),
             $this->getJiraSuccessImportNotifier(),
