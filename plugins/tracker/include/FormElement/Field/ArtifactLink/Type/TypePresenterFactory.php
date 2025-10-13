@@ -145,7 +145,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
     {
         $types = [];
 
-        foreach ($this->dao->searchAllUsedTypesByProject($project->getGroupId()) as $row) {
+        foreach ($this->dao->searchAllUsedTypesByProject((int) $project->getID()) as $row) {
             $types[] = $row['nature'];
         }
 

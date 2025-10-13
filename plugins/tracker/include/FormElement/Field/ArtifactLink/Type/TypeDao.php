@@ -105,11 +105,15 @@ class TypeDao extends DataAccessObject
     /**
      * @psalm-return array{nature: string}[]
      */
-    public function searchAllUsedTypesByProject($project_id): array
+    public function searchAllUsedTypesByProject(int $project_id): array
     {
         $sql = 'SELECT DISTINCT nature
                   FROM tracker_changeset_value_artifactlink
-                 WHERE group_id = ?
+                  JOIN tracker_changeset_value ON (tracker_changeset_value_artifactlink.changeset_value_id = tracker_changeset_value.id)
+                  JOIN tracker_changeset ON (tracker_changeset_value.changeset_id = tracker_changeset.id)
+                  JOIN tracker_artifact ON (tracker_changeset.artifact_id = tracker_artifact.id)
+                  JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
+                 WHERE tracker.group_id = ?
                  ORDER BY nature ASC';
 
         return $this->getDB()->run($sql, $project_id);
