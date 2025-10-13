@@ -115,6 +115,7 @@ const getCommentContent = (
     if (host.is_edition_form_shown) {
         return html` <tuleap-pullrequest-comment-edition-form
             class="pull-request-comment-content"
+            data-test="pull-request-comment-content"
             controller="${host.controller.buildCommentEditionController(host)}"
             comment="${host.comment}"
             project_id="${host.controller.getProjectId()}"
@@ -122,7 +123,7 @@ const getCommentContent = (
     }
 
     return html`
-        <div class="${getCommentContentClasses(host)}">
+        <div class="${getCommentContentClasses(host)}" data-test="pull-request-comment-content">
             ${getCommentBody(host, gettext_provider)} ${getCommentFooter(host, gettext_provider)}
         </div>
     `;

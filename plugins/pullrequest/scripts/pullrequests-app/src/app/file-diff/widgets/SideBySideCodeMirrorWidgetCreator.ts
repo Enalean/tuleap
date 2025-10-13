@@ -76,6 +76,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
         }
 
         inline_comment_element.setAttribute("class", "inline-comment-element");
+        inline_comment_element.setAttribute("data-test", "inline-comment-element");
         inline_comment_element.comment = widget_params.comment;
         inline_comment_element.controller = controller;
 

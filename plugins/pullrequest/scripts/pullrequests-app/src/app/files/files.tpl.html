@@ -1,13 +1,13 @@
 <div class="pull-request-files-header">
     <div class="pull-request-file-switcher tlp-dropdown" ng-show="! files_controller.loading_files">
-        <button type="button" id="file-switcher-dropdown-button" class="tlp-button-primary tlp-button-outline tlp-button-wide">
+        <button type="button" id="file-switcher-dropdown-button" class="tlp-button-primary tlp-button-outline tlp-button-wide" data-test="file-switcher-dropdown-button">
             <span class="pull-request-file-status pull-request-file-status-{{ files_controller.selected_file.status }}">{{ files_controller.selected_file.status }}</span>
             <span class="pull-request-file-path">{{ files_controller.selected_file.path }}</span>
             <span class="pull-request-file-changes pull-request-file-lines-added tlp-text-success" ng-class="{ 'pull-request-file-show-changes': files_controller.selected_file.lines_added > 0}">+{{ files_controller.selected_file.lines_added }}</span>
             <span class="pull-request-file-changes pull-request-file-lines-removed tlp-text-danger" ng-class="{ 'pull-request-file-show-changes': files_controller.selected_file.lines_removed > 0}">-{{ files_controller.selected_file.lines_removed }}</span>
             <i class="fa fa-caret-down"></i>
         </button>
-        <div id="file-switcher-dropdown-content" class="tlp-dropdown-menu" role="menu">
+        <div id="file-switcher-dropdown-content" class="tlp-dropdown-menu" data-test="file-switcher-dropdown-content" role="menu">
             <div class="tlp-dropdown-menu-item"
                 ng-class="{ 'pull-request-file-selected': files_controller.isFileSelected(file) }"
                 ng-repeat="file in (files_controller.files | filter: $select.search) track by file.path"
@@ -33,6 +33,7 @@
             <label for="side-by-side-diff-button"
                    class="tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-bottom"
                    data-tlp-tooltip="{{:: 'Side by side diff' | translate }}"
+                   data-test="side-by-side-diff-button"
             >
                 <i class="far fa-copy tlp-button-icon"></i>
             </label>
@@ -47,6 +48,7 @@
             <label for="unified-diff-button"
                    class="tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-bottom"
                    data-tlp-tooltip="{{:: 'Unified diff' | translate }}"
+                   data-test="unified-diff-button"
             >
                 <i class="far fa-file tlp-button-icon"></i>
             </label>

@@ -39,7 +39,7 @@ import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentW
 import { collapseCommonSectionsUnidiff } from "../code-collapse/code-mirror-common-sections-collapse";
 
 export default {
-    template: `<div class="pull-request-unidiff" resize></div>`,
+    template: `<div class="pull-request-unidiff" data-test="pull-request-unidiff" resize></div>`,
     controller,
     bindings: {
         diff: "<",
