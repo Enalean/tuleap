@@ -43,14 +43,13 @@ final class CachedLicenseBuilder implements BuildLicense
     public static function instance(?LoggerInterface $logger = null): self
     {
         if (self::$instance === null) {
+            $mapper         = ValinorMapperBuilderFactory::mapperBuilder()->registerConstructor(Uuid::fromString(...))->allowSuperfluousKeys()->allowPermissiveTypes()->allowUndefinedValues()->mapper();
+            $token_parser   = new Parser(new JoseEncoder());
+            $logger         = $logger ?? BackendLogger::getDefaultLogger();
             self::$instance = new self(new LicenseBuilder(
                 new PublicKeyPresenceChecker(),
-                new LicenseSignatureChecker(
-                    $logger ?? BackendLogger::getDefaultLogger(),
-                    new Parser(new JoseEncoder()),
-                    new Validator(),
-                    ValinorMapperBuilderFactory::mapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
-                ),
+                new LicenseSignatureChecker($logger, $token_parser, new Validator(), $mapper),
+                new LicenseContentRetriever($logger, $token_parser, $mapper),
             ));
         }
 
