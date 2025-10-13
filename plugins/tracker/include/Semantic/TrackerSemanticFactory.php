@@ -62,7 +62,7 @@ class TrackerSemanticFactory
      * Expected results
      * The semantic parameter is populated with a Tracker_Semantic object if it exists for the given type
      */
-    public final const TRACKER_EVENT_SEMANTIC_FROM_XML = 'tracker_event_semantic_from_xml';
+    public final const string TRACKER_EVENT_SEMANTIC_FROM_XML = 'tracker_event_semantic_from_xml';
 
     /**
      * Get the various duplicators that can duplicate semantics
@@ -70,7 +70,7 @@ class TrackerSemanticFactory
      * Parameters:
      *  'duplicators' => \Tuleap\Tracker\Semantic\IDuplicateSemantic[]
      */
-    public final const TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS = 'tracker_event_get_semantic_duplicators';
+    public final const string TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS = 'tracker_event_get_semantic_duplicators';
 
     /**
      * Hold an instance of the class

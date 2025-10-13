@@ -62,7 +62,7 @@ class TrackerSemanticManager
      * Expected results
      * The semantics parameter is populated with additional semantic fields
      */
-    public final const TRACKER_EVENT_MANAGE_SEMANTICS = 'tracker_event_manage_semantics';
+    public final const string TRACKER_EVENT_MANAGE_SEMANTICS = 'tracker_event_manage_semantics';
 
     /**
      * Fetches all the semantic names
@@ -70,7 +70,7 @@ class TrackerSemanticManager
      * Parameters:
      * 'semantic' => @var array of semantic name strings
      */
-    public final const TRACKER_EVENT_GET_SEMANTICS_NAMES = 'tracker_event_get_semantics_names';
+    public final const string TRACKER_EVENT_GET_SEMANTICS_NAMES = 'tracker_event_get_semantics_names';
 
     public function __construct(
         private readonly RetrieveSemanticDescriptionField $retrieve_description_field,

@@ -37,9 +37,9 @@ use Tuleap\Tracker\Service\PromotedTrackerConfigurationChecker;
 
 class PromoteTrackersController implements DispatchableWithRequest, DispatchableWithProject
 {
-    public const URL = 'promote-trackers';
+    public const string URL = 'promote-trackers';
 
-    private const PROJECT_HISTORY_ENTRY = 'tracker_promotion';
+    private const string PROJECT_HISTORY_ENTRY = 'tracker_promotion';
 
     public function __construct(
         private readonly ProjectManager $project_manager,

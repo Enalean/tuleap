@@ -50,8 +50,8 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
      */
     private $tracker_factory;
 
-    private const CURRENT_TRACKER_ID = 160;
-    private const ANOTHER_TRACKER_ID = 150;
+    private const int CURRENT_TRACKER_ID = 160;
+    private const int ANOTHER_TRACKER_ID = 150;
 
     #[\Override]
     public function setUp(): void

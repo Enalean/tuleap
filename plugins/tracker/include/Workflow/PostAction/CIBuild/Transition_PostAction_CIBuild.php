@@ -24,17 +24,14 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Transition_PostAction_CIBuild extends Transition_PostAction
 {
-    public const SHORT_NAME                          = 'ci_build';
-    public const XML_TAG_NAME                        = 'postaction_ci_build';
-    public const BUILD_PARAMETER_USER                = 'userId';
-    public const BUILD_PARAMETER_PROJECT_ID          = 'projectId';
-    public const BUILD_PARAMETER_ARTIFACT_ID         = 'artifactId';
-    public const BUILD_PARAMETER_TRACKER_ID          = 'trackerId';
-    public const BUILD_PARAMETER_TRIGGER_FIELD_VALUE = 'triggerFieldValue';
-    /**
-     * @var string Pattern to validate a job url
-     */
-    public const JOB_URL_PATTERN = '^https?://.+';
+    public const string SHORT_NAME                          = 'ci_build';
+    public const string XML_TAG_NAME                        = 'postaction_ci_build';
+    public const string BUILD_PARAMETER_USER                = 'userId';
+    public const string BUILD_PARAMETER_PROJECT_ID          = 'projectId';
+    public const string BUILD_PARAMETER_ARTIFACT_ID         = 'artifactId';
+    public const string BUILD_PARAMETER_TRACKER_ID          = 'trackerId';
+    public const string BUILD_PARAMETER_TRIGGER_FIELD_VALUE = 'triggerFieldValue';
+    public const string JOB_URL_PATTERN                     = '^https?://.+';
 
     /**
      *

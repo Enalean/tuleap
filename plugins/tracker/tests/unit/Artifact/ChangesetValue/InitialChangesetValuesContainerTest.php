@@ -32,9 +32,9 @@ use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID               = 745;
-    private const FIELD_VALUE            = 'whatever';
-    private const ARTIFACT_LINK_FIELD_ID = 992;
+    private const int FIELD_ID               = 745;
+    private const string FIELD_VALUE         = 'whatever';
+    private const int ARTIFACT_LINK_FIELD_ID = 992;
     /** @var Option<NewArtifactLinkInitialChangesetValue> $artifact_links */
     private Option $artifact_links;
     private array $fields_data;

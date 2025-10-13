@@ -36,20 +36,20 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID        = 101;
-    private const INT_FIELD_ID      = 395;
-    private const INT_VALUE         = 54;
-    private const FLOAT_FIELD_ID    = 425;
-    private const FLOAT_VALUE       = 14.03;
-    private const STRING_FIELD_ID   = 40;
-    private const STRING_VALUE      = 'untrampled';
-    private const TEXT_FIELD_ID     = 283;
-    private const TEXT_VALUE        = 'fluttery Azerbaijanese';
-    private const TEXT_FORMAT       = 'text';
-    private const INT_FIELD_NAME    = 'integer';
-    private const FLOAT_FIELD_NAME  = 'floatibulle';
-    private const STRING_FIELD_NAME = 'string';
-    private const TEXT_FIELD_NAME   = 'text';
+    private const int TRACKER_ID           = 101;
+    private const int INT_FIELD_ID         = 395;
+    private const int INT_VALUE            = 54;
+    private const int FLOAT_FIELD_ID       = 425;
+    private const float FLOAT_VALUE        = 14.03;
+    private const int STRING_FIELD_ID      = 40;
+    private const string STRING_VALUE      = 'untrampled';
+    private const int TEXT_FIELD_ID        = 283;
+    private const string TEXT_VALUE        = 'fluttery Azerbaijanese';
+    private const string TEXT_FORMAT       = 'text';
+    private const string INT_FIELD_NAME    = 'integer';
+    private const string FLOAT_FIELD_NAME  = 'floatibulle';
+    private const string STRING_FIELD_NAME = 'string';
+    private const string TEXT_FIELD_NAME   = 'text';
     private RetrieveUsedFields $fields_retriever;
     private \Tuleap\Tracker\FormElement\Field\Integer\IntegerField $int_field;
     private \Tuleap\Tracker\FormElement\Field\Float\FloatField $float_field;

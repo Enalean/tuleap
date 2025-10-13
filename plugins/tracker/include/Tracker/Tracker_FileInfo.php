@@ -25,8 +25,8 @@ use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 
 class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const THUMBNAILS_MAX_WIDTH  = 150;
-    public const THUMBNAILS_MAX_HEIGHT = 112;
+    public const int THUMBNAILS_MAX_WIDTH  = 150;
+    public const int THUMBNAILS_MAX_HEIGHT = 112;
 
     protected $id;
     protected $field;

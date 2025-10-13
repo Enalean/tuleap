@@ -28,14 +28,14 @@ namespace Tuleap\Tracker\Artifact\Closure;
  */
 final readonly class ClosingKeyword
 {
-    private const RESOLVE_KEYWORDS = [
+    private const array RESOLVE_KEYWORDS = [
         'resolve',
         'resolves',
         'resolved',
         'resolving',
     ];
 
-    private const CLOSE_KEYWORDS = [
+    private const array CLOSE_KEYWORDS = [
         'close',
         'closes',
         'closed',
@@ -43,7 +43,7 @@ final readonly class ClosingKeyword
         'chore:',
     ];
 
-    private const FIX_KEYWORDS = [
+    private const array FIX_KEYWORDS = [
         'fix',
         'fixes',
         'fixed',
@@ -51,7 +51,7 @@ final readonly class ClosingKeyword
         'fix:',
     ];
 
-    private const IMPLEMENT_KEYWORDS = [
+    private const array IMPLEMENT_KEYWORDS = [
         'implement',
         'implements',
         'implemented',
@@ -59,10 +59,10 @@ final readonly class ClosingKeyword
         'feat:',
     ];
 
-    private const RESOLVES_KEYWORD   = 'resolves';
-    private const CLOSES_KEYWORD     = 'closes';
-    private const FIXES_KEYWORD      = 'fixes';
-    private const IMPLEMENTS_KEYWORD = 'implements';
+    private const string RESOLVES_KEYWORD   = 'resolves';
+    private const string CLOSES_KEYWORD     = 'closes';
+    private const string FIXES_KEYWORD      = 'fixes';
+    private const string IMPLEMENTS_KEYWORD = 'implements';
 
     private function __construct(private string $keyword)
     {

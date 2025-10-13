@@ -21,9 +21,9 @@
 
 use Tuleap\Project\MappingRegistry;
 
-class Tracker_ReportFactory
+class Tracker_ReportFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const MAPPING_KEY = 'plugin_tracker_report';
+    public const string MAPPING_KEY = 'plugin_tracker_report';
 
     /**
      * A protected constructor; prevents direct creation of object
@@ -35,7 +35,7 @@ class Tracker_ReportFactory
     /**
      * Hold an instance of the class
      */
-    protected static $_instance;
+    protected static $_instance; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * The singleton method

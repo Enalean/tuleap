@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Report\Renderer;
 
 class ImportRendererFromXmlEvent implements \Tuleap\Event\Dispatchable
 {
-    public const NAME = 'importRendererFromXmlEvent';
+    public const string NAME = 'importRendererFromXmlEvent';
     /**
      * @var array
      */

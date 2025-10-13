@@ -31,7 +31,7 @@ use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 #[DisableReturnValueGenerationForTestDoubles]
 final class CSVFormatterTest extends TestCase
 {
-    private const TIMESTAMP = 1540456782;
+    private const int TIMESTAMP = 1540456782;
 
     private CSVFormatter $formatter;
     private PFUser $user;

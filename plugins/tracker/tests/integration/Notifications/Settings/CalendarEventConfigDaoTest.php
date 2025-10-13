@@ -27,9 +27,9 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CalendarEventConfigDaoTest extends TestIntegrationTestCase
 {
-    private const BUG_TRACKER_ID   = 1;
-    private const TASK_TRACKER_ID  = 2;
-    private const STORY_TRACKER_ID = 3;
+    private const int BUG_TRACKER_ID   = 1;
+    private const int TASK_TRACKER_ID  = 2;
+    private const int STORY_TRACKER_ID = 3;
     private CalendarEventConfigDao $dao;
 
     #[\Override]

@@ -37,8 +37,8 @@ use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactSubmitterCheckerTest extends TestCase
 {
-    private const VALID_USERNAME   = 'user_1';
-    private const INVALID_USERNAME = 'fake_user';
+    private const string VALID_USERNAME   = 'user_1';
+    private const string INVALID_USERNAME = 'fake_user';
     private Stub&\UserManager $user_manager;
 
     #[\Override]

@@ -28,7 +28,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
-    private const TRACKER_ID = 158;
+    private const int TRACKER_ID = 158;
 
     /**
      * @var DateField&\PHPUnit\Framework\MockObject\MockObject

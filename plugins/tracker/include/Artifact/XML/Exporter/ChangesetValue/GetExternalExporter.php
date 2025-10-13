@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetExternalExporter implements Dispatchable
 {
-    public const NAME = 'getExternalExporter';
+    public const string NAME = 'getExternalExporter';
 
     /**
      * @var ChangesetValueXMLExporter | null

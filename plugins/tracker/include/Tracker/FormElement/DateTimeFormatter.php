@@ -21,9 +21,9 @@
 
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
-class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const DATE_TIME_FORMAT = 'Y-m-d H:i';
+    public const string DATE_TIME_FORMAT = 'Y-m-d H:i';
 
     public function __construct(DateField $field)
     {

@@ -27,7 +27,7 @@ use Tuleap\Tracker\Tracker;
 
 class SemanticDoneUsedExternalServiceEvent implements Dispatchable
 {
-    public const NAME = 'semanticDoneUsedExternalServiceEvent';
+    public const string NAME = 'semanticDoneUsedExternalServiceEvent';
 
     private Tracker $tracker;
     /**

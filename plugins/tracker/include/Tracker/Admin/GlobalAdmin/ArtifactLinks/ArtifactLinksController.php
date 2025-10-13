@@ -44,7 +44,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 class ArtifactLinksController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
-    public const URL = 'artifact-links';
+    public const string URL = 'artifact-links';
 
     /**
      * @var ArtifactLinksUsageDao

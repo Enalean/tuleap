@@ -35,7 +35,7 @@ use Tuleap\User\ProvideCurrentUser;
 
 final readonly class UserPreferencesPostController implements DispatchableWithRequest
 {
-    public const URL = TRACKER_BASE_URL . '/notifications/user';
+    public const string URL = TRACKER_BASE_URL . '/notifications/user';
 
     public function __construct(
         private ProvideCurrentUser $current_user_provider,

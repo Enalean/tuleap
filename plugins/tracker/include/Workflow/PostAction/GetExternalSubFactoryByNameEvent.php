@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetExternalSubFactoryByNameEvent implements Dispatchable
 {
-    public const NAME = 'getExternalSubFactoryByNameEvent';
+    public const string NAME = 'getExternalSubFactoryByNameEvent';
 
     /**
      * @var string

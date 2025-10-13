@@ -54,10 +54,10 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactReverseLinksUpdaterTest extends TestCase
 {
-    private const CURRENT_ARTIFACT_ID  = 10;
-    private const SOURCE_ARTIFACT_ID   = 18;
-    private const SOURCE_ARTIFACT_ID_2 = 36;
-    private const CURRENT_FIELD_ID     = 833;
+    private const int CURRENT_ARTIFACT_ID  = 10;
+    private const int SOURCE_ARTIFACT_ID   = 18;
+    private const int SOURCE_ARTIFACT_ID_2 = 36;
+    private const int CURRENT_FIELD_ID     = 833;
 
     private CreateNewChangesetStub $changeset_creator;
     private RetrieveReverseLinksStub $reverse_links_retriever;

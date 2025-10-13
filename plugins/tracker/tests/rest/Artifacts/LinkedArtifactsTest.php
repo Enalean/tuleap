@@ -32,10 +32,10 @@ require_once __DIR__ . '/../bootstrap.php';
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinkedArtifactsTest extends TrackerBase
 {
-    private const PROJECT_SHORTNAME = 'linked-artifacts';
-    private const TRACKER_SHORTNAME = 'linked_artifacts';
-    private const FIELD_SHORTNAME   = 'link';
-    private int $status_value_id    = 0;
+    private const string PROJECT_SHORTNAME = 'linked-artifacts';
+    private const string TRACKER_SHORTNAME = 'linked_artifacts';
+    private const string FIELD_SHORTNAME   = 'link';
+    private int $status_value_id           = 0;
 
 
     public function testLinkedArtifacts(): void

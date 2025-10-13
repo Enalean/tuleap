@@ -31,7 +31,7 @@ use Tuleap\User\REST\MinimalUserRepresentation;
  */
 final class ChangesetRepresentation
 {
-    public const ROUTE = 'changesets';
+    public const string ROUTE = 'changesets';
 
     /**
      * @var int ID of the changeset

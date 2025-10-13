@@ -28,7 +28,7 @@ use Workflow;
 
 class HiddenFieldsetsJsonParser implements PostActionUpdateJsonParser
 {
-    public const POSTACTION_TYPE = 'hidden_fieldsets';
+    public const string POSTACTION_TYPE = 'hidden_fieldsets';
 
     #[\Override]
     public function accept(array $json): bool

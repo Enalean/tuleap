@@ -33,13 +33,13 @@ use Tuleap\REST\JsonCast;
  */
 class SetFieldValueRepresentation extends PostActionRepresentation
 {
-    public const TYPE = 'set_field_value';
+    public const string TYPE = 'set_field_value';
 
-    public const UNSET_DATE_VALUE   = null;
-    public const EMPTY_DATE_VALUE   = '';
-    public const CURRENT_DATE_VALUE = 'current';
+    public const null UNSET_DATE_VALUE     = null;
+    public const string EMPTY_DATE_VALUE   = '';
+    public const string CURRENT_DATE_VALUE = 'current';
 
-    public const DATE_VALUE_MAPPING = [
+    public const array DATE_VALUE_MAPPING = [
         0 => self::UNSET_DATE_VALUE,
         Transition_PostAction_Field_Date::CLEAR_DATE => self::EMPTY_DATE_VALUE,
         Transition_PostAction_Field_Date::FILL_CURRENT_TIME => self::CURRENT_DATE_VALUE,

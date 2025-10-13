@@ -19,16 +19,16 @@
 
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Report_REST extends Tracker_Report
+class Tracker_Report_REST extends Tracker_Report //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const OPERATOR_PROPERTY_NAME = 'operator';
-    public const VALUE_PROPERTY_NAME    = 'value';
-    public const DEFAULT_OPERATOR       = 'contains';
-    public const OPERATOR_CONTAINS      = 'contains';
-    public const OPERATOR_EQUALS        = '=';
-    public const OPERATOR_BETWEEN       = 'between';
-    public const OPERATOR_GREATER_THAN  = '>';
-    public const OPERATOR_LESS_THAN     = '<';
+    public const string OPERATOR_PROPERTY_NAME = 'operator';
+    public const string VALUE_PROPERTY_NAME    = 'value';
+    public const string DEFAULT_OPERATOR       = 'contains';
+    public const string OPERATOR_CONTAINS      = 'contains';
+    public const string OPERATOR_EQUALS        = '=';
+    public const string OPERATOR_BETWEEN       = 'between';
+    public const string OPERATOR_GREATER_THAN  = '>';
+    public const string OPERATOR_LESS_THAN     = '<';
 
     /**
      * @var Tracker_FormElementFactory

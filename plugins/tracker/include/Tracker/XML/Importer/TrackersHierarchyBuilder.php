@@ -26,7 +26,7 @@ use SimpleXMLElement;
 
 final class TrackersHierarchyBuilder implements BuildTrackersHierarchy
 {
-    private const XML_PARENT_ID_EMPTY = '0';
+    private const string XML_PARENT_ID_EMPTY = '0';
 
     #[\Override]
     public function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper): array

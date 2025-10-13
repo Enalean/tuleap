@@ -29,11 +29,11 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ARTIFACT_ID  = 804;
-    private const FIRST_TYPE         = '_is_child';
-    private const SECOND_ARTIFACT_ID = 955;
-    private const SECOND_TYPE        = '_depends_on';
-    private const THIRD_ARTIFACT_ID  = 103;
+    private const int FIRST_ARTIFACT_ID  = 804;
+    private const string FIRST_TYPE      = '_is_child';
+    private const int SECOND_ARTIFACT_ID = 955;
+    private const string SECOND_TYPE     = '_depends_on';
+    private const int THIRD_ARTIFACT_ID  = 103;
     /**
      * @var ForwardLinkStub[]
      */

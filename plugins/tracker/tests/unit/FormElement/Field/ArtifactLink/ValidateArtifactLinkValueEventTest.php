@@ -28,8 +28,8 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ValidateArtifactLinkValueEventTest extends TestCase
 {
-    private const FIRST_ARTIFACT_ID  = 4457;
-    private const SECOND_ARTIFACT_ID = 5597;
+    private const int FIRST_ARTIFACT_ID  = 4457;
+    private const int SECOND_ARTIFACT_ID = 5597;
 
     public function testItBuildsTheEventWithEmptyLinksIfNoLinksProvided(): void
     {

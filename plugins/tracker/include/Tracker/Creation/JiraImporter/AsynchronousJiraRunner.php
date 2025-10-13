@@ -26,7 +26,7 @@ use Tuleap\Queue\WorkerEvent;
 
 class AsynchronousJiraRunner
 {
-    public const TOPIC = 'tuleap.tracker.creation.jira';
+    public const string TOPIC = 'tuleap.tracker.creation.jira';
 
     /**
      * @var JiraRunner

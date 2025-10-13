@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 
 final class JiraCollectionBuilder
 {
-    private const PARAM_START_AT = 'startAt';
+    private const string PARAM_START_AT = 'startAt';
 
     /**
      * @throws UnexpectedFormatException

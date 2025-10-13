@@ -22,9 +22,9 @@
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
-class Tracker_Report_RendererFactory
+class Tracker_Report_RendererFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const MAPPING_KEY = 'plugin_tracker_renderer';
+    public const string MAPPING_KEY = 'plugin_tracker_renderer';
     private Tracker_Report_Session $report_session;
 
     /**
@@ -48,7 +48,7 @@ class Tracker_Report_RendererFactory
      * Hold an instance of the class
      * @var self|null
      */
-    protected static $_instance;
+    protected static $_instance; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * @return Tracker_Report_RendererFactory

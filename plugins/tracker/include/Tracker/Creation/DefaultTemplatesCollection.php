@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Creation;
 
 class DefaultTemplatesCollection
 {
-    public const NAME = 'defaultTemplatesCollection';
+    public const string NAME = 'defaultTemplatesCollection';
 
     /**
      * @var array<string, DefaultTemplate>

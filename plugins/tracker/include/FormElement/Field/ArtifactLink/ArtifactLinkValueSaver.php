@@ -44,7 +44,7 @@ class ArtifactLinkValueSaver
      * Expected results:
      * 'nature'          => string the type proposed by the plugin
      */
-    public final const TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED = 'tracker_event_artifact_link_type_requested';
+    public final const string TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED = 'tracker_event_artifact_link_type_requested';
 
     /**
      * @var Tracker_ReferenceManager

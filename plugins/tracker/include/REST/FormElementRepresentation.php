@@ -28,15 +28,15 @@ use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
  */
 class Tracker_REST_FormElementRepresentation //phpcs:ignore
 {
-    public const BIND_TYPE = 'type';
-    public const BIND_LIST = 'list';
+    public const string BIND_TYPE = 'type';
+    public const string BIND_LIST = 'list';
 
-    public const BIND_ID    = 'id';
-    public const BIND_LABEL = 'label';
+    public const string BIND_ID    = 'id';
+    public const string BIND_LABEL = 'label';
 
-    public const PERM_READ   = 'read';
-    public const PERM_UPDATE = 'update';
-    public const PERM_CREATE = 'create';
+    public const string PERM_READ   = 'read';
+    public const string PERM_UPDATE = 'update';
+    public const string PERM_CREATE = 'create';
 
     /**
      * @var int

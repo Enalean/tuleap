@@ -49,7 +49,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
 {
     use GlobalResponseMock;
 
-    private const CHANGESET_VALUE_ID = 56;
+    private const int CHANGESET_VALUE_ID = 56;
 
     private ArtifactLinkField $field;
     private ArtifactLinkValueSaver $saver;

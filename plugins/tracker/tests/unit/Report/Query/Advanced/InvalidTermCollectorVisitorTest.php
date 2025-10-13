@@ -100,10 +100,10 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     use LegacyTabTranslationsSupport;
 
-    private const UNSUPPORTED_FIELD_NAME = 'openlist';
-    private const FIELD_NAME             = 'lackwittedly';
-    private const STRING_FIELD_NAME      = 'string';
-    private const TRACKER_ID             = 101;
+    private const string UNSUPPORTED_FIELD_NAME = 'openlist';
+    private const string FIELD_NAME             = 'lackwittedly';
+    private const string STRING_FIELD_NAME      = 'string';
+    private const int TRACKER_ID                = 101;
     private \Tracker_FormElementFactory&MockObject $formelement_factory;
     private \PFUser $user;
     private \Tuleap\Tracker\Tracker $tracker;

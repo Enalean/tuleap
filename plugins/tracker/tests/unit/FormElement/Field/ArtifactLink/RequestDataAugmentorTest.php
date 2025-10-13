@@ -30,7 +30,7 @@ use Tuleap\Tracker\Tracker;
 #[DisableReturnValueGenerationForTestDoubles]
 final class RequestDataAugmentorTest extends TestCase
 {
-    private const ARTIFACT_LINK_FIELD_ID = 555;
+    private const int ARTIFACT_LINK_FIELD_ID = 555;
 
     private ArtifactLinkField $field;
     private RequestDataAugmentor $augmentor;

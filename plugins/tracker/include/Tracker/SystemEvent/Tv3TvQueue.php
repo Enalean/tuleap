@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_SystemEvent_Tv3Tv5Queue extends SystemEventQueue
+class Tracker_SystemEvent_Tv3Tv5Queue extends SystemEventQueue //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const NAME = 'tv3_tv5_migration';
+    public const string NAME = 'tv3_tv5_migration';
 
     #[\Override]
     public function getName()

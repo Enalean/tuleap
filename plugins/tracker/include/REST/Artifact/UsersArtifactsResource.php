@@ -29,7 +29,7 @@ use Tuleap\REST\Header;
 
 class UsersArtifactsResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 250;
+    private const int MAX_LIMIT = 250;
 
     /**
      * Get user's artifacts

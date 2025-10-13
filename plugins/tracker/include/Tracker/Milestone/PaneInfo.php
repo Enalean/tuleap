@@ -29,7 +29,7 @@ namespace Tuleap\Tracker\Milestone;
  */
 abstract class PaneInfo
 {
-    public const ACTION = 'show';
+    public const string ACTION = 'show';
 
     private bool $is_active = false;
 

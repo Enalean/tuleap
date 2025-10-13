@@ -42,7 +42,7 @@ use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 
 class SemanticTooltip extends TrackerSemantic implements TooltipFields
 {
-    public const NAME = 'tooltip';
+    public const string NAME = 'tooltip';
 
     public $fields = [];
 

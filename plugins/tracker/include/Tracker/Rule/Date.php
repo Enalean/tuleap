@@ -25,14 +25,14 @@
  * then target field will be constrained to another value.
  *
  */
-class Tracker_Rule_Date extends Tracker_Rule
+class Tracker_Rule_Date extends Tracker_Rule //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const COMPARATOR_EQUALS                 = '=';
-    public const COMPARATOR_NOT_EQUALS             = '≠';
-    public const COMPARATOR_LESS_THAN              = '<';
-    public const COMPARATOR_LESS_THAN_OR_EQUALS    = '≤';
-    public const COMPARATOR_GREATER_THAN           = '>';
-    public const COMPARATOR_GREATER_THAN_OR_EQUALS = '≥';
+    public const string COMPARATOR_EQUALS                 = '=';
+    public const string COMPARATOR_NOT_EQUALS             = '≠';
+    public const string COMPARATOR_LESS_THAN              = '<';
+    public const string COMPARATOR_LESS_THAN_OR_EQUALS    = '≤';
+    public const string COMPARATOR_GREATER_THAN           = '>';
+    public const string COMPARATOR_GREATER_THAN_OR_EQUALS = '≥';
 
     public static $allowed_comparators = [
         self::COMPARATOR_LESS_THAN,

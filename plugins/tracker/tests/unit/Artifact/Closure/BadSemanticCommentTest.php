@@ -28,7 +28,7 @@ use Tuleap\User\UserName;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_LOGIN = 'jambrosius';
+    private const string USER_LOGIN = 'jambrosius';
 
     private function getBody(): string
     {

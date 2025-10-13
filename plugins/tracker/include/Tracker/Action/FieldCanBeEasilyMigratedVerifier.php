@@ -26,9 +26,9 @@ use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
 final class FieldCanBeEasilyMigratedVerifier implements VerifyFieldCanBeEasilyMigrated
 {
-    private const STRING_TYPES_COMPATIBILITIES = [\Tracker_FormElementFactory::FIELD_STRING_TYPE, \Tracker_FormElementFactory::FIELD_TEXT_TYPE];
-    private const NUMBER_TYPES_COMPATIBILITIES = [\Tracker_FormElementFactory::FIELD_FLOAT_TYPE, \Tracker_FormElementFactory::FIELD_INTEGER_TYPE];
-    private const EASILY_MOVABLE_FIELDS        = [
+    private const array STRING_TYPES_COMPATIBILITIES = [\Tracker_FormElementFactory::FIELD_STRING_TYPE, \Tracker_FormElementFactory::FIELD_TEXT_TYPE];
+    private const array NUMBER_TYPES_COMPATIBILITIES = [\Tracker_FormElementFactory::FIELD_FLOAT_TYPE, \Tracker_FormElementFactory::FIELD_INTEGER_TYPE];
+    private const array EASILY_MOVABLE_FIELDS        = [
         \Tracker_FormElementFactory::FIELD_DATE_TYPE,
         \Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE,
         \Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,

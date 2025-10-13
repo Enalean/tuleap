@@ -23,12 +23,12 @@ use Tuleap\Tracker\Artifact\Artifact;
 /**
  * Builds instances of Tracker_Artifact_MailGateway_Recipient
  */
-class Tracker_Artifact_MailGateway_RecipientFactory
+class Tracker_Artifact_MailGateway_RecipientFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const ARTIFACT_ID_INDEX = 'artifact_id';
-    public const USER_ID_INDEX     = 'user_id';
-    public const HASH_INDEX        = 'hash';
-    public const EMAIL_PATTERN     = '/
+    public const string ARTIFACT_ID_INDEX = 'artifact_id';
+    public const string USER_ID_INDEX     = 'user_id';
+    public const string HASH_INDEX        = 'hash';
+    public const string EMAIL_PATTERN     = '/
         <
         (?P<artifact_id>\d+)
         -

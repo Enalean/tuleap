@@ -33,7 +33,7 @@ use Tuleap\Tracker\TrackerIsInvalidException;
 
 class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const LOG_FILE = 'tv3_tv5_migration_syslog';
+    public const string LOG_FILE = 'tv3_tv5_migration_syslog';
 
     /** @var  Tracker_SystemEventManager */
     private $system_event_manager;

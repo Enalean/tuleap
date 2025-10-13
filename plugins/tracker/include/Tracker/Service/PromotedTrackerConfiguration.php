@@ -38,5 +38,5 @@ final class PromotedTrackerConfiguration
     EOF
     )]
     #[ConfigKeyString('1')]
-    public const FEATURE_FLAG = 'display_promoted_trackers_in_sidebar';
+    public const string FEATURE_FLAG = 'display_promoted_trackers_in_sidebar';
 }

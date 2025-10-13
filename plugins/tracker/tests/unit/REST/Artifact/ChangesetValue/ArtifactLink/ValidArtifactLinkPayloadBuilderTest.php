@@ -30,8 +30,8 @@ use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ValidArtifactLinkPayloadBuilderTest extends TestCase
 {
-    private const PARENT_ARTIFACT_ID = 100;
-    private const FIELD_ID           = 242;
+    private const int PARENT_ARTIFACT_ID = 100;
+    private const int FIELD_ID           = 242;
 
     public function testItThrowsWhenAllLinkAndLinksAreUsedInTheSameTime(): void
     {

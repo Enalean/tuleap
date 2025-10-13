@@ -46,9 +46,9 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticStatus extends TrackerSemantic
 {
-    public const NAME   = 'status';
-    public const OPEN   = 'Open';
-    public const CLOSED = 'Closed';
+    public const string NAME   = 'status';
+    public const string OPEN   = 'Open';
+    public const string CLOSED = 'Closed';
 
     private ?ListField $list_field;
 

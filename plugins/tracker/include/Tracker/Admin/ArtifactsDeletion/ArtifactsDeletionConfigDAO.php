@@ -28,7 +28,7 @@ use Tuleap\DB\DataAccessObject;
 
 class ArtifactsDeletionConfigDAO extends DataAccessObject
 {
-    public const CONFIG_NAME = 'artifacts_deletion_limit';
+    public const string CONFIG_NAME = 'artifacts_deletion_limit';
 
     public function searchDeletableArtifactsLimit()
     {

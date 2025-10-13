@@ -60,8 +60,8 @@ use WorkflowWithoutTransition;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRestBuilderTest extends TestCase
 {
-    private const PARENT_TRACKER_ID = 264;
-    private const TRACKER_ID        = 720;
+    private const int PARENT_TRACKER_ID = 264;
+    private const int TRACKER_ID        = 720;
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private SearchParentTrackerStub $search_parent_tracker;
 

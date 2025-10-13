@@ -38,12 +38,12 @@ use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const REMOVED_ARTIFACT_ID          = 103;
-    private const ADDED_ARTIFACT_ID            = 106;
-    private const SECOND_UNCHANGED_ARTIFACT_ID = 102;
-    private const FIRST_UNCHANGED_ARTIFACT_ID  = 101;
-    private const PARENT_ARTIFACT_ID           = 100;
-    private const FIELD_ID                     = 242;
+    private const int REMOVED_ARTIFACT_ID          = 103;
+    private const int ADDED_ARTIFACT_ID            = 106;
+    private const int SECOND_UNCHANGED_ARTIFACT_ID = 102;
+    private const int FIRST_UNCHANGED_ARTIFACT_ID  = 101;
+    private const int PARENT_ARTIFACT_ID           = 100;
+    private const int FIELD_ID                     = 242;
 
     private function build(ArtifactValuesRepresentation $payload): NewArtifactLinkChangesetValue
     {

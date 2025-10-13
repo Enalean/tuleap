@@ -31,7 +31,7 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerEventExportFullXML implements Dispatchable
 {
-    public const NAME = 'trackerEventExportFullXML';
+    public const string NAME = 'trackerEventExportFullXML';
 
     /**
      * @psalm-param array<string, Tracker> $exported_trackers

@@ -27,17 +27,10 @@ use TruncateLevelLogger;
  */
 final class WorkflowBackendLogger extends TruncateLevelLogger
 {
-    /** @var string */
-    private const WF_PREFIX = '[WF] ';
-
-    /** @var string */
-    private const INDENTATION_START = '┌ ';
-
-    /** @var string */
-    private const INDENTATION_INCREMENT = '│ ';
-
-    /** @var string */
-    private const INDENTATION_END = '└ ';
+    private const string WF_PREFIX             = '[WF] ';
+    private const string INDENTATION_START     = '┌ ';
+    private const string INDENTATION_INCREMENT = '│ ';
+    private const string INDENTATION_END       = '└ ';
 
     /** @var string */
     private $indentation_prefix = '';

@@ -27,12 +27,12 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewFileUploadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FILE_FIELD_ID     = 63;
-    private const UPLOADING_USER_ID = 165;
-    private const NAME              = 'tipster.txt';
-    private const SIZE              = 1408;
-    private const TYPE              = 'text/plain';
-    private const DESCRIPTION       = 'aerolite arseniuret';
+    private const int FILE_FIELD_ID     = 63;
+    private const int UPLOADING_USER_ID = 165;
+    private const string NAME           = 'tipster.txt';
+    private const int SIZE              = 1408;
+    private const string TYPE           = 'text/plain';
+    private const string DESCRIPTION    = 'aerolite arseniuret';
 
     public function testItBuildsFromComponents(): void
     {

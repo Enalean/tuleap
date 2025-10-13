@@ -44,8 +44,8 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MailGatewayTokenTest extends TestCase
 {
-    private const BODY          = 'justaucorps';
-    private const STRIPPED_BODY = 'stripped justaucorps';
+    private const string BODY          = 'justaucorps';
+    private const string STRIPPED_BODY = 'stripped justaucorps';
 
     private PFUser $user;
     private Tracker_Artifact_MailGateway_TokenMailGateway $mailgateway;

@@ -39,7 +39,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsDeletionInTrackerAdminControllerTest extends TestCase
 {
-    private const TRACKER_ID = 10;
+    private const int TRACKER_ID = 10;
 
     #[\Override]
     public function tearDown(): void

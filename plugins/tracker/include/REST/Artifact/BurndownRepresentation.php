@@ -29,7 +29,7 @@ use Tuleap\REST\JsonCast;
  */
 class BurndownRepresentation
 {
-    public const ROUTE = 'burndown';
+    public const string ROUTE = 'burndown';
 
     /**
      * @var string {@type date}

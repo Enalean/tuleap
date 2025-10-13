@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field_List_Bind
 {
-    public const TYPE = 'null';
+    public const string TYPE = 'null';
 
     public function __construct(public \Tuleap\DB\DatabaseUUIDV7Factory $uuid_factory, $field)
     {

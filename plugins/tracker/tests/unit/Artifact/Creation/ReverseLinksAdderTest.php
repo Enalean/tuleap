@@ -49,14 +49,14 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReverseLinksAdderTest extends TestCase
 {
-    private const CURRENT_ARTIFACT_ID  = 1;
-    private const PARENT_ARTIFACT_ID   = 2;
-    private const REQUEST_ID           = 101;
-    private const TASK_ID              = 102;
-    private const STORY_ID             = 103;
-    private const SPRINT_ID            = 104;
-    private const ARTLINK_FIELD_ID     = 1001;
-    private const SUBMISSION_TIMESTAMP = 1234567890;
+    private const int CURRENT_ARTIFACT_ID  = 1;
+    private const int PARENT_ARTIFACT_ID   = 2;
+    private const int REQUEST_ID           = 101;
+    private const int TASK_ID              = 102;
+    private const int STORY_ID             = 103;
+    private const int SPRINT_ID            = 104;
+    private const int ARTLINK_FIELD_ID     = 1001;
+    private const int SUBMISSION_TIMESTAMP = 1234567890;
 
     public function testAddReverseLinksHappyPath(): void
     {

@@ -33,7 +33,7 @@ use User\XML\Import\IFindUserFromXMLReference;
 
 class ImportXMLProjectTrackerDone implements Dispatchable
 {
-    public const NAME = 'importXMLProjectTrackerDone';
+    public const string NAME = 'importXMLProjectTrackerDone';
 
     /**
      * @var Project

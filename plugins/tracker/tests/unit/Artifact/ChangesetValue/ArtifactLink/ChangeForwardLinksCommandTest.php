@@ -29,10 +29,10 @@ use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangeForwardLinksCommandTest extends TestCase
 {
-    private const FIELD_ID           = 939;
-    private const FIRST_ARTIFACT_ID  = 811;
-    private const SECOND_ARTIFACT_ID = 611;
-    private const SECOND_TYPE        = '_is_child';
+    private const int FIELD_ID           = 939;
+    private const int FIRST_ARTIFACT_ID  = 811;
+    private const int SECOND_ARTIFACT_ID = 611;
+    private const string SECOND_TYPE     = '_is_child';
     private CollectionOfForwardLinks $existing_links;
     /**
      * @var Option<CollectionOfForwardLinks> $submitted_links

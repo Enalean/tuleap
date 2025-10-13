@@ -31,8 +31,8 @@ use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
  */
 final class RESTForwardLinkProxy implements ForwardLink
 {
-    private const PAYLOAD_KEY_ID   = 'id';
-    private const PAYLOAD_KEY_TYPE = 'type';
+    private const string PAYLOAD_KEY_ID   = 'id';
+    private const string PAYLOAD_KEY_TYPE = 'type';
 
     private function __construct(private int $id, private string $type)
     {

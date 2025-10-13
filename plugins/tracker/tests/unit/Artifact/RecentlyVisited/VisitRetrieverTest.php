@@ -37,19 +37,19 @@ use Tuleap\User\History\HistoryEntryCollection;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID = 101;
+    private const int USER_ID = 101;
 
-    private const FIRST_ARTIFACT_ID              = 1;
-    private const FIRST_ARTIFACT_VISIT_TIMESTAMP = 1584987154;
-    private const FIRST_ARTIFACT_TITLE           = 'Random title';
-    private const FIRST_TRACKER_COLOR            = ColorName::FIESTA_RED;
-    private const FIRST_TRACKER_SHORTNAME        = 'bug';
+    private const int FIRST_ARTIFACT_ID              = 1;
+    private const int FIRST_ARTIFACT_VISIT_TIMESTAMP = 1584987154;
+    private const string FIRST_ARTIFACT_TITLE        = 'Random title';
+    private const ColorName FIRST_TRACKER_COLOR      = ColorName::FIESTA_RED;
+    private const string FIRST_TRACKER_SHORTNAME     = 'bug';
 
-    private const SECOND_ARTIFACT_ID              = 2;
-    private const SECOND_ARTIFACT_VISIT_TIMESTAMP = 1844678754;
-    private const SECOND_ARTIFACT_TITLE           = 'lowland';
-    private const SECOND_TRACKER_COLOR            = ColorName::DEEP_BLUE;
-    private const SECOND_TRACKER_SHORTNAME        = 'story';
+    private const int SECOND_ARTIFACT_ID              = 2;
+    private const int SECOND_ARTIFACT_VISIT_TIMESTAMP = 1844678754;
+    private const string SECOND_ARTIFACT_TITLE        = 'lowland';
+    private const ColorName SECOND_TRACKER_COLOR      = ColorName::DEEP_BLUE;
+    private const string SECOND_TRACKER_SHORTNAME     = 'story';
 
     private \PFUser $user;
     /**

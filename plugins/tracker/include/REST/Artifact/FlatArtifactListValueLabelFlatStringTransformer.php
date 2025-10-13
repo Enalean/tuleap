@@ -29,7 +29,7 @@ use Tuleap\NeverThrow\Result;
 
 final readonly class FlatArtifactListValueLabelFlatStringTransformer implements FlatArtifactListValueLabelTransformer
 {
-    private const SEPARATOR = ';';
+    private const string SEPARATOR = ';';
 
     /**
      * @psalm-param list<string> $value_labels

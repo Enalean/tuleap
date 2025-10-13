@@ -29,8 +29,8 @@ use Luracast\Restler\RestException;
  */
 final class OrderRepresentation
 {
-    public const AFTER  = 'after';
-    public const BEFORE = 'before';
+    public const string AFTER  = 'after';
+    public const string BEFORE = 'before';
 
     /**
      * @var array {@type int}

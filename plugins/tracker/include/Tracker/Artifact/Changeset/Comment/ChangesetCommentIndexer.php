@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetCommentIndexer
 {
-    public const INDEX_TYPE_CHANGESET_COMMENT = 'plugin_artifact_changeset_comment';
+    public const string INDEX_TYPE_CHANGESET_COMMENT = 'plugin_artifact_changeset_comment';
 
     public function __construct(
         private ItemToIndexQueue $index_queue,

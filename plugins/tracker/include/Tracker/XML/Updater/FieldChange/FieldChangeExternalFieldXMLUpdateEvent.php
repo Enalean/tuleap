@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class FieldChangeExternalFieldXMLUpdateEvent implements Dispatchable
 {
-    public const NAME = 'fieldChangeExternalFieldXMLUpdateEvent';
+    public const string NAME = 'fieldChangeExternalFieldXMLUpdateEvent';
 
     public function __construct(
         private SimpleXMLElement $field_change_xml,

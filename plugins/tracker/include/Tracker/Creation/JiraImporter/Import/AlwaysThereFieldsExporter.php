@@ -48,55 +48,55 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 class AlwaysThereFieldsExporter
 {
-    public const JIRA_LINK_FIELD_NAME        = 'jira_issue_url';
-    public const JIRA_SUMMARY_FIELD_NAME     = 'summary';
-    public const JIRA_DESCRIPTION_FIELD_NAME = 'description';
-    public const JIRA_STATUS_NAME            = 'status';
-    public const JIRA_PRIORITY_NAME          = 'priority';
-    public const JIRA_ATTACHMENT_NAME        = 'attachment';
-    public const JIRA_ASSIGNEE_NAME          = 'assignee';
-    public const JIRA_REPORTER_NAME          = 'reporter';
-    public const JIRA_STORY_POINTS_NAME      = 'story_points';
-    public const JIRA_ISSUE_TYPE_NAME        = 'issuetype';
+    public const string JIRA_LINK_FIELD_NAME        = 'jira_issue_url';
+    public const string JIRA_SUMMARY_FIELD_NAME     = 'summary';
+    public const string JIRA_DESCRIPTION_FIELD_NAME = 'description';
+    public const string JIRA_STATUS_NAME            = 'status';
+    public const string JIRA_PRIORITY_NAME          = 'priority';
+    public const string JIRA_ATTACHMENT_NAME        = 'attachment';
+    public const string JIRA_ASSIGNEE_NAME          = 'assignee';
+    public const string JIRA_REPORTER_NAME          = 'reporter';
+    public const string JIRA_STORY_POINTS_NAME      = 'story_points';
+    public const string JIRA_ISSUE_TYPE_NAME        = 'issuetype';
 
-    public const JIRA_LINK_FIELD_ID        = 'jira_issue_url';
-    public const JIRA_ARTIFACT_ID_FIELD_ID = 'artifact_id';
+    public const string JIRA_LINK_FIELD_ID        = 'jira_issue_url';
+    public const string JIRA_ARTIFACT_ID_FIELD_ID = 'artifact_id';
 
-    public const JIRA_UPDATED_ON_NAME = 'updated';
-    public const JIRA_CREATED_NAME    = 'created';
-    public const JIRA_CREATED_BY      = 'creator';
+    public const string JIRA_UPDATED_ON_NAME = 'updated';
+    public const string JIRA_CREATED_NAME    = 'created';
+    public const string JIRA_CREATED_BY      = 'creator';
 
-    public const JIRA_ISSUE_LINKS_NAME      = 'issuelinks';
-    public const JIRA_SUB_TASKS_NAME        = 'subtasks';
-    public const JIRA_CROSS_REFERENCES_NAME = 'orgtuleapcrossreferences'; // doesn't exist at jira side
+    public const string JIRA_ISSUE_LINKS_NAME      = 'issuelinks';
+    public const string JIRA_SUB_TASKS_NAME        = 'subtasks';
+    public const string JIRA_CROSS_REFERENCES_NAME = 'orgtuleapcrossreferences'; // doesn't exist at jira side
 
-    public const JIRA_RESOLUTION_DATE_NAME = 'resolutiondate';
-    public const JIRA_STATUS_RANK          = 1;
-    public const JIRA_CREATOR_RANK         = 2;
-    public const JIRA_CREATED_RANK         = 3;
-    public const JIRA_UPDATED_ON_RANK      = 4;
-    public const JIRA_RESOLUTION_DATE_RANK = 5;
-    public const JIRA_PRIORITY_RANK        = 6;
-    public const JIRA_ARTIFACT_ID_RANK     = 7;
-    public const JIRA_LINK_RANK            = 8;
-    public const JIRA_ASSIGNEE_RANK        = 9;
-    public const JIRA_REPORTER_RANK        = 10;
-    public const JIRA_STORY_POINTS_RANK    = 11;
+    public const string JIRA_RESOLUTION_DATE_NAME = 'resolutiondate';
+    public const int JIRA_STATUS_RANK             = 1;
+    public const int JIRA_CREATOR_RANK            = 2;
+    public const int JIRA_CREATED_RANK            = 3;
+    public const int JIRA_UPDATED_ON_RANK         = 4;
+    public const int JIRA_RESOLUTION_DATE_RANK    = 5;
+    public const int JIRA_PRIORITY_RANK           = 6;
+    public const int JIRA_ARTIFACT_ID_RANK        = 7;
+    public const int JIRA_LINK_RANK               = 8;
+    public const int JIRA_ASSIGNEE_RANK           = 9;
+    public const int JIRA_REPORTER_RANK           = 10;
+    public const int JIRA_STORY_POINTS_RANK       = 11;
 
-    public const JIRA_ATTACHMENT_RANK  = 1;
-    public const JIRA_SUMMARY_RANK     = 1;
-    public const JIRA_DESCRIPTION_RANK = 2;
+    public const int JIRA_ATTACHMENT_RANK  = 1;
+    public const int JIRA_SUMMARY_RANK     = 1;
+    public const int JIRA_DESCRIPTION_RANK = 2;
 
-    public const JIRA_ISSUE_LINKS_RANK      = 1;
-    public const JIRA_CROSS_REFERENCES_RANK = 2;
+    public const int JIRA_ISSUE_LINKS_RANK      = 1;
+    public const int JIRA_CROSS_REFERENCES_RANK = 2;
 
-    public const DETAILS_FIELDSET_NAME    = 'details_fieldset';
-    public const CUSTOM_FIELDSET_NAME     = 'custom_fieldset';
-    public const ATTACHMENT_FIELDSET_NAME = 'attachment_fieldset';
-    public const LINKS_FIELDSET_NAME      = 'links_fieldset';
+    public const string DETAILS_FIELDSET_NAME    = 'details_fieldset';
+    public const string CUSTOM_FIELDSET_NAME     = 'custom_fieldset';
+    public const string ATTACHMENT_FIELDSET_NAME = 'attachment_fieldset';
+    public const string LINKS_FIELDSET_NAME      = 'links_fieldset';
 
-    public const LEFT_COLUMN_NAME  = 'left_column';
-    public const RIGHT_COLUMN_NAME = 'right_column';
+    public const string LEFT_COLUMN_NAME  = 'left_column';
+    public const string RIGHT_COLUMN_NAME = 'right_column';
 
     public function exportFields(XMLTracker $tracker, StatusValuesCollection $status_values_collection, FieldMappingCollection $field_mapping_collection): XMLTracker
     {

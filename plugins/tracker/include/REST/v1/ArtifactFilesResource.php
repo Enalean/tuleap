@@ -35,7 +35,7 @@ use Tracker_FileInfoDao;
 
 class ArtifactFilesResource
 {
-    private const DEFAULT_LIMIT = 1048576; // 1Mo
+    private const int DEFAULT_LIMIT = 1048576; // 1Mo
 
     /** @var PFUser */
     private $user;

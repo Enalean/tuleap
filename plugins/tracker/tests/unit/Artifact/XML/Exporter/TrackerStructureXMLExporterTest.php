@@ -48,7 +48,7 @@ use UserXMLExporter;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerStructureXMLExporterTest extends TestCase
 {
-    private const TRACKER_ID = 110;
+    private const int TRACKER_ID = 110;
 
     public function testPermissionsExport(): void
     {

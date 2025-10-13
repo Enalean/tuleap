@@ -40,7 +40,7 @@ final class ArtifactLinkerTest extends TestCase
 {
     use GlobalResponseMock;
 
-    private const CURRENT_ARTIFACT_ID = 10;
+    private const int CURRENT_ARTIFACT_ID = 10;
 
     private RetrieveUsedArtifactLinkFieldsStub $form_element_factory;
     private CreateNewChangesetStub $changeset_creator;

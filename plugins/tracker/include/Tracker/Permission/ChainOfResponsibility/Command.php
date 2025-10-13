@@ -26,17 +26,17 @@ use Tuleap\Tracker\Tracker;
  *
  * @see http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern
  */
-abstract class Tracker_Permission_Command
+abstract class Tracker_Permission_Command //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const PERMISSION_PREFIX = 'permissions_';
+    public const string PERMISSION_PREFIX = 'permissions_';
 
-    public const PERMISSION_ADMIN                  = 'ADMIN';
-    public const PERMISSION_FULL                   = 'FULL';
-    public const PERMISSION_ASSIGNEE               = 'ASSIGNEE';
-    public const PERMISSION_SUBMITTER              = 'SUBMITTER';
-    public const PERMISSION_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE';
-    public const PERMISSION_NONE                   = 'NONE';
-    public const PERMISSION_SUBMITTER_ONLY         = 'SUBMITTER_ONLY';
+    public const string PERMISSION_ADMIN                  = 'ADMIN';
+    public const string PERMISSION_FULL                   = 'FULL';
+    public const string PERMISSION_ASSIGNEE               = 'ASSIGNEE';
+    public const string PERMISSION_SUBMITTER              = 'SUBMITTER';
+    public const string PERMISSION_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE';
+    public const string PERMISSION_NONE                   = 'NONE';
+    public const string PERMISSION_SUBMITTER_ONLY         = 'SUBMITTER_ONLY';
 
     protected static $non_admin_permissions = [
         self::PERMISSION_FULL,

@@ -27,9 +27,9 @@ use Tuleap\User\StoreUserPreference;
 
 final readonly class NotificationOnOwnActionSaver
 {
-    public const PREFERENCE_NAME = 'user_notifications_own_actions_tracker';
-    public const VALUE_NO_NOTIF  = '0';
-    public const VALUE_NOTIF     = '1';
+    public const string PREFERENCE_NAME = 'user_notifications_own_actions_tracker';
+    public const string VALUE_NO_NOTIF  = '0';
+    public const string VALUE_NOTIF     = '1';
 
     public function __construct(
         private NotificationOnOwnActionRetriever $retriever,

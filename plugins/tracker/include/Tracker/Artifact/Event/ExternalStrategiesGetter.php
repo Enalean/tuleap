@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ExternalStrategiesGetter implements Dispatchable
 {
-    public const NAME = 'getExternalStrategies';
+    public const string NAME = 'getExternalStrategies';
     /**
      * @var array<string, Tracker_Artifact_XMLImport_XMLImportFieldStrategy>
      */

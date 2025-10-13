@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_WorkflowUser extends PFUser
+class Tracker_Workflow_WorkflowUser extends PFUser //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const ID = 90;
+    public const int ID = 90;
 }

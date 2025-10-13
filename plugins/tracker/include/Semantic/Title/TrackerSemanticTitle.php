@@ -38,7 +38,7 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticTitle extends TrackerSemantic
 {
-    public const NAME = 'title';
+    public const string NAME = 'title';
 
     /**
      * @var TextField

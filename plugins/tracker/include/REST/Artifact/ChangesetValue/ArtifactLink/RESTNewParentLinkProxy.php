@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
  */
 final class RESTNewParentLinkProxy implements NewParentLink
 {
-    private const ID_KEY = 'id';
+    private const string ID_KEY = 'id';
 
     private function __construct(private int $id)
     {

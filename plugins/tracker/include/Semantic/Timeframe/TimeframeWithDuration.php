@@ -28,7 +28,7 @@ use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
 
 class TimeframeWithDuration implements IComputeTimeframes
 {
-    private const NAME = 'timeframe-with-duration';
+    private const string NAME = 'timeframe-with-duration';
 
     #[\Override]
     public function getName(): string

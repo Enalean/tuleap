@@ -26,9 +26,9 @@ use Tuleap\Dashboard\User\UserDashboardController;
  *
  * Personal tracker renderer
  */
-class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer
+class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const ID = 'plugin_tracker_myrenderer';
+    public const string ID = 'plugin_tracker_myrenderer';
 
     public function __construct()
     {

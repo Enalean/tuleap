@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class ArtifactsReordered implements Dispatchable
 {
-    public const NAME = 'trackerArtifactsReordered';
+    public const string NAME = 'trackerArtifactsReordered';
     /**
      * @var array
      */

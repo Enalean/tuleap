@@ -26,7 +26,7 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerMasschangeGetExternalActionsEvent implements Dispatchable
 {
-    public const NAME = 'trackerMasschangeGetExternalActionsEvent';
+    public const string NAME = 'trackerMasschangeGetExternalActionsEvent';
 
     /**
      * @var Tracker

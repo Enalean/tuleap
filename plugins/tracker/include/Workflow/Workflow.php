@@ -28,16 +28,16 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const FUNC_ADMIN_RULES                           = 'admin-workflow';
-    public const FUNC_ADMIN_DEPENDENCIES                    = 'admin-dependencies';
-    public const FUNC_ADMIN_TRANSITIONS                     = 'admin-workflow-transitions';
-    public const FUNC_ADMIN_CROSS_TRACKER_TRIGGERS          = 'admin-workflow-triggers';
-    public const FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA = 'admin-get-triggers-rules-builder-data';
-    public const FUNC_ADMIN_ADD_TRIGGER                     = 'admin-workflow-add-trigger';
-    public const FUNC_ADMIN_DELETE_TRIGGER                  = 'admin-workflow-delete-trigger';
+    public const string FUNC_ADMIN_RULES                           = 'admin-workflow';
+    public const string FUNC_ADMIN_DEPENDENCIES                    = 'admin-dependencies';
+    public const string FUNC_ADMIN_TRANSITIONS                     = 'admin-workflow-transitions';
+    public const string FUNC_ADMIN_CROSS_TRACKER_TRIGGERS          = 'admin-workflow-triggers';
+    public const string FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA = 'admin-get-triggers-rules-builder-data';
+    public const string FUNC_ADMIN_ADD_TRIGGER                     = 'admin-workflow-add-trigger';
+    public const string FUNC_ADMIN_DELETE_TRIGGER                  = 'admin-workflow-delete-trigger';
 
-    public const BASE_PATH       = '/workflow';
-    public const TRANSITION_PATH = '/transitions';
+    public const string BASE_PATH       = '/workflow';
+    public const string TRANSITION_PATH = '/transitions';
 
     public $workflow_id;
     public $field_id;

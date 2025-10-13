@@ -31,7 +31,7 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerForceNotificationsLevelCommand extends Command
 {
-    public const NAME = 'tracker:force-notifications-level';
+    public const string NAME = 'tracker:force-notifications-level';
 
     /**
      * @var NotificationsForceUsageUpdater
@@ -46,7 +46,7 @@ class TrackerForceNotificationsLevelCommand extends Command
      */
     private $project_manager;
 
-    private const AUTHORIZED_CONFIGURATION_LEVEL
+    private const array AUTHORIZED_CONFIGURATION_LEVEL
         = [
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT_LABEL,
             Tracker::NOTIFICATIONS_LEVEL_DISABLED_LABEL,

@@ -51,7 +51,7 @@ final class TrackerPermissionsTest extends TestCase
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    private const PUBLIC_PROJECT_ID = 101;
+    private const int PUBLIC_PROJECT_ID = 101;
 
     private PFUser $all_trackers_admin_user;
     private Project $project_private;

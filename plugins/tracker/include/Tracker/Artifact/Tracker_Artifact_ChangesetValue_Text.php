@@ -31,19 +31,19 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 /**
  * Manage values in changeset for string fields
  */
-class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @const Changeset comment format is text.
      */
-    public const TEXT_CONTENT = 'text';
+    public const string TEXT_CONTENT = 'text';
 
     /**
      * @const Changeset comment format is HTML
      */
-    public const HTML_CONTENT = 'html';
+    public const string HTML_CONTENT = 'html';
 
-    public const COMMONMARK_CONTENT = 'commonmark';
+    public const string COMMONMARK_CONTENT = 'commonmark';
 
     private static $MAX_LENGTH_FOR_DIFF = 20000;
 

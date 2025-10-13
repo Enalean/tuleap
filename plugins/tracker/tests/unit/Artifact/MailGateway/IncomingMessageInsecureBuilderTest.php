@@ -42,11 +42,11 @@ use UserManager;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IncomingMessageInsecureBuilderTest extends TestCase
 {
-    private const USER_MAIL     = 'user@example.com';
-    private const TRACKER_ID    = 1;
-    private const TRACKER_MAIL  = 'forge__tracker+1@example.com';
-    private const ARTIFACT_ID   = 1;
-    private const ARTIFACT_MAIL = 'forge__artifact+1@example.com';
+    private const string USER_MAIL     = 'user@example.com';
+    private const int TRACKER_ID       = 1;
+    private const string TRACKER_MAIL  = 'forge__tracker+1@example.com';
+    private const int ARTIFACT_ID      = 1;
+    private const string ARTIFACT_MAIL = 'forge__artifact+1@example.com';
 
     private UserManager&MockObject $user_manager;
     private TrackerFactory&MockObject $tracker_factory;

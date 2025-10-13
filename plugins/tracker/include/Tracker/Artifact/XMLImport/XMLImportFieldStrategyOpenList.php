@@ -25,10 +25,10 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const FORMAT_ID       = 'id';
-    public const FORMAT_LDAP     = 'ldap';
-    public const FORMAT_USERNAME = 'username';
-    public const BIND_USERS      = 'users';
+    public const string FORMAT_ID       = 'id';
+    public const string FORMAT_LDAP     = 'ldap';
+    public const string FORMAT_USERNAME = 'username';
+    public const string BIND_USERS      = 'users';
 
     /** @var TrackerXmlFieldsMapping */
     private $xml_fields_mapping;

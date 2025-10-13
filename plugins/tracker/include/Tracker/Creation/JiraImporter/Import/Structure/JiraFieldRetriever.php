@@ -32,7 +32,7 @@ use Tuleap\Tracker\XML\IDGenerator;
 
 class JiraFieldRetriever
 {
-    private const PRIORITY_URL = ClientWrapper::JIRA_CORE_BASE_URL . '/priority';
+    private const string PRIORITY_URL = ClientWrapper::JIRA_CORE_BASE_URL . '/priority';
 
     public function __construct(
         private readonly JiraClient $wrapper,

@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class ExcludeTrackersFromArtifactHeartbeats implements Dispatchable
 {
-    public const NAME = 'collectExcludedTrackerFromArtifactHeartbeats';
+    public const string NAME = 'collectExcludedTrackerFromArtifactHeartbeats';
 
     /**
      * @var \Project

@@ -27,7 +27,7 @@ class Tracker_XML_ChildrenCollector
      * tests which shown that creating 30 children
      * took about 1 minute.
      */
-    public const MAX = 30;
+    public const int MAX = 30;
 
     /** @var int[] */
     private $children_stack = [];

@@ -48,9 +48,9 @@ final class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private StateFactory&MockObject $state_factory;
     private TransitionCreator&MockObject $transition_creator;
 
-    private const TRACKER_ID = 196;
-    private const FROM_ID    = 134;
-    private const TO_ID      = 279;
+    private const int TRACKER_ID = 196;
+    private const int FROM_ID    = 134;
+    private const int TO_ID      = 279;
 
     #[\Override]
     protected function setUp(): void

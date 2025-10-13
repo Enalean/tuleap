@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProcessExportEvent implements Dispatchable
 {
-    public const NAME = 'processExport';
+    public const string NAME = 'processExport';
     /**
      * @var array
      */

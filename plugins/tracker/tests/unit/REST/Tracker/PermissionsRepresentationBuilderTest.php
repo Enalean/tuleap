@@ -37,7 +37,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID = 202;
+    private const int PROJECT_ID = 202;
 
     private UGroupRetriever $ugroup_manager;
     private PermissionsFunctionsWrapper&MockObject $permissions_functions_wrapper;

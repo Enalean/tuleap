@@ -28,7 +28,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
  */
 interface JiraUser
 {
-    public const NO_EMAIL_ADDRESS_SHARED = '';
+    public const string NO_EMAIL_ADDRESS_SHARED = '';
 
     public function getDisplayName(): string;
 

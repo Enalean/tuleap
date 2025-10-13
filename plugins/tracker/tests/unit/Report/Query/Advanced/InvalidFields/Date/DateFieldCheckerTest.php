@@ -33,7 +33,7 @@ use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DateFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_NAME = 'date_field';
+    private const string FIELD_NAME = 'date_field';
     private Comparison $comparison;
     private \Tuleap\Tracker\FormElement\Field\Date\DateField $field;
 

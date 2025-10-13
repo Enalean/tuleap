@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class MethodNotConfigured implements IComputeProgression
 {
-    private const METHOD_NAME = 'not-configured';
+    private const string METHOD_NAME = 'not-configured';
 
     #[\Override]
     public static function getMethodName(): string

@@ -33,7 +33,7 @@ use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
  */
 final class CreationSemanticToCheck
 {
-    private const SUPPORTED_SEMANTICS = [TrackerSemanticTitle::NAME];
+    private const array SUPPORTED_SEMANTICS = [TrackerSemanticTitle::NAME];
 
     private function __construct(public readonly string $semantic_to_check)
     {

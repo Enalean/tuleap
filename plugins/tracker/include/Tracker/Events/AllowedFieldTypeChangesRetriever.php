@@ -25,7 +25,7 @@ use Tuleap\Tracker\FormElement\TrackerFormElement;
 
 class AllowedFieldTypeChangesRetriever implements Dispatchable
 {
-    public const NAME = 'semanticAllowedFieldTypeRetriever';
+    public const string NAME = 'semanticAllowedFieldTypeRetriever';
 
     /**
      * @var \Tuleap\Tracker\FormElement\TrackerFormElement

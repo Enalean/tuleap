@@ -74,8 +74,8 @@ final class UpdateArtifactActionTest extends TestCase
 {
     use GlobalResponseMock;
 
-    private const ARTIFACT_ID = 123;
-    private const TRACKER_ID  = 101;
+    private const int ARTIFACT_ID = 123;
+    private const int TRACKER_ID  = 101;
 
     private Artifact&MockObject $task;
     private Artifact&MockObject $user_story;

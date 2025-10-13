@@ -27,7 +27,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
 final readonly class AsynchronousActionsRunner
 {
-    public const TOPIC = 'tuleap.tracker.artifact';
+    public const string TOPIC = 'tuleap.tracker.artifact';
 
     public function __construct(
         private ActionsRunner $actions_runner,

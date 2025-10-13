@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\Field\NumericField;
 
 class MethodBasedOnEffort implements IComputeProgression
 {
-    private const METHOD_NAME = 'effort-based';
+    private const string METHOD_NAME = 'effort-based';
 
     /**
      * @var NumericField

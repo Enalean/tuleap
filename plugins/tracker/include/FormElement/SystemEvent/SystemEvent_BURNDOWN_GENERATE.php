@@ -35,7 +35,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const NAME = 'SystemEvent_BURNDOWN_GENERATE';
+    public const string NAME = 'SystemEvent_BURNDOWN_GENERATE';
 
     /**
      * @var BurndownFieldDao

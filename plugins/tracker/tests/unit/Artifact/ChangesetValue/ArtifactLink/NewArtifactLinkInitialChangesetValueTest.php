@@ -30,11 +30,11 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NewArtifactLinkInitialChangesetValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID                 = 562;
-    private const FIRST_ADDED_ARTIFACT_ID  = 512;
-    private const SECOND_ADDED_ARTIFACT_ID = 340;
-    private const THIRD_ADDED_ARTIFACT_ID  = 341;
-    private const PARENT_ARTIFACT_ID       = 636;
+    private const int FIELD_ID                 = 562;
+    private const int FIRST_ADDED_ARTIFACT_ID  = 512;
+    private const int SECOND_ADDED_ARTIFACT_ID = 340;
+    private const int THIRD_ADDED_ARTIFACT_ID  = 341;
+    private const int PARENT_ARTIFACT_ID       = 636;
 
     public function testItBuildsFromParts(): void
     {

@@ -30,7 +30,7 @@ use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
 
 final class XMLTable extends XMLRenderer
 {
-    private const TYPE = 'table';
+    private const string TYPE = 'table';
 
     /**
      * @readonly

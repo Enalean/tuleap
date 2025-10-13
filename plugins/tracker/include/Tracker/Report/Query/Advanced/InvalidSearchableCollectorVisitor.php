@@ -33,7 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataForCompa
  */
 final readonly class InvalidSearchableCollectorVisitor implements SearchableVisitor
 {
-    public const SUPPORTED_NAME = '@comments';
+    public const string SUPPORTED_NAME = '@comments';
 
     public function __construct(
         private \Tracker_FormElementFactory $form_element_factory,

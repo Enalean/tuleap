@@ -41,7 +41,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EventSummaryRetrieverTest extends TestCase
 {
-    private const USER_CANNOT_READ = false;
+    private const false USER_CANNOT_READ = false;
 
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly Tracker $tracker;

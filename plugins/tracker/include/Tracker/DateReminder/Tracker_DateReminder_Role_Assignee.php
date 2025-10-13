@@ -18,9 +18,9 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-class Tracker_DateReminder_Role_Assignee implements Tracker_DateReminder_Role
+class Tracker_DateReminder_Role_Assignee implements Tracker_DateReminder_Role //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const IDENTIFIER = '2';
+    public const string IDENTIFIER = '2';
     /**
      * Get the Role
      *

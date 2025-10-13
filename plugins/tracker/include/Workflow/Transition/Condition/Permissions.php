@@ -28,7 +28,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /** @var string */
     public $identifier = 'perms';
 
-    public const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
+    public const string PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
 
     /** @var PermissionsManager */
     private $permission_manager;

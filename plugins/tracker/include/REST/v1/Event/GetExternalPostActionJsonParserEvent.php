@@ -27,7 +27,7 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionUpdateJsonParser
 
 class GetExternalPostActionJsonParserEvent implements Dispatchable
 {
-    public const NAME = 'getExternalPostActionJsonParserEvent';
+    public const string NAME = 'getExternalPostActionJsonParserEvent';
 
     /**
      * @var PostActionUpdateJsonParser[]

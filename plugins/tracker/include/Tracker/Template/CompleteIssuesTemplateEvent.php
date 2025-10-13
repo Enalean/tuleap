@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Renderer\XML\XMLRenderer;
 
 final class CompleteIssuesTemplateEvent implements Dispatchable
 {
-    public const NAME = 'completeIssuesTemplate';
+    public const string NAME = 'completeIssuesTemplate';
 
     /**
      * @param XMLRenderer[] $all_issues_renderers

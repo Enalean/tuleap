@@ -29,8 +29,8 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StoredForwardLinkTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID = 53;
-    private const TYPE        = 'custom_type';
+    private const int ARTIFACT_ID = 53;
+    private const string TYPE     = 'custom_type';
     private RetrieveArtifactStub $artifact_retriever;
     private array $row;
 

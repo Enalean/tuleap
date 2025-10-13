@@ -27,7 +27,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
 
 class GetWorkflowExternalPostActionsValueUpdater implements Dispatchable
 {
-    public const NAME = 'getWorkflowExternalPostActionsValueUpdater';
+    public const string NAME = 'getWorkflowExternalPostActionsValueUpdater';
 
     /**
      * @var PostActionUpdater[]

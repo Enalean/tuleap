@@ -38,9 +38,9 @@ use Tuleap\Tracker\Tracker\XML\Updater\FieldChangeArtifactLinksUpdater;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldChangeArtifactLinksUpdaterTest extends TestCase
 {
-    private const ARTIFACT_ID  = '101';
-    private const USER_ID      = 201;
-    private const SUBMITTED_ON = '123456789';
+    private const string ARTIFACT_ID  = '101';
+    private const int USER_ID         = 201;
+    private const string SUBMITTED_ON = '123456789';
 
     private \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $destination_link_field;
     private FieldChangeArtifactLinksUpdater $updater;

@@ -28,11 +28,11 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectionOfReverseLinksTest extends TestCase
 {
-    private const ARTIFACT_ID_1 = 15;
-    private const FIRST_TYPE    = '_is_child';
-    private const ARTIFACT_ID_2 = 20;
-    private const SECOND_TYPE   = 'wololo';
-    private const ARTIFACT_ID_3 = 100;
+    private const int ARTIFACT_ID_1  = 15;
+    private const string FIRST_TYPE  = '_is_child';
+    private const int ARTIFACT_ID_2  = 20;
+    private const string SECOND_TYPE = 'wololo';
+    private const int ARTIFACT_ID_3  = 100;
     /** @var ReverseLinkStub[] */
     private array $links;
 

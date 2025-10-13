@@ -95,7 +95,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
      *  'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
      *  'user'                   PFUser                  (IN)  the current user
      */
-    public final const TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA = 'tracker_event_report_display_additional_criteria';
+    public final const string TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA = 'tracker_event_report_display_additional_criteria';
 
     /**
      * We want to save in database additional criteria
@@ -104,7 +104,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
      * 'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
      * 'report'                 Tracker_Report                       (IN)
      */
-    public final const TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA = 'tracker_event_report_save_additional_criteria';
+    public final const string TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA = 'tracker_event_report_save_additional_criteria';
 
     /**
      * We want to save in database additional criteria
@@ -113,19 +113,19 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
      * 'additional_criteria_values'    array($key => $value) (OUT)
      * 'report'                        Tracker_Report        (IN)
      */
-    public final const TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA = 'tracker_event_report_load_additional_criteria';
+    public final const string TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA = 'tracker_event_report_load_additional_criteria';
 
-    public const ACTION_SAVE            = 'report-save';
-    public const ACTION_SAVEAS          = 'report-saveas';
-    public const ACTION_REPLACE         = 'report-replace';
-    public const ACTION_DELETE          = 'report-delete';
-    public const ACTION_SCOPE           = 'report-scope';
-    public const ACTION_DEFAULT         = 'report-default';
-    public const ACTION_CLEANSESSION    = 'clean-session';
-    public const TYPE_CRITERIA          = 'criteria';
-    public const TYPE_TABLE             = 'table';
-    public const COMMENT_CRITERION_NAME = 'comment';
-    public const XML_ID_PREFIX          = 'REPORT_';
+    public const string ACTION_SAVE            = 'report-save';
+    public const string ACTION_SAVEAS          = 'report-saveas';
+    public const string ACTION_REPLACE         = 'report-replace';
+    public const string ACTION_DELETE          = 'report-delete';
+    public const string ACTION_SCOPE           = 'report-scope';
+    public const string ACTION_DEFAULT         = 'report-default';
+    public const string ACTION_CLEANSESSION    = 'clean-session';
+    public const string TYPE_CRITERIA          = 'criteria';
+    public const string TYPE_TABLE             = 'table';
+    public const string COMMENT_CRITERION_NAME = 'comment';
+    public const string XML_ID_PREFIX          = 'REPORT_';
 
     /**
      * @var int|string

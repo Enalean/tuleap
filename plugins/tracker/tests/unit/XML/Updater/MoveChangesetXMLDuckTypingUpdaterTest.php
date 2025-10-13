@@ -63,10 +63,10 @@ use XMLImportHelper;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
 {
-    private const CURRENT_USER_ID               = 104;
-    private const SUBMITTER_USER_ID             = 101;
-    private const ARTIFACT_SUBMISSION_TIMESTAMP = 1686468600;
-    private const ARTIFACT_MOVE_TIMESTAMP       = 1686580073;
+    private const int CURRENT_USER_ID               = 104;
+    private const int SUBMITTER_USER_ID             = 101;
+    private const int ARTIFACT_SUBMISSION_TIMESTAMP = 1686468600;
+    private const int ARTIFACT_MOVE_TIMESTAMP       = 1686580073;
 
     private MoveChangesetXMLDuckTypingUpdater $updater;
     private \PFUser $current_user;

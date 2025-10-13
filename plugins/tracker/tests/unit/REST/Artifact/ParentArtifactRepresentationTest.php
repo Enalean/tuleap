@@ -30,18 +30,18 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID               = 119;
-    private const PROJECT_ICON             = '🐨';
-    private const PROJECT_LABEL            = 'Casimiroa';
-    private const TRACKER_ID               = 25;
-    private const TRACKER_LABEL            = 'Hortation';
-    private const TRACKER_SHORTNAME        = 'hortation';
-    private const TRACKER_COLOR            = ColorName::CLOCKWORK_ORANGE;
-    private const ARTIFACT_ID              = 251;
-    private const ARTIFACT_TITLE           = 'irisroot';
-    private const STATUS_VALUE             = 'On going';
-    private const STATUS_COLOR             = 'flamingo-pink';
-    private const ARTIFACT_CROSS_REFERENCE = self::TRACKER_SHORTNAME . ' #' . self::ARTIFACT_ID;
+    private const int PROJECT_ID                  = 119;
+    private const string PROJECT_ICON             = '🐨';
+    private const string PROJECT_LABEL            = 'Casimiroa';
+    private const int TRACKER_ID                  = 25;
+    private const string TRACKER_LABEL            = 'Hortation';
+    private const string TRACKER_SHORTNAME        = 'hortation';
+    private const ColorName TRACKER_COLOR         = ColorName::CLOCKWORK_ORANGE;
+    private const int ARTIFACT_ID                 = 251;
+    private const string ARTIFACT_TITLE           = 'irisroot';
+    private const string STATUS_VALUE             = 'On going';
+    private const string STATUS_COLOR             = 'flamingo-pink';
+    private const string ARTIFACT_CROSS_REFERENCE = self::TRACKER_SHORTNAME . ' #' . self::ARTIFACT_ID;
 
     public function testItBuildsFromArtifact(): void
     {

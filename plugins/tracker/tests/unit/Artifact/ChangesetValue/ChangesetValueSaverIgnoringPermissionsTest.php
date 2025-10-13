@@ -31,9 +31,9 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValueSaverIgnoringPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIELD_ID         = 643;
-    private const NEW_CHANGESET_ID = 139;
-    private const FIELD_VALUE      = 'trophodisc squawbush';
+    private const int FIELD_ID         = 643;
+    private const int NEW_CHANGESET_ID = 139;
+    private const string FIELD_VALUE   = 'trophodisc squawbush';
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject & \Tuleap\Tracker\FormElement\Field\TrackerField
      */

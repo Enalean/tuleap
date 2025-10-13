@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\FormElement\Field\Files;
 
 class IdForXMLImportExportConvertor
 {
-    private const ID_PREFIX = 'fileinfo_';
+    private const string ID_PREFIX = 'fileinfo_';
 
     public static function convertFileInfoIdToXMLId(int $fileinfo_id): string
     {

@@ -27,7 +27,7 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerHierarchyUpdateEvent implements Dispatchable
 {
-    public const NAME = 'trackerHierarchyUpdateEvent';
+    public const string NAME = 'trackerHierarchyUpdateEvent';
 
     private bool $hierarchy_can_be_updated = true;
     private string $error_message          = '';

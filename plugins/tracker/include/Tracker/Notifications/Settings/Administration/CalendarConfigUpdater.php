@@ -33,7 +33,7 @@ use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final class CalendarConfigUpdater
 {
-    private const ENABLE_CALENDAR_EVENTS = 'enable-calendar-events';
+    private const string ENABLE_CALENDAR_EVENTS = 'enable-calendar-events';
 
     public function __construct(
         private readonly CheckEventShouldBeSentInNotification $current_config,

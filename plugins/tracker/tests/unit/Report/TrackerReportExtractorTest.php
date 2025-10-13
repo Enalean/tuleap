@@ -27,7 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerReportExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const TRACKER_ID = 1;
+    private const int TRACKER_ID = 1;
 
     public function testItDoesNotExtractTrackerUserCanNotView(): void
     {

@@ -29,8 +29,8 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 final class UserRolesCheckerJiraCloud implements UserRolesCheckerInterface
 {
-    private const NAME_KEY                 = 'name';
-    private const ADMINISTRATOR_ROLE_NAMES = [
+    private const string NAME_KEY                = 'name';
+    private const array ADMINISTRATOR_ROLE_NAMES = [
         'Administrator',
         'Administrators',
     ];

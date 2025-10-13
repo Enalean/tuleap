@@ -40,7 +40,7 @@ use Tuleap\Tracker\Tracker;
 
 class SemanticTimeframe extends TrackerSemantic
 {
-    public const NAME = 'timeframe';
+    public const string NAME = 'timeframe';
 
     /**
      * @var IComputeTimeframes

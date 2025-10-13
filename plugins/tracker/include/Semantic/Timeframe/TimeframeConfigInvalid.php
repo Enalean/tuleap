@@ -27,7 +27,7 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 
 class TimeframeConfigInvalid implements IComputeTimeframes
 {
-    private const NAME = 'timeframe-config-invalid';
+    private const string NAME = 'timeframe-config-invalid';
 
     #[\Override]
     public function getName(): string

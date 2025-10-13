@@ -27,7 +27,7 @@ use Tuleap\Layout\CssAssetGeneric;
 
 final class GetAdditionalCssAssetsForArtifactDisplay implements Dispatchable
 {
-    public const NAME = 'getAdditionalCssAssetsForArtifactDisplay';
+    public const string NAME = 'getAdditionalCssAssetsForArtifactDisplay';
 
     /**
      * @var list<CssAssetGeneric>

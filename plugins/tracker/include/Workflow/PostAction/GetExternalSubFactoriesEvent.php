@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetExternalSubFactoriesEvent implements Dispatchable
 {
-    public const NAME = 'getExternalSubFactoriesEvent';
+    public const string NAME = 'getExternalSubFactoriesEvent';
 
     /**
      * @var Transition_PostActionSubFactory[]

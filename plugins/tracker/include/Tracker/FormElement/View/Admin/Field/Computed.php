@@ -22,7 +22,7 @@ use Tracker_FormElement_View_Admin_Field;
 
 class Computed extends Tracker_FormElement_View_Admin_Field
 {
-    private const DEFAULT_VALUE_KEY = 'default_value';
+    private const string DEFAULT_VALUE_KEY = 'default_value';
 
     #[\Override]
     protected function fetchAdminSpecificProperty(string $key, array $property): string

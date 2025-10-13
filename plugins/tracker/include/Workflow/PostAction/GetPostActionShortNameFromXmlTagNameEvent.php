@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetPostActionShortNameFromXmlTagNameEvent implements Dispatchable
 {
-    public const NAME = 'getPostActionShortNameFromXmlTagNameEvent';
+    public const string NAME = 'getPostActionShortNameFromXmlTagNameEvent';
 
     /**
      * @var string

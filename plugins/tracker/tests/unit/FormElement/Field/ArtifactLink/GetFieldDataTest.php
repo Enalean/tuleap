@@ -36,7 +36,7 @@ final class GetFieldDataTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private const LAST_CHANGESET_ID = 1234;
+    private const int LAST_CHANGESET_ID = 1234;
 
     private ArtifactLinkField&MockObject $field;
     private Artifact $artifact;

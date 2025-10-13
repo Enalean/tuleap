@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 
 class ArtifactDeletor
 {
-    public const PROJECT_HISTORY_ARTIFACT_DELETED = 'tracker_artifact_delete';
+    public const string PROJECT_HISTORY_ARTIFACT_DELETED = 'tracker_artifact_delete';
 
     public function __construct(
         private readonly Tracker_ArtifactDao $dao,

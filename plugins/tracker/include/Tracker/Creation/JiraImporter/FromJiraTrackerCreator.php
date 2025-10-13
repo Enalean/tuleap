@@ -58,8 +58,8 @@ use XMLImportHelper;
 
 class FromJiraTrackerCreator
 {
-    private const LOG_IDENTIFIER     = 'jira_import_syslog';
-    public const DEFAULT_IMPORT_MODE = 'multi-trackers';
+    private const string LOG_IDENTIFIER     = 'jira_import_syslog';
+    public const string DEFAULT_IMPORT_MODE = 'multi-trackers';
 
     public function __construct(
         private readonly TrackerXmlImport $tracker_xml_import,

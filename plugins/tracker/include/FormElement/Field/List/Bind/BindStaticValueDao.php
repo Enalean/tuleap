@@ -27,8 +27,8 @@ use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class BindStaticValueDao extends DataAccessObject
 {
-    public const COPY_BY_REFERENCE = true;
-    public const COPY_BY_VALUE     = false;
+    public const bool COPY_BY_REFERENCE = true;
+    public const bool COPY_BY_VALUE     = false;
 
     private array $cache_used_values_in_artifacts = [];
     private array $cache_cannot_be_hidden_values  = [];

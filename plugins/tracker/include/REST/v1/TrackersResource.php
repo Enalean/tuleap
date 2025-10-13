@@ -112,15 +112,15 @@ use WorkflowFactory;
  */
 class TrackersResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT            = 1000;
-    public const DEFAULT_LIMIT        = 100;
-    public const DEFAULT_OFFSET       = 0;
-    public const DEFAULT_VALUES       = null;
-    public const ALL_VALUES           = 'all';
-    public const DEFAULT_CRITERIA     = '';
-    public const ORDER_ASC            = 'asc';
-    public const ORDER_DESC           = 'desc';
-    public const DEFAULT_EXPERT_QUERY = '';
+    public const int MAX_LIMIT               = 1000;
+    public const int DEFAULT_LIMIT           = 100;
+    public const int DEFAULT_OFFSET          = 0;
+    public const null DEFAULT_VALUES         = null;
+    public const string ALL_VALUES           = 'all';
+    public const string DEFAULT_CRITERIA     = '';
+    public const string ORDER_ASC            = 'asc';
+    public const string ORDER_DESC           = 'desc';
+    public const string DEFAULT_EXPERT_QUERY = '';
 
     private UserManager $user_manager;
     private Tracker_FormElementFactory $formelement_factory;

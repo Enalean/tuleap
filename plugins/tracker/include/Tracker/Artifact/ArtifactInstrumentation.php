@@ -27,12 +27,12 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 
 final class ArtifactInstrumentation
 {
-    private const METRIC_NAME = 'tracker_artifacts_total';
+    private const string METRIC_NAME = 'tracker_artifacts_total';
 
-    public const TYPE_CREATED = 'created';
-    public const TYPE_UPDATED = 'updated';
-    public const TYPE_VIEWED  = 'viewed';
-    public const TYPE_DELETED = 'deleted';
+    public const string TYPE_CREATED = 'created';
+    public const string TYPE_UPDATED = 'updated';
+    public const string TYPE_VIEWED  = 'viewed';
+    public const string TYPE_DELETED = 'deleted';
 
     /**
      * @psalm-param self::TYPE_CREATED|self::TYPE_UPDATED|self::TYPE_VIEWED|self::TYPE_DELETED $type

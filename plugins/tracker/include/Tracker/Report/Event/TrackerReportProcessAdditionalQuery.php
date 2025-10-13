@@ -26,7 +26,7 @@ use Tuleap\Tracker\Tracker;
 
 class TrackerReportProcessAdditionalQuery implements Dispatchable
 {
-    public const NAME = 'trackerReportProcessAdditionalQuery';
+    public const string NAME = 'trackerReportProcessAdditionalQuery';
 
     /**
      * @var Tracker_Report

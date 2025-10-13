@@ -39,8 +39,8 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private const PROJECT_ID      = 196;
-    private const UPLOAD_MAX_SIZE = 1024;
+    private const int PROJECT_ID      = 196;
+    private const int UPLOAD_MAX_SIZE = 1024;
 
     private FileUploadDataProvider&Stub $first_usable_field_data_getter;
 

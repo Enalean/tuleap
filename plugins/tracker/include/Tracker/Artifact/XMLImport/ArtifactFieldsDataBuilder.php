@@ -32,17 +32,17 @@ use Tuleap\Tracker\Tracker;
  */
 class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const FIELDTYPE_STRING            = Tracker_FormElementFactory::FIELD_STRING_TYPE;
-    public const FIELDTYPE_TEXT              = 'text';
-    public const FIELDTYPE_INT               = 'int';
-    public const FIELDTYPE_FLOAT             = 'float';
-    public const FIELDTYPE_DATE              = 'date';
-    public const FIELDTYPE_PERMS_ON_ARTIFACT = 'permissions_on_artifact';
-    public const FIELDTYPE_ATTACHEMENT       = 'file';
-    public const FIELDTYPE_OPENLIST          = 'open_list';
-    public const FIELDTYPE_LIST              = 'list';
-    public const FIELDTYPE_ARTIFACT_LINK     = 'art_link';
-    public const FIELDTYPE_COMPUTED          = 'computed';
+    public const string FIELDTYPE_STRING            = Tracker_FormElementFactory::FIELD_STRING_TYPE;
+    public const string FIELDTYPE_TEXT              = 'text';
+    public const string FIELDTYPE_INT               = 'int';
+    public const string FIELDTYPE_FLOAT             = 'float';
+    public const string FIELDTYPE_DATE              = 'date';
+    public const string FIELDTYPE_PERMS_ON_ARTIFACT = 'permissions_on_artifact';
+    public const string FIELDTYPE_ATTACHEMENT       = 'file';
+    public const string FIELDTYPE_OPENLIST          = 'open_list';
+    public const string FIELDTYPE_LIST              = 'list';
+    public const string FIELDTYPE_ARTIFACT_LINK     = 'art_link';
+    public const string FIELDTYPE_COMPUTED          = 'computed';
     private array $strategies;
 
     public function __construct(

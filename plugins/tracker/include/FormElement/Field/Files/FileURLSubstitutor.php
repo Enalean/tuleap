@@ -27,7 +27,7 @@ use DOMElement;
 
 class FileURLSubstitutor
 {
-    private const LIBXML_HTML_NODEFDTD = 4;
+    private const int LIBXML_HTML_NODEFDTD = 4;
 
     public function substituteURLsInHTML(string $html, CreatedFileURLMapping $url_mapping): string
     {

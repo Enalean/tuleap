@@ -31,8 +31,8 @@ use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_Widget_MyArtifacts extends Widget
 {
-    public const ID        = 'plugin_tracker_myartifacts';
-    public const PREF_SHOW = 'plugin_tracker_myartifacts_show';
+    public const string ID        = 'plugin_tracker_myartifacts';
+    public const string PREF_SHOW = 'plugin_tracker_myartifacts_show';
 
     protected $artifact_show;
 

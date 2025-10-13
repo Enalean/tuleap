@@ -51,7 +51,7 @@ final class PUTHandlerTest extends TestCase
 {
     use GlobalResponseMock;
 
-    private const ARTIFACT_LINK_FIELD_ID = 179;
+    private const int ARTIFACT_LINK_FIELD_ID = 179;
     private CheckArtifactRestUpdateConditionsStub $check_artifact_rest_update_conditions;
     private CreateNewChangesetStub $changeset_creator;
     private RetrieveUsedArtifactLinkFieldsStub $link_field_retriever;

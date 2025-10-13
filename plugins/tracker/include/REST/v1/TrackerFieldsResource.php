@@ -42,7 +42,7 @@ use UserManager;
 
 class TrackerFieldsResource extends AuthenticatedResource
 {
-    public const ROUTE = 'tracker_fields';
+    public const string ROUTE = 'tracker_fields';
 
     /**
      * @url OPTIONS {id}

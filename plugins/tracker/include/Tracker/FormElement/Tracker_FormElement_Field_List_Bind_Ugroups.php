@@ -35,7 +35,7 @@ use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind
 {
-    public const TYPE = 'ugroups';
+    public const string TYPE = 'ugroups';
 
     /**
      * @var UGroupRetriever

@@ -26,7 +26,7 @@ use UserXMLExporter;
 
 class ChangesetXMLExporter
 {
-    public const PREFIX = 'CHANGESET_';
+    public const string PREFIX = 'CHANGESET_';
 
     public function __construct(
         private readonly ChangesetValuesXMLExporter $values_exporter,

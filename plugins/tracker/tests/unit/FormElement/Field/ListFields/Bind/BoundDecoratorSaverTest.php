@@ -33,7 +33,7 @@ use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 #[DisableReturnValueGenerationForTestDoubles]
 final class BoundDecoratorSaverTest extends TestCase
 {
-    private const FIELD_ID = 101;
+    private const int FIELD_ID = 101;
 
     private ListField $field;
     private BoundDecoratorSaver $bound_decorator_saver;
