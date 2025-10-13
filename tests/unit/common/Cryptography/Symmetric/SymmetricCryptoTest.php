@@ -64,7 +64,9 @@ final class SymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
         $ciphertext = SymmetricCrypto::encrypt($plaintext, $ad, $key_1);
 
         $this->expectException(InvalidCiphertextException::class);
-        SymmetricCrypto::decrypt($ciphertext, $ad, $key_2);
+        $decrypted_value = SymmetricCrypto::decrypt($ciphertext, $ad, $key_2);
+        // Force decrypting the value
+        $decrypted_value->getString();
     }
 
     public function testACiphertextEncryptedWithDifferentAdditionalDataCannotBeDecrypted(): void
@@ -77,7 +79,9 @@ final class SymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
         $ciphertext = SymmetricCrypto::encrypt($plaintext, $ad_1, $key);
 
         $this->expectException(InvalidCiphertextException::class);
-        SymmetricCrypto::decrypt($ciphertext, $ad_2, $key);
+        $decrypted_value = SymmetricCrypto::decrypt($ciphertext, $ad_2, $key);
+        // Force decrypting the value
+        $decrypted_value->getString();
     }
 
     #[TestWith(['wrongly_formatted_exception'])]
@@ -87,11 +91,13 @@ final class SymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
         $key = $this->getRandomEncryptionKey();
 
         $this->expectException(InvalidCiphertextException::class);
-        SymmetricCrypto::decrypt(
+        $decrypted_value = SymmetricCrypto::decrypt(
             $wrong_ciphertext,
             new EncryptionAdditionalData('table_name', 'field_name', 'id'),
             $key
         );
+        // Force decrypting the value
+        $decrypted_value->getString();
     }
 
     public function testAPreviouslyEncryptedValueCanBeDecrypted(): void
