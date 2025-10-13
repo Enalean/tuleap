@@ -40,7 +40,7 @@ export function createPreviewArea(
         return html``;
     }
     return html`
-        <div>
+        <div data-test="preview-area">
             ${until(
                 promise_of_html.then(
                     (html_string) =>
