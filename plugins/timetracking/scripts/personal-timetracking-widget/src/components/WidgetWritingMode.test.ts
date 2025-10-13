@@ -20,14 +20,16 @@
 import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 import { Option } from "@tuleap/option";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { PredefinedTimePeriodsVueStub } from "../../tests/stubs/PredefinedTimePeriodsVueStub";
+import { USER_LOCALE } from "../injection-symbols";
 
 vi.mock("@tuleap/tlp-date-picker", () => ({
-    datePicker(): { setDate(): void } {
+    createDatePicker(): { setDate(): void } {
         return {
             setDate(): void {
                 // Do nothing
@@ -47,6 +49,9 @@ describe("Given a personal timetracking widget in writing mode", () => {
                         },
                     },
                 }),
+                provide: {
+                    [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
+                },
                 stubs: { "tuleap-predefined-time-period-select": PredefinedTimePeriodsVueStub },
             },
         });

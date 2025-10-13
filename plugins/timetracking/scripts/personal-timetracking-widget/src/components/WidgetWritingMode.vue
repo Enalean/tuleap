@@ -85,7 +85,7 @@
 </template>
 <script setup lang="ts">
 import type { DatePickerInstance } from "@tuleap/tlp-date-picker";
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker } from "@tuleap/tlp-date-picker";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
@@ -96,6 +96,10 @@ import type {
 } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { Option } from "@tuleap/option";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { USER_LOCALE } from "../injection-symbols";
+
+const user_locale = strictInject(USER_LOCALE);
 
 const { $gettext } = useGettext();
 const personal_store = usePersonalTimetrackingWidgetStore();
@@ -119,10 +123,10 @@ onMounted((): void => {
         return;
     }
 
-    start_date_picker = datePicker(start_date_input.value);
+    start_date_picker = createDatePicker(start_date_input.value, user_locale);
     start_date_picker.setDate(personal_store.start_date);
 
-    end_date_picker = datePicker(end_date_input.value);
+    end_date_picker = createDatePicker(end_date_input.value, user_locale);
     end_date_picker.setDate(personal_store.end_date);
 });
 
@@ -160,6 +164,10 @@ const changeDates = (): void => {
     );
 };
 </script>
+
+<style lang="scss">
+@use "pkg:@tuleap/tlp-date-picker";
+</style>
 
 <style scoped lang="scss">
 .timetracking-writing-mode-selected-dates {

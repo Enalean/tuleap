@@ -53,11 +53,13 @@
 
 <script setup lang="ts">
 import { formatDateUsingPreferredUserFormat } from "@tuleap/plugin-timetracking-time-formatters";
-import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { computed } from "vue";
 import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
 import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { toBCP47 } from "@tuleap/locale";
+import { USER_LOCALE } from "../../injection-symbols";
 
 const { $gettext } = useGettext();
 const props = defineProps<{
@@ -65,7 +67,7 @@ const props = defineProps<{
     project: ProjectResponse;
 }>();
 
-const personal_store = usePersonalTimetrackingWidgetStore();
+const user_locale = strictInject(USER_LOCALE);
 
 const project_link = computed((): string => {
     return "/projects/" + props.project.shortname;
@@ -74,7 +76,7 @@ const project_link = computed((): string => {
 const submission_date = computed((): string => {
     return formatDateUsingPreferredUserFormat(
         new Date(props.artifact.submission_date),
-        personal_store.user_locale,
+        toBCP47(user_locale),
     );
 });
 </script>

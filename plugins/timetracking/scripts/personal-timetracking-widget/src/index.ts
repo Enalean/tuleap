@@ -23,7 +23,8 @@ import { createGettext } from "vue3-gettext";
 import { createPinia } from "pinia";
 import TimetrackingWidget from "./components/TimetrackingWidget.vue";
 import { getAttributeOrThrow } from "@tuleap/dom";
-import { DASHBOARD_ID } from "./injection-symbols";
+import { DASHBOARD_ID, USER_LOCALE } from "./injection-symbols";
+import { getLocaleWithDefault } from "@tuleap/locale";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("personal-timetracking-widget");
@@ -38,15 +39,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dashboard_id = JSON.parse(getAttributeOrThrow(mount_point, "data-dashboard-id"));
 
     createApp(TimetrackingWidget, {
-        user_id: parseInt(document.body.dataset.userId, 10),
-        user_locale: document.body.dataset.userLocale ?? "en-US",
+        user_id: Number.parseInt(getAttributeOrThrow(document.body, "data-user-id"), 10),
     })
         .use(
-            await initVueGettext(createGettext, (locale: string) => {
+            await initVueGettext(createGettext, (locale) => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             }),
         )
         .use(createPinia())
         .provide(DASHBOARD_ID, dashboard_id)
+        .provide(USER_LOCALE, getLocaleWithDefault(document))
         .mount(mount_point);
 });

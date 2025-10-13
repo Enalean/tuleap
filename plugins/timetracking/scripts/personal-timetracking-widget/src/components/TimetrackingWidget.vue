@@ -31,12 +31,8 @@ import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 
-const props = defineProps<{
-    user_id: number;
-    user_locale: string;
-}>();
+const props = defineProps<{ user_id: number }>();
 
 const personal_store = usePersonalTimetrackingWidgetStore();
 personal_store.initUserId(props.user_id);
-personal_store.initUserLocale(props.user_locale);
 </script>

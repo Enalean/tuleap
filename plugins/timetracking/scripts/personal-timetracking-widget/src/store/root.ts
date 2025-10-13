@@ -45,7 +45,6 @@ interface State {
     selected_time_period: Option<PredefinedTimePeriod>;
     reading_mode: boolean;
     total_times: number;
-    user_locale: string;
     pagination_offset: number;
     pagination_limit: number;
     is_loaded: boolean;
@@ -69,7 +68,6 @@ export const usePersonalTimetrackingWidgetStore = defineStore("root", {
             selected_time_period: Option.fromValue(LAST_7_DAYS),
             reading_mode: true,
             total_times: 0,
-            user_locale: "",
             pagination_offset: 0,
             pagination_limit: 50,
             is_loaded: false,
@@ -195,9 +193,6 @@ export const usePersonalTimetrackingWidgetStore = defineStore("root", {
         },
         initUserId(user_id: number): void {
             this.user_id = user_id;
-        },
-        initUserLocale(user_locale: string): void {
-            this.user_locale = user_locale.replace(/_/g, "-");
         },
         setAddMode(is_add_mode: boolean): void {
             this.is_add_mode = is_add_mode;

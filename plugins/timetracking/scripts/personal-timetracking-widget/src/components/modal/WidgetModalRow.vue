@@ -55,11 +55,15 @@ import WidgetModalDeletePopover from "./WidgetModalDeletePopover.vue";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { computed, ref } from "vue";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { toBCP47 } from "@tuleap/locale";
+import { USER_LOCALE } from "../../injection-symbols";
 
 const props = defineProps<{
     time_data: PersonalTime;
 }>();
 
+const user_locale = strictInject(USER_LOCALE);
 const personal_store = usePersonalTimetrackingWidgetStore();
 
 const edit_mode = ref(false);
@@ -68,10 +72,7 @@ const minutes = computed((): string => {
     return formatMinutes(props.time_data.minutes);
 });
 const time_date = computed((): string => {
-    return formatDateUsingPreferredUserFormat(
-        new Date(props.time_data.date),
-        personal_store.user_locale,
-    );
+    return formatDateUsingPreferredUserFormat(new Date(props.time_data.date), toBCP47(user_locale));
 });
 
 const swapEditMode = (): void => {
