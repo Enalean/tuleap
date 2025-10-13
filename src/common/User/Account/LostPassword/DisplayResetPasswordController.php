@@ -93,7 +93,7 @@ final class DisplayResetPasswordController implements DispatchableWithBurningPar
                                             __DIR__ . '/../../../../scripts/user-registration/frontend-assets',
                                             '/assets/core/user-registration'
                                         ),
-                                        'src/index.ts'
+                                        'src/main-anonymous.ts'
                                     )
                                 );
                                 $layout->addCssAsset(
