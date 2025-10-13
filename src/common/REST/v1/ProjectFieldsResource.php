@@ -36,7 +36,7 @@ use UserManager;
 
 class ProjectFieldsResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 100;
+    public const int MAX_LIMIT = 100;
 
     /**
      * @var DescriptionFieldsFactory

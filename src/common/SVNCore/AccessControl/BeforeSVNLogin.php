@@ -29,7 +29,7 @@ use function Psl\Type\string;
 
 final class BeforeSVNLogin implements BeforeLogin
 {
-    public const NAME = 'beforeSVNLogin';
+    public const string NAME = 'beforeSVNLogin';
 
     private ?\PFUser $user = null;
     /**

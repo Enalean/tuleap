@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 
 class BannerDao extends DataAccessObject
 {
-    private const USER_PREFERENCE_NAME_START = 'project_banner_';
+    private const string USER_PREFERENCE_NAME_START = 'project_banner_';
 
     public function addBanner(int $project_id, string $message): void
     {

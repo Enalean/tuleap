@@ -24,7 +24,7 @@ namespace Tuleap\User\Account\Register;
 
 final class BeforeUserRegistrationEvent implements \Tuleap\Event\Dispatchable
 {
-    public const NAME = 'beforeUserRegistrationEvent';
+    public const string NAME = 'beforeUserRegistrationEvent';
 
     private bool $is_password_needed = true;
 

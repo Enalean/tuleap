@@ -22,7 +22,7 @@ namespace Tuleap\Project\XML;
 
 interface ArchiveInterface
 {
-    public const USER_FILE    = 'users.xml';
-    public const PROJECT_FILE = 'project.xml';
-    public const DATA_DIR     = 'data';
+    public const string USER_FILE    = 'users.xml';
+    public const string PROJECT_FILE = 'project.xml';
+    public const string DATA_DIR     = 'data';
 }

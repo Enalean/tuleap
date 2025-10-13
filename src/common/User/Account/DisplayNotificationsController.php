@@ -35,7 +35,7 @@ use Tuleap\Request\ForbiddenException;
 
 final readonly class DisplayNotificationsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/account/notifications';
+    public const string URL = '/account/notifications';
 
     private TemplateRenderer $renderer;
 

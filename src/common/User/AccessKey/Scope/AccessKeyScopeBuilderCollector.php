@@ -27,7 +27,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilderCollectorEvent;
 
 final class AccessKeyScopeBuilderCollector implements AuthenticationScopeBuilderCollectorEvent
 {
-    public const NAME = 'collectAccessKeyScopeBuilder';
+    public const string NAME = 'collectAccessKeyScopeBuilder';
 
     /**
      * @var AuthenticationScopeBuilder[]

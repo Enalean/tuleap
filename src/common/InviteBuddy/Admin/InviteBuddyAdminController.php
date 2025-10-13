@@ -34,7 +34,7 @@ use Tuleap\Request\ForbiddenException;
 
 class InviteBuddyAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/admin/invitations/';
+    public const string URL = '/admin/invitations/';
 
     public function __construct(
         private AdminPageRenderer $admin_page_renderer,

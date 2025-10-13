@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class ImportValidateExternalFields implements Dispatchable
 {
-    public const NAME = 'importValidateExternalFields';
+    public const string NAME = 'importValidateExternalFields';
 
     /**
      * @var SimpleXMLElement

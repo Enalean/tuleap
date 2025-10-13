@@ -30,9 +30,9 @@ use Tuleap\Queue\WorkerEventContent;
 
 final class TaskWorkerProcess implements TaskWorker
 {
-    private const PROCESS_TIMEOUT_SECONDS          = 15 * 60;
-    private const TULEAP_SOURCE_ROOT               = __DIR__ . '/../../../../';
-    private const CONNECTION_KEEP_ALIVE_NB_SECONDS = 15;
+    private const int PROCESS_TIMEOUT_SECONDS          = 15 * 60;
+    private const string TULEAP_SOURCE_ROOT            = __DIR__ . '/../../../../';
+    private const int CONNECTION_KEEP_ALIVE_NB_SECONDS = 15;
 
     public function __construct(
         private readonly ReconnectAfterALongRunningProcess $connection_to_keep_alive,

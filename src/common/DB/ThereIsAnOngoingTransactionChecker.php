@@ -29,7 +29,7 @@ final class ThereIsAnOngoingTransactionChecker extends DataAccessObject implemen
 {
     #[FeatureFlagConfigKey('Reject actions that are going to be processed in a different context while being in a DB transaction')]
     #[ConfigKeyInt(0)]
-    public const FEATURE_FLAG = 'check_actions_context_in_transaction';
+    public const string FEATURE_FLAG = 'check_actions_context_in_transaction';
 
     #[\Override]
     public function checkNoOngoingTransaction(): void

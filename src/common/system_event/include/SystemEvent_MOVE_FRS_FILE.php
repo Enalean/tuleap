@@ -20,7 +20,7 @@
 
 class SystemEvent_MOVE_FRS_FILE extends SystemEvent
 {
-    public const NAME = 'MOVE_FRS_FILE';
+    public const string NAME = 'MOVE_FRS_FILE';
 
     #[\Override]
     public function setLog(string $log): void

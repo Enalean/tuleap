@@ -29,7 +29,7 @@ interface InvitationPurger
 {
     #[ConfigKey('Delay before an invitation becomes obsolete (in days).')]
     #[ConfigKeyInt(30)]
-    public const NB_DAYS = 'invitations_lifetime';
+    public const string NB_DAYS = 'invitations_lifetime';
 
     /**
      * @return Invitation[] Invitations that are removed

@@ -57,10 +57,10 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      * User with id lower than 100 are considered specials (siteadmin, null,
      * etc).
      */
-    public const SPECIAL_USERS_LIMIT = 100;
+    public const int SPECIAL_USERS_LIMIT = 100;
 
     #[ConfigKey('Should user be approved by site admin (1) or auto approved (0)')]
-    public const CONFIG_USER_APPROVAL = 'sys_user_approval';
+    public const string CONFIG_USER_APPROVAL = 'sys_user_approval';
 
     /**
      * @psalm-var array<int|string,PFUser|null>

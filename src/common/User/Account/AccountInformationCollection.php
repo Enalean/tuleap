@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class AccountInformationCollection implements Dispatchable
 {
-    public const NAME = 'accountInformationCollection';
+    public const string NAME = 'accountInformationCollection';
     /**
      * @var PFUser
      */

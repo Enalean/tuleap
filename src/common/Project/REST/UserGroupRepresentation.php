@@ -30,10 +30,10 @@ use Exception;
  */
 class UserGroupRepresentation
 {
-    public const ROUTE = 'user_groups';
+    public const string ROUTE = 'user_groups';
 
-    public const SIMPLE_REST_ID_PATTERN  = '/^\d+$/';
-    public const COMPLEX_REST_ID_PATTERN = '/^(\d+)_(\d+)$/';
+    public const string SIMPLE_REST_ID_PATTERN  = '/^\d+$/';
+    public const string COMPLEX_REST_ID_PATTERN = '/^(\d+)_(\d+)$/';
 
     /**
      * @var string

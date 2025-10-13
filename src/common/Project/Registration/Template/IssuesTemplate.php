@@ -34,7 +34,7 @@ use Tuleap\Project\XML\XMLProject;
 
 class IssuesTemplate implements TuleapTemplate
 {
-    public const NAME = 'issues';
+    public const string NAME = 'issues';
 
     /**
      * @var string

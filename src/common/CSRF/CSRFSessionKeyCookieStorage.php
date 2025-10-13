@@ -26,7 +26,7 @@ use Tuleap\CookieManager;
 
 final readonly class CSRFSessionKeyCookieStorage implements CSRFSessionKeyStorage
 {
-    private const COOKIE_NAME = 'csrf_session_key';
+    private const string COOKIE_NAME = 'csrf_session_key';
 
     public function __construct(private CookieManager $cookie_manager)
     {

@@ -22,7 +22,7 @@ namespace Tuleap\Dashboard\Widget;
 
 class DashboardWidget
 {
-    public const USER_PREF_IS_MINIMIZED_PREFIX = 'dashboard_widget_is_minimized_';
+    public const string USER_PREF_IS_MINIMIZED_PREFIX = 'dashboard_widget_is_minimized_';
 
     private $id;
     private $name;

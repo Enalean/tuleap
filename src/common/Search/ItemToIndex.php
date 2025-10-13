@@ -29,12 +29,12 @@ use Tuleap\Event\Dispatchable;
  */
 final class ItemToIndex implements Dispatchable
 {
-    public const NAME = 'indexItem';
+    public const string NAME = 'indexItem';
 
-    public const ALL_CONTENT_TYPES       = [self::CONTENT_TYPE_PLAINTEXT, self::CONTENT_TYPE_COMMONMARK, self::CONTENT_TYPE_HTML];
-    public const CONTENT_TYPE_PLAINTEXT  = 'plaintext';
-    public const CONTENT_TYPE_COMMONMARK = 'commonmark';
-    public const CONTENT_TYPE_HTML       = 'html';
+    public const array ALL_CONTENT_TYPES        = [self::CONTENT_TYPE_PLAINTEXT, self::CONTENT_TYPE_COMMONMARK, self::CONTENT_TYPE_HTML];
+    public const string CONTENT_TYPE_PLAINTEXT  = 'plaintext';
+    public const string CONTENT_TYPE_COMMONMARK = 'commonmark';
+    public const string CONTENT_TYPE_HTML       = 'html';
 
     /**
      * @psalm-param self::CONTENT_TYPE_* $content_type

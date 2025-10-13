@@ -29,7 +29,7 @@ use UserHelper;
  */
 class MinimalUserRepresentation
 {
-    public const ROUTE = 'users';
+    public const string ROUTE = 'users';
     /**
      * @var int | null {@type int}
      */

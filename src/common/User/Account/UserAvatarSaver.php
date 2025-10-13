@@ -27,7 +27,7 @@ use Tuleap\User\Avatar\ComputeAvatarHash;
 
 final readonly class UserAvatarSaver
 {
-    public const AVATAR_MAX_SIZE = 100;
+    public const int AVATAR_MAX_SIZE = 100;
 
 
     public function __construct(

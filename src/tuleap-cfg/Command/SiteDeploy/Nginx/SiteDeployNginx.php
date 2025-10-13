@@ -24,8 +24,8 @@ use Psr\Log\LoggerInterface;
 
 class SiteDeployNginx
 {
-    public const SSL_CERT_KEY_PATH  = '/etc/pki/tls/private/localhost.key.pem';
-    public const SSL_CERT_CERT_PATH = '/etc/pki/tls/certs/localhost.cert.pem';
+    public const string SSL_CERT_KEY_PATH  = '/etc/pki/tls/private/localhost.key.pem';
+    public const string SSL_CERT_CERT_PATH = '/etc/pki/tls/certs/localhost.cert.pem';
 
     /**
      * @var LoggerInterface

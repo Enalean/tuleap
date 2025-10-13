@@ -33,7 +33,7 @@ use Tuleap\DB\DBConnection;
 
 final class QueueSystemCheckCommand extends Command
 {
-    public const NAME = 'queue-system-check';
+    public const string NAME = 'queue-system-check';
 
     /**
      * @var EventManager

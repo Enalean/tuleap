@@ -22,7 +22,7 @@
 // The artifact field object
 class ArtifactField
 {
-    public const STANDARD_FIELD_NAME = [
+    public const array STANDARD_FIELD_NAME = [
         'artifact_id',
         'status_id',
         'submitted_by',

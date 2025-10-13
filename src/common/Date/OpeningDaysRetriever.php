@@ -32,7 +32,7 @@ final class OpeningDaysRetriever
     #[ConfigKey('Define which days are considered as worked day')]
     #[ConfigKeyHelp('Must be a comma separated list of day index: Monday-Sunday 1-7)')]
     #[ConfigKeyString('1,2,3,4,5')]
-    public const CONFIG_KEY = 'opening_days';
+    public const string CONFIG_KEY = 'opening_days';
 
     /**
      * @return int[]

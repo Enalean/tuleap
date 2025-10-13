@@ -26,7 +26,7 @@ use Tuleap\Layout\BaseLayout;
 
 final class AddAdditionalFieldUserRegistration implements \Tuleap\Event\Dispatchable
 {
-    public const NAME                         = 'addAdditionalFieldUserRegistration';
+    public const string NAME                  = 'addAdditionalFieldUserRegistration';
     private string $additional_fields_in_html = '';
 
     public function __construct(

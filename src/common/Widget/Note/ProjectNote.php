@@ -28,7 +28,7 @@ use Tuleap\Project\MappingRegistry;
 
 class ProjectNote extends Note
 {
-    public const NAME = 'projectnote';
+    public const string NAME = 'projectnote';
 
     #[\Override]
     protected static function getName(): string

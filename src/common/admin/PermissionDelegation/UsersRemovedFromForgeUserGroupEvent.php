@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class UsersRemovedFromForgeUserGroupEvent implements Dispatchable
 {
-    public const NAME = 'usersRemovedFromForgeUserGroupEvent';
+    public const string NAME = 'usersRemovedFromForgeUserGroupEvent';
 
     /**
      * @param \PFUser[] $users

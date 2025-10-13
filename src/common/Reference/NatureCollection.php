@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class NatureCollection implements Dispatchable
 {
-    public const NAME = 'getAvailableReferenceNatures';
+    public const string NAME = 'getAvailableReferenceNatures';
 
     /**
      * @psalm-var array<string, Nature>

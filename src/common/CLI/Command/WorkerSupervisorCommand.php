@@ -40,11 +40,11 @@ use TuleapCfg\Command\ProcessFactory;
 
 class WorkerSupervisorCommand extends Command
 {
-    public const NAME = 'worker:supervisor';
+    public const string NAME = 'worker:supervisor';
 
-    private const PID_FILE_PATH = '/var/run/tuleap/worker_supervisor.pid';
+    private const string PID_FILE_PATH = '/var/run/tuleap/worker_supervisor.pid';
 
-    private const EVENT_LOOP_SLEEP = 5;
+    private const int EVENT_LOOP_SLEEP = 5;
 
     /**
      * @var Process[]

@@ -43,8 +43,8 @@ use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 class OAuth2GrantAccessTokenFromRefreshToken
 {
     // See https://tools.ietf.org/html/rfc6749#section-6
-    private const REFRESH_TOKEN_PARAMETER = 'refresh_token';
-    private const SCOPE_PARAMETER         = 'scope';
+    private const string REFRESH_TOKEN_PARAMETER = 'refresh_token';
+    private const string SCOPE_PARAMETER         = 'scope';
 
     /**
      * @var ResponseFactoryInterface

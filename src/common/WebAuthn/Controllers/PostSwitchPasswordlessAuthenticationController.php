@@ -32,8 +32,8 @@ use Tuleap\User\SwitchPasswordlessOnlyState;
 
 final class PostSwitchPasswordlessAuthenticationController implements DispatchableWithRequest
 {
-    public const  URL          = '/webauthn/switch-passwordless';
-    private const REDIRECT_URL = '/plugins/webauthn/account';
+    public const  string URL          = '/webauthn/switch-passwordless';
+    private const string REDIRECT_URL = '/plugins/webauthn/account';
 
     public function __construct(
         private readonly ProvideCurrentUser $provide_current_user,

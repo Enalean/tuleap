@@ -32,7 +32,7 @@ use Tuleap\Request\ForbiddenException;
 
 final class UpdateSessionPreferencesController implements DispatchableWithRequest
 {
-    public const URL = '/account/security/session';
+    public const string URL = '/account/security/session';
 
     /**
      * @var CSRFSynchronizerToken

@@ -28,7 +28,7 @@ use Tuleap\User\ICreateAccount;
 
 final class AccountRegister
 {
-    private const DEFAULT_LDAP_ID = '';
+    private const string DEFAULT_LDAP_ID = '';
 
     public function __construct(
         private ICreateAccount $account_creator,

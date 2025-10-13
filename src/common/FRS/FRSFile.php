@@ -23,10 +23,10 @@ use Tuleap\FRS\FRSPermissionManager;
 
 class FRSFile // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const EVT_CREATE  = 301;
-    public const EVT_UPDATE  = 302;
-    public const EVT_DELETE  = 303;
-    public const EVT_RESTORE = 304;
+    public const int EVT_CREATE  = 301;
+    public const int EVT_UPDATE  = 302;
+    public const int EVT_DELETE  = 303;
+    public const int EVT_RESTORE = 304;
 
     /**
      * @var int $file_id the ID of this FRSFile

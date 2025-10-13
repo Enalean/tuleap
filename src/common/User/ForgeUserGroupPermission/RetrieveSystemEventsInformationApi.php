@@ -24,7 +24,7 @@ use User_ForgeUserGroupPermission;
 
 class RetrieveSystemEventsInformationApi extends User_ForgeUserGroupPermission
 {
-    public const ID = 6;
+    public const int ID = 6;
 
     #[\Override]
     public function getId()

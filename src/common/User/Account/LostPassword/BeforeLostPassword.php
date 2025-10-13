@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final readonly class BeforeLostPassword implements Dispatchable
 {
-    public const NAME = 'before_lostpw';
+    public const string NAME = 'before_lostpw';
 
     public function __construct()
     {

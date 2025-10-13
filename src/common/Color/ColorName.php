@@ -51,7 +51,7 @@ enum ColorName: string
     case PEGGY_PINK       = 'peggy-pink';
     case FLAMINGO_PINK    = 'flamingo-pink';
 
-    private const NOT_STANDARDIZED_NAMES = [
+    private const array NOT_STANDARDIZED_NAMES = [
         'inca_silver',
         'chrome_silver',
         'teddy_brown',

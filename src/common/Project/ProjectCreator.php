@@ -94,7 +94,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *  - project_creation_data => (output) array
      *  - use_legacy_services   => (output) array
      */
-    public const PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
+    public const string PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
 
     public function __construct(
         private readonly ProjectManager $project_manager,

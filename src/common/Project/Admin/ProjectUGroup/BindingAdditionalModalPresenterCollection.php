@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class BindingAdditionalModalPresenterCollection implements Dispatchable
 {
-    public const NAME = 'bindingAdditionalModalPresenterCollection';
+    public const string NAME = 'bindingAdditionalModalPresenterCollection';
 
     /**
      * @var BindingAdditionalModalPresenter[]

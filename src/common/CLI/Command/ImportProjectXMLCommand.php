@@ -41,8 +41,8 @@ use XML_RNGValidator;
 
 class ImportProjectXMLCommand extends Command
 {
-    public const NAME                              = 'import-project-xml';
-    private const AUTHORIZED_CONFIGURATION_AUTOMAP = ['no-email'];
+    public const string NAME                             = 'import-project-xml';
+    private const array AUTHORIZED_CONFIGURATION_AUTOMAP = ['no-email'];
 
 
     public function __construct(private DBConnection $db_connection)

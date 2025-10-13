@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class HierarchyDisplayer implements Dispatchable
 {
-    public const NAME = 'project_can_display_hierarchy';
+    public const string NAME = 'project_can_display_hierarchy';
 
     private $can_display_hierarchy = false;
     /**

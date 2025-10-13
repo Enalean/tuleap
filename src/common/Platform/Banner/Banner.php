@@ -28,9 +28,9 @@ namespace Tuleap\Platform\Banner;
  */
 class Banner
 {
-    public const IMPORTANCE_STANDARD = 'standard';
-    public const IMPORTANCE_WARNING  = 'warning';
-    public const IMPORTANCE_CRITICAL = 'critical';
+    public const string IMPORTANCE_STANDARD = 'standard';
+    public const string IMPORTANCE_WARNING  = 'warning';
+    public const string IMPORTANCE_CRITICAL = 'critical';
 
     /**
      * @var string

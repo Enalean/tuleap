@@ -28,7 +28,7 @@ use UserManager;
 
 class Verifier
 {
-    public const TOKEN_VALIDITY_PERIOD = 'PT1H';
+    public const string TOKEN_VALIDITY_PERIOD = 'PT1H';
 
     /**
      * @var LostPasswordDAO

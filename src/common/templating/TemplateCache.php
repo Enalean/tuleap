@@ -22,7 +22,7 @@ namespace Tuleap\Templating;
 
 class TemplateCache implements TemplateCacheInterface
 {
-    public const CACHE_FOLDER_NAME = 'template_engine';
+    public const string CACHE_FOLDER_NAME = 'template_engine';
 
 
     #[\Override]

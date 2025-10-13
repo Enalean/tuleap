@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
  */
 final class PluginExecuteUpdateHookEvent implements Dispatchable
 {
-    public const NAME = 'executeUpdateHook';
+    public const string NAME = 'executeUpdateHook';
 
     public function __construct(public LoggerInterface $logger)
     {

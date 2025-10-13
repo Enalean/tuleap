@@ -33,7 +33,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
  */
 final class OAuth2UserMembershipScope implements AuthenticationScope
 {
-    private const IDENTIFIER_KEY = 'read:user_membership';
+    private const string IDENTIFIER_KEY = 'read:user_membership';
 
     /**
      * @var OAuth2ScopeIdentifier

@@ -24,7 +24,7 @@ use Tuleap\REST\JsonCast;
 
 class TokenRepresentation
 {
-    public const ROUTE = 'tokens';
+    public const string ROUTE = 'tokens';
 
     /**
      * @var int

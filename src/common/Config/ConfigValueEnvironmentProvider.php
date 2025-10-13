@@ -25,7 +25,7 @@ namespace Tuleap\Config;
 
 final class ConfigValueEnvironmentProvider implements \ConfigValueProvider
 {
-    private const ENV_VARIABLE_PREFIX = 'TULEAP_';
+    private const string ENV_VARIABLE_PREFIX = 'TULEAP_';
 
     /**
      * @var class-string[]

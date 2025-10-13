@@ -44,7 +44,7 @@ class Admin_Homepage_Controller
      */
     private $csrf;
 
-    public const TEMPLATE = 'admin';
+    public const string TEMPLATE = 'admin';
     /**
      * @var AdminPageRenderer
      */

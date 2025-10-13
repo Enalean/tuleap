@@ -30,7 +30,7 @@ use Tuleap\REST\JsonCast;
  */
 class ProjectFieldRepresentation
 {
-    public const ROUTE = 'project_fields';
+    public const string ROUTE = 'project_fields';
 
     /**
      * @var int

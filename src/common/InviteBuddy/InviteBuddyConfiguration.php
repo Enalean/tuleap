@@ -29,9 +29,9 @@ use Tuleap\User\Account\RegistrationGuardEvent;
 class InviteBuddyConfiguration
 {
     #[ConfigKey('How many invitations a user can send per day? (default 20)')]
-    public const CONFIG_MAX_INVITATIONS_BY_DAY = 'max_invitations_by_day';
+    public const string CONFIG_MAX_INVITATIONS_BY_DAY = 'max_invitations_by_day';
 
-    private const CONFIG_MAX_INVITATIONS_BY_DAY_DEFAULT = 20;
+    private const int CONFIG_MAX_INVITATIONS_BY_DAY_DEFAULT = 20;
 
     public function __construct(private EventDispatcherInterface $event_dispatcher)
     {

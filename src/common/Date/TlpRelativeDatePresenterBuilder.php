@@ -24,11 +24,11 @@ namespace Tuleap\Date;
 
 class TlpRelativeDatePresenterBuilder
 {
-    private const POSITION_RIGHT = 'right';
-    private const POSITION_TOP   = 'top';
+    private const string POSITION_RIGHT = 'right';
+    private const string POSITION_TOP   = 'top';
 
-    private const WITH_TIME    = true;
-    private const WITHOUT_TIME = false;
+    private const bool WITH_TIME    = true;
+    private const bool WITHOUT_TIME = false;
 
     public function getTlpRelativeDatePresenterInBlockContext(\DateTimeImmutable $date, \PFUser $user): TlpRelativeDatePresenter
     {

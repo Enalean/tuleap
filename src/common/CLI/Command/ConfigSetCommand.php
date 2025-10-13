@@ -36,7 +36,7 @@ use Tuleap\Option\Option;
 
 class ConfigSetCommand extends Command
 {
-    public const NAME = 'config-set';
+    public const string NAME = 'config-set';
 
     public function __construct(
         private readonly ConfigSet $config_set,

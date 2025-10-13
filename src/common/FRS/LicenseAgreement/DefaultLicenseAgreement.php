@@ -28,7 +28,7 @@ namespace Tuleap\FRS\LicenseAgreement;
  */
 class DefaultLicenseAgreement implements LicenseAgreementInterface
 {
-    public const ID = 0;
+    public const int ID = 0;
 
     #[\Override]
     public function getAsJson(): string

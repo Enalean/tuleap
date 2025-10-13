@@ -28,7 +28,7 @@ use Tuleap\CLI\ConsoleLogger;
 
 class RestoreCachesCommand extends Command
 {
-    public const NAME = '-r, --restore-caches';
+    public const string NAME = '-r, --restore-caches';
 
     #[\Override]
     protected function configure()

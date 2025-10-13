@@ -27,11 +27,11 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 class PKCEInformationExtractor
 {
     // See https://tools.ietf.org/html/rfc7636#section-4.3
-    private const CODE_CHALLENGE_PARAMETER        = 'code_challenge';
-    private const CODE_CHALLENGE_METHOD_PARAMETER = 'code_challenge_method';
+    private const string CODE_CHALLENGE_PARAMETER        = 'code_challenge';
+    private const string CODE_CHALLENGE_METHOD_PARAMETER = 'code_challenge_method';
 
-    private const SUPPORTED_CHALLENGE_METHOD = 'S256';
-    private const SIZE_SHA256_CODE_CHALLENGE = 32;
+    private const string SUPPORTED_CHALLENGE_METHOD = 'S256';
+    private const int SIZE_SHA256_CODE_CHALLENGE    = 32;
 
     /**
      * @throws MissingMandatoryCodeChallengeException

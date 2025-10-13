@@ -26,7 +26,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
 
 class UserNote extends Note
 {
-    public const NAME = 'usernote';
+    public const string NAME = 'usernote';
 
     #[\Override]
     protected static function getName(): string

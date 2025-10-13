@@ -20,7 +20,7 @@
 
 class Search_SearchPlugin
 {
-    public const RESULTS_PER_QUERY = 15;
+    public const int RESULTS_PER_QUERY = 15;
 
     /**
      * @var EventManager

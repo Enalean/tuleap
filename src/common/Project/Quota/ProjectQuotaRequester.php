@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectQuotaRequester implements Dispatchable
 {
-    public const NAME = 'get_project_quota';
+    public const string NAME = 'get_project_quota';
 
     /**
      * @var Project

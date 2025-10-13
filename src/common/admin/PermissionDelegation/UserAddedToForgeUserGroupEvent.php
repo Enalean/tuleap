@@ -24,7 +24,7 @@ namespace Tuleap\Admin\PermissionDelegation;
 
 final class UserAddedToForgeUserGroupEvent implements \Tuleap\Event\Dispatchable
 {
-    public const NAME = 'userAddedToForgeUserGroupEvent';
+    public const string NAME = 'userAddedToForgeUserGroupEvent';
 
     public function __construct(private \PFUser $user)
     {

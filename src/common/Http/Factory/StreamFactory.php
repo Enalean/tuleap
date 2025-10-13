@@ -31,7 +31,7 @@ use Psr\Http\Message\StreamInterface;
  */
 final class StreamFactory implements StreamFactoryInterface
 {
-    private const PHP_INPUT_WRAPPER = 'php://input';
+    private const string PHP_INPUT_WRAPPER = 'php://input';
 
     private StreamFactoryInterface $stream_factory;
 

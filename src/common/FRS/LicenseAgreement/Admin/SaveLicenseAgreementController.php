@@ -39,7 +39,7 @@ use Tuleap\Request\ProjectRetriever;
 
 class SaveLicenseAgreementController implements DispatchableWithRequest
 {
-    private const CSRF_TOKEN = 'frs_edit_license_agreement';
+    private const string CSRF_TOKEN = 'frs_edit_license_agreement';
 
     /**
      * @var LicenseAgreementFactory

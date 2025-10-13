@@ -22,9 +22,9 @@ namespace Tuleap\Admin\SystemEvents;
 
 class HomepagePaneSectionPresenter
 {
-    public const FLAG_SUCCESS = 'success';
-    public const FLAG_WARNING = 'warning';
-    public const FLAG_ERROR   = 'error';
+    public const string FLAG_SUCCESS = 'success';
+    public const string FLAG_WARNING = 'warning';
+    public const string FLAG_ERROR   = 'error';
 
     public $title;
     public $name;

@@ -38,7 +38,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 
 class HttpClientFactory
 {
-    private const TIMEOUT = 5;
+    private const int TIMEOUT = 5;
 
     public static function createClient(Plugin ...$plugins): ClientInterface
     {

@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class UserRetrieverByLoginNameEvent implements Dispatchable
 {
-    public const NAME = 'get_user_by_login_name';
+    public const string NAME = 'get_user_by_login_name';
     /**
      * @var string
      */

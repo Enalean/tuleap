@@ -25,9 +25,9 @@
  */
 class RestlerCache
 {
-    public const PREFIX = 'v';
+    public const string PREFIX = 'v';
 
-    public const RESTLER_CACHE_FILE = 'routes.php';
+    public const string RESTLER_CACHE_FILE = 'routes.php';
 
     public function getAndInitiateCacheDirectory($version)
     {

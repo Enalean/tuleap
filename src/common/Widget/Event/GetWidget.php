@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetWidget implements Dispatchable
 {
-    public const NAME = 'widgetInstance';
+    public const string NAME = 'widgetInstance';
 
     private $widget_name;
     private $widget;

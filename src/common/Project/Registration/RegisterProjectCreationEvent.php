@@ -28,7 +28,7 @@ use Tuleap\Project\MappingRegistry;
 
 class RegisterProjectCreationEvent implements Dispatchable
 {
-    public const NAME = 'registerProjectCreationEvent';
+    public const string NAME = 'registerProjectCreationEvent';
 
     /**
      * @var Project

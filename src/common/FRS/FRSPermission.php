@@ -22,8 +22,8 @@ namespace Tuleap\FRS;
 
 class FRSPermission
 {
-    public const FRS_ADMIN  = 'FRS_ADMIN';
-    public const FRS_READER = 'FRS_READ';
+    public const string FRS_ADMIN  = 'FRS_ADMIN';
+    public const string FRS_READER = 'FRS_READ';
 
     private $ugroup_id;
 

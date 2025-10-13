@@ -23,8 +23,8 @@ use Tuleap\Notification\Notification;
 
 class MailBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const TRUNCATED_SUBJECT_TEMPLATE = 'subject';
-    public const TRUNCATED_BODY_TEMPLATE    = 'body';
+    public const string TRUNCATED_SUBJECT_TEMPLATE = 'subject';
+    public const string TRUNCATED_BODY_TEMPLATE    = 'body';
 
     /** @var TemplateRenderer */
     private $renderer;

@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class ExternalSystemReferencePresentersCollector implements Dispatchable
 {
-    public const NAME = 'externalSystemReferencePresentersCollector';
+    public const string NAME = 'externalSystemReferencePresentersCollector';
 
     /**
      * @var ExternalSystemReferencePresenter[]

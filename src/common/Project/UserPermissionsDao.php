@@ -24,9 +24,9 @@ use Tuleap\DB\DataAccessObject;
 
 class UserPermissionsDao extends DataAccessObject
 {
-    public const PROJECT_ADMIN_FLAG = 'A';
-    public const WIKI_ADMIN_FLAG    = '2';
-    public const FORUM_ADMIN_FLAG   = '2';
+    public const string PROJECT_ADMIN_FLAG = 'A';
+    public const string WIKI_ADMIN_FLAG    = '2';
+    public const string FORUM_ADMIN_FLAG   = '2';
     public function isUserPartOfProjectMembers($project_id, $user_id)
     {
         $sql  = 'SELECT NULL FROM user_group WHERE group_id = ? AND user_id = ?';

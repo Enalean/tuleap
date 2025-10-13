@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class FindUserByEmailEvent implements Dispatchable
 {
-    public const NAME = 'findUserByEmailEvent';
+    public const string NAME = 'findUserByEmailEvent';
 
     private ?\PFUser $user = null;
 

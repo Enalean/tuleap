@@ -20,7 +20,7 @@
 
 class User_ForgeUserGroupPermission_UserManagement extends User_ForgeUserGroupPermission
 {
-    public const ID = 5;
+    public const int ID = 5;
 
     #[\Override]
     public function getId()

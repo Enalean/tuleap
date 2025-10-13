@@ -20,16 +20,16 @@
 
 class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
 {
-    public const LABEL_VALUES_INDEX = 'valueLabelList';
-    public const TV3_VALUE_INDEX    = 'valueInt';
-    public const TV3_TYPE           = 'MB_2';
-    public const TV5_TYPE           = 'list';
-    public const TV5_BIND           = 'static';
+    public const string LABEL_VALUES_INDEX = 'valueLabelList';
+    public const string TV3_VALUE_INDEX    = 'valueInt';
+    public const string TV3_TYPE           = 'MB_2';
+    public const string TV5_TYPE           = 'list';
+    public const string TV5_BIND           = 'static';
 
-    public const SYS_VALUE_NONE_FR = 'Aucun';
-    public const SYS_VALUE_NONE_EN = 'None';
-    public const SYS_VALUE_ANY_EN  = 'Any';
-    public const SYS_VALUE_ANY_FR  = 'Tous';
+    public const string SYS_VALUE_NONE_FR = 'Aucun';
+    public const string SYS_VALUE_NONE_EN = 'None';
+    public const string SYS_VALUE_ANY_EN  = 'Any';
+    public const string SYS_VALUE_ANY_FR  = 'Tous';
 
     /** @var ArtifactXMLExporterDao */
     private $dao;

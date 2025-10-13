@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class LabeledItemCollection implements Dispatchable
 {
-    public const NAME = 'collect_labeled_items';
+    public const string NAME = 'collect_labeled_items';
 
     /**
      * @var array LabeledItem[]

@@ -38,7 +38,7 @@ use UserManager;
 
 final class UpdateAccountInformationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/account/information';
+    public const string URL = '/account/information';
     /**
      * @var CSRFSynchronizerToken
      */

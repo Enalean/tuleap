@@ -38,7 +38,7 @@ class ProjectDetailsPresenter
      *  - $project  => (in) Project
      *  - $links    => (out) Array of {href, label}
      */
-    public const GET_MORE_INFO_LINKS = 'get_more_info_links';
+    public const string GET_MORE_INFO_LINKS = 'get_more_info_links';
 
     public $public_name;
     public $short_name;

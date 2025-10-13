@@ -30,11 +30,11 @@ use Tuleap\XML\ProjectXMLMerger;
 
 class AgileALMTemplate implements TuleapTemplate
 {
-    public const NAME = 'agile_alm';
+    public const string NAME = 'agile_alm';
 
-    private const PROJECT_XML         = __DIR__ . '/../../../../../tools/setup_templates/agile_alm/project.xml';
-    private const AGILE_ALM_XML       = __DIR__ . '/../../../../../tools/setup_templates/agile_alm/agile_alm_template.xml';
-    private const TEST_MANAGEMENT_XML = __DIR__ . '/../../../../../tools/setup_templates/agile_alm/testmanagement_generated.xml';
+    private const string PROJECT_XML         = __DIR__ . '/../../../../../tools/setup_templates/agile_alm/project.xml';
+    private const string AGILE_ALM_XML       = __DIR__ . '/../../../../../tools/setup_templates/agile_alm/agile_alm_template.xml';
+    private const string TEST_MANAGEMENT_XML = __DIR__ . '/../../../../../tools/setup_templates/agile_alm/testmanagement_generated.xml';
 
     /**
      * @var string

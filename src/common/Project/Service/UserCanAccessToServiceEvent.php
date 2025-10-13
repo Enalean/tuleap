@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class UserCanAccessToServiceEvent implements Dispatchable
 {
-    public const NAME = 'userCanAccessToService';
+    public const string NAME = 'userCanAccessToService';
 
     private bool $is_allowed = true;
 

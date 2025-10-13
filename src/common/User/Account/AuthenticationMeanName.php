@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class AuthenticationMeanName implements Dispatchable
 {
-    public const NAME = 'authenticationMeanName';
+    public const string NAME = 'authenticationMeanName';
 
     /**
      * @var string

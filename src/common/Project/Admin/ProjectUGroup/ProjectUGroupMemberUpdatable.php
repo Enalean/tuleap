@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectUGroupMemberUpdatable implements Dispatchable
 {
-    public const NAME = 'projectUGroupMemberUpdatable';
+    public const string NAME = 'projectUGroupMemberUpdatable';
 
     /**
      * @var \ProjectUGroup

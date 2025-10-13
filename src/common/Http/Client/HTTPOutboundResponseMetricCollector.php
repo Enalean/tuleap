@@ -32,10 +32,10 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 
 final class HTTPOutboundResponseMetricCollector implements Plugin
 {
-    private const METRIC_NAME        = 'outbound_http_requests_total';
-    private const METRIC_DESCRIPTION = 'Total number of outbound HTTP requests';
+    private const string METRIC_NAME        = 'outbound_http_requests_total';
+    private const string METRIC_DESCRIPTION = 'Total number of outbound HTTP requests';
 
-    private const VALID_HTTP_STATUS_CODE = [
+    private const array VALID_HTTP_STATUS_CODE = [
         100 => true,
         101 => true,
         102 => true,

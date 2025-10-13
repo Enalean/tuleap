@@ -30,7 +30,7 @@ namespace Tuleap\User;
  */
 final class AfterLocalStandardLogin implements AfterLocalLogin
 {
-    public const NAME = 'afterLocalLogin';
+    public const string NAME = 'afterLocalLogin';
     /**
      * @var \PFUser
      * @psalm-readonly

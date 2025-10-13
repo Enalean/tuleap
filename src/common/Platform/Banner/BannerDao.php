@@ -30,7 +30,7 @@ use Tuleap\DB\DataAccessObject;
  */
 class BannerDao extends DataAccessObject
 {
-    private const USER_PREFERENCE_NAME = 'platform_banner';
+    private const string USER_PREFERENCE_NAME = 'platform_banner';
 
     /**
      * @psalm-param BannerImportance $importance

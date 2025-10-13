@@ -25,7 +25,7 @@ namespace TuleapCfg\Command;
 
 class SystemControlTuleapCron implements SystemControlInterface
 {
-    public const TARGET_NAME = 'tuleap';
+    public const string TARGET_NAME = 'tuleap';
 
     /**
      * @var string

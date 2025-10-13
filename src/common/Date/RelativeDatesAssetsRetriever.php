@@ -27,7 +27,7 @@ use Tuleap\Layout\JavascriptAsset;
 
 final class RelativeDatesAssetsRetriever
 {
-    private const SCRIPT_NAME = 'tlp-relative-date.js';
+    private const string SCRIPT_NAME = 'tlp-relative-date.js';
 
     public static function retrieveAssetsUrl(): string
     {

@@ -22,5 +22,5 @@ namespace Tuleap\Event;
 
 interface Dispatchable
 {
-    final public const HOOK_CONST_NAME = 'NAME';
+    final public const string HOOK_CONST_NAME = 'NAME';
 }

@@ -24,7 +24,7 @@ use Tuleap\Glyph\GlyphFinder;
 
 class GlyphHelper
 {
-    public const GLYPH = 'glyph';
+    public const string GLYPH = 'glyph';
 
     /**
      * @var GlyphFinder

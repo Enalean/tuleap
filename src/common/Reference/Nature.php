@@ -27,7 +27,7 @@ namespace Tuleap\Reference;
  */
 final class Nature
 {
-    public const NO_ICON = '';
+    public const string NO_ICON = '';
 
     /**
      * @var string

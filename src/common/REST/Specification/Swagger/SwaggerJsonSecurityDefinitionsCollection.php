@@ -26,10 +26,10 @@ use Tuleap\Event\Dispatchable;
 
 final class SwaggerJsonSecurityDefinitionsCollection implements Dispatchable
 {
-    public const NAME = 'retrieveRESTSwaggerJsonSecurityDefinitions';
+    public const string NAME = 'retrieveRESTSwaggerJsonSecurityDefinitions';
 
-    public const TYPE_NAME_ACCESS_KEY = 'api_access_key';
-    public const TYPE_NAME_OAUTH2     = 'oauth2';
+    public const string TYPE_NAME_ACCESS_KEY = 'api_access_key';
+    public const string TYPE_NAME_OAUTH2     = 'oauth2';
 
     /**
      * @var SwaggerJsonSecurityDefinition[]

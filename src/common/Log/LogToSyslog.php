@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface;
 
 final class LogToSyslog
 {
-    public const CONFIG_LOGGER_SYSLOG = 'syslog';
+    public const string CONFIG_LOGGER_SYSLOG = 'syslog';
 
     public function configure(Logger $logger, int|Level $level): LoggerInterface
     {

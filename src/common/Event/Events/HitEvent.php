@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 final class HitEvent implements Dispatchable
 {
-    public const NAME = 'hitEvent';
+    public const string NAME = 'hitEvent';
 
     public function __construct(private HTTPRequest $request, private bool $is_script)
     {

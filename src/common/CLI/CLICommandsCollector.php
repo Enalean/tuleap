@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class CLICommandsCollector implements Dispatchable
 {
-    public const NAME = 'collectCLICommands';
+    public const string NAME = 'collectCLICommands';
 
     /**
      * @var array<string,callable():\Symfony\Component\Console\Command\Command>

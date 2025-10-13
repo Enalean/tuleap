@@ -24,7 +24,7 @@ namespace Tuleap\Project\Service;
 
 class ServiceIconValidator
 {
-    private const ALLOWED_ICONS =  [
+    private const array ALLOWED_ICONS =  [
         'fa-glass' =>
              [
                  'fa-icon' => 'fas fa-glass-martini',

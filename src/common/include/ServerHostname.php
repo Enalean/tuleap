@@ -37,7 +37,7 @@ final class ServerHostname
     EOT)]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString('%sys_default_domain%')]
-    public const DEFAULT_DOMAIN = 'sys_default_domain';
+    public const string DEFAULT_DOMAIN = 'sys_default_domain';
 
     private function __construct()
     {

@@ -27,12 +27,12 @@ namespace Tuleap\BrowserDetection;
  */
 final class DetectedBrowser
 {
-    private const INTERNET_EXPLORER = 'Internet Explorer';
-    private const EDGE_LEGACY       = 'Edge Legacy';
-    private const FIREFOX           = 'Firefox';
-    private const CHROME            = 'Chrome';
+    private const string INTERNET_EXPLORER = 'Internet Explorer';
+    private const string EDGE_LEGACY       = 'Edge Legacy';
+    private const string FIREFOX           = 'Firefox';
+    private const string CHROME            = 'Chrome';
     // Based on https://github.com/matomo-org/device-detector/blob/3.12.6/regexes/client/browsers.yml
-    private const BROWSER_REGEXES = [
+    private const array BROWSER_REGEXES = [
         self::INTERNET_EXPLORER => [
             'MSIE.*Trident/4.0'  => 8.0,
             'MSIE.*Trident/5.0'  => 9.0,
@@ -60,8 +60,8 @@ final class DetectedBrowser
     // Versions considered "very old" are very likely to break in some ways when using Tuleap.
     // Everything older than the current ESR (as of April 10, 2025) is Really Old
     // Shall be updated when we start to see that Old Browsers pops up too often in support channel
-    private const REALLY_OLD_FIREFOX_VERSION = (128 - 1);
-    private const REALLY_OLD_CHROME_VERSION  = (127 - 1);
+    private const int REALLY_OLD_FIREFOX_VERSION = (128 - 1);
+    private const int REALLY_OLD_CHROME_VERSION  = (127 - 1);
 
     /**
      * @var string|null

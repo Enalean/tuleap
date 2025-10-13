@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
  */
 class BurningParrotCompatiblePageEvent implements Dispatchable
 {
-    public const NAME = 'burningParrotCompatiblePage';
+    public const string NAME = 'burningParrotCompatiblePage';
 
     private $is_in_burning_parrot_compatible_page = false;
 

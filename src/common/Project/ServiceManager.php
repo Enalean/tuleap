@@ -29,7 +29,7 @@ use Tuleap\Project\ServiceCanBeUpdated;
 
 class ServiceManager implements ListOfAllowedServicesForProjectRetriever, ServiceCanBeUpdated //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const CUSTOM_SERVICE_SHORTNAME = '';
+    public const string CUSTOM_SERVICE_SHORTNAME = '';
 
     /** @var string[] */
     private $list_of_core_services = [

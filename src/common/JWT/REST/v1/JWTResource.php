@@ -31,8 +31,8 @@ use UserManager;
 
 class JWTResource
 {
-    private const PRIVATE_KEY_FILE   = '/var/lib/tuleap/tuleap-realtime-key';
-    private const PRIVATE_KEY_SUFFIX = 'PRIVATE_KEY=';
+    private const string PRIVATE_KEY_FILE   = '/var/lib/tuleap/tuleap-realtime-key';
+    private const string PRIVATE_KEY_SUFFIX = 'PRIVATE_KEY=';
 
     /**
      * To have a json web token

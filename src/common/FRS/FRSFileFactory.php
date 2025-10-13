@@ -27,7 +27,7 @@ use Tuleap\FRS\FRSPermissionManager;
 
 class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const COMPUTE_MD5 = 0x0001;
+    public const int COMPUTE_MD5 = 0x0001;
 
     /**
      * @var \Psr\Log\LoggerInterface

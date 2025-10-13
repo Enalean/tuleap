@@ -24,7 +24,7 @@ namespace Tuleap\Templating\Mustache;
 
 final class LineBreakHelper
 {
-    public const NL2BR = 'nl2br';
+    public const string NL2BR = 'nl2br';
 
     public function nl2br(string $in, \Mustache_LambdaHelper $helper): string
     {

@@ -33,8 +33,8 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 final class HelpMenuOpenedController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    private const METRIC_NAME = 'help_menu_opened_total';
-    private const HELP        = 'Total number of times the help menu has been opened';
+    private const string METRIC_NAME = 'help_menu_opened_total';
+    private const string HELP        = 'Total number of times the help menu has been opened';
 
     private \UserManager $user_manager;
     private Prometheus $prometheus;

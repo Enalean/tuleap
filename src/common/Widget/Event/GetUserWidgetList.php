@@ -26,9 +26,9 @@ use Tuleap\Widget\Note\UserNote;
 
 class GetUserWidgetList extends GetWidgetList
 {
-    public const NAME = 'getUserWidgetList';
+    public const string NAME = 'getUserWidgetList';
 
-    public const CORE_WIDGETS = [
+    public const array CORE_WIDGETS = [
         'myadmin',
         'myprojects',
         'mybookmarks',

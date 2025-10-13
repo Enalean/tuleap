@@ -45,7 +45,7 @@ use Tuleap\CSRF\CSRFSigningKeyStorage;
  */
 class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInterface // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const DEFAULT_TOKEN_NAME = 'challenge';
+    public const string DEFAULT_TOKEN_NAME = 'challenge';
 
     /**
      * @psalm-var SensitiveParameterValue<non-empty-string>|null

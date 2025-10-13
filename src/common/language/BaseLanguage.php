@@ -26,9 +26,9 @@ use Tuleap\File\FileWriter;
 
 class BaseLanguage
 {
-    public const DEFAULT_LANG_SHORT = 'en';
-    public const DEFAULT_LANG       = self::DEFAULT_LANG_SHORT . '_US';
-    public const CONFIG_KEY         = 'sys_lang';
+    public const string DEFAULT_LANG_SHORT = 'en';
+    public const string DEFAULT_LANG       = self::DEFAULT_LANG_SHORT . '_US';
+    public const string CONFIG_KEY         = 'sys_lang';
 
     //array to hold the string values
     public $text_array;

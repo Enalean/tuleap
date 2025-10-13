@@ -35,7 +35,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 final class OpenIDConnectEmailScope implements AuthenticationScope
 {
     // See https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
-    private const IDENTIFIER_KEY = 'email';
+    private const string IDENTIFIER_KEY = 'email';
 
     /**
      * @var OAuth2ScopeIdentifier

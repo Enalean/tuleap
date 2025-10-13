@@ -30,7 +30,7 @@ use Tuleap\SeatManagement\CachedLicenseBuilder;
 
 class VersionResource
 {
-    public const ROUTE = 'version';
+    public const string ROUTE = 'version';
 
     /**
      * @url    OPTIONS

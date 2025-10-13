@@ -26,7 +26,7 @@ class ToBeCreatedUser extends ActionToBeTakenForUser
 {
     private static $ALLOWED_ACTIONS = ['create', 'map'];
 
-    public const ACTION = 'create';
+    public const string ACTION = 'create';
 
     /** @return array */
     #[\Override]

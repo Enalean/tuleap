@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class RemoveLabel implements Dispatchable
 {
-    public const NAME = 'removeLabel';
+    public const string NAME = 'removeLabel';
 
     private $label_to_delete_id;
 

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ReferenceAdministrationWarningsCollectorEvent implements Dispatchable
 {
-    public const NAME = 'referenceAdministrationWarningsCollectorEvent';
+    public const string NAME = 'referenceAdministrationWarningsCollectorEvent';
 
     /**
      * @var \Reference[]

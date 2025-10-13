@@ -24,10 +24,10 @@ use Tuleap\User\BuildDisplayName;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UserHelper implements BuildDisplayName
 {
-    public const PREFERENCES_NAME_AND_LOGIN = 0;
-    public const PREFERENCES_LOGIN_AND_NAME = 1;
-    public const PREFERENCES_LOGIN          = 2;
-    public const PREFERENCES_REAL_NAME      = 3;
+    public const int PREFERENCES_NAME_AND_LOGIN = 0;
+    public const int PREFERENCES_LOGIN_AND_NAME = 1;
+    public const int PREFERENCES_LOGIN          = 2;
+    public const int PREFERENCES_REAL_NAME      = 3;
 
     public $_username_display; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public $_cache_by_id; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore

@@ -24,18 +24,18 @@ use ForgeConfig;
 
 class NameTranslator
 {
-    public const  NOBODY                     = 'ugroup_nobody_name_key';
-    public const  ANON                       = 'ugroup_anonymous_users_name_key';
-    public const  AUTHENTICATED              = 'ugroup_authenticated_users_name_key';
-    public const  PROJECT_ADMINS             = 'ugroup_project_admins_name_key';
-    public const  REGISTERED                 = 'ugroup_registered_users_name_key';
-    public const  PROJECT_MEMBERS            = 'ugroup_project_members_name_key';
-    private const WIKI_ADMINS                = 'ugroup_wiki_admin_name_key';
-    private const FORUM_ADMINS               = 'ugroup_forum_admin_name_key';
-    private const FILE_ADMINS                = 'ugroup_file_manager_admin_name_key';
-    private const TV3_TRACKER_ADMINS         = 'ugroup_tracker_admins_name_key';
-    public const  CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label';
-    public const  CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label';
+    public const  string NOBODY                     = 'ugroup_nobody_name_key';
+    public const  string ANON                       = 'ugroup_anonymous_users_name_key';
+    public const  string AUTHENTICATED              = 'ugroup_authenticated_users_name_key';
+    public const  string PROJECT_ADMINS             = 'ugroup_project_admins_name_key';
+    public const  string REGISTERED                 = 'ugroup_registered_users_name_key';
+    public const  string PROJECT_MEMBERS            = 'ugroup_project_members_name_key';
+    private const string WIKI_ADMINS                = 'ugroup_wiki_admin_name_key';
+    private const string FORUM_ADMINS               = 'ugroup_forum_admin_name_key';
+    private const string FILE_ADMINS                = 'ugroup_file_manager_admin_name_key';
+    private const string TV3_TRACKER_ADMINS         = 'ugroup_tracker_admins_name_key';
+    public const  string CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label';
+    public const  string CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label';
 
     public static $names = [
         self::NOBODY,

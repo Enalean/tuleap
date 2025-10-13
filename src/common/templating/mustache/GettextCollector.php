@@ -25,7 +25,7 @@ use Tuleap\Language\Gettext\POTEntryCollection;
 
 class GettextCollector
 {
-    public const DEFAULT_DOMAIN = 'tuleap-core';
+    public const string DEFAULT_DOMAIN = 'tuleap-core';
 
     /**
      * @var GettextSectionContentTransformer

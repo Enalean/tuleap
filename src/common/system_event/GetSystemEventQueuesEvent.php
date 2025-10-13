@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetSystemEventQueuesEvent implements Dispatchable
 {
-    public const NAME = 'getSystemEventQueuesEvent';
+    public const string NAME = 'getSystemEventQueuesEvent';
 
     /**
      * @var SystemEventQueue[]

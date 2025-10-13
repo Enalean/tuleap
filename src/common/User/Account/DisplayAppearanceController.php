@@ -37,7 +37,7 @@ use Tuleap\User\Account\Appearance\AppearancePresenterBuilder;
 
 final class DisplayAppearanceController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/account/appearance';
+    public const string URL = '/account/appearance';
 
     /**
      * @var TemplateRenderer

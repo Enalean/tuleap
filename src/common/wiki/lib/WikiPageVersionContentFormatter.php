@@ -28,7 +28,7 @@ use Tuleap\PHPWiki\WikiPage;
 
 class WikiPageVersionContentFormatter
 {
-    public const PHPWIKI_TEMPLATE = 'rest';
+    public const string PHPWIKI_TEMPLATE = 'rest';
 
     /** @var WikiPageWrapper */
     private $wrapper;

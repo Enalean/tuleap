@@ -24,7 +24,7 @@ namespace Tuleap\HelpDropdown;
 
 class VersionNumberExtractor
 {
-    private const PATTERN = '/([0-9]+\.[0-9]+).*/';
+    private const string PATTERN = '/([0-9]+\.[0-9]+).*/';
 
     /**
      * @throws TuleapVersionNotExtractedException

@@ -22,8 +22,8 @@
 
 class BackendAliases extends Backend
 {
-    public const ADMIN_ALIAS        = 'codendi-admin';
-    public const ALIAS_ENTRY_FORMAT = '%-50s%-10s';
+    public const string ADMIN_ALIAS        = 'codendi-admin';
+    public const string ALIAS_ENTRY_FORMAT = '%-50s%-10s';
 
     protected $need_update = false;
 

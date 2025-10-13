@@ -38,7 +38,7 @@ use Tuleap\Request\ForbiddenException;
 
 final class DisplayKeysTokensController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/account/keys-tokens';
+    public const string URL = '/account/keys-tokens';
 
     /**
      * @var TemplateRenderer

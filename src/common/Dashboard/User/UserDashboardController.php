@@ -41,8 +41,8 @@ use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class UserDashboardController
 {
-    public const DASHBOARD_TYPE        = 'user';
-    public const LEGACY_DASHBOARD_TYPE = 'u';
+    public const string DASHBOARD_TYPE        = 'user';
+    public const string LEGACY_DASHBOARD_TYPE = 'u';
 
     /**
      * @var CSRFSynchronizerToken

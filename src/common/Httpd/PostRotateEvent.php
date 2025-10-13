@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface;
  */
 class PostRotateEvent implements Dispatchable
 {
-    public const NAME = 'httpdPostRotate';
+    public const string NAME = 'httpdPostRotate';
 
     /**
      * @var LoggerInterface

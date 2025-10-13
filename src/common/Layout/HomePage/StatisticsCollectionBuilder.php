@@ -31,7 +31,7 @@ use UserManager;
 class StatisticsCollectionBuilder
 {
     #[ConfigKey('Toggle display of site statistics on site home page')]
-    public const CONFIG_DISPLAY_STATISTICS = 'display_homepage_statistics';
+    public const string CONFIG_DISPLAY_STATISTICS = 'display_homepage_statistics';
 
     /**
      * @var \ProjectManager

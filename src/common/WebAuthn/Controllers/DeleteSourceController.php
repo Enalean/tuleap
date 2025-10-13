@@ -44,7 +44,7 @@ use function Psl\Json\decode as psl_json_decode;
 
 final class DeleteSourceController extends DispatchablePSR15Compatible
 {
-    public const URL = '/webauthn/key/delete';
+    public const string URL = '/webauthn/key/delete';
 
     public function __construct(
         private readonly ProvideCurrentUser $provide_current_user,

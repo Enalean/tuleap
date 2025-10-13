@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
  */
 final class CollectLinkedProjects implements Dispatchable
 {
-    public const NAME = 'collectLinkedProjects';
+    public const string NAME = 'collectLinkedProjects';
 
     private bool $can_aggregate_projects = false;
 

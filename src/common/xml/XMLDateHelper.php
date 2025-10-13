@@ -28,7 +28,7 @@ use XML_SimpleXMLCDATAFactory;
 
 final class XMLDateHelper
 {
-    private const FORMAT = 'ISO8601';
+    private const string FORMAT = 'ISO8601';
 
     public static function addChild(SimpleXMLElement $parent_node, string $node_name, DateTimeImmutable $date): void
     {

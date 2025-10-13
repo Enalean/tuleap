@@ -29,7 +29,7 @@ use function Psl\Type\string;
 
 final class WebAuthnChallengeDao extends DataAccessObject implements SaveWebAuthnChallenge, RetrieveWebAuthnChallenge
 {
-    private const VALIDITY_TIME_IN_SECONDS = 60 * 2;
+    private const int VALIDITY_TIME_IN_SECONDS = 60 * 2;
 
     #[\Override]
     public function saveChallenge(int $user_id, string $challenge): void

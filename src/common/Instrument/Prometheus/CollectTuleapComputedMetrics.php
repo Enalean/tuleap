@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class CollectTuleapComputedMetrics implements Dispatchable
 {
-    public const NAME = 'collect_computed_metrics';
+    public const string NAME = 'collect_computed_metrics';
 
     /**
      * @var Prometheus

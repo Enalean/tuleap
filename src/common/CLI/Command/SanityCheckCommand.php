@@ -37,7 +37,7 @@ use TuleapCfg\Command\SetupMysql\EasyDBWrapper;
 
 final class SanityCheckCommand extends Command
 {
-    public const NAME = 'sanity-check';
+    public const string NAME = 'sanity-check';
 
     #[\Override]
     protected function configure(): void

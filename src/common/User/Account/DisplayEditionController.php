@@ -35,7 +35,7 @@ use Tuleap\Request\ForbiddenException;
 
 final class DisplayEditionController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/account/edition';
+    public const string URL = '/account/edition';
 
     /**
      * @var TemplateRenderer

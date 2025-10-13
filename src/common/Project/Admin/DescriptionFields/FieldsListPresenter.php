@@ -24,7 +24,7 @@ use Tuleap\Admin\ProjectCreationNavBarPresenter;
 
 class FieldsListPresenter
 {
-    public const TEMPLATE = 'description_fields_list';
+    public const string TEMPLATE = 'description_fields_list';
 
     public $title;
 

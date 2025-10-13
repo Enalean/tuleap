@@ -31,13 +31,13 @@ use Tuleap\Date\DateHelper;
  */
 class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const FORMAT_TEXT = 0;
-    public const FORMAT_HTML = 1;
+    public const int FORMAT_TEXT = 0;
+    public const int FORMAT_HTML = 1;
 
     //The diffetents mode of display
-    public const OUTPUT_BROWSER   = 0;
-    public const OUTPUT_EXPORT    = 1;
-    public const OUTPUT_MAIL_TEXT = 2;
+    public const int OUTPUT_BROWSER   = 0;
+    public const int OUTPUT_EXPORT    = 1;
+    public const int OUTPUT_MAIL_TEXT = 2;
 
     /**
      * Artifact Type object.

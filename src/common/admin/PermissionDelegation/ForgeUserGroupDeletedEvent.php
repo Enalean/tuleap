@@ -24,7 +24,7 @@ namespace Tuleap\Admin\PermissionDelegation;
 
 class ForgeUserGroupDeletedEvent implements \Tuleap\Event\Dispatchable
 {
-    public const NAME = 'forgeUserGroupDeletedEvent';
+    public const string NAME = 'forgeUserGroupDeletedEvent';
 
     public function __construct(public \User_ForgeUGroup $user_group)
     {

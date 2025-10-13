@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class DelegatedUserAccessForProject implements Dispatchable
 {
-    public const NAME = 'has_user_been_delegated_access';
+    public const string NAME = 'has_user_been_delegated_access';
 
     /**
      * @var PFUser

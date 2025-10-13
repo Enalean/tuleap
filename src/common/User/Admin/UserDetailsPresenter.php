@@ -29,7 +29,7 @@ use User_UserStatusManager;
 
 class UserDetailsPresenter
 {
-    public const ADDITIONAL_DETAILS = 'additional_details';
+    public const string ADDITIONAL_DETAILS = 'additional_details';
 
     public $name;
     public $login;

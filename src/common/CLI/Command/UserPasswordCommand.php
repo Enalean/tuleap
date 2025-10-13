@@ -32,7 +32,7 @@ use UserManager;
 
 class UserPasswordCommand extends Command
 {
-    public const NAME = 'set-user-password';
+    public const string NAME = 'set-user-password';
 
     /**
      * @var UserManager

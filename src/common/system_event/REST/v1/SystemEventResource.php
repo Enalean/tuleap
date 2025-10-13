@@ -34,7 +34,7 @@ use PFUser;
 
 class SystemEventResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 100;
+    public const int MAX_LIMIT = 100;
 
     /**
      * @var UserManager

@@ -29,7 +29,7 @@ use Tuleap\Project\REST\v1\Project\ProjectFilePOSTRepresentation;
 
 final readonly class ProjectFileToUploadCreator
 {
-    private const EXPIRATION_DELAY_IN_HOURS = 4;
+    private const int EXPIRATION_DELAY_IN_HOURS = 4;
 
     public function __construct(
         private SaveFileUpload $file_ongoing_upload_save_dao,

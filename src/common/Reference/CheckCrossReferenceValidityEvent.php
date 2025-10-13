@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 final class CheckCrossReferenceValidityEvent implements Dispatchable
 {
-    public const NAME = 'checkCrossReferenceValidityEvent';
+    public const string NAME = 'checkCrossReferenceValidityEvent';
 
     /**
      * @param CrossReference[] $cross_references

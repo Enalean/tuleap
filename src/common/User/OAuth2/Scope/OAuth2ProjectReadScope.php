@@ -33,7 +33,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
  */
 final class OAuth2ProjectReadScope implements AuthenticationScope
 {
-    private const IDENTIFIER_KEY = 'read:project';
+    private const string IDENTIFIER_KEY = 'read:project';
 
     /**
      * @var OAuth2ScopeIdentifier

@@ -37,9 +37,9 @@ use ZipArchive;
 
 final class CollectSystemDataCommand extends Command
 {
-    public const NAME = 'collect-system-data';
+    public const string NAME = 'collect-system-data';
 
-    private const KEYS_THAT_SHOULD_NOT_BE_DISCLOSED = [
+    private const array KEYS_THAT_SHOULD_NOT_BE_DISCLOSED = [
         'sys_dbpasswd',
         'sys_dbauth_passwd',
     ];

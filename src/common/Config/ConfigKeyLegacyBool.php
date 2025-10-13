@@ -34,8 +34,8 @@ namespace Tuleap\Config;
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
 final class ConfigKeyLegacyBool implements ConfigKeyType
 {
-    public const TRUE  = '1';
-    public const FALSE = '0';
+    public const string TRUE  = '1';
+    public const string FALSE = '0';
 
     public ?string $default_value = null;
 

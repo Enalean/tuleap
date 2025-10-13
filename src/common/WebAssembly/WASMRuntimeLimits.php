@@ -27,8 +27,8 @@ namespace Tuleap\WebAssembly;
  */
 final readonly class WASMRuntimeLimits
 {
-    private const MAX_EXEC_TIME_IN_MS      = 10;
-    private const MAX_MEMORY_SIZE_IN_BYTES = 4194304; /* 4 Mo */
+    private const int MAX_EXEC_TIME_IN_MS      = 10;
+    private const int MAX_MEMORY_SIZE_IN_BYTES = 4194304; /* 4 Mo */
 
     /**
      * @psalm-param positive-int $max_exec_time_in_ms

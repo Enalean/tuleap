@@ -54,23 +54,23 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
 {
     #[ConfigKey('Is project creation allowed to regular users (1) or not (0)')]
     #[ConfigKeyLegacyBool(true)]
-    public const CONFIG_PROJECTS_CAN_BE_CREATED = 'sys_use_project_registration';
+    public const string CONFIG_PROJECTS_CAN_BE_CREATED = 'sys_use_project_registration';
 
     #[ConfigKey('Should project be approved by site admin (1) or auto approved (0)')]
-    public const CONFIG_PROJECT_APPROVAL = 'sys_project_approval';
+    public const string CONFIG_PROJECT_APPROVAL = 'sys_project_approval';
 
     #[ConfigKey('Max number of projects in the site administration validation queue')]
-    public const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION = 'nb_projects_waiting_for_validation';
+    public const string CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION = 'nb_projects_waiting_for_validation';
 
     #[ConfigKey('Max number of projects a user can submit in validation queue')]
-    public const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER = 'nb_projects_waiting_for_validation_per_user';
+    public const string CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER = 'nb_projects_waiting_for_validation_per_user';
 
     #[ConfigKey('Are restricted users allowed to create projects (1) or not (0)')]
-    public const CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS = 'restricted_users_can_create_projects';
+    public const string CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS = 'restricted_users_can_create_projects';
 
     #[ConfigKey("Are project admin allowed to choose project's visibility (1) or not (0)")]
     #[ConfigKeyLegacyBool(true)]
-    public const SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY = 'sys_user_can_choose_project_privacy';
+    public const string SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY = 'sys_user_can_choose_project_privacy';
 
     /**
      * The Projects dao used to fetch data

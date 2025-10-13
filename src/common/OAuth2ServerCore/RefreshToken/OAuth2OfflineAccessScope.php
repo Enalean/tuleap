@@ -35,7 +35,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 final class OAuth2OfflineAccessScope implements AuthenticationScope
 {
     // See https://openid.net/specs/openid-connect-core-1_0.html#OfflineAccess
-    private const IDENTIFIER_KEY = 'offline_access';
+    private const string IDENTIFIER_KEY = 'offline_access';
 
     /**
      * @var OAuth2ScopeIdentifier

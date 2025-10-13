@@ -29,9 +29,9 @@ use Tuleap\Project\ProjectCreationData;
 
 final class ProjectCreationDao extends DataAccessObject implements StoreProjectInformation
 {
-    public const TYPE_PROJECT   = 1;
-    private const TYPE_TEMPLATE = 2;
-    private const TYPE_TEST     = 3;
+    public const int TYPE_PROJECT   = 1;
+    private const int TYPE_TEMPLATE = 2;
+    private const int TYPE_TEST     = 3;
 
     #[\Override]
     public function create(ProjectCreationData $data): int

@@ -24,7 +24,7 @@ namespace Tuleap\Admin\PermissionDelegation;
 
 final class PermissionDelegationsRemovedForForgeUserGroupEvent implements \Tuleap\Event\Dispatchable
 {
-    public const NAME = 'permissionDelegationsRemovedForForgeUserGroupEvent';
+    public const string NAME = 'permissionDelegationsRemovedForForgeUserGroupEvent';
 
     /**
      * @param \User_ForgeUserGroupPermission[] $permissions

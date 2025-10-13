@@ -32,7 +32,7 @@ use UserManager;
 
 final class ForceRegenerationDefaultAvatarCommand extends Command
 {
-    public const NAME = 'user:force-regeneration-default-avatar';
+    public const string NAME = 'user:force-regeneration-default-avatar';
 
     public function __construct(
         private readonly UserManager $user_manager,

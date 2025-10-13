@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class EventCronJobEveryMinute implements Dispatchable
 {
-    public const NAME = 'cron_job_every_minute';
+    public const string NAME = 'cron_job_every_minute';
 
     /**
      * @var LoggerInterface

@@ -29,8 +29,8 @@ use Tuleap\Project\Service\IndexController;
 
 class NavigationPresenterBuilder
 {
-    public const DATA_ENTRY_SHORTNAME   = 'data';
-    public const OTHERS_ENTRY_SHORTNAME = 'others';
+    public const string DATA_ENTRY_SHORTNAME   = 'data';
+    public const string OTHERS_ENTRY_SHORTNAME = 'others';
 
     /**
      * @var NavigationPresenter

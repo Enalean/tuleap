@@ -20,7 +20,7 @@
 
 class TroveCatFactory
 {
-    public const BROWSELIMIT = 20;
+    public const int BROWSELIMIT = 20;
 
     /**
      * @var TroveCatDao

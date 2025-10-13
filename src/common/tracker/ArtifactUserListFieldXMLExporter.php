@@ -20,11 +20,11 @@
 
 class ArtifactUserListFieldXMLExporter extends ArtifactStaticListFieldXMLExporter
 {
-    public const TV3_VALUE_INDEX     = 'valueInt';
-    public const TV3_TYPE            = 'SB_5';
-    public const TV5_TYPE            = 'list';
-    public const TV5_BIND            = 'users';
-    public const TV5_NONE_USER_LABEL = 'None';
+    public const string TV3_VALUE_INDEX     = 'valueInt';
+    public const string TV3_TYPE            = 'SB_5';
+    public const string TV5_TYPE            = 'list';
+    public const string TV5_BIND            = 'users';
+    public const string TV5_NONE_USER_LABEL = 'None';
 
     #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)

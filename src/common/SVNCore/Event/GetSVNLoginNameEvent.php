@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetSVNLoginNameEvent implements Dispatchable
 {
-    public const NAME = 'get_svn_login_name';
+    public const string NAME = 'get_svn_login_name';
 
     /**
      * @var \PFUser

@@ -28,7 +28,7 @@ namespace Tuleap\SVNCore;
  */
 final class SVNUserGroup
 {
-    public const MEMBERS = 'members';
+    public const string MEMBERS = 'members';
 
     /**
      * @var SVNUser[]

@@ -24,7 +24,7 @@ namespace Tuleap\User\Account;
 
 final class AccountTabGeneralSection extends AccountTabSection
 {
-    public const NAME = 'General';
+    public const string NAME = 'General';
 
     public function __construct(array $tabs)
     {

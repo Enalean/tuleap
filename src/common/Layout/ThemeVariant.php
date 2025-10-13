@@ -29,12 +29,12 @@ use Tuleap\Layout\ThemeVariantColor;
 #[ConfigKeyCategory('Theme')]
 class ThemeVariant //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public final const PREFERENCE_NAME = 'theme_variant';
+    public final const string PREFERENCE_NAME = 'theme_variant';
 
     #[ConfigKey("Default theme variant (will be used for anonymous users for example). Default is 'orange'.")]
     #[ConfigKeyString('orange')]
     #[ConfigKeyValueValidator(ConfigDefaultThemeVariantValidator::class)]
-    public final const CONFIG_DEFAULT = 'sys_default_theme_variant';
+    public final const string CONFIG_DEFAULT = 'sys_default_theme_variant';
 
     #[ConfigKey(<<<'EOF'
     Comma-separated list of allowed theme variants (users will be able to choose their preference among this list).
@@ -43,7 +43,7 @@ class ThemeVariant //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     )]
     #[ConfigKeyString('orange,blue,grey,green,purple,red')]
     #[ConfigKeyValueValidator(ConfigAvailableThemeVariantValidator::class)]
-    public final const CONFIG_ALLOWED = 'sys_available_theme_variants';
+    public final const string CONFIG_ALLOWED = 'sys_available_theme_variants';
 
     private ThemeVariantColor $default;
 

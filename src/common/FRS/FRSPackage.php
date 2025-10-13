@@ -26,15 +26,15 @@
  */
 class FRSPackage
 {
-    public const PERM_READ = 'PACKAGE_READ';
+    public const string PERM_READ = 'PACKAGE_READ';
 
-    public const STATUS_ACTIVE  = 1;
-    public const STATUS_DELETED = 2;
-    public const STATUS_HIDDEN  = 3;
+    public const int STATUS_ACTIVE  = 1;
+    public const int STATUS_DELETED = 2;
+    public const int STATUS_HIDDEN  = 3;
 
-    public const EVT_CREATE = 101;
-    public const EVT_UPDATE = 102;
-    public const EVT_DELETE = 103;
+    public const int EVT_CREATE = 101;
+    public const int EVT_UPDATE = 102;
+    public const int EVT_DELETE = 103;
 
     /**
      * @var int $package_id the ID of this FRSPackage

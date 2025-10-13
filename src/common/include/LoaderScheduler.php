@@ -23,7 +23,7 @@ use Tuleap\Plugin\PluginLoader;
 
 final readonly class LoaderScheduler
 {
-    public const FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION = 'TULEAP_DISABLE_AUTO_SESSION_START';
+    public const string FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION = 'TULEAP_DISABLE_AUTO_SESSION_START';
 
     public function __construct(
         private CookieManager $cookie_manager,

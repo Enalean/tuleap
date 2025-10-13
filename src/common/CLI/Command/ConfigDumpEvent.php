@@ -28,5 +28,5 @@ namespace Tuleap\CLI\Command;
  */
 final class ConfigDumpEvent
 {
-    public const NAME = 'configDumpEvent';
+    public const string NAME = 'configDumpEvent';
 }

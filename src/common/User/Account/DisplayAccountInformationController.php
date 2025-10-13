@@ -39,7 +39,7 @@ use Tuleap\User\Profile\AvatarGenerator;
 
 final class DisplayAccountInformationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/account/information';
+    public const string URL = '/account/information';
 
     /**
      * @var EventDispatcherInterface

@@ -25,7 +25,7 @@ use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 class ProjectDashboardRouter
 {
-    public const DASHBOARD_TYPE = 'project';
+    public const string DASHBOARD_TYPE = 'project';
 
     /**
      * @var ProjectDashboardController

@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 
 class LostPasswordDAO extends DataAccessObject
 {
-    private const MIN_DELAY_BETWEEN_LOST_PASSWORD_TOKEN_CREATION_SECONDS = 10 * 60;
+    private const int MIN_DELAY_BETWEEN_LOST_PASSWORD_TOKEN_CREATION_SECONDS = 10 * 60;
 
     /**
      * @throws RecentlyCreatedCodeException

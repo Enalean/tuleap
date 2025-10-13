@@ -31,7 +31,7 @@ use Tuleap\Event\Dispatchable;
 
 class MembersEditProcessAction implements Dispatchable
 {
-    public const NAME = 'membersEditProcessAction';
+    public const string NAME = 'membersEditProcessAction';
 
     /**
      * @var bool

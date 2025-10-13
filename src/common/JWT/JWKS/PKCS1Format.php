@@ -24,11 +24,11 @@ namespace Tuleap\JWT\JWKS;
 
 final class PKCS1Format
 {
-    private const ASN1_INTEGER  = 2;
-    private const ASN1_SEQUENCE = 48;
+    private const int ASN1_INTEGER  = 2;
+    private const int ASN1_SEQUENCE = 48;
     // sequence(oid(1.2.840.113549.1.1.1), null))
     // MA0GCSqGSIb3DQEBAQUA
-    private const RSA_OID = "\x30\x0d\x06\x09\x2a\x86\x48\x86\xf7\x0d\x01\x01\x01\x05\x00";
+    private const string RSA_OID = "\x30\x0d\x06\x09\x2a\x86\x48\x86\xf7\x0d\x01\x01\x01\x05\x00";
 
     /**
      * @see http://tools.ietf.org/html/rfc3447#appendix-A.1.1

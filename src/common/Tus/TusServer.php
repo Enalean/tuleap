@@ -28,7 +28,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class TusServer implements RequestHandlerInterface
 {
-    private const TUS_VERSION = '1.0.0';
+    private const string TUS_VERSION = '1.0.0';
 
     /**
      * @var ResponseFactoryInterface

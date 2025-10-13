@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetProjectHistoryEntryValue implements Dispatchable
 {
-    public const NAME = 'getProjectHistoryEntryValue';
+    public const string NAME = 'getProjectHistoryEntryValue';
 
     public function __construct(private array $row, private string $value, private array $parameters, private string $key)
     {

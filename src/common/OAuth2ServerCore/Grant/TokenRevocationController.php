@@ -40,11 +40,11 @@ use Tuleap\User\OAuth2\OAuth2Exception;
 
 final class TokenRevocationController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    private const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
+    private const string CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
 
-    private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
-    private const ERROR_CODE_INVALID_CLIENT  = 'invalid_client';
-    private const TOKEN_PARAMETER            = 'token';
+    private const string ERROR_CODE_INVALID_REQUEST = 'invalid_request';
+    private const string ERROR_CODE_INVALID_CLIENT  = 'invalid_client';
+    private const string TOKEN_PARAMETER            = 'token';
     /**
      * @var ResponseFactoryInterface
      */

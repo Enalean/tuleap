@@ -28,7 +28,7 @@ use Tuleap\Layout\BaseLayout;
 
 final class SvnCoreAccess implements Dispatchable
 {
-    public const NAME = 'svnCoreAccess';
+    public const string NAME = 'svnCoreAccess';
 
     /**
      * @var \Project

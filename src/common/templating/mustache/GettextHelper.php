@@ -22,10 +22,10 @@ namespace Tuleap\Templating\Mustache;
 
 class GettextHelper
 {
-    public const GETTEXT   = 'gettext';
-    public const NGETTEXT  = 'ngettext';
-    public const DGETTEXT  = 'dgettext';
-    public const DNGETTEXT = 'dngettext';
+    public const string GETTEXT   = 'gettext';
+    public const string NGETTEXT  = 'ngettext';
+    public const string DGETTEXT  = 'dgettext';
+    public const string DNGETTEXT = 'dngettext';
 
     private static $gettext_cache = [];
 

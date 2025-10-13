@@ -32,7 +32,7 @@ use Psr\Http\Message\RequestFactoryInterface;
  */
 class PwnedPasswordRangeRetriever
 {
-    private const ENDPOINT = 'https://api.pwnedpasswords.com/range/';
+    private const string ENDPOINT = 'https://api.pwnedpasswords.com/range/';
     /**
      * @var ClientInterface
      */

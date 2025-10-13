@@ -34,7 +34,7 @@ use Tuleap\Massmail\RecipientUsersRetriever;
 class Massmail extends SystemEvent
 {
     #[FeatureFlagConfigKey('Feature flag to allow massmail feature to send each mails one by one.')]
-    public const FEATURE_FLAG_KEY = 'send_massmail_one_by_one';
+    public const string FEATURE_FLAG_KEY = 'send_massmail_one_by_one';
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in

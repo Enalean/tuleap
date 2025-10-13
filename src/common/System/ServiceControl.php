@@ -29,11 +29,11 @@ use Tuleap\Config\ConfigKey;
  */
 class ServiceControl
 {
-    public const SYSTEMD     = 'systemd';
-    public const SUPERVISORD = 'supervisord';
+    public const string SYSTEMD     = 'systemd';
+    public const string SUPERVISORD = 'supervisord';
 
     #[ConfigKey('Init mode for the platform (systemd, supervisord)')]
-    public const FORGECONFIG_INIT_MODE = 'init_mode';
+    public const string FORGECONFIG_INIT_MODE = 'init_mode';
 
     public function getInitMode()
     {

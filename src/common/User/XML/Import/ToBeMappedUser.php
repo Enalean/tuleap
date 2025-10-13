@@ -24,7 +24,7 @@ use RuntimeException;
 
 class ToBeMappedUser extends ActionToBeTakenForUser
 {
-    public const ACTION = 'map';
+    public const string ACTION = 'map';
 
     /** @var \PFUser[] */
     private $matching_users;

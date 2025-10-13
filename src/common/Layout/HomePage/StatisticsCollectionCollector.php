@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class StatisticsCollectionCollector implements Dispatchable
 {
-    public const NAME = 'statisticsCollectionCollector';
+    public const string NAME = 'statisticsCollectionCollector';
     /**
      * @var StatisticsCollection
      */

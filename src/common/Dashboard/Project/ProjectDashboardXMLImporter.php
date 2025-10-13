@@ -36,7 +36,7 @@ use Widget;
 
 class ProjectDashboardXMLImporter
 {
-    private const NOT_CREATED = -1;
+    private const int NOT_CREATED = -1;
 
     private LoggerInterface $logger;
 

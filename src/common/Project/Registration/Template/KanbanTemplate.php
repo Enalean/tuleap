@@ -30,10 +30,10 @@ use Tuleap\XML\ProjectXMLMerger;
 
 class KanbanTemplate implements TuleapTemplate
 {
-    public const NAME = 'kanban';
+    public const string NAME = 'kanban';
 
-    private const PROJECT_XML = __DIR__ . '/../../../../../tools/setup_templates/kanban/project.xml';
-    private const KANBAN_XML  = __DIR__ . '/../../../../../tools/setup_templates/kanban/kanban_template.xml';
+    private const string PROJECT_XML = __DIR__ . '/../../../../../tools/setup_templates/kanban/project.xml';
+    private const string KANBAN_XML  = __DIR__ . '/../../../../../tools/setup_templates/kanban/kanban_template.xml';
 
     /**
      * @var string

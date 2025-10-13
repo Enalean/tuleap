@@ -29,7 +29,7 @@ enum ThemeVariantColor: string
     case Purple = 'purple';
     case Red    = 'red';
 
-    public const DEFAULT = self::Orange;
+    public const ThemeVariantColor DEFAULT = self::Orange;
 
     public static function buildFromDefaultVariant(): self
     {

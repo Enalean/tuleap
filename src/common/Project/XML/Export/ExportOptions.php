@@ -24,9 +24,9 @@ namespace Tuleap\Project\XML\Export;
 
 final class ExportOptions
 {
-    public const MODE_ALL        = 'all';
-    public const MODE_STRUCTURE  = 'structure';
-    public const BYPASS_THRESOLD = 'force';
+    public const string MODE_ALL        = 'all';
+    public const string MODE_STRUCTURE  = 'structure';
+    public const string BYPASS_THRESOLD = 'force';
 
     /**
      * @param array<string, int> $extra_options

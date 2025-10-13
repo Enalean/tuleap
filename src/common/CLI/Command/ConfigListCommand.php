@@ -36,7 +36,7 @@ use Tuleap\Config\ConfigKeyMetadata;
 
 class ConfigListCommand extends Command
 {
-    public const NAME = 'config-list';
+    public const string NAME = 'config-list';
 
     public function __construct(private EventDispatcherInterface $event_manager)
     {

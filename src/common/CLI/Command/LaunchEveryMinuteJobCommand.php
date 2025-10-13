@@ -33,7 +33,7 @@ use Tuleap\DB\DBConnection;
 
 final class LaunchEveryMinuteJobCommand extends Command
 {
-    public const NAME = 'launch-every-minute-job';
+    public const string NAME = 'launch-every-minute-job';
 
     /**
      * @var EventDispatcherInterface

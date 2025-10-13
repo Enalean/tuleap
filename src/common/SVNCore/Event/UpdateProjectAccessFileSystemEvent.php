@@ -26,7 +26,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class UpdateProjectAccessFileSystemEvent extends \SystemEvent
 {
-    public const NAME = 'UPDATE_SVN_ACCESS_FILE';
+    public const string NAME = 'UPDATE_SVN_ACCESS_FILE';
 
     /**
      * @var \ProjectManager
