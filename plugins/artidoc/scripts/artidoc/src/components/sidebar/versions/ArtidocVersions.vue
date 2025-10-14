@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <section>
+    <section v-bind:class="{ 'use-fake-versions': use_fake_versions }">
         <div class="tlp-alert-info" v-if="should_display_under_construction_message">
             <p>{{ $gettext("This feature of artidoc is under construction.") }}</p>
             <p>{{ $gettext("Data is fake in order to gather feedback about the feature.") }}</p>
@@ -48,6 +48,12 @@
                         {{ $gettext("Group by named versions") }}
                     </option>
                 </select>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" v-model="use_fake_versions" />
+                    {{ $gettext("Versions based on fake data") }}
+                </label>
             </div>
             <flat-list-of-versions v-if="display === ALL_VERSIONS" v-bind:versions="versions" />
             <flat-list-of-versions
@@ -109,6 +115,7 @@ const GROUP_BY_NAMED_VERSIONS = "group";
 type Choices = typeof ALL_VERSIONS | typeof NAMED_VERSIONS | typeof GROUP_BY_NAMED_VERSIONS;
 
 const display = ref<Choices>(ALL_VERSIONS);
+const use_fake_versions = ref(true);
 
 const named_versions = computed(() => versions.value.filter((version) => version.title.isValue()));
 const grouped_versions = computed(() => groupVersionsByNamedVersion(versions.value));
