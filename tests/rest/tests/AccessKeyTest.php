@@ -27,7 +27,7 @@ use Tuleap\REST\RestBase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AccessKeyTest extends RestBase
 {
-    private const DESCRIPTION_ACCESS_KEY = 'test_key';
+    private const string DESCRIPTION_ACCESS_KEY = 'test_key';
 
     public function testOptions(): void
     {

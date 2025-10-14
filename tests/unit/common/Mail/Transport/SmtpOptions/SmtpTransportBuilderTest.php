@@ -33,7 +33,7 @@ final class SmtpTransportBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const DEFAULT_PORT = 25;
+    private const int DEFAULT_PORT = 25;
 
     #[\Override]
     protected function setUp(): void

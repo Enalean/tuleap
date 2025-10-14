@@ -19,14 +19,14 @@
  */
 
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class GetStateVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+class GetStateVisitorTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;
-    public const STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST;
-    public const STATE_BLANK = TreeNode_GetStateVisitor::STATE_BLANK;
-    public const STATE_PIPE  = TreeNode_GetStateVisitor::STATE_PIPE;
+    public const int STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;
+    public const int STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST;
+    public const int STATE_BLANK = TreeNode_GetStateVisitor::STATE_BLANK;
+    public const int STATE_PIPE  = TreeNode_GetStateVisitor::STATE_PIPE;
 
     public function testOneNodeShouldHaveStateLast(): void
     {

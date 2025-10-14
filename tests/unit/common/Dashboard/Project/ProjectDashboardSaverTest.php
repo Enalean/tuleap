@@ -32,8 +32,8 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID   = 145;
-    private const DASHBOARD_ID = 1;
+    private const int PROJECT_ID   = 145;
+    private const int DASHBOARD_ID = 1;
     private \PFUser $regular_user;
     private \PFUser $admin_user;
     private MockObject&ProjectDashboardDao $dao;

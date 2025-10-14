@@ -33,7 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateProjectAccessFileSystemEventTest extends TestCase
 {
-    private const PROJECT_ID = 102;
+    private const int PROJECT_ID = 102;
 
     private ProjectManager&MockObject $project_manager;
     private EventDispatcherInterface&MockObject $event_dispatcher;

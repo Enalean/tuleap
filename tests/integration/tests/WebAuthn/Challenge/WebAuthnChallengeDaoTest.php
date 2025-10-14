@@ -32,9 +32,9 @@ final class WebAuthnChallengeDaoTest extends TestIntegrationTestCase
     private WebAuthnChallengeDao $dao;
     private EasyDB $db;
 
-    private const USER_ID_WITH_CHALLENGE_1  = 101;
-    private const USER_ID_WITH_CHALLENGE_2  = 102;
-    private const USER_ID_WITHOUT_CHALLENGE = 103;
+    private const int USER_ID_WITH_CHALLENGE_1  = 101;
+    private const int USER_ID_WITH_CHALLENGE_2  = 102;
+    private const int USER_ID_WITHOUT_CHALLENGE = 103;
 
     #[\Override]
     public function setUp(): void

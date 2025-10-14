@@ -34,7 +34,7 @@ use Tuleap\User\ProvideCurrentUser;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FrontendErrorCollectorControllerTest extends TestCase
 {
-    private const CURRENT_USER_ID = 102;
+    private const int CURRENT_USER_ID = 102;
 
     private \Psr\Http\Message\StreamFactoryInterface $stream_factory;
     private TestLogger $logger;

@@ -51,7 +51,7 @@ use Tuleap\User\RetrieveUserById;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ManageProjectInvitationsControllerTest extends TestCase
 {
-    private const PROJECT_ID = 111;
+    private const int PROJECT_ID = 111;
     private \Project $project;
     private \PFUser $user;
 

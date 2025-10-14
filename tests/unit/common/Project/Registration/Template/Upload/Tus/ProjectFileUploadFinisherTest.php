@@ -40,8 +40,8 @@ final class ProjectFileUploadFinisherTest extends TestCase
 {
     use \Tuleap\TemporaryTestDirectory;
 
-    private const PROJECT_ID = 1001;
-    private const USER_ID    = 102;
+    private const int PROJECT_ID = 1001;
+    private const int USER_ID    = 102;
 
     private string $base_path;
     private UploadPathAllocator $path_allocator;

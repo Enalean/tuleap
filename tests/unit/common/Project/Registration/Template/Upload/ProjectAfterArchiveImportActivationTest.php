@@ -35,7 +35,7 @@ final class ProjectAfterArchiveImportActivationTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const PROJECT_ID = 101;
+    private const int PROJECT_ID = 101;
 
     public function testWhenConfigIsNotSetThenProjectStatusShouldBePendingAndSiteAdminShouldBeWarned(): void
     {

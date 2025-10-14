@@ -35,7 +35,7 @@ use function Psl\Filesystem\create_directory_for_file;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UploadedArchiveForProjectControllerTest extends TestCase
 {
-    private const PROJECT_ID = 101;
+    private const int PROJECT_ID = 101;
 
     public function testNotCreatedFromArchive(): void
     {

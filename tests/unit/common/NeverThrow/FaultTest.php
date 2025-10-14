@@ -29,8 +29,8 @@ use Tuleap\NeverThrow\Tests\FaultForTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ERROR_MESSAGE     = 'User is not allowed to do that';
-    private const EXCEPTION_MESSAGE = 'An exception was thrown';
+    private const string ERROR_MESSAGE     = 'User is not allowed to do that';
+    private const string EXCEPTION_MESSAGE = 'An exception was thrown';
 
     public function testItBuildsANewFaultWithAMessage(): void
     {

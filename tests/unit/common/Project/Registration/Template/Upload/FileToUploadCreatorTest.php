@@ -31,7 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileToUploadCreatorTest extends TestCase
 {
-    private const SAVED_FILE_ID = 10;
+    private const int SAVED_FILE_ID = 10;
 
     public function testItReturnsTheFileToUpload(): void
     {

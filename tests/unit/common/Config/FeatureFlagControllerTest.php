@@ -37,7 +37,7 @@ final class FeatureFlagControllerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const FEATURE_FLAG_KEY = 'stop_linking_artifact';
+    private const string FEATURE_FLAG_KEY = 'stop_linking_artifact';
 
     #[\Override]
     protected function setUp(): void

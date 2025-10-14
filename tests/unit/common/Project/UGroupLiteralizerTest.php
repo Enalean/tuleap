@@ -32,7 +32,7 @@ use UserManager;
 final class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PFUser&MockObject $user;
-    private const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
+    private const string PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
     private UGroupLiteralizer $ugroup_literalizer;
 

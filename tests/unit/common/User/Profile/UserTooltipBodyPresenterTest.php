@@ -27,8 +27,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserTooltipBodyPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID = 132;
-    private const EMAIL   = 'goosish@example.com';
+    private const int USER_ID  = 132;
+    private const string EMAIL = 'goosish@example.com';
 
     public function testItBuildsFromUser(): void
     {

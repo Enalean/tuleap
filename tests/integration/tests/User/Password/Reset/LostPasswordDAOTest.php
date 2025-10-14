@@ -27,7 +27,7 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LostPasswordDAOTest extends TestIntegrationTestCase
 {
-    private const TEST_USER_ID = 102;
+    private const int TEST_USER_ID = 102;
 
     /**
      * @var LostPasswordDAO

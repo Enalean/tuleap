@@ -35,7 +35,7 @@ use Tuleap\User\AccessKey\Scope\SVNAccessKeyScope;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVNPersonalAccessKeyBasedAuthenticationMethodTest extends TestCase
 {
-    private const ACCESS_KEY = 'tlp-k1-123.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+    private const string ACCESS_KEY = 'tlp-k1-123.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 
     /**
      * @var AccessKeyVerifier&\PHPUnit\Framework\MockObject\Stub
