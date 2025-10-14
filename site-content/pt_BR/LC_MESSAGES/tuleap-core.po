@@ -246,9 +246,6 @@ msgid ""
 "requests.html\">the documentation for more information</a>.</p>"
 msgstr ""
 
-msgid "<strong>Monitor this thread</strong>"
-msgstr "<forte>Monitore esta discussão</strong>"
-
 msgid "A deleted project can not be restored."
 msgstr "Um projeto excluído não pode ser restaurado."
 
@@ -658,15 +655,6 @@ msgstr ""
 "Conforme notificado %1$s dias atrás e sem que houvesse nenhum acesso da sua "
 "parte desde então, a sua conta de usuário está suspensa de acordo com as "
 "políticas %2$s."
-
-msgid ""
-"As the Forum creator it is <u>strongly recommend</u> that you monitor this "
-"forum to be instantly notified via email of any new message posted to the "
-"Forum."
-msgstr ""
-"Como o criador do Fórum é <u> fortemente recomendado</u> que você monitore "
-"este fórum para ser imediatamente notificado via email de qualquer nova "
-"mensagem postada no Fórum."
 
 msgid "Ask to join"
 msgstr "Solicitar acesso"
@@ -1341,9 +1329,6 @@ msgstr "Erro ao adicionar o Fórum '%1$s'."
 msgid "Error Updating Forum Info"
 msgstr "Erro ao Atualizar as Informações do Fórum"
 
-msgid "Error inserting into forum_monitoring"
-msgstr "Erro ao inserir no forum_monitoring"
-
 msgid "Error inserting into forum_saved_place"
 msgstr "Erro ao inserir no forum_saved_place"
 
@@ -1459,12 +1444,6 @@ msgstr "Informações do Fórum Atualizadas com Sucesso"
 
 msgid "Forum Name"
 msgstr "Nome do Fórum"
-
-msgid "Forum already monitored"
-msgstr "Fórum já monitorado"
-
-msgid "Forum is now being monitored"
-msgstr "O Fórum agora está sendo monitorado"
 
 msgid "Forum is restricted"
 msgstr "Fórum é restrito"
@@ -2009,18 +1988,6 @@ msgstr ""
 msgid "Moderation"
 msgstr "Moderação"
 
-msgid "Monitor Forum"
-msgstr "Monitorar Fórum"
-
-msgid "Monitor a forum"
-msgstr "Monitorar um fórum"
-
-msgid "Monitor?"
-msgstr "Monitorar?"
-
-msgid "Monitoring has been turned off"
-msgstr "O monitoramento foi desativado"
-
 msgid "Month"
 msgstr "Mês"
 
@@ -2242,9 +2209,6 @@ msgstr "Ok, entendido"
 msgid ""
 "Once approved, you will receive a confirmation email to <strong>%s</strong>"
 msgstr ""
-
-msgid "Once you add a forum, it cannot be modified or deleted!"
-msgstr "Uma vez adicionado um Fórum, ele não pode ser modificado ou excluído!"
 
 msgid "Only project members can access its content."
 msgstr "Apenas os membros do projeto podem acessar seu conteúdo."
@@ -3213,9 +3177,6 @@ msgstr "Iniciar o trabalho"
 msgid "Status"
 msgstr "Estado"
 
-msgid "Stop Monitoring Forum"
-msgstr "Parar de monitorar o Fórum"
-
 msgid ""
 "Streamline your workflow and focus on what's hot with an easy-to-use board"
 msgstr ""
@@ -3839,17 +3800,8 @@ msgstr "Isto vai remover este serviço de todos os projetos."
 msgid "Thread"
 msgstr "Tópico"
 
-msgid "Thread Monitoring Panel"
-msgstr "Painel de monitoramento de discussões"
-
 msgid "Thread View"
 msgstr "Visualizar Discussão"
-
-msgid "Thread monitoring update failed."
-msgstr "A atualização do monitoramento da discussão falhou."
-
-msgid "Thread monitoring updated."
-msgstr "Monitoramento da Discussão atualizado."
 
 msgid "Threaded"
 msgstr "Discutido"
@@ -3889,11 +3841,6 @@ msgstr "Para acessar (seu usuário é %s):"
 
 msgid "To sign up:"
 msgstr "Para solicitar acesso:"
-
-msgid "To turn off monitoring, simply click the <B>Stop Monitoring Forum</B>."
-msgstr ""
-"Para desligar o monitoramento, basta clicar em <B>Parar de Monitorar o "
-"Fórum</B>."
 
 msgid "Today"
 msgstr "Hoje"
@@ -4206,9 +4153,6 @@ msgstr ""
 "ATENÇÃO! Você está prestes a excluir permanentemente uma mensagem e todos os "
 "seus andamentos!!"
 
-msgid "Want to monitor this forum?"
-msgstr "Quer monitorar este fórum?"
-
 msgid "Warnings"
 msgstr "Avisos"
 
@@ -4439,13 +4383,6 @@ msgstr[1] ""
 
 msgid "You are going to be redirected"
 msgstr ""
-
-msgid ""
-"You are monitoring the whole forum. If you want to monitor only specific "
-"threads, Stop Monitoring Forum."
-msgstr ""
-"Você está monitorando o Fórum inteiro. Se você quiser monitorar apenas "
-"tópicos específicos, Pare de monitorar o Fórum."
 
 msgid "You are not allowed to access this resource"
 msgstr "Você não está autorizado a acessar este recurso"
@@ -4748,12 +4685,6 @@ msgstr "Você deve enviar uma imagem png"
 
 msgid "You should send an image with height smaller than 100px"
 msgstr "Deve enviar uma imagem com altura inferior a 100px"
-
-msgid "You will not receive any more emails from this forum."
-msgstr "Você não receberá mais emails deste fórum."
-
-msgid "You will now be emailed followups to this entire forum."
-msgstr "Agora você receberá por email todos os acompanhamentos deste Fórum."
 
 msgid "You will receive an email when the project is approved."
 msgstr ""

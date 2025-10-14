@@ -482,9 +482,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 $arr['description'],
                 $need_feedback = false
             );
-            if ($fid != -1) {
-                forum_add_monitor($fid, UserManager::instance()->getCurrentUser()->getId());
-            }
         }
     }
 

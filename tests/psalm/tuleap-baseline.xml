@@ -84383,6 +84383,9 @@
       <code><![CDATA[db_result($result, 0, 'group_forum_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
     </DeprecatedFunction>
+    <ParseError>
+      <code><![CDATA[)]]></code>
+    </ParseError>
   </file>
   <file src="src/www/forum/forum.php">
     <DeprecatedFunction>
@@ -84459,18 +84462,6 @@
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
@@ -84485,29 +84476,11 @@
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
-      <code><![CDATA[db_ei($msg_id)]]></code>
-      <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
-      <code><![CDATA[db_ei($user_id)]]></code>
       <code><![CDATA[db_ei($user_id)]]></code>
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
       <code><![CDATA[db_error()]]></code>
@@ -84521,11 +84494,9 @@
       <code><![CDATA[db_es(htmlspecialchars($subject))]]></code>
       <code><![CDATA[db_es(sprintf(_('Welcome to %1$s'), $group_name) . ' ' . htmlspecialchars($forum_name))]]></code>
       <code><![CDATA[db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . ' ' . htmlspecialchars($forum_name))]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_insertid($result)]]></code>
-      <code><![CDATA[db_numrows($res)]]></code>
       <code><![CDATA[db_numrows($res2)]]></code>
       <code><![CDATA[db_numrows($res3)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
@@ -84534,24 +84505,8 @@
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_query("INSERT INTO forum_thread_id VALUES ('')")]]></code>
       <code><![CDATA[db_query("UPDATE forum SET has_followups='1' WHERE msg_id=" . db_ei($is_followup_to) . ' AND thread_id=' . db_ei($thread_id) . ' AND group_forum_id=' . db_ei($group_forum_id))]]></code>
-      <code><![CDATA[db_query($del)]]></code>
-      <code><![CDATA[db_query($qry)]]></code>
-      <code><![CDATA[db_query($qry)]]></code>
-      <code><![CDATA[db_query($qry1)]]></code>
-      <code><![CDATA[db_query($qry2)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -84572,8 +84527,6 @@
         "AND posted_by='" . $db_escaped_user_id . "'")]]></code>
       <code><![CDATA[db_query('SELECT * FROM forum WHERE msg_id=' . db_ei($is_followup_to) . ' AND thread_id=' . db_ei($thread_id) . ' AND group_forum_id=' . db_ei($group_forum_id))]]></code>
       <code><![CDATA[db_query('SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
-      <code><![CDATA[db_result($res, 0, 'thread_id')]]></code>
-      <code><![CDATA[db_result($res, 0, 'thread_id')]]></code>
       <code><![CDATA[db_result($res2, 0, 'has_followups')]]></code>
       <code><![CDATA[db_result($result, $i, 'body')]]></code>
       <code><![CDATA[db_result($result, $i, 'body')]]></code>
@@ -84614,13 +84567,6 @@
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_name]]></code>
       <code><![CDATA[$forum_status]]></code>
       <code><![CDATA[$group_forum_id]]></code>
@@ -84632,9 +84578,6 @@
       <code><![CDATA[$level]]></code>
       <code><![CDATA[$msg_id]]></code>
       <code><![CDATA[$msg_id]]></code>
-      <code><![CDATA[$msg_id]]></code>
-      <code><![CDATA[$msg_id]]></code>
-      <code><![CDATA[$mthread]]></code>
       <code><![CDATA[$need_feedback]]></code>
       <code><![CDATA[$subject]]></code>
       <code><![CDATA[$subject]]></code>
@@ -84642,29 +84585,12 @@
       <code><![CDATA[$thread_id]]></code>
       <code><![CDATA[$thread_id]]></code>
       <code><![CDATA[$thread_id]]></code>
-      <code><![CDATA[$thread_id]]></code>
-      <code><![CDATA[$thread_id]]></code>
-      <code><![CDATA[$thread_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[forum_add_monitor]]></code>
       <code><![CDATA[forum_can_be_public]]></code>
-      <code><![CDATA[forum_delete_monitor]]></code>
       <code><![CDATA[forum_footer]]></code>
       <code><![CDATA[forum_header]]></code>
       <code><![CDATA[forum_is_public_value_allowed]]></code>
-      <code><![CDATA[forum_thread_add_monitor]]></code>
-      <code><![CDATA[forum_thread_delete_monitor]]></code>
-      <code><![CDATA[forum_thread_delete_monitor_by_user]]></code>
-      <code><![CDATA[forum_thread_is_monitored]]></code>
-      <code><![CDATA[forum_thread_monitor]]></code>
       <code><![CDATA[forum_utils_access_allowed]]></code>
       <code><![CDATA[forum_utils_get_styles]]></code>
       <code><![CDATA[get_forum_group_id]]></code>
@@ -84675,8 +84601,6 @@
       <code><![CDATA[show_post_form]]></code>
       <code><![CDATA[show_submessages]]></code>
       <code><![CDATA[show_thread]]></code>
-      <code><![CDATA[user_monitor_forum]]></code>
-      <code><![CDATA[user_monitor_forum_thread]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$poster]]></code>
@@ -84705,40 +84629,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$poster]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/www/forum/monitor.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-    </DeprecatedFunction>
-  </file>
-  <file src="src/www/forum/monitor_thread.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($qry)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'subject')]]></code>
-      <code><![CDATA[db_result($result, $i, 'thread_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-    </DeprecatedFunction>
-    <PossiblyNullArgument>
-      <code><![CDATA[$monitorer]]></code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedGlobalVariable>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$mthread]]></code>
-      <code><![CDATA[$uid]]></code>
-      <code><![CDATA[$user_id]]></code>
-    </PossiblyUndefinedGlobalVariable>
   </file>
   <file src="src/www/forum/save.php">
     <DeprecatedFunction>
@@ -85386,11 +85276,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$hide]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="src/www/my/stop_monitor.php">
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$HTML]]></code>
-    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/project/admin/history.php">
     <InvalidArgument>

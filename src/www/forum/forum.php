@@ -140,26 +140,10 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     $vPostMsg = new Valid_WhiteList('post_message', ['y']);
     $vPostMsg->required();
     if ($request->isPost() && $request->valid($vPostMsg)) {
-        // MV: add management on "on post monitoring"
-        $vMonitor = new Valid_WhiteList('enable_monitoring', ['1']);
-        $vMonitor->required();
         $vThreadId = new Valid_UInt('thread_id');
         $vThreadId->required();
 
-        if ($request->valid($vMonitor) && $request->valid($vThreadId)) {
-            if (user_isloggedin()) {
-                $user_id = UserManager::instance()->getCurrentUser()->getId();
-                if (! user_monitor_forum($forum_id, $user_id)) {
-                    if (! forum_thread_add_monitor($forum_id, $request->get('thread_id'), $user_id)) {
-                        $feedback .= _('Error inserting into forum_monitoring');
-                    }
-                }
-            }
-        }
-
         // Note: there is a 'msg_id' send but not used here.
-
-
         $vFollowUp = new Valid_UInt('is_followup_to');
         $vFollowUp->required();
 

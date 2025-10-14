@@ -98,9 +98,3 @@ bookmark_delete	deleted	Bookmark deleted!
 # Script: SF/www/my/bookmark_edit.php
 #
 bookmark_edit	title	Edit Bookmark
-#
-#-----------------------------------------------
-# Script: SF/www/my/stop_monitor.php
-#
-my_monitored_forum	stop_monitoring	Monitoring has been turned off. You will not receive any more emails from this forum.
-my_monitored_forum	title	Stop monitoring a forum.
