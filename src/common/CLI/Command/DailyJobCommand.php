@@ -36,7 +36,7 @@ use Tuleap\User\UserSuspensionManager;
 
 class DailyJobCommand extends Command
 {
-    public const NAME = 'daily-job';
+    public const string NAME = 'daily-job';
 
     public function __construct(
         private readonly EventManager $event_manager,

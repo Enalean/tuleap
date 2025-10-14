@@ -23,7 +23,7 @@ namespace Tuleap\REST\v1;
 
 class GitRepositoryReferenceBase
 {
-    public const ROUTE = 'git';
+    public const string ROUTE = 'git';
 
     /**
      * @var int

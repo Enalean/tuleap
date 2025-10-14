@@ -31,10 +31,10 @@ use Tuleap\XML\ProjectXMLMerger;
 
 class ScrumTemplate implements TuleapTemplate
 {
-    public const NAME = 'scrum';
+    public const string NAME = 'scrum';
 
-    private const PROJECT_XML        = __DIR__ . '/../../../../../tools/setup_templates/scrum/project.xml';
-    private const AGILEDASHBOARD_XML = __DIR__ . '/../../../../../plugins/agiledashboard/resources/templates/scrum_dashboard_template.xml';
+    private const string PROJECT_XML        = __DIR__ . '/../../../../../tools/setup_templates/scrum/project.xml';
+    private const string AGILEDASHBOARD_XML = __DIR__ . '/../../../../../plugins/agiledashboard/resources/templates/scrum_dashboard_template.xml';
 
     /**
      * @var string

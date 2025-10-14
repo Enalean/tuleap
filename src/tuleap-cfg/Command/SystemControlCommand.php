@@ -31,11 +31,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SystemControlCommand extends Command
 {
-    private const ENV_SYSTEMCTL         = 'TLP_SYSTEMCTL';
-    private const ENV_SYSTEMCTL_DOCKER  = 'docker';
-    private const ENV_SYSTEMCTL_SYSTEMD = 'systemd';
+    private const string ENV_SYSTEMCTL         = 'TLP_SYSTEMCTL';
+    private const string ENV_SYSTEMCTL_DOCKER  = 'docker';
+    private const string ENV_SYSTEMCTL_SYSTEMD = 'systemd';
 
-    private const ALLOWED_ACTIONS = [
+    private const array ALLOWED_ACTIONS = [
         'start',
         'stop',
         'restart',
@@ -46,7 +46,7 @@ class SystemControlCommand extends Command
         'mask',
     ];
 
-    public const ACTION_WORD = [
+    public const array ACTION_WORD = [
         'start'   => 'Starting',
         'stop'    => 'Stopping',
         'restart' => 'Restarting',

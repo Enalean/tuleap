@@ -27,7 +27,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class NodeJSClient implements Client
 {
-    private const SERVER_URL = 'http://localhost:2999';
+    private const string SERVER_URL = 'http://localhost:2999';
 
     /**
      * @var ClientInterface

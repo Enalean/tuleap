@@ -32,7 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class WorkerEnqueueCommand extends Command
 {
-    public const NAME = 'worker:enqueue';
+    public const string NAME = 'worker:enqueue';
 
     public function __construct()
     {

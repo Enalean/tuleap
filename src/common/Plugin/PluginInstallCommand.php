@@ -31,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class PluginInstallCommand extends Command
 {
-    public const NAME = 'plugin:install';
+    public const string NAME = 'plugin:install';
     /**
      * @var \PluginManager
      */

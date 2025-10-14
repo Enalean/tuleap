@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class BeforeRegisterFormValidationEvent implements Dispatchable
 {
-    public const NAME = 'beforeRegisterFormValidationEvent';
+    public const string NAME = 'beforeRegisterFormValidationEvent';
 
     private ?RegisterFormValidationIssue $validation_error = null;
 

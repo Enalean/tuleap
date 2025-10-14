@@ -30,7 +30,7 @@ use Lcobucci\JWT\Token\Builder;
 final class JWTBuilderFactory
 {
     // See https://tools.ietf.org/html/rfc7515#section-4.1.4
-    public const HEADER_KEY_ID = 'kid';
+    public const string HEADER_KEY_ID = 'kid';
 
     public function getBuilder(): BuilderInterface
     {

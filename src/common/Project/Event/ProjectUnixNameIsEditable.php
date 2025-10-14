@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectUnixNameIsEditable implements Dispatchable
 {
-    public const NAME = 'projectUnixNameIsEditable';
+    public const string NAME = 'projectUnixNameIsEditable';
     /**
      * @var bool
      */

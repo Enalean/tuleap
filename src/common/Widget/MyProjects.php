@@ -39,7 +39,7 @@ use UserManager;
 class MyProjects extends \Widget
 {
     #[ConfigKey("Do not allow to contact project members from 'My projects' widget")]
-    public const CONFIG_DISABLE_CONTACT = 'widget_myprojects_disable_contact';
+    public const string CONFIG_DISABLE_CONTACT = 'widget_myprojects_disable_contact';
 
     public function __construct()
     {

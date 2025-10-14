@@ -33,7 +33,7 @@ use Tuleap\Config\GetConfigKeys;
 
 class ConfigGetCommand extends Command
 {
-    public const NAME = 'config-get';
+    public const string NAME = 'config-get';
 
     public function __construct(private EventDispatcherInterface $event_dispatcher)
     {

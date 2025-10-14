@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectProviderEvent implements Dispatchable
 {
-    public const NAME = 'projectProviderEvent';
+    public const string NAME = 'projectProviderEvent';
 
     /**
      * @var Project

@@ -28,7 +28,7 @@
  */
 class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const RESERVED_PREFIX = 'forge__';
+    public const string RESERVED_PREFIX = 'forge__';
 
     /**
      * Test is the value is Codendi username

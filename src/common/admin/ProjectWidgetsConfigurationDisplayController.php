@@ -34,7 +34,7 @@ use Tuleap\Widget\WidgetFactory;
 
 class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRequest
 {
-    public const TAB_NAME = 'widgets';
+    public const string TAB_NAME = 'widgets';
 
     /**
      * @var WidgetFactory

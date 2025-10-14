@@ -33,34 +33,34 @@ abstract class SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     protected $log;
 
     // Define event types
-    public const TYPE_SYSTEM_CHECK                    = 'SYSTEM_CHECK';
-    public const TYPE_EDIT_SSH_KEYS                   = 'EDIT_SSH_KEYS';
-    public const TYPE_PROJECT_DELETE                  = 'PROJECT_DELETE';
-    public const TYPE_PROJECT_RENAME                  = 'PROJECT_RENAME';
-    public const TYPE_UGROUP_MODIFY                   = 'UGROUP_MODIFY';
-    public const TYPE_USER_ACTIVE_STATUS_CHANGE       = 'ACTIVE_USER_STATUS_CHANGE';
-    public const TYPE_USER_MODIFY                     = 'USER_MODIFY';
-    public const TYPE_USER_RENAME                     = 'USER_RENAME';
-    public const TYPE_MEMBERSHIP_CREATE               = 'MEMBERSHIP_CREATE';
-    public const TYPE_MEMBERSHIP_DELETE               = 'MEMBERSHIP_DELETE';
-    public const TYPE_MEMBERSHIP_MODIFY               = 'MEMBERSHIP_MODIFY';
-    public const TYPE_PROJECT_IS_PRIVATE              = 'PROJECT_IS_PRIVATE';
-    public const TYPE_ROOT_DAILY                      = 'ROOT_DAILY';
-    public const TYPE_COMPUTE_MD5SUM                  = 'COMPUTE_MD5SUM';
-    public const TYPE_MASSMAIL                        = 'MASSMAIL';
-    public const TYPE_MOVE_FRS_FILE                   = 'MOVE_FRS_FILE';
-    public const TYPE_UPDATE_ALIASES                  = 'UPDATE_ALIASES';
-    public const TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES = 'UPDATE_SVN_ACCESS_FILE';
+    public const string TYPE_SYSTEM_CHECK                    = 'SYSTEM_CHECK';
+    public const string TYPE_EDIT_SSH_KEYS                   = 'EDIT_SSH_KEYS';
+    public const string TYPE_PROJECT_DELETE                  = 'PROJECT_DELETE';
+    public const string TYPE_PROJECT_RENAME                  = 'PROJECT_RENAME';
+    public const string TYPE_UGROUP_MODIFY                   = 'UGROUP_MODIFY';
+    public const string TYPE_USER_ACTIVE_STATUS_CHANGE       = 'ACTIVE_USER_STATUS_CHANGE';
+    public const string TYPE_USER_MODIFY                     = 'USER_MODIFY';
+    public const string TYPE_USER_RENAME                     = 'USER_RENAME';
+    public const string TYPE_MEMBERSHIP_CREATE               = 'MEMBERSHIP_CREATE';
+    public const string TYPE_MEMBERSHIP_DELETE               = 'MEMBERSHIP_DELETE';
+    public const string TYPE_MEMBERSHIP_MODIFY               = 'MEMBERSHIP_MODIFY';
+    public const string TYPE_PROJECT_IS_PRIVATE              = 'PROJECT_IS_PRIVATE';
+    public const string TYPE_ROOT_DAILY                      = 'ROOT_DAILY';
+    public const string TYPE_COMPUTE_MD5SUM                  = 'COMPUTE_MD5SUM';
+    public const string TYPE_MASSMAIL                        = 'MASSMAIL';
+    public const string TYPE_MOVE_FRS_FILE                   = 'MOVE_FRS_FILE';
+    public const string TYPE_UPDATE_ALIASES                  = 'UPDATE_ALIASES';
+    public const string TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES = 'UPDATE_SVN_ACCESS_FILE';
 
     // Define status value (in sync with DB enum)
-    public const STATUS_NONE    = 'NONE';
-    public const STATUS_NEW     = 'NEW';
-    public const STATUS_RUNNING = 'RUNNING';
-    public const STATUS_DONE    = 'DONE';
-    public const STATUS_WARNING = 'WARNING';
-    public const STATUS_ERROR   = 'ERROR';
+    public const string STATUS_NONE    = 'NONE';
+    public const string STATUS_NEW     = 'NEW';
+    public const string STATUS_RUNNING = 'RUNNING';
+    public const string STATUS_DONE    = 'DONE';
+    public const string STATUS_WARNING = 'WARNING';
+    public const string STATUS_ERROR   = 'ERROR';
 
-    public const ALL_STATUS = [
+    public const array ALL_STATUS = [
         self::STATUS_NONE,
         self::STATUS_NEW,
         self::STATUS_RUNNING,
@@ -70,19 +70,19 @@ abstract class SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     ];
 
     //Priority of the event
-    public const PRIORITY_HIGH   = 1;
-    public const PRIORITY_MEDIUM = 2;
-    public const PRIORITY_LOW    = 3;
+    public const int PRIORITY_HIGH   = 1;
+    public const int PRIORITY_MEDIUM = 2;
+    public const int PRIORITY_LOW    = 3;
 
-    public const PARAMETER_SEPARATOR        = '::';
-    public const PARAMETER_SEPARATOR_ESCAPE = '\:\:';
+    public const string PARAMETER_SEPARATOR        = '::';
+    public const string PARAMETER_SEPARATOR_ESCAPE = '\:\:';
 
     // Who should execute the event
-    public const OWNER_ROOT = 'root';
-    public const OWNER_APP  = 'app';
+    public const string OWNER_ROOT = 'root';
+    public const string OWNER_APP  = 'app';
 
-    public const APP_OWNER_QUEUE = 'owner';
-    public const DEFAULT_QUEUE   = 'default';
+    public const string APP_OWNER_QUEUE = 'owner';
+    public const string DEFAULT_QUEUE   = 'default';
 
     /**
      * Constructor

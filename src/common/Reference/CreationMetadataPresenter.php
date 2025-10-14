@@ -30,7 +30,7 @@ use Tuleap\Reference\Metadata\CreatedByPresenter;
  */
 final class CreationMetadataPresenter
 {
-    public const NO_CREATED_BY_PRESENTER = null;
+    public const null NO_CREATED_BY_PRESENTER = null;
 
     /**
      * @var ?CreatedByPresenter

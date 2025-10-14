@@ -60,7 +60,7 @@ use User_UserStatusManager;
 
 final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetadataProvider, KeysThatCanBeModifiedProvider
 {
-    public const NAME = 'getConfigKeys';
+    public const string NAME = 'getConfigKeys';
 
     public const array CORE_CLASSES_WITH_CONFIG_KEYS = [
         ConfigurationVariables::class,

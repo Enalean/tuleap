@@ -29,7 +29,7 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class ServicesPresenterBuilder
 {
-    private const NONE_SERVICE_ID = 100;
+    private const int NONE_SERVICE_ID = 100;
 
     public function __construct(
         private readonly ServiceManager $service_manager,

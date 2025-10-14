@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class RedirectAfterLogin implements Dispatchable
 {
-    public const NAME = 'redirectAfterLogin';
+    public const string NAME = 'redirectAfterLogin';
 
     /**
      * @var \PFUser

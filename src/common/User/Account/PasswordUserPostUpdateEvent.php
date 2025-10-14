@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 final class PasswordUserPostUpdateEvent implements Dispatchable
 {
-    public const NAME = 'passwordUserPostUpdateEvent';
+    public const string NAME = 'passwordUserPostUpdateEvent';
 
     /**
      * @var PFUser

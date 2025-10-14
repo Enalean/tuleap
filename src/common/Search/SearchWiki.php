@@ -20,10 +20,10 @@
 
 class Search_SearchWiki
 {
-    public const NAME = 'wiki';
+    public const string NAME = 'wiki';
 
-    public const SEARCH_PAGENAME_EN = 'FullTextSearch';
-    public const SEARCH_PAGENAME_FR = 'RechercheEnTexteIntégral';
+    public const string SEARCH_PAGENAME_EN = 'FullTextSearch';
+    public const string SEARCH_PAGENAME_FR = 'RechercheEnTexteIntégral';
 
     /**
      * @var WikiDao

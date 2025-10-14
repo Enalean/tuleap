@@ -30,8 +30,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class TusRequestMethodOverride implements MiddlewareInterface
 {
-    private const HEADER_NAME         = 'X-Http-Method-Override';
-    private const OVERRIDABLE_METHODS = ['PATCH', 'POST', 'PUT', 'DELETE'];
+    private const string HEADER_NAME        = 'X-Http-Method-Override';
+    private const array OVERRIDABLE_METHODS = ['PATCH', 'POST', 'PUT', 'DELETE'];
 
     /**
      * @var ResponseFactoryInterface

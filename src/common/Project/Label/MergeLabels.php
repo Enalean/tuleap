@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class MergeLabels implements Dispatchable
 {
-    public const NAME = 'mergeLabel';
+    public const string NAME = 'mergeLabel';
 
     private $label_to_edit_id;
     private $label_ids_to_merge;

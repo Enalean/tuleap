@@ -21,7 +21,7 @@
 
 class FRSPackageDao extends DataAccessObject
 {
-    public const INCLUDE_DELETED = 0x0001;
+    public const int INCLUDE_DELETED = 0x0001;
 
     public $STATUS_DELETED;
 

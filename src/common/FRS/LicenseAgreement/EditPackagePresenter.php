@@ -28,7 +28,7 @@ namespace Tuleap\FRS\LicenseAgreement;
  */
 class EditPackagePresenter
 {
-    public const TEMPLATE = 'edit-package';
+    public const string TEMPLATE = 'edit-package';
 
     /**
      * @var LicenseOptionPresenter[]

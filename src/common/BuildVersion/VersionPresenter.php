@@ -27,8 +27,8 @@ namespace Tuleap\BuildVersion;
  */
 final class VersionPresenter
 {
-    private const COMMUNITY_EDITION_FLAVOR_NAME  = 'Tuleap Community Edition';
-    private const ENTERPRISE_EDITION_FLAVOR_NAME = 'Tuleap Enterprise Edition';
+    private const string COMMUNITY_EDITION_FLAVOR_NAME  = 'Tuleap Community Edition';
+    private const string ENTERPRISE_EDITION_FLAVOR_NAME = 'Tuleap Enterprise Edition';
 
     /**
      * @var string

@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class HistoryEntryCollection implements Dispatchable
 {
-    public const NAME = 'getHistoryEntryCollection';
+    public const string NAME = 'getHistoryEntryCollection';
 
     public function __construct(
         /**

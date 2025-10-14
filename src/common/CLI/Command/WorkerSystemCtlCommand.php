@@ -32,7 +32,7 @@ use TuleapCfg\Command\ProcessFactory;
 
 class WorkerSystemCtlCommand extends Command
 {
-    public const NAME = 'worker:systemctl';
+    public const string NAME = 'worker:systemctl';
     /**
      * @var ProcessFactory
      */

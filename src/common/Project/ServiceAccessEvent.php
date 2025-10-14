@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ServiceAccessEvent implements Dispatchable
 {
-    public const NAME = 'serviceAccessEvent';
+    public const string NAME = 'serviceAccessEvent';
 
     /**
      * @var string

@@ -20,8 +20,8 @@
 
 class Admin_Homepage_LogoFinder
 {
-    public const PATH       = '/images/homepage-logo.png';
-    public const THEME_PATH = '/themes/common';
+    public const string PATH       = '/images/homepage-logo.png';
+    public const string THEME_PATH = '/themes/common';
 
     /** @return string */
     public static function getCurrentUrl()

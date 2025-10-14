@@ -25,7 +25,7 @@ use Tuleap\SVNCore\ApacheConfRepository;
  */
 class SVN_Apache_SvnrootConf
 {
-    public const CONFIG_SVN_LOG_PATH = 'svn_log_path';
+    public const string CONFIG_SVN_LOG_PATH = 'svn_log_path';
 
     /**
      * @param ApacheConfRepository[] $repositories

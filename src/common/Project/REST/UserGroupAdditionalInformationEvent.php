@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 final class UserGroupAdditionalInformationEvent implements Dispatchable
 {
-    public const NAME = 'addAdditionalInformation';
+    public const string NAME = 'addAdditionalInformation';
 
     /**
      * @var UserGroupAdditionalInformation[]|null[]

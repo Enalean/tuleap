@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 class AccountTabPresenterCollection implements Dispatchable, \Iterator
 {
-    public const NAME = 'accountTabPresenterCollection';
+    public const string NAME = 'accountTabPresenterCollection';
 
     /**
      * @var array<string, AccountTabSection>

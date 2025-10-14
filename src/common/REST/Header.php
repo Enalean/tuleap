@@ -25,32 +25,32 @@ use Tuleap\ServerHostname;
 
 class Header
 {
-    public const GET     = 'GET';
-    public const OPTIONS = 'OPTIONS';
-    public const PUT     = 'PUT';
-    public const POST    = 'POST';
-    public const DELETE  = 'DELETE';
-    public const PATCH   = 'PATCH';
+    public const string GET     = 'GET';
+    public const string OPTIONS = 'OPTIONS';
+    public const string PUT     = 'PUT';
+    public const string POST    = 'POST';
+    public const string DELETE  = 'DELETE';
+    public const string PATCH   = 'PATCH';
 
-    public const CORS_ALLOW_METHODS = 'Access-Control-Allow-Methods';
-    public const ALLOW              = 'Allow';
-    public const LAST_MODIFIED      = 'Last-Modified';
-    public const ETAG               = 'Etag';
-    public const LOCATION           = 'Location';
+    public const string CORS_ALLOW_METHODS = 'Access-Control-Allow-Methods';
+    public const string ALLOW              = 'Allow';
+    public const string LAST_MODIFIED      = 'Last-Modified';
+    public const string ETAG               = 'Etag';
+    public const string LOCATION           = 'Location';
 
-    public const X_PAGINATION_LIMIT     = 'X-PAGINATION-LIMIT';
-    public const X_PAGINATION_OFFSET    = 'X-PAGINATION-OFFSET';
-    public const X_PAGINATION_SIZE      = 'X-PAGINATION-SIZE';
-    public const X_PAGINATION_LIMIT_MAX = 'X-PAGINATION-LIMIT-MAX';
+    public const string X_PAGINATION_LIMIT     = 'X-PAGINATION-LIMIT';
+    public const string X_PAGINATION_OFFSET    = 'X-PAGINATION-OFFSET';
+    public const string X_PAGINATION_SIZE      = 'X-PAGINATION-SIZE';
+    public const string X_PAGINATION_LIMIT_MAX = 'X-PAGINATION-LIMIT-MAX';
 
-    public const X_QUOTA                     = 'X-QUOTA';
-    public const X_DISK_USAGE                = 'X-DISK-USAGE';
-    public const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
+    public const string X_QUOTA                     = 'X-QUOTA';
+    public const string X_DISK_USAGE                = 'X-DISK-USAGE';
+    public const string X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
 
-    public const X_RATELIMIT_REMAINING = 'X-RateLimit-Remaining';
-    public const X_RATELIMIT_LIMIT     = 'X-RateLimit-Limit';
+    public const string X_RATELIMIT_REMAINING = 'X-RateLimit-Remaining';
+    public const string X_RATELIMIT_LIMIT     = 'X-RateLimit-Limit';
 
-    public const RFC1123 = 'D, d M Y H:i:s \G\M\T';
+    public const string RFC1123 = 'D, d M Y H:i:s \G\M\T';
 
     /**
      * Sends headers in RFC1123 compliant format

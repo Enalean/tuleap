@@ -35,7 +35,7 @@ final class CSRFSigningKeyDBStorage implements CSRFSigningKeyStorage
     #[ConfigKeySecret]
     #[ConfigCannotBeModified]
     #[ConfigKeyHidden]
-    private const NAME = 'csrf_token_signing_key';
+    private const string NAME = 'csrf_token_signing_key';
 
     private ?ConcealedString $signing_key = null;
 

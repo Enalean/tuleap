@@ -26,7 +26,7 @@ use Tuleap\User\AfterLocalLogin;
 
 final class AfterLocalSVNLogin implements AfterLocalLogin
 {
-    public const NAME = 'afterLocalSVNLogin';
+    public const string NAME = 'afterLocalSVNLogin';
 
     private bool $is_login_allowed   = true;
     private string $feedback_message = '';

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 final class GetAllRepositories implements Dispatchable
 {
-    public const NAME = 'getAllRepositories';
+    public const string NAME = 'getAllRepositories';
     /**
      * @var \SVN_DAO
      */

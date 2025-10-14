@@ -24,7 +24,7 @@ use User_ForgeUserGroupPermission;
 
 class RestProjectManagementPermission extends User_ForgeUserGroupPermission
 {
-    public const ID = 8;
+    public const int ID = 8;
 
     #[\Override]
     public function getId()

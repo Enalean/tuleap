@@ -20,7 +20,7 @@
 
 class SystemEventQueue
 {
-    public const NAME = 'default';
+    public const string NAME = 'default';
 
     public function getName()
     {

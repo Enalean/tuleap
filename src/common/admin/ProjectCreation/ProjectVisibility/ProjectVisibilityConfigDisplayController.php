@@ -32,7 +32,7 @@ use Tuleap\Request\ForbiddenException;
 
 class ProjectVisibilityConfigDisplayController implements DispatchableWithRequest
 {
-    public const TAB_NAME = 'visibility';
+    public const string TAB_NAME = 'visibility';
 
     /**
      * @throws ForbiddenException

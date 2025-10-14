@@ -26,7 +26,7 @@
  */
 class Valid_FTPURI extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const URI_REGEXP = '/^ftps?:\/\/.+/i';
+    public const string URI_REGEXP = '/^ftps?:\/\/.+/i';
     #[\Override]
     public function validate($value)
     {

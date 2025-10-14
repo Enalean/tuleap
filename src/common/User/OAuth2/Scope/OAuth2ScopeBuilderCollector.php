@@ -27,7 +27,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilderCollectorEvent;
 
 final class OAuth2ScopeBuilderCollector implements AuthenticationScopeBuilderCollectorEvent
 {
-    public const NAME = 'collectOAuth2ScopeBuilder';
+    public const string NAME = 'collectOAuth2ScopeBuilder';
 
     /**
      * @var AuthenticationScopeBuilder[]

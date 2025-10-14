@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class NavigationPresenter implements Dispatchable
 {
-    public const NAME = 'collect_project_admin_navigation_items';
+    public const string NAME = 'collect_project_admin_navigation_items';
 
     public $admin_section_title;
 

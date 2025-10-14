@@ -21,9 +21,9 @@
 
 class ProjectDao extends DataAccessObject
 {
-    public const GROUP_ID        = 'group_id';
-    public const STATUS          = 'status';
-    public const UNIX_GROUP_NAME = 'unix_group_name';
+    public const string GROUP_ID        = 'group_id';
+    public const string STATUS          = 'status';
+    public const string UNIX_GROUP_NAME = 'unix_group_name';
 
     public function getFoundRows()
     {

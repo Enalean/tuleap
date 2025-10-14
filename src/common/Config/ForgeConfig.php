@@ -34,8 +34,8 @@ use Tuleap\ServerHostname;
 
 class ForgeConfig
 {
-    public const AUTH_TYPE_LDAP      = 'ldap';
-    public const FEATURE_FLAG_PREFIX = 'feature_flag_';
+    public const string AUTH_TYPE_LDAP      = 'ldap';
+    public const string FEATURE_FLAG_PREFIX = 'feature_flag_';
 
     /**
      * Hold the configuration variables

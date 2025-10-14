@@ -31,7 +31,7 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
 class OpenIDConnectIDTokenCreator
 {
     // See https://openid.net/specs/openid-connect-core-1_0.html#IDToken
-    private const CLAIM_AUTH_TIME = 'auth_time';
+    private const string CLAIM_AUTH_TIME = 'auth_time';
 
     public function __construct(
         private OAuth2SignInScope $sign_in_scope,

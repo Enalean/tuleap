@@ -23,7 +23,7 @@
 
 class Rule_Timestamp extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const TIMESTAMP_REGEX = '/^[0-9]+$/';
+    public const string TIMESTAMP_REGEX = '/^[0-9]+$/';
     #[\Override]
     public function isValid($val)
     {

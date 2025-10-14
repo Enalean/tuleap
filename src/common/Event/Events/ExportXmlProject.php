@@ -32,7 +32,7 @@ use Tuleap\Project\XML\Export\ExportOptions;
 
 class ExportXmlProject implements Dispatchable
 {
-    public const NAME = 'exportXmlProject';
+    public const string NAME = 'exportXmlProject';
 
     /**
      * @var Project

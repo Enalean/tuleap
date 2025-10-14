@@ -25,7 +25,7 @@ use FastRoute;
 
 class CollectRoutesEvent
 {
-    public const NAME = 'collectRoutesEvent';
+    public const string NAME = 'collectRoutesEvent';
 
     /**
      * @var FastRoute\RouteCollector

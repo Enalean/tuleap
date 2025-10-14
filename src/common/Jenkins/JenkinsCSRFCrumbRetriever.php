@@ -26,7 +26,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 
 class JenkinsCSRFCrumbRetriever
 {
-    private const CRUMB_ISSUER_PATH = '/crumbIssuer/api/xml';
+    private const string CRUMB_ISSUER_PATH = '/crumbIssuer/api/xml';
 
     /**
      * @var ClientInterface

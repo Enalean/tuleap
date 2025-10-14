@@ -34,16 +34,16 @@ class ClientFactory
     #[ConfigKey('Redis server hostname')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/redis.inc')]
     #[ConfigKeyString('')]
-    public const REDIS_SERVER   = 'redis_server';
+    public const string REDIS_SERVER   = 'redis_server';
     #[ConfigKey('Port used by the Redis server')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/redis.inc')]
     #[ConfigKeyInt(6379)]
-    public const REDIS_PORT     = 'redis_port';
+    public const string REDIS_PORT     = 'redis_port';
     #[ConfigKey('Password for the Redis server')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/redis.inc')]
     #[ConfigKeySecret]
     #[ConfigKeyString('')]
-    public const REDIS_PASSWORD = 'redis_password';
+    public const string REDIS_PASSWORD = 'redis_password';
 
     public static function canClientBeBuiltFromForgeConfig(): bool
     {

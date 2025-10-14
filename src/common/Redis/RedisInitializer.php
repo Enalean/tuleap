@@ -30,7 +30,7 @@ class RedisInitializer
      * Connection timeout is raised to 200ms as we now (11.14) support TLS connection to redis
      * and TLS handshake overhead + bumpy network can make things slower.
      */
-    public const CONNECT_TIMEOUT = 0.2;
+    public const float CONNECT_TIMEOUT = 0.2;
 
     /**
      * @var string

@@ -30,7 +30,7 @@ use Tuleap\Event\Dispatchable;
  */
 final class ProjectStatusUpdate implements Dispatchable
 {
-    public const NAME = 'projectStatusUpdate';
+    public const string NAME = 'projectStatusUpdate';
 
     /**
      * @param \Project::STATUS_ACTIVE|\Project::STATUS_SUSPENDED|\Project::STATUS_DELETED $status

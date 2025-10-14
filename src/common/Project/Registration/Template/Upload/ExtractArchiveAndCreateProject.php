@@ -38,7 +38,7 @@ use Tuleap\User\RetrieveUserById;
 
 final readonly class ExtractArchiveAndCreateProject implements WorkerEventProcessor
 {
-    public const TOPIC = 'tuleap.project.create-from-archive';
+    public const string TOPIC = 'tuleap.project.create-from-archive';
 
     /**
      * @param non-empty-string $filename

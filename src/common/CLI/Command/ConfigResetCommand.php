@@ -35,7 +35,7 @@ use Tuleap\Config\KeyMetadataProvider;
 
 final class ConfigResetCommand extends Command
 {
-    public const NAME = 'config-reset';
+    public const string NAME = 'config-reset';
 
     public function __construct(
         private readonly KeyMetadataProvider $config_keys,

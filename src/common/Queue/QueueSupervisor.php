@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 
 final class QueueSupervisor
 {
-    private const ACCEPTABLE_PROCESS_DELAY = 120;
+    private const int ACCEPTABLE_PROCESS_DELAY = 120;
 
     public function __construct(private PersistentQueue $queue, private LoggerInterface $logger)
     {

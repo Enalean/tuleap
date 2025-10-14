@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class CanProjectUseLabels implements Dispatchable
 {
-    public const NAME = 'canProjectUseLabels';
+    public const string NAME = 'canProjectUseLabels';
     /**
      * @var bool
      */

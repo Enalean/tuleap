@@ -50,7 +50,7 @@ use UserManager;
 
 final class UpdatePasswordController implements DispatchableWithRequest
 {
-    public const URL = '/account/security/password';
+    public const string URL = '/account/security/password';
 
     /**
      * @var CSRFSynchronizerToken

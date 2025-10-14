@@ -29,7 +29,7 @@ use SimpleXMLElement;
  */
 final class ProjectXMLImportPreChecksEvent implements ProjectXMLImportPreChecks
 {
-    public const NAME = 'projectXMLImportPreChecksEvent';
+    public const string NAME = 'projectXMLImportPreChecksEvent';
 
     public function __construct(private readonly SimpleXMLElement $xml_element)
     {

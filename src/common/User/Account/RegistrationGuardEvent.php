@@ -30,7 +30,7 @@ use Tuleap\Event\Dispatchable;
  */
 final class RegistrationGuardEvent implements Dispatchable
 {
-    public const NAME = 'registrationGuardEvent';
+    public const string NAME = 'registrationGuardEvent';
 
     /**
      * @var bool

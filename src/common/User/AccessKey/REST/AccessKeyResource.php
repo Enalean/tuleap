@@ -52,7 +52,7 @@ use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
 
 class AccessKeyResource extends AuthenticatedResource
 {
-    public const ROUTE = 'access_keys';
+    public const string ROUTE = 'access_keys';
 
     /**
      * @url OPTIONS

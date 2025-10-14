@@ -68,18 +68,18 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
      */
     protected static $instance;
 
-    public const KEYWORD_ARTIFACT_SHORT = 'art';
-    public const KEYWORD_ARTIFACT_LONG  = 'artifact';
+    public const string KEYWORD_ARTIFACT_SHORT = 'art';
+    public const string KEYWORD_ARTIFACT_LONG  = 'artifact';
 
-    public const REFERENCE_NATURE_ARTIFACT     = 'artifact';
-    public const REFERENCE_NATURE_DOCUMENT     = 'document';
-    public const REFERENCE_NATURE_SVNREVISION  = 'svn_revision';
-    public const REFERENCE_NATURE_FILE         = 'file';
-    public const REFERENCE_NATURE_RELEASE      = 'release';
-    public const REFERENCE_NATURE_FORUM        = 'forum';
-    public const REFERENCE_NATURE_FORUMMESSAGE = 'forum_message';
-    public const REFERENCE_NATURE_WIKIPAGE     = 'wiki_page';
-    public const REFERENCE_NATURE_OTHER        = 'other';
+    public const string REFERENCE_NATURE_ARTIFACT     = 'artifact';
+    public const string REFERENCE_NATURE_DOCUMENT     = 'document';
+    public const string REFERENCE_NATURE_SVNREVISION  = 'svn_revision';
+    public const string REFERENCE_NATURE_FILE         = 'file';
+    public const string REFERENCE_NATURE_RELEASE      = 'release';
+    public const string REFERENCE_NATURE_FORUM        = 'forum';
+    public const string REFERENCE_NATURE_FORUMMESSAGE = 'forum_message';
+    public const string REFERENCE_NATURE_WIKIPAGE     = 'wiki_page';
+    public const string REFERENCE_NATURE_OTHER        = 'other';
 
     /**
      * Not possible to give extra params to the call back function (_insertRefCallback in this case)

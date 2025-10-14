@@ -29,7 +29,7 @@ use Tuleap\Project\PaginatedProjects;
 
 class GetProjectsWithCriteria
 {
-    public const NAME = 'getProjectsWithCriteria';
+    public const string NAME = 'getProjectsWithCriteria';
 
     /**
      * @var array

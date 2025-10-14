@@ -20,8 +20,8 @@
 
 class ArtifactCommentXMLExporter
 {
-    public const TEXT = 'text';
-    public const HTML = 'html';
+    public const string TEXT = 'text';
+    public const string HTML = 'html';
 
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;

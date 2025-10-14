@@ -27,7 +27,7 @@ use Tuleap\Layout\BaseLayout;
 
 final class ProjectDashboardIsDisplayed implements Dispatchable
 {
-    public const NAME = 'projectDashboardIsDisplayed';
+    public const string NAME = 'projectDashboardIsDisplayed';
 
     public function __construct(private BaseLayout $layout)
     {

@@ -31,7 +31,7 @@ use Tuleap\Tus\TusServerIncompatibleVersionException;
 
 final readonly class TusServer implements RequestHandlerInterface
 {
-    private const TUS_VERSION = '1.0.0';
+    private const string TUS_VERSION = '1.0.0';
 
     public function __construct(
         private ResponseFactoryInterface $response_factory,

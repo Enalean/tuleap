@@ -36,7 +36,7 @@ require_once __DIR__ . '/../../www/include/account.php';
 
 class UGroupManager implements UGroupRetriever, ProjectAdminsUGroupRetriever, ProjectUserUGroupMembershipsRetriever // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    private const FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS = 100;
+    private const int FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS = 100;
 
     /**
      * @var UGroupDao

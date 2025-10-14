@@ -22,15 +22,15 @@
 
 class FRSRelease // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const PERM_READ = 'RELEASE_READ';
+    public const string PERM_READ = 'RELEASE_READ';
 
-    public const STATUS_ACTIVE  = 1;
-    public const STATUS_DELETED = 2;
-    public const STATUS_HIDDEN  = 3;
+    public const int STATUS_ACTIVE  = 1;
+    public const int STATUS_DELETED = 2;
+    public const int STATUS_HIDDEN  = 3;
 
-    public const EVT_CREATE = 201;
-    public const EVT_UPDATE = 202;
-    public const EVT_DELETE = 203;
+    public const int EVT_CREATE = 201;
+    public const int EVT_UPDATE = 202;
+    public const int EVT_DELETE = 203;
 
     /**
      * @var int $release_id the ID of this FRSRelease

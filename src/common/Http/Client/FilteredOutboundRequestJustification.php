@@ -30,7 +30,7 @@ use Tuleap\Option\Option;
  */
 final class FilteredOutboundRequestJustification
 {
-    private const SMOKESCREEN_ERROR_HEADER = 'X-Smokescreen-Error';
+    private const string SMOKESCREEN_ERROR_HEADER = 'X-Smokescreen-Error';
 
     private function __construct(public readonly string $reason)
     {

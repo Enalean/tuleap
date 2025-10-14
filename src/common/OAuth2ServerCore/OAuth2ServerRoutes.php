@@ -86,9 +86,9 @@ use UserManager;
 
 final class OAuth2ServerRoutes
 {
-    private const INSTRUMENTATION_NAME        = 'oauth2_server_core';
-    public const ID_TOKEN_EXPIRATION_DELAY    = 'PT2M';
-    public const SIGNING_KEY_EXPIRATION_DELAY = 'PT1H';
+    private const string INSTRUMENTATION_NAME        = 'oauth2_server_core';
+    public const string ID_TOKEN_EXPIRATION_DELAY    = 'PT2M';
+    public const string SIGNING_KEY_EXPIRATION_DELAY = 'PT1H';
 
     private function __construct()
     {

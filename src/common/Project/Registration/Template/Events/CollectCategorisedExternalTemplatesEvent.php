@@ -28,7 +28,7 @@ use Tuleap\Project\Registration\Template\ProjectTemplate;
 
 final class CollectCategorisedExternalTemplatesEvent implements Dispatchable
 {
-    public const NAME = 'collectCategorisedExternalTemplatesEvent';
+    public const string NAME = 'collectCategorisedExternalTemplatesEvent';
 
     private array $categorized_templates = [];
 

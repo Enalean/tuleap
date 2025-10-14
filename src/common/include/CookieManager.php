@@ -29,9 +29,9 @@ class CookieManager
 {
     #[ConfigKey('The default Tuleap domain')]
     #[ConfigKeyString('TULEAP')]
-    public const PREFIX = 'sys_cookie_prefix';
+    public const string PREFIX = 'sys_cookie_prefix';
 
-    private const PREFIX_HOST = '__Host-';
+    private const string PREFIX_HOST = '__Host-';
 
     public function setCookie(string $name, string $value, int $expire = 0): void
     {

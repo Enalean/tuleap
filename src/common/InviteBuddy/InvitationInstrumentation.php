@@ -26,10 +26,10 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 
 class InvitationInstrumentation
 {
-    private const INVITATION_METRIC_NAME           = 'user_invitations_total';
-    private const INVITATION_METRIC_HELP           = 'Total number of invitations sent by users';
-    private const INVITATION_COMPLETED_METRIC_NAME = 'completed_user_invitations_total';
-    private const INVITATION_COMPLETED_METRIC_HELP = 'Total number of completed user invitations';
+    private const string INVITATION_METRIC_NAME           = 'user_invitations_total';
+    private const string INVITATION_METRIC_HELP           = 'Total number of invitations sent by users';
+    private const string INVITATION_COMPLETED_METRIC_NAME = 'completed_user_invitations_total';
+    private const string INVITATION_COMPLETED_METRIC_HELP = 'Total number of completed user invitations';
 
     public function __construct(private Prometheus $prometheus)
     {

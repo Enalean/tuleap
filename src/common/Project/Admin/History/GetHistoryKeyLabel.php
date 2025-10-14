@@ -29,7 +29,7 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectAdminHistoryEntry;
 
 final class GetHistoryKeyLabel implements Dispatchable
 {
-    public const NAME = 'getHistoryKeyLabel';
+    public const string NAME = 'getHistoryKeyLabel';
 
     private ?string $label = null;
 

@@ -24,7 +24,7 @@ use Tuleap\Mail\MailAccountSuspensionPresenter;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MailPresenterFactory
 {
-    public const FLAMING_PARROT_THEME = 'FlamingParrot';
+    public const string FLAMING_PARROT_THEME = 'FlamingParrot';
 
     /**
      * Create a presenter for email account.

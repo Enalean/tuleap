@@ -31,14 +31,14 @@ class RequestInstrumentation
 {
     #[ConfigKey('Log pages that take more than defined milliseconds to render (default: 5000 for 5 seconds)')]
     #[ConfigKeyInt(5000)]
-    public const CONFIG_SLOW_PAGES = 'slow_pages_threshold';
+    public const string CONFIG_SLOW_PAGES = 'slow_pages_threshold';
 
-    private const COUNT_NAME = 'http_responses_total';
-    private const COUNT_HELP = 'Total number of HTTP request';
+    private const string COUNT_NAME = 'http_responses_total';
+    private const string COUNT_HELP = 'Total number of HTTP request';
 
-    private const DURATION_NAME    = 'http_responses_duration';
-    private const DURATION_HELP    = 'Duration of http responses in microseconds';
-    private const DURATION_BUCKETS = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
+    private const string DURATION_NAME   = 'http_responses_duration';
+    private const string DURATION_HELP   = 'Duration of http responses in microseconds';
+    private const array DURATION_BUCKETS = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
 
     public function __construct(private readonly Prometheus $prometheus, private readonly LoggerInterface $logger)
     {

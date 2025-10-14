@@ -25,7 +25,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
  */
 class PluginDao extends DataAccessObject
 {
-    public const ENABLED_COLUMN = 'available';
+    public const string ENABLED_COLUMN = 'available';
 
     /**
     * Gets all tables of the db

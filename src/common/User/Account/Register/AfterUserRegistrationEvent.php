@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class AfterUserRegistrationEvent implements Dispatchable
 {
-    public const NAME = 'afterUserRegistrationEvent';
+    public const string NAME = 'afterUserRegistrationEvent';
 
     public function __construct(private \PFUser $user)
     {

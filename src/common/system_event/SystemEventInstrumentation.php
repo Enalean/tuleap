@@ -27,11 +27,11 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 
 class SystemEventInstrumentation
 {
-    private const METRIC_NAME = 'system_events_total';
+    private const string METRIC_NAME = 'system_events_total';
 
-    private const DURATION_NAME    = 'system_events_duration';
-    private const DURATION_HELP    = 'Duration of system events processing (only processing time, time spent in queue excluded) in seconds';
-    private const DURATION_BUCKETS = [1, 2, 5, 10, 30, 60, 120, 300, 600];
+    private const string DURATION_NAME   = 'system_events_duration';
+    private const string DURATION_HELP   = 'Duration of system events processing (only processing time, time spent in queue excluded) in seconds';
+    private const array DURATION_BUCKETS = [1, 2, 5, 10, 30, 60, 120, 300, 600];
 
     /**
      * @psalm-param value-of<\SystemEvent::ALL_STATUS> $status

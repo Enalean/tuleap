@@ -24,7 +24,7 @@ use Symfony\Component\Process\Process;
  */
 class User_SSHKeyValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    private const SSH_KEY_FORMAT_REGEX = '/^(?:(?:ssh-(?:rsa|dss|ed25519))|(?:ecdsa-sha2-nistp(?:256|384|521)))\s+[a-zA-Z0-9+\/]+={0,2}\s*/';
+    private const string SSH_KEY_FORMAT_REGEX = '/^(?:(?:ssh-(?:rsa|dss|ed25519))|(?:ecdsa-sha2-nistp(?:256|384|521)))\s+[a-zA-Z0-9+\/]+={0,2}\s*/';
 
     /**
      * Ensure all the keys for a user are valid SSH keys

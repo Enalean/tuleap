@@ -36,47 +36,47 @@ final class ConfigurationVariables
     #[ConfigKey('Email address pointing to the Tuleap site administrators')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString]
-    public const EMAIL_ADMIN = 'sys_email_admin';
+    public const string EMAIL_ADMIN = 'sys_email_admin';
 
     #[ConfigKey('Email address pointing to the Tuleap contacts')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString]
-    public const EMAIL_CONTACT = 'sys_email_contact';
+    public const string EMAIL_CONTACT = 'sys_email_contact';
 
     #[ConfigKey('Address from which emails are sent')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString]
-    public const NOREPLY = 'sys_noreply';
+    public const string NOREPLY = 'sys_noreply';
 
     #[ConfigKey('Name of the instance')]
     #[ConfigKeyHelp('The name of the instance is used in various web pages and mails')]
     #[ConfigKeyString('Tuleap')]
-    public const NAME = 'sys_name';
+    public const string NAME = 'sys_name';
 
     #[ConfigKey('Company/organization running the system (short)')]
     #[ConfigKeyHelp('Short version or abbreviation commonly used')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString('Tuleap')]
-    public const ORG_NAME = 'sys_org_name';
+    public const string ORG_NAME = 'sys_org_name';
 
     #[ConfigKey('Company/organization running the system (long)')]
     #[ConfigKeyHelp('Long/official/formal name')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString('Tuleap')]
-    public const LONG_ORG_NAME = 'sys_long_org_name';
+    public const string LONG_ORG_NAME = 'sys_long_org_name';
 
     #[ConfigKey('When 0 mail sent to everybody can lead to information leak, non projects members can receive mails of private projects')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyLegacyBool(false)]
-    public const MAIL_SECURE_MODE = 'sys_mail_secure_mode';
+    public const string MAIL_SECURE_MODE = 'sys_mail_secure_mode';
 
     #[ConfigKey('Disable sub-domains (like svn.proj.example.com)')]
     #[ConfigKeyHelp('This is a legacy configuration variable. Subdomains must be left deactivated')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyLegacyBool(false)]
-    public const DISABLE_SUBDOMAINS = 'sys_disable_subdomains';
+    public const string DISABLE_SUBDOMAINS = 'sys_disable_subdomains';
 
     #[ConfigKey('Server timezone')]
     #[ConfigKeyString('Europe/Paris')]
-    public const SERVER_TIMEZONE = 'sys_server_timezone';
+    public const string SERVER_TIMEZONE = 'sys_server_timezone';
 }

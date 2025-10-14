@@ -27,7 +27,7 @@ use Project;
 
 class SynchronizedProjectMembershipProjectVisibilityToggler
 {
-    private const ENABLE_ON_PROJECT_VISIBILITY_MATRIX = [
+    private const array ENABLE_ON_PROJECT_VISIBILITY_MATRIX = [
         Project::ACCESS_PRIVATE => [
             Project::ACCESS_PUBLIC              => true,
             Project::ACCESS_PUBLIC_UNRESTRICTED => true,

@@ -26,7 +26,7 @@ use Tuleap\ServerHostname;
 
 final class TuleapFunctionsUser extends \PFUser
 {
-    public const ID = 70;
+    public const int ID = 70;
 
     public function __construct()
     {

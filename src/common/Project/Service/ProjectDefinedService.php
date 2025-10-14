@@ -25,7 +25,7 @@ namespace Tuleap\Project\Service;
 
 class ProjectDefinedService extends \Service
 {
-    private const DEFAULT_ICON = 'fas fa-angle-double-right';
+    private const string DEFAULT_ICON = 'fas fa-angle-double-right';
 
     public static function forProjectServiceCreation(\Project $project): self
     {

@@ -21,11 +21,11 @@
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Project_CustomDescription_CustomDescription
 {
-    public const REQUIRED     = true;
-    public const NOT_REQUIRED = false;
+    public const bool REQUIRED     = true;
+    public const bool NOT_REQUIRED = false;
 
-    public const TYPE_TEXT = 'text';
-    public const TYPE_LINE = 'line';
+    public const string TYPE_TEXT = 'text';
+    public const string TYPE_LINE = 'line';
 
     private $id;
     private $name;

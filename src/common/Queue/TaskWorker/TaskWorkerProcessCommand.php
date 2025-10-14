@@ -36,7 +36,7 @@ use Tuleap\Queue\WorkerEventProcessor;
 
 final class TaskWorkerProcessCommand extends Command
 {
-    public const NAME = 'queue:task-worker-process';
+    public const string NAME = 'queue:task-worker-process';
 
     public function __construct(
         private readonly EventDispatcherInterface $event_dispatcher,

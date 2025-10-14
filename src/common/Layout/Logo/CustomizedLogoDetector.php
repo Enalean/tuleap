@@ -27,7 +27,7 @@ use LogoRetriever;
 
 class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
 {
-    private const ORGANIZATION_LOGO_SHA256_CONTENT_HASHES = [
+    private const array ORGANIZATION_LOGO_SHA256_CONTENT_HASHES = [
         'f6aeea978b22cd40c9804fd1e897ad394643a3715fa8e6ab449dd18397dce1c0',
         '1eabd948d8d077314370f9ee3b76c5e8bbf70ab993f1e3eea49c32074333cbdf',
     ];

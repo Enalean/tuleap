@@ -40,11 +40,11 @@ use UserManager;
 class UserSuspensionManager
 {
     #[ConfigKey('Send an email X number of days before an inactive user will be suspended')]
-    public const CONFIG_NOTIFICATION_DELAY = 'sys_suspend_inactive_accounts_notification_delay';
+    public const string CONFIG_NOTIFICATION_DELAY = 'sys_suspend_inactive_accounts_notification_delay';
     #[ConfigKey('Toggle activation of notification of inactive accounts')]
-    public const CONFIG_INACTIVE_EMAIL     = 'sys_suspend_send_account_suspension_email';
-    public const CONFIG_INACTIVE_DELAY     = 'sys_suspend_inactive_accounts_delay';
-    public const ONE_DAY_INTERVAL          = 'PT23H59M59S';
+    public const string CONFIG_INACTIVE_EMAIL     = 'sys_suspend_send_account_suspension_email';
+    public const string CONFIG_INACTIVE_DELAY     = 'sys_suspend_inactive_accounts_delay';
+    public const string ONE_DAY_INTERVAL          = 'PT23H59M59S';
 
     /**
      * @var MailPresenterFactory

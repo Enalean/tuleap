@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 final class PasswordPreUpdateEvent implements Dispatchable
 {
-    public const NAME = 'passwordPreUpdateEvent';
+    public const string NAME = 'passwordPreUpdateEvent';
 
     private $user_can_change_password;
     /**

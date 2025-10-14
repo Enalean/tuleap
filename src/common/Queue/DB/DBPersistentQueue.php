@@ -33,9 +33,9 @@ use Tuleap\Queue\WorkerEventContent;
 
 final readonly class DBPersistentQueue implements PersistentQueue
 {
-    private const MAX_SLEEP_TIME_MICROSEC_WHILE_WAITING_FOR_MESSAGES = 2_000_000;
-    private const MAX_RETRY_PROCESSING_EVENT                         = 3;
-    private const MAX_MESSAGES                                       = 1000;
+    private const int MAX_SLEEP_TIME_MICROSEC_WHILE_WAITING_FOR_MESSAGES = 2_000_000;
+    private const int MAX_RETRY_PROCESSING_EVENT                         = 3;
+    private const int MAX_MESSAGES                                       = 1000;
 
     public function __construct(
         private string $queue_name,

@@ -36,7 +36,7 @@ use Tuleap\Reference\NatureCollection;
 
 class ReferenceAdministrationViews extends Views
 {
-    private const TEMPLATE_PAH = __DIR__ . '/../../../../templates/project/admin/references';
+    private const string TEMPLATE_PAH = __DIR__ . '/../../../../templates/project/admin/references';
     private NatureCollection $nature_collection;
     private ReferenceManager $reference_manager;
     private \UserManager $user_manager;

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class PermissionPerGroupPaneCollector implements Dispatchable
 {
-    public const NAME = 'permissionPerGroupPaneCollector';
+    public const string NAME = 'permissionPerGroupPaneCollector';
 
     /**
      * @var int|false

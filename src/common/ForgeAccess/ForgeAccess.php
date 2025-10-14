@@ -24,18 +24,18 @@ use Tuleap\Config\ConfigKey;
 
 class ForgeAccess
 {
-    public const SUPER_PUBLIC_PROJECTS = 'super_public_projects';
+    public const string SUPER_PUBLIC_PROJECTS = 'super_public_projects';
 
     #[ConfigKey('Set to 1 if anonymous users should be allowed to site site home page')]
-    public const ANONYMOUS_CAN_SEE_SITE_HOMEPAGE = 'anonymous_can_see_site_homepage';
+    public const string ANONYMOUS_CAN_SEE_SITE_HOMEPAGE = 'anonymous_can_see_site_homepage';
 
     #[ConfigKey('Set to 1 if anonymous users should be allowed to see Contact page')]
-    public const ANONYMOUS_CAN_SEE_CONTACT = 'anonymous_can_see_contact';
+    public const string ANONYMOUS_CAN_SEE_CONTACT = 'anonymous_can_see_contact';
 
-    public const CONFIG     = 'access_mode';
-    public const ANONYMOUS  = 'anonymous';
-    public const REGULAR    = 'regular';
-    public const RESTRICTED = 'restricted';
+    public const string CONFIG     = 'access_mode';
+    public const string ANONYMOUS  = 'anonymous';
+    public const string REGULAR    = 'regular';
+    public const string RESTRICTED = 'restricted';
 
     public function doesPlatformRequireLogin(): bool
     {

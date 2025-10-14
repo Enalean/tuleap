@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetReferenceEvent implements Dispatchable
 {
-    public const NAME = 'getReference';
+    public const string NAME = 'getReference';
 
     /**
      * @var ReferenceManager

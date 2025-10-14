@@ -30,7 +30,7 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class ResetTokenSerializer implements SplitTokenFormatter, SplitTokenIdentifierTranslator
 {
-    public const PARTS_SEPARATOR = '.';
+    public const string PARTS_SEPARATOR = '.';
 
     #[\Override]
     public function getIdentifier(SplitToken $token): ConcealedString

@@ -35,11 +35,11 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 final class AccessTokenGrantController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    public const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
+    public const string CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
 
-    private const GRANT_TYPE_PARAMETER     = 'grant_type';
-    private const GRANT_AUTHORIZATION_CODE = 'authorization_code';
-    private const GRANT_REFRESH_TOKEN      = 'refresh_token';
+    private const string GRANT_TYPE_PARAMETER     = 'grant_type';
+    private const string GRANT_AUTHORIZATION_CODE = 'authorization_code';
+    private const string GRANT_REFRESH_TOKEN      = 'refresh_token';
 
     /**
      * @var AccessTokenGrantErrorResponseBuilder

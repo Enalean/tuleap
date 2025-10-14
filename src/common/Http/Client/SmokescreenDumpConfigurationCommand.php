@@ -28,7 +28,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class SmokescreenDumpConfigurationCommand extends Command
 {
-    public const NAME = 'smokescreen-configuration-dump';
+    public const string NAME = 'smokescreen-configuration-dump';
 
     public function __construct(private readonly SmokescreenConfiguration $smokescreen_configuration)
     {

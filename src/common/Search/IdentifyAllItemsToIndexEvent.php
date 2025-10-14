@@ -26,5 +26,5 @@ use Tuleap\Event\Dispatchable;
 
 final class IdentifyAllItemsToIndexEvent implements Dispatchable
 {
-    public const NAME = 'identifyAllItemsToIndex';
+    public const string NAME = 'identifyAllItemsToIndex';
 }

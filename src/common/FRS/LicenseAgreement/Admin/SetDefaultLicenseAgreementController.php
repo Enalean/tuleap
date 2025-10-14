@@ -35,7 +35,7 @@ use Tuleap\Request\ProjectRetriever;
 
 class SetDefaultLicenseAgreementController implements DispatchableWithRequest
 {
-    private const CSRF_TOKEN = 'frs_set_default_license_agreement';
+    private const string CSRF_TOKEN = 'frs_set_default_license_agreement';
 
     /**
      * @var ProjectRetriever

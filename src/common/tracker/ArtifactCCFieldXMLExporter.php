@@ -20,8 +20,8 @@
 
 class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter
 {
-    public const TV3_TYPE = 'cc';
-    public const TV5_TYPE = 'open_list';
+    public const string TV3_TYPE = 'cc';
+    public const string TV5_TYPE = 'open_list';
 
     #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)

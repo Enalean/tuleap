@@ -37,9 +37,9 @@ final class FilteredOutboundHTTPResponseAlerter implements Plugin
 {
     #[ConfigKey('Alert when an outbound HTTP requests is filtered (either ' . self::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_NEVER_VALUE  . ' or ' . self::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE . ')')]
     #[ConfigKeyString(self::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE)]
-    public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST                    = 'http_outbound_requests_filtered_alert';
-    public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_NEVER_VALUE        = 'never';
-    public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE = 'system-check';
+    public const string ALERT_FILTERED_OUTBOUND_HTTP_REQUEST                    = 'http_outbound_requests_filtered_alert';
+    public const string ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_NEVER_VALUE        = 'never';
+    public const string ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE = 'system-check';
 
 
     public function __construct(

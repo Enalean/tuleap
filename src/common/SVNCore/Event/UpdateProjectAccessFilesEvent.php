@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class UpdateProjectAccessFilesEvent implements Dispatchable
 {
-    public const NAME = 'updateProjectAccessFiles';
+    public const string NAME = 'updateProjectAccessFiles';
 
     /**
      * @var Project

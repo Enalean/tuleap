@@ -49,7 +49,7 @@ class AllowedColorsCollection
         'peggy-pink'       => ['secondary' => '#ffdcf2', 'text' => '#c5007a'],
     ];
 
-    public const DEFAULT_COLOR = 'chrome-silver';
+    public const string DEFAULT_COLOR = 'chrome-silver';
 
     /**
      * @return string[]

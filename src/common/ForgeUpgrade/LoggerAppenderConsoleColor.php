@@ -23,13 +23,13 @@ namespace Tuleap\ForgeUpgrade;
 
 class LoggerAppenderConsoleColor
 {
-    public const BLACK   = "\033[30m";
-    public const RED     = "\033[31m";
-    public const GREEN   = "\033[32m";
-    public const BLUE    = "\033[34m";
-    public const YELLOW  = "\033[35m";
-    public const BG_RED  = "\033[41m";
-    public const NOCOLOR = "\033[0m";
+    public const string BLACK   = "\033[30m";
+    public const string RED     = "\033[31m";
+    public const string GREEN   = "\033[32m";
+    public const string BLUE    = "\033[34m";
+    public const string YELLOW  = "\033[35m";
+    public const string BG_RED  = "\033[41m";
+    public const string NOCOLOR = "\033[0m";
 
     /**
      * Format message aaccording to given level

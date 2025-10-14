@@ -40,8 +40,8 @@ use UGroupDao;
 
 class PlatformAccessControlCommand extends Command
 {
-    public const NAME                    = '--platform-access-control';
-    public const ACCESS_CONTROL_ARGUMENT = 'access_control_level';
+    public const string NAME                    = '--platform-access-control';
+    public const string ACCESS_CONTROL_ARGUMENT = 'access_control_level';
 
     #[\Override]
     protected function configure()

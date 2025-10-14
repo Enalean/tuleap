@@ -30,7 +30,7 @@ use Tuleap\REST\JsonCast;
  */
 final class ServiceRepresentation
 {
-    public const ROUTE = 'project_services';
+    public const string ROUTE = 'project_services';
 
     public readonly int $id;
     public readonly string $uri;

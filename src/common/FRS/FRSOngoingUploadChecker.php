@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 class FRSOngoingUploadChecker implements \Tuleap\Event\Dispatchable  //phpcs:ignore
 {
-    public const NAME = 'frsOngoingUploadChecker';
+    public const string NAME = 'frsOngoingUploadChecker';
 
     /**
      * @var FRSFile

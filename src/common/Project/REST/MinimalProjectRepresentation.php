@@ -32,7 +32,7 @@ use Tuleap\REST\JsonCast;
  */
 class MinimalProjectRepresentation
 {
-    public const ROUTE = 'projects';
+    public const string ROUTE = 'projects';
 
     /**
      * @var int

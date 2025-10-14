@@ -31,7 +31,7 @@ use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class MercureJWTGeneratorBuilder
 {
-    public const  DEFAULTPATH = '/etc/tuleap/conf/mercure.env';
+    public const  string DEFAULTPATH = '/etc/tuleap/conf/mercure.env';
     public static function build(string $path, ProvideUserAvatarUrl $provide_user_avatar_url): MercureJWTGenerator
     {
         if (

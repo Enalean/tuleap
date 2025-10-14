@@ -28,8 +28,8 @@ use Tuleap\Cryptography\ConcealedString;
  */
 final readonly class StandardPasswordHandler implements PasswordHandler
 {
-    private const ALGO          = PASSWORD_ARGON2ID;
-    private const ALGO_SETTINGS = ['memory_cost' => 65536, 'time_cost' => 10, 'threads' => 1];
+    private const string ALGO         = PASSWORD_ARGON2ID;
+    private const array ALGO_SETTINGS = ['memory_cost' => 65536, 'time_cost' => 10, 'threads' => 1];
 
     #[\Override]
     public function verifyHashPassword(

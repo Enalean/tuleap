@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class IndexedItemFoundToSearchResult implements Dispatchable
 {
-    public const NAME = 'convertIndexedItemToSearchResult';
+    public const string NAME = 'convertIndexedItemToSearchResult';
 
     /**
      * @var array<int,SearchResultEntry>

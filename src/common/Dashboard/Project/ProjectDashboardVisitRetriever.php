@@ -30,7 +30,7 @@ use Tuleap\User\History\HistoryEntryCollection;
 
 final class ProjectDashboardVisitRetriever implements GetVisitHistory
 {
-    private const TYPE = 'projectdashboard';
+    private const string TYPE = 'projectdashboard';
 
     public function __construct(
         private readonly RecentlyVisitedProjectDashboardDao $recently_visited_project_dashboard_dao,

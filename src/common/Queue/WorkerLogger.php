@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 
 final class WorkerLogger
 {
-    public const DEFAULT_LOG_FILE_PATH = '/var/log/tuleap/worker_log';
+    public const string DEFAULT_LOG_FILE_PATH = '/var/log/tuleap/worker_log';
 
     public static function get(): LoggerInterface
     {

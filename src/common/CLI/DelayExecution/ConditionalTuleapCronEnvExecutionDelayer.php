@@ -24,7 +24,7 @@ namespace Tuleap\CLI\DelayExecution;
 
 final class ConditionalTuleapCronEnvExecutionDelayer implements ExecutionDelayer
 {
-    public const DELAY_ENV_VAR_NAME = 'TLP_DELAY_CRON_CMD';
+    public const string DELAY_ENV_VAR_NAME = 'TLP_DELAY_CRON_CMD';
 
     /**
      * @var ExecutionDelayer

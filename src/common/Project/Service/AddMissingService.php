@@ -37,7 +37,7 @@ use Tuleap\Event\Dispatchable;
  */
 final class AddMissingService implements Dispatchable
 {
-    public const NAME = 'addMissingService';
+    public const string NAME = 'addMissingService';
 
     /**
      * @readonly

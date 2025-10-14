@@ -42,18 +42,18 @@ final class FFIWASMCaller implements WASMCaller
      */
     private static ?\FFI $ffi = null;
 
-    private const RESPONSE_TYPE_NAME = 'wasm_response_total';
-    private const RESPONSE_TYPE_HELP = 'Total number of wasm response received';
+    private const string RESPONSE_TYPE_NAME = 'wasm_response_total';
+    private const string RESPONSE_TYPE_HELP = 'Total number of wasm response received';
 
-    private const EXEC_TIME_NAME             = 'wasm_module_duration_seconds';
-    private const EXEC_TIME_HELP             = 'Execution time of the WebAssembly module in seconds';
-    private const EXEC_TIME_BUCKETS          = [0.00025, 0.0005, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01];
-    private const EXEC_TIME_FULL_NAME        = 'wasm_full_duration_seconds';
-    private const EXEC_TIME_FULL_HELP        = 'Execution time of the WebAssembly module in seconds, including the FFI back and forth, setting up Wamstime, executing the module...';
-    private const EXEC_TIME_FULL_BUCKETS     = [0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10];
-    private const MEMORY_CONSUMPTION_NAME    = 'wasm_memory_usage_bytes';
-    private const MEMORY_CONSUMPTION_HELP    = 'Memory consumed by the git WebAssembly module in bytes';
-    private const MEMORY_CONSUMPTION_BUCKETS = [1114112, 2228224, 3342336, 4194304];
+    private const string EXEC_TIME_NAME            = 'wasm_module_duration_seconds';
+    private const string EXEC_TIME_HELP            = 'Execution time of the WebAssembly module in seconds';
+    private const array EXEC_TIME_BUCKETS          = [0.00025, 0.0005, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01];
+    private const string EXEC_TIME_FULL_NAME       = 'wasm_full_duration_seconds';
+    private const string EXEC_TIME_FULL_HELP       = 'Execution time of the WebAssembly module in seconds, including the FFI back and forth, setting up Wamstime, executing the module...';
+    private const array EXEC_TIME_FULL_BUCKETS     = [0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10];
+    private const string MEMORY_CONSUMPTION_NAME   = 'wasm_memory_usage_bytes';
+    private const string MEMORY_CONSUMPTION_HELP   = 'Memory consumed by the git WebAssembly module in bytes';
+    private const array MEMORY_CONSUMPTION_BUCKETS = [1114112, 2228224, 3342336, 4194304];
 
     public function __construct(
         private readonly WASMCacheConfigurationBuilder $cache_configuration_builder,

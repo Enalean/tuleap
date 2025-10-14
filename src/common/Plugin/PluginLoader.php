@@ -31,7 +31,7 @@ use Tuleap\File\FileWriter;
 
 class PluginLoader
 {
-    public const HOOK_CACHE_KEY = 'tuleap_hooks_cache';
+    public const string HOOK_CACHE_KEY = 'tuleap_hooks_cache';
 
     /**
      * @var EventManager

@@ -34,7 +34,7 @@ use UserManager;
 
 class UGroupRouter
 {
-    private const CSRF_TOKEN = 'user_group_modifications';
+    private const string CSRF_TOKEN = 'user_group_modifications';
 
     /**
      * @var DelegationController

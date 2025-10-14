@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 final class UserRetrieverBySVNLoginNameEvent implements Dispatchable
 {
-    public const NAME = 'retrieveUserBySVNLoginName';
+    public const string NAME = 'retrieveUserBySVNLoginName';
 
     public ?\PFUser $user                            = null;
     public bool $can_user_be_provided_by_other_means = true;

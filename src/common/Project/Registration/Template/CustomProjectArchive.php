@@ -29,7 +29,7 @@ final readonly class CustomProjectArchive implements VerifyProjectCreationFromAr
 {
     #[ConfigKey('Disable the possibility to create a new project from a custom zip archive which contains the project XML template')]
     #[ConfigKeyInt(0)]
-    public const CONFIG_KEY = 'disable_create_from_custom_archive';
+    public const string CONFIG_KEY = 'disable_create_from_custom_archive';
 
     #[\Override]
     public function canCreateFromCustomArchive(): bool

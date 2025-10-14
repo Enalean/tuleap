@@ -33,7 +33,7 @@ use Tuleap\ServerHostname;
 
 final class HealthCheckCommand extends Command
 {
-    public const NAME = 'healthcheck';
+    public const string NAME = 'healthcheck';
     private RequestFactoryInterface $request_factory;
 
     public function __construct(RequestFactoryInterface $request_factory)

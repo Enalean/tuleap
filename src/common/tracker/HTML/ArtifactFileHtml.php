@@ -12,7 +12,7 @@
 
 class ArtifactFileHtml extends ArtifactFile // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const MAX_SIZE_DEFAULT = 16777216;
+    public const int MAX_SIZE_DEFAULT = 16777216;
 
     /**
      *  ArtifactFileHtml() - constructor

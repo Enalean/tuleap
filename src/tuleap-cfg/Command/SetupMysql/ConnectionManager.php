@@ -35,9 +35,9 @@ use Tuleap\NeverThrow\Result;
 
 class ConnectionManager implements ConnectionManagerInterface
 {
-    private const MAX_DB_WAIT_LOOPS = 60;
+    private const int MAX_DB_WAIT_LOOPS = 60;
 
-    private const AUTHORISED_SQL_MODES = [
+    private const array AUTHORISED_SQL_MODES = [
         'NO_AUTO_CREATE_USER' => true,
         'NO_ENGINE_SUBSTITUTION' => true,
         'ONLY_FULL_GROUP_BY' => true,

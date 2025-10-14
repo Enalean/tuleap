@@ -29,7 +29,7 @@ use Tuleap\Cryptography\ConcealedString;
 
 class AccessKeyHeaderExtractor
 {
-    private const PHP_HTTP_ACCESS_KEY_HEADER = 'HTTP_X_AUTH_ACCESSKEY';
+    private const string PHP_HTTP_ACCESS_KEY_HEADER = 'HTTP_X_AUTH_ACCESSKEY';
 
     /**
      * @var SplitTokenIdentifierTranslator

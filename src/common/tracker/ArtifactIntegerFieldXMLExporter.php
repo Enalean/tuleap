@@ -20,10 +20,10 @@
 
 class ArtifactIntegerFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
 {
-    public const TV3_VALUE_INDEX = 'valueInt';
-    public const TV3_TYPE        = 'TF_2';
-    public const TV5_TYPE        = 'int';
-    public const DEFAULT_VALUE   = 0;
+    public const string TV3_VALUE_INDEX = 'valueInt';
+    public const string TV3_TYPE        = 'TF_2';
+    public const string TV5_TYPE        = 'int';
+    public const int DEFAULT_VALUE      = 0;
 
     #[\Override]
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)

@@ -28,9 +28,9 @@ class TemplateSingleton
   // simply containing the
     public $data_array = [];
 
-    public const PROJECT      = 1;
-    public const TEMPLATE     = 2;
-    public const TEST_PROJECT = 3;
+    public const int PROJECT      = 1;
+    public const int TEMPLATE     = 2;
+    public const int TEST_PROJECT = 3;
 
     public function __construct()
     {

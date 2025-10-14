@@ -29,7 +29,7 @@ use Tuleap\Config\ConfigKey;
 final class DefaultProjectVisibilityRetriever
 {
     #[ConfigKey('Default project visibility as project creation (unrestricted, public, private, private-wo-restr)')]
-    public const CONFIG_SETTING_NAME = 'default_project_visibility';
+    public const string CONFIG_SETTING_NAME = 'default_project_visibility';
 
     public function getDefaultProjectVisibility(): string
     {

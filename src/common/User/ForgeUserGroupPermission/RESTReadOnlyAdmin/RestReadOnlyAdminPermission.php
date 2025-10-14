@@ -24,7 +24,7 @@ use User_ForgeUserGroupPermission;
 
 class RestReadOnlyAdminPermission extends User_ForgeUserGroupPermission
 {
-    public const ID = 9;
+    public const int ID = 9;
 
     #[\Override]
     public function getId()

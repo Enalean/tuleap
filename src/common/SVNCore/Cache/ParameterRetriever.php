@@ -22,8 +22,8 @@ namespace Tuleap\SVNCore\Cache;
 
 class ParameterRetriever
 {
-    public const LIFETIME         = 'lifetime';
-    public const LIFETIME_DEFAULT = 5;
+    public const string LIFETIME      = 'lifetime';
+    public const int LIFETIME_DEFAULT = 5;
 
     /**
      * @var ParameterDao

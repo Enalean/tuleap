@@ -43,32 +43,32 @@ use Tuleap\Request\ForbiddenException;
 final class AuthorizationEndpointController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot, DispatchableWithRequestNoAuthz
 {
     // see https://tools.ietf.org/html/rfc6749#section-4.1.1
-    private const RESPONSE_TYPE_PARAMETER = 'response_type';
-    private const CLIENT_ID_PARAMETER     = 'client_id';
-    private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
-    public const  SCOPE_PARAMETER         = 'scope';
-    public const  CODE_PARAMETER          = 'code';
-    public const  STATE_PARAMETER         = 'state';
+    private const string RESPONSE_TYPE_PARAMETER = 'response_type';
+    private const string CLIENT_ID_PARAMETER     = 'client_id';
+    private const string REDIRECT_URI_PARAMETER  = 'redirect_uri';
+    public const  string SCOPE_PARAMETER         = 'scope';
+    public const  string CODE_PARAMETER          = 'code';
+    public const  string STATE_PARAMETER         = 'state';
     // see https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
-    private const NONCE_PARAMETER        = 'nonce';
-    public const PROMPT_PARAMETER        = 'prompt';
-    private const MAX_AGE_PARAMETER      = 'max_age';
-    private const REQUEST_PARAMETER      = 'request';
-    private const REQUEST_URI_PARAMETER  = 'request_uri';
-    private const REGISTRATION_PARAMETER = 'registration';
+    private const string NONCE_PARAMETER        = 'nonce';
+    public const string PROMPT_PARAMETER        = 'prompt';
+    private const string MAX_AGE_PARAMETER      = 'max_age';
+    private const string REQUEST_PARAMETER      = 'request';
+    private const string REQUEST_URI_PARAMETER  = 'request_uri';
+    private const string REGISTRATION_PARAMETER = 'registration';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
-    public const  ERROR_PARAMETER            = 'error';
-    public const  ERROR_CODE_INVALID_REQUEST = 'invalid_request';
-    private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
-    public const  ERROR_CODE_ACCESS_DENIED   = 'access_denied';
+    public const  string ERROR_PARAMETER            = 'error';
+    public const  string ERROR_CODE_INVALID_REQUEST = 'invalid_request';
+    private const string ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
+    public const  string ERROR_CODE_ACCESS_DENIED   = 'access_denied';
     // see https://openid.net/specs/openid-connect-core-1_0.html#AuthError
-    private const ERROR_CODE_INTERACTION_REQUIRED       = 'interaction_required';
-    private const ERROR_CODE_LOGIN_REQUIRED             = 'login_required';
-    private const ERROR_CODE_REQUEST_NOT_SUPPORTED      = 'request_not_supported';
-    private const ERROR_CODE_REQUEST_URI_NOT_SUPPORTED  = 'request_uri_not_supported';
-    private const ERROR_CODE_REGISTRATION_NOT_SUPPORTED = 'registration_not_supported';
+    private const string ERROR_CODE_INTERACTION_REQUIRED       = 'interaction_required';
+    private const string ERROR_CODE_LOGIN_REQUIRED             = 'login_required';
+    private const string ERROR_CODE_REQUEST_NOT_SUPPORTED      = 'request_not_supported';
+    private const string ERROR_CODE_REQUEST_URI_NOT_SUPPORTED  = 'request_uri_not_supported';
+    private const string ERROR_CODE_REGISTRATION_NOT_SUPPORTED = 'registration_not_supported';
 
-    public const CSRF_TOKEN = 'oauth2_server_authorization_endpoint';
+    public const string CSRF_TOKEN = 'oauth2_server_authorization_endpoint';
     /**
      * @var \UserManager
      */

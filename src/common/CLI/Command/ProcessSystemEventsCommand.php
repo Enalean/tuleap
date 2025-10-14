@@ -35,7 +35,7 @@ use Tuleap\DB\DBConnection;
 
 final class ProcessSystemEventsCommand extends Command
 {
-    public const NAME = 'process-system-events';
+    public const string NAME = 'process-system-events';
 
     /**
      * @var SystemEventProcessor_Factory

@@ -35,7 +35,7 @@ use Tuleap\Request\ForbiddenException;
 
 class RelativeDatesDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/admin/dates-display';
+    public const string URL = '/admin/dates-display';
 
     /**
      * @var AdminPageRenderer

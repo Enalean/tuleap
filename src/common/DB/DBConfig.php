@@ -38,27 +38,27 @@ final class DBConfig
     #[ConfigKey('Database server hostname or IP address')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyString('localhost')]
-    public const CONF_HOST = 'sys_dbhost';
+    public const string CONF_HOST = 'sys_dbhost';
 
     #[ConfigKey('Database server port')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyInt(self::DEFAULT_MYSQL_PORT)]
-    public const CONF_PORT = 'sys_dbport';
+    public const string CONF_PORT = 'sys_dbport';
 
     #[ConfigKey('Database name')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyString(self::DEFAULT_MYSQL_TULEAP_DB_NAME)]
-    public const CONF_DBNAME = 'sys_dbname';
+    public const string CONF_DBNAME = 'sys_dbname';
 
     #[ConfigKey('Database application user')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyString(self::DEFAULT_MYSQL_TULEAP_USER_NAME)]
-    public const CONF_DBUSER = 'sys_dbuser';
+    public const string CONF_DBUSER = 'sys_dbuser';
 
     #[ConfigKey('Database application user password')]
     #[ConfigKeySecret]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
-    public const CONF_DBPASSWORD = 'sys_dbpasswd';
+    public const string CONF_DBPASSWORD = 'sys_dbpasswd';
 
     #[ConfigKey('Database is accessed with TLS')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
@@ -69,27 +69,27 @@ final class DBConfig
     connection. Either with a grant for user or by forcing all
     connections to be in SSL with `require_secure_transport=ON`
     EOT)]
-    public const CONF_ENABLE_SSL = 'sys_enablessl';
+    public const string CONF_ENABLE_SSL = 'sys_enablessl';
 
     #[ConfigKey('Database TLS CA')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyString(self::DEFAULT_MYSQL_CA_FILE_PATH)]
-    public const CONF_SSL_CA = 'sys_db_ssl_ca';
+    public const string CONF_SSL_CA = 'sys_db_ssl_ca';
 
     #[ConfigKey('Toggle verification of database certificate')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyLegacyBool(false)]
-    public const CONF_SSL_VERIFY_CERT = 'sys_db_ssl_verify_cert';
+    public const string CONF_SSL_VERIFY_CERT = 'sys_db_ssl_verify_cert';
 
     #[ConfigKey('Adjust the maximum number of JOIN the mysql server can accept')]
     #[ConfigCannotBeModifiedYet('/etc/tuleap/conf/database.inc')]
     #[ConfigKeyInt(20)]
-    public const CONF_NB_MAX_JOIN = 'sys_server_join';
+    public const string CONF_NB_MAX_JOIN = 'sys_server_join';
 
-    public const DEFAULT_MYSQL_PORT             = 3306;
-    public const DEFAULT_MYSQL_TULEAP_DB_NAME   = 'tuleap';
-    public const DEFAULT_MYSQL_TULEAP_USER_NAME = 'tuleapadm';
-    public const DEFAULT_MYSQL_CA_FILE_PATH     = '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem';
+    public const int DEFAULT_MYSQL_PORT                = 3306;
+    public const string DEFAULT_MYSQL_TULEAP_DB_NAME   = 'tuleap';
+    public const string DEFAULT_MYSQL_TULEAP_USER_NAME = 'tuleapadm';
+    public const string DEFAULT_MYSQL_CA_FILE_PATH     = '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem';
 
     public static function isSSLEnabled(): bool
     {

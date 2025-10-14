@@ -43,7 +43,7 @@ use User_LoginException;
  */
 final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
 {
-    private const WWW_AUTHENTICATE_HEADER_BASE = 'Bearer realm="Tuleap OAuth2 Protected Resource" ';
+    private const string WWW_AUTHENTICATE_HEADER_BASE = 'Bearer realm="Tuleap OAuth2 Protected Resource" ';
 
     /**
      * @var ResponseFactoryInterface

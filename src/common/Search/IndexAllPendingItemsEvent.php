@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 final class IndexAllPendingItemsEvent implements Dispatchable
 {
-    public const NAME = 'indexAllPendingItems';
+    public const string NAME = 'indexAllPendingItems';
 
     /**
      * @psalm-param callable(string):ProgressQueueIndexItemCategory $progress_queue_item_factory

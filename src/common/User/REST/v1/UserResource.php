@@ -70,13 +70,13 @@ use UserManager;
  */
 class UserResource extends AuthenticatedResource
 {
-    public const SELF_ID                        = 'self';
-    public const MAX_LIMIT                      = 50;
-    public const DEFAULT_LIMIT                  = 10;
-    public const DEFAULT_OFFSET                 = 0;
-    public const MAX_TIMES_BATCH                = 100;
-    public const DEFAULT_USER_MEMBERSHIP_SCOPE  = null;
-    public const DEFAULT_USER_MEMBERSHIP_FORMAT = null;
+    public const string SELF_ID                      = 'self';
+    public const int MAX_LIMIT                       = 50;
+    public const int DEFAULT_LIMIT                   = 10;
+    public const int DEFAULT_OFFSET                  = 0;
+    public const int MAX_TIMES_BATCH                 = 100;
+    public const null DEFAULT_USER_MEMBERSHIP_SCOPE  = null;
+    public const null DEFAULT_USER_MEMBERSHIP_FORMAT = null;
 
     /** @var JsonDecoder */
     private $json_decoder;

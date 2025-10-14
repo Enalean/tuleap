@@ -47,7 +47,7 @@ use function Psl\Json\decode as psl_json_decode;
 
 final class PostRegistrationController extends DispatchablePSR15Compatible
 {
-    public const URL = '/webauthn/registration';
+    public const string URL = '/webauthn/registration';
 
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,

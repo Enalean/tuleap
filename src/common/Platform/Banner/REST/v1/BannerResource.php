@@ -34,7 +34,7 @@ use Tuleap\REST\Header;
 
 final class BannerResource extends AuthenticatedResource
 {
-    public const ROUTE = 'banner';
+    public const string ROUTE = 'banner';
 
     /**
      * @url OPTIONS

@@ -24,7 +24,7 @@ use User_ForgeUserGroupPermission;
 
 class SiteAdministratorPermission extends User_ForgeUserGroupPermission
 {
-    public const ID = 7;
+    public const int ID = 7;
 
     #[\Override]
     public function getId()

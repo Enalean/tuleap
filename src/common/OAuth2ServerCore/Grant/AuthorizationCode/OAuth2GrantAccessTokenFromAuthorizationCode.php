@@ -39,9 +39,9 @@ use Tuleap\OAuth2ServerCore\OAuth2ServerException;
 
 class OAuth2GrantAccessTokenFromAuthorizationCode
 {
-    private const AUTH_CODE_PARAMETER     = 'code';
-    private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
-    private const CODE_VERIFIER_PARAMETER = 'code_verifier';
+    private const string AUTH_CODE_PARAMETER     = 'code';
+    private const string REDIRECT_URI_PARAMETER  = 'redirect_uri';
+    private const string CODE_VERIFIER_PARAMETER = 'code_verifier';
     /**
      * @var ResponseFactoryInterface
      */

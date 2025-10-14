@@ -31,7 +31,7 @@ use Tuleap\Reference\TextWithPotentialReferences;
  */
 final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
 {
-    public const NAME = 'receivePotentialReferences';
+    public const string NAME = 'receivePotentialReferences';
 
     /**
      * @param TextWithPotentialReferences[] $text_with_potential_references

@@ -41,7 +41,7 @@ use UserManager;
 
 final class DisplaySecurityController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public const URL = '/account/security';
+    public const string URL = '/account/security';
     /**
      * @var EventDispatcherInterface
      */

@@ -33,29 +33,29 @@ use Tuleap\User\UserGroup\NameTranslator;
  */
 class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const NONE               = 100;
-    public const ANONYMOUS          = 1;
-    public const REGISTERED         = 2;
-    public const AUTHENTICATED      = 5;
-    public const PROJECT_MEMBERS    = 3;
-    public const PROJECT_ADMIN      = 4;
-    public const FILE_MANAGER_ADMIN = 11;
-    public const DOCUMENT_TECH      = 12;
-    public const DOCUMENT_ADMIN     = 13;
-    public const WIKI_ADMIN         = 14;
-    public const TRACKER_ADMIN      = 15;
-    public const FORUM_ADMIN        = 16;
-    public const SVN_ADMIN          = 19;
+    public const int NONE               = 100;
+    public const int ANONYMOUS          = 1;
+    public const int REGISTERED         = 2;
+    public const int AUTHENTICATED      = 5;
+    public const int PROJECT_MEMBERS    = 3;
+    public const int PROJECT_ADMIN      = 4;
+    public const int FILE_MANAGER_ADMIN = 11;
+    public const int DOCUMENT_TECH      = 12;
+    public const int DOCUMENT_ADMIN     = 13;
+    public const int WIKI_ADMIN         = 14;
+    public const int TRACKER_ADMIN      = 15;
+    public const int FORUM_ADMIN        = 16;
+    public const int SVN_ADMIN          = 19;
 
-    public const PROJECT_ADMIN_NAME   = 'project_admins';
-    public const PROJECT_MEMBERS_NAME = 'project_members';
+    public const string PROJECT_ADMIN_NAME   = 'project_admins';
+    public const string PROJECT_MEMBERS_NAME = 'project_members';
 
-    public const WIKI_ADMIN_PERMISSIONS    = 'W2';
-    public const PROJECT_ADMIN_PERMISSIONS = 'A';
+    public const string WIKI_ADMIN_PERMISSIONS    = 'W2';
+    public const string PROJECT_ADMIN_PERMISSIONS = 'A';
 
-    public const DYNAMIC_UPPER_BOUNDARY = 100;
+    public const int DYNAMIC_UPPER_BOUNDARY = 100;
 
-    public const SYSTEM_USER_GROUPS = [
+    public const array SYSTEM_USER_GROUPS = [
         self::NONE,
         self::ANONYMOUS,
         self::REGISTERED,
@@ -72,7 +72,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::SVN_ADMIN,
     ];
 
-    public const NORMALIZED_NAMES = [
+    public const array NORMALIZED_NAMES = [
         self::NONE               => 'nobody',
         self::ANONYMOUS          => 'all_users',
         self::REGISTERED         => 'registered_users',

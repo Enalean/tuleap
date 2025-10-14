@@ -30,7 +30,7 @@ use UserManager;
 
 final class ConfirmNewEmailController implements DispatchableWithRequest
 {
-    public const URL = '/account/confirm-new-email';
+    public const string URL = '/account/confirm-new-email';
 
     /**
      * @var UserManager

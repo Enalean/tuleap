@@ -27,7 +27,7 @@ namespace Tuleap\Project\Sidebar;
  */
 final class LinkedProjectsCollectionPresenter
 {
-    public const NB_MAX_PROJECTS_BEFORE_POPOVER = 5;
+    public const int NB_MAX_PROJECTS_BEFORE_POPOVER = 5;
 
     /**
      * @param LinkedProjectPresenter[] $projects

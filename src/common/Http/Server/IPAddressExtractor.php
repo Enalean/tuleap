@@ -24,8 +24,8 @@ use ForgeConfig;
 
 final class IPAddressExtractor
 {
-    private const HEADER_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
-    private const HEADER_REMOTE_ADDR     = 'REMOTE_ADDR';
+    private const string HEADER_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
+    private const string HEADER_REMOTE_ADDR     = 'REMOTE_ADDR';
 
     public static function getIPAddressFromServerParams(array $server_params): string
     {

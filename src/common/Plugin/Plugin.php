@@ -61,8 +61,8 @@ class Plugin implements \Tuleap\Plugin\IsProjectAllowedToUsePlugin //phpcs:ignor
 
     protected $filesystem_path = '';
 
-    public const SCOPE_SYSTEM  = 0;
-    public const SCOPE_PROJECT = 1;
+    public const int SCOPE_SYSTEM  = 0;
+    public const int SCOPE_PROJECT = 1;
 
     /**
      * @var array List of allowed projects

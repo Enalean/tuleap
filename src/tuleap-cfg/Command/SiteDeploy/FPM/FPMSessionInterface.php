@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 
 interface FPMSessionInterface
 {
-    public const DEPLOYED_FILE_NAME = 'tuleap_sessions.part';
+    public const string DEPLOYED_FILE_NAME = 'tuleap_sessions.part';
 
     public function deployFreshTuleapConf(LoggerInterface $logger, string $tuleap_php_configuration_folder, string $php_configuration_folder): void;
 

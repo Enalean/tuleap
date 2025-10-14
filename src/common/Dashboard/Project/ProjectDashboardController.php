@@ -50,8 +50,8 @@ use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
 {
-    public const DASHBOARD_TYPE        = 'project';
-    public const LEGACY_DASHBOARD_TYPE = 'g';
+    public const string DASHBOARD_TYPE        = 'project';
+    public const string LEGACY_DASHBOARD_TYPE = 'g';
 
     public function __construct(
         private readonly CSRFSynchronizerToken $csrf,

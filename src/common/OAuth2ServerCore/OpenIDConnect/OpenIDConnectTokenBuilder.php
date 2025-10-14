@@ -29,7 +29,7 @@ use Tuleap\OAuth2ServerCore\App\OAuth2App;
 final class OpenIDConnectTokenBuilder
 {
     // See https://tools.ietf.org/html/rfc7515#section-4.1.4
-    private const HEADER_KEY_ID = 'kid';
+    private const string HEADER_KEY_ID = 'kid';
 
     public function __construct(
         private JWTBuilderFactory $builder_factory,

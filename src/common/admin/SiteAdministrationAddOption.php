@@ -24,7 +24,7 @@ namespace Tuleap\Admin;
 
 final class SiteAdministrationAddOption
 {
-    public const NAME = 'siteAdministrationAddOption';
+    public const string NAME = 'siteAdministrationAddOption';
 
     /**
      * @var SiteAdministrationPluginOption[]

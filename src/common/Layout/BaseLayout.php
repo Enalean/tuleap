@@ -63,7 +63,7 @@ use Widget_Static;
 abstract class BaseLayout extends Response
 {
     #[FeatureFlagConfigKey('Feature flag to show a footer on some pages. ⚠️ The footer will soon be removed definitively.')]
-    public const FEATURE_FLAG_SHOW_FOOTER = 'show_footer';
+    public const string FEATURE_FLAG_SHOW_FOOTER = 'show_footer';
 
     /**
      * The root location for the current theme : '/themes/Tuleap/'

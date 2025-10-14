@@ -33,7 +33,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
  */
 final class RESTAccessKeyScope implements AuthenticationScope
 {
-    public const IDENTIFIER_KEY = 'write:rest';
+    public const string IDENTIFIER_KEY = 'write:rest';
 
     /**
      * @var AccessKeyScopeIdentifier

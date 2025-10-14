@@ -31,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ConfigDumpCommand extends Command
 {
-    public const NAME = 'config-dump';
+    public const string NAME = 'config-dump';
 
     public function __construct(private EventDispatcherInterface $event_dispatcher)
     {

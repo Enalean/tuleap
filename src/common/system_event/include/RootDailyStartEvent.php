@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 class RootDailyStartEvent implements Dispatchable
 {
-    public const NAME = 'rootDailyStart';
+    public const string NAME = 'rootDailyStart';
 
     /**
      * @var LoggerInterface

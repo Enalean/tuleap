@@ -23,21 +23,21 @@ use Tuleap\Layout\SidebarPromotedItemPresenter;
 
 class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const FAKE_ID_FOR_CREATION = -1;
+    public const int FAKE_ID_FOR_CREATION = -1;
 
-    public const SUMMARY   = 'summary';
-    public const ADMIN     = 'admin';
-    public const FORUM     = 'forum';
-    public const HOMEPAGE  = 'homepage';
-    public const FILE      = 'file';
-    public const SVN       = 'svn';
-    public const WIKI      = 'wiki';
-    public const TRACKERV3 = 'tracker';
+    public const string SUMMARY   = 'summary';
+    public const string ADMIN     = 'admin';
+    public const string FORUM     = 'forum';
+    public const string HOMEPAGE  = 'homepage';
+    public const string FILE      = 'file';
+    public const string SVN       = 'svn';
+    public const string WIKI      = 'wiki';
+    public const string TRACKERV3 = 'tracker';
 
-    public const SCOPE_SYSTEM  = 'system';
-    public const SCOPE_PROJECT = 'project';
+    public const string SCOPE_SYSTEM  = 'system';
+    public const string SCOPE_PROJECT = 'project';
 
-    public const ICONS = [
+    public const array ICONS = [
         self::ADMIN     => 'fas fa-cogs',
         self::FORUM     => 'fas fa-users',
         self::HOMEPAGE  => 'fas fa-home',

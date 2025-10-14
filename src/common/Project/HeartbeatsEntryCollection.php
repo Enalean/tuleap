@@ -26,9 +26,9 @@ use Tuleap\Event\Dispatchable;
 
 class HeartbeatsEntryCollection implements Dispatchable
 {
-    public const NAME = 'collectHeartbeatsEntries';
+    public const string NAME = 'collectHeartbeatsEntries';
 
-    public const NB_MAX_ENTRIES = 30;
+    public const int NB_MAX_ENTRIES = 30;
 
     /**
      * @var HeartbeatsEntry[]

@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class ApproveProjectAdministratorRemoval implements Dispatchable
 {
-    public const NAME = 'approveProjectAdministratorRemoval';
+    public const string NAME = 'approveProjectAdministratorRemoval';
 
     /**
      * @var \Project

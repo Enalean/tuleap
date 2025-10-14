@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CorrectFrsRepositoryPermissionsCommand extends Command
 {
-    public const NAME = 'frs:correct-repository-permissions';
+    public const string NAME = 'frs:correct-repository-permissions';
 
     /**
      * @var string

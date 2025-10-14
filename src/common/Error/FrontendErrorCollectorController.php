@@ -35,7 +35,7 @@ use Tuleap\User\ProvideCurrentUser;
 
 final class FrontendErrorCollectorController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    private const METRIC_NAME = 'collected_frontend_errors_total';
+    private const string METRIC_NAME = 'collected_frontend_errors_total';
 
     public function __construct(
         private ResponseFactoryInterface $response_factory,

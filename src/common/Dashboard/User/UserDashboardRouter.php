@@ -25,7 +25,7 @@ use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 class UserDashboardRouter
 {
-    public const DASHBOARD_TYPE = 'user';
+    public const string DASHBOARD_TYPE = 'user';
 
     /** @var UserDashboardController  */
     private $user_dashboard_controller;

@@ -41,7 +41,7 @@ final class DeprecatedForum
     EOT)]
     #[ConfigKeyHidden]
     #[ConfigKeyString('')]
-    public const FEATURE_FLAG_FORUM_EOL = 'deprecated_forum_unblock_list';
+    public const string FEATURE_FLAG_FORUM_EOL = 'deprecated_forum_unblock_list';
 
     public static function getDeprecationMessage(): string
     {

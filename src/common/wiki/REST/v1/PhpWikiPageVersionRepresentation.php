@@ -29,7 +29,7 @@ use WikiPageVersion;
  */
 class PhpWikiPageVersionRepresentation
 {
-    public const ROUTE = 'versions';
+    public const string ROUTE = 'versions';
 
     /**
      * @var int {@type int}

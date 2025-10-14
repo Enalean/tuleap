@@ -22,16 +22,16 @@ namespace Tuleap\User\UserGroup;
 
 class DescriptionTranslator
 {
-    private const  NOBODY             = 'ugroup_nobody_desc_key';
-    private const  ANON               = 'ugroup_anonymous_users_desc_key';
-    private const  AUTHENTICATED      = 'ugroup_authenticated_users_desc_key';
-    private const  PROJECT_ADMINS     = 'ugroup_project_admins_desc_key';
-    private const  REGISTERED         = 'ugroup_registered_users_desc_key';
-    private const  PROJECT_MEMBERS    = 'ugroup_project_members_desc_key';
-    private const  WIKI_ADMINS        = 'ugroup_wiki_admin_desc_key';
-    private const  FORUM_ADMINS       = 'ugroup_forum_admin_desc_key';
-    private const  FILE_ADMINS        = 'ugroup_file_manager_admin_desc_key';
-    private const  TV3_TRACKER_ADMINS = 'ugroup_tracker_admins_desc_key';
+    private const  string NOBODY             = 'ugroup_nobody_desc_key';
+    private const  string ANON               = 'ugroup_anonymous_users_desc_key';
+    private const  string AUTHENTICATED      = 'ugroup_authenticated_users_desc_key';
+    private const  string PROJECT_ADMINS     = 'ugroup_project_admins_desc_key';
+    private const  string REGISTERED         = 'ugroup_registered_users_desc_key';
+    private const  string PROJECT_MEMBERS    = 'ugroup_project_members_desc_key';
+    private const  string WIKI_ADMINS        = 'ugroup_wiki_admin_desc_key';
+    private const  string FORUM_ADMINS       = 'ugroup_forum_admin_desc_key';
+    private const  string FILE_ADMINS        = 'ugroup_file_manager_admin_desc_key';
+    private const  string TV3_TRACKER_ADMINS = 'ugroup_tracker_admins_desc_key';
 
     public static function getUserGroupDisplayDescription(string $desc): string
     {

@@ -26,7 +26,7 @@ use Tuleap\REST\JsonDecoder;
 
 class UserGroupQueryParameterParser
 {
-    private const WITH_SYSTEM_USER_GROUPS_PARAMETER = 'with_system_user_groups';
+    private const string WITH_SYSTEM_USER_GROUPS_PARAMETER = 'with_system_user_groups';
 
     private $json_decoder;
 

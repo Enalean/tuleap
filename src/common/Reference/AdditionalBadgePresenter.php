@@ -27,10 +27,10 @@ namespace Tuleap\Reference;
  */
 final class AdditionalBadgePresenter
 {
-    private const STATE_PRIMARY   = 'primary';
-    private const STATE_SECONDARY = 'secondary';
-    private const STATE_DANGER    = 'danger';
-    private const STATE_SUCCESS   = 'success';
+    private const string STATE_PRIMARY   = 'primary';
+    private const string STATE_SECONDARY = 'secondary';
+    private const string STATE_DANGER    = 'danger';
+    private const string STATE_SUCCESS   = 'success';
 
     /**
      * @var string

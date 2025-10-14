@@ -39,15 +39,15 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Codendi_HTMLPurifier
 {
-    public const CONFIG_CONVERT_HTML                  = 0;
-    public const CONFIG_STRIP_HTML                    = 1;
-    public const CONFIG_BASIC                         = 5;
-    public const CONFIG_BASIC_NOBR                    = 6;
-    public const CONFIG_LIGHT                         = 10;
-    public const CONFIG_FULL                          = 15;
-    public const CONFIG_JS_QUOTE                      = 20;
-    public const CONFIG_MINIMAL_FORMATTING_NO_NEWLINE = 35;
-    public const CONFIG_DISABLED                      = 100;
+    public const int CONFIG_CONVERT_HTML                  = 0;
+    public const int CONFIG_STRIP_HTML                    = 1;
+    public const int CONFIG_BASIC                         = 5;
+    public const int CONFIG_BASIC_NOBR                    = 6;
+    public const int CONFIG_LIGHT                         = 10;
+    public const int CONFIG_FULL                          = 15;
+    public const int CONFIG_JS_QUOTE                      = 20;
+    public const int CONFIG_MINIMAL_FORMATTING_NO_NEWLINE = 35;
+    public const int CONFIG_DISABLED                      = 100;
 
     private static $allowed_schemes = [
         'http'   => true,

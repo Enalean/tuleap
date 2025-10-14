@@ -31,7 +31,7 @@ use Tuleap\Request\NotFoundException;
 
 class TroveCatListController implements DispatchableWithRequest
 {
-    private const DEFAULT_NB_MAX_VALUES = 3;
+    private const int DEFAULT_NB_MAX_VALUES = 3;
 
     /**
      * @var TroveCatDao

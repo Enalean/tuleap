@@ -26,7 +26,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class HistoryRetriever
 {
-    public const MAX_LENGTH_HISTORY = 30;
+    public const int MAX_LENGTH_HISTORY = 30;
 
     public function __construct(
         private readonly EventDispatcherInterface $event_manager,

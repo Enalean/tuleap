@@ -27,10 +27,10 @@ use Tuleap\Backend\FileExtensionFilterIterator;
  */
 class Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const LOG_INFO    = \Psr\Log\LogLevel::INFO;
-    public const LOG_WARNING = \Psr\Log\LogLevel::WARNING;
-    public const LOG_ERROR   = \Psr\Log\LogLevel::ERROR;
-    public const LOG_DEBUG   = \Psr\Log\LogLevel::DEBUG;
+    public const string LOG_INFO    = \Psr\Log\LogLevel::INFO;
+    public const string LOG_WARNING = \Psr\Log\LogLevel::WARNING;
+    public const string LOG_ERROR   = \Psr\Log\LogLevel::ERROR;
+    public const string LOG_DEBUG   = \Psr\Log\LogLevel::DEBUG;
 
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";

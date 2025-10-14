@@ -24,7 +24,7 @@ namespace Tuleap\User\Account;
 
 final class AccountTabSecuritySection extends AccountTabSection
 {
-    public const NAME = 'Security';
+    public const string NAME = 'Security';
 
     public function __construct(array $tabs)
     {

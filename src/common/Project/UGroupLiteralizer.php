@@ -31,12 +31,12 @@ use UserManager;
  */
 class UGroupLiteralizer
 {
-    private const USER_STATUS = [
+    private const array USER_STATUS = [
         PFUser::STATUS_RESTRICTED => 'site_restricted',
         PFUser::STATUS_ACTIVE     => 'site_active',
     ];
 
-    private const UGROUPS_TEMPLATES = [
+    private const array UGROUPS_TEMPLATES = [
         ProjectUGroup::ANONYMOUS       => '@site_active @%s_project_members',
         ProjectUGroup::REGISTERED      => '@site_active @%s_project_members',
         ProjectUGroup::AUTHENTICATED   => '@site_active @%s_project_members @site_restricted',

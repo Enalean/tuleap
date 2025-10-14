@@ -28,7 +28,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 
 final class OAuth2ScopeExtractorRESTEndpoint
 {
-    private const ANNOTATION_NAME = 'oauth2-scope';
+    private const string ANNOTATION_NAME = 'oauth2-scope';
 
     /**
      * @var AuthenticationScopeBuilder

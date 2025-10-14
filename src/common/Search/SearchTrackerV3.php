@@ -20,7 +20,7 @@
 
 class Search_SearchTrackerV3
 {
-    public const NAME = 'tracker';
+    public const string NAME = 'tracker';
 
     /**
      * @var ArtifactDao

@@ -30,7 +30,7 @@ use TruncateLevelLogger;
 
 final class LogToFiles
 {
-    public const CONFIG_LOGGER_FILES = 'files';
+    public const string CONFIG_LOGGER_FILES = 'files';
 
     public function getLogger(string $name): LoggerInterface
     {

@@ -36,7 +36,7 @@ use Tuleap\Project\Status\UpdateStatusChecker;
 
 class ProjectEditController
 {
-    public const TEMPLATE = 'project-info';
+    public const string TEMPLATE = 'project-info';
     /**
      * @var ProjectDetailsPresenter
      */

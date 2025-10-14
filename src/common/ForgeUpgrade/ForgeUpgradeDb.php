@@ -27,10 +27,10 @@ use RuntimeException;
 
 class ForgeUpgradeDb
 {
-    public const STATUS_ERROR   = 0;
-    public const STATUS_SUCCESS = 1;
-    public const STATUS_FAILURE = 2;
-    public const STATUS_SKIP    = 3;
+    public const int STATUS_ERROR   = 0;
+    public const int STATUS_SUCCESS = 1;
+    public const int STATUS_FAILURE = 2;
+    public const int STATUS_SKIP    = 3;
 
     private PDO $dbh;
 

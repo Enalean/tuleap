@@ -24,7 +24,7 @@ namespace Tuleap\Layout;
 
 class IncludeAssets implements IncludeAssetsGeneric
 {
-    public const MANIFEST_FILE_NAME = 'manifest.json';
+    public const string MANIFEST_FILE_NAME = 'manifest.json';
 
     private $base_url;
     private $assets;

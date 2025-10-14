@@ -36,7 +36,7 @@ class AtUserCreationDefaultWidgetsCreator
      */
     private $event_manager;
 
-    public const DEFAULT_WIDGETS_FOR_NEW_USER = 'default_widgets_for_new_user';
+    public const string DEFAULT_WIDGETS_FOR_NEW_USER = 'default_widgets_for_new_user';
 
     public function __construct(DashboardWidgetDao $dao, EventManager $event_manager)
     {

@@ -28,7 +28,7 @@
  */
 class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const PATTERN_PROJECT_NAME = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
+    public const string PATTERN_PROJECT_NAME = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
     /**
      * Group name cannot contain underscore or dots for DNS reasons.
      *

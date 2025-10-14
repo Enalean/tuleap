@@ -27,7 +27,7 @@ namespace Tuleap\Project\ProjectBackground;
  */
 final class ProjectBackgroundSelection
 {
-    public const ALLOWED = [
+    public const array ALLOWED = [
         'aerial-water'    => 'Chris',
         'asphalt-rock'    => 'Jake Blucker',
         'beach-daytime'   => 'Chris Stenger',

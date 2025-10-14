@@ -27,7 +27,7 @@ namespace Tuleap\OAuth2ServerCore\App;
  */
 final class ClientIdentifier
 {
-    private const PREFIX = 'tlp-client-id-';
+    private const string PREFIX = 'tlp-client-id-';
 
     /** @var int */
     private $identifier;

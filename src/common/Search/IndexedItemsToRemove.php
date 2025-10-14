@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
  */
 final class IndexedItemsToRemove implements Dispatchable
 {
-    public const NAME = 'removeIndexedItems';
+    public const string NAME = 'removeIndexedItems';
 
     /**
      * @param non-empty-array<non-empty-string,string> $metadata

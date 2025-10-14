@@ -24,7 +24,7 @@ use Tuleap\Project\ProjectDescriptionUsageRetriever;
 
 class DescriptionFieldAdminPresenterBuilder
 {
-    public const SHORT_DESCRIPTION_FIELD_ID = 'short_description';
+    public const string SHORT_DESCRIPTION_FIELD_ID = 'short_description';
 
     /**
      * @return FieldPresenter[]

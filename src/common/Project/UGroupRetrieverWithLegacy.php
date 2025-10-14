@@ -26,7 +26,7 @@ use UGroupManager;
 
 class UGroupRetrieverWithLegacy
 {
-    private const LEGACY_SYSTEM_USER_GROUPS = [
+    private const array LEGACY_SYSTEM_USER_GROUPS = [
         'UGROUP_NONE'               => ProjectUGroup::NONE,
         'UGROUP_ANONYMOUS'          => ProjectUGroup::ANONYMOUS,
         'UGROUP_REGISTERED'         => ProjectUGroup::REGISTERED,

@@ -46,7 +46,7 @@ final class WebAuthnAuthentication
     #[FeatureFlagConfigKey('Feature flag to enable/disable passwordless login')]
     #[ConfigKeyInt(0)]
     #[ConfigKeyHidden]
-    public const FEATURE_FLAG_LOGIN = 'enable_passwordless_login';
+    public const string FEATURE_FLAG_LOGIN = 'enable_passwordless_login';
 
     public function __construct(
         private readonly GetAllCredentialSourceByUserId $source_dao,

@@ -40,31 +40,31 @@ class MailTransportBuilder
 {
     #[ConfigKey('Option to define how Tuleap will send emails')]
     #[ConfigKeyString(self::EMAIL_TRANSPORT_SENDMAIL_VALUE)]
-    public const TRANSPORT_CONFIG_KEY = 'email_transport';
+    public const string TRANSPORT_CONFIG_KEY = 'email_transport';
 
     #[ConfigKey("Option to define the relay host used when email_transport is configured to 'smtp'. The used port must be provided here.")]
     #[ConfigKeyString('')]
-    public const RELAYHOST_CONFIG_KEY            = 'email_relayhost';
+    public const string RELAYHOST_CONFIG_KEY            = 'email_relayhost';
     #[ConfigKey('Deprecated and not used, temporarily kept for backward compatibility')]
     #[ConfigKeyInt(0)]
     #[ConfigKeyHidden] // Not used anymore keeping it around for now to ease the migration
-    public const RELAYHOST_SMTP_USE_TLS          = 'email_relayhost_smtp_use_tls';
+    public const string RELAYHOST_SMTP_USE_TLS          = 'email_relayhost_smtp_use_tls';
     #[ConfigKey('Force activate the usage of TLS for the SMTP relay host, do not set if your mail relay is using "STARTTLS"')]
     #[ConfigKeyInt(0)]
-    public const RELAYHOST_SMTP_USE_IMPLICIT_TLS = 'email_relayhost_smtp_use_implicit_tls';
+    public const string RELAYHOST_SMTP_USE_IMPLICIT_TLS = 'email_relayhost_smtp_use_implicit_tls';
     #[ConfigKey('Username to use to authenticate against the SMTP relay host')]
     #[ConfigKeyString('')]
-    public const RELAYHOST_SMTP_USERNAME         = 'email_relayhost_smtp_username';
+    public const string RELAYHOST_SMTP_USERNAME         = 'email_relayhost_smtp_username';
     #[ConfigKey('Password to use to authenticate against the SMTP relay host')]
     #[ConfigKeySecret]
-    public const RELAYHOST_SMTP_PASSWORD         = 'email_relayhost_smtp_password';
+    public const string RELAYHOST_SMTP_PASSWORD         = 'email_relayhost_smtp_password';
 
-    public const EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
-    public const EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
+    public const string EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
+    public const string EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
     #[ConfigKey('Type of authentication to use against the SMTP relay host (either plain, login or xoauth2), indicative only not used anymore')]
     #[ConfigKeyString('plain')]
     #[ConfigKeyHidden] // Not used anymore keeping it around for now to ease the migration
-    public const RELAYHOST_SMTP_AUTH_TYPE       = 'email_relayhost_smtp_auth_type';
+    public const string RELAYHOST_SMTP_AUTH_TYPE       = 'email_relayhost_smtp_auth_type';
 
     private function __construct()
     {

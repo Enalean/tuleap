@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class ServiceEnableForXmlImportRetriever implements Dispatchable
 {
-    public const NAME = 'serviceEnableForXmlImportRetriever';
+    public const string NAME = 'serviceEnableForXmlImportRetriever';
 
     /**
      * @var array

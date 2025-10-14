@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 class NewDropdownProjectLinksCollector implements Dispatchable
 {
-    public const NAME = 'collectNewDropdownLinksForProject';
+    public const string NAME = 'collectNewDropdownLinksForProject';
 
     /**
      * @var NewDropdownLinkPresenter[]

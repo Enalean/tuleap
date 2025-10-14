@@ -22,9 +22,9 @@ namespace Tuleap\Admin\Homepage;
 
 class StatisticsBadgePresenter
 {
-    public const LEVEL_DANGER    = 'danger';
-    public const LEVEL_WARNING   = 'warning';
-    public const LEVEL_SECONDARY = 'secondary';
+    public const string LEVEL_DANGER    = 'danger';
+    public const string LEVEL_WARNING   = 'warning';
+    public const string LEVEL_SECONDARY = 'secondary';
 
     public $label;
     public $level;

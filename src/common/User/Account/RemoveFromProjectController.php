@@ -37,7 +37,7 @@ use UserManager;
 
 final class RemoveFromProjectController extends DispatchablePSR15Compatible
 {
-    public const CSRF_TOKEN_NAME = 'remove_yourself_from_project';
+    public const string CSRF_TOKEN_NAME = 'remove_yourself_from_project';
 
     /**
      * @var ResponseFactoryInterface

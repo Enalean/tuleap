@@ -33,7 +33,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
  */
 final class SVNAccessKeyScope implements AuthenticationScope
 {
-    public const IDENTIFIER_KEY = 'write:svn';
+    public const string IDENTIFIER_KEY = 'write:svn';
 
     private AuthenticationScopeDefinition $definition;
 

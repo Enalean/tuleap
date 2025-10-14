@@ -33,7 +33,7 @@ use Tuleap\Widget\XML\XMLWidget;
 
 final class IssuesTemplateDashboardDefinition implements Dispatchable
 {
-    public const NAME = 'issuesTemplateDashboardDefinition';
+    public const string NAME = 'issuesTemplateDashboardDefinition';
 
     private XMLColumn $global_dashboard_left_column;
     private XMLColumn $team_dashboard_left_column;

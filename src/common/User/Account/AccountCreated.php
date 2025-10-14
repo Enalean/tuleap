@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class AccountCreated implements Dispatchable
 {
-    public const NAME = 'accountCreated';
+    public const string NAME = 'accountCreated';
 
     /**
      * @var \PFUser

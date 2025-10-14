@@ -30,7 +30,7 @@ use function Psl\Type\string;
 
 final class BeforeStandardLogin implements BeforeLogin
 {
-    public const NAME = 'beforeLogin';
+    public const string NAME = 'beforeLogin';
 
     private ?PFUser $user = null;
     /**

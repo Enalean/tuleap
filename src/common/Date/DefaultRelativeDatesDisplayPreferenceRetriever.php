@@ -24,7 +24,7 @@ namespace Tuleap\Date;
 
 class DefaultRelativeDatesDisplayPreferenceRetriever
 {
-    public const DEFAULT_RELATIVE_DATES_DISPLAY = 'default-relative-dates-display';
+    public const string DEFAULT_RELATIVE_DATES_DISPLAY = 'default-relative-dates-display';
 
     public static function retrieveDefaultValue(): string
     {

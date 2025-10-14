@@ -28,7 +28,7 @@ use Tuleap\PHPWiki\WikiPage;
  */
 class PhpWikiPageRepresentation
 {
-    public const ROUTE = 'phpwiki';
+    public const string ROUTE = 'phpwiki';
 
     /**
      * @var int {@type int}

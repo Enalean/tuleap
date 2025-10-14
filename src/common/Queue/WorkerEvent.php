@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 readonly class WorkerEvent implements Dispatchable
 {
-    public const NAME = 'workerEvent';
+    public const string NAME = 'workerEvent';
 
     public function __construct(private LoggerInterface $logger, private WorkerEventContent $content)
     {

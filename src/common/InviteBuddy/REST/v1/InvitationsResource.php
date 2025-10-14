@@ -51,7 +51,7 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 class InvitationsResource extends AuthenticatedResource
 {
-    public const ROUTE = 'invitations';
+    public const string ROUTE = 'invitations';
 
     /**
      * @url OPTIONS

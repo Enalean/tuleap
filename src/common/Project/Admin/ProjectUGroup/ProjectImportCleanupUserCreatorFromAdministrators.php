@@ -28,7 +28,7 @@ use Tuleap\Event\Dispatchable;
 
 final class ProjectImportCleanupUserCreatorFromAdministrators implements Dispatchable
 {
-    public const NAME = 'projectImportCleanupUserCreatorFromAdministrators';
+    public const string NAME = 'projectImportCleanupUserCreatorFromAdministrators';
     /**
      * @var PFUser
      */

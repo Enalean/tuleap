@@ -34,9 +34,9 @@ use Tuleap\System\DaemonLocker;
 
 class Worker
 {
-    public const EVENT_QUEUE_NAME = 'app_user_events';
+    public const string EVENT_QUEUE_NAME = 'app_user_events';
 
-    public const DEFAULT_PID_FILE_PATH = '/var/run/tuleap/worker.pid';
+    public const string DEFAULT_PID_FILE_PATH = '/var/run/tuleap/worker.pid';
 
     private $id = 0;
     private $pid_file;

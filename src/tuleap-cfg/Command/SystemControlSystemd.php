@@ -27,7 +27,7 @@ use Symfony\Component\Process\Process;
 
 class SystemControlSystemd implements SystemControlInterface
 {
-    private const SYSTEMCTL = '/usr/bin/systemctl';
+    private const string SYSTEMCTL = '/usr/bin/systemctl';
 
     /**
      * @var Process
