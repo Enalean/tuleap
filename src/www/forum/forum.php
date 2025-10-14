@@ -62,16 +62,6 @@ function forum_show_a_nested_message($result, $row = 0)
 				</TD>
 			</TR>';
 
-    $crossref_fact = new CrossReferenceFactory(db_result($result, $row, 'msg_id'), ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
-    $crossref_fact->fetchDatas();
-    if ($crossref_fact->getNbReferences() > 0) {
-        $ret_val .= '<tr>';
-        $ret_val .= ' <td class="forum_reference_separator">';
-        $ret_val .= '  <b> ' . $Language->getText('cross_ref_fact_include', 'references') . '</b>';
-        $ret_val .= $crossref_fact->getHTMLDisplayCrossRefs();
-        $ret_val .= ' </td>';
-        $ret_val .= '</tr>';
-    }
     $ret_val .= '
 			<tr>
 			 <td>
@@ -478,13 +468,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     }
 
         echo $ret_val;
-
-        $crossref_fact = new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_FORUM, $group_id);
-        $crossref_fact->fetchDatas();
-    if ($crossref_fact->getNbReferences() > 0) {
-        echo '<b> ' . $Language->getText('cross_ref_fact_include', 'references') . '</b>';
-        $crossref_fact->DisplayCrossRefs();
-    }
 
     if (! $pv) {
             echo '<P>&nbsp;<P>';

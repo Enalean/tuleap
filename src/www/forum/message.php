@@ -77,17 +77,6 @@ if ($request->valid($vMsg)) {
     echo $purifier->purify($message->getBody(), CODENDI_PURIFIER_BASIC, $group_id);
     echo '</TD></TR>';
 
-    $crossref_fact = new CrossReferenceFactory($msg_id, ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $group_id);
-    $crossref_fact->fetchDatas();
-    if ($crossref_fact->getNbReferences() > 0) {
-        echo '<tr>';
-        echo ' <td class="forum_reference_separator">';
-        echo '  <b> ' . $Language->getText('cross_ref_fact_include', 'references') . '</b>';
-        echo $crossref_fact->getHTMLDisplayCrossRefs();
-        echo ' </td>';
-        echo '</tr>';
-    }
-
     echo '</TABLE>';
 
     if ($pv == 0) {

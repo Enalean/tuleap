@@ -42,15 +42,11 @@ use Tracker_Report_Criteria;
 use Tracker_Report_Criteria_Text_ValueDao;
 use Tracker_Report_Criteria_ValueDao;
 use Tuleap\DB\DBFactory;
-use Tuleap\Forum\ForumDao;
-use Tuleap\Forum\ForumRetriever;
-use Tuleap\Forum\MessageRetriever;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Option\Option;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
-use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
 use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\ByNature\Wiki\WikiPageFromReferenceValueRetriever;
@@ -390,13 +386,6 @@ final class CrossReferencesField extends TrackerField implements Tracker_FormEle
                         new FRSPackageFactory(),
                         new FRSReleaseFactory(),
                         new FRSFileFactory()
-                    ),
-                    new CrossReferenceForumOrganizer(
-                        ProjectManager::instance(),
-                        new MessageRetriever(),
-                        new ForumRetriever(
-                            new ForumDao(),
-                        )
                     ),
                 ),
             )
