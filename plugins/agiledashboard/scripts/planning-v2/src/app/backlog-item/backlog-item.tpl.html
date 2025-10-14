@@ -4,6 +4,7 @@
     move-to-top="backlogItemController.moveToTopInParent(backlogItemController.backlog_item)"
     move-to-bottom="backlogItemController.moveToBottomInParent(backlogItemController.backlog_item)"
     current-milestone="current_milestone"
+    data-test="backlog-item-handle"
 ></div>
 
 <div class="backlog-item-show-children"
@@ -33,6 +34,7 @@
                     children-context="true"
                     move-to-top="backlogItemController.moveToTop(backlog_item)"
                     move-to-bottom="backlogItemController.moveToBottom(backlog_item)"
+                    data-test="backlog-item-child"
                 ></div>
             </div>
         </div>
@@ -43,5 +45,6 @@
     <div class="backlog-item-show-children-handle"
         ng-class="{'closed': ! backlogItemController.backlog_item.children.collapsed}"
         ng-click="backlogItemController.toggleChildrenDisplayed()"
+        data-test="backlog-item-show-children-handle"
     ></div>
 </div>

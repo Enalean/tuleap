@@ -38,6 +38,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-button-mini"
                 open-tlp-dropdown
                 ng-click="$event.stopPropagation()"
+                data-test="add-item-milestone-dropdown"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
                 <span translate>Add item</span>
@@ -49,7 +50,7 @@
                     ng-click="$event.stopPropagation(); planning.showAddItemToSubMilestoneModal(accepted_type, milestoneController.milestone)"
                     class="tlp-dropdown-menu-item"
                     role="menuitem"
-                    data-test="add-item-to-submilestone"
+                    data-test="add-item-in-milestone"
                 ><i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i> <span translate>Add {{ accepted_type.label }}</span></a>
             </div>
         </div>
