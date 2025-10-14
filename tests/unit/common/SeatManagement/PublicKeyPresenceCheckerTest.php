@@ -22,37 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
+use Tuleap\NeverThrow\Result;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class PublicKeyPresenceCheckerTest extends TestCase
 {
-    public function testItReturnsFalseWhenNoPublicKeyIsPresent(): void
+    public function testItReturnsErrWhenNoPublicKeyIsPresent(): void
     {
         $checker = new PublicKeyPresenceChecker();
 
-        self::assertFalse($checker->checkPresence(__DIR__ . '/_fixtures/empty'));
+        self::assertTrue(Result::isErr($checker->checkPresence(__DIR__ . '/_fixtures/empty')));
     }
 
-    public function testItReturnsTrueWhenAtLeastOnePublicKeyIsPresent(): void
+    public function testItReturnsOkWhenAtLeastOnePublicKeyIsPresent(): void
     {
         $checker = new PublicKeyPresenceChecker();
 
-        self::assertTrue($checker->checkPresence(__DIR__ . '/_fixtures/keys'));
+        self::assertTrue(Result::isOk($checker->checkPresence(__DIR__ . '/_fixtures/keys')));
     }
 
-    public function testItReturnsFalseWhenKeysDirectoryDoesNotExist(): void
+    public function testItReturnsErrWhenKeysDirectoryDoesNotExist(): void
     {
         $checker = new PublicKeyPresenceChecker();
 
-        self::assertFalse($checker->checkPresence(__DIR__ . 'abc'));
+        self::assertTrue(Result::isErr($checker->checkPresence(__DIR__ . 'abc')));
     }
 
-    public function testItReturnsFalseWhenKeysDirectoryIsAFile(): void
+    public function testItReturnsErrWhenKeysDirectoryIsAFile(): void
     {
         $checker = new PublicKeyPresenceChecker();
 
-        self::assertFalse($checker->checkPresence(__FILE__));
+        self::assertTrue(Result::isErr($checker->checkPresence(__FILE__)));
     }
 }

@@ -49,7 +49,7 @@ final class CachedLicenseBuilder implements BuildLicense
             self::$instance = new self(new LicenseBuilder(
                 new PublicKeyPresenceChecker(),
                 new LicenseSignatureChecker($logger, $token_parser, new Validator(), $mapper),
-                new LicenseContentRetriever($logger, $token_parser, $mapper),
+                new LicenseContentRetriever($logger, $mapper),
             ));
         }
 

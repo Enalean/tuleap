@@ -23,7 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Test\Stubs\SeatManagement;
 
 use Override;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Result;
 use Tuleap\SeatManagement\CheckPublicKeyPresence;
+use Tuleap\SeatManagement\Fault\NoPublicKeyFault;
 
 final readonly class CheckPublicKeyPresenceStub implements CheckPublicKeyPresence
 {
@@ -43,8 +47,8 @@ final readonly class CheckPublicKeyPresenceStub implements CheckPublicKeyPresenc
     }
 
     #[Override]
-    public function checkPresence(string $public_key_directory): bool
+    public function checkPresence(string $public_key_directory): Ok|Err
     {
-        return $this->has_key;
+        return $this->has_key ? Result::ok(null) : Result::err(NoPublicKeyFault::build());
     }
 }

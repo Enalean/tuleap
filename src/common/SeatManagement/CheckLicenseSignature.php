@@ -22,11 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
+use Lcobucci\JWT\UnencryptedToken;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+
 interface CheckLicenseSignature
 {
     /**
      * @param non-empty-string $license_file_path
      * @param non-empty-string $keys_directory
+     * @return Ok<UnencryptedToken>|Err<Fault>
      */
-    public function checkLicenseSignature(string $license_file_path, string $keys_directory): bool;
+    public function checkLicenseSignature(string $license_file_path, string $keys_directory): Ok|Err;
 }

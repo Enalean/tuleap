@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SeatManagement;
+namespace Tuleap\SeatManagement\Fault;
 
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 
-interface CheckPublicKeyPresence
+/**
+ * @psalm-immutable
+ */
+final readonly class LicenseClaimsParsingFault extends Fault
 {
-    /**
-     * @param non-empty-string $public_key_directory
-     * @return Ok<null>|Err<Fault>
-     */
-    public function checkPresence(string $public_key_directory): Ok|Err;
+    public static function build(string $error_message): Fault
+    {
+        return new self('Failed parsing license claims: ' . $error_message);
+    }
 }

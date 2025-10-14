@@ -23,22 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\SeatManagement;
 
 use Override;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Result;
+use Tuleap\SeatManagement\Fault\NoPublicKeyFault;
 use function Psl\Filesystem\is_file;
 use function Psl\Filesystem\read_directory;
-use function Psl\Filesystem\exists;
 use function Psl\Filesystem\is_directory;
 
 final class PublicKeyPresenceChecker implements CheckPublicKeyPresence
 {
     #[Override]
-    public function checkPresence(string $public_key_directory): bool
+    public function checkPresence(string $public_key_directory): Ok|Err
     {
-        if (! exists($public_key_directory) || ! is_directory($public_key_directory)) {
-            return false;
+        if (! is_directory($public_key_directory)) {
+            return Result::err(NoPublicKeyFault::build());
         }
 
         $files = read_directory($public_key_directory);
 
-        return array_any($files, static fn (string $filename) => str_ends_with($filename, '.key') && is_file($filename));
+        if (! array_any($files, static fn (string $filename) => str_ends_with($filename, '.key') && is_file($filename))) {
+            return Result::err(NoPublicKeyFault::build());
+        }
+
+        return Result::ok(null);
     }
 }

@@ -22,13 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
-use Tuleap\Option\Option;
+use Lcobucci\JWT\UnencryptedToken;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Fault;
 
 interface RetrieveLicenseContent
 {
     /**
-     * @param non-empty-string $license_file_path
-     * @return Option<LicenseContent>
+     * @return Ok<LicenseContent>|Err<Fault>
      */
-    public function retrieveLicenseContent(string $license_file_path): Option;
+    public function retrieveLicenseContent(UnencryptedToken $token): Ok|Err;
 }

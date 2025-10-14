@@ -28,6 +28,8 @@ use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer\Eddsa;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token\Builder;
+use Lcobucci\JWT\UnencryptedToken;
+use LogicException;
 use Ramsey\Uuid\Rfc4122\UuidV7;
 use function Psl\File\write;
 use function Psl\Json\encode as json_encode;
@@ -37,6 +39,8 @@ final class PublicKeyTestBuilder
     private bool $valid_signature = true;
     private bool $has_kid_header  = true;
     private bool $has_aud_claim   = true;
+
+    private ?UnencryptedToken $token = null;
 
     /**
      * @param non-empty-string $license_file_path
@@ -97,7 +101,7 @@ final class PublicKeyTestBuilder
         $expire_at        = $today->modify('+1 day');
         $raw_private_key2 = sodium_crypto_sign_secretkey(sodium_crypto_sign_keypair());
         assert($raw_private_key2 !== '');
-        $license = $token_builder
+        $this->token = $token_builder
             ->issuedBy('enalean-tuleap-enterprise')
             ->expiresAt($expire_at)
             ->issuedAt($today)
@@ -109,8 +113,17 @@ final class PublicKeyTestBuilder
                 $this->valid_signature ? $private_key : InMemory::plainText($raw_private_key2),
             );
 
-        write($this->license_file_path, $license->toString());
+        write($this->license_file_path, $this->token->toString());
 
         return $key_file;
+    }
+
+    public function getToken(): UnencryptedToken
+    {
+        if ($this->token === null) {
+            throw new LogicException('Please call build() before getToken()');
+        }
+
+        return $this->token;
     }
 }

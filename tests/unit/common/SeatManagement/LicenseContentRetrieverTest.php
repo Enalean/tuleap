@@ -27,13 +27,17 @@ use CuyZ\Valinor\Mapper\TreeMapper;
 use CuyZ\Valinor\MapperBuilder;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\UnencryptedToken;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
 use Ramsey\Uuid\Rfc4122\FieldsInterface;
 use Ramsey\Uuid\Uuid;
+use Tuleap\NeverThrow\Result;
+use Tuleap\SeatManagement\Fault\LicenseClaimsParsingFault;
 use Tuleap\Test\Builders\SeatManagement\PublicKeyTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use function Psl\File\read;
 use function Psl\Filesystem\create_directory;
 use function Psl\Filesystem\create_file;
 
@@ -61,43 +65,49 @@ final class LicenseContentRetrieverTest extends TestCase
 
     public function testItShouldReturnNothingWhenLicenseClaimsAreInvalid(): void
     {
-        new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->withoutAudClaim()->build();
+        $builder = new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->withoutAudClaim();
+        $builder->build();
 
         $logger    = new TestLogger();
         $retriever = new LicenseContentRetriever(
             $logger,
-            new Parser(new JoseEncoder()),
             $this->mapper,
         );
+        $result    = $retriever->retrieveLicenseContent($builder->getToken());
 
-        self::assertTrue($retriever->retrieveLicenseContent($this->license_file_path)->isNothing());
-        self::assertTrue($logger->hasErrorThatContains('Failed parsing license claims: Could not map type `Tuleap\SeatManagement\LicenseContent`'));
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(LicenseClaimsParsingFault::class, $result->error);
+        self::assertTrue($logger->hasInfoThatContains('Failed parsing license claims: Could not map type `Tuleap\SeatManagement\LicenseContent`'));
     }
 
     public function testItReturnsALicenseContent(): void
     {
-        new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->build();
+        $builder = new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory);
+        $builder->build();
 
         $retriever = new LicenseContentRetriever(
             new NullLogger(),
-            new Parser(new JoseEncoder()),
             $this->mapper,
         );
 
-        self::assertTrue($retriever->retrieveLicenseContent($this->license_file_path)->isValue());
+        self::assertTrue(Result::isOk($retriever->retrieveLicenseContent($builder->getToken())));
     }
 
     public function testItReturnsLicenseContentForTheDevLicense(): void
     {
         $retriever = new LicenseContentRetriever(
             new NullLogger(),
-            new Parser(new JoseEncoder()),
             $this->mapper,
         );
 
-        $option = $retriever->retrieveLicenseContent(__DIR__ . '/../../../../tools/docker/tuleap-aio-dev/license.key');
-        self::assertTrue($option->isValue());
-        $license = $option->unwrapOr(null);
+        $jwt = trim(read(__DIR__ . '/../../../../tools/docker/tuleap-aio-dev/license.key'));
+        self::assertTrue($jwt !== '');
+        $token = new Parser(new JoseEncoder())->parse($jwt);
+        self::assertInstanceOf(UnencryptedToken::class, $token);
+
+        $result = $retriever->retrieveLicenseContent($token);
+        self::assertTrue(Result::isOk($result));
+        $license = $result->value;
         self::assertInstanceOf(LicenseContent::class, $license);
         self::assertSame([
             'dc41ac2eb04e9fd5804e02dfe34706450b40f060b278551671d6f49f55d8131a',

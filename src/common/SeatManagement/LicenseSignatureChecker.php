@@ -32,10 +32,15 @@ use Lcobucci\JWT\Signer\Eddsa;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\UnsupportedHeaderFound;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validator;
 use Psr\Log\LoggerInterface;
+use Tuleap\NeverThrow\Result;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\SeatManagement\Fault\InvalidLicenseSignatureFault;
 use function Psl\File\read;
 use function Psl\Filesystem\is_file;
 
@@ -52,42 +57,48 @@ final readonly class LicenseSignatureChecker implements CheckLicenseSignature
     }
 
     #[\Override]
-    public function checkLicenseSignature(string $license_file_path, string $keys_directory): bool
+    public function checkLicenseSignature(string $license_file_path, string $keys_directory): Ok|Err
     {
         $license_content = trim(read($license_file_path));
         if ($license_content === '') {
-            $this->logger->error('License file is empty');
-            return false;
+            $this->logger->info('License file is empty');
+            return Result::err(InvalidLicenseSignatureFault::build('License file is empty'));
         }
 
         try {
             $token = $this->parser->parse($license_content);
         } catch (CannotDecodeContent | InvalidTokenStructure | UnsupportedHeaderFound $error) {
-            $this->logger->error('Failed parsing license: ' . $error->getMessage(), ['exception' => $error]);
-            return false;
+            $this->logger->info('Failed parsing license: ' . $error->getMessage(), ['exception' => $error]);
+            return Result::err(InvalidLicenseSignatureFault::build($error->getMessage()));
         }
 
         try {
             $headers = $this->mapper->map(LicenseHeaders::class, $token->headers()->all());
         } catch (MappingError $error) {
-            $this->logger->error('Failed parsing license headers: ' . $error->getMessage(), ['exception' => $error]);
-            return false;
+            $this->logger->info('Failed parsing license headers: ' . $error->getMessage(), ['exception' => $error]);
+            return Result::err(InvalidLicenseSignatureFault::build($error->getMessage()));
         }
 
         $kid             = $headers->kid->toString();
         $public_key_file = "$keys_directory/$kid.key";
         if (! is_file($public_key_file)) {
-            $this->logger->error('License uses non-existent public key.');
-            return false;
+            $this->logger->info('License uses non-existent public key.');
+            return Result::err(InvalidLicenseSignatureFault::build('License uses non-existent public key.'));
         }
 
         try {
             $public_key = $this->mapper->map(LicensePublicKey::class, new JsonSource(read($public_key_file)));
         } catch (MappingError | InvalidSource $error) {
-            $this->logger->error('Failed parsing public key: ' . $error->getMessage(), ['exception' => $error]);
-            return false;
+            $this->logger->info('Failed parsing public key: ' . $error->getMessage(), ['exception' => $error]);
+            return Result::err(InvalidLicenseSignatureFault::build($error->getMessage()));
         }
 
-        return $this->validator->validate($token, new IssuedBy(self::ISSUER), new SignedWith(new Eddsa(), InMemory::plainText($public_key->x)));
+        if (! $this->validator->validate($token, new IssuedBy(self::ISSUER), new SignedWith(new Eddsa(), InMemory::plainText($public_key->x)))) {
+            $this->logger->info('License signature is invalid.');
+            return Result::err(InvalidLicenseSignatureFault::build('License signature is invalid.'));
+        }
+
+        assert($token instanceof UnencryptedToken);
+        return Result::ok($token);
     }
 }
