@@ -123,7 +123,7 @@ services:
       - db80-data:/var/lib/mysql
 
   redis:
-    image: valkey/valkey:8.0.4-alpine@sha256:1e35be5b62d56106e4d8a0051d694713511652f690b9b4037f0528138a74ee85
+    image: valkey/valkey:8.0.6-alpine@sha256:21edf5ca7cec694ee226f18fa8f86a312d149ddaf2006fd77d84f58211df864c
     volumes:
       - redis-data:/data
     command: valkey-server --appendonly yes --auto-aof-rewrite-percentage 20 --auto-aof-rewrite-min-size 200kb
