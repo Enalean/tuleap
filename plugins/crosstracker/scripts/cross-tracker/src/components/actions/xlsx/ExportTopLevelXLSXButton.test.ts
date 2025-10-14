@@ -20,36 +20,36 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
-import ExportXLSXButton from "./ExportXLSXButton.vue";
-import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../../injection-symbols";
+import { RetrieveArtifactsTableStub } from "../../../../tests/stubs/RetrieveArtifactsTableStub";
 import { errAsync, okAsync } from "neverthrow";
-import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
-import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
-import type { Events, NotifyFaultEvent } from "../../helpers/widget-events";
-import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
+import { ColumnNameGetter } from "../../../domain/ColumnNameGetter";
+import { createVueGettextProviderPassThrough } from "../../../helpers/vue-gettext-provider-for-test";
+import type { Events, NotifyFaultEvent } from "../../../helpers/widget-events";
+import { NOTIFY_FAULT_EVENT } from "../../../helpers/widget-events";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
+import ExportTopLevelXLSXButton from "./ExportTopLevelXLSXButton.vue";
 import { Fault } from "@tuleap/fault";
 
 vi.useFakeTimers();
 
 const downloadXLSXDocument = vi.fn();
-vi.mock("../../helpers/exporter/export-document", () => {
+vi.mock("../../../helpers/exporter/export-document", () => {
     return {
         downloadXLSXDocument: downloadXLSXDocument,
     };
 });
 
 const downloadXLSX = vi.fn();
-vi.mock("../../helpers/exporter/xlsx/download-xlsx", () => {
+vi.mock("../../../helpers/exporter/xlsx/download-xlsx", () => {
     return {
         downloadXLSX: downloadXLSX,
     };
 });
 
-describe("ExportXLSXButton", () => {
+describe("ExportTopLevelXLSXButton", () => {
     let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
 
@@ -69,8 +69,8 @@ describe("ExportXLSXButton", () => {
         emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvents);
     });
 
-    function getWrapper(): VueWrapper<InstanceType<typeof ExportXLSXButton>> {
-        return shallowMount(ExportXLSXButton, {
+    function getWrapper(): VueWrapper<InstanceType<typeof ExportTopLevelXLSXButton>> {
+        return shallowMount(ExportTopLevelXLSXButton, {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
@@ -97,7 +97,7 @@ describe("ExportXLSXButton", () => {
     describe("exportXLSX()", () => {
         it(`When the server responds,
             then it will hide feedbacks,
-            show a spinner and offer to download a XLSX file with the results`, async () => {
+            show a spinner and offer to download a XLSX file with the results and close the modal`, async () => {
             const wrapper = getWrapper();
 
             downloadXLSXDocument.mockImplementation(() => {
@@ -115,6 +115,7 @@ describe("ExportXLSXButton", () => {
 
             expect(xlsx_button_icon.classes()).toContain("fa-download");
             expect(dispatched_fault_events).toHaveLength(0);
+            expect(wrapper.emitted()).toHaveProperty("hide-modal");
         });
 
         it("When there is a REST error, then it will be shown", async () => {
@@ -127,6 +128,7 @@ describe("ExportXLSXButton", () => {
 
             expect(dispatched_fault_events).toHaveLength(1);
             expect(dispatched_fault_events[0].fault.isXLSXExport()).toBe(true);
+            expect(wrapper.emitted()).not.toHaveProperty("hide-modal");
         });
     });
 });
