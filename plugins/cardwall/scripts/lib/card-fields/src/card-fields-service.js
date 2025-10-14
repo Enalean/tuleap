@@ -22,6 +22,7 @@ function CardFieldsService($sce) {
         getCardFieldFileValue,
         getCardFieldPermissionsValue,
         getCardFieldUserValue,
+        hasAValue,
         isListBoundToAValueDifferentFromNone,
         getDateToDisplay,
     };
@@ -179,6 +180,10 @@ function CardFieldsService($sce) {
 
     function isListBoundToAValueDifferentFromNone(values) {
         return values.find((value) => value.id !== null);
+    }
+
+    function hasAValue(value) {
+        return value !== null && value !== undefined;
     }
 
     function renderListItems(items, render_item) {
