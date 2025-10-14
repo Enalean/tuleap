@@ -18,7 +18,12 @@
  */
 
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
-import { del, get, patch } from "@tuleap/tlp-fetch";
+import { del, patch } from "@tuleap/tlp-fetch";
+import { del as del_result, getJSON, patchResponse, uri } from "@tuleap/fetch-result";
+import type { EmbeddedFileDisplayPreference } from "../type";
+import { EMBEDDED_FILE_DISPLAY_LARGE, EMBEDDED_FILE_DISPLAY_NARROW } from "../type";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 
 export async function patchUserPreferenciesForFolderInProject(
     user_id: number,
@@ -52,46 +57,42 @@ export async function deleteUserPreferenciesForFolderInProject(
     await deleteUserPreference(user_id, key);
 }
 
-export async function setNarrowModeForEmbeddedDisplay(
+export function setNarrowModeForEmbeddedDisplay(
     user_id: number,
     project_id: number,
     document_id: number,
-): Promise<void> {
-    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+): ResultAsync<typeof EMBEDDED_FILE_DISPLAY_NARROW, Fault> {
+    return patchResponse(
+        uri`/api/users/${user_id}/preferences`,
+        {},
+        {
             key: `plugin_docman_display_embedded_${project_id}_${document_id}`,
             value: "narrow",
-        }),
-    });
+        },
+    ).map(() => EMBEDDED_FILE_DISPLAY_NARROW);
 }
 
-export async function removeUserPreferenceForEmbeddedDisplay(
+export function removeUserPreferenceForEmbeddedDisplay(
     user_id: number,
     project_id: number,
     document_id: number,
-): Promise<void> {
+): ResultAsync<typeof EMBEDDED_FILE_DISPLAY_LARGE, Fault> {
     const key = `plugin_docman_display_embedded_${project_id}_${document_id}`;
-
-    await del(
-        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`,
+    return del_result(uri`/api/users/${user_id}/preferences?key=${key}`).map(
+        () => EMBEDDED_FILE_DISPLAY_LARGE,
     );
 }
 
-export async function getPreferenceForEmbeddedDisplay(
+export function getPreferenceForEmbeddedDisplay(
     user_id: number,
     project_id: number,
     document_id: number,
-): Promise<"narrow" | false> {
-    const escaped_user_id = encodeURIComponent(user_id);
-    const escaped_preference_key = encodeURIComponent(
-        `plugin_docman_display_embedded_${project_id}_${document_id}`,
-    );
-    const response = await get(
-        `/api/users/${escaped_user_id}/preferences?key=${escaped_preference_key}`,
-    );
-
-    return (await response.json()).value;
+): ResultAsync<EmbeddedFileDisplayPreference, Fault> {
+    return getJSON<{ key: string; value: "narrow" | false }>(
+        uri`/api/users/${user_id}/preferences?key=plugin_docman_display_embedded_${project_id}_${document_id}`,
+    ).map((result): EmbeddedFileDisplayPreference => {
+        return result.value === "narrow"
+            ? EMBEDDED_FILE_DISPLAY_NARROW
+            : EMBEDDED_FILE_DISPLAY_LARGE;
+    });
 }

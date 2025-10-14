@@ -15,6 +15,7 @@
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/keyboard-shortcuts": "workspace:*",
     "@tuleap/locale": "workspace:^",
+    "@tuleap/option": "workspace:*",
     "@tuleap/project-background": "workspace:^",
     "@tuleap/project-privacy-helper": "workspace:*",
     "@tuleap/tlp": "workspace:*",

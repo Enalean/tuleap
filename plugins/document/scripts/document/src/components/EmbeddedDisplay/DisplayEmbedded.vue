@@ -24,6 +24,8 @@
             v-bind:embedded_file="embedded_file"
             v-bind:content_to_display="embedded_content"
             v-bind:specific_version_number="specific_version_number"
+            v-bind:embedded_file_display_preference="embedded_file_display_preference"
+            v-on:update_display_preference="(value) => (embedded_file_display_preference = value)"
             data-test="embedded_content"
         />
         <display-embedded-spinner
@@ -37,22 +39,23 @@
 import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
 import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
-import type { Embedded, EmbeddedFileSpecificVersionContent } from "../../type";
-import {
-    useActions,
-    useMutations,
-    useNamespacedActions,
-    useNamespacedGetters,
-    useNamespacedMutations,
-} from "vuex-composition-helpers";
+import type {
+    Embedded,
+    EmbeddedFileDisplayPreference,
+    EmbeddedFileSpecificVersionContent,
+} from "../../type";
+import { EMBEDDED_FILE_DISPLAY_LARGE } from "../../type";
+import { useActions, useMutations, useNamespacedGetters, useStore } from "vuex-composition-helpers";
 import type { ErrorGetters } from "../../store/error/error-getters";
-import type { PreferenciesActions } from "../../store/preferencies/preferencies-actions";
 import { isEmbedded } from "../../helpers/type-check-helper";
 import { getEmbeddedFileVersionContent } from "../../api/version-rest-querier";
 import type { ItemHasJustBeenUpdatedEvent } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT, USER_ID } from "../../configuration-keys";
+import { getEmbeddedFileDisplayPreference } from "../../helpers/embedded-file-display-preferences";
+
+const $store = useStore();
 
 const props = withDefaults(defineProps<{ item_id: number; version_id?: number | null }>(), {
     version_id: null,
@@ -63,6 +66,9 @@ const embedded_content = ref("");
 const is_loading = ref(false);
 const is_loading_specific_version_in_error = ref(false);
 const specific_version_number = ref<number | null>(null);
+const embedded_file_display_preference = ref<EmbeddedFileDisplayPreference>(
+    EMBEDDED_FILE_DISPLAY_LARGE,
+);
 
 const user_id = strictInject(USER_ID);
 const project = strictInject(PROJECT);
@@ -79,13 +85,6 @@ const has_loaded_without_error = computed((): boolean => !has_an_error.value && 
 
 const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
 const { updateCurrentlyPreviewedItem } = useMutations(["updateCurrentlyPreviewedItem"]);
-const { getEmbeddedFileDisplayPreference } = useNamespacedActions<PreferenciesActions>(
-    "preferencies",
-    ["getEmbeddedFileDisplayPreference"],
-);
-const { shouldDisplayEmbeddedInLargeMode } = useNamespacedMutations("preferencies", [
-    "shouldDisplayEmbeddedInLargeMode",
-]);
 
 watch(() => props.version_id, loadContent);
 
@@ -128,12 +127,15 @@ onBeforeMount(async () => {
     embedded_file.value = item;
 
     updateCurrentlyPreviewedItem(embedded_file.value);
-    const preference = await getEmbeddedFileDisplayPreference({
-        item: embedded_file.value,
+    const preference = await getEmbeddedFileDisplayPreference(
+        $store,
+        embedded_file.value,
         user_id,
-        project_id: project.id,
-    });
-    shouldDisplayEmbeddedInLargeMode(!preference);
+        project.id,
+    );
+    preference.apply(
+        (value: EmbeddedFileDisplayPreference) => (embedded_file_display_preference.value = value),
+    );
     loadContent();
     emitter.on("item-has-just-been-updated", updateDisplayedContent);
 });

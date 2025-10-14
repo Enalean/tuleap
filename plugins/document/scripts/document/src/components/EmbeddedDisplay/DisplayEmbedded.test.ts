@@ -18,7 +18,7 @@
  *
  */
 
-import type { Mock } from "vitest";
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import type { VueWrapper } from "@vue/test-utils";
@@ -29,9 +29,12 @@ import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { ErrorState } from "../../store/error/module";
 import type { Embedded, Item } from "../../type";
+import { EMBEDDED_FILE_DISPLAY_LARGE } from "../../type";
 import * as VersionRestQuerier from "../../api/version-rest-querier";
 import { PROJECT, USER_ID } from "../../configuration-keys";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
+import * as display_preferences from "../../helpers/embedded-file-display-preferences";
+import { Option } from "@tuleap/option";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
@@ -41,10 +44,8 @@ vi.useFakeTimers();
 
 describe("DisplayEmbedded", () => {
     let loadDocument: () => Promise<Item>;
-    let update_currently_previewed_item: vi.Mock;
-    let get_preferencies: vi.Mock;
-    let display_in_large_mode: vi.Mock;
-    let getEmbeddedFileVersionContent: Mock;
+    let update_currently_previewed_item: MockInstance;
+    let getEmbeddedFileVersionContent: MockInstance;
 
     beforeEach(() => {
         loadDocument = (): Promise<Item> =>
@@ -56,11 +57,12 @@ describe("DisplayEmbedded", () => {
                 },
             } as Embedded);
         update_currently_previewed_item = vi.fn();
-        get_preferencies = vi.fn();
-        display_in_large_mode = vi.fn();
         getEmbeddedFileVersionContent = vi.spyOn(
             VersionRestQuerier,
             "getEmbeddedFileVersionContent",
+        );
+        vi.spyOn(display_preferences, "getEmbeddedFileDisplayPreference").mockResolvedValue(
+            Option.fromValue(EMBEDDED_FILE_DISPLAY_LARGE),
         );
     });
 
@@ -83,15 +85,6 @@ describe("DisplayEmbedded", () => {
                             namespaced: true,
                             getters: {
                                 does_document_have_any_error: () => true,
-                            },
-                        },
-                        preferencies: {
-                            namespaced: true,
-                            actions: {
-                                getEmbeddedFileDisplayPreference: get_preferencies,
-                            },
-                            mutations: {
-                                shouldDisplayEmbeddedInLargeMode: display_in_large_mode,
                             },
                         },
                     },
@@ -125,15 +118,6 @@ describe("DisplayEmbedded", () => {
                             namespaced: true,
                             getters: {
                                 does_document_have_any_error: () => false,
-                            },
-                        },
-                        preferencies: {
-                            namespaced: true,
-                            actions: {
-                                getEmbeddedFileDisplayPreference: get_preferencies,
-                            },
-                            mutations: {
-                                shouldDisplayEmbeddedInLargeMode: display_in_large_mode,
                             },
                         },
                     },
