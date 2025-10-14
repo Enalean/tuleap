@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
 
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-export function buildOverviewURL(
+export function buildCommitsTabURL(
     location: Location,
     pull_request: PullRequest,
     current_project_id: number,
@@ -29,8 +29,8 @@ export function buildOverviewURL(
     url.searchParams.set("action", "pull-requests");
     url.searchParams.set("repo_id", encodeURIComponent(current_repository_id));
     url.searchParams.set("group_id", encodeURIComponent(current_project_id));
-    url.searchParams.set("tab", "overview");
-    url.hash = `#/pull-requests/${encodeURIComponent(pull_request.id)}/overview`;
+    url.searchParams.set("tab", "commits");
+    url.hash = `#/pull-requests/${encodeURIComponent(pull_request.id)}/commits`;
 
     return url;
 }

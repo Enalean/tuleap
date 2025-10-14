@@ -63,7 +63,7 @@ describe("OverviewTabs", () => {
             name: VIEW_OVERVIEW_NAME,
         });
         expect(wrapper.find("[data-test=tab-commits]").attributes("href")).toBe(
-            `${APP_BASE_URL}#/pull-requests/${PULLREQUEST_ID}/commits`,
+            `${APP_BASE_URL}?tab=commits#/pull-requests/${PULLREQUEST_ID}/commits`,
         );
         expect(wrapper.find("[data-test=tab-changes]").attributes("href")).toBe(
             `${APP_BASE_URL}#/pull-requests/${PULLREQUEST_ID}/files`,

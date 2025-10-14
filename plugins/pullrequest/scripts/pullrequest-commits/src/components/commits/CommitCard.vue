@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <a v-bind:href="commit.html_url" class="tlp-card tlp-card-selectable commit">
+    <a
+        v-bind:href="commit.html_url"
+        class="tlp-card tlp-card-selectable commit"
+        data-test="pullrequest-commits-list-commit"
+    >
         <div class="commit-metadata">
             <commit-author-avatar v-bind:commit="commit" />
             <div>

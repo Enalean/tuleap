@@ -28,14 +28,14 @@
         <a
             v-if="is_tab_displayed"
             class="tlp-tab"
-            v-bind:href="buildUrlForView('commits')"
+            v-bind:href="buildUrlForCommitsTab()"
             data-test="tab-commits"
             >{{ $gettext("Commits") }}</a
         >
         <a
             v-if="is_tab_displayed"
             class="tlp-tab"
-            v-bind:href="buildUrlForView('files')"
+            v-bind:href="buildUrlForChangesTab()"
             data-test="tab-changes"
             >{{ $gettext("Changes") }}</a
         >
@@ -62,9 +62,17 @@ const is_tab_displayed = computed(
     () => props.pull_request !== null && props.pull_request.is_git_reference_broken === false,
 );
 
-const buildUrlForView = (view_name: string): string => {
+const buildUrlForCommitsTab = (): string => {
     const view_url = new URL("", base_url.toString());
-    view_url.hash = `#/pull-requests/${pull_request_id}/${view_name}`;
+    view_url.hash = `#/pull-requests/${pull_request_id}/commits`;
+    view_url.searchParams.set("tab", "commits");
+
+    return view_url.toString();
+};
+
+const buildUrlForChangesTab = (): string => {
+    const view_url = new URL("", base_url.toString());
+    view_url.hash = `#/pull-requests/${pull_request_id}/files`;
 
     return view_url.toString();
 };
