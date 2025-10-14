@@ -264,4 +264,19 @@ describe("PrettyTitleCellComponent", () => {
             expect(wrapper.findComponent(ArtifactLinkArrow).exists()).toBe(true);
         });
     });
+
+    describe("Mount and unmount", () => {
+        it("should register the element into the ArrowDataStore on Mount", () => {
+            expect(arrow_data_store.getByUUID(row_uuid)).toBeUndefined();
+            getWrapper();
+            expect(arrow_data_store.getByUUID(row_uuid)).not.toBeUndefined();
+        });
+        it("should remove the element from the ArrowDataStore on unMount", () => {
+            const wrapper = getWrapper();
+            expect(arrow_data_store.getByUUID(row_uuid)).not.toBeUndefined();
+
+            wrapper.unmount();
+            expect(arrow_data_store.getByUUID(row_uuid)).toBeUndefined();
+        });
+    });
 });
