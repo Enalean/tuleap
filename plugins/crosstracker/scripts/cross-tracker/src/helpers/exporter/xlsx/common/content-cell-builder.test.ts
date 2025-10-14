@@ -22,6 +22,7 @@ import { buildXLSXContentCell } from "./content-cell-builder";
 
 import type { Cell } from "../../../../domain/ArtifactsTable";
 import {
+    LINK_TYPE_CELL,
     STATIC_LIST_CELL,
     TEXT_CELL,
     PROJECT_CELL,
@@ -173,5 +174,16 @@ describe("buildXLSXContentCell", () => {
         const result = buildXLSXContentCell(cell) as TextCell;
         expect(result.type).toBe("text");
         expect(result.value).toBe("TrackerName#123 Artifact Title");
+    });
+
+    it("should return a TextCell for LINK_TYPE_CELL type", () => {
+        const cell: Cell = {
+            type: LINK_TYPE_CELL,
+            label: "Is Linked To",
+            direction: "forward",
+        };
+        const result = buildXLSXContentCell(cell) as TextCell;
+        expect(result.type).toBe("text");
+        expect(result.value).toBe("Is Linked To");
     });
 });
