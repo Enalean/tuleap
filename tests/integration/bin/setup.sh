@@ -23,6 +23,8 @@ setup_database() {
 
     echo "Use remote db $DB_HOST"
 
+    sleep 8
+
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
         --skip-sanity-check \
         --host="$DB_HOST" \
