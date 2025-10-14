@@ -18,42 +18,27 @@
  *
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
-import type { Item, RootState } from "../../type";
-import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
+import type { EmbeddedFileDisplayPreference, Item, RootState } from "../../type";
+import { EMBEDDED_FILE_DISPLAY_LARGE, EMBEDDED_FILE_DISPLAY_NARROW } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { PROJECT, USER_ID } from "../../configuration-keys";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
+import * as display_preferences from "../../helpers/embedded-file-display-preferences";
+import { Option } from "@tuleap/option";
 
 describe("EmbeddedFileEditionSwitcher", () => {
-    let display_in_large_mode: vi.Mock;
-    let display_in_narrow_mode: vi.Mock;
-
-    beforeEach(() => {
-        display_in_large_mode = vi.fn();
-        display_in_narrow_mode = vi.fn();
-    });
-
     function getWrapper(
-        preferencies: PreferenciesState,
+        embedded_file_display_preference: EmbeddedFileDisplayPreference,
         currently_previewed_item: Item | null,
     ): VueWrapper<InstanceType<typeof EmbeddedFileEditionSwitcher>> {
         return shallowMount(EmbeddedFileEditionSwitcher, {
+            props: { embedded_file_display_preference },
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        preferencies: {
-                            state: preferencies as PreferenciesState,
-                            namespaced: true,
-                            actions: {
-                                displayEmbeddedInNarrowMode: display_in_narrow_mode,
-                                displayEmbeddedInLargeMode: display_in_large_mode,
-                            },
-                        },
-                    },
                     state: {
                         currently_previewed_item,
                     } as RootState,
@@ -68,12 +53,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
 
     it(`Given user is not in large view
         Then switch button should be check on narrow`, () => {
-        const wrapper = getWrapper(
-            {
-                is_embedded_in_large_view: false,
-            },
-            null,
-        );
+        const wrapper = getWrapper(EMBEDDED_FILE_DISPLAY_NARROW, null);
 
         expect(
             wrapper.get<HTMLInputElement>("[data-test=view-switcher-narrow]").element.checked,
@@ -84,12 +64,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
     });
 
     it(`Embedded document is well rendered in narrow mode`, () => {
-        const wrapper = getWrapper(
-            {
-                is_embedded_in_large_view: true,
-            },
-            null,
-        );
+        const wrapper = getWrapper(EMBEDDED_FILE_DISPLAY_LARGE, null);
 
         expect(
             wrapper.get<HTMLInputElement>("[data-test=view-switcher-narrow]").element.checked,
@@ -100,26 +75,22 @@ describe("EmbeddedFileEditionSwitcher", () => {
     });
 
     it(`Should switch view to narrow when user click on narrow view`, () => {
+        const display_in_narrow_mode = vi
+            .spyOn(display_preferences, "displayEmbeddedInNarrowMode")
+            .mockResolvedValue(Option.fromValue(EMBEDDED_FILE_DISPLAY_NARROW));
         const item: Item = { id: 42, title: "my embedded document" } as Item;
-        const wrapper = getWrapper(
-            {
-                is_embedded_in_large_view: false,
-            },
-            item,
-        );
+        const wrapper = getWrapper(EMBEDDED_FILE_DISPLAY_NARROW, item);
 
         wrapper.get("[data-test=view-switcher-narrow]").trigger("click");
         expect(display_in_narrow_mode).toHaveBeenCalled();
     });
 
     it(`Should switch view to large when user click on large view`, () => {
+        const display_in_large_mode = vi
+            .spyOn(display_preferences, "displayEmbeddedInLargeMode")
+            .mockResolvedValue(Option.fromValue(EMBEDDED_FILE_DISPLAY_LARGE));
         const item: Item = { id: 42, title: "my embedded document" } as Item;
-        const wrapper = getWrapper(
-            {
-                is_embedded_in_large_view: true,
-            },
-            item,
-        );
+        const wrapper = getWrapper(EMBEDDED_FILE_DISPLAY_LARGE, item);
 
         wrapper.get("[data-test=view-switcher-large]").trigger("click");
         expect(display_in_large_mode).toHaveBeenCalled();

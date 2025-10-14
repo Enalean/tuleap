@@ -18,12 +18,8 @@
  */
 
 import * as actions from "./preferencies-actions";
-import * as mutations from "./preferencies-mutations";
-import defaultState from "./preferencies-default-state";
 
 export default {
     namespaced: true,
-    state: defaultState,
     actions,
-    mutations,
 };

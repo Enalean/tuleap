@@ -22,8 +22,8 @@ import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
-import type { Embedded, RootState } from "../../type";
-import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
+import type { Embedded, EmbeddedFileDisplayPreference } from "../../type";
+import { EMBEDDED_FILE_DISPLAY_LARGE, EMBEDDED_FILE_DISPLAY_NARROW } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "../../router/router";
@@ -42,17 +42,18 @@ describe("DisplayEmbeddedContent", () => {
         embedded_file: Embedded,
         content_to_display: string,
         specific_version_number: number | null,
-        state: RootState,
+        embedded_file_display_preference: EmbeddedFileDisplayPreference,
     ): VueWrapper<InstanceType<typeof DisplayEmbeddedContent>> {
         return shallowMount(DisplayEmbeddedContent, {
             props: {
                 embedded_file,
                 content_to_display,
                 specific_version_number,
+                embedded_file_display_preference,
             },
             global: {
                 plugins: [router],
-                ...getGlobalTestOptions({ state }),
+                ...getGlobalTestOptions({}),
                 directives: {
                     "dompurify-html": vi.fn().mockImplementation(() => {
                         return content_to_display;
@@ -77,11 +78,7 @@ describe("DisplayEmbeddedContent", () => {
             } as Embedded,
             "My content",
             null,
-            {
-                preferencies: {
-                    is_embedded_in_large_view: false,
-                } as PreferenciesState,
-            } as unknown as RootState,
+            EMBEDDED_FILE_DISPLAY_NARROW,
         );
 
         const element = wrapper.get("[data-test=display-embedded-content]");
@@ -100,11 +97,7 @@ describe("DisplayEmbeddedContent", () => {
             } as Embedded,
             "My content",
             null,
-            {
-                preferencies: {
-                    is_embedded_in_large_view: true,
-                } as PreferenciesState,
-            } as unknown as RootState,
+            EMBEDDED_FILE_DISPLAY_LARGE,
         );
 
         const element = wrapper.get("[data-test=display-embedded-content]");

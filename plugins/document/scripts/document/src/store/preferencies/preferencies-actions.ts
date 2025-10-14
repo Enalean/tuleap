@@ -19,20 +19,13 @@
 
 import {
     deleteUserPreferenciesForFolderInProject,
-    getPreferenceForEmbeddedDisplay,
     patchUserPreferenciesForFolderInProject,
-    removeUserPreferenceForEmbeddedDisplay,
-    setNarrowModeForEmbeddedDisplay,
 } from "../../api/preferencies-rest-querier";
-import type { PreferenciesState } from "./preferencies-default-state";
 import type { ActionContext, ActionTree } from "vuex";
-import type { Item, RootState } from "../../type";
+import type { RootState } from "../../type";
 
-export interface PreferenciesActions extends ActionTree<PreferenciesState, RootState> {
+export interface PreferenciesActions extends ActionTree<RootState, RootState> {
     readonly setUserPreferenciesForFolder: typeof setUserPreferenciesForFolder;
-    readonly displayEmbeddedInNarrowMode: typeof displayEmbeddedInNarrowMode;
-    readonly displayEmbeddedInLargeMode: typeof displayEmbeddedInLargeMode;
-    readonly getEmbeddedFileDisplayPreference: typeof getEmbeddedFileDisplayPreference;
 }
 
 export interface UserPreferenciesFolderSetPayload {
@@ -43,7 +36,7 @@ export interface UserPreferenciesFolderSetPayload {
 }
 
 export const setUserPreferenciesForFolder = async (
-    context: ActionContext<PreferenciesState, RootState>,
+    context: ActionContext<RootState, RootState>,
     payload: UserPreferenciesFolderSetPayload,
 ): Promise<void> => {
     if (payload.user_id === 0) {
@@ -67,67 +60,5 @@ export const setUserPreferenciesForFolder = async (
         );
     } catch (exception) {
         await context.dispatch("error/handleErrors", exception);
-    }
-};
-
-export interface DisplayEmbeddedInNarrowModePayload {
-    item: Item;
-    user_id: number;
-    project_id: number;
-}
-
-export const displayEmbeddedInNarrowMode = async (
-    context: ActionContext<PreferenciesState, RootState>,
-    payload: DisplayEmbeddedInNarrowModePayload,
-): Promise<void> => {
-    try {
-        await setNarrowModeForEmbeddedDisplay(payload.user_id, payload.project_id, payload.item.id);
-        context.commit("shouldDisplayEmbeddedInLargeMode", false);
-    } catch (exception) {
-        await context.dispatch("error/handleErrors", exception);
-    }
-};
-
-export interface DisplayEmbeddedInLargeModePayload {
-    item: Item;
-    user_id: number;
-    project_id: number;
-}
-
-export const displayEmbeddedInLargeMode = async (
-    context: ActionContext<PreferenciesState, RootState>,
-    payload: DisplayEmbeddedInLargeModePayload,
-): Promise<void> => {
-    try {
-        await removeUserPreferenceForEmbeddedDisplay(
-            payload.user_id,
-            payload.project_id,
-            payload.item.id,
-        );
-        context.commit("shouldDisplayEmbeddedInLargeMode", true);
-    } catch (exception) {
-        await context.dispatch("error/handleErrors", exception);
-    }
-};
-
-export interface GetEmbeddedFileDisplayPreferencePayload {
-    item: Item;
-    user_id: number;
-    project_id: number;
-}
-
-export const getEmbeddedFileDisplayPreference = async (
-    context: ActionContext<PreferenciesState, RootState>,
-    payload: GetEmbeddedFileDisplayPreferencePayload,
-): Promise<"narrow" | false | null> => {
-    try {
-        return getPreferenceForEmbeddedDisplay(
-            payload.user_id,
-            payload.project_id,
-            payload.item.id,
-        );
-    } catch (exception) {
-        await context.dispatch("error/handleErrors", exception);
-        return null;
     }
 };

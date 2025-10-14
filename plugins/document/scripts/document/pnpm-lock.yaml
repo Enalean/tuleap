@@ -32,6 +32,9 @@ dependencies:
   '@tuleap/locale':
     specifier: workspace:^
     version: link:../../../../lib/frontend/locale
+  '@tuleap/option':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/option
   '@tuleap/project-background':
     specifier: workspace:^
     version: link:../../../../lib/frontend/project-background

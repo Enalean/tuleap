@@ -34,7 +34,11 @@
 
             <approval-badge v-bind:item="embedded_file" v-bind:is-in-folder-content-row="false" />
 
-            <embedded-file-edition-switcher v-bind:is-in-large-view="is_embedded_in_large_view" />
+            <embedded-file-edition-switcher
+                v-bind:is-in-large-view="is_embedded_in_large_view"
+                v-bind:embedded_file_display_preference="embedded_file_display_preference"
+                v-on:update_display_preference="(value) => emit('update_display_preference', value)"
+            />
         </div>
 
         <div
@@ -93,9 +97,8 @@
 <script setup lang="ts">
 import emitter from "../../helpers/emitter";
 import { computed, defineAsyncComponent, onBeforeMount, onUnmounted, ref } from "vue";
-import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { Embedded } from "../../type";
+import type { Embedded, EmbeddedFileDisplayPreference } from "../../type";
+import { EMBEDDED_FILE_DISPLAY_LARGE } from "../../type";
 import { useGettext } from "vue3-gettext";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
@@ -126,18 +129,22 @@ const props = withDefaults(
         embedded_file: Embedded;
         content_to_display: string;
         specific_version_number?: number | null;
+        embedded_file_display_preference: EmbeddedFileDisplayPreference;
     }>(),
     { specific_version_number: null },
 );
 
-const document_properties = getDocumentProperties();
+const emit = defineEmits<{
+    (e: "update_display_preference", value: EmbeddedFileDisplayPreference): void;
+}>();
 
-const { is_embedded_in_large_view } = useNamespacedState<PreferenciesState>("preferencies", [
-    "is_embedded_in_large_view",
-]);
+const document_properties = getDocumentProperties();
 
 const { interpolate, $gettext } = useGettext();
 
+const is_embedded_in_large_view = computed(
+    () => props.embedded_file_display_preference === EMBEDDED_FILE_DISPLAY_LARGE,
+);
 const should_display_old_version_warning = computed((): boolean => {
     if (!props.specific_version_number) {
         return false;

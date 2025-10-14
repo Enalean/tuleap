@@ -579,3 +579,7 @@ interface OtherItemType {
 }
 
 export type OtherItemTypeCollection = Record<string, OtherItemType>;
+
+export type EmbeddedFileDisplayPreference = "large" | "narrow";
+export const EMBEDDED_FILE_DISPLAY_LARGE: EmbeddedFileDisplayPreference = "large";
+export const EMBEDDED_FILE_DISPLAY_NARROW: EmbeddedFileDisplayPreference = "narrow";

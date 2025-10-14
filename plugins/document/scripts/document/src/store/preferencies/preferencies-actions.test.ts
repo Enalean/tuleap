@@ -20,14 +20,9 @@
 import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/preferencies-rest-querier";
-import {
-    displayEmbeddedInLargeMode,
-    displayEmbeddedInNarrowMode,
-    setUserPreferenciesForFolder,
-} from "./preferencies-actions";
+import { setUserPreferenciesForFolder } from "./preferencies-actions";
 import type { UserPreferenciesFolderSetPayload } from "./preferencies-actions";
-import type { Embedded, RootState } from "../../type";
-import type { PreferenciesState } from "./preferencies-default-state";
+import type { RootState } from "../../type";
 import type { ActionContext } from "vuex";
 
 describe("setUserPreferenciesForFolder", () => {
@@ -46,8 +41,8 @@ describe("setUserPreferenciesForFolder", () => {
     it("sets the user preference for the state of a given folder if its new state is 'open' (expanded)", async () => {
         const folder_id = 30;
         const should_be_closed = false;
-        const context: ActionContext<PreferenciesState, RootState> = {} as ActionContext<
-            PreferenciesState,
+        const context: ActionContext<RootState, RootState> = {} as ActionContext<
+            RootState,
             RootState
         >;
 
@@ -67,8 +62,8 @@ describe("setUserPreferenciesForFolder", () => {
     it("deletes the user preference for the state of a given folder if its new state is 'closed' (collapsed)", async () => {
         const folder_id = 30;
         const should_be_closed = true;
-        const context: ActionContext<PreferenciesState, RootState> = {} as ActionContext<
-            PreferenciesState,
+        const context: ActionContext<RootState, RootState> = {} as ActionContext<
+            RootState,
             RootState
         >;
 
@@ -82,58 +77,5 @@ describe("setUserPreferenciesForFolder", () => {
 
         expect(patchUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
         expect(deleteUserPreferenciesForFolderInProject).toHaveBeenCalled();
-    });
-});
-
-describe("displayEmbeddedInLargeMode", () => {
-    let context: ActionContext<PreferenciesState, RootState>;
-
-    beforeEach(() => {
-        context = {
-            commit: vi.fn(),
-        } as unknown as ActionContext<PreferenciesState, RootState>;
-
-        vi.spyOn(rest_querier, "removeUserPreferenceForEmbeddedDisplay").mockReturnValue(
-            Promise.resolve(),
-        );
-    });
-
-    it("should store in user preferences the new mode and then update the store value", async () => {
-        const item = {
-            id: 123,
-            title: "My embedded",
-        } as Embedded;
-
-        await displayEmbeddedInLargeMode(context, { item, user_id: 254, project_id: 101 });
-
-        expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", true);
-    });
-});
-
-describe("displayEmbeddedInNarrowMode", () => {
-    let context: ActionContext<PreferenciesState, RootState>;
-
-    beforeEach(() => {
-        context = {
-            rootState: {
-                configuration: { user_id: 102, project_id: 110 },
-            },
-            commit: vi.fn(),
-        } as unknown as ActionContext<PreferenciesState, RootState>;
-
-        vi.spyOn(rest_querier, "setNarrowModeForEmbeddedDisplay").mockReturnValue(
-            Promise.resolve(),
-        );
-    });
-
-    it("should store in user preferences the new mode and then update the store value", async () => {
-        const item = {
-            id: 123,
-            title: "My embedded",
-        } as Embedded;
-
-        await displayEmbeddedInNarrowMode(context, { item, user_id: 254, project_id: 101 });
-
-        expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", false);
     });
 });

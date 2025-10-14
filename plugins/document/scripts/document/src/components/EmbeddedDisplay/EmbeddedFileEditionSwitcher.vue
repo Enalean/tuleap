@@ -61,18 +61,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import { useNamespacedActions, useState, useNamespacedState } from "vuex-composition-helpers";
-import type { PreferenciesActions } from "../../store/preferencies/preferencies-actions";
-import type { RootState } from "../../type";
-import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
+import { useState, useStore } from "vuex-composition-helpers";
+import type { EmbeddedFileDisplayPreference, RootState } from "../../type";
+import { EMBEDDED_FILE_DISPLAY_LARGE } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT, USER_ID } from "../../configuration-keys";
+import {
+    displayEmbeddedInLargeMode,
+    displayEmbeddedInNarrowMode,
+} from "../../helpers/embedded-file-display-preferences";
 
-const { is_embedded_in_large_view } = useNamespacedState<PreferenciesState>("preferencies", [
-    "is_embedded_in_large_view",
-]);
+const $store = useStore();
+
+const props = defineProps<{
+    embedded_file_display_preference: EmbeddedFileDisplayPreference;
+}>();
+
+const emit = defineEmits<{
+    (e: "update_display_preference", value: EmbeddedFileDisplayPreference): void;
+}>();
 
 const { $gettext } = useGettext();
 const narrow_view_title = ref($gettext("Narrow view"));
@@ -82,28 +91,34 @@ const user_id = strictInject(USER_ID);
 const project = strictInject(PROJECT);
 
 const { currently_previewed_item } = useState<RootState>(["currently_previewed_item"]);
-const { displayEmbeddedInLargeMode, displayEmbeddedInNarrowMode } =
-    useNamespacedActions<PreferenciesActions>("preferencies", [
-        "displayEmbeddedInLargeMode",
-        "displayEmbeddedInNarrowMode",
-    ]);
-function switchToLargeView() {
+
+const is_embedded_in_large_view = computed(
+    () => props.embedded_file_display_preference === EMBEDDED_FILE_DISPLAY_LARGE,
+);
+
+async function switchToLargeView(): Promise<void> {
     if (currently_previewed_item.value) {
-        displayEmbeddedInLargeMode({
-            item: currently_previewed_item.value,
-            user_id,
-            project_id: project.id,
-        });
+        (
+            await displayEmbeddedInLargeMode(
+                $store,
+                currently_previewed_item.value,
+                user_id,
+                project.id,
+            )
+        ).apply((value: EmbeddedFileDisplayPreference) => emit("update_display_preference", value));
     }
 }
 
-function switchToNarrowView() {
+async function switchToNarrowView(): Promise<void> {
     if (currently_previewed_item.value) {
-        displayEmbeddedInNarrowMode({
-            item: currently_previewed_item.value,
-            user_id,
-            project_id: project.id,
-        });
+        (
+            await displayEmbeddedInNarrowMode(
+                $store,
+                currently_previewed_item.value,
+                user_id,
+                project.id,
+            )
+        ).apply((value: EmbeddedFileDisplayPreference) => emit("update_display_preference", value));
     }
 }
 </script>
