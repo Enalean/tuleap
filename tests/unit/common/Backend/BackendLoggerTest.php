@@ -102,6 +102,9 @@ class BackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
         $logger = BackendLogger::getDefaultLogger();
 
         self::assertInstanceOf(\Monolog\Logger::class, $logger);
+
+        // Done to be sure we can log messages without any errors/warnings
+        $logger->error('Foo');
     }
 
     public function testItReturnsFileLoggerWhenCannotConfigure(): void
