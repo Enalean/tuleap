@@ -34,7 +34,7 @@ use Tuleap\Test\Stubs\TemplateRendererStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID = 102;
+    private const int PROJECT_ID = 102;
     private TemplateRendererStub $renderer;
     private BannerRetriever&\PHPUnit\Framework\MockObject\Stub $banner_retriever;
 

@@ -29,7 +29,7 @@ final class ZipArchiveTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;
 
-    private const FIXTURES_DIR = __DIR__ . '/_fixtures';
+    private const string FIXTURES_DIR = __DIR__ . '/_fixtures';
 
     private string $tmp_dir;
 

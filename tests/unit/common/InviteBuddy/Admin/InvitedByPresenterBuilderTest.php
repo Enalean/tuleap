@@ -34,12 +34,12 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvitedByPresenterBuilderTest extends TestCase
 {
-    private const CURRENT_USER_ID    = 101;
-    private const ALICE_ID           = 102;
-    private const BOB_ID             = 103;
-    private const INVITEE_ID         = 104;
-    private const A_PROJECT_ID       = 1001;
-    private const ANOTHER_PROJECT_ID = 1002;
+    private const int CURRENT_USER_ID    = 101;
+    private const int ALICE_ID           = 102;
+    private const int BOB_ID             = 103;
+    private const int INVITEE_ID         = 104;
+    private const int A_PROJECT_ID       = 1001;
+    private const int ANOTHER_PROJECT_ID = 1002;
 
     private \UserHelper&\PHPUnit\Framework\MockObject\MockObject $user_helper;
 

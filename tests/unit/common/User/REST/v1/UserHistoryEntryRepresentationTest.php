@@ -31,28 +31,28 @@ use Tuleap\User\History\HistoryEntryBadge;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserHistoryEntryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const VISIT_TIMESTAMP = 1654304679;
-    private const TYPE            = 'vesperian';
-    private const PER_TYPE_ID     = 56;
-    private const XREF            = 'bug #' . self::PER_TYPE_ID;
-    private const URI             = '/plugins/thaumaturgism/?id=' . self::PER_TYPE_ID;
-    private const TITLE           = 'Le rédynamisme';
-    private const COLOR_NAME      = 'plum-crazy';
-    private const ICON_NAME       = 'fa-solid fa-seedling';
-    private const PROJECT_ID      = 111;
-    private const SMALL_ICON_SVG  = '<svg>small</svg>';
-    private const NORMAL_ICON_SVG = '<svg>normal</svg>';
+    private const int VISIT_TIMESTAMP    = 1654304679;
+    private const string TYPE            = 'vesperian';
+    private const int PER_TYPE_ID        = 56;
+    private const string XREF            = 'bug #' . self::PER_TYPE_ID;
+    private const string URI             = '/plugins/thaumaturgism/?id=' . self::PER_TYPE_ID;
+    private const string TITLE           = 'Le rédynamisme';
+    private const string COLOR_NAME      = 'plum-crazy';
+    private const string ICON_NAME       = 'fa-solid fa-seedling';
+    private const int PROJECT_ID         = 111;
+    private const string SMALL_ICON_SVG  = '<svg>small</svg>';
+    private const string NORMAL_ICON_SVG = '<svg>normal</svg>';
 
-    private const FIRST_QUICK_LINK_NAME  = 'outworth';
-    private const FIRST_QUICK_LINK_URI   = '/plugins/modestness?id=' . self::PER_TYPE_ID;
-    private const FIRST_QUICK_LINK_ICON  = 'fa-solid fa-plug';
-    private const SECOND_QUICK_LINK_NAME = 'unflagging';
-    private const SECOND_QUICK_LINK_URI  = '/plugins/hydrocyanic?id=' . self::PER_TYPE_ID;
-    private const SECOND_QUICK_LINK_ICON = 'fa-solid fa-cloud-bolt';
+    private const string FIRST_QUICK_LINK_NAME  = 'outworth';
+    private const string FIRST_QUICK_LINK_URI   = '/plugins/modestness?id=' . self::PER_TYPE_ID;
+    private const string FIRST_QUICK_LINK_ICON  = 'fa-solid fa-plug';
+    private const string SECOND_QUICK_LINK_NAME = 'unflagging';
+    private const string SECOND_QUICK_LINK_URI  = '/plugins/hydrocyanic?id=' . self::PER_TYPE_ID;
+    private const string SECOND_QUICK_LINK_ICON = 'fa-solid fa-cloud-bolt';
 
-    private const FIRST_BADGE_LABEL  = 'Open';
-    private const FIRST_BADGE_COLOR  = 'surf-green';
-    private const SECOND_BADGE_LABEL = 'Easy Fix';
+    private const string FIRST_BADGE_LABEL  = 'Open';
+    private const string FIRST_BADGE_COLOR  = 'surf-green';
+    private const string SECOND_BADGE_LABEL = 'Easy Fix';
 
     public function testItBuilds(): void
     {

@@ -86858,17 +86858,9 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="tests/integration/tests/DAO/DBTablesDaoLoadKnowDataTestCase.php">
-    <MissingClassConstType>
-      <code><![CDATA[DB_TEST_NAME = 'testdb_dbtablesloadknowdata']]></code>
-    </MissingClassConstType>
     <PossiblyFalseIterator>
       <code><![CDATA[glob(__DIR__ . '/../../../../plugins/*/db')]]></code>
     </PossiblyFalseIterator>
-  </file>
-  <file src="tests/integration/tests/InviteBuddy/InvitationDaoTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[CREATED_ON_TIMESTAMP = 1234567890]]></code>
-    </MissingClassConstType>
   </file>
   <file src="tests/integration/tests/TrackersV3ToV5/DefectTrackerTest.php">
     <DeprecatedMethod>
@@ -87041,9 +87033,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="tests/rest/tests/AccessKeyTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[DESCRIPTION_ACCESS_KEY = 'test_key']]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$expiration_date]]></code>
       <code><![CDATA[$key_identifier]]></code>
@@ -88422,21 +88411,6 @@
       <code><![CDATA[$keys]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="tests/unit/common/Config/GetConfigKeysTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[HIDDEN_KEY = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'bar']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-      <code><![CDATA[SOME_STUFF = 'foo']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="tests/unit/common/Dashboard/AssetsIncluderTest.php">
     <InternalMethod>
       <code><![CDATA[numberOfInvocations]]></code>
@@ -89683,17 +89657,6 @@
       <code><![CDATA[SomeEventFromNotLoadedPlugin]]></code>
     </UndefinedClass>
   </file>
-  <file src="tests/unit/common/Plugin/SerializedPluginProxyTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[SOME_KEY = 'some_key']]></code>
-      <code><![CDATA[SOME_KEY = 'some_key']]></code>
-      <code><![CDATA[SOME_KEY = 'some_key']]></code>
-      <code><![CDATA[SOME_KEY = 'some_key']]></code>
-      <code><![CDATA[SOME_KEY = 'some_key']]></code>
-      <code><![CDATA[SOME_KEY = 'some_key']]></code>
-      <code><![CDATA[SOME_KEY = 'some_key']]></code>
-    </MissingClassConstType>
-  </file>
   <file src="tests/unit/common/Plugin/_fixtures/customplugins/customdoc/include/customdocPlugin.php">
     <MissingParamType>
       <code><![CDATA[$is_custom]]></code>
@@ -90669,12 +90632,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="tests/unit/common/TreeNode/GetStateVisitorTest.php">
-    <MissingClassConstType>
-      <code><![CDATA[STATE_BLANK = TreeNode_GetStateVisitor::STATE_BLANK]]></code>
-      <code><![CDATA[STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST]]></code>
-      <code><![CDATA[STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE]]></code>
-      <code><![CDATA[STATE_PIPE  = TreeNode_GetStateVisitor::STATE_PIPE]]></code>
-    </MissingClassConstType>
     <MissingParamType>
       <code><![CDATA[$node]]></code>
       <code><![CDATA[$visitor]]></code>
@@ -91221,10 +91178,6 @@
       <code><![CDATA[$event]]></code>
       <code><![CDATA[$event]]></code>
     </InvalidArgument>
-    <MissingClassConstType>
-      <code><![CDATA[NAME = 'doSomething']]></code>
-      <code><![CDATA[NAME = 'foo']]></code>
-    </MissingClassConstType>
     <MissingClosureParamType>
       <code><![CDATA[$event]]></code>
       <code><![CDATA[$params]]></code>

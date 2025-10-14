@@ -64,7 +64,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $class = new class {
             #[ConfigKey('summary')]
             #[ConfigCannotBeModified]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -77,7 +77,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $class = new class {
             #[ConfigCannotBeModified]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -99,7 +99,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $class = new class {
             #[ConfigKey('summary')]
             #[ConfigCannotBeModified]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -120,7 +120,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $class = new class {
             #[ConfigKey('summary')]
             #[ConfigCannotBeModified]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -134,7 +134,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $class = new class {
             #[ConfigKey('summary')]
             #[ConfigKeyString('')]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -148,7 +148,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $class = new #[ConfigKeyCategory('bar')]
         class {
             #[ConfigKey('summary')]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -163,7 +163,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $class = new class {
             #[ConfigKey('summary')]
             #[ConfigKeyValueValidator(GetConfigKeysValueValidator::class)]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -178,7 +178,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $class = new class {
             #[ConfigKey('summary')]
             #[ConfigKeySecret]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -195,7 +195,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
             #[ConfigKey('summary')]
             #[ConfigKeySecret]
             #[ConfigKeySecretValidator(GetConfigKeysSecretValidator::class)]
-            public const SOME_STUFF = 'foo';
+            public const string SOME_STUFF = 'foo';
         };
 
         $get_config_keys = new GetConfigKeys();
@@ -211,10 +211,10 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $class = new class {
             #[ConfigKey('summary hidden key')]
             #[ConfigKeyHidden]
-            public const HIDDEN_KEY = 'foo';
+            public const string HIDDEN_KEY = 'foo';
 
             #[ConfigKey('summary regular key')]
-            public const SOME_STUFF = 'bar';
+            public const string SOME_STUFF = 'bar';
         };
 
         $get_config_keys = new GetConfigKeys();

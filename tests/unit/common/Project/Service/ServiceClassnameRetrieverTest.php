@@ -30,7 +30,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ServiceClassnameRetrieverTest extends TestCase
 {
-    private const PLUGIN_SERVICE_SHORTNAME = 'plugin_service';
+    private const string PLUGIN_SERVICE_SHORTNAME = 'plugin_service';
 
     public function testReturnsProjectDefinedServiceWhenShortNameIsEmpty(): void
     {

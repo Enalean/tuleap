@@ -34,7 +34,7 @@ final class UserAvatarUrlProviderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const HTTPS_HOST_IN_TESTS = 'https://';
+    private const string HTTPS_HOST_IN_TESTS = 'https://';
 
     #[\Override]
     protected function setUp(): void

@@ -27,9 +27,9 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserTooltipTitlePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const REAL_NAME  = 'Donetta Humphrys';
-    private const USERNAME   = 'dhumphrys';
-    private const AVATAR_URL = '/avatar/9ab958.png';
+    private const string REAL_NAME  = 'Donetta Humphrys';
+    private const string USERNAME   = 'dhumphrys';
+    private const string AVATAR_URL = '/avatar/9ab958.png';
 
     public function testItBuildsFromUserWithAvatar(): void
     {

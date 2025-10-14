@@ -25,7 +25,7 @@ namespace Tuleap\Password\HaveIBeenPwned;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PwnedPasswordCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public const API_RESPONSE_EXAMPLE = <<<EOF
+    public const string API_RESPONSE_EXAMPLE = <<<EOF
 63DBC31449BE0453A859936BD1BC9957642:15
 DD41FB439C6EEB61BBE84136C182CEA04FC:4
 95CEB99C43E3EFD89FE8550E3C4355F1FED:9

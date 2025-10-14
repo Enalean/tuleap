@@ -28,8 +28,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const SESSION_LIFETIME_2_WEEKS = 1209600;
-    private const CURRENT_TIME             = 1481202269;
+    private const int SESSION_LIFETIME_2_WEEKS = 1209600;
+    private const int CURRENT_TIME             = 1481202269;
 
     /**
      * @var \UserManager&MockObject

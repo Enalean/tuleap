@@ -38,8 +38,8 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private const LAST_ACCESS_RESOLUTION             = 3600;
-    private const IP_ADDRESS_REQUESTING_VERIFICATION = '2001:db8::1777';
+    private const int LAST_ACCESS_RESOLUTION                = 3600;
+    private const string IP_ADDRESS_REQUESTING_VERIFICATION = '2001:db8::1777';
 
     private AccessKeyDAO&MockObject $dao;
     private SplitTokenVerificationStringHasher&MockObject $hasher;

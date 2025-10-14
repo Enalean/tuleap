@@ -27,9 +27,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVN_TokenHandlerTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
-    private const VALID_TOKEN = 'valid_token';
+    private const string VALID_TOKEN = 'valid_token';
     // crypt(self::VALID_TOKEN, '$6$rounds=20000$16$')
-    private const VALID_TOKEN_PASSWORD_HASH = '$6$rounds=20000$bf679aec72b28967$zt8Hv8kaQlRekiSvswUGQDvBl8Z8HR45CaFlaJUogQfxVdWzp.Y4JAT4h31zOgurbCT.p9tVmrFCaSNLsapIe1';
+    private const string VALID_TOKEN_PASSWORD_HASH = '$6$rounds=20000$bf679aec72b28967$zt8Hv8kaQlRekiSvswUGQDvBl8Z8HR45CaFlaJUogQfxVdWzp.Y4JAT4h31zOgurbCT.p9tVmrFCaSNLsapIe1';
 
     /**
      * @var \SVN_TokenDao&\PHPUnit\Framework\MockObject\Stub

@@ -27,8 +27,8 @@ use Tuleap\Test\Builders\ReferenceBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReferenceInstanceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const ARTIFACT_ID = 49;
-    private const PROJECT_ID  = 164;
+    private const int ARTIFACT_ID = 49;
+    private const int PROJECT_ID  = 164;
 
     public function testItBuildsFromComponents(): void
     {

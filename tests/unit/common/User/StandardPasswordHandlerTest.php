@@ -28,11 +28,11 @@ use Tuleap\Cryptography\ConcealedString;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StandardPasswordHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const HASHED_WORD   = 'Tuleap';
-    private const MD5_HASH      = '$1$aa$yURlyd26QSZm44JDJtAuT/';
-    private const SHA512_HASH   = '$6$rounds=50000$aaaaaaaaaaaaaaaa$sI3KG111U.auUFeiO.PlagitndbvX7gVnzecFnuCBs/TV.qUCla1mz3Zmaq1JTJWT2eErh4ea9Iw995D//pfo/';
-    private const BCRYPT_HASH   = '$2y$10$aaaaaaaaaaaaaaaaaaaaaOBkuuklGwTPKAtCkHvUX3Lk5UDwjLI5O';
-    private const ARGON2ID_HASH = '$argon2id$v=19$m=65536,t=10,p=1$UzLcjjBnyoinfskrbUri0Q$qdp2xywJXGrc+BbcEscGC35J1oEY1IB+NS/YK7NcmKw';
+    private const string HASHED_WORD   = 'Tuleap';
+    private const string MD5_HASH      = '$1$aa$yURlyd26QSZm44JDJtAuT/';
+    private const string SHA512_HASH   = '$6$rounds=50000$aaaaaaaaaaaaaaaa$sI3KG111U.auUFeiO.PlagitndbvX7gVnzecFnuCBs/TV.qUCla1mz3Zmaq1JTJWT2eErh4ea9Iw995D//pfo/';
+    private const string BCRYPT_HASH   = '$2y$10$aaaaaaaaaaaaaaaaaaaaaOBkuuklGwTPKAtCkHvUX3Lk5UDwjLI5O';
+    private const string ARGON2ID_HASH = '$argon2id$v=19$m=65536,t=10,p=1$UzLcjjBnyoinfskrbUri0Q$qdp2xywJXGrc+BbcEscGC35J1oEY1IB+NS/YK7NcmKw';
 
     private StandardPasswordHandler $password_handler;
 

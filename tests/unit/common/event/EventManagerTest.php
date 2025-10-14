@@ -154,7 +154,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
     public function testItCanSendAnEventObjectWithNameInsteadOfStringPlusParams(): void
     {
         $event = new class {
-            public const NAME = 'doSomething';
+            public const string NAME = 'doSomething';
         };
 
         $listener = new class {
@@ -197,7 +197,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
     public function testItStopsEventPropagation(): void
     {
         $stoppable_event = new class implements StoppableEventInterface {
-            public const NAME = 'foo';
+            public const string NAME = 'foo';
 
             public bool $stop = false;
 

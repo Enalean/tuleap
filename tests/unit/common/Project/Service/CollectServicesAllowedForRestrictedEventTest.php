@@ -27,7 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CollectServicesAllowedForRestrictedEventTest extends TestCase
 {
-    private const ALLOWED_SERVICE_SHORTNAME = 'git';
+    private const string ALLOWED_SERVICE_SHORTNAME = 'git';
 
     public function testItReturnsTrueWhenServiceShortnameHasBeenAdded(): void
     {

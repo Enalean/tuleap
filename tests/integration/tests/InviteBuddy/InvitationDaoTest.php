@@ -31,7 +31,7 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class InvitationDaoTest extends TestIntegrationTestCase
 {
-    private const CREATED_ON_TIMESTAMP = 1234567890;
+    private const int CREATED_ON_TIMESTAMP = 1234567890;
 
     private InvitationDao $dao;
     private \PHPUnit\Framework\MockObject\MockObject&InvitationInstrumentation $instrumentation;

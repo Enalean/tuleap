@@ -39,7 +39,7 @@ use Tuleap\User\ProvideCurrentRequestUser;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectFileBeingUploadedInformationProviderTest extends TestCase
 {
-    private const FILE_ONGOING_UPLOAD_ID = 10;
+    private const int FILE_ONGOING_UPLOAD_ID = 10;
     private ServerRequestInterface|NullServerRequest $request;
     private CheckProjectRegistrationUserPermissionStub $permission_checker;
     private SearchFileUploadByExpirationDateStub $file_upload_dao;

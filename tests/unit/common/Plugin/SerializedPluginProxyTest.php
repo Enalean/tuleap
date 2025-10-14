@@ -54,7 +54,7 @@ final class SerializedPluginProxyTest extends TestCase
             'It ignores when variable has not default value' => [
                 'class' => new class {
                     #[ConfigKey('Some key')]
-                    public const SOME_KEY = 'some_key';
+                    public const string SOME_KEY = 'some_key';
                 },
                 'environment' => [],
                 'expected_value' => [],
@@ -63,7 +63,7 @@ final class SerializedPluginProxyTest extends TestCase
                 'class' => new class {
                     #[ConfigKey('Some key')]
                     #[ConfigKeyString('foo_bar')]
-                    public const SOME_KEY = 'some_key';
+                    public const string SOME_KEY = 'some_key';
                 },
                 'environment' => [],
                 'expected_value' => [
@@ -74,7 +74,7 @@ final class SerializedPluginProxyTest extends TestCase
                 'class' => new class {
                     #[FeatureFlagConfigKey('Some key')]
                     #[ConfigKeyString('foo_bar')]
-                    public const SOME_KEY = 'some_key';
+                    public const string SOME_KEY = 'some_key';
                 },
                 'environment' => [],
                 'expected_value' => [
@@ -84,7 +84,7 @@ final class SerializedPluginProxyTest extends TestCase
             'It captures variable from environment' => [
                 'class' => new class {
                     #[ConfigKey('Some key')]
-                    public const SOME_KEY = 'some_key';
+                    public const string SOME_KEY = 'some_key';
                 },
                 'environment' => [
                     'TULEAP_SOME_KEY' => 'foo',
@@ -96,7 +96,7 @@ final class SerializedPluginProxyTest extends TestCase
             'It captures variable from environment with empty value' => [
                 'class' => new class {
                     #[ConfigKey('Some key')]
-                    public const SOME_KEY = 'some_key';
+                    public const string SOME_KEY = 'some_key';
                 },
                 'environment' => [
                     'TULEAP_SOME_KEY' => '',
@@ -109,7 +109,7 @@ final class SerializedPluginProxyTest extends TestCase
                 'class' => new class {
                     #[ConfigKey('Some key')]
                     #[ConfigKeyString('foo_bar')]
-                    public const SOME_KEY = 'some_key';
+                    public const string SOME_KEY = 'some_key';
                 },
                 'environment' => [
                     'TULEAP_SOME_KEY' => 'foo',
@@ -122,7 +122,7 @@ final class SerializedPluginProxyTest extends TestCase
                 'class' => new class {
                     #[ConfigKey('Some key')]
                     #[ConfigKeyString('foo_bar')]
-                    public const SOME_KEY = 'some_key';
+                    public const string SOME_KEY = 'some_key';
                 },
                 'environment' => [
                     'TULEAP_SOME_KEY' => '',

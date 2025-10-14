@@ -30,7 +30,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ScrumTemplateDashboardDefinitionTest extends TestCase
 {
-    private const PROJECT_XML = __DIR__ . '/../../../../../../tools/setup_templates/scrum/project.xml';
+    private const string PROJECT_XML = __DIR__ . '/../../../../../../tools/setup_templates/scrum/project.xml';
 
     public function testItKeepsOriginalDashboardByDefault(): void
     {
