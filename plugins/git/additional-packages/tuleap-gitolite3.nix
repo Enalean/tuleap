@@ -9,7 +9,8 @@ in pkgs.stdenvNoCC.mkDerivation rec {
   src = pkgs.stdenvNoCC.mkDerivation {
     name = "gitolite-src.tar";
 
-    src = pkgs.fetchFromGitHub {
+    src = pkgs.fetchFromGitea {
+      domain = "codeberg.org";
       owner = "sitaramc";
       repo = "gitolite";
       rev = "v${version}";
