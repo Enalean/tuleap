@@ -21,12 +21,14 @@
 import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import { getGlobalTestOptions } from "../../../tests/global-options-for-tests";
+import { USER_LOCALE } from "../../injection-symbols";
 
 vi.mock("@tuleap/tlp-date-picker", () => {
-    return { datePicker: vi.fn() };
+    return { createDatePicker: vi.fn() };
 });
 
 describe("Given a personal timetracking widget modal", () => {
@@ -40,6 +42,9 @@ describe("Given a personal timetracking widget modal", () => {
             },
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
+                },
             },
         });
     }

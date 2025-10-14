@@ -85,10 +85,14 @@ import {
     formatDatetimeToYearMonthDay,
 } from "@tuleap/plugin-timetracking-time-formatters";
 import { TIME_REGEX } from "@tuleap/plugin-timetracking-constants";
-import { datePicker } from "@tuleap/tlp-date-picker";
+import { createDatePicker } from "@tuleap/tlp-date-picker";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import { computed, onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { USER_LOCALE } from "../../injection-symbols";
+
+const user_locale = strictInject(USER_LOCALE);
 
 const { $gettext } = useGettext();
 const props = defineProps<{
@@ -120,7 +124,7 @@ onMounted((): void => {
     if (!(date_field.value instanceof HTMLInputElement)) {
         return;
     }
-    datePicker(date_field.value, {
+    createDatePicker(date_field.value, user_locale, {
         static: true,
         onValueUpdate: (la_date, string_value) => {
             date.value = string_value;
