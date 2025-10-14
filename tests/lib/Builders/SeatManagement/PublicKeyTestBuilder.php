@@ -36,6 +36,7 @@ final class PublicKeyTestBuilder
 {
     private bool $valid_signature = true;
     private bool $has_kid_header  = true;
+    private bool $has_aud_claim   = true;
 
     /**
      * @param non-empty-string $license_file_path
@@ -57,13 +58,20 @@ final class PublicKeyTestBuilder
         return $this;
     }
 
+    public function withoutAudClaim(): self
+    {
+        $this->has_aud_claim = false;
+        return $this;
+    }
+
     /**
      * @return non-empty-string
      */
     public function build(): string
     {
         $key_pair = sodium_crypto_sign_keypair();
-        $kid      = UuidV7::uuid7(new DateTimeImmutable())->toString();
+        $today    = new DateTimeImmutable();
+        $kid      = UuidV7::uuid7($today)->toString();
 
         $jwk = [
             'kid' => $kid,
@@ -83,13 +91,17 @@ final class PublicKeyTestBuilder
         if ($this->has_kid_header) {
             $token_builder = $token_builder->withHeader('kid', $kid);
         }
-        $expire_at        = new DateTimeImmutable()->modify('+1 day');
+        if ($this->has_aud_claim) {
+            $token_builder = $token_builder->permittedFor(hash('sha256', (string) idn_to_ascii('example.com:443', IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46)));
+        }
+        $expire_at        = $today->modify('+1 day');
         $raw_private_key2 = sodium_crypto_sign_secretkey(sodium_crypto_sign_keypair());
         assert($raw_private_key2 !== '');
         $license = $token_builder
             ->issuedBy('enalean-tuleap-enterprise')
-            ->permittedFor(hash('sha256', (string) idn_to_ascii('example.com:443', IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46)))
             ->expiresAt($expire_at)
+            ->issuedAt($today)
+            ->canOnlyBeUsedAfter($today)
             ->identifiedBy(UuidV7::uuid7($expire_at)->toString())
             ->withClaim('restrictions', ['active_user_count' => 500, 'additional_accepted_user_count' => 10])
             ->getToken(

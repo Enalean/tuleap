@@ -32,6 +32,7 @@ final readonly class LicenseBuilder implements BuildLicense
     public function __construct(
         private CheckPublicKeyPresence $public_key_presence_checker,
         private CheckLicenseSignature $license_signature_checker,
+        private RetrieveLicenseContent $license_content_retriever,
     ) {
     }
 
@@ -44,15 +45,19 @@ final readonly class LicenseBuilder implements BuildLicense
             return License::buildCommunityEdition();
         }
 
-        $licence_key_path = ((string) \ForgeConfig::get('sys_custom_dir')) . '/conf/license.key';
-        if (! is_file($licence_key_path)) {
+        $license_file_path = ((string) \ForgeConfig::get('sys_custom_dir')) . '/conf/license.key';
+        if (! is_file($license_file_path)) {
             return License::buildEnterpriseEdition(null);
         }
 
-        if (! $this->license_signature_checker->checkLicenseSignature($licence_key_path, self::PUBLIC_KEY_DIRECTORY)) {
+        if (! $this->license_signature_checker->checkLicenseSignature($license_file_path, self::PUBLIC_KEY_DIRECTORY)) {
             return License::buildInvalidEnterpriseEdition();
         }
 
-        return License::buildEnterpriseEdition(null);
+        return $this->license_content_retriever->retrieveLicenseContent($license_file_path)
+            ->match(
+                static fn(LicenseContent $license_content) => License::buildEnterpriseEdition($license_content->exp),
+                static fn() => License::buildInvalidEnterpriseEdition(),
+            );
     }
 }

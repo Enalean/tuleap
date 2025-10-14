@@ -22,12 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
+use DateTimeImmutable;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Ramsey\Uuid\Uuid;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\SeatManagement\CheckLicenseSignatureStub;
 use Tuleap\Test\Stubs\SeatManagement\CheckPublicKeyPresenceStub;
+use Tuleap\Test\Stubs\SeatManagement\RetrieveLicenseContentStub;
 use function Psl\Filesystem\create_directory;
 use function Psl\Filesystem\create_file;
 use function Psl\Filesystem\delete_file;
@@ -54,14 +57,22 @@ final class LicenseBuilderTest extends TestCase
 
     public function testItShouldReturnTCEWhenThereIsNoKey(): void
     {
-        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithNoKey(), CheckLicenseSignatureStub::buildWithValidSignature());
+        $builder = new LicenseBuilder(
+            CheckPublicKeyPresenceStub::buildWithNoKey(),
+            CheckLicenseSignatureStub::buildWithValidSignature(),
+            RetrieveLicenseContentStub::buildWithoutLicenseContent(),
+        );
 
         self::assertEquals(License::buildCommunityEdition(), $builder->build());
     }
 
     public function testItShouldReturnTEEWithAMigrationDateWhenThereIsNoLicenseFile(): void
     {
-        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithKey(), CheckLicenseSignatureStub::buildWithValidSignature());
+        $builder = new LicenseBuilder(
+            CheckPublicKeyPresenceStub::buildWithKey(),
+            CheckLicenseSignatureStub::buildWithValidSignature(),
+            RetrieveLicenseContentStub::buildWithoutLicenseContent(),
+        );
         delete_file($this->license_file_path);
 
         self::assertEquals(License::buildEnterpriseEdition(null), $builder->build());
@@ -69,15 +80,62 @@ final class LicenseBuilderTest extends TestCase
 
     public function testItShouldReturnExpiredTEEIfLicenseSignatureIsInvalid(): void
     {
-        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithKey(), CheckLicenseSignatureStub::buildWithInvalidSignature());
+        $builder = new LicenseBuilder(
+            CheckPublicKeyPresenceStub::buildWithKey(),
+            CheckLicenseSignatureStub::buildWithInvalidSignature(),
+            RetrieveLicenseContentStub::buildWithoutLicenseContent(),
+        );
 
         self::assertEquals(License::buildInvalidEnterpriseEdition(), $builder->build());
     }
 
-    public function testItShouldReturnValidTEEIfLicenseSignatureIsValid(): void
+    public function testItShouldReturnExpiredTEEIfLicenseContentIsInvalid(): void
     {
-        $builder = new LicenseBuilder(CheckPublicKeyPresenceStub::buildWithKey(), CheckLicenseSignatureStub::buildWithValidSignature());
+        $builder = new LicenseBuilder(
+            CheckPublicKeyPresenceStub::buildWithKey(),
+            CheckLicenseSignatureStub::buildWithValidSignature(),
+            RetrieveLicenseContentStub::buildWithoutLicenseContent(),
+        );
+
+        self::assertEquals(License::buildInvalidEnterpriseEdition(), $builder->build());
+    }
+
+    public function testItShouldReturnValidTEEWithoutExpirationDate(): void
+    {
+        $builder = new LicenseBuilder(
+            CheckPublicKeyPresenceStub::buildWithKey(),
+            CheckLicenseSignatureStub::buildWithValidSignature(),
+            RetrieveLicenseContentStub::buildWithLicenseContent(new LicenseContent(
+                'enalean-tuleap-enterprise',
+                ['toto'],
+                new DateTimeImmutable(),
+                new DateTimeImmutable(),
+                Uuid::uuid4(),
+                [],
+                null,
+            )),
+        );
 
         self::assertEquals(License::buildEnterpriseEdition(null), $builder->build());
+    }
+
+    public function testItShouldReturnValidTEEWithExpirationDate(): void
+    {
+        $date    = new DateTimeImmutable()->modify('+1 year');
+        $builder = new LicenseBuilder(
+            CheckPublicKeyPresenceStub::buildWithKey(),
+            CheckLicenseSignatureStub::buildWithValidSignature(),
+            RetrieveLicenseContentStub::buildWithLicenseContent(new LicenseContent(
+                'enalean-tuleap-enterprise',
+                ['toto'],
+                new DateTimeImmutable(),
+                new DateTimeImmutable(),
+                Uuid::uuid7($date),
+                [],
+                $date,
+            )),
+        );
+
+        self::assertEquals(License::buildEnterpriseEdition($date), $builder->build());
     }
 }
