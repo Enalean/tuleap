@@ -18,5 +18,7 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { LocaleString } from "@tuleap/locale";
 
 export const REPORT_ID: StrictInjectionKey<number> = Symbol("report_id");
+export const USER_LOCALE: StrictInjectionKey<LocaleString> = Symbol("user_locale");

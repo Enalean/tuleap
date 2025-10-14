@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/locale
   '@tuleap/plugin-timetracking-constants':
     specifier: workspace:*
     version: link:../lib/constants

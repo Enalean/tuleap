@@ -23,6 +23,8 @@ import { useProjectTimetrackingWidgetStore } from "./store";
 import ProjectTimetracking from "./components/ProjectTimetracking.vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
+import { getLocaleWithDefault } from "@tuleap/locale";
+import { USER_LOCALE } from "./injection-symbols";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(
@@ -36,7 +38,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("dataset userId not found");
     }
 
-    const user_id = parseInt(document.body.dataset.userId, 10);
+    const user_locale = getLocaleWithDefault(document);
+    const user_id = Number.parseInt(document.body.dataset.userId, 10);
 
     for (const widget_element of widgets) {
         if (!widget_element.dataset.reportId) {
@@ -55,15 +58,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         const pinia = createPinia();
         useProjectTimetrackingWidgetStore(report_id)(pinia);
 
-        app.use(pinia);
-        app.use(
-            /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
-            await initVueGettext(
+        app.use(pinia)
+            .use(
                 /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
-                createGettext,
-                (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
-            ),
-        );
-        app.mount(widget_element);
+                await initVueGettext(createGettext, (locale) => {
+                    return import(`../po/${getPOFileFromLocale(locale)}`);
+                }),
+            )
+            .provide(USER_LOCALE, user_locale)
+            .mount(widget_element);
     }
 });

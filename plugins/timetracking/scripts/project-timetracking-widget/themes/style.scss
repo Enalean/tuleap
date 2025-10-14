@@ -18,6 +18,7 @@
  */
 
 @use "pkg:@tuleap/tlp-badge/badge-with-remove-button";
+@use "pkg:@tuleap/tlp-date-picker";
 
 .timetracking-reading-mode {
     display: flex;
