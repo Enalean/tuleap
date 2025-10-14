@@ -30,7 +30,9 @@ echo '<div id="tracker_toolbar_clear"></div>';
 // Display the artifact items according to all the parameters
 $ah->displayAdd(UserManager::instance()->getCurrentUser()->getId());
 
-echo "<script type=\"text/javascript\">\n";
+$csp_value_purified = Codendi_HTMLPurifier::instance()->purify(\Tuleap\ContentSecurityPolicy\CSPNonce::build()->value);
+
+echo "<script type=\"text/javascript\" nonce=\"$csp_value_purified\">\n";
 $armh = new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 echo "new UserAutoCompleter('tracker_cc',

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\ContentSecurityPolicy\CSPNonce;
+
 require_once __DIR__ . '/../../../www/project/admin/ugroup_utils.php';
 
 class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -368,11 +370,12 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $url_action_with_group_first    = $url_action_without_group_first . '&group_first=' . ($group_first ? 1 : 0);
 
         //The change form
-        $group_first_value = ($group_first ? 1 : 0);
-        $group_id          = (int) $this->getGroupID();
-        $atid              = (int) $this->getID();
-        $html             .= <<<EOS
-                <script type="text/javascript">
+        $group_first_value        = ($group_first ? 1 : 0);
+        $group_id                 = (int) $this->getGroupID();
+        $atid                     = (int) $this->getID();
+        $csp_nonce_purified_value = $hp->purify(CSPNonce::build()->value);
+        $html                    .= <<<EOS
+                <script type="text/javascript" nonce="$csp_nonce_purified_value">
                 <!--
                 function changeFirstPartId(wanted) {
                    document.form_tracker_permissions_change.selected_id.value = wanted;
@@ -956,7 +959,7 @@ EOS;
 
         $af = new ArtifactField();
 
-        echo '<script language="JavaScript">
+        echo '<script language="text/javascript" nonce="' . Codendi_HTMLPurifier::instance()->purify(CSPNonce::build()->value) . '">
 
 			  function onChangeFieldType(form) {
 			  		switch ( form.field_type.value ) {
@@ -1859,7 +1862,7 @@ EOS;
                 echo '</div>';
             }
             echo '<p><a href="?func=notification&amp;group_id=' . (int) $group_id . '&amp;atid=' . (int) $this->getId() . '&amp;action=add_global" id="add_global">' . $Language->getText('tracker_include_type', 'add') . '</a></p>';
-            echo '<script type="text/javascript">' . "
+            echo '<script type="text/javascript" nonce="' . Codendi_HTMLPurifier::instance()->purify(CSPNonce::build()->value) . '">' . "
             document.observe('dom:loaded', function() {
                 $('add_global').observe('click', function (evt) {
                     var self = arguments.callee;
@@ -2401,7 +2404,7 @@ EOS;
             $html   .= '' . $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') . '</label>';
             $html   .= '</p>';
             $html   .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $group_id);
-            $html   .= '<script type="text/javascript">';
+            $html   .= '<script type="text/javascript" nonce="' . Codendi_HTMLPurifier::instance()->purify(CSPNonce::build()->value) . '">';
             $html   .= "
                     document.observe('dom:loaded', function() {
                         //init

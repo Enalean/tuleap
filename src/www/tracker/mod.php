@@ -44,7 +44,9 @@ $ah->display($ro, $pv, UserManager::instance()->getCurrentUser()->getId());
 
 $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/trackerv3_artifact.js');
 
-echo '<script type="text/javascript">' . "\n";
+$csp_value_purified = Codendi_HTMLPurifier::instance()->purify(\Tuleap\ContentSecurityPolicy\CSPNonce::build()->value);
+
+echo '<script type="text/javascript" nonce="' . $csp_value_purified . '">' . "\n";
 $armh = new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 echo "Event.observe(window, 'load', function() {

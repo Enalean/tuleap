@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\ContentSecurityPolicy\CSPNonce;
+
 class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public $fields_per_line;
@@ -535,7 +537,7 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
         $html_result .= '</tbody></table>';
 
         if ($masschange) {
-            $html_result .= '<script language="JavaScript">';
+            $html_result .= '<script language="text/javascript" nonce="' . Codendi_HTMLPurifier::instance()->purify(CSPNonce::build()->value) . '">';
             $html_result .= "
        <!--
               function checkAll(val) {
