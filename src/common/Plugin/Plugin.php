@@ -203,7 +203,7 @@ class Plugin implements \Tuleap\Plugin\IsProjectAllowedToUsePlugin //phpcs:ignor
             return;
         }
         $event_class   = new \ReflectionClass($type_class);
-        $name_constant = $event_class->getConstant(Dispatchable::HOOK_CONST_NAME);
+        $name_constant = $event_class->hasConstant(Dispatchable::HOOK_CONST_NAME) ? $event_class->getConstant(Dispatchable::HOOK_CONST_NAME) : false;
         if ($name_constant === false) {
             $this->listenToHook($event_class->name, $method->name);
         } else {
