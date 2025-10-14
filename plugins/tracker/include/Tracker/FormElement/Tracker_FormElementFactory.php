@@ -64,6 +64,8 @@ use Tuleap\Tracker\FormElement\StaticField\LineBreak\LineBreakStaticField;
 use Tuleap\Tracker\FormElement\StaticField\RichText\RichTextStaticField;
 use Tuleap\Tracker\FormElement\StaticField\Separator\SeparatorStaticField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
+use Tuleap\Tracker\FormElement\View\Admin\CreateSharedVisitorAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\CreateVisitorAdminView;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -1506,9 +1508,9 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
             $allUsedElements = $this->getUsedFormElementForTracker($tracker);
             if ($form_element instanceof Tracker_FormElement_Shared) {
-                $visitor = new Tracker_FormElement_View_Admin_CreateSharedVisitor($allUsedElements);
+                $visitor = new CreateSharedVisitorAdminView($allUsedElements);
             } else {
-                $visitor = new Tracker_FormElement_View_Admin_CreateVisitor($allUsedElements);
+                $visitor = new CreateVisitorAdminView($allUsedElements);
             }
 
             $visitor->setType($type);

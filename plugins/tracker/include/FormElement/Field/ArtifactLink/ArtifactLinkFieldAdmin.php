@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use TemplateRenderer;
-use Tracker_FormElement_View_Admin_Field;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 
-final class ArtifactLinkFieldAdmin extends Tracker_FormElement_View_Admin_Field
+final class ArtifactLinkFieldAdmin extends FieldAdminView
 {
     public function __construct(
         private readonly TemplateRenderer $renderer,

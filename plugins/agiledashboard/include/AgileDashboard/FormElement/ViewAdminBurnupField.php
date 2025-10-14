@@ -21,9 +21,9 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use Override;
-use Tracker_FormElement_View_Admin_Field;
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 
-class ViewAdminBurnupField extends Tracker_FormElement_View_Admin_Field
+class ViewAdminBurnupField extends FieldAdminView
 {
     #[Override]
     protected function fetchRequired()

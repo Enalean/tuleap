@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\TrackerEncryption\ChangesetValue;
 use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
@@ -355,7 +356,7 @@ class Tracker_FormElement_Field_Encrypted extends TrackerField implements Tracke
     #[\Override]
     public function getFormAdminVisitor(TrackerField $element, array $used_element)
     {
-        return new Tracker_FormElement_View_Admin_Field($element, $used_element);
+        return new FieldAdminView($element, $used_element);
     }
 
     #[\Override]

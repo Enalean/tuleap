@@ -17,11 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin;
+
+use CSRFSynchronizerToken;
+use HTTPRequest;
+use TrackerManager;
 
 /**
  * Visit a FormElement and provides an update view
  */
-class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_View_Admin_Visitor
+class UpdateVisitorAdminView extends VisitorAdminView
 {
     protected function fetchForm()
     {
@@ -41,8 +46,8 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
     /**
      * Display the form to administrate the element
      *
-     * @param TrackerManager  $tracker_manager The tracker manager
-     * @param HTTPRequest     $request         The data coming from the user
+     * @param TrackerManager $tracker_manager The tracker manager
+     * @param HTTPRequest $request The data coming from the user
      */
     public function display(TrackerManager $tracker_manager, HTTPRequest $request, ?CSRFSynchronizerToken $csrf_token = null): void
     {

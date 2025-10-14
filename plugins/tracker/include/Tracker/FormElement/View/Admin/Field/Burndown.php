@@ -17,8 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 
-class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_View_Admin_Field
+class Tracker_FormElement_View_Admin_Field_Burndown extends FieldAdminView
 {
     #[\Override]
     protected function fetchRequired()

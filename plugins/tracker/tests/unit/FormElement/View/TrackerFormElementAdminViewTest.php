@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\View;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_View_Admin;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -31,7 +30,7 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class AdminTest extends TestCase
+final class TrackerFormElementAdminViewTest extends TestCase
 {
     public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName(): void
     {
@@ -42,7 +41,7 @@ final class AdminTest extends TestCase
         self::assertMatchesRegularExpression('%<a href="' . TRACKER_BASE_URL . '/\?tracker=101&func=admin-formElement-update-view&formElement=666"%', $result);
     }
 
-    public function givenAnAdminWithOriginalProjectAndTracker(string $project_name, string $tracker_name): Tracker_FormElement_View_Admin
+    public function givenAnAdminWithOriginalProjectAndTracker(string $project_name, string $tracker_name): TrackerFormElementAdminView
     {
         $project = ProjectTestBuilder::aProject()->withPublicName($project_name)->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName($tracker_name)->withProject($project)->build();
@@ -50,13 +49,13 @@ final class AdminTest extends TestCase
         $original = StringFieldBuilder::aStringField(666)->inTracker($tracker)->build();
         $element  = StringFieldBuilder::aStringField(667)->withOriginalField($original)->build();
 
-        return new Tracker_FormElement_View_Admin($element, []);
+        return new TrackerFormElementAdminView($element, []);
     }
 
     public function testSharedUsageShouldDisplayAllTrackershatShareMe(): void
     {
         $element = $this->givenAnElementWithManyCopies();
-        $admin   = new Tracker_FormElement_View_Admin($element, []);
+        $admin   = new TrackerFormElementAdminView($element, []);
         $content = $admin->fetchSharedUsage();
         self::assertMatchesRegularExpression('/Canard/', $content);
         self::assertMatchesRegularExpression('/Saucisse/', $content);

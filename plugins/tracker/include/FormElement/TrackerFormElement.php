@@ -35,8 +35,6 @@ use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_Interface;
-use Tracker_FormElement_View_Admin_UpdateSharedVisitor;
-use Tracker_FormElement_View_Admin_UpdateVisitor;
 use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tracker_IProvideJsonFormatOfMyself;
@@ -54,6 +52,8 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\FieldPropertiesRetriever;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
+use Tuleap\Tracker\FormElement\View\Admin\UpdateSharedVisitorAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\UpdateVisitorAdminView;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementImpl;
 use Tuleap\Tracker\Tracker;
@@ -473,9 +473,9 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
     {
         $allUsedElements = $this->getFormElementFactory()->getUsedFormElementForTracker($this->getTracker());
         if ($this->isTargetSharedField()) {
-            $visitor = new Tracker_FormElement_View_Admin_UpdateSharedVisitor($allUsedElements);
+            $visitor = new UpdateSharedVisitorAdminView($allUsedElements);
         } else {
-            $visitor = new Tracker_FormElement_View_Admin_UpdateVisitor($allUsedElements);
+            $visitor = new UpdateVisitorAdminView($allUsedElements);
             EventManager::instance()->processEvent(
                 self::VIEW_ADMIN_UPDATE_VISITOR,
                 [

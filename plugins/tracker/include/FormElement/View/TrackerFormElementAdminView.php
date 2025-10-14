@@ -17,6 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View;
+
+use Codendi_HTMLPurifier;
+use LogicException;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 
@@ -25,24 +29,10 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
  *
  * This is the top most element of the hierarchy and correspond to Tracker_FormElement
  */
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
-class Tracker_FormElement_View_Admin
+class TrackerFormElementAdminView
 {
-    /**
-     * @var TrackerFormElement
-     */
-    protected $formElement;
-
-    /**
-     * @var
-     */
-    protected $allUsedElements;
-
-    public function __construct(TrackerFormElement $formElement, $allUsedElements)
+    public function __construct(protected TrackerFormElement $formElement, protected $allUsedElements)
     {
-        $this->formElement     = $formElement;
-        $this->allUsedElements = $allUsedElements;
     }
 
     public function fetchTypeNotModifiable()
@@ -106,7 +96,7 @@ class Tracker_FormElement_View_Admin
         $html .= '<p>';
 
         $html .= '<label for="formElement_description">' . dgettext('tuleap-tracker', 'Description') . ':</label>';
-        $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">' .  $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML)  . '</textarea>';
+        $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">' . $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML) . '</textarea>';
 
         $html .= '</p>';
         return $html;
@@ -234,11 +224,11 @@ class Tracker_FormElement_View_Admin
     /**
      * Fetch a unique property edit form
      *
-     * @param string $key      The key of the property
-     * @param array  $property The property to display
+     * @param string $key The key of the property
+     * @param array $property The property to display
      *
-     * @see fetchAdminSpecificProperties
      * @return string html
+     * @see fetchAdminSpecificProperties
      */
     protected function fetchAdminSpecificProperty(string $key, array $property): string
     {
@@ -266,7 +256,7 @@ class Tracker_FormElement_View_Admin
                            cols="50" rows="10"
                            name="formElement_data[specific_properties][' . $purifier->purify($key) . ']"
                            id="formElement_properties_' . $key . '">' .
-                           $purifier->purify($property['value']) . '</textarea>';
+                         $purifier->purify($property['value']) . '</textarea>';
                 break;
             case 'rich_text':
                 $html .= '<label data-test="rich-text-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';
@@ -275,7 +265,7 @@ class Tracker_FormElement_View_Admin
                            cols="50" rows="10"
                            name="formElement_data[specific_properties][' . $purifier->purify($key) . ']"
                            id="formElement_properties_' . $purifier->purify($key) . '">' .
-                           $purifier->purify($property['value'], CODENDI_PURIFIER_FULL) . '</textarea>';
+                         $purifier->purify($property['value'], CODENDI_PURIFIER_FULL) . '</textarea>';
                 break;
             case 'radio':
                 $html .= '<label data-test="radio-specific-properties" for="formElement_properties_' . $purifier->purify($key) . '">' . $purifier->purify($this->formElement->getPropertyLabel($key)) . '</label> ';

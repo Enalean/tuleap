@@ -17,6 +17,32 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin;
+
+use Codendi_HTMLPurifier;
+use Exception;
+use HTTPRequest;
+use TemplateRendererFactory;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElement_Shared;
+use Tracker_FormElement_View_Admin_Field_ArtifactId;
+use Tracker_FormElement_View_Admin_Field_Burndown;
+use Tracker_FormElement_View_Admin_Field_Checkbox;
+use Tracker_FormElement_View_Admin_Field_CrossReferences;
+use Tracker_FormElement_View_Admin_Field_LastModifiedBy;
+use Tracker_FormElement_View_Admin_Field_LastUpdateDate;
+use Tracker_FormElement_View_Admin_Field_List;
+use Tracker_FormElement_View_Admin_Field_MultiSelectbox;
+use Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact;
+use Tracker_FormElement_View_Admin_Field_Radiobutton;
+use Tracker_FormElement_View_Admin_Field_Selectbox;
+use Tracker_FormElement_View_Admin_Field_SubmittedBy;
+use Tracker_FormElement_View_Admin_Field_SubmittedOn;
+use Tracker_FormElement_View_Admin_Priority;
+use Tracker_FormElement_View_Admin_StaticField_LineBreak;
+use Tracker_FormElement_View_Admin_StaticField_Separator;
+use Tracker_FormElement_Visitor;
+use TrackerManager;
 use Tuleap\JSONHeader;
 use Tuleap\Tracker\FormElement\Container\TrackerFormElementContainer;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
@@ -51,17 +77,18 @@ use Tuleap\Tracker\FormElement\StaticField\TrackerStaticField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
+use Tuleap\Tracker\FormElement\View\TrackerFormElementAdminView;
 
 /**
  * Can visit a FormElement and provides the corresponding administration element
  */
-class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visitor, Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class VisitorAdminView implements Tracker_FormElement_Visitor, Tracker_FormElement_FieldVisitor
 {
     public const string SUBMIT_UPDATE = 'update-formElement';
     public const string SUBMIT_CREATE = 'docreate-formElement';
 
     /**
-     * @var Tracker_FormElement_View_Admin
+     * @var TrackerFormElementAdminView
      */
     protected $adminElement = null;
 
@@ -110,7 +137,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     {
         $this->element      = $field;
         $this->adminElement = new ArtifactLinkFieldAdmin(
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../FormElement/Field/ArtifactLink/templates'),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../Field/ArtifactLink/templates'),
             $field,
             $this->allUsedElements,
         );
@@ -168,7 +195,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     private function visitField(TrackerField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field($element, $this->allUsedElements);
+        $this->adminElement = new FieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
@@ -269,12 +296,12 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
 
     private function visitContainer(TrackerFormElementContainer $element)
     {
-        $this->adminElement = new Tracker_FormElement_View_Admin_Container($element, $this->allUsedElements);
+        $this->adminElement = new ContainerAdminView($element, $this->allUsedElements);
     }
 
     private function visitStaticField(TrackerStaticField $element)
     {
-        $this->adminElement = new Tracker_FormElement_View_Admin_StaticField($element, $this->allUsedElements);
+        $this->adminElement = new StaticFieldAdminView($element, $this->allUsedElements);
     }
 
     private function visitLineBreak(LineBreakStaticField $element)
@@ -289,7 +316,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
 
     private function visitShared(Tracker_FormElement_Shared $element)
     {
-        $this->adminElement = new Tracker_FormElement_View_Admin_Shared($element, $this->allUsedElements);
+        $this->adminElement = new SharedAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
@@ -311,7 +338,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
      *
      * Mostly used for tests.
      *
-     * @return Tracker_FormElement_View_Admin
+     * @return TrackerFormElementAdminView
      */
     public function getAdmin()
     {

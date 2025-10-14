@@ -17,8 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\View\Admin\StaticFieldAdminView;
 
-class Tracker_FormElement_View_Admin_StaticField_LineBreak extends Tracker_FormElement_View_Admin_StaticField
+class Tracker_FormElement_View_Admin_StaticField_LineBreak extends StaticFieldAdminView
 {
     /**
      * html form for the description

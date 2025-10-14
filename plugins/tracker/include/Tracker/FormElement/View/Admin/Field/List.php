@@ -17,8 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 
-class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View_Admin_Field  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElement_View_Admin_Field_List extends FieldAdminView  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Fetch additionnal stuff to display below the edit form

@@ -20,9 +20,9 @@
 
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
-use Tracker_FormElement_View_Admin_Field;
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 
-class ViewAdmin extends Tracker_FormElement_View_Admin_Field
+class ViewAdmin extends FieldAdminView
 {
     #[\Override]
     protected function fetchRequired()
