@@ -38,7 +38,7 @@ use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
 use TransitionFactory;
-use Tuleap\AgileDashboard\BacklogItem\AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
+use Tuleap\AgileDashboard\BacklogItem\PaginatedBacklogItemsRepresentationsBuilder;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItemBuilder;
@@ -866,7 +866,7 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        $paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
+        $paginated_backlog_item_representation_builder = new PaginatedBacklogItemsRepresentationsBuilder(
             $this->getBacklogItemRepresentationFactory(),
             $this->backlog_item_collection_factory,
             $this->backlog_factory,
