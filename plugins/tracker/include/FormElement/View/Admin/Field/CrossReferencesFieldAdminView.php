@@ -17,20 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
+
 use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 
-class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends FieldAdminView
+final class CrossReferencesFieldAdminView extends FieldAdminView
 {
-    #[\Override]
-    public function fetchCustomHelp()
-    {
-        $html  = '';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= dgettext('tuleap-tracker', 'The field is automatically set to last artifact update date');
-        $html .= '</span>';
-        return $html;
-    }
-
     /**
      * Fetch the "required" part of field admin
      *

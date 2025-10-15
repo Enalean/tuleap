@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
+ * Copyright (c) Jtekt, 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 
-class Tracker_FormElement_View_Admin_Field_SubmittedOn extends FieldAdminView
+final class RadioButtonFieldAdminView extends SelectboxFieldAdminView
 {
-    #[\Override]
-    protected function fetchCustomHelp()
-    {
-        $html  = '';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission date');
-        $html .= '</span>';
-        return $html;
-    }
-
-    #[\Override]
-    protected function fetchRequired()
-    {
-        return '';
-    }
+    protected $availableTypes = ['sb', 'msb', 'cb'];
 }

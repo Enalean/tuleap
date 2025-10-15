@@ -17,8 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 
-class Tracker_FormElement_View_Admin_Field_Checkbox extends Tracker_FormElement_View_Admin_Field_MultiSelectbox
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
+
+final class ArtifactIdFieldAdminView extends FieldAdminView
 {
-    protected $availableTypes = ['sb', 'rb', 'msb'];
+    /**
+     * Fetch the "required" part of field admin
+     *
+     * @return string the HTML for the part of form for required checkbox
+     */
+    #[\Override]
+    protected function fetchRequired()
+    {
+        return '';
+    }
 }

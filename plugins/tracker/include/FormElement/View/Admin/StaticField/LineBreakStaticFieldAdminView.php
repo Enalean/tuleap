@@ -17,13 +17,41 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
+namespace Tuleap\Tracker\FormElement\View\Admin\StaticField;
 
-class Tracker_FormElement_View_Admin_Field_Burndown extends FieldAdminView
+use Tuleap\Tracker\FormElement\View\Admin\StaticFieldAdminView;
+
+final class LineBreakStaticFieldAdminView extends StaticFieldAdminView
 {
+    /**
+     * html form for the description
+     *
+     * @return string html
+     */
     #[\Override]
-    protected function fetchRequired()
+    public function fetchDescriptionForUpdate()
     {
         return '';
+    }
+
+    /**
+     * html form for the description
+     *
+     * @return string html
+     */
+    #[\Override]
+    public function fetchDescriptionForShared()
+    {
+        return '';
+    }
+
+    #[\Override]
+    protected function fetchCustomHelp()
+    {
+        $html  = '';
+        $html .= '<span class="tracker-admin-form-element-help">';
+        $html .= dgettext('tuleap-tracker', 'The label will not appear in form.');
+        $html .= '</span>';
+        return $html;
     }
 }

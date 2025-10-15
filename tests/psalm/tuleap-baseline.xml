@@ -38100,7 +38100,6 @@
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$reverse_label]]></code>
       <code><![CDATA[$reverse_label]]></code>
       <code><![CDATA[$shortname]]></code>
@@ -40539,6 +40538,74 @@
       <code><![CDATA[(int) $this->element->getTracker()->getId()]]></code>
     </RedundantCast>
   </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/CheckboxFieldAdminView.php">
+    <MissingPropertyType>
+      <code><![CDATA[$availableTypes]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/ComputedFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[canUpgrade]]></code>
+      <code><![CDATA[isMigrated]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/LastUpdateByFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchCustomHelp]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/LastUpdateDateFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchCustomHelp]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/ListFieldAdminView.php">
+    <UndefinedMethod>
+      <code><![CDATA[getBind]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/MultiSelectboxFieldAdminView.php">
+    <MissingPropertyType>
+      <code><![CDATA[$availableTypes]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/PermissionsOnArtifactFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchCustomHelp]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/PriorityFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchCustomHelp]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/RadioButtonFieldAdminView.php">
+    <MissingPropertyType>
+      <code><![CDATA[$availableTypes]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/SelectboxFieldAdminView.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->formElement]]></code>
+    </ArgumentTypeCoercion>
+    <MissingPropertyType>
+      <code><![CDATA[$availableTypes]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[fetchTypeForUpdate]]></code>
+      <code><![CDATA[getAvailableTypes]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/SubmittedByFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchCustomHelp]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/Field/SubmittedOnFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchCustomHelp]]></code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/FormElement/View/Admin/FieldAdminView.php">
     <UndefinedMethod>
       <code><![CDATA[isNotificationsSupported]]></code>
@@ -40559,6 +40626,16 @@
     <MissingParamType>
       <code><![CDATA[$allUsedElements]]></code>
     </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/StaticField/LineBreakStaticFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchCustomHelp]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/View/Admin/StaticField/SeparatorStaticFieldAdminView.php">
+    <MissingReturnType>
+      <code><![CDATA[fetchCustomHelp]]></code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/View/Admin/UpdateVisitorAdminView.php">
     <MissingReturnType>
@@ -46222,84 +46299,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[checkTransition]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Checkbox.php">
-    <MissingPropertyType>
-      <code><![CDATA[$availableTypes]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Computed.php">
-    <MissingReturnType>
-      <code><![CDATA[canUpgrade]]></code>
-      <code><![CDATA[isMigrated]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/LastModifiedBy.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchCustomHelp]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/LastUpdateDate.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchCustomHelp]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/List.php">
-    <UndefinedMethod>
-      <code><![CDATA[getBind]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/MultiSelectbox.php">
-    <MissingPropertyType>
-      <code><![CDATA[$availableTypes]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/PermissionsOnArtifact.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchCustomHelp]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Priority.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchCustomHelp]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Radiobutton.php">
-    <MissingPropertyType>
-      <code><![CDATA[$availableTypes]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Selectbox.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$this->formElement]]></code>
-    </ArgumentTypeCoercion>
-    <MissingPropertyType>
-      <code><![CDATA[$availableTypes]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[fetchTypeForUpdate]]></code>
-      <code><![CDATA[getAvailableTypes]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/SubmittedBy.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchCustomHelp]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/SubmittedOn.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchCustomHelp]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/StaticField/LineBreak.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchCustomHelp]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/StaticField/Separator.php">
-    <MissingReturnType>
-      <code><![CDATA[fetchCustomHelp]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/GeneralSettings_Presenter.php">
@@ -69861,7 +69860,6 @@
       <code><![CDATA[$dst_im]]></code>
       <code><![CDATA[$dst_im]]></code>
       <code><![CDATA[$dst_im]]></code>
-      <code><![CDATA[$dst_im]]></code>
     </PossiblyFalseArgument>
   </file>
   <file src="src/common/User/Admin/PendingProjectBuilder.php">
@@ -84383,9 +84381,6 @@
       <code><![CDATA[db_result($result, 0, 'group_forum_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
     </DeprecatedFunction>
-    <ParseError>
-      <code><![CDATA[)]]></code>
-    </ParseError>
   </file>
   <file src="src/www/forum/forum.php">
     <DeprecatedFunction>
@@ -84423,7 +84418,6 @@
       <code><![CDATA[db_result($result, $row, 'body')]]></code>
       <code><![CDATA[db_result($result, $row, 'date')]]></code>
       <code><![CDATA[db_result($result, $row, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, $row, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $row, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $row, 'subject')]]></code>
       <code><![CDATA[db_result($result, $row, 'user_name')]]></code>

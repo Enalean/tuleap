@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
+
 use Tuleap\Tracker\FormElement\View\TrackerFormElementAdminView;
 
-class Tracker_FormElement_View_Admin_Priority extends TrackerFormElementAdminView
+final class PriorityFieldAdminView extends TrackerFormElementAdminView
 {
     /**
      * Fetch the "required" part of field admin

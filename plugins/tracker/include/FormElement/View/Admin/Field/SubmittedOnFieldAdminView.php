@@ -17,15 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
+
 use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 
-class Tracker_FormElement_View_Admin_Field_CrossReferences extends FieldAdminView
+final class SubmittedOnFieldAdminView extends FieldAdminView
 {
-    /**
-     * Fetch the "required" part of field admin
-     *
-     * @return string the HTML for the part of form for required checkbox
-     */
+    #[\Override]
+    protected function fetchCustomHelp()
+    {
+        $html  = '';
+        $html .= '<span class="tracker-admin-form-element-help">';
+        $html .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission date');
+        $html .= '</span>';
+        return $html;
+    }
+
     #[\Override]
     protected function fetchRequired()
     {
