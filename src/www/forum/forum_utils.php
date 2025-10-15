@@ -409,12 +409,6 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
         }
 
         $msg_id = db_insertid($result);
-
-        // extract cross reference in the message
-        $reference_manager = ReferenceManager::instance();
-        $g_id              = get_forum_group_id($group_forum_id);
-        $reference_manager->extractCrossRef($subject, $msg_id, ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
-        $reference_manager->extractCrossRef($body, $msg_id, ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
     } else {
         echo '
 			<H3>' . _('You could post if you were logged in') . '</H3>';

@@ -71,15 +71,13 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
     public const string KEYWORD_ARTIFACT_SHORT = 'art';
     public const string KEYWORD_ARTIFACT_LONG  = 'artifact';
 
-    public const string REFERENCE_NATURE_ARTIFACT     = 'artifact';
-    public const string REFERENCE_NATURE_DOCUMENT     = 'document';
-    public const string REFERENCE_NATURE_SVNREVISION  = 'svn_revision';
-    public const string REFERENCE_NATURE_FILE         = 'file';
-    public const string REFERENCE_NATURE_RELEASE      = 'release';
-    public const string REFERENCE_NATURE_FORUM        = 'forum';
-    public const string REFERENCE_NATURE_FORUMMESSAGE = 'forum_message';
-    public const string REFERENCE_NATURE_WIKIPAGE     = 'wiki_page';
-    public const string REFERENCE_NATURE_OTHER        = 'other';
+    public const string REFERENCE_NATURE_ARTIFACT    = 'artifact';
+    public const string REFERENCE_NATURE_DOCUMENT    = 'document';
+    public const string REFERENCE_NATURE_SVNREVISION = 'svn_revision';
+    public const string REFERENCE_NATURE_FILE        = 'file';
+    public const string REFERENCE_NATURE_RELEASE     = 'release';
+    public const string REFERENCE_NATURE_WIKIPAGE    = 'wiki_page';
+    public const string REFERENCE_NATURE_OTHER       = 'other';
 
     /**
      * Not possible to give extra params to the call back function (_insertRefCallback in this case)
@@ -155,26 +153,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
                 'release',
                 'far fa-copy',
                 $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key'),
-                true
-            )
-        );
-
-        $natures_collection->addNature(
-            self::REFERENCE_NATURE_FORUM,
-            new Nature(
-                'forum',
-                'fas ' . Service::ICONS[Service::FORUM],
-                $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key'),
-                true
-            )
-        );
-
-        $natures_collection->addNature(
-            self::REFERENCE_NATURE_FORUMMESSAGE,
-            new Nature(
-                'msg',
-                'fas ' . Service::ICONS[Service::FORUM],
-                $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key'),
                 true
             )
         );
@@ -1022,24 +1000,6 @@ class ReferenceManager implements ExtractReferences, ExtractAndSaveCrossReferenc
 
                 if ($file) {
                     $ref_gid = $file->getGroup()->getID();
-                }
-
-                break;
-            case self::REFERENCE_NATURE_FORUM:
-                $forum_dao          = new ForumDao();
-                $forum_group_id_row = $forum_dao->searchByGroupForumId($value)->getRow();
-
-                if ($forum_group_id_row) {
-                    $ref_gid = $forum_group_id_row['group_id'];
-                }
-
-                break;
-            case self::REFERENCE_NATURE_FORUMMESSAGE:
-                $forum_dao            = new ForumDao();
-                $message_group_id_row = $forum_dao->getMessageProjectIdAndForumId($value);
-
-                if ($message_group_id_row) {
-                    $ref_gid = $message_group_id_row['group_id'];
                 }
 
                 break;

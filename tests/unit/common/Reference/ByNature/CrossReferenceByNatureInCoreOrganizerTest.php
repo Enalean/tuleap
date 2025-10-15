@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Reference\ByNature;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
 use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -37,7 +36,6 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
     private CrossReferenceByNatureInCoreOrganizer $core_organizer;
     private CrossReferenceByNatureOrganizer&MockObject $by_nature_organizer;
     private CrossReferenceFRSOrganizer&MockObject $frs_organizer;
-    private CrossReferenceForumOrganizer&MockObject $forum_organizer;
 
     #[\Override]
     public function setUp(): void
@@ -45,12 +43,10 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         $this->by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
         $this->wiki_organizer      = $this->createMock(CrossReferenceWikiOrganizer::class);
         $this->frs_organizer       = $this->createMock(CrossReferenceFRSOrganizer::class);
-        $this->forum_organizer     = $this->createMock(CrossReferenceForumOrganizer::class);
 
         $this->core_organizer = new CrossReferenceByNatureInCoreOrganizer(
             $this->wiki_organizer,
             $this->frs_organizer,
-            $this->forum_organizer,
         );
     }
 
@@ -101,40 +97,6 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
             ->expects($this->once())
             ->method('organizeFRSFileReference')
             ->with($file_ref, $this->by_nature_organizer);
-
-        $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
-    }
-
-    public function testItOrganizesForumMessagesReferences(): void
-    {
-        $ref = CrossReferencePresenterBuilder::get(1)->withType('forum_message')->build();
-
-        $this->by_nature_organizer->method('getCrossReferencePresenters')->willReturn([
-            CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-            $ref,
-        ]);
-
-        $this->forum_organizer
-            ->expects($this->once())
-            ->method('organizeMessageReference')
-            ->with($ref, $this->by_nature_organizer);
-
-        $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
-    }
-
-    public function testItOrganizesForumReferences(): void
-    {
-        $ref = CrossReferencePresenterBuilder::get(1)->withType('forum')->build();
-
-        $this->by_nature_organizer->method('getCrossReferencePresenters')->willReturn([
-            CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
-            $ref,
-        ]);
-
-        $this->forum_organizer
-            ->expects($this->once())
-            ->method('organizeForumReference')
-            ->with($ref, $this->by_nature_organizer);
 
         $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
     }
