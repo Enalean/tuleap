@@ -7,7 +7,7 @@
     >
         <div
                 class="extra-card-field-content"
-                ng-if="card_ctrl.cardFieldIsSimpleValue(card_field.type) && card_field.value"
+                ng-if="card_ctrl.cardFieldIsSimpleValue(card_field.type) && card_ctrl.hasAValue(card_field.value)"
         >
             <span class="extra-card-field-title">{{ card_field.label }}: </span>
             <tuleap-simple-field value="{{ card_field.value }}"
