@@ -22,32 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Stubs\SeatManagement;
 
+use Lcobucci\JWT\UnencryptedToken;
 use Override;
-use Tuleap\Option\Option;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\SeatManagement\Fault\LicenseClaimsParsingFault;
 use Tuleap\SeatManagement\LicenseContent;
 use Tuleap\SeatManagement\RetrieveLicenseContent;
 
 final readonly class RetrieveLicenseContentStub implements RetrieveLicenseContent
 {
     /**
-     * @param Option<LicenseContent> $license_content
+     * @param Ok<LicenseContent>|Err<Fault> $license_content
      */
-    private function __construct(private Option $license_content)
+    private function __construct(private Ok|Err $license_content)
     {
     }
 
     public static function buildWithLicenseContent(LicenseContent $license_content): self
     {
-        return new self(Option::fromValue($license_content));
+        return new self(Result::ok($license_content));
     }
 
     public static function buildWithoutLicenseContent(): self
     {
-        return new self(Option::nothing(LicenseContent::class));
+        return new self(Result::err(LicenseClaimsParsingFault::build('License claims parsing error')));
     }
 
     #[Override]
-    public function retrieveLicenseContent(string $license_file_path): Option
+    public function retrieveLicenseContent(UnencryptedToken $token): Ok|Err
     {
         return $this->license_content;
     }

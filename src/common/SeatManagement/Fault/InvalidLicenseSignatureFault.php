@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SeatManagement;
+namespace Tuleap\SeatManagement\Fault;
 
 use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final readonly class NoPublicKeyFault extends Fault
+final readonly class InvalidLicenseSignatureFault extends Fault
 {
-    public static function build(): Fault
+    public static function build(string $error_message): Fault
     {
-        return new self('There is no public keys');
+        return new self('Failed checking license signature: ' . $error_message);
     }
 }

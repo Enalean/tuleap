@@ -22,12 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Stubs\SeatManagement;
 
+use Lcobucci\JWT\Token\DataSet;
+use Lcobucci\JWT\Token\Plain;
+use Lcobucci\JWT\Token\Signature;
+use Lcobucci\JWT\UnencryptedToken;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\SeatManagement\CheckLicenseSignature;
+use Tuleap\SeatManagement\Fault\InvalidLicenseSignatureFault;
 
 final readonly class CheckLicenseSignatureStub implements CheckLicenseSignature
 {
+    private UnencryptedToken $token;
+
     private function __construct(private bool $is_valid)
     {
+        $this->token = new Plain(new DataSet([], ''), new DataSet([], ''), new Signature('a', 'a'));
     }
 
     public static function buildWithValidSignature(): self
@@ -41,8 +52,10 @@ final readonly class CheckLicenseSignatureStub implements CheckLicenseSignature
     }
 
     #[\Override]
-    public function checkLicenseSignature(string $license_file_path, string $keys_directory): bool
+    public function checkLicenseSignature(string $license_file_path, string $keys_directory): Ok|Err
     {
-        return $this->is_valid;
+        return $this->is_valid
+            ? Result::ok($this->token)
+            : Result::err(InvalidLicenseSignatureFault::build('Invalid license signature.'));
     }
 }

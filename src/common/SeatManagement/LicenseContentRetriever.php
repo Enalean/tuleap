@@ -24,44 +24,30 @@ namespace Tuleap\SeatManagement;
 
 use CuyZ\Valinor\Mapper\MappingError;
 use CuyZ\Valinor\Mapper\TreeMapper;
-use Lcobucci\JWT\Encoding\CannotDecodeContent;
-use Lcobucci\JWT\Parser as ParserInterface;
-use Lcobucci\JWT\Token\InvalidTokenStructure;
-use Lcobucci\JWT\Token\UnsupportedHeaderFound;
 use Lcobucci\JWT\UnencryptedToken;
 use Override;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
-use Tuleap\Option\Option;
-use function Psl\File\read;
+use Tuleap\NeverThrow\Result;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\SeatManagement\Fault\LicenseClaimsParsingFault;
 
 final readonly class LicenseContentRetriever implements RetrieveLicenseContent
 {
     public function __construct(
         private LoggerInterface $logger,
-        private ParserInterface $parser,
         private TreeMapper $mapper,
     ) {
     }
 
     #[Override]
-    public function retrieveLicenseContent(string $license_file_path): Option
+    public function retrieveLicenseContent(UnencryptedToken $token): Ok|Err
     {
-        $license_content = trim(read($license_file_path));
-        assert($license_content !== '');
-
         try {
-            $token = $this->parser->parse($license_content);
-        } catch (CannotDecodeContent | InvalidTokenStructure | UnsupportedHeaderFound $error) {
-            throw new RuntimeException('Should have been caught at license signature checker', 0, $error);
-        }
-        assert($token instanceof UnencryptedToken);
-
-        try {
-            return Option::fromValue($this->mapper->map(LicenseContent::class, $token->claims()->all()));
+            return Result::ok($this->mapper->map(LicenseContent::class, $token->claims()->all()));
         } catch (MappingError $error) {
-            $this->logger->error('Failed parsing license claims: ' . $error->getMessage(), ['exception' => $error]);
-            return Option::nothing(LicenseContent::class);
+            $this->logger->info('Failed parsing license claims: ' . $error->getMessage(), ['exception' => $error]);
+            return Result::err(LicenseClaimsParsingFault::build($error->getMessage()));
         }
     }
 }

@@ -22,7 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
+use LogicException;
 use Override;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Result;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Err;
+use Tuleap\SeatManagement\Fault\InvalidLicenseSignatureFault;
+use Tuleap\SeatManagement\Fault\LicenseClaimsParsingFault;
+use Tuleap\SeatManagement\Fault\MissingLicenseFileFault;
+use Tuleap\SeatManagement\Fault\NoPublicKeyFault;
 use function Psl\Filesystem\is_file;
 
 final readonly class LicenseBuilder implements BuildLicense
@@ -39,25 +48,38 @@ final readonly class LicenseBuilder implements BuildLicense
     #[Override]
     public function build(): License
     {
-        $is_public_key_present = $this->public_key_presence_checker->checkPresence(self::PUBLIC_KEY_DIRECTORY);
-
-        if (! $is_public_key_present) {
-            return License::buildCommunityEdition();
-        }
-
-        $license_file_path = ((string) \ForgeConfig::get('sys_custom_dir')) . '/conf/license.key';
-        if (! is_file($license_file_path)) {
-            return License::buildEnterpriseEdition(null);
-        }
-
-        if (! $this->license_signature_checker->checkLicenseSignature($license_file_path, self::PUBLIC_KEY_DIRECTORY)) {
-            return License::buildInvalidEnterpriseEdition();
-        }
-
-        return $this->license_content_retriever->retrieveLicenseContent($license_file_path)
+        return $this->public_key_presence_checker->checkPresence(self::PUBLIC_KEY_DIRECTORY)
+            ->andThen($this->checkLicenseFilePresence(...))
+            ->andThen(
+            /**
+             * @param non-empty-string $license_file_path
+             */
+                function (string $license_file_path) {
+                    return $this->license_signature_checker->checkLicenseSignature($license_file_path, self::PUBLIC_KEY_DIRECTORY);
+                }
+            )
+            ->andThen($this->license_content_retriever->retrieveLicenseContent(...))
             ->match(
                 static fn(LicenseContent $license_content) => License::buildEnterpriseEdition($license_content->exp),
-                static fn() => License::buildInvalidEnterpriseEdition(),
+                static fn(Fault $fault) => match ($fault::class) {
+                    NoPublicKeyFault::class => License::buildCommunityEdition(),
+                    MissingLicenseFileFault::class => License::buildEnterpriseEdition(null),
+                    LicenseClaimsParsingFault::class, InvalidLicenseSignatureFault::class => License::buildInvalidEnterpriseEdition(),
+                    default => throw new LogicException('Was not expected: ' . $fault::class),
+                },
             );
+    }
+
+    /**
+     * @return Ok<non-empty-string>|Err<Fault>
+     */
+    private function checkLicenseFilePresence(): Ok|Err
+    {
+        /** @var non-empty-string $license_file_path */
+        $license_file_path = ((string) \ForgeConfig::get('sys_custom_dir')) . '/conf/license.key';
+        if (! is_file($license_file_path)) {
+            return Result::err(MissingLicenseFileFault::build());
+        }
+        return Result::ok($license_file_path);
     }
 }

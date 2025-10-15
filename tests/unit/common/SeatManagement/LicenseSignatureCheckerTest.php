@@ -31,6 +31,8 @@ use org\bovigo\vfs\vfsStream;
 use Psl\File\WriteMode;
 use Psr\Log\NullLogger;
 use Ramsey\Uuid\Uuid;
+use Tuleap\NeverThrow\Result;
+use Tuleap\SeatManagement\Fault\InvalidLicenseSignatureFault;
 use Tuleap\Test\Builders\SeatManagement\PublicKeyTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use function Psl\File\write;
@@ -57,7 +59,7 @@ final class LicenseSignatureCheckerTest extends TestCase
         create_file($this->license_file_path);
     }
 
-    public function testItReturnsFalseWhenLicenseFileIsEmpty(): void
+    public function testItReturnsErrWhenLicenseFileIsEmpty(): void
     {
         new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->build();
         write($this->license_file_path, '', WriteMode::Truncate);
@@ -70,11 +72,14 @@ final class LicenseSignatureCheckerTest extends TestCase
             new MapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
         );
 
-        self::assertFalse($license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory));
-        self::assertTrue($logger->hasError('License file is empty'));
+        $result = $license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(InvalidLicenseSignatureFault::class, $result->error);
+        self::assertTrue($logger->hasInfo('License file is empty'));
     }
 
-    public function testItReturnsFalseWhenLicenseFileContentDoesNotHave3Parts(): void
+    public function testItReturnsErrWhenLicenseFileContentDoesNotHave3Parts(): void
     {
         new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->build();
         write($this->license_file_path, 'Some text', WriteMode::Truncate);
@@ -87,11 +92,13 @@ final class LicenseSignatureCheckerTest extends TestCase
             new MapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
         );
 
-        self::assertFalse($license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory));
-        self::assertTrue($logger->hasError('Failed parsing license: The JWT string must have two dots'));
+        $result = $license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory);
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(InvalidLicenseSignatureFault::class, $result->error);
+        self::assertTrue($logger->hasInfo('Failed parsing license: The JWT string must have two dots'));
     }
 
-    public function testItReturnsFalseWhenLicenseHeaderContentIsInvalid(): void
+    public function testItReturnsErrWhenLicenseHeaderContentIsInvalid(): void
     {
         new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->withoutKidHeader()->build();
 
@@ -102,12 +109,14 @@ final class LicenseSignatureCheckerTest extends TestCase
             new Validator(),
             new MapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
         );
+        $result          = $license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory);
 
-        self::assertFalse($license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory));
-        self::assertTrue($logger->hasErrorThatContains('Failed parsing license headers: Could not map type `Tuleap\SeatManagement\LicenseHeaders`.'));
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(InvalidLicenseSignatureFault::class, $result->error);
+        self::assertTrue($logger->hasInfoThatContains('Failed parsing license headers: Could not map type `Tuleap\SeatManagement\LicenseHeaders`.'));
     }
 
-    public function testItReturnsFalseWhenLicenseCorrespondingPublicKeyDoesNotExist(): void
+    public function testItReturnsErrWhenLicenseCorrespondingPublicKeyDoesNotExist(): void
     {
         new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->build();
         delete_directory($this->keys_directory, true);
@@ -120,11 +129,13 @@ final class LicenseSignatureCheckerTest extends TestCase
             new MapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
         );
 
-        self::assertFalse($license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory));
-        self::assertTrue($logger->hasError('License uses non-existent public key.'));
+         $result = $license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory);
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(InvalidLicenseSignatureFault::class, $result->error);
+        self::assertTrue($logger->hasInfo('License uses non-existent public key.'));
     }
 
-    public function testItReturnsFalseWhenPublicKeyFormatIsInvalid(): void
+    public function testItReturnsErrWhenPublicKeyFormatIsInvalid(): void
     {
         $key_file = new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->build();
         write($key_file, 'Some text', WriteMode::Truncate);
@@ -137,11 +148,13 @@ final class LicenseSignatureCheckerTest extends TestCase
             new MapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
         );
 
-        self::assertFalse($license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory));
-        self::assertTrue($logger->hasError('Failed parsing public key: Invalid JSON source.'));
+         $result = $license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory);
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(InvalidLicenseSignatureFault::class, $result->error);
+        self::assertTrue($logger->hasInfo('Failed parsing public key: Invalid JSON source.'));
     }
 
-    public function testItReturnsFalseWhenLicenseSignatureIsIncorrect(): void
+    public function testItReturnsErrWhenLicenseSignatureIsIncorrect(): void
     {
         new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->withInvalidSignature()->build();
 
@@ -153,11 +166,13 @@ final class LicenseSignatureCheckerTest extends TestCase
             new MapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
         );
 
-        self::assertFalse($license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory));
-        self::assertFalse($logger->hasErrorRecords());
+         $result = $license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory);
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(InvalidLicenseSignatureFault::class, $result->error);
+        self::assertTrue($logger->hasInfo('License signature is invalid.'));
     }
 
-    public function testItReturnsTrueWhenLicenseSignatureIsCorrect(): void
+    public function testItReturnsOkWhenLicenseSignatureIsCorrect(): void
     {
         new PublicKeyTestBuilder($this->license_file_path, $this->keys_directory)->build();
 
@@ -168,10 +183,11 @@ final class LicenseSignatureCheckerTest extends TestCase
             new MapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
         );
 
-        self::assertTrue($license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory));
+        $result = $license_checker->checkLicenseSignature($this->license_file_path, $this->keys_directory);
+        self::assertTrue(Result::isOk($result));
     }
 
-    public function testItReturnsTrueForTheDevLicense(): void
+    public function testItReturnsOkForTheDevLicense(): void
     {
         $license_checker = new LicenseSignatureChecker(
             new NullLogger(),
@@ -180,9 +196,9 @@ final class LicenseSignatureCheckerTest extends TestCase
             new MapperBuilder()->registerConstructor(Uuid::fromString(...))->mapper(),
         );
 
-        self::assertTrue($license_checker->checkLicenseSignature(
+        self::assertTrue(Result::isOk($license_checker->checkLicenseSignature(
             __DIR__ . '/../../../../tools/docker/tuleap-aio-dev/license.key',
             __DIR__ . '/../../../../src/common/SeatManagement/keys',
-        ));
+        )));
     }
 }
