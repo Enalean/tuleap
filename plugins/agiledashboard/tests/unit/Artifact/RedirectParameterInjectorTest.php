@@ -57,7 +57,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             new AgileDashboard_PaneRedirectionExtractor(),
             $this->artifact_factory,
             $GLOBALS['Response'],
-            $template_renderer_factory->getRenderer(__DIR__ . '/../../../../templates/')
+            $template_renderer_factory->getRenderer(__DIR__ . '/../../../templates/')
         );
     }
 
