@@ -94,11 +94,11 @@ class ForgeUpgradeDb
         return $result;
     }
 
-    public function getActivePlugins(): PDOStatement
+    public function getInstalledPlugins(): PDOStatement
     {
-        $result = $this->dbh->query('SELECT name FROM plugin WHERE available = 1');
+        $result = $this->dbh->query('SELECT name FROM plugin');
         if ($result === false) {
-            throw new RuntimeException('Impossible to get the list of active plugins');
+            throw new RuntimeException('Impossible to get the list of installed plugins');
         }
         return $result;
     }

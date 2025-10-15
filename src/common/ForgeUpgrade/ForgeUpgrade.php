@@ -419,7 +419,7 @@ class ForgeUpgrade implements ForgeUpgradeRecordOnly
         $paths = [
             $this->getCoreBucketPath(),
         ];
-        foreach ($this->db->getActivePlugins() as $rows) {
+        foreach ($this->db->getInstalledPlugins() as $rows) {
             $plugin_db_path = dirname(__DIR__, 3) . '/plugins/' . $rows['name'] . '/db';
             if (is_dir($plugin_db_path)) {
                 $paths[] = $plugin_db_path;
