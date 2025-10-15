@@ -21,14 +21,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Check if value match Codendi user names format.
- *
- * This rule doesn't check that user actually exists.
- */
-class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+use Tuleap\User\RetrieveUserByUserName;
+
+class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public const string RESERVED_PREFIX = 'forge__';
+    public const string RESERVED_PREFIX  = 'forge__';
+    public const int USERNAME_MAX_LENGTH = 30;
+    public const int USERNAME_MIN_LENGTH = 3;
+
+    protected readonly RetrieveUserByUserName $user_retriever;
+    protected readonly ProjectManager $project_manager;
+    protected readonly SystemEventManager $system_event_manager;
+
+    public function __construct(
+        ?RetrieveUserByUserName $user_retriever = null,
+        ?ProjectManager $project_manager = null,
+        ?SystemEventManager $system_event_manager = null,
+    ) {
+        $this->user_retriever       = $user_retriever ?? UserManager::instance();
+        $this->project_manager      = $project_manager ?? ProjectManager::instance();
+        $this->system_event_manager = $system_event_manager ?? SystemEventManager::instance();
+    }
 
     /**
      * Test is the value is Codendi username
@@ -39,8 +52,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function isAlreadyUserName($val)
     {
-        $um = $this->_getUserManager();
-        if ($um->getUserByUserName($val) !== \null) {
+        if ($this->user_retriever->getUserByUserName($val) !== \null) {
             $this->error = $this->_getErrorExists();
             return \true;
         }
@@ -56,8 +68,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function isAlreadyProjectName($val)
     {
-        $pm = $this->_getProjectManager();
-        if ($pm->getProjectByUnixName($val) !== \null) {
+        if ($this->project_manager->getProjectByUnixName($val) !== \null) {
             $this->error = $this->_getErrorExists();
             return \true;
         }
@@ -147,7 +158,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function lessThanMin($val)
     {
-        if (\strlen($val) < 3) {
+        if (\strlen($val) < self::USERNAME_MIN_LENGTH) {
             $this->error = _('Name is too short. It must be at least 3 characters.');
             return \true;
         }
@@ -162,7 +173,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return bool
      */
-    public function greaterThanMax(string $val, int $max = 30)
+    public function greaterThanMax(string $val, int $max = self::USERNAME_MAX_LENGTH)
     {
         if (\mb_strlen($val) > $max) {
             $this->error = sprintf(
@@ -182,8 +193,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function getPendingUserRename($val)
     {
-        $sm = $this->_getSystemEventManager();
-        if (! $sm->isUserNameAvailable($val)) {
+        if (! $this->system_event_manager->isUserNameAvailable($val)) {
             $this->error = sprintf(_('%s is already reserved for another rename operation. Please check System Event Monitor'), $val);
             return \false;
         }
@@ -226,35 +236,5 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     protected function _getErrorNoSpaces(): string // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return _('There cannot be any spaces in the login name.');
-    }
-
-    /**
-     * Wrapper
-     *
-     * @return ProjectManager
-     */
-    protected function _getProjectManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        return \ProjectManager::instance();
-    }
-
-    /**
-     * Wrapper
-     *
-     * @return UserManager
-     */
-    protected function _getUserManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        return \UserManager::instance();
-    }
-
-    /**
-     * Wrapper
-     *
-     * @return SystemEventManager
-     */
-    protected function _getSystemEventManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        return \SystemEventManager::instance();
     }
 }

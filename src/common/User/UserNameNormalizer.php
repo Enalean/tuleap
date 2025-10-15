@@ -23,7 +23,7 @@ namespace Tuleap\User;
 use Cocur\Slugify\Slugify;
 use Rule_UserName;
 
-class UserNameNormalizer
+readonly class UserNameNormalizer
 {
     public function __construct(private Rule_UserName $username_rule, private Slugify $slugify)
     {
@@ -34,22 +34,38 @@ class UserNameNormalizer
      */
     public function normalize(string $username): string
     {
-        $username = $this->slugify->slugify($username, '_');
+        $username        = $this->slugify->slugify($username, '_');
+        $username_length = mb_strlen($username);
+        $username_suffix = 1;
 
-        if (! $this->username_rule->isUnixValid($username)) {
-            throw new DataIncompatibleWithUsernameGenerationException();
+        if ($username_length < Rule_UserName::USERNAME_MIN_LENGTH) {
+            $username_suffix = (int) str_repeat('1', Rule_UserName::USERNAME_MIN_LENGTH - $username_length);
+            $username        = $username . $username_suffix;
+        }
+
+        if ($this->username_rule->isReservedName($username) || ! $this->username_rule->isUnixValid($username)) {
+            throw new DataIncompatibleWithUsernameGenerationException($this->username_rule->getErrorMessage());
         }
 
         if ($this->username_rule->isValid($username)) {
             return $username;
         }
 
-        $username_suffix = 1;
+        while ($username_suffix < PHP_INT_MAX) {
+            $username_suffix_length   = mb_strlen("$username_suffix");
+            $total_length_with_prefix = $username_length + $username_suffix_length;
+            $username_prefix          = $username;
+            if ($total_length_with_prefix > Rule_UserName::USERNAME_MAX_LENGTH) {
+                $username_prefix = mb_substr($username, 0, $username_length - ($total_length_with_prefix - Rule_UserName::USERNAME_MAX_LENGTH));
+            }
 
-        while (! $this->username_rule->isValid("$username$username_suffix")) {
-            $username_suffix++;
+            $suffixed_username = $username_prefix . $username_suffix;
+
+            if ($this->username_rule->isValid($suffixed_username)) {
+                return $suffixed_username;
+            }
         }
 
-        return "$username$username_suffix";
+        throw new DataIncompatibleWithUsernameGenerationException();
     }
 }

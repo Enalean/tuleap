@@ -20,14 +20,11 @@
  */
 
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\GlobalLanguageMock;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     use ForgeConfigSandbox;
-    use GlobalLanguageMock;
 
     public function testOk(): void
     {
@@ -40,17 +37,7 @@ final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $sm = $this->createMock(\SystemEventManager::class);
         $sm->method('isUserNameAvailable')->willReturn(true);
 
-        $r = $this->createPartialMock(
-            \Rule_UserName::class,
-            [
-                '_getUserManager',
-                '_getProjectManager',
-                '_getSystemEventManager',
-            ]
-        );
-        $r->method('_getUserManager')->willReturn($um);
-        $r->method('_getProjectManager')->willReturn($pm);
-        $r->method('_getSystemEventManager')->willReturn($sm);
+        $r = new Rule_UserName($um, $pm, $sm);
 
         self::assertTrue($r->isValid('user'));
         self::assertTrue($r->isValid('user_name'));
@@ -69,17 +56,7 @@ final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $sm = $this->createMock(\SystemEventManager::class);
         $sm->method('isUserNameAvailable')->willReturn(true);
 
-        $r = $this->createPartialMock(
-            \Rule_UserName::class,
-            [
-                '_getUserManager',
-                '_getProjectManager',
-                '_getSystemEventManager',
-            ]
-        );
-        $r->method('_getUserManager')->willReturn($um);
-        $r->method('_getProjectManager')->willReturn($pm);
-        $r->method('_getSystemEventManager')->willReturn($sm);
+        $r = new Rule_UserName($um, $pm, $sm);
 
         self::assertFalse($r->isValid('user'));
     }
@@ -96,17 +73,7 @@ final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $sm = $this->createMock(\SystemEventManager::class);
         $sm->method('isUserNameAvailable')->willReturn(true);
 
-        $r = $this->createPartialMock(
-            \Rule_UserName::class,
-            [
-                '_getUserManager',
-                '_getProjectManager',
-                '_getSystemEventManager',
-            ]
-        );
-        $r->method('_getUserManager')->willReturn($um);
-        $r->method('_getProjectManager')->willReturn($pm);
-        $r->method('_getSystemEventManager')->willReturn($sm);
+        $r = new Rule_UserName($um, $pm, $sm);
 
         self::assertFalse($r->isValid('user'));
     }
@@ -122,17 +89,7 @@ final class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $sm = $this->createMock(\SystemEventManager::class);
         $sm->method('isUserNameAvailable')->willReturn(true);
 
-        $r = $this->createPartialMock(
-            \Rule_UserName::class,
-            [
-                '_getUserManager',
-                '_getProjectManager',
-                '_getSystemEventManager',
-            ]
-        );
-        $r->method('_getUserManager')->willReturn($um);
-        $r->method('_getProjectManager')->willReturn($pm);
-        $r->method('_getSystemEventManager')->willReturn($sm);
+        $r = new Rule_UserName($um, $pm, $sm);
 
         self::assertFalse($r->isValid('user name'));
     }

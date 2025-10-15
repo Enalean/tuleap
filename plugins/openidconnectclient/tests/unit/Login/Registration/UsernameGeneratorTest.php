@@ -24,6 +24,8 @@ namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use Cocur\Slugify\Slugify;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\User\DataIncompatibleWithUsernameGenerationException;
 use Tuleap\User\UserNameNormalizer;
 
@@ -33,9 +35,15 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     #[DataProvider('dataProviderUserInformationExpectedUserName')]
     public function testGeneratesUsernameFromUserInformation(array $user_information, string $expected_username): void
     {
-        $rule = $this->createStub(\Rule_UserName::class);
-        $rule->method('isUnixValid')->willReturn(true);
-        $rule->method('isValid')->willReturn(true);
+        $project_manager = $this->createStub(\ProjectManager::class);
+        $project_manager->method('getProjectByUnixName')->willReturn(null);
+        $system_event_manager = $this->createStub(\SystemEventManager::class);
+        $system_event_manager->method('isUserNameAvailable')->willReturn(true);
+        $rule = new \Rule_UserName(
+            ProvideAndRetrieveUserStub::build(UserTestBuilder::aUser()->build()),
+            $project_manager,
+            $system_event_manager,
+        );
 
         $username_generator = new UsernameGenerator(new UserNameNormalizer($rule, new Slugify()));
 
@@ -89,6 +97,8 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $rule = $this->createMock(\Rule_UserName::class);
         $rule->method('isUnixValid')->willReturn(false);
+        $rule->method('isReservedName')->willReturn(false);
+        $rule->method('getErrorMessage')->willReturn('');
         $rule->method('isValid')->willReturn(true);
         $username_generator = new UsernameGenerator(new UserNameNormalizer($rule, new Slugify()));
 
@@ -105,18 +115,16 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriesToUseGivenAndFamilyNamesEvenIfPreferredUsernameIsNotCompatible(): void
     {
-        $rule = $this->createMock(\Rule_UserName::class);
-        $rule->method('isUnixValid')->willReturn(false, true);
-        $rule->method('isValid')->willReturn(true);
-
         $rulename = $this->createMock(\Rule_UserName::class);
         $rulename->method('isUnixValid')->willReturnCallback(static fn (string $name): bool => match ($name) {
             'incompatiblepreferredusername' => false,
             'gfamilyname' => true,
         });
+        $rulename->method('isReservedName')->willReturn(false);
         $rulename->method('isValid')->willReturnCallback(static fn (string $name): bool => match ($name) {
             'gfamilyname' => true,
         });
+        $rulename->method('getErrorMessage')->willReturn('');
         $username_generator = new UsernameGenerator(new UserNameNormalizer($rulename, new Slugify()));
 
         $username = 'gfamilyname';

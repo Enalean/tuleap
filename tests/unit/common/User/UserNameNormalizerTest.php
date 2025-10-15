@@ -22,19 +22,33 @@ namespace Tuleap\User;
 
 use Cocur\Slugify\Slugify;
 use Rule_UserName;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserNameNormalizerTest extends TestCase
 {
-    private \PHPUnit\Framework\MockObject\MockObject&Rule_UserName $rules;
     private UserNameNormalizer $username_normalizer;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->rules               = $this->createMock(Rule_UserName::class);
-        $this->username_normalizer = new UserNameNormalizer($this->rules, new Slugify());
+        $user_jean_pierre   = UserTestBuilder::aUser()->withUserName('jean_pierre')->build();
+        $user_long_username = UserTestBuilder::aUser()->withUserName(str_repeat('a', 30))->build();
+        $user_retriever     = ProvideAndRetrieveUserStub::build($user_jean_pierre)->withUsers([$user_jean_pierre, $user_long_username]);
+        $project_manager    = $this->createStub(\ProjectManager::class);
+        $project_manager->method('getProjectByUnixName')->willReturn(null);
+        $system_event_manager = $this->createStub(\SystemEventManager::class);
+        $system_event_manager->method('isUserNameAvailable')->willReturn(true);
+
+        $rule = new Rule_UserName(
+            $user_retriever,
+            $project_manager,
+            $system_event_manager,
+        );
+
+        $this->username_normalizer = new UserNameNormalizer($rule, new Slugify());
     }
 
     #[\PHPUnit\Framework\Attributes\TestWith(['coincoin', 'coincoin'])]
@@ -64,35 +78,34 @@ final class UserNameNormalizerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\TestWith(['christiant', '#çhristïant'])]
     public function testGenerateUserLogin(string $expected_username, string $given_username): void
     {
-        $this->rules->method('isUnixValid')->with($expected_username)->willReturn(true);
-        $this->rules->method('isValid')->with($expected_username)->willReturn(true);
         self::assertEquals($expected_username, $this->username_normalizer->normalize($given_username));
     }
 
     public function testGenerateThrowExceptionWhenUsernameIsNotUnixValid(): void
     {
-        $slugified_username = '666';
-
-        $this->rules->method('atLeastOneChar')->willReturn(true);
-        $this->rules->method('isUnixValid')->with($slugified_username)->willReturn(false);
-        $this->rules->expects($this->never())->method('isValid');
-
         $this->expectException(DataIncompatibleWithUsernameGenerationException::class);
 
-        $this->username_normalizer->normalize('666');
+        $this->username_normalizer->normalize('www');
     }
 
     public function testGenerateUserLoginIncrementIfLoginAlreadyExist(): void
     {
-        $slugified_username   = 'jean_pierre';
-        $incremented_username = 'jean_pierre1';
+        self::assertSame('jean_pierre1', $this->username_normalizer->normalize('jean pierre'));
+    }
 
-        $this->rules->method('isUnixValid')->with($slugified_username)->willReturn(true);
-        $this->rules->method('isValid')->willReturnMap([
-            [$slugified_username, false],
-            [$incremented_username, true],
-        ]);
+    public function testSupportLongUsernames(): void
+    {
+        self::assertSame(
+            str_repeat('a', 29) . '1',
+            $this->username_normalizer->normalize(str_repeat('a', 30))
+        );
+    }
 
-        self::assertSame($incremented_username, $this->username_normalizer->normalize('jean pierre'));
+    public function testSupportShortUsername(): void
+    {
+        self::assertSame(
+            'a11',
+            $this->username_normalizer->normalize('a')
+        );
     }
 }
