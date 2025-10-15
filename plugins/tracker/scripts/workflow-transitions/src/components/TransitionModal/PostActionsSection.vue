@@ -36,7 +36,7 @@
                 v-bind:disabled="is_modal_save_running"
                 data-test="add-post-action"
             >
-                <i class="fa fa-plus tlp-button-icon"></i>
+                <i class="fa-solid fa-plus tlp-button-icon"></i>
                 <span>{{ $gettext("Add another action") }}</span>
             </button>
         </template>

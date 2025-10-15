@@ -42,7 +42,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
           Name 
           <i
             aria-hidden="true"
-            class="fa fa-asterisk"
+            class="fa-solid fa-asterisk"
           />
         </label>
         <input

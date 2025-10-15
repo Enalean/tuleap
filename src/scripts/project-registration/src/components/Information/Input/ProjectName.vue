@@ -25,7 +25,7 @@
     >
         <label class="tlp-label" for="project-name">
             <span>{{ $gettext("Name") }}</span>
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <input
             id="project-name"

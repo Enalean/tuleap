@@ -49,7 +49,7 @@
                 {{ $gettext("Cancel") }}
             </button>
             <button type="submit" class="tlp-button-primary tlp-modal-action">
-                <i class="fa fa-plus tlp-button-icon"></i>
+                <i class="fa-solid fa-plus tlp-button-icon"></i>
                 {{ $gettext("Add service") }}
             </button>
         </div>

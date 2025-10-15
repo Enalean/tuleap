@@ -41,7 +41,7 @@
                             <div class="siteadmin-project-information-details-row-cell">
                                 <div class="tlp-form-element">
                                     <label class="tlp-label" for="public-name">
-                                        {{ unix_name_label }} <i class="fa fa-asterisk"></i>
+                                        {{ unix_name_label }} <i class="fa-solid fa-asterisk"></i>
                                     </label>
                                     <input type="text"
                                            class="tlp-input"
@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="tlp-form-element">
                                     <label class="tlp-label" for="project-type">
-                                        {{ type_label }} <i class="fa fa-asterisk"></i>
+                                        {{ type_label }} <i class="fa-solid fa-asterisk"></i>
                                     </label>
                                     <select class="tlp-select" id="project-type" name="group_type">
                                         {{# types }}
@@ -71,7 +71,7 @@
                                 {{^ is_system }}
                                     <div class="tlp-form-element">
                                         <label class="tlp-label" for="status">
-                                            {{ status_label }} <i class="fa fa-asterisk"></i>
+                                            {{ status_label }} <i class="fa-solid fa-asterisk"></i>
                                         </label>
                                         <select class="tlp-select"
                                                 id="status"
@@ -133,7 +133,7 @@
 
                     <section class="tlp-pane-section tlp-pane-section-submit">
                         <button type="submit" class="tlp-button-primary" name="update" data-test="update-project-information">
-                            <i class="fa fa-save tlp-button-icon"></i> {{ save_label }}
+                            <i class="fa-solid fa-save tlp-button-icon"></i> {{ save_label }}
                         </button>
                     </section>
                 </form>

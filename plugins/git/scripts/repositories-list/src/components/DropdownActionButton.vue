@@ -33,7 +33,7 @@
                 v-on:click="showAddRepositoryModal()"
                 data-test="create-repository-button"
             >
-                <i class="fa fa-plus tlp-button-icon"></i>
+                <i class="fa-solid fa-plus tlp-button-icon"></i>
                 <span class="git-add-action-button">{{ $gettext("Create a repository") }}</span>
             </button>
             <add-gitlab-repository-action-button />

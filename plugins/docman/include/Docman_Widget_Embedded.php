@@ -33,7 +33,7 @@ use Tuleap\Project\MappingRegistry;
  *
  * The display of a folder (its children) would be great
  */
-class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * The title given by the user to the widget
@@ -142,7 +142,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="item-id-' . $widget_id . '">
-                    Item_id <i class="fa fa-asterisk"></i>
+                    Item_id <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"
@@ -164,7 +164,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return '
             <div class="tlp-form-element">
                 <label class="tlp-label" for="widget-docman-embedded-item-id">
-                    Item_id <i class="fa fa-asterisk"></i>
+                    Item_id <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"

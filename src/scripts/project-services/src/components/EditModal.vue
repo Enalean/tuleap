@@ -54,7 +54,7 @@
                 class="tlp-button-primary tlp-modal-action"
                 data-test="save-service-modifications"
             >
-                <i class="fa fa-save tlp-button-icon"></i>
+                <i class="fa-solid fa-save tlp-button-icon"></i>
                 {{ $gettext("Save modifications") }}
             </button>
         </div>

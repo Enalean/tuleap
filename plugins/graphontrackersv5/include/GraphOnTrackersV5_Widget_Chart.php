@@ -101,7 +101,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="chart-id-' . $purifier->purify($widget_id) . '">
-                    Chart Id <i class="fa fa-asterisk"></i>
+                    Chart Id <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"
@@ -131,7 +131,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="widget-chart-id">
-                    Chart Id <i class="fa fa-asterisk"></i>
+                    Chart Id <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"

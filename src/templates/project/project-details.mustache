@@ -40,7 +40,7 @@
                         <div
                             class="tlp-form-element form-group-name-element">
                             <label for="form_group_name" class="tlp-label">
-                                {{ project_name_label }} <i class="fa fa-asterisk"></i>
+                                {{ project_name_label }} <i class="fa-solid fa-asterisk"></i>
                             </label>
                             <input
                                 type="text"
@@ -79,7 +79,7 @@
                         <div class="tlp-form-element">
                             <label for="form_shortdesc" class="tlp-label">
                                 {{ short_description_label }}
-                                {{# is_description_mandatory }} <i class="fa fa-asterisk"></i>{{/ is_description_mandatory }}
+                                {{# is_description_mandatory }} <i class="fa-solid fa-asterisk"></i>{{/ is_description_mandatory }}
                             </label>
                             <textarea
                                 class="tlp-textarea"
@@ -96,7 +96,7 @@
                         {{# description_fields_representation }}
                             <div class="tlp-form-element">
                                 <label for="{{ field_name }}" class="tlp-label">
-                                    {{ field_label }}{{# field_description_required }}<i class="fa fa-asterisk"></i>{{/field_description_required}}
+                                    {{ field_label }}{{# field_description_required }}<i class="fa-solid fa-asterisk"></i>{{/field_description_required}}
                                 </label>
                                 {{# is_field_line_typed }}
                                     <input
@@ -181,7 +181,7 @@
             class="tlp-button-primary tlp-button-large project-admin-details-submit"
             data-test="project-details-submit-button"
         >
-            <i class="fa fa-save tlp-button-icon"></i> {{ update_button }}
+            <i class="fa-solid fa-save tlp-button-icon"></i> {{ update_button }}
         </button>
     </form>
 </div>

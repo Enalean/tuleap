@@ -22,7 +22,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="trovecat">
             {{ trovecat.fullname }}
-            <i class="fa fa-asterisk" />
+            <i class="fa-solid fa-asterisk" />
         </label>
         <select
             class="tlp-select tlp-select-large"

@@ -28,7 +28,7 @@
                 class="tlp-button-primary"
                 data-test="save-comparison"
             >
-                <i class="fa fa-save tlp-button-icon"></i>
+                <i class="fa-solid fa-save tlp-button-icon"></i>
                 {{ $gettext("Save") }}
             </button>
         </div>

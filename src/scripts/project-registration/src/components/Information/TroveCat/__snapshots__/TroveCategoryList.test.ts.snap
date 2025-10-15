@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TroveCategoryList - Display correctly the component 1`] = `
-<div class="tlp-form-element"><label class="tlp-label" for="trovecat">licence <i class="fa fa-asterisk"></i></label><select class="tlp-select tlp-select-large" id="trovecat" name="trovecat" required="">
+<div class="tlp-form-element"><label class="tlp-label" for="trovecat">licence <i class="fa-solid fa-asterisk"></i></label><select class="tlp-select tlp-select-large" id="trovecat" name="trovecat" required="">
     <option></option>
     <option value="10">MIT Licence</option>
     <option value="20">GNU General Public License </option>

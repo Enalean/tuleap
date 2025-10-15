@@ -43,7 +43,7 @@
                     <label
                         class="tlp-label"
                         for="git-repository-actions-pullrequest-modal-body-source"
-                        >{{ source_branch_label }}<i class="fa fa-asterisk"></i></label
+                        >{{ source_branch_label }}<i class="fa-solid fa-asterisk"></i></label
                     ><select
                         class="tlp-select"
                         id="git-repository-actions-pullrequest-modal-body-source"
@@ -65,7 +65,7 @@
                     <label
                         class="tlp-label"
                         for="git-repository-actions-pullrequest-modal-body-destination"
-                        >{{ destination_branch_label }}<i class="fa fa-asterisk"></i></label
+                        >{{ destination_branch_label }}<i class="fa-solid fa-asterisk"></i></label
                     ><select
                         class="tlp-select"
                         id="git-repository-actions-pullrequest-modal-body-destination"

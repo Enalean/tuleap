@@ -40,7 +40,7 @@
                     >
                         <i class="fa fa-question-circle"></i>
                     </span>
-                    <i class="fa fa-asterisk"></i>
+                    <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <select
                     id="workflow-field"

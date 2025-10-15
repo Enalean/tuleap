@@ -32,7 +32,7 @@ use Laminas\Feed\Reader\Reader as FeedReader;
 *
 * Rss reader
 */
-abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public ?string $rss_title = null;
     public ?string $rss_url   = null;
@@ -117,7 +117,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="url-' . $widget_id . '">
-                    URL <i class="fa fa-asterisk"></i>
+                    URL <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="text"
                        class="tlp-input"
@@ -149,7 +149,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="widget-rss-url">
-                    URL <i class="fa fa-asterisk"></i>
+                    URL <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="text"
                        class="tlp-input"

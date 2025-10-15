@@ -41,7 +41,7 @@
         >
             <label class="tlp-label" for="project-short-name">
                 <span>{{ $gettext("Project shortname") }}</span>
-                <i class="fa fa-asterisk" />
+                <i class="fa-solid fa-asterisk" />
             </label>
             <input
                 type="text"

@@ -23,7 +23,7 @@
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label for="workflow-transition-modal-hidden-fieldsets" class="tlp-label">
                 {{ $gettext("Fieldsets that will be hidden by default") }}
-                <i class="fa fa-asterisk"></i>
+                <i class="fa-solid fa-asterisk"></i>
             </label>
             <select
                 id="workflow-transition-modal-hidden-fieldsets"

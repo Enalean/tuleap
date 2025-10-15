@@ -26,7 +26,7 @@
                 <div class="tlp-form-element new-comparison-modal-body-form-element">
                     <label class="tlp-label" for="base_baseline">
                         {{ $gettext("Reference…") }}
-                        <i class="fa fa-asterisk"></i>
+                        <i class="fa-solid fa-asterisk"></i>
                     </label>
                     <select
                         id="base_baseline"
@@ -53,7 +53,7 @@
                 <div class="tlp-form-element new-comparison-modal-body-form-element">
                     <label class="tlp-label" for="baseline_to_compare">
                         {{ $gettext("… compared to") }}
-                        <i class="fa fa-asterisk"></i>
+                        <i class="fa-solid fa-asterisk"></i>
                     </label>
                     <span
                         v-if="baselines_to_compare !== null && baselines_to_compare.length === 0"

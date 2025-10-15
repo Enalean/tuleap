@@ -35,7 +35,7 @@
                     v-on:click="showAddRepositoryModal()"
                     data-test="create-repository-button"
                 >
-                    <i class="fa fa-plus tlp-button-icon"></i>
+                    <i class="fa-solid fa-plus tlp-button-icon"></i>
                     {{ $gettext("Add project repository") }}
                 </button>
             </div>

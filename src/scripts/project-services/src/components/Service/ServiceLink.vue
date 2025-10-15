@@ -21,7 +21,7 @@
     <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': disabled }">
         <label class="tlp-label" v-bind:for="id">
             {{ $gettext("Link") }}
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <input
             type="text"

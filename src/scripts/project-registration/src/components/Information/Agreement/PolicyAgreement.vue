@@ -23,7 +23,7 @@
         <label class="tlp-label tlp-checkbox">
             <input type="checkbox" value="1" required data-test="approve_tos" />
             <span v-dompurify-html="agreement" v-on:click="loadAgreement" />
-            <i class="fa fa-asterisk" aria-hidden="true"></i>
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             <agreement-modal />
         </label>
     </div>

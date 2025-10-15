@@ -39,7 +39,7 @@
                     v-on:click="addStep"
                     data-test="add-step"
                 >
-                    <i class="fa fa-plus"></i>
+                    <i class="fa-solid fa-plus"></i>
                     {{ $gettext("Add step") }}
                 </button>
             </div>

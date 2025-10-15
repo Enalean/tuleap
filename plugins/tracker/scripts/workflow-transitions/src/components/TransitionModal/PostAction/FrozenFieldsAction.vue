@@ -26,7 +26,7 @@
         >
             <label for="workflow-transition-modal-frozen-fields" class="tlp-label">
                 {{ $gettext("Fields that will be frozen") }}
-                <i class="fa fa-asterisk"></i>
+                <i class="fa-solid fa-asterisk"></i>
             </label>
             <select
                 id="workflow-transition-modal-frozen-fields"

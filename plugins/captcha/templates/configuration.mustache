@@ -14,16 +14,16 @@
                     {{> csrf_token_input }}
                 {{/ csrf_token }}
                 <div class="tlp-form-element">
-                    <label for="site_key" class="tlp-label">{{ site_key_label }} <i class="fa fa-asterisk"></i></label>
+                    <label for="site_key" class="tlp-label">{{ site_key_label }} <i class="fa-solid fa-asterisk"></i></label>
                     <input id="site_key" type="text" name="site_key" value="{{ site_key }}" class="tlp-input" required size="50">
                 </div>
                 <div class="tlp-form-element">
-                    <label for="secret_key" class="tlp-label">{{ secret_key_label }} <i class="fa fa-asterisk"></i></label>
+                    <label for="secret_key" class="tlp-label">{{ secret_key_label }} <i class="fa-solid fa-asterisk"></i></label>
                     <input id="secret_key" type="text" name="secret_key" value="{{ secret_key }}" class="tlp-input" required size="50">
                 </div>
                 <div class="tlp-pane-section-submit">
                     <button class="tlp-button-primary" type="submit">
-                        <i class="fa fa-save tlp-button-icon"></i> {{ save_settings }}
+                        <i class="fa-solid fa-save tlp-button-icon"></i> {{ save_settings }}
                     </button>
                 </div>
             </form>

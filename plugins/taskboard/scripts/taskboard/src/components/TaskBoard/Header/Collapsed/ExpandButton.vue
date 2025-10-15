@@ -26,7 +26,7 @@
         v-on:click="expandColumn(column)"
         data-test="button"
     >
-        <i class="fa fa-plus-square" aria-hidden="true"></i>
+        <i class="fa-solid fa-plus-square" aria-hidden="true"></i>
     </button>
 </template>
 

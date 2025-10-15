@@ -26,7 +26,7 @@ use Tuleap\Project\MappingRegistry;
  *
  * Tracker Renderer
  */
-abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $renderer_title;
     public $renderer_id;
@@ -98,7 +98,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
             <div class="tlp-form-element">
                 <label class="tlp-label" for="renderer-id-' . $purifier->purify($widget_id) . '">
                     ' . $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) . '
-                    <i class="fa fa-asterisk"></i>
+                    <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"
@@ -130,7 +130,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
             <div class="tlp-form-element">
                 <label class="tlp-label" for="widget-renderer-id">
                     ' . $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) . '
-                    <i class="fa fa-asterisk"></i>
+                    <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"

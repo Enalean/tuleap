@@ -1001,7 +1001,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                     <a id="tracker_renderer_add_handle"
                        class="dropdown-toggle"
                        data-toggle="dropdown">';
-                $html .=  '<i class="fa fa-plus"></i>';
+                $html .=  '<i class="fa-solid fa-plus"></i>';
                 $html .= '</a>';
                 $html .= '<div class="dropdown-menu">' . $this->fetchAddRendererForm($current_renderer) . '</div>';
                 $html .= '</li>';
