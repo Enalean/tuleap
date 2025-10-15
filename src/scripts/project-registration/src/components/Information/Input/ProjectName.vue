@@ -43,7 +43,7 @@
             <i class="far fa-fw fa-life-ring"></i> {{ info_project_name_size }}
         </p>
         <p class="tlp-text-danger" v-if="has_error" data-test="project-name-is-invalid">
-            <i class="fa fa-fw fa-exclamation-circle"></i> {{ error_project_name_size }}
+            <i class="fa-solid fa-fw fa-circle-exclamation"></i> {{ error_project_name_size }}
         </p>
 
         <project-short-name />

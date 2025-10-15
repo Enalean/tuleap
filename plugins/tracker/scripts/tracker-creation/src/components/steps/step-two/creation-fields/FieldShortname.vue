@@ -51,7 +51,7 @@
             data-test="shortname-error"
             v-if="!is_shortname_valid"
         >
-            <i class="fa fa-fw fa-exclamation-circle"></i>
+            <i class="fa-solid fa-circle-exclamation fa-fw"></i>
             {{
                 $gettext(
                     "The tracker shortname must have a length between 1 and 25 characters. It can only contain alphanumerical characters and underscores.",
@@ -63,7 +63,7 @@
             data-test="shortname-taken-error"
             v-if="is_shortname_already_used"
         >
-            <i class="fa fa-fw fa-exclamation-circle"></i>
+            <i class="fa-solid fa-circle-exclamation fa-fw"></i>
             {{
                 $gettext(
                     "The chosen shortname already exist in this project, please choose another one.",

@@ -367,12 +367,12 @@ class ServiceIconValidator
              ],
         'fa-question-circle' =>
              [
-                 'fa-icon' => 'fas fa-question-circle',
+                 'fa-icon' => 'fa-solid fa-circle-question',
                  'description' => 'Question Circle',
              ],
         'fa-info-circle' =>
              [
-                 'fa-icon' => 'fas fa-info-circle',
+                 'fa-icon' => 'fa-solid fa-circle-info',
                  'description' => 'Info Circle',
              ],
         'fa-crosshairs' =>
@@ -437,12 +437,12 @@ class ServiceIconValidator
              ],
         'fa-asterisk' =>
              [
-                 'fa-icon' => 'fas fa-asterisk',
+                 'fa-icon' => 'fa-solid fa-asterisk',
                  'description' => 'Asterisk',
              ],
         'fa-exclamation-circle' =>
              [
-                 'fa-icon' => 'fas fa-exclamation-circle',
+                 'fa-icon' => 'fa-solid fa-circle-exclamation',
                  'description' => 'Exclamation Circle',
              ],
         'fa-gift' =>
@@ -472,7 +472,7 @@ class ServiceIconValidator
              ],
         'fa-exclamation-triangle' =>
              [
-                 'fa-icon' => 'fas fa-exclamation-triangle',
+                 'fa-icon' => 'fa-solid fa-triangle-exclamation',
                  'description' => 'Exclamation Triangle',
              ],
         'fa-plane' =>
@@ -727,7 +727,7 @@ class ServiceIconValidator
              ],
         'fa-users' =>
              [
-                 'fa-icon' => 'fas fa-users',
+                 'fa-icon' => 'fa-solid fa-users',
                  'description' => 'Users',
              ],
         'fa-link' =>

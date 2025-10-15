@@ -26,7 +26,7 @@
             <p class="tlp-text-info">
                 <i
                     aria-hidden="true"
-                    class="cross-tracker-query-editor-info-icon fa-solid fa-info-circle"
+                    class="cross-tracker-query-editor-info-icon fa-solid fa-circle-info"
                 ></i
                 >{{
                     $gettext(

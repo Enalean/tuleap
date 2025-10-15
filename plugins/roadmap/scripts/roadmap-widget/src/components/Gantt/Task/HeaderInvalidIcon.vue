@@ -20,6 +20,6 @@
 
 <template>
     <div class="roadmap-gantt-task-header-invalid-icon">
-        <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
     </div>
 </template>

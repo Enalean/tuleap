@@ -21,7 +21,7 @@
 <template>
     <div v-bind:class="message_class" v-bind:style="style">
         <i
-            class="fas roadmap-gantt-subtask-header-message-icon"
+            class="roadmap-gantt-subtask-header-message-icon"
             v-bind:class="icon"
             aria-hidden="true"
         ></i>
@@ -92,7 +92,7 @@ const style = computed((): string => {
 const should_button_be_displayed = computed((): boolean => !isErrorRow(props.row));
 
 const icon = computed((): string => {
-    return isErrorRow(props.row) ? "fa-exclamation-circle" : "fa-info-circle";
+    return isErrorRow(props.row) ? "fa-solid fa-circle-exclamation" : "fa-solid fa-circle-info";
 });
 
 function userUndestandsThatThereAreNoSubtasksToBeDisplayed(): void {

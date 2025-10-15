@@ -200,7 +200,7 @@
             >
                 <i class="fa fa-check-circle current-test-status" ng-if="execution.status === 'passed'"></i>
                 <i class="fa fa-times-circle current-test-status" ng-if="execution.status === 'failed'"></i>
-                <i class="fa fa-exclamation-circle current-test-status" ng-if="execution.status === 'blocked'"></i>
+                <i class="fa-solid fa-circle-exclamation current-test-status" ng-if="execution.status === 'blocked'"></i>
                 <div class="current-test-header-who">
                     <span ng-if="execution.previous_result.submitted_on">
                         {{ execution.previous_result.submitted_on | amCalendar }}

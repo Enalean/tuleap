@@ -33,7 +33,7 @@
                     class="tlp-tooltip tlp-tooltip-top"
                     v-bind:data-tlp-tooltip="advanced_configuration_tooltip"
                 >
-                    <i class="fa fa-question-circle"></i>
+                    <i class="fa-solid fa-circle-question"></i>
                 </span>
             </label>
             <div

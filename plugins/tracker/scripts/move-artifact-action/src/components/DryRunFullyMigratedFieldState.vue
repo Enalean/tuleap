@@ -23,7 +23,7 @@
         class="alert alert-info"
         data-test="dry-run-message-info"
     >
-        <i class="fa fa-info-circle move-artifact-icon"></i>
+        <i class="fa-solid fa-circle-info move-artifact-icon"></i>
         <span>{{ message }}</span>
         <fields-list-displayer
             v-bind:fields="fully_migrated_fields"

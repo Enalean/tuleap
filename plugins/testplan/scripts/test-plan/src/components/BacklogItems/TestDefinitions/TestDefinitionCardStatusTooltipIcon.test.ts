@@ -27,8 +27,8 @@ describe("TestDefinitionCardStatusTooltipIcon", () => {
     it.each([
         ["passed", "Passed", "fa-check-circle"],
         ["failed", "Failed", "fa-times-circle"],
-        ["blocked", "Blocked", "fa-exclamation-circle"],
-        ["notrun", "Not run", "fa-question-circle"],
+        ["blocked", "Blocked", "fa-circle-exclamation"],
+        ["notrun", "Not run", "fa-circle-question"],
         [null, "Not planned in release MyRelease", "fa-circle-thin"],
     ])(
         "Displays an icon for test with %s status with the appropriate tooltip",

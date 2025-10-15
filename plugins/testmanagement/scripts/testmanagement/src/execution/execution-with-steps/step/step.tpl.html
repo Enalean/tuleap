@@ -70,14 +70,14 @@
             role="menuitem"
             ng-click="$ctrl.setToBlocked()"
         >
-            <i class="fa fa-fw fa-exclamation-circle"></i> {{::'Blocked' | translate }}
+            <i class="fa-solid fa-circle-exclamation fa-fw"></i> {{::'Blocked' | translate }}
         </button>
         <button class="tlp-dropdown-menu-item steps-step-action-notrun"
             ng-class="{ 'steps-step-action-disabled': $ctrl.saving }"
             role="menuitem"
             ng-click="$ctrl.setToNotRun()"
         >
-            <i class="fa fa-fw fa-question-circle"></i> {{::'Not run' | translate }}
+            <i class="fa-solid fa-fw fa-circle-question"></i> {{::'Not run' | translate }}
         </button>
     </div>
 </div>

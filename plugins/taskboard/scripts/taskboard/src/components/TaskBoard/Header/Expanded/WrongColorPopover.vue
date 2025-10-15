@@ -25,7 +25,7 @@
             data-placement="bottom"
             data-trigger="click"
         >
-            <i class="fas fa-exclamation-triangle"></i>
+            <i class="fa-solid fa-triangle-exclamation"></i>
         </span>
         <section
             class="tlp-popover tlp-popover-warning taskboard-header-wrong-color-popover"

@@ -27,11 +27,7 @@
             v-bind:class="getBadgeClass()"
             data-test="pullrequest-ci-status-badge"
         >
-            <i
-                class="fa-solid"
-                v-bind:class="getBadgeIconClass()"
-                data-test="pullrequest-ci-badge-icon"
-            ></i>
+            <i v-bind:class="getBadgeIconClass()" data-test="pullrequest-ci-badge-icon"></i>
             <span class="pullrequest-ci-status" data-test="pullrequest-ci-badge-status-name">
                 {{ getBadgeText() }}
                 <pull-request-relative-date
@@ -88,14 +84,14 @@ function getBadgeClass(): string {
 function getBadgeIconClass(): string {
     switch (props.pull_request_info?.last_build_status) {
         case BUILD_STATUS_PENDING:
-            return "fa-hourglass";
+            return "fa-solid fa-hourglass";
         case BUILD_STATUS_FAILED:
-            return "fa-circle-exclamation";
+            return "fa-solid fa-circle-exclamation";
         case BUILD_STATUS_SUCCESS:
-            return "fa-circle-check";
+            return "fa-solid fa-circle-check";
         case BUILD_STATUS_UNKNOWN:
         default:
-            return "fa-exclamation-triangle";
+            return "fa-solid fa-triangle-exclamation";
     }
 }
 

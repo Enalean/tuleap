@@ -106,7 +106,7 @@ class ForgeAccess_AdminPresenter
         $this->access_restricted = ($current_access_mode === ForgeAccess::RESTRICTED);
 
         $this->btn_submit                = _('Update information');
-        $this->localinc_obsolete_message = sprintf(_('<h4><i class="fa fa-exclamation-triangle"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>%1$s</code> and remove the following variables: <code>$sys_allow_anon</code> and <code>$sys_allow_restricted_users</code>.</p>'), $this->localinc_path);
+        $this->localinc_obsolete_message = sprintf(_('<h4><i class="fa-solid fa-triangle-exclamation"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>%1$s</code> and remove the following variables: <code>$sys_allow_anon</code> and <code>$sys_allow_restricted_users</code>.</p>'), $this->localinc_path);
 
         $this->access_anonymous_label           = _('Anonymous users can access the platform');
         $this->access_anonymous_desc            = _('Anonymous users can browse the public part of the site without logging in.');

@@ -63,7 +63,7 @@
                 }}</span>
             </p>
             <p class="tlp-text-danger" v-if="has_slug_error" data-test="has-error-slug">
-                <i class="fa fa-fw fa-exclamation-circle"></i>
+                <i class="fa-solid fa-fw fa-circle-exclamation"></i>
                 {{ error_project_short_name }}
             </p>
         </div>

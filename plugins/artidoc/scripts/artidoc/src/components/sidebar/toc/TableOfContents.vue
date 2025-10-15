@@ -40,7 +40,7 @@
             </span>
 
             <i
-                class="fa-solid fa-exclamation-circle section-under-artifact-icon"
+                class="fa-solid fa-circle-exclamation section-under-artifact-icon"
                 role="img"
                 v-bind:title="section_under_artifact_title"
                 data-test="warning-icon"

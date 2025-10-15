@@ -25,7 +25,7 @@
         data-test="test-status"
     >
         <i
-            class="fa fa-fw"
+            class="fa-fw"
             v-bind:class="icon_status"
             aria-hidden="true"
             data-test="test-status-icon"
@@ -67,15 +67,15 @@ const tooltip_content = computed((): string => {
 const icon_status = computed((): string => {
     switch (props.test_definition.test_status) {
         case "passed":
-            return "fa-check-circle test-plan-test-definition-icon-status-passed";
+            return "fa fa-check-circle test-plan-test-definition-icon-status-passed";
         case "failed":
-            return "fa-times-circle test-plan-test-definition-icon-status-failed";
+            return "fa fa-times-circle test-plan-test-definition-icon-status-failed";
         case "blocked":
-            return "fa-exclamation-circle test-plan-test-definition-icon-status-blocked";
+            return "fa-solid fa-circle-exclamation test-plan-test-definition-icon-status-blocked";
         case "notrun":
-            return "fa-question-circle test-plan-test-definition-icon-status-notrun";
+            return "fa fa-circle-question test-plan-test-definition-icon-status-notrun";
         default:
-            return "fa-circle-thin test-plan-test-definition-icon-status-notplanned";
+            return "fa fa-circle-thin test-plan-test-definition-icon-status-notplanned";
     }
 });
 </script>

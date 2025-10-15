@@ -59,7 +59,7 @@ export const renderCommonmarkSyntaxHelper = (
         disabled="${host.disabled}"
         data-test="artifact-modal-helper-popover-button"
     >
-        <i class="fas fa-question-circle tlp-button-icon" aria-hidden="true"></i>
+        <i class="fa-solid fa-circle-question tlp-button-icon" aria-hidden="true"></i>
         ${help()}
     </button>
     <section class="tlp-popover" data-popover-content>

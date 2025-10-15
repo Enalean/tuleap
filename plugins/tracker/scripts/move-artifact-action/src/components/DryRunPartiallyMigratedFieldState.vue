@@ -23,7 +23,7 @@
         class="alert block"
         data-test="dry-run-message-warning"
     >
-        <i class="fa fa-exclamation-circle move-artifact-icon"></i>
+        <i class="fa-solid fa-circle-exclamation move-artifact-icon"></i>
         <span>{{ message }}</span>
         <fields-list-displayer
             v-bind:fields="partially_migrated_fields"

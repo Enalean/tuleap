@@ -81,6 +81,6 @@ class HTMLOutputStrategy implements OutputStrategy
         $title = $this->purifier->purify($warning);
 
         return $artifact_link_info->getLink() .
-            ' <i class="fa fa-exclamation-triangle format-warning" title="' . $title . '"></i>';
+            ' <i class="fa-solid fa-triangle-exclamation format-warning" title="' . $title . '"></i>';
     }
 }

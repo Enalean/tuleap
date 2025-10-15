@@ -28,8 +28,8 @@
                             >
                                 <i class="fa fa-check-circle test-status-icon passed" ng-class="{'filtered-status': isStatusHidden('passed')}" aria-hidden="true"></i>
                                 <i class="fa fa-times-circle test-status-icon failed" ng-class="{'filtered-status': isStatusHidden('failed')}" aria-hidden="true"></i>
-                                <i class="fa fa-exclamation-circle test-status-icon blocked" ng-class="{'filtered-status': isStatusHidden('blocked')}" aria-hidden="true"></i>
-                                <i class="fa fa-question-circle test-status-icon notrun" ng-class="{'filtered-status': isStatusHidden('notrun')}" aria-hidden="true"></i>
+                                <i class="fa-solid fa-circle-exclamation test-status-icon blocked" ng-class="{'filtered-status': isStatusHidden('blocked')}" aria-hidden="true"></i>
+                                <i class="fa-solid fa-circle-question test-status-icon notrun" ng-class="{'filtered-status': isStatusHidden('notrun')}" aria-hidden="true"></i>
                                 <i class="fa fa-tlp-robot test-status-icon test-status-icon notrun" ng-class="{'filtered-status': are_automated_tests_shown === false}" aria-hidden="true"></i>
                             </button>
                             <div id="filters-dropdown-menu" class="tlp-dropdown-menu" role="menu" aria-label="{{ 'Filter tests by status' | translate }}">
@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="tests-filter-option">
                                     <label class="tests-filter-option-title tlp-label" for="status-filter-blocked">
-                                        <i class="fa fa-fw fa-exclamation-circle test-status-icon blocked" aria-hidden="true"></i>
+                                        <i class="fa-solid fa-circle-exclamation fa-fw test-status-icon blocked" aria-hidden="true"></i>
                                         {{ 'Blocked' | translate }}
                                     </label>
                                     <div class="tlp-switch tlp-switch-mini">
@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="tests-filter-option">
                                     <label class="tests-filter-option-title tlp-label" for="status-filter-notrun">
-                                        <i class="fa fa-fw fa-question-circle test-status-icon notrun" aria-hidden="true"></i>
+                                        <i class="fa-solid fa-fw fa-circle-question test-status-icon notrun" aria-hidden="true"></i>
                                         {{ 'Not run' | translate }}
                                     </label>
                                     <div class="tlp-switch tlp-switch-mini">
@@ -190,7 +190,7 @@
                                         <i class="fa fa-times-circle test-status-icon failed"
                                            ng-if="execution.status === 'failed'"
                                            title="{{ 'Failed' | translate }}"></i>
-                                        <i class="fa fa-exclamation-circle test-status-icon blocked"
+                                        <i class="fa-solid fa-circle-exclamation test-status-icon blocked"
                                            ng-if="execution.status === 'blocked'"
                                            title="{{ 'Blocked' | translate }}"></i>
                                     </a>

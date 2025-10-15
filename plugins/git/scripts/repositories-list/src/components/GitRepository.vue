@@ -113,7 +113,7 @@
                             isGitlabRepository(props.repository) &&
                             !isGitlabRepositoryWellConfigured(props.repository)
                         "
-                        class="fas fa-exclamation-triangle git-gitlab-integration-not-well-configured"
+                        class="fa-solid fa-triangle-exclamation git-gitlab-integration-not-well-configured"
                         v-bind:title="$gettext('Webhook must be regenerated.')"
                     ></i>
                 </section>
