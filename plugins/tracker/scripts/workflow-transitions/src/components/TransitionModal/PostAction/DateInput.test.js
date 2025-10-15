@@ -62,9 +62,11 @@ describe("DateInput", () => {
             wrapper.get("select").trigger("change");
         });
 
-        it("emits input event with corresponding value", () => {
-            expect(wrapper.emitted().change).toBeTruthy();
-            expect(wrapper.emitted().change[0]).toStrictEqual([DATE_FIELD_VALUE.CURRENT]);
+        it("emits 'new-input-value' event with corresponding value", () => {
+            expect(wrapper.emitted()["new-input-value"]).toBeTruthy();
+            expect(wrapper.emitted()["new-input-value"][0]).toStrictEqual([
+                DATE_FIELD_VALUE.CURRENT,
+            ]);
         });
     });
 });

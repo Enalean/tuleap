@@ -68,8 +68,7 @@
             <component
                 v-bind:is="value_input_component"
                 v-bind:id="value_input_id"
-                v-on:input="updateValue"
-                v-on:change="updateValue"
+                v-on:new-input-value="updateValue"
                 v-bind:disabled="is_modal_save_running"
                 v-bind:input_value="value"
             />
@@ -168,10 +167,10 @@ export default {
                 new_field: field[0],
             });
         },
-        updateValue(event) {
+        updateValue(value) {
             this.$store.commit("transitionModal/updateSetValuePostActionValue", {
                 post_action: this.post_action,
-                value: event,
+                value: value,
             });
         },
     },
