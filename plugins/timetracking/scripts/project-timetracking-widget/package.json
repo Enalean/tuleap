@@ -10,6 +10,7 @@
     "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/locale": "workspace:^",
     "@tuleap/plugin-timetracking-constants": "workspace:*",
     "@tuleap/plugin-timetracking-rest-api-types": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:*",
