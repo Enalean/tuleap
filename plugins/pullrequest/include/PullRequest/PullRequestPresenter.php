@@ -39,6 +39,7 @@ final class PullRequestPresenter implements PresentPullRequest
     public bool $is_legacy_angular_app_shown;
     public bool $is_vue_overview_shown;
     public bool $is_vue_homepage_shown;
+    public bool $is_vue_commit_list_shown;
 
     public function __construct(
         \GitRepository $repository,
@@ -58,6 +59,7 @@ final class PullRequestPresenter implements PresentPullRequest
         $this->is_legacy_angular_app_shown        = $app === PullRequestApp::LEGACY_ANGULAR_APP;
         $this->is_vue_overview_shown              = $app === PullRequestApp::OVERVIEW_APP;
         $this->is_vue_homepage_shown              = $app === PullRequestApp::HOMEPAGE_APP;
+        $this->is_vue_commit_list_shown           = $app === PullRequestApp::COMMITS_APP;
     }
 
     #[\Override]

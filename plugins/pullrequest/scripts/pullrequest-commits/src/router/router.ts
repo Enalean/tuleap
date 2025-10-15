@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,24 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import type { Router } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
+import CommitsPane from "../components/CommitsPane.vue";
+import { VIEW_COMMITS_NAME } from "../constants";
+import { buildCommitsTabUrl } from "./base-url-builders";
 
-namespace Tuleap\PullRequest\FrontendApps;
-
-enum PullRequestApp: string
-{
-    case LEGACY_ANGULAR_APP = '';
-    case OVERVIEW_APP       = 'overview';
-    case HOMEPAGE_APP       = 'homepage';
-    case COMMITS_APP        = 'commits';
-
-    public static function fromRequest(\HTTPRequest $request): self
-    {
-        return match ($request->get('tab')) {
-            'overview' => self::OVERVIEW_APP,
-            'homepage' => self::HOMEPAGE_APP,
-            'commits'  => self::COMMITS_APP,
-            default    => self::LEGACY_ANGULAR_APP,
-        };
-    }
+export function createCommitsRouter(base_url: URL): Router {
+    return createRouter({
+        history: createWebHashHistory(buildCommitsTabUrl(base_url).toString()),
+        routes: [
+            {
+                path: "/pull-requests/:id/commits",
+                name: VIEW_COMMITS_NAME,
+                component: CommitsPane,
+            },
+        ],
+    });
 }

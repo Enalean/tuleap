@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { uri, getJSON } from "@tuleap/fetch-result";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-namespace Tuleap\PullRequest\FrontendApps;
-
-enum PullRequestApp: string
-{
-    case LEGACY_ANGULAR_APP = '';
-    case OVERVIEW_APP       = 'overview';
-    case HOMEPAGE_APP       = 'homepage';
-    case COMMITS_APP        = 'commits';
-
-    public static function fromRequest(\HTTPRequest $request): self
-    {
-        return match ($request->get('tab')) {
-            'overview' => self::OVERVIEW_APP,
-            'homepage' => self::HOMEPAGE_APP,
-            'commits'  => self::COMMITS_APP,
-            default    => self::LEGACY_ANGULAR_APP,
-        };
-    }
-}
+export const fetchPullRequestInfo = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
+    return getJSON(uri`/api/v1/pull_requests/${pull_request_id}`);
+};
