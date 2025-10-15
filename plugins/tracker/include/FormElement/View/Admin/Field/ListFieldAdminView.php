@@ -17,39 +17,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\FormElement\View\Admin\StaticFieldAdminView;
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 
-class Tracker_FormElement_View_Admin_StaticField_LineBreak extends StaticFieldAdminView
+use Tracker_FormElement_Field_List_BindFactory;
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
+
+class ListFieldAdminView extends FieldAdminView
 {
     /**
-     * html form for the description
+     * Fetch additionnal stuff to display below the edit form
      *
      * @return string html
      */
     #[\Override]
-    public function fetchDescriptionForUpdate()
+    public function fetchAfterAdminEditForm()
     {
-        return '';
+        return $this->formElement->getBind()->fetchAdminEditForm();
     }
 
     /**
-     * html form for the description
+     * Fetch additionnal stuff to display below the create form
+     * Result if not empty must be enclosed in a <tr>
      *
      * @return string html
      */
     #[\Override]
-    public function fetchDescriptionForShared()
+    public function fetchAfterAdminCreateForm()
     {
-        return '';
-    }
-
-    #[\Override]
-    protected function fetchCustomHelp()
-    {
+        $bf    = new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $html  = '';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= dgettext('tuleap-tracker', 'The label will not appear in form.');
-        $html .= '</span>';
+        $html .= '<tr valign="top"><td colspan="2">';
+        $html .= $bf->fetchCreateABind($this->formElement);
+        $html .= '</td></tr>';
         return $html;
     }
 }

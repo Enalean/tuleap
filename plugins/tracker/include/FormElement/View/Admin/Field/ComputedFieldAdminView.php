@@ -20,7 +20,7 @@ namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 
 use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
 
-class Computed extends FieldAdminView
+class ComputedFieldAdminView extends FieldAdminView
 {
     private const string DEFAULT_VALUE_KEY = 'default_value';
 

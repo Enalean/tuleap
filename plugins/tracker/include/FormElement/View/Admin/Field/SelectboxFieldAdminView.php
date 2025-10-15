@@ -17,9 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 
-class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement_View_Admin_Field_List
+use Codendi_HTMLPurifier;
+use EventManager;
+use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
+use WorkflowFactory;
+
+class SelectboxFieldAdminView extends ListFieldAdminView
 {
     protected $availableTypes = ['rb', 'msb', 'cb'];
 
@@ -30,7 +35,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
         $html          = '<div class="tracker-admin-form-element-type-change"><label for="formElement_type">' . dgettext('tuleap-tracker', 'Type') . ': </label><br />';
         $html         .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '"/> ' . $html_purifier->purify($this->formElement->getFactoryLabel());
 
-           //do not change from SB to MSB if the field is used to define the workflow
+        //do not change from SB to MSB if the field is used to define the workflow
         $wf = WorkflowFactory::instance();
         if (! $wf->isWorkflowField($this->formElement)) {
             $html .= ' (' . dgettext('tuleap-tracker', 'Switch to:') . ' ';
@@ -39,9 +44,9 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
 
             $labels     = [
                 'msb' => dgettext('tuleap-tracker', 'Multi Select Box'),
-                'sb' => dgettext('tuleap-tracker', 'Select Box'),
-                'cb' => dgettext('tuleap-tracker', 'CheckBox'),
-                'rb' => dgettext('tuleap-tracker', 'Radio button'),
+                'sb'  => dgettext('tuleap-tracker', 'Select Box'),
+                'cb'  => dgettext('tuleap-tracker', 'CheckBox'),
+                'rb'  => dgettext('tuleap-tracker', 'Radio button'),
             ];
             $csrf_token = $this->formElement->getCSRFTokenForElementUpdate();
             foreach ($this->getAvailableTypes() as $type) {

@@ -1,7 +1,6 @@
 <?php
-/** Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+/**
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -10,21 +9,24 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_FormElement_View_Admin_Field_LastModifiedBy extends Tracker_FormElement_View_Admin_Field_List
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
+
+final class SubmittedByFieldAdminView extends ListFieldAdminView
 {
     #[\Override]
     protected function fetchCustomHelp()
     {
         $html  = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= dgettext('tuleap-tracker', 'The field is automatically set to the last person who modified the artifact');
+        $html .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission user');
         $html .= '</span>';
         return $html;
     }

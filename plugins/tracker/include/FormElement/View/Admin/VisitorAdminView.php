@@ -25,22 +25,6 @@ use HTTPRequest;
 use TemplateRendererFactory;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_Shared;
-use Tracker_FormElement_View_Admin_Field_ArtifactId;
-use Tracker_FormElement_View_Admin_Field_Burndown;
-use Tracker_FormElement_View_Admin_Field_Checkbox;
-use Tracker_FormElement_View_Admin_Field_CrossReferences;
-use Tracker_FormElement_View_Admin_Field_LastModifiedBy;
-use Tracker_FormElement_View_Admin_Field_LastUpdateDate;
-use Tracker_FormElement_View_Admin_Field_List;
-use Tracker_FormElement_View_Admin_Field_MultiSelectbox;
-use Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact;
-use Tracker_FormElement_View_Admin_Field_Radiobutton;
-use Tracker_FormElement_View_Admin_Field_Selectbox;
-use Tracker_FormElement_View_Admin_Field_SubmittedBy;
-use Tracker_FormElement_View_Admin_Field_SubmittedOn;
-use Tracker_FormElement_View_Admin_Priority;
-use Tracker_FormElement_View_Admin_StaticField_LineBreak;
-use Tracker_FormElement_View_Admin_StaticField_Separator;
 use Tracker_FormElement_Visitor;
 use TrackerManager;
 use Tuleap\JSONHeader;
@@ -76,7 +60,23 @@ use Tuleap\Tracker\FormElement\StaticField\Separator\SeparatorStaticField;
 use Tuleap\Tracker\FormElement\StaticField\TrackerStaticField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
-use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
+use Tuleap\Tracker\FormElement\View\Admin\Field\ArtifactIdFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\BurndownFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\CheckboxFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\ComputedFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\CrossReferencesFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\LastUpdateByFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\LastUpdateDateFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\ListFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\MultiSelectboxFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\PermissionsOnArtifactFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\PriorityFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\RadioButtonFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\SelectboxFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\SubmittedByFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\Field\SubmittedOnFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\StaticField\LineBreakStaticFieldAdminView;
+use Tuleap\Tracker\FormElement\View\Admin\StaticField\SeparatorStaticFieldAdminView;
 use Tuleap\Tracker\FormElement\View\TrackerFormElementAdminView;
 
 /**
@@ -189,7 +189,7 @@ class VisitorAdminView implements Tracker_FormElement_Visitor, Tracker_FormEleme
     public function visitComputed(ComputedField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Computed($element, $this->allUsedElements);
+        $this->adminElement = new ComputedFieldAdminView($element, $this->allUsedElements);
     }
 
     private function visitField(TrackerField $element)
@@ -202,7 +202,7 @@ class VisitorAdminView implements Tracker_FormElement_Visitor, Tracker_FormEleme
     public function visitArtifactId(ArtifactIdField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_ArtifactId($element, $this->allUsedElements);
+        $this->adminElement = new ArtifactIdFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
@@ -215,83 +215,83 @@ class VisitorAdminView implements Tracker_FormElement_Visitor, Tracker_FormEleme
     public function visitCrossReferences(CrossReferencesField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_CrossReferences($element, $this->allUsedElements);
+        $this->adminElement = new CrossReferencesFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitBurndown(BurndownField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_Burndown($element, $this->allUsedElements);
+        $this->adminElement = new BurndownFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitLastUpdateDate(LastUpdateDateField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_LastUpdateDate($element, $this->allUsedElements);
+        $this->adminElement = new LastUpdateDateFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitPermissionsOnArtifact(PermissionsOnArtifactField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact($element, $this->allUsedElements);
+        $this->adminElement = new PermissionsOnArtifactFieldAdminView($element, $this->allUsedElements);
     }
 
     private function visitList(ListField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_List($element, $this->allUsedElements);
+        $this->adminElement = new ListFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitSelectbox(SelectboxField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_Selectbox($element, $this->allUsedElements);
+        $this->adminElement = new SelectboxFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitSubmittedBy(SubmittedByField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_SubmittedBy($element, $this->allUsedElements);
+        $this->adminElement = new SubmittedByFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitLastModifiedBy(LastUpdateByField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_LastModifiedBy($element, $this->allUsedElements);
+        $this->adminElement = new LastUpdateByFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitSubmittedOn(SubmittedOnField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_SubmittedOn($element, $this->allUsedElements);
+        $this->adminElement = new SubmittedOnFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitMultiSelectbox(MultiSelectboxField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_MultiSelectbox($element, $this->allUsedElements);
+        $this->adminElement = new MultiSelectboxFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitCheckbox(CheckboxField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_Checkbox($element, $this->allUsedElements);
+        $this->adminElement = new CheckboxFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]
     public function visitRadiobutton(RadioButtonField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Field_Radiobutton($element, $this->allUsedElements);
+        $this->adminElement = new RadioButtonFieldAdminView($element, $this->allUsedElements);
     }
 
     private function visitContainer(TrackerFormElementContainer $element)
@@ -306,12 +306,12 @@ class VisitorAdminView implements Tracker_FormElement_Visitor, Tracker_FormEleme
 
     private function visitLineBreak(LineBreakStaticField $element)
     {
-        $this->adminElement = new Tracker_FormElement_View_Admin_StaticField_LineBreak($element, $this->allUsedElements);
+        $this->adminElement = new LineBreakStaticFieldAdminView($element, $this->allUsedElements);
     }
 
     private function visitSeparator(SeparatorStaticField $element)
     {
-        $this->adminElement = new Tracker_FormElement_View_Admin_StaticField_Separator($element, $this->allUsedElements);
+        $this->adminElement = new SeparatorStaticFieldAdminView($element, $this->allUsedElements);
     }
 
     private function visitShared(Tracker_FormElement_Shared $element)
@@ -323,7 +323,7 @@ class VisitorAdminView implements Tracker_FormElement_Visitor, Tracker_FormEleme
     public function visitPriority(PriorityField $element)
     {
         $this->element      = $element;
-        $this->adminElement = new Tracker_FormElement_View_Admin_Priority($element, $this->allUsedElements);
+        $this->adminElement = new PriorityFieldAdminView($element, $this->allUsedElements);
     }
 
     #[\Override]

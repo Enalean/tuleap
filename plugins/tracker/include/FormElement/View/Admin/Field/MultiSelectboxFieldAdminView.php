@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Jtekt, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 
-class Tracker_FormElement_View_Admin_Field_Radiobutton extends Tracker_FormElement_View_Admin_Field_Selectbox
+class MultiSelectboxFieldAdminView extends SelectboxFieldAdminView
 {
-    protected $availableTypes = ['sb', 'msb', 'cb'];
+    protected $availableTypes = ['sb', 'rb', 'cb'];
 }

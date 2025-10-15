@@ -17,47 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 
-class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormElement_View_Admin_Field_List
+use Tuleap\Tracker\FormElement\View\Admin\FieldAdminView;
+
+final class PermissionsOnArtifactFieldAdminView extends FieldAdminView
 {
     #[\Override]
     protected function fetchCustomHelp()
     {
         $html  = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission user');
+        $html .= dgettext('tuleap-tracker', 'Warning : use that field only once.');
         $html .= '</span>';
         return $html;
-    }
-
-    #[\Override]
-    protected function fetchRequired()
-    {
-        return '';
-    }
-
-    /**
-     * Fetch additionnal stuff to display below the create form
-     * Result if not empty must be enclosed in a <tr>
-     *
-     * @return string html
-     */
-    #[\Override]
-    public function fetchAfterAdminCreateForm()
-    {
-        // Don't display the values because this is a special field
-        return '';
-    }
-
-    /**
-     * Fetch additionnal stuff to display below the edit form
-     *
-     * @return string html
-     */
-    #[\Override]
-    public function fetchAfterAdminEditForm()
-    {
-        // Don't display the values because this is a special field
-        return '';
     }
 }
