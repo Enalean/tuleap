@@ -10,7 +10,7 @@ exports[`WrongColorPopover initiates a popover to inform user that the chosen co
     data-trigger="click"
   >
     <i
-      class="fas fa-exclamation-triangle"
+      class="fa-solid fa-triangle-exclamation"
     />
   </span>
   <section

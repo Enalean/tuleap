@@ -29,7 +29,7 @@
                     class="tlp-tooltip tlp-tooltip-top"
                     v-bind:data-tlp-tooltip="$gettext('Transitions based field')"
                 >
-                    <i class="fa fa-question-circle"></i>
+                    <i class="fa-solid fa-circle-question"></i>
                 </span>
             </label>
             <div>

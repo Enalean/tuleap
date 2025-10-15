@@ -61,7 +61,7 @@
                     autocomplete="off"
                 />
                 <p class="tlp-text-info">
-                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                     {{ $gettext("GitLab access token scope must contain at least: api.") }}
                 </p>
             </div>

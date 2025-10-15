@@ -33,7 +33,7 @@
             v-bind:class="bar_classes"
         >
             <i
-                class="fas fa-exclamation-triangle"
+                class="fa-solid fa-triangle-exclamation"
                 aria-hidden="true"
                 data-test="progress-error-sign"
                 v-if="is_error_sign_displayed_inside_bar"
@@ -62,7 +62,7 @@
             </template>
         </div>
         <i
-            class="fas fa-exclamation-triangle roadmap-gantt-task-bar-progress-error-outside-bar"
+            class="fa-solid fa-triangle-exclamation roadmap-gantt-task-bar-progress-error-outside-bar"
             aria-hidden="true"
             data-test="progress-error-sign"
             v-if="is_error_sign_displayed_outside_bar"

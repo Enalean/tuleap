@@ -20,7 +20,7 @@
 <template>
     <div class="artidoc-section-container" v-bind:class="additional_class">
         <p class="section-with-artifact-parent-error" v-if="has_artifact_parent">
-            <i class="fa-solid fa-exclamation-circle alert-icon" aria-hidden="true"></i
+            <i class="fa-solid fa-circle-exclamation alert-icon" aria-hidden="true"></i
             >{{
                 $gettext(
                     "This section cannot be on a level below an Artifact section, please either change its heading level to the same level or a higher level.",

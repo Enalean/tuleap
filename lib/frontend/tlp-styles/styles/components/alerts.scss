@@ -53,7 +53,7 @@
     color: var(--tlp-alert-info-color);
 
     &::before {
-        content: "\f05a"; // fa-info-circle
+        content: "\f05a"; // fa-circle-info
         font-weight: 900;
     }
 
@@ -89,7 +89,7 @@
     color: var(--tlp-alert-warning-color);
 
     &::before {
-        content: "\f071"; // fa-exclamation-triangle
+        content: "\f071"; // fa-triangle-exclamation
         font-weight: 900;
     }
 
@@ -107,7 +107,7 @@
     color: var(--tlp-alert-danger-color);
 
     &::before {
-        content: "\f06a"; // fa-exclamation-circle
+        content: "\f06a"; // fa-circle-exclamation
         font-weight: 900;
     }
 

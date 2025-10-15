@@ -115,12 +115,12 @@
                                         {{^ has_one_selected }}
                                             {{# current_timezone }}
                                                 <p class="tlp-text-warning">
-                                                    <i class="fa fa-exclamation-triangle"></i> {{# gettext }}Your current timezone (%s) is not listed in the available timezones. Please select a new one. | {{ current_timezone }}{{/ gettext }}
+                                                    <i class="fa-solid fa-triangle-exclamation"></i> {{# gettext }}Your current timezone (%s) is not listed in the available timezones. Please select a new one. | {{ current_timezone }}{{/ gettext }}
                                                 </p>
                                             {{/ current_timezone }}
                                             {{^ current_timezone }}
                                                 <p class="tlp-text-warning">
-                                                    <i class="fa fa-exclamation-triangle"></i> {{# gettext }}No timezone set. Please select one.{{/ gettext }}
+                                                    <i class="fa-solid fa-triangle-exclamation"></i> {{# gettext }}No timezone set. Please select one.{{/ gettext }}
                                                 </p>
                                             {{/ current_timezone }}
                                         {{/ has_one_selected }}

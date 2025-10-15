@@ -1046,7 +1046,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 'tuleap-tracker',
                                 'The report was sorted against this column. This column can not be used to sort a report, the sort has been ignored. Please choose another column.'
                             );
-                            $html           .= '<i class="fa fa-exclamation-triangle" title="' . $warning_message . '"></i>';
+                            $html           .= '<i class="fa-solid fa-triangle-exclamation" title="' . $warning_message . '"></i>';
                         }
                         $html .= '</td>';
                     }

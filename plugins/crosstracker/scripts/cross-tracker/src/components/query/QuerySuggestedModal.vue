@@ -48,7 +48,7 @@
         </div>
         <div class="tlp-modal-footer suggestion-modal-footer">
             <p class="tlp-text-muted overwrite-info">
-                <i class="fas fa-info-circle" aria-hidden="true"></i>
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                 {{
                     $gettext(
                         "If you validate, this query will replace your content. You can't undo it.",

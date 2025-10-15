@@ -6,7 +6,7 @@ exports[`NoMappingMessage displays a message when card has a status 1`] = `
 >
   <i
     aria-hidden="true"
-    class="fas fa-exclamation-triangle"
+    class="fa-solid fa-triangle-exclamation"
   />
   <span>
     This card has status 
@@ -25,7 +25,7 @@ exports[`NoMappingMessage displays another message when card has no status 1`] =
 >
   <i
     aria-hidden="true"
-    class="fas fa-exclamation-triangle"
+    class="fa-solid fa-triangle-exclamation"
   />
   <span>
     This card does not have any status.

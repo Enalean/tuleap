@@ -65,7 +65,7 @@ describe("PullRequestCIStatus", () => {
         [BUILD_STATUS_PENDING, ["tlp-badge-outline", "tlp-badge-info"], "fa-hourglass"],
         [BUILD_STATUS_SUCCESS, ["tlp-badge-outline", "tlp-badge-success"], "fa-circle-check"],
         [BUILD_STATUS_FAILED, ["tlp-badge-danger"], "fa-circle-exclamation"],
-        [BUILD_STATUS_UNKNOWN, ["tlp-badge-warning"], "fa-exclamation-triangle"],
+        [BUILD_STATUS_UNKNOWN, ["tlp-badge-warning"], "fa-triangle-exclamation"],
     ])(
         "When the status is %s, then it should display a %s badge containing a %s icon",
         async (last_build_status, expected_badge_classes, expected_icon_class) => {

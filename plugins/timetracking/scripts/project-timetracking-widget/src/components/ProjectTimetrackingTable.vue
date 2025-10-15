@@ -69,7 +69,7 @@
                             v-bind:data-tlp-tooltip="time_format_tooltip"
                             v-bind:aria-label="time_format_tooltip"
                         >
-                            <i class="fa fa-question-circle"></i>
+                            <i class="fa-solid fa-circle-question"></i>
                         </span>
                     </th>
                 </tr>

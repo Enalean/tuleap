@@ -34,7 +34,7 @@
                 data-test="backlog-item-icon"
             >
                 <i
-                    class="fa test-plan-backlog-item-coverage-icon-symbol"
+                    class="test-plan-backlog-item-coverage-icon-symbol"
                     v-bind:class="icon_class"
                 ></i>
             </span>
@@ -82,13 +82,13 @@ const icon_class = computed((): string => {
         case null:
             return "";
         case "failed":
-            return "fa-times-circle";
+            return "fa fa-times-circle";
         case "blocked":
-            return "fa-exclamation-circle";
+            return "fa-solid fa-circle-exclamation";
         case "notrun":
-            return "fa-question-circle";
+            return "fa-solid fa-circle-question";
         case "passed":
-            return "fa-check-circle";
+            return "fa fa-check-circle";
         default:
             return ((val: never): never => val)(value);
     }

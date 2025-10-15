@@ -23,7 +23,7 @@
         class="alert alert-error"
         data-test="dry-run-message-error"
     >
-        <i class="fa fa-exclamation-circle move-artifact-icon move-artifact-error-icon"></i>
+        <i class="fa-solid fa-circle-exclamation move-artifact-icon move-artifact-error-icon"></i>
         <span
             v-if="!dry_run_store.is_move_possible"
             data-test="move-action-not-possible-error-message"

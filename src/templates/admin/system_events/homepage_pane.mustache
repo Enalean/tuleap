@@ -37,13 +37,13 @@
                                     class="system-event-type-count tlp-badge-warning tlp-badge-rounded tlp-tooltip tlp-tooltip-top {{^ has_warning }}tlp-badge-outline{{/ has_warning}}"
                                     data-tlp-tooltip="{{ warning_label_tooltip }}"
                                 >
-                                    <i class="tlp-badge-icon fas fa-exclamation-triangle"></i> {{ warning_count }} {{# has_warning_without_error }}{{ warning_label }}{{/ has_warning_without_error}}
+                                    <i class="tlp-badge-icon fa-solid fa-triangle-exclamation"></i> {{ warning_count }} {{# has_warning_without_error }}{{ warning_label }}{{/ has_warning_without_error}}
                                 </a>
                                 <a href="/admin/system_events/?queue={{ name}}&filter_status[]=ERROR"
                                     class="system-event-type-count tlp-badge-danger tlp-badge-rounded tlp-tooltip tlp-tooltip-top {{^ has_error }}tlp-badge-outline{{/ has_error}}"
                                     data-tlp-tooltip="{{ error_label_tooltip }}"
                                 >
-                                    <i class="tlp-badge-icon fa fa-exclamation-circle"></i> {{ error_count }} {{# has_error }}{{ error_label }}{{/ has_error}}
+                                    <i class="tlp-badge-icon fa-solid fa-circle-exclamation"></i> {{ error_count }} {{# has_error }}{{ error_label }}{{/ has_error}}
                                 </a>
                             </div>
                         {{/ has_warning_or_error }}

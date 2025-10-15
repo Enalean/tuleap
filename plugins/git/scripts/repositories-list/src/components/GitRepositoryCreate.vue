@@ -67,7 +67,7 @@
                     data-test="create_repository_name"
                 />
                 <p class="tlp-text-info">
-                    <i class="fa fa-info-circle"></i>
+                    <i class="fa-solid fa-circle-info"></i>
                     {{
                         $gettext(
                             'Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".',

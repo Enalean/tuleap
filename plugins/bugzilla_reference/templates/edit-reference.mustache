@@ -95,7 +95,7 @@
                        placeholder="{{ api_key }}"
                 >
                 {{^ hasApiKeyAlwaysBeenEncrypted }}
-                    <p class="tlp-text-danger"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> {{ api_key_stored_plaintext_warning }}</p>
+                    <p class="tlp-text-danger"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{ api_key_stored_plaintext_warning }}</p>
                 {{/ hasApiKeyAlwaysBeenEncrypted }}
             </div>
         {{/ isApiKeySet }}

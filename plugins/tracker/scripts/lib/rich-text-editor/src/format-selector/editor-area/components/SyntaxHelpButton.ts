@@ -41,7 +41,7 @@ export function createSyntaxHelpButton(
                 data-test="help-button"
                 ?disabled="${presenter.is_disabled}"
             >
-                <i class="fas fa-question-circle" aria-hidden="true"></i>
+                <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
                 ${gettext_provider.gettext("Help")}
             </button>
             ${helper_popover}

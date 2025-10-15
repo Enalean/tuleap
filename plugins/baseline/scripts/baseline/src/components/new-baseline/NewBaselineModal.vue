@@ -51,7 +51,7 @@
                         class="tlp-tooltip tlp-tooltip-right"
                         v-bind:data-tlp-tooltip="milestone_tooltip"
                     >
-                        <i class="fa fa-question-circle baseline-tooltip-icon"></i>
+                        <i class="fa-solid fa-circle-question baseline-tooltip-icon"></i>
                     </span>
                 </label>
                 <milestones-select-skeleton v-if="is_loading" />
@@ -76,7 +76,7 @@
                         class="tlp-tooltip tlp-tooltip-right"
                         v-bind:data-tlp-tooltip="snapshot_date_tooltip"
                     >
-                        <i class="fa fa-question-circle baseline-tooltip-icon-optional"></i>
+                        <i class="fa-solid fa-circle-question baseline-tooltip-icon-optional"></i>
                     </span>
                 </label>
                 <div class="tlp-form-element tlp-form-element-prepend">

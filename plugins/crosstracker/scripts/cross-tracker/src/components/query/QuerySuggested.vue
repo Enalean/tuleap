@@ -34,7 +34,7 @@
             </button>
         </div>
         <p class="tlp-text-muted">
-            <i class="fas fa-info-circle" aria-hidden="true"></i>
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
             {{
                 $gettext(
                     "If you click on one of the suggested query, your content will be replaced.",

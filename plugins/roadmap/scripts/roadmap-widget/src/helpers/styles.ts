@@ -31,6 +31,6 @@ export const Styles = {
     TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_DIGIT_IN_PX: 6,
     // approximate width of a percentage with 3 digits + margins
     TEXT_PERCENTAGE_IN_PROGRESS_BAR_THRESOLD_IN_PX: 30,
-    // approximate width of the fa-exclamation-triangle + margins
+    // approximate width of the fa-triangle-exclamation + margins
     MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX: 22,
 } as const;

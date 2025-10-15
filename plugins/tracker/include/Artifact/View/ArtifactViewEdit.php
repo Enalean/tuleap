@@ -297,7 +297,7 @@ readonly class ArtifactViewEdit extends TrackerArtifactView
         $html = '';
         if ($this->canUpdateArtifactByMail()) {
             $email = Codendi_HTMLPurifier::instance()->purify($this->artifact->getInsecureEmailAddress());
-            $html .= '<p class="email-tracker-help"><i class="fa fa-info-circle"></i> ';
+            $html .= '<p class="email-tracker-help"><i class="fa-solid fa-circle-info"></i> ';
             $html .= sprintf(dgettext('tuleap-tracker', 'You can also reply to this artifact <a href="#" class="email-tracker email-tracker-reply" data-email="%1$s"><span>by email</span></a>.'), $email);
             $html .= '</p>';
         }

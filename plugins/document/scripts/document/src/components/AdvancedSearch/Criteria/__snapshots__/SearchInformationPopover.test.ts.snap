@@ -7,7 +7,7 @@ exports[`SearchInformationPopover > should display a popover content 1`] = `
 >
   <span>
     <i
-      class="fa-solid fa-question-circle popover-search-icon"
+      class="fa-solid fa-circle-question popover-search-icon"
     />
   </span>
   <section

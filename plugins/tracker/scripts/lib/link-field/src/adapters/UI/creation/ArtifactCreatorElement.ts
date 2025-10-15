@@ -221,7 +221,7 @@ const initListPickers = (host: InternalArtifactCreator): DisconnectFunction => {
             const tooltip = html`<span
                 class="artifact-modal-link-creator-list-picker-tooltip"
                 title="${current_tracker.cannot_create_reason}"
-                ><i class="fa-solid fa-question-circle tlp-button-icon" aria-hidden="true"></i
+                ><i class="fa-solid fa-circle-question tlp-button-icon" aria-hidden="true"></i
             ></span>`;
             return html`<span class="artifact-modal-link-creator-list-picker-container"
                 ><span class="artifact-modal-link-creator-list-picker-option-label"
