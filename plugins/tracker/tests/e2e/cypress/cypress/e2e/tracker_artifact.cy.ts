@@ -498,6 +498,11 @@ describe("Tracker artifacts", function () {
                     cy.get("[data-test=switch-to-recent-items]").should("contain", "My new bug");
                     cy.get("@body").type("{esc}");
 
+                    cy.log("Edit the artifact and submit whithout any change");
+                    editSimpleField("Title");
+                    submitAndStay();
+                    cy.get("[data-test=feedback]").contains("No changes for artifact");
+
                     cy.log("Edit the artifact and add a comment");
                     editSimpleField("Title").clear().type("My edited bug");
                     cy.get("[data-test=artifact_followup_comment]").type("Changed the title");

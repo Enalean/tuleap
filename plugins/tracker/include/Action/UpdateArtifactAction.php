@@ -177,17 +177,7 @@ final readonly class UpdateArtifactAction
                 exit();
             }
             $base_layout->addFeedback(Feedback::INFO, (string) $fault, CODENDI_PURIFIER_LIGHT);
-            $render = new Tracker_Artifact_ReadOnlyRenderer(
-                $this->event_manager,
-                $this->artifact,
-                $layout,
-                $this->artifact_retriever,
-                $this->visit_recorder,
-                $this->hidden_fieldsets_detector,
-                new ArtifactViewCollectionBuilder($this->event_manager)
-            );
-            $render->display($request, $current_user);
-            exit();
+            $base_layout->redirect($redirect->toUrl());
         }
         $error_message = match ($fault::class) {
             ArtifactDoesNotExistFault::class => sprintf(
