@@ -533,6 +533,13 @@ Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-ai
 %{summary}.
 
+%package plugin-ai-crosstracker
+Summary: AI - Cross-Tracker Search
+Group: Development/Tools
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist} tuleap-plugin-ai
+%description plugin-ai-crosstracker
+%{summary}.
+
 %endif
 
 #
@@ -619,6 +626,7 @@ done
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphs
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ai
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ai_crosstracker
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -1453,6 +1461,10 @@ fi
 %files plugin-ai
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/ai
+
+%files plugin-ai-crosstracker
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/ai_crosstracker
 
 %endif
 

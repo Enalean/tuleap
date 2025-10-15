@@ -1,0 +1,22 @@
+{
+    "id": "c8631c0be17944e997ca42bd373b1137",
+    "created": 1760609224,
+    "model": "mistral-medium-2508",
+    "usage": {
+        "prompt_tokens": 18872,
+        "total_tokens": 19137,
+        "completion_tokens": 265
+    },
+    "object": "chat.completion",
+    "choices": [
+        {
+            "index": 0,
+            "finish_reason": "stop",
+            "message": {
+                "role": "assistant",
+                "tool_calls": null,
+                "content": "Voici la requête TQL pour obtenir toutes les exigences (user stories) ouvertes qui ne sont pas couvertes par des tests :\n\n```tql\nSELECT @pretty_title, @status, @project.name, @tracker.name\nFROM @tracker.name = 'story'\nWHERE @status = OPEN() AND IS NOT COVERED\nORDER BY @last_update_date DESCENDING\n```\n\nExplications :\n1. `SELECT @pretty_title, @status, @project.name, @tracker.name` : Affiche le titre, le statut, le projet et le tracker\n2. `FROM @tracker.name = 'story'` : Recherche uniquement dans le tracker \"User Stories\"\n3. `WHERE @status = OPEN()` : Filtre pour les exigences ouvertes\n4. `AND IS NOT COVERED` : Filtre pour les exigences non couvertes par des tests\n5. `ORDER BY @last_update_date DESCENDING` : Trie par date de dernière mise à jour (plus récentes en premier)\n\nSi vous voulez inclure d'autres types d'exigences (comme les \"Team Enablers\"), vous pouvez modifier la partie FROM :\n```tql\nFROM @tracker.name IN ('story', 'team_enabler')\n```"
+            }
+        }
+    ]
+}

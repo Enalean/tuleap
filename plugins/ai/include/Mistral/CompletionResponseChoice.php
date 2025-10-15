@@ -19,31 +19,14 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AI\Mistral;
 
-use Tuleap\Config\ConfigKey;
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeySecret;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-#[ConfigKeyCategory('AI')]
-interface MistralConnector
+/**
+ * @psalm-immutable
+ */
+final readonly class CompletionResponseChoice
 {
-    #[ConfigKey('Mistral API Key')]
-    #[ConfigKeyString('')]
-    #[ConfigKeySecret]
-    final public const string CONFIG_API_KEY = 'mistral_api_key';
-
-    /**
-     * @return Ok<null>|Err<Fault>
-     */
-    public function testConnection(): Ok|Err;
-
-    /**
-     * @return Ok<CompletionResponse>|Err<Fault>
-     */
-    public function sendCompletion(Completion $completion): Ok|Err;
+    public AssistantMessage $message;
 }

@@ -1,0 +1,13 @@
+{
+  "name": "tuleap/plugin-ai-crosstracker",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\AICrossTracker\\": "include"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\AICrossTracker\\": ["tests/unit"]
+    }
+  }
+}

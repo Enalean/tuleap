@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AI\Mistral;
 
+use CuyZ\Valinor\Mapper\MappingError;
+use CuyZ\Valinor\Mapper\Source\JsonSource;
 use ForgeConfig;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -63,6 +66,41 @@ final readonly class MistralConnectorLive implements MistralConnector
             return Result::err(Fault::fromMessage(sprintf('%s (%d)', $response->getReasonPhrase(), $response->getStatusCode())));
         } catch (ClientExceptionInterface $client_exception) {
             return Result::err(Fault::fromThrowable($client_exception));
+        } catch (\Exception) {
+            return Result::err(Fault::fromMessage(dgettext('tuleap-ai', 'An error occurred while trying to access to API key in configuration.')));
+        }
+    }
+
+    #[\Override]
+    public function sendCompletion(Completion $completion): Ok|Err
+    {
+        try {
+            if (ForgeConfig::get(self::CONFIG_API_KEY) === '') {
+                return Result::err(NoKeyFault::build());
+            }
+
+            $request  = HTTPFactoryBuilder::requestFactory()
+                ->createRequest('POST', 'https://api.mistral.ai/v1/chat/completions')
+                ->withHeader('Authorization', sprintf('Bearer %s', (string) ForgeConfig::getSecretAsClearText(self::CONFIG_API_KEY)))
+                ->withHeader('Content-Type', 'application/json')
+                ->withHeader('Accept', 'application/json')
+                ->withBody(HTTPFactoryBuilder::streamFactory()->createStream(\json_encode(
+                    $completion,
+                    JSON_THROW_ON_ERROR,
+                )));
+            $response = $this->client->sendRequest($request);
+            if ($response->getStatusCode() === 401) {
+                return Result::err(AuthenticationFailure::build());
+            }
+            if ($response->getStatusCode() !== 200) {
+                return Result::err(Fault::fromMessage(sprintf('%s (%d)', $response->getReasonPhrase(), $response->getStatusCode())));
+            }
+            $mapper = ValinorMapperBuilderFactory::mapperBuilder()->allowSuperfluousKeys()->allowUndefinedValues()->mapper();
+            return Result::ok($mapper->map(CompletionResponse::class, new JsonSource($response->getBody()->getContents())));
+        } catch (ClientExceptionInterface $client_exception) {
+            return Result::err(Fault::fromThrowable($client_exception));
+        } catch (MappingError $error) {
+            return Result::err(UnexpectedCompletionResponseFault::build($error));
         } catch (\Exception) {
             return Result::err(Fault::fromMessage(dgettext('tuleap-ai', 'An error occurred while trying to access to API key in configuration.')));
         }

@@ -19,31 +19,30 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AI\Mistral;
 
-use Tuleap\Config\ConfigKey;
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeySecret;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Override;
 
-#[ConfigKeyCategory('AI')]
-interface MistralConnector
+/**
+ * @psalm-immutable
+ */
+final class ChunkContent implements \JsonSerializable
 {
-    #[ConfigKey('Mistral API Key')]
-    #[ConfigKeyString('')]
-    #[ConfigKeySecret]
-    final public const string CONFIG_API_KEY = 'mistral_api_key';
-
     /**
-     * @return Ok<null>|Err<Fault>
+     * @var TextChunk[]
      */
-    public function testConnection(): Ok|Err;
+    private array $chunks;
 
-    /**
-     * @return Ok<CompletionResponse>|Err<Fault>
-     */
-    public function sendCompletion(Completion $completion): Ok|Err;
+    public function __construct(TextChunk ...$chunks)
+    {
+        $this->chunks = $chunks;
+    }
+
+    #[Override]
+    public function jsonSerialize(): array
+    {
+        return $this->chunks;
+    }
 }
