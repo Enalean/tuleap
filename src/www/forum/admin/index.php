@@ -96,7 +96,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             if (
                 $request->valid($vForumName) &&
                 $request->valid($vDescription) &&
-                $request->valid($vIsPublic) &&
+                $request->valid($vIsPublic)
             ) {
                 $forum_name  = $request->get('forum_name');
                 $is_public   = $request->get('is_public');
