@@ -2226,7 +2226,6 @@ class Graph
             } else {
                 JpGraphError::RaiseL(25035, $this->img->a);//('You have enabled clipping. Cliping is only supported for graphs at 0 or 90 degrees rotation. Please adjust you current angle (='.$this->img->a.' degrees) or disable clipping.');
             }
-            $this->img->Destroy();
             $this->img->SetCanvasH($oldimage);
         }
 

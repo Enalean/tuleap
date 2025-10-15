@@ -278,7 +278,6 @@ class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
                 }
                 $destination = imagecreate((int) $thumbnail_width, (int) $thumbnail_height);
                 if ($destination === false) {
-                    imagedestroy($source);
                     return;
                 }
                 imagepalettecopy($destination, $source);
@@ -291,7 +290,6 @@ class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
                 }
                 $destination = imagecreatetruecolor((int) $thumbnail_width, (int) $thumbnail_height);
                 if ($destination === false) {
-                    imagedestroy($source);
                     return;
                 }
                 $this->doResizeAndStore(imagejpeg(...), $destination, $source, (int) $thumbnail_width, (int) $thumbnail_height, $size[0], $size[1]);
@@ -303,7 +301,6 @@ class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
                 }
                 $destination = imagecreatetruecolor((int) $thumbnail_width, (int) $thumbnail_height);
                 if ($destination === false) {
-                    imagedestroy($source);
                     return;
                 }
                 $this->doResizeAndStore(imagepng(...), $destination, $source, (int) $thumbnail_width, (int) $thumbnail_height, $size[0], $size[1]);
@@ -318,16 +315,12 @@ class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
     {
         $resize_success = imagecopyresized($destination, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $width, $height);
         if ($resize_success === false) {
-            imagedestroy($source);
-            imagedestroy($destination);
             return;
         }
         $thumbnail_path = $this->getThumbnailPath();
         if ($thumbnail_path !== null) {
             $store($destination, $thumbnail_path);
         }
-        imagedestroy($source);
-        imagedestroy($destination);
     }
 
     /**

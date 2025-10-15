@@ -1710,14 +1710,7 @@ class Image {
 
         $dst_img = @imagecreatetruecolor($this->original_width, $this->original_height);
         imagecopyresampled($dst_img, $this->img, 0, 0, 0, 0, $this->original_width, $this->original_height, $this->width, $this->height);
-        $this->Destroy();
         return $this->img = $dst_img;
-    }
-
-    // Clear resources used by image (this is normally not used since all resources are/should be
-    // returned when the script terminates
-    function Destroy() {
-        imagedestroy($this->img);
     }
 
     // Specify image format. Note depending on your installation

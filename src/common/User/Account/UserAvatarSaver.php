@@ -56,8 +56,6 @@ final readonly class UserAvatarSaver
             imagecopy($dst_im, $imageDesc, 0, 0, 0, 0, $x, $y);
 
             imagecopy($imageDesc, $dst_im, 0, 0, 0, 0, $x, $y);
-
-            imagedestroy($dst_im);
         });
         $avatar_path   = $user->getAvatarFilePath();
         $avatar_folder = dirname($avatar_path);
