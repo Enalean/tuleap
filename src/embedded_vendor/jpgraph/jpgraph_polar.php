@@ -913,7 +913,6 @@ class PolarGraph extends Graph
                     $this->img->plotwidth + 1
                 );
             }
-            $this->img->Destroy();
             $this->img->SetCanvasH($oldimage);
         }
 

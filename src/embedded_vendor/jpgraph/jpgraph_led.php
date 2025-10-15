@@ -255,7 +255,6 @@ class DigitalLED74
 
         $img =  new Image($width, $height, DEFAULT_GFORMAT, false);
         $img->Copy($simg->img, 0, 0, 0, 0, $width, $height, $swidth, $sheight);
-        $simg->Destroy();
         unset($simg);
         return $img;
     }
