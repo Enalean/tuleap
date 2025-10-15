@@ -88,27 +88,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Message not found'));
                 }
             }
-        } elseif ($request->existAndNonEmpty('add_forum')) {
-            /*
-                Adding forums to this group
-            */
-
-            if (
-                $request->valid($vForumName) &&
-                $request->valid($vDescription) &&
-                $request->valid($vIsPublic)
-            ) {
-                $forum_name  = $request->get('forum_name');
-                $is_public   = $request->get('is_public');
-                $description = $request->get('description');
-
-                if (
-                    (in_array($current_project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true) && $is_public == 0)
-                    || forum_can_be_public($current_project)
-                ) {
-                    $fid = forum_create_forum($group_id, $forum_name, $is_public, 1, $description);
-                }
-            }
         } elseif ($request->existAndNonEmpty('change_status')) {
             /*
                 Change a forum to public/private
@@ -166,42 +145,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     <INPUT TYPE="TEXT" NAME="msg_id" id="msg_id" VALUE=""><BR>
                 </div>
 			<INPUT CLASS="btn" TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '">
-			</FORM>';
-
-        forum_footer();
-    } elseif ($request->existAndNonEmpty('add_forum')) {
-        /*
-            Show the form for adding forums
-        */
-        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Add a Forum'))
-            ->inProject($current_project, Service::FORUM)
-            ->build());
-
-        $sql    = 'SELECT forum_name FROM forum_group_list WHERE group_id=' . db_ei($group_id);
-        $result = db_query($sql);
-        ShowResultSet($result, _('Existing Forums'), false);
-
-        echo '
-			<P>
-			<H2>' . _('Add a Forum') . '</H2>
-
-			<FORM METHOD="POST" ACTION="?">
-			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-			<INPUT TYPE="HIDDEN" NAME="add_forum" VALUE="y">
-			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
-			<B>' . _('Forum Name') . ':</B><BR>
-			<INPUT TYPE="TEXT" NAME="forum_name" VALUE="" SIZE="30" MAXLENGTH="50"><BR>
-			<B>' . _('Description') . ':</B><BR>
-                        <INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="255"><BR>';
-        if (in_array($current_project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
-            echo '<INPUT TYPE="HIDDEN" NAME="is_public" VALUE="0" CHECKED>';
-        } else {
-            echo '<P><B>' . _('Is Public?') . '</B><BR>
-                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> ' . $GLOBALS['Language']->getText('global', 'yes') . ' &nbsp;&nbsp;&nbsp;&nbsp;
-                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> ' . $GLOBALS['Language']->getText('global', 'no') . '<P>';
-        }
-                        echo '<P>
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . _('Add This Forum') . '">
 			</FORM>';
 
         forum_footer();
@@ -281,7 +224,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         echo '
 			<H2>' . _('Forum Administration') . '</H2>
 			<P>
-			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&add_forum=1">' . _('Add Forum') . '</A><BR>
 			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&delete=1">' . _('Delete Message') . '</A><BR>
 			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&change_status=1">' . _('Update Forum Info/Status') . '</A>';
 

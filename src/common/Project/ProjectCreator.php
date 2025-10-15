@@ -18,7 +18,6 @@
  */
 
 require_once __DIR__ . '/../../www/include/service.php';
-require_once __DIR__ . '/../../www/forum/forum_utils.php';
 require_once __DIR__ . '/../../www/admin/admin_utils.php';
 require_once __DIR__ . '/../../www/include/trove.php';
 require_once __DIR__ . '/../../common/wiki/lib/WikiCloner.php';
@@ -284,7 +283,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * Copy from template:
      * - activate the same services (using the ame server id and options)
      * - send message to the project requested (pepend on template values)
-     * - create forums with the same name and public status
      * - copy SVN settings and start .SVNAccessFile hisr=tiry
      * - add system references withut services
      * - copy ugroups and save mapping for further import
@@ -347,7 +345,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         if ($template_group !== null) {
             $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);
             $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
-            $this->initForumModuleFromTemplate($group_id, $template_group->getID());
 
             if ($legacy[Service::SVN] === true) {
                 $this->initSVNModuleFromTemplate($group_id, $template_group->getID());
@@ -428,12 +425,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function setProjectAdmin($group_id, PFUser $user)
     {
-        $result = db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags) VALUES ('
+        $result = db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags) VALUES ('
             . db_ei($user->getId()) . ','
             . db_ei($group_id) . ','
             . "'A'," // admin flags
             . '2,' // bug flags
-            . '2,' // forum flags
             . '2,' // project flags
             . '2,' // patch flags
             . '2,' // support flags
@@ -463,25 +459,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
         if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_msg_to_requester'));
-        }
-    }
-
-    /**
-     * protected for testing purpose
-     */
-    protected function initForumModuleFromTemplate($group_id, $template_id)
-    {
-        $sql    = 'SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=' . db_ei($template_id) . ' ';
-        $result = db_query($sql);
-        while ($arr = db_fetch_array($result)) {
-            $fid               = forum_create_forum(
-                $group_id,
-                $arr['forum_name'],
-                $arr['is_public'],
-                1,
-                $arr['description'],
-                $need_feedback = false
-            );
         }
     }
 

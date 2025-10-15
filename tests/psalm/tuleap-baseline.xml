@@ -38100,7 +38100,6 @@
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$reverse_label]]></code>
       <code><![CDATA[$reverse_label]]></code>
       <code><![CDATA[$shortname]]></code>
@@ -63409,6 +63408,9 @@
       <code><![CDATA[db_result($result, 0, 'thread_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'user_name')]]></code>
     </DeprecatedFunction>
+    <UndefinedFunction>
+      <code><![CDATA[forum_utils_access_allowed($forum_id)]]></code>
+    </UndefinedFunction>
   </file>
   <file src="src/common/Glyph/Glyph.php">
     <MissingParamType>
@@ -66987,7 +66989,6 @@
       <code><![CDATA[db_ei($p_data['status_id'])]]></code>
       <code><![CDATA[db_ei($project->getId())]]></code>
       <code><![CDATA[db_ei($template_id)]]></code>
-      <code><![CDATA[db_ei($template_id)]]></code>
       <code><![CDATA[db_ei($template_package_id)]]></code>
       <code><![CDATA[db_ei($template_project->getID())]]></code>
       <code><![CDATA[db_ei($user->getId())]]></code>
@@ -67003,7 +67004,6 @@
       <code><![CDATA[db_fetch_array($res)]]></code>
       <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_fetch_array($result)]]></code>
-      <code><![CDATA[db_fetch_array($result)]]></code>
       <code><![CDATA[db_insertid($rid)]]></code>
       <code><![CDATA[db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('" . db_ei($group_id) . "','" . db_es($this->project_manager->getProject($group_id)->getUnixName()) . "')")]]></code>
       <code><![CDATA[db_query($query)]]></code>
@@ -67012,13 +67012,11 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags) VALUES ('
+      <code><![CDATA[db_query('INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags) VALUES ('
             . db_ei($user->getId()) . ','
             . db_ei($group_id) . ','
             . "'A'," // admin flags
             . '2,' // bug flags
-            . '2,' // forum flags
             . '2,' // project flags
             . '2,' // patch flags
             . '2,' // support flags
@@ -67039,8 +67037,6 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$template_id]]></code>
       <code><![CDATA[$template_id]]></code>
       <code><![CDATA[$template_id]]></code>
       <code><![CDATA[$template_id]]></code>
@@ -67052,7 +67048,6 @@
       <code><![CDATA[fakeGroupIdIntoHTTPParams]]></code>
       <code><![CDATA[initFRSModuleFromTemplate]]></code>
       <code><![CDATA[initFileModule]]></code>
-      <code><![CDATA[initForumModuleFromTemplate]]></code>
       <code><![CDATA[initLayoutFromTemplate]]></code>
       <code><![CDATA[initSVNModuleFromTemplate]]></code>
       <code><![CDATA[initTrackerV3ModuleFromTemplate]]></code>
@@ -69857,7 +69852,6 @@
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[$background_color]]></code>
-      <code><![CDATA[$dst_im]]></code>
       <code><![CDATA[$dst_im]]></code>
       <code><![CDATA[$dst_im]]></code>
       <code><![CDATA[$dst_im]]></code>
@@ -84362,14 +84356,12 @@
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($is_public)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_es(htmlspecialchars($description))]]></code>
       <code><![CDATA[db_es(htmlspecialchars($forum_name))]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -84383,9 +84375,6 @@
       <code><![CDATA[db_result($result, 0, 'group_forum_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
     </DeprecatedFunction>
-    <ParseError>
-      <code><![CDATA[)]]></code>
-    </ParseError>
   </file>
   <file src="src/www/forum/forum.php">
     <DeprecatedFunction>
@@ -84423,7 +84412,6 @@
       <code><![CDATA[db_result($result, $row, 'body')]]></code>
       <code><![CDATA[db_result($result, $row, 'date')]]></code>
       <code><![CDATA[db_result($result, $row, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, $row, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $row, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $row, 'subject')]]></code>
       <code><![CDATA[db_result($result, $row, 'user_name')]]></code>
