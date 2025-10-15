@@ -36,7 +36,7 @@ use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
+final class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
 {
     use GlobalLanguageMock;
 
@@ -92,8 +92,8 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
 
         $snapshot_date = DateTimeFactory::one();
         for ($id = 1; $id < 10; $id++) {
-            $snapshot_date->modify('+1 day');
-            $baseline = BaselineFactory::fromProject($project)
+            $snapshot_date = $snapshot_date->modify('+1 day');
+            $baseline      = BaselineFactory::fromProject($project)
                 ->id($id)
                 ->snapshotDate($snapshot_date)
                 ->build();
