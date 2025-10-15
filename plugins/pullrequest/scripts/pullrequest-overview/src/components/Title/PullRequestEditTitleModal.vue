@@ -51,7 +51,7 @@
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="pullrequest-title">
                         {{ $gettext("Title") }}
-                        <i class="fa fa-asterisk"></i>
+                        <i class="fa-solid fa-asterisk"></i>
                     </label>
                     <input
                         id="pullrequest-title"

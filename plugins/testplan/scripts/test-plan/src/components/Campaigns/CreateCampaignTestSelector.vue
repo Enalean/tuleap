@@ -22,7 +22,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="new-campaign-tests-selector">
             {{ $gettext("Tests") }}
-            <i class="fa fa-asterisk" aria-hidden="true"></i>
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
         </label>
         <select
             id="new-campaign-tests-selector"

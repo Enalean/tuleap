@@ -16,7 +16,7 @@
             ng-click="kanban.openAddArtifactModal($event)"
             data-test="kanban-add-artifact"
         >
-            <i class="fa fa-plus tlp-button-icon"
+            <i class="fa-solid fa-plus tlp-button-icon"
                ng-class="{ 'fa-spinner fa-spin': kanban.is_artifact_modal_loading }"
             ></i>
             <span translate>Add new {{ kanban.kanban.tracker.item_name }}</span>
@@ -161,7 +161,7 @@
                   ng-click="kanban.toggleColumn(column); $event.stopPropagation();"
                   data-test="kanban-column-header-toggle"
             >
-                <i ng-class="column.is_open ? 'fa fa-minus-square' : 'fa fa-plus-square'" data-test="kanban-column-header-toggle-icon"></i>
+                <i ng-class="column.is_open ? 'fa fa-minus-square' : 'fa-solid fa-plus-square'" data-test="kanban-column-header-toggle-icon"></i>
             </span>
             <span class="kanban-column-header-wip-warning"
                   ng-if="column.is_open && kanban.isColumnWipReached(column)"

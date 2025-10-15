@@ -27,7 +27,7 @@
     >
         <label class="tlp-label" for="tracker-name">
             {{ $gettext("Name") }}
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <input
             type="text"

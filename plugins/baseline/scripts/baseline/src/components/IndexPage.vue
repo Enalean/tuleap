@@ -45,7 +45,7 @@
                             v-on:click="showNewBaselineModal()"
                             v-if="is_admin"
                         >
-                            <i class="fa fa-plus tlp-button-icon"></i>
+                            <i class="fa-solid fa-plus tlp-button-icon"></i>
                             {{ $gettext("New baseline") }}
                         </button>
                     </div>

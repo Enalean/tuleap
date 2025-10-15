@@ -178,7 +178,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             $html   .= '<div id="tracker_report_renderer_view_controls">';
             $html   .= '<div class="btn-group">';
             $html   .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
-            $html   .= '<i class="fa fa-plus"></i> ';
+            $html   .= '<i class="fa-solid fa-plus"></i> ';
             $html   .= dgettext('tuleap-graphontrackersv5', 'Add a Chart');
             $html   .= ' <span class="caret"></span>';
             $html   .= '</a>';

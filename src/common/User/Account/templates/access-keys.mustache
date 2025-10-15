@@ -21,7 +21,7 @@
                             data-test="generate-access-key-button"
                             data-target-modal-id="access-keys-generate-modal"
                     >
-                        <i class="tlp-button-icon fa fa-plus"></i> {{# gettext }}Generate new key{{/ gettext }}
+                        <i class="tlp-button-icon fa-solid fa-plus"></i> {{# gettext }}Generate new key{{/ gettext }}
                     </button>
                     {{# has_access_keys }}
                         <button type="submit"
@@ -133,7 +133,7 @@
             </div>
 
             <div class="tlp-form-element">
-                <label class="tlp-label">{{# gettext }}Access key scopes{{/ gettext }} <i class="fa fa-asterisk"></i></label>
+                <label class="tlp-label">{{# gettext }}Access key scopes{{/ gettext }} <i class="fa-solid fa-asterisk"></i></label>
                 {{# access_key_scopes }}
                     <label class="tlp-label tlp-checkbox">
                         <input type="checkbox" name="access-key-scopes[]" value="{{ identifier }}" data-test="user-prefs-personal-access-key-scope-option"> {{ name }}

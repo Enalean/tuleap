@@ -30,7 +30,7 @@
             <div class="tlp-form-element" data-test-type="input-error-message">
                 <label class="tlp-label" for="name">
                     {{ $gettext("Name") }}
-                    <i class="fa fa-asterisk"></i>
+                    <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input
                     ref="name-input"
@@ -46,7 +46,7 @@
             <div class="tlp-form-element">
                 <label class="tlp-label baseline-modal-milestone-label">
                     {{ $gettext("Milestone") }}
-                    <i class="fa fa-asterisk"></i>
+                    <i class="fa-solid fa-asterisk"></i>
                     <span
                         class="tlp-tooltip tlp-tooltip-right"
                         v-bind:data-tlp-tooltip="milestone_tooltip"

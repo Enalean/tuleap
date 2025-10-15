@@ -20,7 +20,7 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
     >
       <i
         aria-hidden="true"
-        class="fa fa-plus-square"
+        class="fa-solid fa-plus-square"
       />
     </button>
     

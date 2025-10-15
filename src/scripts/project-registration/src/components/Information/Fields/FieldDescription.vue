@@ -22,7 +22,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="field_description">
             <span>{{ $gettext("Description") }}</span>
-            <i class="fa fa-asterisk" v-if="root_store.is_description_required" />
+            <i class="fa-solid fa-asterisk" v-if="root_store.is_description_required" />
         </label>
 
         <textarea

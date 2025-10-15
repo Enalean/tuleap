@@ -79,7 +79,7 @@
                                 id="ad-service-submit"
                                 data-test="backlog-edit-global-settings"
                         >
-                            <i class="fa fa-save tlp-button-icon"></i> {{# dgettext }}tuleap-agiledashboard | Save{{/ dgettext }}
+                            <i class="fa-solid fa-save tlp-button-icon"></i> {{# dgettext }}tuleap-agiledashboard | Save{{/ dgettext }}
                         </button>
 
                         <button type="button"
@@ -88,7 +88,7 @@
                                 data-target-modal-id="scrum-explicit-backlog-switch-usage-modal"
                                 data-explicit-backlog-value="{{ explicit_top_backlog_enabled }}"
                         >
-                            <i class="fa fa-save tlp-button-icon"></i> {{# dgettext }}tuleap-agiledashboard | Save{{/ dgettext }}
+                            <i class="fa-solid fa-save tlp-button-icon"></i> {{# dgettext }}tuleap-agiledashboard | Save{{/ dgettext }}
                         </button>
 
                         {{> admin-scrum/switch-explicit-backlog-usage-modal }}
@@ -108,13 +108,13 @@
                                 id="planning_create"
                                 class="tlp-button-primary tlp-table-actions-element"
                             >
-                                <i class="fa fa-plus tlp-button-icon"></i> {{ create_planning }}
+                                <i class="fa-solid fa-plus tlp-button-icon"></i> {{ create_planning }}
                             </a>
                         {{/ does_configuration_allows_planning_creation }}
                         {{^ does_configuration_allows_planning_creation }}
                             <div id="agiledashboard-administration-cannot-create-planning-popover-trigger" data-placement="right">
                                 <button class="tlp-button-primary tlp-table-actions-element" disabled>
-                                    <i class="fa fa-plus tlp-button-icon"></i> {{ create_planning }}
+                                    <i class="fa-solid fa-plus tlp-button-icon"></i> {{ create_planning }}
                                 </button>
                             </div>
                             <section class="tlp-popover tlp-popover-info" id="agiledashboard-administration-cannot-create-planning-popover">

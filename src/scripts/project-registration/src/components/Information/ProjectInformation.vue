@@ -79,7 +79,7 @@
                                 for="project-information-input-privacy-list-label"
                             >
                                 <span>{{ $gettext("Visibility") }}</span>
-                                <i class="fa fa-asterisk"></i>
+                                <i class="fa-solid fa-asterisk"></i>
                             </label>
                             <project-information-input-privacy-list
                                 data-test="register-new-project-information-list"

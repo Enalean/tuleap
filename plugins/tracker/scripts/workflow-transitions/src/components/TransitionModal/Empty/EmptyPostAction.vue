@@ -28,7 +28,7 @@
             v-on:click="addNewPostAction()"
             data-test="add-post-action"
         >
-            <i class="fa fa-plus tlp-button-icon"></i>
+            <i class="fa-solid fa-plus tlp-button-icon"></i>
             <span>{{ $gettext("Add action") }}</span>
         </button>
     </section>

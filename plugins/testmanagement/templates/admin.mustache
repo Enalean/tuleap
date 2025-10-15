@@ -7,7 +7,7 @@
     <input type="hidden" name="action" value="admin-update"/>
     <div class="tlp-form-element">
       <label class="tlp-label" for="campaign_id">{{ campaigns }}
-        <i class="fa fa-asterisk"></i>
+        <i class="fa-solid fa-asterisk"></i>
       </label>
       <select class="list-picker-sb" name="campaign_tracker_id" id="campaign_id" required>
         {{# campaign_tracker_config}}
@@ -26,7 +26,7 @@
     <div class="tlp-form-element
             {{# is_definition_disabled }} tlp-form-element-disabled {{/ is_definition_disabled }}
         ">
-      <label class="tlp-label" for="test_definition_id">{{ definitions }} <i class="fa fa-asterisk"></i>
+      <label class="tlp-label" for="test_definition_id">{{ definitions }} <i class="fa-solid fa-asterisk"></i>
       </label>
 
       <select class="list-picker-sb" name="test_definition_tracker_id" id="test_definition_id" required
@@ -58,7 +58,7 @@
             {{# is_execution_disabled }} tlp-form-element-disabled {{/ is_execution_disabled }}
         ">
       <label class="tlp-label" for="test_execution_id">{{ executions }}
-        <i class="fa fa-asterisk"></i>
+        <i class="fa-solid fa-asterisk"></i>
       </label>
       <select class="list-picker-sb" name="test_execution_tracker_id" id="test_execution_id" required
               {{# is_execution_disabled }}disabled{{/ is_execution_disabled }}

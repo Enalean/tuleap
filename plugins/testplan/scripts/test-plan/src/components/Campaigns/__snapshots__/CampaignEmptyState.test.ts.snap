@@ -20,7 +20,7 @@ exports[`CampaignEmptyState Displays empty state with new campaign creation butt
     type="button"
   >
     <i
-      class="fa fa-plus tlp-button-icon"
+      class="fa-solid fa-plus tlp-button-icon"
     />
      Create new campaign
   </button>

@@ -24,7 +24,7 @@
         >
             <label class="tlp-label">
                 {{ $gettext("Project") }}
-                <i class="fa fa-asterisk"></i>
+                <i class="fa-solid fa-asterisk"></i>
             </label>
             <project-timetracking-project-option
                 v-bind:projects="project_timetracking_store.projects"
@@ -36,7 +36,7 @@
         >
             <label class="tlp-label">
                 {{ $gettext("Tracker") }}
-                <i class="fa fa-asterisk"></i>
+                <i class="fa-solid fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-append">
                 <project-timetracking-trackers-options v-on:input="trackerSelected($event)" />
@@ -54,7 +54,7 @@
                     ></i>
                     <i
                         v-else-if="is_tracker_available"
-                        class="tlp-button-icon fa fa-plus"
+                        class="tlp-button-icon fa-solid fa-plus"
                         data-test="icon-plus"
                     ></i>
                     <i v-else class="tlp-button-icon fa fa-ban" data-test="icon-ban"></i>

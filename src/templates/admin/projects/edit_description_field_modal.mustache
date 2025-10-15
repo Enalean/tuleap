@@ -23,7 +23,7 @@
             <input type="hidden" name="form_desc_id" value="{{ id }}">
 
             <div class="tlp-form-element">
-                <label class="tlp-label" for="edit-field-form-name-{{ id }}">{{ modal_field_form_name_label }} <i class="fa fa-asterisk"></i></label>
+                <label class="tlp-label" for="edit-field-form-name-{{ id }}">{{ modal_field_form_name_label }} <i class="fa-solid fa-asterisk"></i></label>
                 <input type="text"
                     id="edit-field-form-name-{{ id }}"
                     class="tlp-input"
@@ -35,14 +35,14 @@
                 >
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="edit-field-form-type-{{ id }}">{{ modal_field_form_type_label }} <i class="fa fa-asterisk"></i></label>
+                <label class="tlp-label" for="edit-field-form-type-{{ id }}">{{ modal_field_form_type_label }} <i class="fa-solid fa-asterisk"></i></label>
                 <select class="tlp-select tlp-select-adjusted" id="edit-field-form-type-{{ id }}" name="form_type">
                     <option value="line" {{# type_is_line}}selected{{/ type_is_line }}>{{ modal_field_form_type_label_line }}</option>
                     <option value="text" {{^ type_is_line}}selected{{/ type_is_line }}>{{ modal_field_form_type_label_text }}</option>
                 </select>
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="edit-field-form-rank-{{ id }}">{{ modal_field_form_rank_label }} <i class="fa fa-asterisk"></i></label>
+                <label class="tlp-label" for="edit-field-form-rank-{{ id }}">{{ modal_field_form_rank_label }} <i class="fa-solid fa-asterisk"></i></label>
                 <input type="text"
                     class="tlp-input"
                     id="edit-field-form-rank-{{ id }}"
@@ -74,7 +74,7 @@
     <div class="tlp-modal-footer">
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ edit_modal_cancel }}</button>
         <button type="submit" class="tlp-button-primary tlp-modal-action">
-            <i class="fa fa-save tlp-button-icon"></i> {{ edit_modal_submit }}
+            <i class="fa-solid fa-save tlp-button-icon"></i> {{ edit_modal_submit }}
         </button>
     </div>
 </form>

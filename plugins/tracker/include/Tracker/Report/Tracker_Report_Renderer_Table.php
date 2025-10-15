@@ -569,7 +569,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items            = ['export' => ''];
         $my_items['export'] .= '<div class="btn-group">';
         $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
-        $my_items['export'] .= '<i class="fa fa-download"></i> ';
+        $my_items['export'] .= '<i class="fa-solid fa-download"></i> ';
         $my_items['export'] .= dgettext('tuleap-tracker', 'Export');
         $my_items['export'] .= ' <span class="caret"></span>';
         $my_items['export'] .= '</a>';
@@ -1603,7 +1603,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             class="btn btn-mini dropdown-toggle"
             title="' . dgettext('tuleap-tracker', 'Toggle an aggregate function') . '"
             data-toggle="dropdown">';
-        $html      .= '<i class="fa fa-plus"></i> ';
+        $html      .= '<i class="fa-solid fa-plus"></i> ';
         $html      .= '<span class="caret"></span>';
         $html      .= '</a>';
         $html      .= '<ul class="dropdown-menu ' . ($is_first ? '' : 'pull-right') . '">';

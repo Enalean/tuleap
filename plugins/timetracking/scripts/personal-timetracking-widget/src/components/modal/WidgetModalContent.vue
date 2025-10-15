@@ -30,7 +30,7 @@
                     data-test="button-set-add-mode"
                     v-on:click="personal_store.setAddMode(!personal_store.is_add_mode)"
                 >
-                    <i class="fa fa-plus tlp-button-icon"></i>
+                    <i class="fa-solid fa-plus tlp-button-icon"></i>
                     {{ $gettext("Add") }}
                 </button>
             </div>

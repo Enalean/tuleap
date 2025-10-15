@@ -30,7 +30,7 @@
             data-test="new-campaign"
             v-on:click="show_create_modal"
         >
-            <i class="fa fa-plus tlp-button-icon"></i>
+            <i class="fa-solid fa-plus tlp-button-icon"></i>
             {{ $gettext("New campaign") }}
         </button>
     </div>

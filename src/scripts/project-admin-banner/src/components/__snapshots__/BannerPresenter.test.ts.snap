@@ -107,7 +107,7 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
     >
       <!--v-if-->
       <i
-        class="tlp-button-icon fa fa-save"
+        class="tlp-button-icon fa-solid fa-save"
       />
       Save the configuration
     </button>
@@ -163,7 +163,7 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
     >
       <!--v-if-->
       <i
-        class="tlp-button-icon fa fa-save"
+        class="tlp-button-icon fa-solid fa-save"
       />
       Save the configuration
     </button>

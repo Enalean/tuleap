@@ -21,7 +21,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="id">
             {{ $gettext("Short name") }}
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <input
             type="text"

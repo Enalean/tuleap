@@ -22,7 +22,7 @@
     <div class="tlp-form-element" v-if="is_required">
         <label class="tlp-label" v-bind:for="`input-${field.group_desc_id}`">
             {{ field.desc_name }}
-            <i class="fa fa-asterisk" data-test="asterisk"></i>
+            <i class="fa-solid fa-asterisk" data-test="asterisk"></i>
         </label>
         <input
             type="text"

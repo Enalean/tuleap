@@ -34,7 +34,7 @@
                     v-on:click="expandSwimlane(swimlane)"
                     data-test="swimlane-toggle"
                 >
-                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                    <i class="fa-solid fa-plus-square" aria-hidden="true"></i>
                 </button>
             </template>
             <template v-slot:default>

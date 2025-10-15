@@ -23,7 +23,7 @@
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label v-bind:for="job_url_input_id" class="tlp-label">
                 {{ $gettext("Job url") }}
-                <i class="fa fa-asterisk"></i>
+                <i class="fa-solid fa-asterisk"></i>
             </label>
             <input
                 v-bind:id="job_url_input_id"

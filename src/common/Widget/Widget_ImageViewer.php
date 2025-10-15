@@ -27,7 +27,7 @@ use Tuleap\Project\MappingRegistry;
 * Display an image
 *
 */
-class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public ?string $image_title = null;
     public ?string $image_url   = null;
@@ -80,7 +80,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="url-' . $widget_id . '">
-                    URL <i class="fa fa-asterisk"></i>
+                    URL <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="text"
                        class="tlp-input"
@@ -112,7 +112,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="widget-imageviewer-install-url">
-                    URL <i class="fa fa-asterisk"></i>
+                    URL <i class="fa-solid fa-asterisk"></i>
                 </label>
                 <input type="text"
                        class="tlp-input"

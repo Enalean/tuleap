@@ -56,7 +56,7 @@
                     v-if="loading"
                     class="tlp-button-icon fa fa-fw fa-spin fa-circle fa-circle-o-notch"
                 ></i>
-                <i v-if="!loading" class="tlp-button-icon fa fa-save"></i
+                <i v-if="!loading" class="tlp-button-icon fa-solid fa-save"></i
                 >{{ $gettext("Save the configuration") }}
             </button>
         </div>
