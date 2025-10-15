@@ -26,6 +26,7 @@
         v-bind:value="input_value"
         v-on:input="onInput"
         v-bind:disabled="disabled"
+        data-test="int-input"
         required
     />
 </template>
@@ -47,7 +48,7 @@ export default {
             if (isNaN(int_value)) {
                 return;
             }
-            return this.$emit("input", int_value);
+            this.$emit("new-input-value", int_value);
         },
     },
 };
