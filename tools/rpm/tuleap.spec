@@ -526,6 +526,12 @@ Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-t
 %description plugin-graphs
 %{summary}.
 
+%package plugin-ai
+Summary: AI Connectors
+Group: Development/Tools
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
+%description plugin-ai
+%{summary}.
 
 %endif
 
@@ -612,6 +618,7 @@ done
 %if %{with experimental}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphs
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ai
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -1442,6 +1449,10 @@ fi
 %files plugin-graphs
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/graphs
+
+%files plugin-ai
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/ai
 
 %endif
 
