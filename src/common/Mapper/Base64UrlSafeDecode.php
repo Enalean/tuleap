@@ -32,7 +32,9 @@ use function Psl\Encoding\Base64\decode as base64_decode;
 final class Base64UrlSafeDecode
 {
     /**
-     * @param callable(mixed): mixed $next
+     * @template T
+     * @param callable(mixed): T $next
+     * @return T
      */
     public function map(string $value, callable $next): mixed
     {
