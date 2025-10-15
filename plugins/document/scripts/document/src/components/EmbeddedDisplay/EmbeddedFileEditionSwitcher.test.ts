@@ -27,7 +27,7 @@ import { EMBEDDED_FILE_DISPLAY_LARGE, EMBEDDED_FILE_DISPLAY_NARROW } from "../..
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { PROJECT, USER_ID } from "../../configuration-keys";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
-import * as display_preferences from "../../helpers/embedded-file-display-preferences";
+import * as display_preferences from "../../helpers/preferences/embedded-file-display-preferences";
 import { Option } from "@tuleap/option";
 
 describe("EmbeddedFileEditionSwitcher", () => {

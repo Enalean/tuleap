@@ -33,7 +33,7 @@ import { EMBEDDED_FILE_DISPLAY_LARGE } from "../../type";
 import * as VersionRestQuerier from "../../api/version-rest-querier";
 import { PROJECT, USER_ID } from "../../configuration-keys";
 import { ProjectBuilder } from "../../../tests/builders/ProjectBuilder";
-import * as display_preferences from "../../helpers/embedded-file-display-preferences";
+import * as display_preferences from "../../helpers/preferences/embedded-file-display-preferences";
 import { Option } from "@tuleap/option";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {

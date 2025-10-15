@@ -18,57 +18,62 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import * as tlp_fetch from "@tuleap/tlp-fetch";
 import * as fetch_result from "@tuleap/fetch-result";
 
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
 import {
-    deleteUserPreferenciesForFolderInProject,
+    deleteUserPreferencesForFolderInProject,
     getPreferenceForEmbeddedDisplay,
-    patchUserPreferenciesForFolderInProject,
+    patchUserPreferencesForFolderInProject,
     removeUserPreferenceForEmbeddedDisplay,
     setNarrowModeForEmbeddedDisplay,
-} from "./preferencies-rest-querier";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+} from "./preferences-rest-querier";
 import { EMBEDDED_FILE_DISPLAY_LARGE, EMBEDDED_FILE_DISPLAY_NARROW } from "../type";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import { uri } from "@tuleap/fetch-result";
 
 describe("User preferences", () => {
     const user_id = 102;
     const project_id = 110;
     const folder_id = 30;
     const preference_key = "plugin_docman_hide_110_30";
-    const headers = {
-        headers: {
-            "Content-Type": "application/json",
-        },
-    };
 
-    describe("patchUserPreferenciesForFolderInProject() -", () => {
+    describe("patchUserPreferencesForFolderInProject() -", () => {
         it("should set the current user's preferencies for a given folder on 'expanded'", async () => {
-            const tlpPatch = vi.spyOn(tlp_fetch, "patch");
-            mockFetchSuccess(tlpPatch);
-            await patchUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
+            const patchResponse = vi.spyOn(fetch_result, "patchResponse");
+            patchResponse.mockReturnValue(okAsync({} as Response));
+            const result = await patchUserPreferencesForFolderInProject(
+                user_id,
+                project_id,
+                folder_id,
+            );
 
-            expect(tlpPatch).toHaveBeenCalledWith("/api/users/102/preferences", {
-                ...headers,
-                body: JSON.stringify({
+            expect(result.isOk()).toBe(true);
+            expect(patchResponse).toHaveBeenCalledWith(
+                uri`/api/users/102/preferences`,
+                {},
+                {
                     key: preference_key,
                     value: DOCMAN_FOLDER_EXPANDED_VALUE,
-                }),
-            });
+                },
+            );
         });
     });
 
-    describe("deleteUserPreferenciesForFolderInProject() -", () => {
+    describe("deleteUserPreferencesForFolderInProject() -", () => {
         it("should delete the current user's preferencies for a given folder (e.g collapsed)", async () => {
-            const tlpDel = vi.spyOn(tlp_fetch, "del");
-            mockFetchSuccess(tlpDel);
-            await deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
+            const del = vi.spyOn(fetch_result, "del");
+            del.mockReturnValue(okAsync({} as Response));
+            const result = await deleteUserPreferencesForFolderInProject(
+                user_id,
+                project_id,
+                folder_id,
+            );
 
-            expect(tlpDel).toHaveBeenCalledWith(
-                "/api/users/102/preferences?key=plugin_docman_hide_110_30",
+            expect(result.isOk()).toBe(true);
+            expect(del).toHaveBeenCalledWith(
+                uri`/api/users/102/preferences?key=plugin_docman_hide_110_30`,
             );
         });
     });

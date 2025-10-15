@@ -18,43 +18,35 @@
  */
 
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
-import { del, patch } from "@tuleap/tlp-fetch";
-import { del as del_result, getJSON, patchResponse, uri } from "@tuleap/fetch-result";
+import { del, getJSON, patchResponse, uri } from "@tuleap/fetch-result";
 import type { EmbeddedFileDisplayPreference } from "../type";
 import { EMBEDDED_FILE_DISPLAY_LARGE, EMBEDDED_FILE_DISPLAY_NARROW } from "../type";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 
-export async function patchUserPreferenciesForFolderInProject(
+export function patchUserPreferencesForFolderInProject(
     user_id: number,
     project_id: number,
     folder_id: number,
-): Promise<void> {
-    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+): ResultAsync<Response, Fault> {
+    return patchResponse(
+        uri`/api/users/${user_id}/preferences`,
+        {},
+        {
             key: `plugin_docman_hide_${project_id}_${folder_id}`,
             value: DOCMAN_FOLDER_EXPANDED_VALUE,
-        }),
-    });
-}
-
-export async function deleteUserPreference(user_id: number, key: string): Promise<void> {
-    await del(
-        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`,
+        },
     );
 }
 
-export async function deleteUserPreferenciesForFolderInProject(
+export function deleteUserPreferencesForFolderInProject(
     user_id: number,
     project_id: number,
     folder_id: number,
-): Promise<void> {
+): ResultAsync<Response, Fault> {
     const key = `plugin_docman_hide_${project_id}_${folder_id}`;
 
-    await deleteUserPreference(user_id, key);
+    return del(uri`/api/users/${user_id}/preferences?key=${key}`);
 }
 
 export function setNarrowModeForEmbeddedDisplay(
@@ -78,7 +70,7 @@ export function removeUserPreferenceForEmbeddedDisplay(
     document_id: number,
 ): ResultAsync<typeof EMBEDDED_FILE_DISPLAY_LARGE, Fault> {
     const key = `plugin_docman_display_embedded_${project_id}_${document_id}`;
-    return del_result(uri`/api/users/${user_id}/preferences?key=${key}`).map(
+    return del(uri`/api/users/${user_id}/preferences?key=${key}`).map(
         () => EMBEDDED_FILE_DISPLAY_LARGE,
     );
 }

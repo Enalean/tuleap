@@ -22,14 +22,14 @@ import type {
     EmbeddedFileDisplayPreference,
     Item,
     RootState,
-} from "../type";
+} from "../../type";
 import type { ActionContext } from "vuex";
 import { Option } from "@tuleap/option";
 import {
     getPreferenceForEmbeddedDisplay,
     removeUserPreferenceForEmbeddedDisplay,
     setNarrowModeForEmbeddedDisplay,
-} from "../api/preferencies-rest-querier";
+} from "../../api/preferences-rest-querier";
 
 export function getEmbeddedFileDisplayPreference(
     context: ActionContext<RootState, RootState>,

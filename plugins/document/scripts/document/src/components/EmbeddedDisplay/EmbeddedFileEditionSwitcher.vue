@@ -71,7 +71,7 @@ import { PROJECT, USER_ID } from "../../configuration-keys";
 import {
     displayEmbeddedInLargeMode,
     displayEmbeddedInNarrowMode,
-} from "../../helpers/embedded-file-display-preferences";
+} from "../../helpers/preferences/embedded-file-display-preferences";
 
 const $store = useStore();
 
