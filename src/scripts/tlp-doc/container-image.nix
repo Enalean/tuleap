@@ -32,7 +32,8 @@ let
       }
     }
   '';
-in pkgs.dockerTools.buildLayeredImage {
+in
+pkgs.dockerTools.buildLayeredImage {
   name = "tlp-doc";
   tag = "latest";
   contents = [
@@ -45,9 +46,13 @@ in pkgs.dockerTools.buildLayeredImage {
   '';
 
   config = {
-    Cmd = [ "${pkgs.nginx}/bin/nginx" "-c" nginxConf ];
+    Cmd = [
+      "${pkgs.nginx}/bin/nginx"
+      "-c"
+      nginxConf
+    ];
     ExposedPorts = {
-      "${nginxPort}/tcp" = {};
+      "${nginxPort}/tcp" = { };
     };
   };
 }

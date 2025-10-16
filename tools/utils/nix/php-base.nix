@@ -1,5 +1,6 @@
 { pkgs }:
 
 let
-  phpBase = pkgs.php84.withExtensions ({ all, ... }: []);
-in phpBase
+  phpBase = pkgs.php84.withExtensions ({ all, ... }: [ ]);
+in
+phpBase

@@ -1,5 +1,5 @@
 {
-  pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) {},
+  pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) { },
   nixpkgsPinEpoch ? (import ../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; },
 }:
 
@@ -7,10 +7,14 @@ let
   name = "viewvc-theme-tuleap";
   src = ./viewvc-theme-tuleap;
   tuleapVersion = builtins.readFile ../../VERSION;
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   inherit name src;
 
-  nativeBuildInputs = [ pkgs.rpm pkgs.file ];
+  nativeBuildInputs = [
+    pkgs.rpm
+    pkgs.file
+  ];
 
   dontConfigure = true;
 

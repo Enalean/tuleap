@@ -1,4 +1,8 @@
-{ stdenvNoCC, fetchurl, nodejs }:
+{
+  stdenvNoCC,
+  fetchurl,
+  nodejs,
+}:
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "pnpm";

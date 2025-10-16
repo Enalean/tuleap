@@ -1,17 +1,21 @@
 {
-  pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) {}
+  pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) { },
 }:
 
 let
   tuleapVersion = builtins.readFile ../../VERSION;
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-realtime-rpm-package";
   srcs = [
     ./tuleap-realtime/dist/tuleap-realtime.js
     ./tuleap-realtime/packaging/tuleap-realtime.systemd-service
   ];
 
-  nativeBuildInputs = [ pkgs.rpm pkgs.jq ];
+  nativeBuildInputs = [
+    pkgs.rpm
+    pkgs.jq
+  ];
 
   dontConfigure = true;
 

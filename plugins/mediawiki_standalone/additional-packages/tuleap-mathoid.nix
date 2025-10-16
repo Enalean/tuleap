@@ -1,25 +1,29 @@
-{ pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) {} }:
+{
+  pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) { },
+}:
 let
   mathoidNpmPackage = pkgs.buildNpmPackage rec {
     name = "mathoid";
 
-    src = pkgs.nix-gitignore.gitignoreSourcePure
-      ''
-      *
-      !*.js
-      !package.json
-      !package-lock.json
-      !lib/
-      !routes/
-      ''
-      (pkgs.fetchFromGitLab {
-        domain = "gitlab.wikimedia.org";
-        owner = "repos";
-        repo = "mediawiki/services/mathoid";
-        rev = "221d528610a851c458db8a177e9e2803209dd43c";
-        hash = "sha256-zjCgGkEOq+oidTBPBsmNH8an7ADGOrxXn4lfxGjFeTk=";
-      })
-    ;
+    src =
+      pkgs.nix-gitignore.gitignoreSourcePure
+        ''
+          *
+          !*.js
+          !package.json
+          !package-lock.json
+          !lib/
+          !routes/
+        ''
+        (
+          pkgs.fetchFromGitLab {
+            domain = "gitlab.wikimedia.org";
+            owner = "repos";
+            repo = "mediawiki/services/mathoid";
+            rev = "221d528610a851c458db8a177e9e2803209dd43c";
+            hash = "sha256-zjCgGkEOq+oidTBPBsmNH8an7ADGOrxXn4lfxGjFeTk=";
+          }
+        );
 
     patches = [
       ./mediawiki-mathoid/cleanup-mathoid-deps.patch
@@ -47,7 +51,10 @@ let
   mathoidTarball = pkgs.stdenvNoCC.mkDerivation rec {
     name = "tuleap-mathoid.tar";
 
-    srcs = [ mathoidNpmPackage ./mediawiki-mathoid/config.yaml ];
+    srcs = [
+      mathoidNpmPackage
+      ./mediawiki-mathoid/config.yaml
+    ];
 
     unpackPhase = unpackPhaseCopyMultipleSrcs;
 
@@ -60,12 +67,19 @@ let
     '';
   };
   tuleapVersion = builtins.readFile ../../../VERSION;
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-mathoid";
 
-  srcs = [ mathoidTarball ./tuleap-mathoid.spec ];
+  srcs = [
+    mathoidTarball
+    ./tuleap-mathoid.spec
+  ];
 
-  nativeBuildInputs = [ pkgs.rpm pkgs.file ];
+  nativeBuildInputs = [
+    pkgs.rpm
+    pkgs.file
+  ];
 
   unpackPhase = unpackPhaseCopyMultipleSrcs;
 
@@ -83,14 +97,14 @@ in pkgs.stdenvNoCC.mkDerivation {
       --define "_rpmdir $(pwd)/RPMS" \
       -bb tuleap-mathoid.spec
     runHook postBuild
- '';
+  '';
 
- installPhase = ''
-   runHook preInstall
-   mkdir $out/
-   mv RPMS/x86_64/*.rpm $out/
-   runHook postInstall
- '';
+  installPhase = ''
+    runHook preInstall
+    mkdir $out/
+    mv RPMS/x86_64/*.rpm $out/
+    runHook postInstall
+  '';
 
- dontFixUp = true;
+  dontFixUp = true;
 }

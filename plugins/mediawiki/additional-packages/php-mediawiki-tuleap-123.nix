@@ -1,4 +1,6 @@
-{ pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) {} }:
+{
+  pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) { },
+}:
 
 pkgs.stdenvNoCC.mkDerivation {
   name = "php-mediawiki-tuleap";
@@ -8,7 +10,10 @@ pkgs.stdenvNoCC.mkDerivation {
     sha256 = "sha256-MQULpio5cfsqbT5zLqNC0ReX8EjA+Xsh6vgeA/xXjqw=";
   };
 
-  nativeBuildInputs = [ pkgs.rpm pkgs.file ];
+  nativeBuildInputs = [
+    pkgs.rpm
+    pkgs.file
+  ];
 
   dontConfigure = true;
 

@@ -1,14 +1,16 @@
-{ pkgs ? (import ../utils/nix/pinned-nixpkgs.nix) { }
-, tuleapSourceTarballPath
-, tuleapOS
-, tuleapRelease
-, withExperimental
+{
+  pkgs ? (import ../utils/nix/pinned-nixpkgs.nix) { },
+  tuleapSourceTarballPath,
+  tuleapOS,
+  tuleapRelease,
+  withExperimental,
 }:
 
 let
   tuleapVersion = pkgs.lib.strings.fileContents ../../VERSION;
   tuleapDist = tuleapOS;
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-rpms";
 
   src = [ tuleapSourceTarballPath ];

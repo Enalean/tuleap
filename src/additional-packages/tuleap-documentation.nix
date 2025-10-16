@@ -1,17 +1,22 @@
-{ pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) {} }:
+{
+  pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) { },
+}:
 
 let
   tuleapVersion = pkgs.lib.strings.fileContents ../../VERSION;
-  buildTuleapDocumentation = lang:
+  buildTuleapDocumentation =
+    lang:
     let
-      branchName = if (builtins.match "^[0-9]+\.[0-9]+\.99.*$" tuleapVersion != null) then "master" else tuleapVersion;
+      branchName =
+        if (builtins.match "^[0-9]+\.[0-9]+\.99.*$" tuleapVersion != null) then "master" else tuleapVersion;
       src = builtins.fetchTarball "https://github.com/Enalean/tuleap-documentation-${lang}/archive/refs/heads/${branchName}.tar.gz";
-    in pkgs.stdenvNoCC.mkDerivation {
+    in
+    pkgs.stdenvNoCC.mkDerivation {
       name = "tuleap-documentation-${lang}";
 
       inherit src;
 
-      nativeBuildInputs = (import "${src}/build-support/build-tools.nix" { } );
+      nativeBuildInputs = (import "${src}/build-support/build-tools.nix" { });
 
       buildPhase = ''
         runHook preBuild
@@ -53,7 +58,8 @@ let
       runHook postInstall
     '';
   };
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-documentation-rpm";
   src = documentationTarball;
 

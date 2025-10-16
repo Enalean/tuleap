@@ -1,14 +1,21 @@
 {
-  pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) {},
-  nixpkgsPinEpoch ? (import ../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; }
+  pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) { },
+  nixpkgsPinEpoch ? (import ../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; },
 }:
 
 let
   baseArchTarget = "x86_64";
   buildTargetRust = "${baseArchTarget}-unknown-linux-gnu";
   rust = pkgs.rust-bin.stable.latest.minimal.override {
-    targets = [ "wasm32-wasip1" buildTargetRust ];
-    extensions = [ "cargo" "rustc" "clippy" ];
+    targets = [
+      "wasm32-wasip1"
+      buildTargetRust
+    ];
+    extensions = [
+      "cargo"
+      "rustc"
+      "clippy"
+    ];
   };
   tuleapWasmtimeWrapperLib = pkgs.stdenvNoCC.mkDerivation rec {
     name = "tuleap-wasmtime-wrapper-lib";
@@ -24,7 +31,10 @@ let
     nativeBuildInputs = [
       pkgs.rustPlatform.cargoSetupHook
       rust
-      (import ./wasmtime-wrapper-lib/build-tools/cargo-zig-wrapper.nix { inherit pkgs; baseArch = baseArchTarget; })
+      (import ./wasmtime-wrapper-lib/build-tools/cargo-zig-wrapper.nix {
+        inherit pkgs;
+        baseArch = baseArchTarget;
+      })
     ];
 
     buildPhase = ''
@@ -51,7 +61,8 @@ let
     '';
   };
   tuleapVersion = builtins.readFile ../../VERSION;
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-wasmtime-wrapper-lib-rpm-package";
 
   nativeBuildInputs = [ pkgs.rpm ];

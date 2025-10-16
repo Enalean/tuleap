@@ -1,4 +1,6 @@
-{ pkgs ? (import ../nix/pinned-nixpkgs.nix) { } }:
+{
+  pkgs ? (import ../nix/pinned-nixpkgs.nix) { },
+}:
 
 pkgs.buildGoModule {
   name = "pre-receive-tuleap-git-repo-validation";

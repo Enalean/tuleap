@@ -1,8 +1,12 @@
-{ pkgs ? (import ../utils/nix/pinned-nixpkgs.nix) {}, gitignoreNix ? (import ../utils/nix/pinned-hercules-gitignore.nix { inherit pkgs; } ) }:
+{
+  pkgs ? (import ../utils/nix/pinned-nixpkgs.nix) { },
+  gitignoreNix ? (import ../utils/nix/pinned-hercules-gitignore.nix { inherit pkgs; }),
+}:
 
 let
   tuleapVersion = pkgs.lib.strings.fileContents ../../VERSION;
-  sourceFilter = src:
+  sourceFilter =
+    src:
     let
       # IMPORTANT: use a let binding like this to memoize info about the git directories.
       srcIgnored = gitignoreNix.gitignoreFilterWith {
@@ -55,29 +59,39 @@ let
         '';
       };
       # Clean files src/scripts/<name>/(not "frontend_assets" directory)
-      cleanCoreScriptsSubAppCode = path: type:
-              ! ( ( ( baseNameOf path ) != "frontend-assets" ) &&
-                  ( ( baseNameOf ( dirOf ( dirOf path ) ) ) == "scripts" ) &&
-                  ( ( baseNameOf ( dirOf ( dirOf ( dirOf path ) ) ) ) == "src" )
-                );
+      cleanCoreScriptsSubAppCode =
+        path: type:
+        !(
+          ((baseNameOf path) != "frontend-assets")
+          && ((baseNameOf (dirOf (dirOf path))) == "scripts")
+          && ((baseNameOf (dirOf (dirOf (dirOf path)))) == "src")
+        );
       # Clean files in plugins/<name>/scripts/
-      cleanPluginScriptsFiles = path: type:
-        ! ( ( type != "directory" ) &&
-            ( ( baseNameOf ( dirOf path ) ) == "scripts" ) &&
-            ( ( baseNameOf ( dirOf ( dirOf ( dirOf path ) ) ) ) == "plugins" )
-          );
+      cleanPluginScriptsFiles =
+        path: type:
+        !(
+          (type != "directory")
+          && ((baseNameOf (dirOf path)) == "scripts")
+          && ((baseNameOf (dirOf (dirOf (dirOf path)))) == "plugins")
+        );
       # Clean plugins/<name>/scripts/<sub_app_name>/(not "frontend_assets" directory)
-      cleanPluginScriptsSubAppCode = path: type:
-        ! ( ( ( baseNameOf path ) != "frontend-assets" ) &&
-            ( ( baseNameOf ( dirOf ( dirOf path ) ) ) == "scripts" ) &&
-            ( ( baseNameOf ( dirOf ( dirOf ( dirOf ( dirOf path ) ) ) ) ) == "plugins" )
-          );
+      cleanPluginScriptsSubAppCode =
+        path: type:
+        !(
+          ((baseNameOf path) != "frontend-assets")
+          && ((baseNameOf (dirOf (dirOf path))) == "scripts")
+          && ((baseNameOf (dirOf (dirOf (dirOf (dirOf path))))) == "plugins")
+        );
     in
-      path: type:
-        srcIgnored path type && cleanCoreScriptsSubAppCode path type && cleanPluginScriptsSubAppCode path type && cleanPluginScriptsFiles path type;
+    path: type:
+    srcIgnored path type
+    && cleanCoreScriptsSubAppCode path type
+    && cleanPluginScriptsSubAppCode path type
+    && cleanPluginScriptsFiles path type;
   name = "tuleap-${tuleapVersion}-tarball";
   rootFolderSrc = ../..;
-in pkgs.stdenv.mkDerivation {
+in
+pkgs.stdenv.mkDerivation {
   inherit name;
   src = pkgs.lib.cleanSourceWith {
     filter = sourceFilter rootFolderSrc;

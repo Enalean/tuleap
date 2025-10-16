@@ -1,4 +1,6 @@
-{ pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) {} }:
+{
+  pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) { },
+}:
 
 pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-community-release";
@@ -9,7 +11,10 @@ pkgs.stdenvNoCC.mkDerivation {
     ../../VERSION
   ];
 
-  nativeBuildInputs = [ pkgs.rpm pkgs.file ];
+  nativeBuildInputs = [
+    pkgs.rpm
+    pkgs.file
+  ];
 
   dontConfigure = true;
 
@@ -22,15 +27,15 @@ pkgs.stdenvNoCC.mkDerivation {
   '';
 
   buildPhase = ''
-      rpmbuild \
-        --define "_sourcedir $(pwd)" \
-        --define "_rpmdir $(pwd)" \
-        --dbpath="$(pwd)"/rpmdb \
-        --define "%_topdir $(pwd)" \
-        --define "%_tmppath %{_topdir}/TMP" \
-        --define "_rpmdir $(pwd)/RPMs" \
-        --define "VERSION $(cat VERSION)" \
-        -bb tuleap-community-release.spec
+    rpmbuild \
+      --define "_sourcedir $(pwd)" \
+      --define "_rpmdir $(pwd)" \
+      --dbpath="$(pwd)"/rpmdb \
+      --define "%_topdir $(pwd)" \
+      --define "%_tmppath %{_topdir}/TMP" \
+      --define "_rpmdir $(pwd)/RPMs" \
+      --define "VERSION $(cat VERSION)" \
+      -bb tuleap-community-release.spec
   '';
 
   installPhase = ''

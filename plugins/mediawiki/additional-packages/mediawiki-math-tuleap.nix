@@ -1,4 +1,7 @@
-{ pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) {}, nixpkgsPinEpoch ? (import ../../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; } }:
+{
+  pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) { },
+  nixpkgsPinEpoch ? (import ../../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; },
+}:
 
 let
   pkgsPinForOCaml = import (builtins.fetchTarball {
@@ -32,7 +35,8 @@ let
       runHook postInstall
     '';
   };
-in pkgs.stdenv.mkDerivation {
+in
+pkgs.stdenv.mkDerivation {
   name = "mediawiki-math-tuleap";
   src = pkgs.symlinkJoin {
     name = "mediawiki-math-tuleap-src";
@@ -43,7 +47,11 @@ in pkgs.stdenv.mkDerivation {
   };
 
   buildInputs = [ pkgs.glibc.static ];
-  nativeBuildInputs = [ pkgs.rpm pkgs.file pkgsPinForOCaml.ocaml ];
+  nativeBuildInputs = [
+    pkgs.rpm
+    pkgs.file
+    pkgsPinForOCaml.ocaml
+  ];
 
   dontConfigure = true;
 
