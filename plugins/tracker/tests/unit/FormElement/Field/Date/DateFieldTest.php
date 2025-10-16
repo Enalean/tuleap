@@ -657,7 +657,6 @@ final class DateFieldTest extends TestCase
         $field      = $this->getDateField();
         $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
-        $method->setAccessible(true);
 
         $field    = $this->getDateField();
         $fragment = $method->invokeArgs($field, [$is_advanced, '=', $from, $to, $column]);
@@ -674,7 +673,6 @@ final class DateFieldTest extends TestCase
         $field      = $this->getDateField();
         $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
-        $method->setAccessible(true);
 
         $fragment = $method->invokeArgs($field, [$is_advanced, '=', null, $to, $column]);
         self::assertEquals('my_date_column <= ?', $fragment->sql);
@@ -691,7 +689,6 @@ final class DateFieldTest extends TestCase
         $field      = $this->getDateField();
         $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
-        $method->setAccessible(true);
 
         $fragment = $method->invokeArgs($field, [$is_advanced, '=', $from, $to, $column]);
         self::assertEquals('my_date_column BETWEEN ? AND ?', $fragment->sql);
@@ -708,7 +705,6 @@ final class DateFieldTest extends TestCase
         $field      = $this->getDateField();
         $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
-        $method->setAccessible(true);
 
         $fragment = $method->invokeArgs($field, [$is_advanced, '<', $from, $to, $column]);
         self::assertEquals('my_date_column < ?', $fragment->sql);
@@ -725,7 +721,6 @@ final class DateFieldTest extends TestCase
         $field      = $this->getDateField();
         $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('getSQLCompareDate');
-        $method->setAccessible(true);
 
         $fragment = $method->invokeArgs($field, [$is_advanced, '>', $from, $to, $column]);
         self::assertEquals('my_date_column > ?', $fragment->sql);

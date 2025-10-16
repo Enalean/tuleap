@@ -175,7 +175,6 @@ final class OpenListFieldTest extends TestCase
         $list_field->method('getOpenValueDao')->willReturn($open_value_dao);
         $reflection = new ReflectionClass($list_field::class);
         $method     = $reflection->getMethod('saveValue');
-        $method->setAccessible(true);
 
         $method->invoke($list_field, $artifact, $changeset_id, $submitted_value, null, new CreatedFileURLMapping());
     }
