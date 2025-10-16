@@ -34,7 +34,7 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 
-final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
+final readonly class PaginatedBacklogItemsRepresentationsBuilder
 {
     public function __construct(
         private BacklogItemRepresentationFactory $backlog_item_representation_factory,
@@ -50,7 +50,7 @@ final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentat
         ISearchOnStatus $criterion,
         int $limit,
         int $offset,
-    ): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations {
+    ): PaginatedBacklogItemsRepresentations {
         $backlog = $this->backlog_factory->getBacklog($user, $milestone, $limit, $offset);
 
         return $this->getBacklogItemsRepresentations($user, $milestone, $backlog, $criterion, $limit, $offset);
@@ -61,7 +61,7 @@ final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentat
         Planning_Milestone $top_milestone,
         int $limit,
         int $offset,
-    ): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations {
+    ): PaginatedBacklogItemsRepresentations {
         $backlog = $this->backlog_factory->getSelfBacklog($top_milestone, $limit, $offset);
 
         return $this->getBacklogItemsRepresentations($user, $top_milestone, $backlog, new StatusOpen(), $limit, $offset);
@@ -74,7 +74,7 @@ final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentat
         ISearchOnStatus $criterion,
         int $limit,
         int $offset,
-    ): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations {
+    ): PaginatedBacklogItemsRepresentations {
         $backlog_items                 = $this->getMilestoneBacklogItems($user, $milestone, $backlog, $criterion, $limit, $offset);
         $backlog_items_representations = [];
 
@@ -82,7 +82,7 @@ final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentat
             $backlog_items_representations[] = $this->backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
-        return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations($backlog_items_representations, $backlog_items->getTotalAvaialableSize());
+        return new PaginatedBacklogItemsRepresentations($backlog_items_representations, $backlog_items->getTotalAvaialableSize());
     }
 
     private function getMilestoneBacklogItems(

@@ -24,7 +24,7 @@ namespace Tuleap\AgileDashboard\BacklogItem;
 
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation;
 
-final readonly class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations
+final readonly class PaginatedBacklogItemsRepresentations
 {
     /**
      * @param list<BacklogItemRepresentation> $backlog_items_representations

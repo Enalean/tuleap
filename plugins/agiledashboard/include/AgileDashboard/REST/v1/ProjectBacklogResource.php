@@ -31,7 +31,7 @@ use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
-use Tuleap\AgileDashboard\BacklogItem\AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
+use Tuleap\AgileDashboard\BacklogItem\PaginatedBacklogItemsRepresentationsBuilder;
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
@@ -93,7 +93,7 @@ class ProjectBacklogResource
     /** @var PlanningPermissionsManager */
     private $planning_permissions_manager;
 
-    /** @var AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder */
+    /** @var PaginatedBacklogItemsRepresentationsBuilder */
     private $paginated_backlog_item_representation_builder;
 
     public function __construct()
@@ -160,7 +160,7 @@ class ProjectBacklogResource
             SubmissionPermissionVerifier::instance(),
         );
 
-        $this->paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
+        $this->paginated_backlog_item_representation_builder = new PaginatedBacklogItemsRepresentationsBuilder(
             $item_factory,
             $backlog_item_collection_factory,
             $backlog_factory,
