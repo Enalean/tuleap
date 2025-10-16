@@ -3979,6 +3979,9 @@ msgstr "Usar como flag de projeto"
 msgid "Use default avatar"
 msgstr "Usar avatar padrão"
 
+msgid "Use theme color for favicon"
+msgstr ""
+
 #, php-format
 msgid "User #%d is not administrator of project #%d"
 msgstr "Usuário #%d não é administrador do projeto #%d"

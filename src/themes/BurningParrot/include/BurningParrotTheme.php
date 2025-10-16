@@ -268,7 +268,6 @@ class BurningParrotTheme extends BaseLayout
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
             $this->current_user,
-            $this->imgroot,
             $params['title'],
             $this->_feedback->logs,
             $body_classes,

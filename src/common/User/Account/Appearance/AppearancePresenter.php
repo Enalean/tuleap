@@ -134,6 +134,8 @@ final class AppearancePresenter
         bool $is_login,
         bool $is_realname,
         string $relative_dates_display,
+        public readonly bool $allow_favicon_variant,
+        public readonly bool $use_favicon_variant,
     ) {
         $this->csrf_token               = $csrf_token;
         $this->tabs                     = $tabs;

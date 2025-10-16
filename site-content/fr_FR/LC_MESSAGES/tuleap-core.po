@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -4050,6 +4050,9 @@ msgstr "Utilisée en tant que marqueur de projet"
 
 msgid "Use default avatar"
 msgstr "Utiliser l'avatar par défaut"
+
+msgid "Use theme color for favicon"
+msgstr "Utiliser la couleur du thème pour le favicon"
 
 #, php-format
 msgid "User #%d is not administrator of project #%d"

@@ -49,9 +49,6 @@ class HeaderPresenterBuilder
     private $navbar_presenter_builder;
 
     /** @var string */
-    private $imgroot;
-
-    /** @var string */
     private $title;
 
     /** @var array */
@@ -83,7 +80,6 @@ class HeaderPresenterBuilder
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
         CurrentUserWithLoggedInInformation $current_user,
-        $imgroot,
         $title,
         $feedback_logs,
         $body_classes,
@@ -109,7 +105,6 @@ class HeaderPresenterBuilder
         InviteBuddiesPresenter $invite_buddies_presenter,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
-        $this->imgroot                  = $imgroot;
         $this->title                    = $title;
         $this->body_classes             = $body_classes;
         $this->main_classes             = $main_classes;
@@ -125,7 +120,6 @@ class HeaderPresenterBuilder
         return new HeaderPresenter(
             $current_user->user,
             $this->getPageTitle(),
-            $this->imgroot,
             $this->navbar_presenter_builder->build(
                 $current_user,
                 $url_redirect,

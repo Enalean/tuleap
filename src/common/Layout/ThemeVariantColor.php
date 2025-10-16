@@ -58,7 +58,7 @@ enum ThemeVariantColor: string
     public function getHexaCode(): string
     {
         return match ($this) {
-            self::Orange => '#f79514',
+            self::Orange => '#ff6e30',
             self::Blue => '#1593c4',
             self::Green => '#67af45',
             self::Grey => '#5b6c79',

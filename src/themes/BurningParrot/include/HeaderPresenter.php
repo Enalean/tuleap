@@ -32,6 +32,7 @@ use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 use Tuleap\TimezoneRetriever;
+use Tuleap\User\Account\Appearance\FaviconVariant;
 use Tuleap\User\SwitchToPresenter;
 
 class HeaderPresenter
@@ -39,17 +40,11 @@ class HeaderPresenter
     /** @var string */
     public $title;
 
-    /** @var string */
-    public $imgroot;
-
     /** @var \Tuleap\Theme\BurningParrot\Navbar\Presenter */
     public $navbar_presenter;
 
     /** @var array */
     public $stylesheets;
-
-    /** @var string */
-    public $color_name;
 
     /** @var string */
     public $color_code;
@@ -194,11 +189,11 @@ class HeaderPresenter
      * @psalm-readonly
      */
     public $is_a_broken_browser;
+    public string $favicon_variant;
 
     public function __construct(
         PFUser $user,
         $title,
-        $imgroot,
         NavbarPresenter $navbar_presenter,
         ThemeVariantColor $color,
         array $stylesheets,
@@ -223,10 +218,8 @@ class HeaderPresenter
         $this->user_locale                 = $user->getLocale();
         $this->user_id                     = $user->getId();
         $this->title                       = html_entity_decode($title);
-        $this->imgroot                     = $imgroot;
         $this->navbar_presenter            = $navbar_presenter;
         $this->stylesheets                 = $stylesheets;
-        $this->color_name                  = $color->getName();
         $this->color_code                  = $color->getHexaCode();
         $this->body_classes                = $body_classes;
         $this->main_classes                = $main_classes;
@@ -260,6 +253,10 @@ class HeaderPresenter
             );
         }
         $this->is_a_broken_browser = $is_a_broken_browser;
+
+        $this->favicon_variant = FaviconVariant::shouldDisplayFaviconVariant($user)
+            ? $color->getName()
+            : ThemeVariantColor::Orange->getName();
     }
 
     private function buildFeedbacks($feedback_logs)

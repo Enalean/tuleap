@@ -646,8 +646,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo '<html lang="' . $GLOBALS['Language']->getText('conf', 'language_code') . '">
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                    <title>' . $hp->purify($pagetitle) . '</title>
-                    <link rel="SHORTCUT ICON" href="' . $this->imgroot . 'favicon.ico' . '">';
+                    <title>' . $hp->purify($pagetitle) . '</title>';
         $this->displayJavascriptElements($params);
         $this->displayStylesheetElements();
         $this->displaySyndicationElements();

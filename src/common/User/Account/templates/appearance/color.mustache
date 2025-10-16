@@ -9,3 +9,15 @@
     >
     </select>
 </div>
+{{# allow_favicon_variant }}
+    <div class="tlp-form-element">
+        <label class="tlp-label tlp-checkbox">
+            <input type="checkbox"
+                   name="favicon-variant"
+                   value="1"
+                   {{# use_favicon_variant}}checked{{/ use_favicon_variant }}
+            >
+            {{# gettext }}Use theme color for favicon{{/gettext}}
+        </label>
+    </div>
+{{/ allow_favicon_variant }}

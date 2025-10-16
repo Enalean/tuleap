@@ -102,7 +102,9 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                     true,
                     true,
                     true,
-                    DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN
+                    DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+                    false,
+                    false,
                 )
             );
 

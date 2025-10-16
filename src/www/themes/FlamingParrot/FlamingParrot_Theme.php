@@ -153,8 +153,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
 
         $this->render('header', new FlamingParrot_HeaderPresenter(
+            $current_user,
             $title,
-            $this->imgroot,
             $open_graph,
             $current_variant,
         ));
