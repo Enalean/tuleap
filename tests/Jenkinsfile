@@ -152,6 +152,9 @@ pipeline {
                 stage ('Scan for secrets') {
                     steps { script { execTestWithLimitedConcurrency({ actions.runSecretsScan() }) } }
                 }
+                stage ('Treefmt linter/formatter') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runTreefmt() }) } }
+                }
             }
             post {
                 always {

@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::path::Path;
 use std::sync::Arc;
 use std::time::Instant;
 use wasmtime::*;
+use wasmtime_wasi::WasiCtxBuilder;
 use wasmtime_wasi::p2::pipe::{MemoryInputPipe, MemoryOutputPipe};
 use wasmtime_wasi::preview1::WasiP1Ctx;
-use wasmtime_wasi::WasiCtxBuilder;
 use wasmtime_wasi::{DirPerms, FilePerms};
 use wire::{
     ExecConfig, InternalErrorJson, Limitations, MountPoint, Stats, SuccessResponseJson,
@@ -81,18 +81,22 @@ pub unsafe extern "C" fn callWasmModule(
                     }
                 }
                 match e.downcast_ref::<Trap>() {
-                        Some(&Trap::Interrupt) => user_error(format!(
+                    Some(&Trap::Interrupt) => user_error(
+                        format!(
                             "The module has exceeded the {} ms of allowed computation time",
                             config_json.limits.max_exec_time_in_ms
                         ),
-                        out_struct.stats),
-                        Some(&Trap::UnreachableCodeReached) => user_error(format!(
+                        out_struct.stats,
+                    ),
+                    Some(&Trap::UnreachableCodeReached) => user_error(
+                        format!(
                             "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
                             config_json.limits.max_memory_size_in_bytes
                         ),
-                        out_struct.stats),
-                        _ => user_error(format!("{}", e.root_cause()), out_struct.stats),
-                    }
+                        out_struct.stats,
+                    ),
+                    _ => user_error(format!("{}", e.root_cause()), out_struct.stats),
+                }
             }
         },
         Err(e) => {
@@ -178,7 +182,8 @@ fn compile_and_exec(
     config.epoch_interruption(true);
 
     if let Some(cache_config_file) = possible_cache_config_file {
-        Cache::from_file(Some(&Path::new(cache_config_file))).map(|cache| config.cache(Some(cache)))?;
+        Cache::from_file(Some(&Path::new(cache_config_file)))
+            .map(|cache| config.cache(Some(cache)))?;
         config.cranelift_opt_level(OptLevel::Speed);
     }
 

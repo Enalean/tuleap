@@ -268,6 +268,10 @@ stylelint-fix: ## Execute stylelint with --fix to try to fix problems automatica
 	$(eval FILES ?= **/*.{vue,scss})
 	@pnpm run stylelint --fix -- $(FILES)
 
+.PHONY:treefmt
+treefmt: ## Run treefmt
+	@treefmt
+
 bash-web: ## Give a bash on web container
 	@$(DOCKER) exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `$(DOCKER_COMPOSE) ps -q web` bash
 

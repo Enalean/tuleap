@@ -86,6 +86,12 @@ def runSecretsScan() {
     }
 }
 
+def runTreefmt() {
+    dir ('sources') {
+        runInsideNixShell('treefmt --ci')
+    }
+}
+
 def runPsalm(String configPath, String root='.') {
     withEnv(['XDG_CACHE_HOME=/tmp/psalm_cache/']) {
         dir ('sources') {

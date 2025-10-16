@@ -8,7 +8,6 @@ import (
 	"github.com/stripe/smokescreen/pkg/smokescreen"
 )
 
-
 func main() {
 	conf, err := cmd.NewConfiguration(nil, nil)
 	if err != nil {

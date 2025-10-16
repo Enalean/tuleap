@@ -6,7 +6,8 @@ in pkgs.mkShellNoCC {
   buildInputs = (import ./build-tools-general.nix { inherit pkgs; }) ++
     (import ./build-tools-packages.nix { inherit pkgs; }) ++
     (php) ++
-    [(import ./build-tools-js.nix { inherit pkgs; })];
+    [(import ./build-tools-js.nix { inherit pkgs; })] ++
+    [(import ./build-tools-linting.nix { inherit pkgs; })];
 
   # Enable Console Do Not Track / disable telemetry
   DO_NOT_TRACK = 1;
