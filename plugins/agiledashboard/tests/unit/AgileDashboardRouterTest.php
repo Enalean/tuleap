@@ -18,16 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\ConfigurationDao;
-use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\ConfigurationDao;
+use Tuleap\AgileDashboard\ConfigurationManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Milestone\Sidebar\DuplicateMilestonesInSidebarConfig;
 use Tuleap\AgileDashboard\Milestone\Sidebar\UpdateMilestonesInSidebarConfig;
-use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
+use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
