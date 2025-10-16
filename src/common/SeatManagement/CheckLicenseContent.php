@@ -22,24 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
-use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\SeatManagement\BuildLicenseStub;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-#[DisableReturnValueGenerationForTestDoubles]
-final class CachedLicenseBuilderTest extends TestCase
+interface CheckLicenseContent
 {
-    public function testItUsesCache(): void
-    {
-        $license         = License::buildInfiniteEnterpriseEdition();
-        $license_builder = BuildLicenseStub::buildWithLicense($license);
-
-        $cache = new CachedLicenseBuilder($license_builder);
-
-        $cache->build();
-        $cache->build();
-
-        self::assertSame(1, $license_builder->getCallCount());
-        self::assertSame($license, $cache->build());
-    }
+    /**
+     * @return Ok<LicenseContent>|Err<Fault>
+     */
+    public function checkLicenseContent(LicenseContent $license_content): Ok|Err;
 }

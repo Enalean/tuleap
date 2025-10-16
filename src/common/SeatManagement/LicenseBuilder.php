@@ -24,10 +24,11 @@ namespace Tuleap\SeatManagement;
 
 use LogicException;
 use Override;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Result;
-use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\SeatManagement\Fault\InvalidLicenseContentFault;
 use Tuleap\SeatManagement\Fault\InvalidLicenseSignatureFault;
 use Tuleap\SeatManagement\Fault\LicenseClaimsParsingFault;
 use Tuleap\SeatManagement\Fault\MissingLicenseFileFault;
@@ -42,6 +43,7 @@ final readonly class LicenseBuilder implements BuildLicense
         private CheckPublicKeyPresence $public_key_presence_checker,
         private CheckLicenseSignature $license_signature_checker,
         private RetrieveLicenseContent $license_content_retriever,
+        private CheckLicenseContent $license_content_checker,
     ) {
     }
 
@@ -59,13 +61,16 @@ final readonly class LicenseBuilder implements BuildLicense
                 }
             )
             ->andThen($this->license_content_retriever->retrieveLicenseContent(...))
+            ->andThen($this->license_content_checker->checkLicenseContent(...))
             ->match(
-                static fn(LicenseContent $license_content) => License::buildEnterpriseEdition($license_content->exp),
+                static fn(LicenseContent $license_content) => License::buildEnterpriseEdition($license_content),
                 static fn(Fault $fault) => match ($fault::class) {
-                    NoPublicKeyFault::class => License::buildCommunityEdition(),
-                    MissingLicenseFileFault::class => License::buildEnterpriseEdition(null),
-                    LicenseClaimsParsingFault::class, InvalidLicenseSignatureFault::class => License::buildInvalidEnterpriseEdition(),
-                    default => throw new LogicException('Was not expected: ' . $fault::class),
+                    NoPublicKeyFault::class           => License::buildCommunityEdition(),
+                    MissingLicenseFileFault::class    => License::buildInfiniteEnterpriseEdition(),
+                    LicenseClaimsParsingFault::class,
+                    InvalidLicenseSignatureFault::class,
+                    InvalidLicenseContentFault::class => License::buildInvalidEnterpriseEdition(),
+                    default                           => throw new LogicException('Was not expected: ' . $fault::class),
                 },
             );
     }

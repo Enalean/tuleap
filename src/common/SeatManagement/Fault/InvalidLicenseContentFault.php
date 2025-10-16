@@ -20,26 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SeatManagement;
+namespace Tuleap\SeatManagement\Fault;
 
-use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\SeatManagement\BuildLicenseStub;
+use Tuleap\NeverThrow\Fault;
 
-#[DisableReturnValueGenerationForTestDoubles]
-final class CachedLicenseBuilderTest extends TestCase
+/**
+ * @psalm-immutable
+ */
+final readonly class InvalidLicenseContentFault extends Fault
 {
-    public function testItUsesCache(): void
+    public static function build(): Fault
     {
-        $license         = License::buildInfiniteEnterpriseEdition();
-        $license_builder = BuildLicenseStub::buildWithLicense($license);
-
-        $cache = new CachedLicenseBuilder($license_builder);
-
-        $cache->build();
-        $cache->build();
-
-        self::assertSame(1, $license_builder->getCallCount());
-        self::assertSame($license, $cache->build());
+        return new self('License contains invalid claims');
     }
 }

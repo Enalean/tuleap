@@ -50,6 +50,7 @@ final class CachedLicenseBuilder implements BuildLicense
                 new PublicKeyPresenceChecker(),
                 new LicenseSignatureChecker($logger, $token_parser, new Validator(), $mapper),
                 new LicenseContentRetriever($logger, $mapper),
+                new LicenseContentChecker($logger),
             ));
         }
 
