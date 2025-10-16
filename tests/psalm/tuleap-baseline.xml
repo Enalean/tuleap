@@ -37570,6 +37570,84 @@
       <code><![CDATA[getChildrenForParent]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/FormElement/ArtifactLinkValidator.php">
+    <MissingParamType>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$artifact_id]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/BurndownCalculator.php">
+    <MissingParamType>
+      <code><![CDATA[$timestamp]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/BurndownFieldPresenter.php">
+    <MissingParamType>
+      <code><![CDATA[$warning]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$data_burndown]]></code>
+      <code><![CDATA[$has_warning]]></code>
+      <code><![CDATA[$locale]]></code>
+      <code><![CDATA[$warning]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/ChartConfigurationValueChecker.php">
+    <MissingReturnType>
+      <code><![CDATA[hasFieldChanged]]></code>
+      <code><![CDATA[hasStartDate]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[hasChanged]]></code>
+    </PossiblyNullReference>
+    <UndefinedMethod>
+      <code><![CDATA[getTimestamp]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/ChartConfigurationValueRetriever.php">
+    <UndefinedMethod>
+      <code><![CDATA[getComputedValue]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/ChartFieldUsage.php">
+    <MissingParamType>
+      <code><![CDATA[$use_capacity]]></code>
+      <code><![CDATA[$use_duration]]></code>
+      <code><![CDATA[$use_hierarchy]]></code>
+      <code><![CDATA[$use_remaining_effort]]></code>
+      <code><![CDATA[$use_start_date]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$use_capacity]]></code>
+      <code><![CDATA[$use_duration]]></code>
+      <code><![CDATA[$use_hierarchy]]></code>
+      <code><![CDATA[$use_remaining_effort]]></code>
+      <code><![CDATA[$use_start_date]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[getUseCapacity]]></code>
+      <code><![CDATA[getUseDuration]]></code>
+      <code><![CDATA[getUseHierarchy]]></code>
+      <code><![CDATA[getUseRemainingEffort]]></code>
+      <code><![CDATA[getUseStartDate]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/ChartMessageFetcher.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[String]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="plugins/tracker/include/FormElement/ComputedFieldCalculator.php">
+    <MissingParamType>
+      <code><![CDATA[$timestamp]]></code>
+    </MissingParamType>
+  </file>
   <file src="plugins/tracker/include/FormElement/Container/Column/ColumnContainer.php">
     <MissingParamType>
       <code><![CDATA[$format]]></code>
@@ -37670,6 +37748,38 @@
       <code><![CDATA[getDefaultValue]]></code>
       <code><![CDATA[getRESTContent]]></code>
       <code><![CDATA[hasBeenDisplayed]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/DateFormatter.php">
+    <MissingParamType>
+      <code><![CDATA[$timestamp]]></code>
+      <code><![CDATA[$timestamp]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[fetchArtifactValueReadOnly]]></code>
+      <code><![CDATA[getFieldDataForCSVPreview]]></code>
+      <code><![CDATA[getFormat]]></code>
+      <code><![CDATA[validate]]></code>
+    </MissingReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[getTimestamp]]></code>
+      <code><![CDATA[getTimestamp]]></code>
+      <code><![CDATA[getTimestamp]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/DateTimeFormatter.php">
+    <MissingParamType>
+      <code><![CDATA[$timestamp]]></code>
+      <code><![CDATA[$timestamp]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[getFieldDataForCSVPreview]]></code>
+      <code><![CDATA[getUserDateFormatPreference]]></code>
+      <code><![CDATA[validate]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/Event/MessageFetcherAdditionalWarnings.php">
@@ -40385,6 +40495,32 @@
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
   </file>
+  <file src="plugins/tracker/include/FormElement/FieldCalculator.php">
+    <MissingParamType>
+      <code><![CDATA[$stop_on_manual_value]]></code>
+      <code><![CDATA[$target_field_name]]></code>
+      <code><![CDATA[$timestamp]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[calculate]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/FieldNameFormatter.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$label]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/tracker/include/FormElement/IProvideArtifactChildrenForComputedCalculation.php">
+    <MissingParamType>
+      <code><![CDATA[$timestamp]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/PermissionsOnArtifactUGroupRetriever.php">
+    <MissingParamType>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+  </file>
   <file src="plugins/tracker/include/FormElement/StaticField/LineBreak/LineBreakStaticField.php">
     <MissingParamType>
       <code><![CDATA[$tracker]]></code>
@@ -40514,6 +40650,20 @@
     <UndefinedMethod>
       <code><![CDATA[accept]]></code>
     </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/TrackerFormElementExternalField.php">
+    <MissingReturnType>
+      <code><![CDATA[getFormAdminVisitor]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/FormElement/TransitionListValidator.php">
+    <MissingParamType>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[checkTransition]]></code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/View/Admin/CreateSharedVisitorAdminView.php">
     <MissingReturnType>
@@ -45286,132 +45436,6 @@
       <code><![CDATA[buildFileInfoData]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/ArtifactLinkValidator.php">
-    <MissingParamType>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$artifact_id]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/BurndownCalculator.php">
-    <MissingParamType>
-      <code><![CDATA[$timestamp]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/BurndownFieldPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$warning]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$data_burndown]]></code>
-      <code><![CDATA[$has_warning]]></code>
-      <code><![CDATA[$locale]]></code>
-      <code><![CDATA[$warning]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/ChartConfigurationValueChecker.php">
-    <MissingReturnType>
-      <code><![CDATA[hasFieldChanged]]></code>
-      <code><![CDATA[hasStartDate]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[hasChanged]]></code>
-    </PossiblyNullReference>
-    <UndefinedMethod>
-      <code><![CDATA[getTimestamp]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/ChartConfigurationValueRetriever.php">
-    <UndefinedMethod>
-      <code><![CDATA[getComputedValue]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/ChartFieldUsage.php">
-    <MissingParamType>
-      <code><![CDATA[$use_capacity]]></code>
-      <code><![CDATA[$use_duration]]></code>
-      <code><![CDATA[$use_hierarchy]]></code>
-      <code><![CDATA[$use_remaining_effort]]></code>
-      <code><![CDATA[$use_start_date]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$use_capacity]]></code>
-      <code><![CDATA[$use_duration]]></code>
-      <code><![CDATA[$use_hierarchy]]></code>
-      <code><![CDATA[$use_remaining_effort]]></code>
-      <code><![CDATA[$use_start_date]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getUseCapacity]]></code>
-      <code><![CDATA[getUseDuration]]></code>
-      <code><![CDATA[getUseHierarchy]]></code>
-      <code><![CDATA[getUseRemainingEffort]]></code>
-      <code><![CDATA[getUseStartDate]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/ChartMessageFetcher.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[String]]></code>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[null]]></code>
-      <code><![CDATA[null]]></code>
-    </NullableReturnStatement>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/ComputedFieldCalculator.php">
-    <MissingParamType>
-      <code><![CDATA[$timestamp]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/DateFormatter.php">
-    <MissingParamType>
-      <code><![CDATA[$timestamp]]></code>
-      <code><![CDATA[$timestamp]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[fetchArtifactValueReadOnly]]></code>
-      <code><![CDATA[getFieldDataForCSVPreview]]></code>
-      <code><![CDATA[getFormat]]></code>
-      <code><![CDATA[validate]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-      <code><![CDATA[getTimestamp]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/DateTimeFormatter.php">
-    <MissingParamType>
-      <code><![CDATA[$timestamp]]></code>
-      <code><![CDATA[$timestamp]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getFieldDataForCSVPreview]]></code>
-      <code><![CDATA[getUserDateFormatPreference]]></code>
-      <code><![CDATA[validate]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/FieldCalculator.php">
-    <MissingParamType>
-      <code><![CDATA[$stop_on_manual_value]]></code>
-      <code><![CDATA[$target_field_name]]></code>
-      <code><![CDATA[$timestamp]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[calculate]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/FieldNameFormatter.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$label]]></code>
-    </PossiblyNullArgument>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/IAcceptFieldVisitor.php">
     <MissingReturnType>
       <code><![CDATA[accept]]></code>
@@ -45425,30 +45449,6 @@
     <MissingReturnType>
       <code><![CDATA[getCachedValue]]></code>
       <code><![CDATA[getComputedValue]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/IProvideArtifactChildrenForComputedCalculation.php">
-    <MissingParamType>
-      <code><![CDATA[$timestamp]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/PermissionsOnArtifactUGroupRetriever.php">
-    <MissingParamType>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/SpecificPropertiesDao.php">
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[save]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/TrackerFormElementExternalField.php">
-    <MissingReturnType>
-      <code><![CDATA[getFormAdminVisitor]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElementFactory.php">
@@ -46290,15 +46290,6 @@
       <code><![CDATA[createFormElement]]></code>
       <code><![CDATA[getRootOriginalField]]></code>
       <code><![CDATA[populateFormElementDataForASharedField]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/TransitionListValidator.php">
-    <MissingParamType>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[checkTransition]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/GeneralSettings_Presenter.php">

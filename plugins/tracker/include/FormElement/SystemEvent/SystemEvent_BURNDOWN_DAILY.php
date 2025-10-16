@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\FormElement\SystemEvent;
 
 use Psr\Log\LoggerInterface;
 use SystemEvent;
-use Tuleap\Date\TimezoneWrapper;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Date\TimezoneWrapper;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;

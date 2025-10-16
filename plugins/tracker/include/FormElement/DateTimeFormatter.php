@@ -19,9 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\FormElement\Field\Date\DateField;
+namespace Tuleap\Tracker\FormElement;
 
-class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+use Rule_Date_Time;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use UserManager;
+
+class DateTimeFormatter extends DateFormatter
 {
     public const string DATE_TIME_FORMAT = 'Y-m-d H:i';
 
@@ -72,7 +76,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
     public function getFieldDataForCSVPreview(array $date_explode)
     {
         return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2]
-            . ' ' . $date_explode[3] . ':' . $date_explode[4];
+               . ' ' . $date_explode[3] . ':' . $date_explode[4];
     }
 
     #[\Override]
