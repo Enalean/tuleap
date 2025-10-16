@@ -51,8 +51,9 @@ export const getCrossRefClasses = (artifact: LinkedArtifactPresenter | NewLink):
 };
 
 export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFunction<LinkField> => {
-    const removeNewLink = (): void => {
+    const removeNewLink = (host: LinkField): void => {
         host.new_links = host.controller.removeNewLink(link);
+        host.autocompleter.autoComplete(host, "");
     };
 
     const onTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
