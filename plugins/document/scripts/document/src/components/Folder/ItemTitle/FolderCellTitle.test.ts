@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -28,17 +29,18 @@ import * as router from "../../../helpers/use-router";
 import type { Router } from "vue-router";
 import { PROJECT, USER_ID } from "../../../configuration-keys";
 import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
+import * as folder_preferences from "../../../helpers/preferences/folder-preferences";
 
 vi.useFakeTimers();
 
 describe("FolderCellTitle", () => {
-    let initialize_folder_properties: vi.Mock;
-    let unfold_folder_content: vi.Mock;
-    let get_sub_folder_content: vi.Mock;
-    let toggle_collapse_folder_has_uploading_content: vi.Mock;
-    let set_user_preferences: vi.Mock;
-    let fold_folder_content: vi.Mock;
-    let append_folder_to_hierarchy: vi.Mock;
+    let initialize_folder_properties: MockInstance;
+    let unfold_folder_content: MockInstance;
+    let get_sub_folder_content: MockInstance;
+    let toggle_collapse_folder_has_uploading_content: MockInstance;
+    let set_user_preferences: MockInstance;
+    let fold_folder_content: MockInstance;
+    let append_folder_to_hierarchy: MockInstance;
     const item = { id: 10 } as Folder;
     beforeEach(() => {
         const mock_resolve = vi.fn().mockReturnValue({ href: "/my-url" });
@@ -49,7 +51,7 @@ describe("FolderCellTitle", () => {
         unfold_folder_content = vi.fn();
         get_sub_folder_content = vi.fn();
         toggle_collapse_folder_has_uploading_content = vi.fn();
-        set_user_preferences = vi.fn();
+        set_user_preferences = vi.spyOn(folder_preferences, "setUserPreferencesForFolder");
         fold_folder_content = vi.fn();
         append_folder_to_hierarchy = vi.fn();
     });
@@ -66,12 +68,6 @@ describe("FolderCellTitle", () => {
             props: { item },
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        preferencies: {
-                            actions: { setUserPreferenciesForFolder: set_user_preferences },
-                            namespaced: true,
-                        },
-                    },
                     state: {
                         current_folder: {
                             id: 1,
@@ -149,12 +145,13 @@ describe("FolderCellTitle", () => {
 
             expect(unfold_folder_content).toHaveBeenCalled();
             expect(toggle_collapse_folder_has_uploading_content).toHaveBeenCalled();
-            expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
-                folder_id: item.id,
-                should_be_closed: false,
-                user_id: 254,
-                project_id: 101,
-            });
+            expect(set_user_preferences).toHaveBeenCalledWith(
+                expect.anything(),
+                item.id,
+                false,
+                254,
+                101,
+            );
         });
 
         it(`Given folder is expanded
@@ -168,12 +165,13 @@ describe("FolderCellTitle", () => {
             expect(toggle.classes()).toContain("fa-caret-right");
             expect(fold_folder_content).toHaveBeenCalled();
             expect(toggle_collapse_folder_has_uploading_content).toHaveBeenCalled();
-            expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
-                folder_id: item.id,
-                should_be_closed: true,
-                user_id: 254,
-                project_id: 101,
-            });
+            expect(set_user_preferences).toHaveBeenCalledWith(
+                expect.anything(),
+                item.id,
+                true,
+                254,
+                101,
+            );
         });
 
         it(`Given folder is closed and given its children have been loaded
@@ -205,17 +203,18 @@ describe("FolderCellTitle", () => {
             expect(toggle.classes()).toContain("fa-caret-right");
             expect(fold_folder_content).toHaveBeenCalled();
             expect(toggle_collapse_folder_has_uploading_content).toHaveBeenCalled();
-            expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
-                folder_id: item.id,
-                should_be_closed: true,
-                user_id: 254,
-                project_id: 101,
-            });
+            expect(set_user_preferences).toHaveBeenCalledWith(
+                expect.anything(),
+                item.id,
+                true,
+                254,
+                101,
+            );
         });
     });
 
     describe("go to folder", () => {
-        let abortCurrentUploads: vi.SpyInstance;
+        let abortCurrentUploads: MockInstance;
         beforeEach(() => {
             abortCurrentUploads = vi.spyOn(abort_current_uploads, "abortCurrentUploads");
         });

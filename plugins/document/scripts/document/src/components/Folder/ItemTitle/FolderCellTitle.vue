@@ -62,26 +62,19 @@
 <script setup lang="ts">
 import type { Folder, State } from "../../../type";
 import { ACTION_ICON_FOLDER } from "../../../constants";
-import {
-    useActions,
-    useGetters,
-    useMutations,
-    useNamespacedActions,
-    useState,
-    useStore,
-} from "vuex-composition-helpers";
+import { useActions, useGetters, useMutations, useState, useStore } from "vuex-composition-helpers";
 import { useRouter } from "../../../helpers/use-router";
 import { computed, onMounted, ref } from "vue";
-import type { PreferenciesActions } from "../../../store/preferencies/preferencies-actions";
 import { abortCurrentUploads } from "../../../helpers/abort-current-uploads";
 import { useGettext } from "vue3-gettext";
 import type { RootGetter } from "../../../store/getters";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT, USER_ID } from "../../../configuration-keys";
+import { setUserPreferencesForFolder } from "../../../helpers/preferences/folder-preferences";
 
 const router = useRouter();
 const { $gettext } = useGettext();
-const store = useStore();
+const $store = useStore();
 
 const props = defineProps<{ item: Folder }>();
 
@@ -105,10 +98,6 @@ const {
 ]);
 
 const { getSubfolderContent } = useActions(["getSubfolderContent"]);
-
-const { setUserPreferenciesForFolder } = useNamespacedActions<PreferenciesActions>("preferencies", [
-    "setUserPreferenciesForFolder",
-]);
 
 const { is_uploading } = useGetters<Pick<RootGetter, "is_uploading">>(["is_uploading"]);
 
@@ -145,7 +134,7 @@ onMounted((): void => {
 });
 
 async function goToFolder(): Promise<void> {
-    if (!is_uploading.value || abortCurrentUploads($gettext, store)) {
+    if (!is_uploading.value || abortCurrentUploads($gettext, $store)) {
         await doGoToFolder();
     }
 }
@@ -188,11 +177,6 @@ function toggle(): void {
         is_closed.value = true;
     }
 
-    setUserPreferenciesForFolder({
-        folder_id: props.item.id,
-        should_be_closed: is_closed.value,
-        user_id,
-        project_id: project.id,
-    });
+    setUserPreferencesForFolder($store, props.item.id, is_closed.value, user_id, project.id);
 }
 </script>

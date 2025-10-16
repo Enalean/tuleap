@@ -53,7 +53,7 @@ import type { ItemHasJustBeenUpdatedEvent } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT, USER_ID } from "../../configuration-keys";
-import { getEmbeddedFileDisplayPreference } from "../../helpers/embedded-file-display-preferences";
+import { getEmbeddedFileDisplayPreference } from "../../helpers/preferences/embedded-file-display-preferences";
 
 const $store = useStore();
 

@@ -18,19 +18,19 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { RootState } from "../type";
-import { EMBEDDED_FILE_DISPLAY_LARGE, EMBEDDED_FILE_DISPLAY_NARROW } from "../type";
+import type { RootState } from "../../type";
+import { EMBEDDED_FILE_DISPLAY_LARGE, EMBEDDED_FILE_DISPLAY_NARROW } from "../../type";
 import type { ActionContext } from "vuex";
-import * as preferencies_rest from "../api/preferencies-rest-querier";
+import * as preferencies_rest from "../../api/preferences-rest-querier";
 import {
     displayEmbeddedInLargeMode,
     displayEmbeddedInNarrowMode,
     getEmbeddedFileDisplayPreference,
 } from "./embedded-file-display-preferences";
-import { ItemBuilder } from "../../tests/builders/ItemBuilder";
+import { ItemBuilder } from "../../../tests/builders/ItemBuilder";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import { TYPE_EMBEDDED } from "../constants";
+import { TYPE_EMBEDDED } from "../../constants";
 
 describe("embedded-file-display-preferences", () => {
     let context: ActionContext<RootState, RootState>;
