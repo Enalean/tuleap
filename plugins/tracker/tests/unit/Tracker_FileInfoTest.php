@@ -26,7 +26,7 @@ use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     use \Tuleap\ForgeConfigSandbox;
 
@@ -142,7 +142,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
         $file_info_1->postUploadActions();
 
         $this->assertFileExists($file_info_1->getThumbnailPath());
-        $this->assertEquals(
+        self::assertArrayIsIdenticalToArrayIgnoringListOfKeys(
             [
                 112,
                 112,
@@ -151,7 +151,8 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
                 'bits' => 8,
                 'mime' => 'image/png',
             ],
-            getimagesize($file_info_1->getThumbnailPath())
+            (array) getimagesize($file_info_1->getThumbnailPath()),
+            ['width_unit', 'height_unit'],
         );
     }
 
@@ -168,7 +169,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
         $file_info_1->postUploadActions();
 
         $this->assertFileExists($file_info_1->getThumbnailPath());
-        $this->assertEquals(
+        self::assertArrayIsIdenticalToArrayIgnoringListOfKeys(
             [
                 112,
                 112,
@@ -178,7 +179,8 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
                 'channels' => 3,
                 'mime' => 'image/gif',
             ],
-            getimagesize($file_info_1->getThumbnailPath())
+            (array) getimagesize($file_info_1->getThumbnailPath()),
+            ['width_unit', 'height_unit'],
         );
     }
 
@@ -195,7 +197,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
         $file_info_1->postUploadActions();
 
         $this->assertFileExists($file_info_1->getThumbnailPath());
-        $this->assertEquals(
+        self::assertArrayIsIdenticalToArrayIgnoringListOfKeys(
             [
                 112,
                 112,
@@ -205,7 +207,8 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
                 'channels' => 3,
                 'mime' => 'image/jpeg',
             ],
-            getimagesize($file_info_1->getThumbnailPath())
+            (array) getimagesize($file_info_1->getThumbnailPath()),
+            ['width_unit', 'height_unit'],
         );
     }
 
