@@ -19,6 +19,10 @@
 use std::fs::read_to_string;
 
 fn main() -> Result<(), ()> {
-    print!("{}{}", read_to_string("/guest-dir-0000/ReadTest.txt").unwrap(), read_to_string("/guest-dir-0001/ReadTest.txt").unwrap());
+    print!(
+        "{}{}",
+        read_to_string("/guest-dir-0000/ReadTest.txt").unwrap(),
+        read_to_string("/guest-dir-0001/ReadTest.txt").unwrap()
+    );
     Ok(())
 }

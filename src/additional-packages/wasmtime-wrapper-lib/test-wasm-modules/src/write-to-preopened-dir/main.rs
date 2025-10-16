@@ -17,11 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 use std::fs::File;
-use std::path::Path;
 use std::io::Error;
+use std::path::Path;
 
 fn main() -> Result<(), Error> {
-
     let dir = Path::new("/git-dir-7331/");
     let temp_file = dir.join(".write_test");
     match File::create(&temp_file) {

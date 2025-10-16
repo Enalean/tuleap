@@ -1,0 +1,12 @@
+{
+  "url": "https://github.com/numtide/treefmt-nix.git",
+  "rev": "761ae7aff00907b607125b2f57338b74177697ed",
+  "date": "2025-10-10T20:26:56+02:00",
+  "path": "/nix/store/s4vj7hwfl6833d60s23piz6czmpygvkd-treefmt-nix",
+  "sha256": "1y0xsyj12939fg6i0f7bk5ppl06gx30vxfdlq111d699hxv6pbw2",
+  "hash": "sha256-gq9rdocpmRZCwLS5vsHozwB6b5nrOBDNc2kkEaTXHfg=",
+  "fetchLFS": false,
+  "fetchSubmodules": false,
+  "deepClone": false,
+  "leaveDotGit": false
+}

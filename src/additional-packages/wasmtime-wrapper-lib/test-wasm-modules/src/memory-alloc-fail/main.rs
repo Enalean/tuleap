@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
- fn main() -> () {
+fn main() -> () {
     // Allocate 10Mo (10485760 bytes)
     let mut vec: Vec<u64> = Vec::with_capacity(2621440);
     for i in 0..2621440 {
