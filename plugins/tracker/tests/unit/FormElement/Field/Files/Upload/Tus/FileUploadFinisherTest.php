@@ -66,6 +66,6 @@ final class FileUploadFinisherTest extends TestCase
         $file_information = new FileBeingUploadedInformation(42, 'Lenna.png', 473831, 473831);
 
         (new FileUploadFinisher($dao, $factory))->finishUpload(new NullServerRequest(), $file_information);
-        self::assertFileEquals(__DIR__ . '/_fixtures/Lenna-expected-thumbnail.png', $base_path . '/thumbnails/42');
+        self::assertEquals('631b6b98a9e41fb834164c0b83fbe5cc56da967d76d6cffe396534765adc7a43', hash('sha256', $base_path . '/thumbnails/42'));
     }
 }

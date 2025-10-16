@@ -10,4 +10,5 @@ treefmt-nix.mkWrapper pkgs {
     enable = true;
     package = pkgs.nixfmt;
   };
+  programs.oxipng.enable = true;
 }
