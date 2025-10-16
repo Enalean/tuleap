@@ -193,14 +193,6 @@ msgstr "5일 전"
 
 #, php-format
 msgid ""
-"<A HREF=\"%1$s\"><u>Log in first</u></A><span class=\"highlight\"> to post "
-"messages</span>"
-msgstr ""
-"<A HREF=\"%1$s\"><u>먼저 로그인하여</u></A><span class=\"highlight\"> 메시지 "
-"게시</span>"
-
-#, php-format
-msgid ""
 "<h4><i class=\"fa-solid fa-triangle-exclamation\"></i> Your local.inc file "
 "is outdated!</h4><p>It appears that your local.inc file contains definitions "
 "of variables that are unused and it may lead to confusion.</p><p>Please edit "
@@ -1472,9 +1464,6 @@ msgstr "그룹 멤버"
 msgid "Groups"
 msgstr "그룹"
 
-msgid "HTML tags will display in your post as text"
-msgstr "HTML 태그는 게시물에 텍스트로 표시됩니다."
-
 msgid "Header background"
 msgstr "머리글 배경"
 
@@ -1523,9 +1512,6 @@ msgstr "동의합니다."
 
 msgid "I decline"
 msgstr "거절합니다."
-
-msgid "INSERT FAILED"
-msgstr "삽입 실패"
 
 msgid "Icon"
 msgstr "아이콘"
@@ -1889,9 +1875,6 @@ msgstr "멤버 관리"
 msgid "Message"
 msgstr "메시지"
 
-msgid "Message Posted"
-msgstr "메시지 게시됨"
-
 msgid "Message from %s:"
 msgstr "%s에서 온 메시지:"
 
@@ -2051,9 +2034,6 @@ msgstr "하위 프로젝트 없음"
 
 msgid "No email for user account"
 msgstr "사용자 계정에 대한 이메일 없음"
-
-msgid "No followup ID present when trying to post to an existing thread."
-msgstr "기존 스레드에 게시하려고 할 때 후속 ID가 없습니다."
 
 msgid "No forum for this project"
 msgstr "이 프로젝트에 포럼이 없습니다."
@@ -2365,15 +2345,6 @@ msgstr "http:// 또는 https:// 링크를 입력하십시오."
 
 msgid "Plugins"
 msgstr "플러그인"
-
-msgid "Post Comment"
-msgstr "댓글 작성"
-
-msgid "Post a followup to this message"
-msgstr "이 메시지에 대한 후속 댓글 남기기"
-
-msgid "Posting Failed"
-msgstr "게시 실패"
 
 msgid "Predefined project references"
 msgstr "사전 정의된 프로젝트 참조"
@@ -3081,9 +3052,6 @@ msgstr "특정 프로젝트"
 msgid "Start New Thread"
 msgstr "새 스레드 시작"
 
-msgid "Start a New Thread"
-msgstr "새 스레드 시작"
-
 msgid "Start a new project"
 msgstr "새 프로젝트 시작"
 
@@ -3697,9 +3665,6 @@ msgstr "이는 모든 프로젝트에서 이 서비스를 제거합니다."
 msgid "Thread"
 msgstr "스레드"
 
-msgid "Thread View"
-msgstr "스레드 뷰"
-
 msgid "Threaded"
 msgstr "스레드 됨"
 
@@ -3760,12 +3725,6 @@ msgstr "트래커 v3 불러오기"
 
 msgid "Trove categories"
 msgstr "Trove 카테고리"
-
-msgid "Trying to followup to a message that doesn't exist."
-msgstr "존재하지 않는 메시지에 대한 후속 조치를 시도하고 있습니다."
-
-msgid "Trying to post without a forum ID"
-msgstr "포럼 ID 없이 게시하려고 합니다."
 
 msgid ""
 "Tuleap helps teams to deliver awesome applications, better, faster, and "
@@ -4177,13 +4136,6 @@ msgid "Yesterday"
 msgstr "어제"
 
 msgid ""
-"You appear to be double-posting this message, since it has the same subject "
-"and followup information as a prior post."
-msgstr ""
-"이 메시지는 이전 게시물과 동일한 제목 및 후속 정보를 가지고 있습니다. 이 메시"
-"지를 중복 게시하는 것은 아닌지 다시 한번 확인해주세요."
-
-msgid ""
 "You are about to allow access to a resource for every projects on the "
 "platform."
 msgstr "플랫폼의 모든 프로젝트에 대해 리소스의 액세스를 허용하려고 합니다."
@@ -4399,9 +4351,6 @@ msgstr "아카이브에서 프로젝트를 만들 때 드라이 런을 요청할
 
 msgid "You cannot create an already expired access key."
 msgstr "이미 만료된 액세스 키는 생성할 수 없습니다."
-
-msgid "You could post if you were logged in"
-msgstr "로그인하면 게시할 수 있습니다."
 
 msgid "You do not have permission to access the site administration."
 msgstr "사이트 관리에 액세스할 수 있는 권한이 없습니다."

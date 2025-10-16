@@ -206,14 +206,6 @@ msgstr "il y a 5 jours"
 
 #, php-format
 msgid ""
-"<A HREF=\"%1$s\"><u>Log in first</u></A><span class=\"highlight\"> to post "
-"messages</span>"
-msgstr ""
-"<A HREF=\"%1$s\"><u>Connectez-vous en premier</u></A><span "
-"class=\"highlight\"> pour poster un message</span>"
-
-#, php-format
-msgid ""
 "<h4><i class=\"fa-solid fa-triangle-exclamation\"></i> Your local.inc file "
 "is outdated!</h4><p>It appears that your local.inc file contains definitions "
 "of variables that are unused and it may lead to confusion.</p><p>Please edit "
@@ -1539,10 +1531,6 @@ msgstr "Membres du groupe"
 msgid "Groups"
 msgstr "Groupes"
 
-msgid "HTML tags will display in your post as text"
-msgstr ""
-"Les balises HTML seront affichées sous forme de texte dans vos messages"
-
 msgid "Header background"
 msgstr "Image de fond de l'entête"
 
@@ -1595,9 +1583,6 @@ msgstr "Je suis d'accord"
 
 msgid "I decline"
 msgstr "Je refuse"
-
-msgid "INSERT FAILED"
-msgstr "L'insertion a échoué"
 
 msgid "Icon"
 msgstr "Icône"
@@ -1975,9 +1960,6 @@ msgstr "Gestion des membres"
 msgid "Message"
 msgstr "Message"
 
-msgid "Message Posted"
-msgstr "Message posté"
-
 msgid "Message from %s:"
 msgstr "Message de la part de %s :"
 
@@ -2140,9 +2122,6 @@ msgstr "Aucun projet enfant"
 
 msgid "No email for user account"
 msgstr "Pas d'adresse email pour ce compte"
-
-msgid "No followup ID present when trying to post to an existing thread."
-msgstr "Identifiant de fil de discussion manquant pour une réponse."
 
 msgid "No forum for this project"
 msgstr "Aucun forum pour ce projet"
@@ -2476,15 +2455,6 @@ msgstr "Veuillez utiliser un lien http:// ou https://"
 
 msgid "Plugins"
 msgstr "Plugins"
-
-msgid "Post Comment"
-msgstr "Poster un commentaire"
-
-msgid "Post a followup to this message"
-msgstr "Poster une réponse dans cette discussion"
-
-msgid "Posting Failed"
-msgstr "L'envoi du message a échoué"
 
 msgid "Predefined project references"
 msgstr "Références de projets prédéfinis"
@@ -3205,9 +3175,6 @@ msgstr "Projet spécifique"
 msgid "Start New Thread"
 msgstr "Commencer une nouvelle discussion"
 
-msgid "Start a New Thread"
-msgstr "Commencer une nouvelle discussion"
-
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"
 
@@ -3850,9 +3817,6 @@ msgstr "Ceci supprimera ce service de tous les projets."
 msgid "Thread"
 msgstr "Fil de discussion"
 
-msgid "Thread View"
-msgstr "Vue des fils de discussion"
-
 msgid "Threaded"
 msgstr "En fils de discussions"
 
@@ -3915,12 +3879,6 @@ msgstr "Import trackers v3"
 
 msgid "Trove categories"
 msgstr "Catégories"
-
-msgid "Trying to followup to a message that doesn't exist."
-msgstr "Tentative de poster une réponse sur un fil de discussion inexistant."
-
-msgid "Trying to post without a forum ID"
-msgstr "Tentative de poster un message sans identifiant (ID) de forum"
 
 msgid ""
 "Tuleap helps teams to deliver awesome applications, better, faster, and "
@@ -4358,13 +4316,6 @@ msgid "Yesterday"
 msgstr "Hier"
 
 msgid ""
-"You appear to be double-posting this message, since it has the same subject "
-"and followup information as a prior post."
-msgstr ""
-"Il semble que vous tentiez de poster ce message deux fois, car il a le même "
-"sujet et les mêmes information d fil de discussion qu'un précédent message."
-
-msgid ""
 "You are about to allow access to a resource for every projects on the "
 "platform."
 msgstr ""
@@ -4623,9 +4574,6 @@ msgstr ""
 
 msgid "You cannot create an already expired access key."
 msgstr "Vous ne pouvez pas créer une clé déja expirée."
-
-msgid "You could post if you were logged in"
-msgstr "Vous pourriez poster un message si vous étiez connecté"
 
 msgid "You do not have permission to access the site administration."
 msgstr ""
