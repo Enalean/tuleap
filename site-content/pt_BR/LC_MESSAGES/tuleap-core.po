@@ -420,17 +420,8 @@ msgstr "Ativo"
 msgid "Active sessions browser statistics"
 msgstr "Estatísticas das sessões ativas de navegador"
 
-msgid "Add Forum"
-msgstr "Adicionar Fórum"
-
 msgid "Add SSH key"
 msgstr "Adicionar chave SSH"
-
-msgid "Add This Forum"
-msgstr "Adicionar este Fórum"
-
-msgid "Add a Forum"
-msgstr "Adicionar um Fórum"
 
 msgid "Add a new service"
 msgstr "Adicionar novo serviço"
@@ -1322,10 +1313,6 @@ msgstr "Erro"
 msgid "Error - choose a forum first"
 msgstr "Erro - escolha primeiro um Fórum"
 
-#, php-format
-msgid "Error Adding Forum '%1$s'."
-msgstr "Erro ao adicionar o Fórum '%1$s'."
-
 msgid "Error Updating Forum Info"
 msgstr "Erro ao Atualizar as Informações do Fórum"
 
@@ -1346,9 +1333,6 @@ msgstr "Eventos com erros"
 
 msgid "Events in warning"
 msgstr "Eventos com alertas"
-
-msgid "Existing Forums"
-msgstr "Fóruns Existentes"
 
 msgid ""
 "Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format."
@@ -1431,10 +1415,6 @@ msgstr "Forçar a utilização?"
 
 msgid "Forum"
 msgstr "Fórum"
-
-#, php-format
-msgid "Forum '%1$s' Added."
-msgstr "Fórum '%1$s' Adicionado."
 
 msgid "Forum Administration"
 msgstr "Administração do Fórum"
@@ -4193,10 +4173,6 @@ msgstr "Bem-vindo a bordo"
 
 msgid "Welcome message and information for users"
 msgstr "Mensagem de boas-vindas e informações para os usuários"
-
-#, php-format
-msgid "Welcome to %1$s"
-msgstr "Bem-vindo a %1$s"
 
 #, php-format
 msgid "Welcome to %1$s!"

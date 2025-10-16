@@ -99,65 +99,6 @@ function forum_footer()
     site_project_footer([]);
 }
 
-/**
- * @return forum_id = -1 if error
- */
-function forum_create_forum($group_id, $forum_name, $is_public = 1, $create_default_message = 1, $description = '', $need_feedback = true)
-{
-    global $feedback;
-    /*
-        Adding forums to this group
-    */
-    $sql = 'INSERT INTO forum_group_list (group_id,forum_name,is_public,description) ' .
-    'VALUES (' . db_ei($group_id) . ",'" . db_es(htmlspecialchars($forum_name)) . "'," . db_ei($is_public) . ",'" . db_es(htmlspecialchars($description)) . "')";
-
-    $result = db_query($sql);
-    if (! $result) {
-        if ($need_feedback) {
-            $feedback .= ' ' . sprintf(_('Error Adding Forum \'%1$s\'.'), $forum_name) . ' ';
-        }
-        return -1;
-    } else {
-        if ($need_feedback) {
-            $GLOBALS['Response']->addFeedback('info', sprintf(_('Forum \'%1$s\' Added.'), $forum_name));
-        }
-
-        $forum_id = db_insertid($result);
-
-        if ($create_default_message) {
-         //Get the name of the group
-            $group_name = '';
-            $pm         = ProjectManager::instance();
-            $group_obj  = $pm->getProject($group_id);
-            if ($group_obj && is_object($group_obj)) {
-                  $group_name = $group_obj->getPublicName();
-            }
-
-            $hp = Codendi_HTMLPurifier::instance();
-         //set up a cheap default message
-            $result2 = db_query('INSERT INTO forum ' .
-             '(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ' .
-             'VALUES (' . db_ei($forum_id) . ",100,'" . db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . ' ' . htmlspecialchars($forum_name)) . "'," .
-             "'" . db_es(sprintf(_('Welcome to %1$s'), $group_name) . ' ' . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')");
-        }
-        return $forum_id;
-    }
-}
-
-function get_forum_group_id($id)
-{
-    /*
-        Takes an ID and returns the corresponding forum group_id
-    */
-    $sql    = 'SELECT group_id FROM forum_group_list WHERE group_forum_id=' . db_ei($id);
-    $result = db_query($sql);
-    if (! $result || db_numrows($result) < 1) {
-        return null;
-    } else {
-        return db_result($result, 0, 'group_id');
-    }
-}
-
 function show_thread($thread_id, $et = 0)
 {
     global $Language;

@@ -206,7 +206,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->expects($this->once())->method('setProjectAdmin');
         $this->creator->expects($this->once())->method('fakeGroupIdIntoHTTPParams');
         $this->creator->expects($this->once())->method('setMessageToRequesterFromTemplate');
-        $this->creator->expects($this->once())->method('initForumModuleFromTemplate');
         $this->creator->expects($this->once())->method('initSVNModuleFromTemplate');
         $this->creator->expects($this->once())->method('initFRSModuleFromTemplate');
         $this->creator->expects($this->once())->method('initTrackerV3ModuleFromTemplate');
@@ -264,7 +263,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->expects($this->once())->method('setProjectAdmin');
         $this->creator->expects($this->once())->method('fakeGroupIdIntoHTTPParams');
         $this->creator->expects($this->once())->method('setMessageToRequesterFromTemplate');
-        $this->creator->expects($this->once())->method('initForumModuleFromTemplate');
         $this->creator->expects($this->once())->method('initSVNModuleFromTemplate');
         $this->creator->expects($this->once())->method('initFRSModuleFromTemplate');
         $this->creator->expects($this->once())->method('initTrackerV3ModuleFromTemplate');
@@ -327,7 +325,6 @@ final class ProjectCreatorTest extends TestCase
                 'setProjectAdmin',
                 'fakeGroupIdIntoHTTPParams',
                 'setMessageToRequesterFromTemplate',
-                'initForumModuleFromTemplate',
                 'initSVNModuleFromTemplate',
                 'initFRSModuleFromTemplate',
                 'initTrackerV3ModuleFromTemplate',

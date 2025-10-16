@@ -410,17 +410,8 @@ msgstr "활동 중"
 msgid "Active sessions browser statistics"
 msgstr "활성 세션 브라우저 통계"
 
-msgid "Add Forum"
-msgstr "포럼 추가"
-
 msgid "Add SSH key"
 msgstr "SSH 키 추가"
-
-msgid "Add This Forum"
-msgstr "이 포럼 추가"
-
-msgid "Add a Forum"
-msgstr "포럼 추가"
 
 msgid "Add a new service"
 msgstr "새로운 서비스 추가"
@@ -1291,10 +1282,6 @@ msgstr "오류"
 msgid "Error - choose a forum first"
 msgstr "오류 - 포럼을 먼저 선택하세요."
 
-#, php-format
-msgid "Error Adding Forum '%1$s'."
-msgstr "포럼 '%1$s'을(를) 추가하는 동안 오류 발생"
-
 msgid "Error Updating Forum Info"
 msgstr "포럼 정보를 업데이트하는 중 오류 발생"
 
@@ -1315,9 +1302,6 @@ msgstr "오류가 있는 이벤트"
 
 msgid "Events in warning"
 msgstr "경고가 있는 이벤트"
-
-msgid "Existing Forums"
-msgstr "기존 포럼"
 
 msgid ""
 "Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format."
@@ -1398,10 +1382,6 @@ msgstr "강제 사용하시겠습니까?"
 
 msgid "Forum"
 msgstr "포럼"
-
-#, php-format
-msgid "Forum '%1$s' Added."
-msgstr "포럼 '%1$s’이(가) 추가되었습니다."
 
 msgid "Forum Administration"
 msgstr "포럼 관리"
@@ -4102,10 +4082,6 @@ msgstr "환영합니다"
 
 msgid "Welcome message and information for users"
 msgstr "사용자를 위한 환영 메시지 및 정보"
-
-#, php-format
-msgid "Welcome to %1$s"
-msgstr "%1$s에 오신 것을 환영합니다."
 
 #, php-format
 msgid "Welcome to %1$s!"
