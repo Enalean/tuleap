@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\ContentSecurityPolicy\CSPNonce;
+
 /**
 * Html view of the manager.
 *
@@ -238,7 +240,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager // phpcs:ignore PSR1
         echo '<input type="hidden" id="value" name="value" value="" />';
         echo '<input type="hidden" id="direction_type" name="direction_type" value="" />';
         echo '</form>';
-        echo '<script type="text/javascript">' . "\n";
+        echo '<script type="text/javascript" nonce="' . Codendi_HTMLPurifier::instance()->purify(CSPNonce::build()->value) . '">' . "\n";
         echo "//<![CDATA[\n";
 
         $this->displayFieldsAndValuesAsJavascript();

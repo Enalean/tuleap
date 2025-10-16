@@ -3205,7 +3205,9 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     return $out;
         }
 
-        $out = '';
+        $out                      = '';
+        $csp_nonce                = \Tuleap\ContentSecurityPolicy\CSPNonce::build();
+        $csp_nonce_purified_value = $hp->purify($csp_nonce->value);
 
         // Header first
         if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
@@ -3213,7 +3215,7 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         } else {
             if ($rows > 0) {
                 $out .= '<div style="text-align:right">';
-                $out .= '<script type="text/javascript">
+                $out .= '<script type="text/javascript" nonce="' . $csp_nonce_purified_value . '">
                     function tracker_expand_all_comments() {
                         $H(tracker_comment_togglers).values().each(function (value) {
                                 (value)(null, true, true);
@@ -3275,7 +3277,7 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     <div class="followup_comment" id="comment_' . $comment_id . '">
                         <div class="' . util_get_alt_row_color($i) . ' followup_comment_header">
                             <div class="followup_comment_title">';
-                $out .= '<script type="text/javascript">document.write(\'<span>';
+                $out .= '<script type="text/javascript" nonce="' . $csp_nonce_purified_value . '">document.write(\'<span>';
                 $out .= $GLOBALS['HTML']->getImage(
                     $toggle,
                     [
@@ -3285,7 +3287,7 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     ]
                 );
                 $out .= '</span>\');</script>';
-                $out .= '<script type="text/javascript">';
+                $out .= '<script type="text/javascript" nonce="' . $csp_nonce_purified_value . '">';
                 $out .= 'tracker_comment_togglers[' . (int) $comment_id . "] = function (evt, force, expand) {
                         var toggle = $('comment_" . (int) $comment_id . "_toggle');
                         var element = $('comment_" . (int) $comment_id . "_content');
@@ -3346,7 +3348,7 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 }
                 $user_quoted = addslashes(addslashes($user_quoted));
                 if ($pv == 0) {
-                    $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\'' . $user_quoted . '\\\', \\\'' . (int) $comment_id . '\\\'); return false;" title="quote">';
+                    $out .= '<script type="text/javascript" nonce="' . $csp_nonce_purified_value . '">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\'' . $user_quoted . '\\\', \\\'' . (int) $comment_id . '\\\'); return false;" title="quote">';
                     $out .= $GLOBALS['HTML']->getImage('ic/quote.png', ['border' => 0, 'alt' => 'quote']);
                     $out .= '</a>\');</script>';
                 }
@@ -3369,7 +3371,7 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 $out .= $this->formatFollowUp($group_id, $isHtml, $value, $output);
                 $out .= '</div>';
                 $out .= '</div>';
-                $out .= '<script type="text/javascript">
+                $out .= '<script type="text/javascript" nonce="' . $csp_nonce_purified_value . '">
                     if (linked_comment_id == ' . (int) $comment_id . ') {
                         tracker_comment_togglers[' . (int) $comment_id . '](null, true, true);
                     }

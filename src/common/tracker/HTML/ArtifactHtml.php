@@ -20,6 +20,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\ContentSecurityPolicy\CSPNonce;
 use Tuleap\Date\DateHelper;
 
 class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -165,9 +166,12 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         if (! $ro) {
             echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('tracker_include_artifact', 'submit') . '"></div>';
         }
+        $csp_nonce                = CSPNonce::build();
+        $csp_nonce_purified_value = $hp->purify($csp_nonce->value);
+
         // Followups comments
         $html  = '';
-        $html .= '<script type="text/javascript">';
+        $html .= '<script type="text/javascript" nonce="' . $csp_nonce_purified_value . '">';
         $html .= "var tracker_comment_togglers = {};
             function tracker_reorder_followups() {
                 var element = $('artifact_section_followups');
@@ -218,7 +222,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $html .=  $this->showFollowUpComments($group_id, $pv);
 
         $title  = $Language->getText('tracker_include_artifact', 'follow_ups') . ' ';
-        $title .= '<script type="text/javascript">';
+        $title .= '<script type="text/javascript" nonce="' . $csp_nonce_purified_value . '">';
         $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();new Ajax.Request(\\\'invert_comments_order.php\\\'); return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
         $title .= '</script>';
         $title .= ' <a href="/tracker/?func=rss&aid=' . (int) $this->getId() . '&atid=' . (int) $this->ArtifactType->getID() . '&group_id=' . (int) $this->ArtifactType->getGroupId() . '" ';
@@ -232,7 +236,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             true
         );
         if (user_get_preference('tracker_comment_invertorder')) {
-            echo '<script type="text/javascript">tracker_reorder_followups();</script>';
+            echo '<script type="text/javascript"  nonce="' . $csp_nonce_purified_value . '">tracker_reorder_followups();</script>';
         }
 
         // CC List
@@ -320,7 +324,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             $html .= $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') . '</label>';
             $html .= '</p>';
             $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);
-            $html .= '<script type="text/javascript">';
+            $html .= '<script type="text/javascript" nonce="' . $csp_nonce_purified_value . '">';
             $html .= "
                 document.observe('dom:loaded', function() {
                     if ( ! $('use_artifact_permissions').checked) {
@@ -388,7 +392,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             ]
         );
         $html .= ' ' . $title . '</legend><div id="' . $id . '_alternate" style="display:none;"></div>';
-        $html .= '<script type="text/javascript">';
+        $html .= '<script type="text/javascript" nonce="' . Codendi_HTMLPurifier::instance()->purify(CSPNonce::build()->value) . '">';
         $html .= "Event.observe($('" . $id . "_toggle'), 'click', function (evt) {
                 var element = $('$id');
                 if (element) {
@@ -1005,7 +1009,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             $html .= $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') . '</label>';
             $html .= '</p>';
             $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);
-            $html .= '<script type="text/javascript">';
+            $html .= '<script type="text/javascript" nonce="' . Codendi_HTMLPurifier::instance()->purify(CSPNonce::build()->value) . '">';
             $html .= "
             document.observe('dom:loaded', function() {
                 if ( ! $('use_artifact_permissions').checked) {

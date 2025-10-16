@@ -148,7 +148,7 @@ class ArtifactFieldHtml extends ArtifactField
                 $output .= html_build_multiple_select_box($result, $box_name, $checked, ($this->getDisplaySize() != '' ? $this->getDisplaySize() : '6'), $show_none, $text_none, $show_any, $text_any, $show_unchanged, $text_unchanged, $show_value);
             }
             if ($this->isJavascriptEnabled) {
-                $output .= '<script type="text/javascript">';
+                $output .= '<script type="text/javascript" nonce="' . $hp->purify(\Tuleap\ContentSecurityPolicy\CSPNonce::build()->value) . '">';
                 $output .= "\ncodendi.trackerv3.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE) . "')";
                 $output .= $this->_getValuesAsJavascript($array_values, $checked);
                 $output .= ";\n";
@@ -270,7 +270,7 @@ class ArtifactFieldHtml extends ArtifactField
                 );
             }
             if ($this->isJavascriptEnabled) {
-                $output .= '<script type="text/javascript">';
+                $output .= '<script type="text/javascript" nonce="' . $hp->purify(\Tuleap\ContentSecurityPolicy\CSPNonce::build()->value) . '">';
                 $output .= "\ncodendi.trackerv3.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE) . "')";
                 $output .= $this->_getValuesAsJavascript($array_values, $checked, $text_unchanged);
                 $output .= ';';
