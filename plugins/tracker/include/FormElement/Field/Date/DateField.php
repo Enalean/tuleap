@@ -30,8 +30,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_DateFormatter;
-use Tracker_FormElement_DateTimeFormatter;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_Report;
@@ -42,6 +40,8 @@ use Tracker_Report_REST;
 use Tuleap\Date\DateHelper;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\DateFormatter;
+use Tuleap\Tracker\FormElement\DateTimeFormatter;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DateFieldSpecificPropertiesDAO;
@@ -620,7 +620,7 @@ class DateField extends TrackerField
 
     private function formatDateForReport($criteria_value)
     {
-        $date_formatter = new Tracker_FormElement_DateFormatter($this);
+        $date_formatter = new DateFormatter($this);
         return $date_formatter->formatDate($criteria_value);
     }
 
@@ -633,7 +633,7 @@ class DateField extends TrackerField
      */
     protected function formatDateTime($date)
     {
-        return format_date(Tracker_FormElement_DateTimeFormatter::DATE_TIME_FORMAT, (float) $date, '');
+        return format_date(DateTimeFormatter::DATE_TIME_FORMAT, (float) $date, '');
     }
 
     /**
@@ -1115,10 +1115,10 @@ class DateField extends TrackerField
         }
 
         if ($this->isTimeDisplayed()) {
-            return date(Tracker_FormElement_DateTimeFormatter::DATE_TIME_FORMAT, strtotime($value['value']));
+            return date(DateTimeFormatter::DATE_TIME_FORMAT, strtotime($value['value']));
         }
 
-        return date(Tracker_FormElement_DateFormatter::DATE_FORMAT, strtotime($value['value']));
+        return date(DateFormatter::DATE_FORMAT, strtotime($value['value']));
     }
 
     #[Override]
@@ -1189,15 +1189,15 @@ class DateField extends TrackerField
     }
 
     /**
-     * @return Tracker_FormElement_DateFormatter
+     * @return DateFormatter
      */
     public function getFormatter()
     {
         if ($this->isTimeDisplayed()) {
-            return new Tracker_FormElement_DateTimeFormatter($this);
+            return new DateTimeFormatter($this);
         }
 
-        return new Tracker_FormElement_DateFormatter($this);
+        return new DateFormatter($this);
     }
 
     protected function getArtifactTimeframeHelper(): ArtifactTimeframeHelper

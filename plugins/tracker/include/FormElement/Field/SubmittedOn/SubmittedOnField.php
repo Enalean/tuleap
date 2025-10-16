@@ -28,7 +28,6 @@ use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_DateFormatter;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
@@ -36,6 +35,7 @@ use Tracker_Report_Criteria;
 use Tuleap;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\DateFormatter;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
@@ -369,7 +369,7 @@ class SubmittedOnField extends DateField implements Tracker_FormElement_Field_Re
     #[Override]
     public function getLastValue(Artifact $artifact)
     {
-        return date(Tracker_FormElement_DateFormatter::DATE_FORMAT, $artifact->getSubmittedOn());
+        return date(DateFormatter::DATE_FORMAT, $artifact->getSubmittedOn());
     }
 
     /**

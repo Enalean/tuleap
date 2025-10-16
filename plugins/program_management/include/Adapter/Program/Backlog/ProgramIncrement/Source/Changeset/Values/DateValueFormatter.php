@@ -31,10 +31,10 @@ final class DateValueFormatter
      * Format a date value (UNIX Timestamp) to a format accepted by Tracker
      * Date field validation
      * @see \Rule_Date::isValid()
-     * @see \Tracker_FormElement_DateFormatter::formatDate()
+     * @see \Tuleap\Tracker\FormElement\DateFormatter::formatDate()
      */
     public function formatForTrackerPlugin(StartDateValue|EndDateValue $value): string
     {
-        return \date(\Tracker_FormElement_DateFormatter::DATE_FORMAT, $value->getValue());
+        return \date(\Tuleap\Tracker\FormElement\DateFormatter::DATE_FORMAT, $value->getValue());
     }
 }

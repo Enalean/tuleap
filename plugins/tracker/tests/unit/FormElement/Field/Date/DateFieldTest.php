@@ -31,7 +31,6 @@ use ReflectionClass;
 use SimpleXMLElement;
 use TestHelper;
 use Tracker_Artifact_ChangesetValue_Date;
-use Tracker_FormElement_DateFormatter;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_Report_Criteria;
 use Tracker_Report_REST;
@@ -40,6 +39,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\DateFormatter;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -95,7 +95,7 @@ final class DateFieldTest extends TestCase
         });
         self::assertTrue($date_field->hasDefaultValue());
         self::assertEquals(
-            (new DateTimeImmutable())->format(Tracker_FormElement_DateFormatter::DATE_FORMAT),
+            (new DateTimeImmutable())->format(DateFormatter::DATE_FORMAT),
             $date_field->getDefaultValue(),
         );
     }
@@ -519,7 +519,7 @@ final class DateFieldTest extends TestCase
 
         $date->continueGetInstanceFromXML($xml, $mapping, $this->createStub(XMLImportHelper::class), $feedback_collector);
         self::assertEquals(
-            (new DateTimeImmutable())->format(Tracker_FormElement_DateFormatter::DATE_FORMAT),
+            (new DateTimeImmutable())->format(DateFormatter::DATE_FORMAT),
             $date->getDefaultValue(),
         );
     }

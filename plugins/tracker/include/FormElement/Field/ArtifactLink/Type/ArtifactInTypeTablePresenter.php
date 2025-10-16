@@ -54,7 +54,7 @@ class ArtifactInTypeTablePresenter
         $this->artifact_id               = $artifact->getId();
         $this->artifact_title            = $this->emptyStringIfNull($artifact->getTitle());
         $this->artifact_status           = $this->emptyStringIfNull($artifact->getStatus());
-        $this->artifact_last_update_date = \Tracker_FormElement_DateTimeFormatter::format($artifact->getLastUpdateDate());
+        $this->artifact_last_update_date = \Tuleap\Tracker\FormElement\DateTimeFormatter::format($artifact->getLastUpdateDate());
         $this->artifactlink_field_id     = $field->getId();
 
         $assignees      = $artifact->getAssignedTo($current_user);

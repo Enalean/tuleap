@@ -18,6 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Tracker\FormElement\DateFormatter;
+
 /**
  * Date Rule between two dynamic fields
  *
@@ -120,7 +122,7 @@ class Tracker_Rule_Date extends Tracker_Rule //phpcs:ignore PSR1.Classes.ClassDe
     {
         if (preg_match(Rule_Timestamp::TIMESTAMP_REGEX, $date) && $date_only) {
             //transform timestamps for "submitted on" and "last updated date"
-            $date = date(Tracker_FormElement_DateFormatter::DATE_FORMAT, $date);
+            $date = date(DateFormatter::DATE_FORMAT, $date);
         } elseif (preg_match(Rule_Timestamp::TIMESTAMP_REGEX, $date)) {
             return $date;
         }

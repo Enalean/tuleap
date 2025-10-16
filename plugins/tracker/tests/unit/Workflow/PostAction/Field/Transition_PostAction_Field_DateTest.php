@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\DateFormatter;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     use \Tuleap\GlobalLanguageMock;
     use \Tuleap\GlobalResponseMock;
@@ -39,7 +40,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
     #[\Override]
     protected function setUp(): void
     {
-        $GLOBALS['Language']->method('getText')->with('system', 'datefmt_short')->willReturn(Tracker_FormElement_DateFormatter::DATE_FORMAT);
+        $GLOBALS['Language']->method('getText')->with('system', 'datefmt_short')->willReturn(DateFormatter::DATE_FORMAT);
 
         $this->current_user = UserTestBuilder::buildWithDefaults();
 

@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\DateTimeFormatter;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -30,7 +31,7 @@ final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUn
     use \Tuleap\GlobalLanguageMock;
 
     private DateField&MockObject $field;
-    private Tracker_FormElement_DateTimeFormatter $date_formatter;
+    private DateTimeFormatter $date_formatter;
 
     #[Override]
     protected function setUp(): void
@@ -38,7 +39,7 @@ final class Tracker_FormElement_DateTimeFormatterTest extends \Tuleap\Test\PHPUn
         parent::setUp();
 
         $this->field          = $this->createMock(DateField::class);
-        $this->date_formatter = new Tracker_FormElement_DateTimeFormatter($this->field);
+        $this->date_formatter = new DateTimeFormatter($this->field);
     }
 
     public function testItFormatsTimestampInRightFormat(): void
