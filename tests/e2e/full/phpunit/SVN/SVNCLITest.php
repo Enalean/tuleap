@@ -26,7 +26,7 @@ namespace Tuleap\Tests\Selenium\SVN;
 use SimpleXMLElement;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
+final class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $init_pwd;
 
@@ -34,7 +34,6 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->markTestSkipped('SVN 1.10+ need fix');
         $this->init_pwd = getcwd();
         system('/bin/rm -rf /tmp/sample');
     }
@@ -47,7 +46,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
         system('/bin/rm -rf /tmp/sample');
     }
 
-    public function testSVNLs()
+    public function testSVNLs(): void
     {
         $output  = $this->getXML($this->getSvnCommand('alice', 'ls --xml https://tuleap/svnplugin/svn-project-01/sample'));
         $content = [];
@@ -62,7 +61,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
         return 'svn --username ' . $username . ' --password "Correct Horse Battery Staple" --non-interactive --trust-server-cert ' . $command;
     }
 
-    public function testWriteAccessByAlice()
+    public function testWriteAccessByAlice(): void
     {
         chdir('/tmp');
         $this->command($this->getSvnCommand('alice', 'co https://tuleap/svnplugin/svn-project-01/sample'));
@@ -81,7 +80,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($checkedout_revision + 1, $this->getWCRevision());
     }
 
-    public function testWriteAccessDeniedToBob()
+    public function testWriteAccessDeniedToBob(): void
     {
         $got_exception = false;
         $message       = '';
@@ -96,7 +95,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($got_exception, 'Message: ' . $message);
     }
 
-    public function testWriteAccessGrantedToAlice()
+    public function testWriteAccessGrantedToAlice(): void
     {
         $got_exception = false;
         try {

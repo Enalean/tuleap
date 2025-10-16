@@ -5,7 +5,6 @@
         <ugroup name="project_members" description="">
             <members>
                 <member format="username">alice</member>
-                <member format="username">bob</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="">
@@ -31,9 +30,7 @@
     <svn>
         <repository name="sample" dump-file="data/svn.dump">
             <access-file><![CDATA[
-[/]
-* =
-@members = r
+@Contributors = r
 @Integrators = rw
 
 [/trunk]
