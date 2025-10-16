@@ -119,7 +119,6 @@ final class IntegerFieldTest extends TestCase
         $field      = IntegerFieldBuilder::anIntField(456)->build();
         $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('buildMatchExpression');
-        $method->setAccessible(true);
 
         self::assertFragment('field = ?', [12], $method->invokeArgs($field, ['field', '12']));
         self::assertFragment('field < ?', [12], $method->invokeArgs($field, ['field', '<12']));

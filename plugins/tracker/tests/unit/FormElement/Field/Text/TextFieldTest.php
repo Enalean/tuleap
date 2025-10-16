@@ -291,7 +291,6 @@ final class TextFieldTest extends TestCase
         $this->text_field->method('getCriteriaDao')->willReturn($dao);
         $reflection = new ReflectionClass($this->text_field::class);
         $method     = $reflection->getMethod('buildMatchExpression');
-        $method->setAccessible(true);
 
         self::assertFragment(
             'field LIKE ?',

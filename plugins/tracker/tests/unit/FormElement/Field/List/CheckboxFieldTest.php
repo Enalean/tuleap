@@ -87,7 +87,6 @@ final class CheckboxFieldTest extends TestCase
 
         $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('fetchFieldValue');
-        $method->setAccessible(true);
 
         $html = $method->invokeArgs($field, $parameters);
 
