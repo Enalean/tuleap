@@ -24,6 +24,8 @@
     </ul>
 </template>
 
+<script setup lang="ts"></script>
+
 <style scoped lang="scss">
 @use "@/themes/includes/viewport-breakpoint";
 
@@ -36,20 +38,20 @@ ul {
     list-style-type: none;
     color: var(--tlp-dimmed-color);
 
-    &::after {
-        content: "specimen";
-        position: absolute;
-        top: 20vh;
-        transform: rotate(310deg);
-        opacity: 0.7;
-        color: var(--tlp-main-color-transparent-90);
-        font-size: 5rem;
-        font-weight: 600;
-        pointer-events: none;
-    }
-
     &:has(+ .load-more-versions) {
         padding: 0;
     }
+}
+
+.use-fake-versions ul::after {
+    content: "specimen";
+    position: absolute;
+    top: 20vh;
+    transform: rotate(310deg);
+    opacity: 0.7;
+    color: var(--tlp-main-color-transparent-90);
+    font-size: 5rem;
+    font-weight: 600;
+    pointer-events: none;
 }
 </style>

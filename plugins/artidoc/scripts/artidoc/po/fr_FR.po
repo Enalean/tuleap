@@ -471,6 +471,9 @@ msgstr "Avatar de l'utilisateur"
 msgid "Versions"
 msgstr "Versions"
 
+msgid "Versions based on fake data"
+msgstr "Versions basées sur des données simulées"
+
 msgid ""
 "You can now select your fields or go back to the document and create new "
 "sections, they will be stored as artifacts in the selected tracker."
