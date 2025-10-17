@@ -24,15 +24,18 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\ContentSecurityPolicy\CSPNonce;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\ConsentRequiredResponseBuilder;
 
-final class OAuth2ConsentRequiredResponseBuilder implements ConsentRequiredResponseBuilder
+final readonly class OAuth2ConsentRequiredResponseBuilder implements ConsentRequiredResponseBuilder
 {
-    public function __construct(private AuthorizationFormRenderer $form_renderer)
-    {
+    public function __construct(
+        private AuthorizationFormRenderer $form_renderer,
+        private CSPNonce $csp_nonce,
+    ) {
     }
 
     /**
@@ -55,7 +58,8 @@ final class OAuth2ConsentRequiredResponseBuilder implements ConsentRequiredRespo
         return $this->form_renderer->renderForm($data, $layout)
             ->withHeader(
                 'Content-Security-Policy',
-                "default-src 'report-sample'; base-uri 'none'; script-src 'self' 'unsafe-inline' 'report-sample'; style-src 'self' 'report-sample'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self';"
+                "script-src-elem 'self', "
+                . "default-src 'report-sample'; base-uri 'none'; script-src-elem 'nonce-{$this->csp_nonce->value}' 'strict-dynamic'; style-src 'self' 'report-sample'; font-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self';"
                 . "form-action 'self' " . $redirect_uri . ';'
                 . "frame-ancestors 'none'; block-all-mixed-content; report-uri /csp-violation;"
             );

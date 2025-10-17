@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\ContentSecurityPolicy\CSPNonce;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
@@ -46,7 +47,8 @@ final class OAuth2AuthorizationFormResponseBuilderTest extends TestCase
         $form_renderer->expects($this->once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $form_response_builder = new OAuth2ConsentRequiredResponseBuilder(
-            $form_renderer
+            $form_renderer,
+            CSPNonce::build()
         );
 
         $request  = (new NullServerRequest())->withAttribute(BaseLayout::class, LayoutBuilder::build());

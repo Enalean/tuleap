@@ -423,6 +423,7 @@ final class oauth2_serverPlugin extends Plugin
                     TemplateRendererFactory::build(),
                     new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormPresenterBuilder($redirect_uri_builder)
                 ),
+                \Tuleap\ContentSecurityPolicy\CSPNonce::build(),
             ),
             \UserManager::instance(),
             new \Tuleap\OAuth2ServerCore\App\AppFactory(

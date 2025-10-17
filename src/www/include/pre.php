@@ -120,36 +120,40 @@ $loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_loader, new \Tu
 $loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT, $_SERVER);
 
 if (! IS_SCRIPT) {
-    header('Referrer-Policy: no-referrer-when-downgrade, strict-origin, same-origin');
+    (static function () use ($event_manager) {
+        header('Referrer-Policy: no-referrer-when-downgrade, strict-origin, same-origin');
 
-    // Protection against clickjacking
-    header('X-Frame-Options: DENY');
-    $csp_rules = "frame-ancestors 'self'; ";
+        // Protection against clickjacking
+        header('X-Frame-Options: DENY');
+        $csp_rules = "frame-ancestors 'self'; ";
 
-    // XSS prevention
-    header('X-Content-Type-Options: nosniff');
-    $whitelist_scripts = [];
-    $event_manager->processEvent(
-        Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST,
-        [
-            'whitelist_scripts' => &$whitelist_scripts,
-        ]
-    );
-    $csp_whitelist_script_scr  = implode(' ', $whitelist_scripts);
-    $csp_whitelist_script_scr .= ' ' . ForgeConfig::get('sys_csp_script_scr_whitelist');
-    $csp_rules                .= "script-src 'self' 'unsafe-inline' 'report-sample' $csp_whitelist_script_scr ; ";
-    $csp_rules                .= "style-src 'self' 'unsafe-inline' 'report-sample'; ";
-    $csp_rules                .= "font-src 'self'; ";
-    $csp_rules                .= "form-action 'self'; ";
-    $csp_rules                .= "manifest-src 'self'; ";
-    $csp_rules                .= 'img-src * data: blob:; ';
-    $csp_rules                .= "media-src 'self'; ";
-    $csp_rules                .= 'connect-src *; ';
-    $csp_rules                .= 'child-src *; ';
-    $csp_rules                .= 'upgrade-insecure-requests; ';
-    $csp_rules                .= 'report-uri /csp-violation; ';
+        // XSS prevention
+        header('X-Content-Type-Options: nosniff');
+        $allowlist_scripts = [];
+        $event_manager->processEvent(
+            Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST,
+            [
+                'whitelist_scripts' => &$allowlist_scripts,
+            ]
+        );
+        $csp_script_origin = "script-src-elem 'self' 'unsafe-inline' " . implode(' ', $allowlist_scripts) . ' ' . ForgeConfig::get('sys_csp_script_scr_whitelist');
 
-    header("Content-Security-Policy: default-src 'report-sample'; base-uri 'self'; $csp_rules");
+        $csp_nonce_value = \Tuleap\ContentSecurityPolicy\CSPNonce::build()->value;
+        $csp_rules      .= "script-src-elem 'nonce-$csp_nonce_value' 'strict-dynamic'; ";
+        $csp_rules      .= "script-src-attr 'unsafe-inline' 'report-sample'; ";
+        $csp_rules      .= "style-src 'self' 'unsafe-inline' 'report-sample'; ";
+        $csp_rules      .= "font-src 'self'; ";
+        $csp_rules      .= "form-action 'self'; ";
+        $csp_rules      .= "manifest-src 'self'; ";
+        $csp_rules      .= 'img-src * data: blob:; ';
+        $csp_rules      .= "media-src 'self'; ";
+        $csp_rules      .= 'connect-src *; ';
+        $csp_rules      .= 'child-src *; ';
+        $csp_rules      .= 'upgrade-insecure-requests; ';
+        $csp_rules      .= 'report-uri /csp-violation; ';
+
+        header("Content-Security-Policy: $csp_script_origin, default-src 'report-sample'; base-uri 'self'; $csp_rules");
+    })();
 }
 
 $feedback = ''; // Initialize global var

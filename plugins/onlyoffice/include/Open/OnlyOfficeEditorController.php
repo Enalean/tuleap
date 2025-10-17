@@ -94,8 +94,9 @@ final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
     {
         $document_server_url_csp_encoded = str_replace([',', ';'], ['%2C', '%3B'], $document_server_url);
 
-        $csp_header  = "default-src 'report-sample'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; sandbox allow-scripts allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox; report-uri /csp-violation;";
-        $csp_header .= "style-src 'nonce-$csp_nonce'; script-src 'nonce-$csp_nonce' 'strict-dynamic'; frame-src $document_server_url_csp_encoded;";
+        $csp_header  = "script-src-elem 'self', ";
+        $csp_header .= "default-src 'report-sample'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; sandbox allow-scripts allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox; report-uri /csp-violation;";
+        $csp_header .= "style-src 'nonce-$csp_nonce'; script-src-elem 'nonce-$csp_nonce' 'strict-dynamic'; frame-src $document_server_url_csp_encoded;";
 
         return $this->response_factory->createResponse()
             ->withHeader(
