@@ -39,14 +39,8 @@ use Tuleap\Request\NotFoundException;
 
 class AgileDashboardLegacyController implements DispatchableWithRequest, DispatchableWithThemeSelection
 {
-    /**
-     * @var AgileDashboardRouterBuilder
-     */
-    private $router_builder;
-
-    public function __construct(AgileDashboardRouterBuilder $router_builder)
+    public function __construct(private readonly AgileDashboardRouterBuilder $router_builder)
     {
-        $this->router_builder = $router_builder;
     }
 
     /**

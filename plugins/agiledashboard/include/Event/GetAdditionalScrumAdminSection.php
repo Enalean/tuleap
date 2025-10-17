@@ -29,16 +29,10 @@ class GetAdditionalScrumAdminSection
     /**
      * @var IScrumAdminSectionControllers[]
      */
-    private $controllers = [];
+    private array $controllers = [];
 
-    /**
-     * @var \Project
-     */
-    private $project;
-
-    public function __construct(\Project $project)
+    public function __construct(private readonly \Project $project)
     {
-        $this->project = $project;
     }
 
     public function getProject(): \Project

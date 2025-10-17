@@ -20,22 +20,22 @@
 
 use Tuleap\AgileDashboard\BacklogItemDao;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
+use Tuleap\BotMattermost\Bot\BotDao;
+use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
+use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory;
+use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Dao;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\NotificationCreator;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Validator;
-use Tuleap\BotMattermostAgileDashboard\Plugin\PluginInfo;
-use Tuleap\BotMattermost\Bot\BotDao;
-use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostAgileDashboard\Controller;
+use Tuleap\BotMattermostAgileDashboard\Plugin\PluginInfo;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
-use Tuleap\BotMattermost\SenderServices\EncoderMessage;
-use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\Cron\EventCronJobEveryMinute;
 
 require_once 'constants.php';
@@ -43,7 +43,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
-class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($id)
     {
