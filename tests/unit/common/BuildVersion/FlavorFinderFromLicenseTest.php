@@ -31,7 +31,7 @@ final class FlavorFinderFromLicenseTest extends TestCase
 {
     public function testItReturnTrueIfLicenseIsEnterpriseEdition(): void
     {
-        $finder = new FlavorFinderFromLicense(BuildLicenseStub::buildWithLicense(License::buildEnterpriseEdition(null)));
+        $finder = new FlavorFinderFromLicense(BuildLicenseStub::buildWithLicense(License::buildInfiniteEnterpriseEdition()));
 
         self::assertTrue($finder->isEnterprise());
     }

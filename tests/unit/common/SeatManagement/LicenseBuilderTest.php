@@ -27,7 +27,9 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Ramsey\Uuid\Uuid;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\SeatManagement\CheckLicenseContentStub;
 use Tuleap\Test\Stubs\SeatManagement\CheckLicenseSignatureStub;
 use Tuleap\Test\Stubs\SeatManagement\CheckPublicKeyPresenceStub;
 use Tuleap\Test\Stubs\SeatManagement\RetrieveLicenseContentStub;
@@ -61,9 +63,14 @@ final class LicenseBuilderTest extends TestCase
             CheckPublicKeyPresenceStub::buildWithNoKey(),
             CheckLicenseSignatureStub::buildWithValidSignature(),
             RetrieveLicenseContentStub::buildWithoutLicenseContent(),
+            CheckLicenseContentStub::buildWithInvalid(),
         );
 
-        self::assertEquals(License::buildCommunityEdition(), $builder->build());
+        $license = $builder->build();
+        self::assertSame(false, $license->is_enterprise_edition);
+        self::assertEquals(Option::nothing(DateTimeImmutable::class), $license->expiration_date);
+        self::assertSame([], $license->restrictions);
+        self::assertSame(true, $license->has_valid_signature);
     }
 
     public function testItShouldReturnTEEWithAMigrationDateWhenThereIsNoLicenseFile(): void
@@ -72,10 +79,15 @@ final class LicenseBuilderTest extends TestCase
             CheckPublicKeyPresenceStub::buildWithKey(),
             CheckLicenseSignatureStub::buildWithValidSignature(),
             RetrieveLicenseContentStub::buildWithoutLicenseContent(),
+            CheckLicenseContentStub::buildWithInvalid(),
         );
         delete_file($this->license_file_path);
 
-        self::assertEquals(License::buildEnterpriseEdition(null), $builder->build());
+        $license = $builder->build();
+        self::assertSame(true, $license->is_enterprise_edition);
+        self::assertEquals(Option::nothing(DateTimeImmutable::class), $license->expiration_date);
+        self::assertSame([], $license->restrictions);
+        self::assertSame(true, $license->has_valid_signature);
     }
 
     public function testItShouldReturnExpiredTEEIfLicenseSignatureIsInvalid(): void
@@ -84,9 +96,14 @@ final class LicenseBuilderTest extends TestCase
             CheckPublicKeyPresenceStub::buildWithKey(),
             CheckLicenseSignatureStub::buildWithInvalidSignature(),
             RetrieveLicenseContentStub::buildWithoutLicenseContent(),
+            CheckLicenseContentStub::buildWithInvalid(),
         );
 
-        self::assertEquals(License::buildInvalidEnterpriseEdition(), $builder->build());
+        $license = $builder->build();
+        self::assertSame(true, $license->is_enterprise_edition);
+        self::assertEquals(Option::nothing(DateTimeImmutable::class), $license->expiration_date);
+        self::assertSame([], $license->restrictions);
+        self::assertSame(false, $license->has_valid_signature);
     }
 
     public function testItShouldReturnExpiredTEEIfLicenseContentIsInvalid(): void
@@ -95,12 +112,17 @@ final class LicenseBuilderTest extends TestCase
             CheckPublicKeyPresenceStub::buildWithKey(),
             CheckLicenseSignatureStub::buildWithValidSignature(),
             RetrieveLicenseContentStub::buildWithoutLicenseContent(),
+            CheckLicenseContentStub::buildWithInvalid(),
         );
 
-        self::assertEquals(License::buildInvalidEnterpriseEdition(), $builder->build());
+        $license = $builder->build();
+        self::assertSame(true, $license->is_enterprise_edition);
+        self::assertEquals(Option::nothing(DateTimeImmutable::class), $license->expiration_date);
+        self::assertSame([], $license->restrictions);
+        self::assertSame(false, $license->has_valid_signature);
     }
 
-    public function testItShouldReturnValidTEEWithoutExpirationDate(): void
+    public function testItShouldReturnInvalidTEEWhenLicenseClaimsAreInvalid(): void
     {
         $builder = new LicenseBuilder(
             CheckPublicKeyPresenceStub::buildWithKey(),
@@ -114,28 +136,35 @@ final class LicenseBuilderTest extends TestCase
                 [],
                 null,
             )),
+            CheckLicenseContentStub::buildWithInvalid(),
         );
 
-        self::assertEquals(License::buildEnterpriseEdition(null), $builder->build());
+        $license = $builder->build();
+        self::assertSame(true, $license->is_enterprise_edition);
+        self::assertEquals(Option::nothing(DateTimeImmutable::class), $license->expiration_date);
+        self::assertSame([], $license->restrictions);
+        self::assertSame(false, $license->has_valid_signature);
     }
 
-    public function testItShouldReturnValidTEEWithExpirationDate(): void
+    public function testItShouldReturnValidTEE(): void
     {
-        $date    = new DateTimeImmutable()->modify('+1 year');
-        $builder = new LicenseBuilder(
+        $date            = new DateTimeImmutable()->modify('+1 year');
+        $license_content = new LicenseContent(
+            'enalean-tuleap-enterprise',
+            ['toto'],
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
+            Uuid::uuid7($date),
+            [],
+            $date,
+        );
+        $builder         = new LicenseBuilder(
             CheckPublicKeyPresenceStub::buildWithKey(),
             CheckLicenseSignatureStub::buildWithValidSignature(),
-            RetrieveLicenseContentStub::buildWithLicenseContent(new LicenseContent(
-                'enalean-tuleap-enterprise',
-                ['toto'],
-                new DateTimeImmutable(),
-                new DateTimeImmutable(),
-                Uuid::uuid7($date),
-                [],
-                $date,
-            )),
+            RetrieveLicenseContentStub::buildWithLicenseContent($license_content),
+            CheckLicenseContentStub::buildWithValid(),
         );
 
-        self::assertEquals(License::buildEnterpriseEdition($date), $builder->build());
+        self::assertEquals(License::buildEnterpriseEdition($license_content), $builder->build());
     }
 }

@@ -35,23 +35,42 @@ final readonly class License
      */
     private function __construct(
         public bool $is_enterprise_edition,
+        public DateTimeImmutable $start_date,
         public Option $expiration_date,
+        public array $restrictions,
         public bool $has_valid_signature,
     ) {
     }
 
-    public static function buildEnterpriseEdition(?DateTimeImmutable $expiration_date): self
+    public static function buildEnterpriseEdition(LicenseContent $license_content): self
     {
-        return new self(true, Option::fromNullable($expiration_date), true);
+        return new self(
+            true,
+            $license_content->nbf,
+            Option::fromNullable($license_content->exp),
+            $license_content->restrictions,
+            true,
+        );
+    }
+
+    public static function buildInfiniteEnterpriseEdition(): self
+    {
+        return new self(
+            true,
+            new DateTimeImmutable(),
+            Option::nothing(DateTimeImmutable::class),
+            [],
+            true,
+        );
     }
 
     public static function buildInvalidEnterpriseEdition(): self
     {
-        return new self(true, Option::nothing(DateTimeImmutable::class), false);
+        return new self(true, new DateTimeImmutable(), Option::nothing(DateTimeImmutable::class), [], false);
     }
 
     public static function buildCommunityEdition(): self
     {
-        return new self(false, Option::nothing(DateTimeImmutable::class), true);
+        return new self(false, new DateTimeImmutable(), Option::nothing(DateTimeImmutable::class), [], true);
     }
 }
