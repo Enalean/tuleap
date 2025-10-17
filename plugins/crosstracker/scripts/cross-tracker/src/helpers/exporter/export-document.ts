@@ -19,11 +19,13 @@
 import type { RetrieveArtifactsTable } from "../../domain/RetrieveArtifactsTable";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import { ok } from "neverthrow";
+import { ok, okAsync } from "neverthrow";
 import type { ContentSection } from "./xlsx/without-link/data-formater";
 import { formatData } from "./xlsx/without-link/data-formater";
 import type { GetColumnName } from "../../domain/ColumnNameGetter";
 import type { Query } from "../../type";
+import { formatDataWithLink } from "./xlsx/with-link/data-with-link-formater";
+import type { TableDataStore } from "../../domain/TableDataStore";
 
 export function downloadXLSXDocument(
     artifact_table_retriever: RetrieveArtifactsTable,
@@ -36,4 +38,15 @@ export function downloadXLSXDocument(
         download_document(formated_data, query.title);
         return ok(null);
     });
+}
+
+export function downloadXLSXWithLinkDocument(
+    table_data: TableDataStore,
+    column_name_getter: GetColumnName,
+    query: Query,
+    download_document: (formated_data: ContentSection, title: string) => void,
+): ResultAsync<null, Fault> {
+    const formated_data = formatDataWithLink(table_data, column_name_getter);
+    download_document(formated_data, query.title);
+    return okAsync(null);
 }
