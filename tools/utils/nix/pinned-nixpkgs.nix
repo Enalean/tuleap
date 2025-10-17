@@ -1,4 +1,4 @@
-{}:
+{ }:
 
 let
   oxalicaRustOverlayJson = builtins.fromJSON (builtins.readFile ./oxalica-rust-overlay-pin.json);
@@ -10,5 +10,6 @@ let
   pinnedNixpkgs = import (fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/${nixpkgsJson.rev}.tar.gz";
     sha256 = nixpkgsJson.sha256;
-  } ) { overlays = [ oxalicaRustOverlay ]; };
-in pinnedNixpkgs
+  }) { overlays = [ oxalicaRustOverlay ]; };
+in
+pinnedNixpkgs

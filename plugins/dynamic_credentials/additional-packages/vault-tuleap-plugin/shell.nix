@@ -1,4 +1,6 @@
-{ pkgs ? (import ../../../../tools/utils/nix/pinned-nixpkgs.nix) { } }:
+{
+  pkgs ? (import ../../../../tools/utils/nix/pinned-nixpkgs.nix) { },
+}:
 
 pkgs.mkShellNoCC {
   buildInputs = [

@@ -1,7 +1,15 @@
-{ pkgs ? import <nixpkgs> {} }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 
 let
-  startOldBrowserScript = { browserName, browserPackageName, nixpkgsRev, commandToLaunch }:
+  startOldBrowserScript =
+    {
+      browserName,
+      browserPackageName,
+      nixpkgsRev,
+      commandToLaunch,
+    }:
     pkgs.writeScriptBin "old-${browserName}" ''
       #! /usr/bin/env nix-shell
       #! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/${nixpkgsRev}.tar.gz -i bash -p ${browserPackageName}

@@ -1,6 +1,6 @@
 {
-  pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) {},
-  nixpkgsPinEpoch ? (import ../../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; }
+  pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) { },
+  nixpkgsPinEpoch ? (import ../../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; },
 }:
 
 let
@@ -26,7 +26,11 @@ let
       allowBuiltinFetchGit = true;
     };
 
-    nativeBuildInputs = [ pkgs.rustPlatform.cargoSetupHook rustBinWithMuslTarget zigCC ];
+    nativeBuildInputs = [
+      pkgs.rustPlatform.cargoSetupHook
+      rustBinWithMuslTarget
+      zigCC
+    ];
 
     # Tests will try to compile with mini-dashboard features which downloads something from the internet.
     doCheck = false;
@@ -45,7 +49,8 @@ let
     '';
   };
   tuleapVersion = builtins.readFile ../../../VERSION;
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-meilisearch-server-rpm-package";
   srcs = [
     "${tuleapMeilisearchBin}/bin/tuleap-meilisearch"

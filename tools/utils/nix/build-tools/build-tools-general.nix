@@ -16,4 +16,5 @@
   pkgs.cachix
   pkgs.cacert
   pkgs.trufflehog
-] ++ pkgs.lib.optionals (! pkgs.stdenv.isDarwin) [ pkgs.glibc ]
+]
+++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [ pkgs.glibc ]

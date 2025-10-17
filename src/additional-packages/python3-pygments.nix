@@ -18,7 +18,8 @@ let
     ];
     hash = "sha256-B9B+mSmQrVbwp+RuZlAEihmZa8su86sDAkUoAPRZd1g=";
   };
-in pkgs.stdenvNoCC.mkDerivation {
+in
+pkgs.stdenvNoCC.mkDerivation {
   name = "python3-pygments-rpm-crb";
   dontUnpack = true;
   dontPatch = true;
