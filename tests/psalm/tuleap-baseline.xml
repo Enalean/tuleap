@@ -24346,6 +24346,7 @@
       <code><![CDATA[is_null($this->xaxis)]]></code>
     </TypeDoesNotContainNull>
     <UndefinedConstant>
+      <code><![CDATA[FS_NORMAL]]></code>
       <code><![CDATA[SIDE_DOWN]]></code>
     </UndefinedConstant>
     <UndefinedMagicMethod>
@@ -32085,6 +32086,8 @@
     </PossiblyUndefinedVariable>
     <UndefinedConstant>
       <code><![CDATA[BGRAD_MARGIN]]></code>
+      <code><![CDATA[FF_FONT1]]></code>
+      <code><![CDATA[FS_BOLD]]></code>
       <code><![CDATA[GRAD_HOR]]></code>
     </UndefinedConstant>
   </file>
@@ -72852,11 +72855,24 @@
       <code><![CDATA[$box3[1]]]></code>
       <code><![CDATA[$box3[5]]]></code>
     </PossiblyInvalidArrayAccess>
+    <UndefinedConstant>
+      <code><![CDATA[FF_USERFONT]]></code>
+      <code><![CDATA[FS_BOLD]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+    </UndefinedConstant>
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->title]]></code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/chart/Chart_Gantt.php">
+    <UndefinedConstant>
+      <code><![CDATA[FS_NORMAL]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+    </UndefinedConstant>
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->scale]]></code>
     </UndefinedThisPropertyFetch>
@@ -72876,6 +72892,11 @@
     <MissingPropertyType>
       <code><![CDATA[$jpgraph_instance]]></code>
     </MissingPropertyType>
+    <UndefinedConstant>
+      <code><![CDATA[FF_USERFONT]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+    </UndefinedConstant>
   </file>
   <file src="src/common/chart/Chart_TTFFactory.php">
     <MissingParamType>
@@ -72917,6 +72938,10 @@
     <MissingPropertyType>
       <code><![CDATA[$this->jpgraph_instance]]></code>
     </MissingPropertyType>
+    <UndefinedConstant>
+      <code><![CDATA[FS_BOLD]]></code>
+      <code><![CDATA[FS_NORMAL]]></code>
+    </UndefinedConstant>
   </file>
   <file src="src/common/chart/GanttVerticalLine.php">
     <MissingParamType>
@@ -84440,18 +84465,14 @@
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
       <code><![CDATA[db_ei($group_forum_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
       <code><![CDATA[db_ei($is_followup_to)]]></code>
       <code><![CDATA[db_ei($is_followup_to)]]></code>
       <code><![CDATA[db_ei($is_followup_to)]]></code>
       <code><![CDATA[db_ei($is_followup_to)]]></code>
-      <code><![CDATA[db_ei($is_public)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
@@ -84467,18 +84488,12 @@
       <code><![CDATA[db_error()]]></code>
       <code><![CDATA[db_es(htmlspecialchars($body))]]></code>
       <code><![CDATA[db_es(htmlspecialchars($body))]]></code>
-      <code><![CDATA[db_es(htmlspecialchars($description))]]></code>
-      <code><![CDATA[db_es(htmlspecialchars($forum_name))]]></code>
       <code><![CDATA[db_es(htmlspecialchars($subject))]]></code>
       <code><![CDATA[db_es(htmlspecialchars($subject))]]></code>
-      <code><![CDATA[db_es(sprintf(_('Welcome to %1$s'), $group_name) . ' ' . htmlspecialchars($forum_name))]]></code>
-      <code><![CDATA[db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . ' ' . htmlspecialchars($forum_name))]]></code>
-      <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_numrows($res2)]]></code>
       <code><![CDATA[db_numrows($res3)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
@@ -84492,12 +84507,6 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('INSERT INTO forum ' .
-             '(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ' .
-             'VALUES (' . db_ei($forum_id) . ",100,'" . db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . ' ' . htmlspecialchars($forum_name)) . "'," .
-             "'" . db_es(sprintf(_('Welcome to %1$s'), $group_name) . ' ' . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')")]]></code>
       <code><![CDATA[db_query('SELECT * FROM forum ' .
         'WHERE is_followup_to=' . db_ei($is_followup_to) . ' ' .
         "AND subject='" .  db_es(htmlspecialchars($subject)) . "' " .
@@ -84529,35 +84538,24 @@
       <code><![CDATA[db_result($result, ($rows - 1), 'msg_id')]]></code>
       <code><![CDATA[db_result($result, ($rows - 1), 'subject')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'is_public')]]></code>
       <code><![CDATA[db_result($result, 0, 'save_date')]]></code>
     </DeprecatedFunction>
-    <InvalidReturnStatement>
-      <code><![CDATA[-1]]></code>
-    </InvalidReturnStatement>
     <MissingParamType>
       <code><![CDATA[$body]]></code>
-      <code><![CDATA[$create_default_message]]></code>
-      <code><![CDATA[$description]]></code>
       <code><![CDATA[$et]]></code>
       <code><![CDATA[$et]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_name]]></code>
       <code><![CDATA[$forum_status]]></code>
       <code><![CDATA[$group_forum_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$is_followup_to]]></code>
       <code><![CDATA[$is_followup_to]]></code>
-      <code><![CDATA[$is_public]]></code>
       <code><![CDATA[$level]]></code>
       <code><![CDATA[$msg_id]]></code>
       <code><![CDATA[$msg_id]]></code>
-      <code><![CDATA[$need_feedback]]></code>
       <code><![CDATA[$subject]]></code>
       <code><![CDATA[$subject]]></code>
       <code><![CDATA[$thread_id]]></code>
@@ -84572,7 +84570,6 @@
       <code><![CDATA[forum_is_public_value_allowed]]></code>
       <code><![CDATA[forum_utils_access_allowed]]></code>
       <code><![CDATA[forum_utils_get_styles]]></code>
-      <code><![CDATA[get_forum_group_id]]></code>
       <code><![CDATA[get_forum_saved_date]]></code>
       <code><![CDATA[get_next_thread_id]]></code>
       <code><![CDATA[post_message]]></code>
@@ -84585,9 +84582,6 @@
       <code><![CDATA[$poster]]></code>
       <code><![CDATA[$poster]]></code>
     </PossiblyNullArgument>
-    <UndefinedDocblockClass>
-      <code><![CDATA[forum_id]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/www/forum/index.php">
     <DeprecatedFunction>
@@ -89406,11 +89400,6 @@
     <TooManyArguments>
       <code><![CDATA[displayStylesheetElements]]></code>
     </TooManyArguments>
-  </file>
-  <file src="tests/unit/common/Layout/Logo/CustomizedLogoDetectorTest.php">
-    <MissingPropertyType>
-      <code><![CDATA[$data_dir_path]]></code>
-    </MissingPropertyType>
   </file>
   <file src="tests/unit/common/Layout/Logo/FileContentComparatorTest.php">
     <InvalidArgument>
