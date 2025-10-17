@@ -29,8 +29,8 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
 use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
-use Tuleap\Kanban\SemanticStatusNotFoundException;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
+use Tuleap\Kanban\SemanticStatusNotFoundException;
 use XML_ParseException;
 use XML_RNGValidator;
 
