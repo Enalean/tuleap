@@ -4,25 +4,25 @@
 %
 % Commands:
 % ~~~~~~~~~
-% \cancel    draws a diagonal line (slash) through its argument. 
-% \bcancel   uses the negative slope (a backslash). 
+% \cancel    draws a diagonal line (slash) through its argument.
+% \bcancel   uses the negative slope (a backslash).
 % \xcancel   draws an X (actually \cancel plus \bcancel).
-% \cancelto{<value>}{<expression>} draws a diagonal arrow through the 
+% \cancelto{<value>}{<expression>} draws a diagonal arrow through the
 %            expression, pointing to the value.
 %
 % The first three work in math and text mode, but \cancelto is only
 % for math mode.
-% The slope of the line or arrow depends on what is being cancelled.  
+% The slope of the line or arrow depends on what is being cancelled.
 %
 % Options:
 % ~~~~~~~~
-% Bt default, none of these commands affects the horizontal spacing, 
+% Bt default, none of these commands affects the horizontal spacing,
 % so they might over-print neighboring parts of the formula (or text).
-% They do add their height to the expression, so there should never be 
-% unintended vertical overlap.  There is a package option [makeroom] to 
-% increase the horizontal spacing to make room for the cancellation value.  
-% 
-% If you use the color package, then you can declare 
+% They do add their height to the expression, so there should never be
+% unintended vertical overlap.  There is a package option [makeroom] to
+% increase the horizontal spacing to make room for the cancellation value.
+%
+% If you use the color package, then you can declare
 %   \renewcommand{\CancelColor}{<color_command>}
 % and the cancellation marks will be printed in that color (e.g., \blue).
 % However, if you are using color, I recommend lightly shaded blocks rather
@@ -31,17 +31,17 @@
 % The option [thicklines] asks for heavier lines and arrows. This may be
 % useful when the lines are colored a light shade.
 %
-% The size (math style) of the \cancelto value depends on package options 
+% The size (math style) of the \cancelto value depends on package options
 % according to this table:
 %
 % Current style       [samesize]         [smaller]          [Smaller]
 % -------------       ----------------   ----------------   ----------------
 % \displaystyle       \displaystyle      \textstyle         \scriptstyle
 % \textstyle          \textstyle         \scriptstyle       \scriptstyle
-% \scriptstyle        \scriptstyle       \scriptscriptstyle \scriptscriptstyle 
+% \scriptstyle        \scriptstyle       \scriptscriptstyle \scriptscriptstyle
 % \scriptscriptstyle  \scriptscriptstyle \scriptscriptstyle \scriptscriptstyle
 %
-% ("smaller" is the default behavior.  It gives textstyle limits in 
+% ("smaller" is the default behavior.  It gives textstyle limits in
 % displaystyle, whereas "Smaller" gives scriptstyle limits.)
 %
 % This package is provided without guarantees or support.  Drawing slashes
@@ -65,13 +65,13 @@
 \ProcessOptions
 
 \DeclareRobustCommand\cancel[1]{\ifmmode
-  \mathpalette{\@cancel{\@can@slash{}}}{#1}\else 
+  \mathpalette{\@cancel{\@can@slash{}}}{#1}\else
   \@cancel{\@can@slash{}}\hbox{#1}\fi}
 \DeclareRobustCommand\bcancel[1]{\ifmmode
-  \mathpalette{\@cancel{\@can@slash{-}}}{#1}\else 
+  \mathpalette{\@cancel{\@can@slash{-}}}{#1}\else
   \@cancel{\@can@slash{-}}\hbox{#1}\fi}
 \DeclareRobustCommand\xcancel[1]{\ifmmode
-  \mathpalette{\@cancel{\@can@slash{+}\@can@slash{-}}}{#1}\else 
+  \mathpalette{\@cancel{\@can@slash{+}\@can@slash{-}}}{#1}\else
   \@cancel{\@can@slash{+}\@can@slash{-}}\hbox{#1}\fi}
 
 \newcommand\@cancel[3]{%
@@ -93,7 +93,7 @@
  \edef\@tempa{(\ifcase\@tempcnta 6,#11\or 4,#11\or 2,#11\or 4,#13\else 1,#11\fi
    ){\strip@pt\dimen@}}%
 \else % tall
- \@min@pt\totalheight8% 
+ \@min@pt\totalheight8%
  \advance\totalheight2\p@ % "+2"
  \@tempcnta\dimen@ \multiply\@tempcnta 5 \divide\@tempcnta\totalheight
  \dimen@ \ifcase\@tempcnta .16\or .25\or .5\or .75\else 1\fi \totalheight
@@ -133,7 +133,7 @@
  \@tempcnta\totalheight \multiply\@tempcnta 5 \divide\@tempcnta\dimen@
  \@tempdimb 3\p@ % extra width for arrowhead ("+2")
  \advance\dimen@ \ifcase\@tempcnta 5\or 5\or 4\or 3\else 2\fi \p@
- \@min@pt\dimen@9\advance\dimen@\p@ 
+ \@min@pt\dimen@9\advance\dimen@\p@
  \edef\@tempa{\ifcase\@tempcnta 5441\or 5441\or 5421\or 4443\else 3611\fi
       {\strip@pt\dimen@}{\strip@pt\@tempdimb}}%
  \def\@tempb{Cancel #4 to #2; case wide }%

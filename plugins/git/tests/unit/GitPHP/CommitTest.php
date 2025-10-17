@@ -40,7 +40,9 @@ parent 4e6c9adec89c15af454484dda60109ed604efca8
 author Author 1 <author@example.com> 1534259619 +0300
 committer Committer 1 <committer@example.com> 1534259719 +0200
 gpgsig -----BEGIN PGP SIGNATURE-----
- 
+
+EOF . ' ' . <<<EOF
+
  iQEzBAABCgAdFiEEZYSpTRl85FSuRKh0m6S5XYk2HS0FAlty8aMACgkQm6S5XYk2
  HS2i1wgAmG6M4QqONTEHIFU69GhVE834ZLulGSmNZ96/I3WEerMJB/Hb0mk12Vie
  AH+5lly2QefD0BWcWSUY+8H5qdHNQSUauvZsS1K+JH2Kc+GRChKH7k1vzbEBVoe+

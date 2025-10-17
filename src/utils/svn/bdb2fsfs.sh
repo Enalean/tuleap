@@ -11,10 +11,10 @@
 #    more details.
 #
 #
-# This script automates Subversion repository conversion from BDB to FSFS 
+# This script automates Subversion repository conversion from BDB to FSFS
 #
 # ex:
-# Check one repository: 
+# Check one repository:
 #  ./bdb2fsfs.sh --verbose --identify --repository==/svnroot/project
 # Convert all svn repositories:
 #  ./bdb2fsfs.sh --verbose --convert --svnroot=/svnroot
@@ -46,7 +46,7 @@ check_fstype() {
         else
             fstype="bdb"
 	fi
-    
+
 	if [ "${fstype}" != "fsfs" ]; then
 	    echo "${svnrepository}: BDB"
 	else
@@ -59,7 +59,7 @@ check_fstype() {
 
 bkp_repo() {
     set -e${debug}
-    
+
     root=$1
     bkpdir=$2
 
@@ -75,7 +75,7 @@ dump_repo() {
     dumpfile=$2
 
     ${MKDIR} -p $(dirname ${dumpfile})
-    
+
     ${SVNADMIN} dump ${root} > ${dumpfile}
 }
 
@@ -103,7 +103,7 @@ restore_repo() {
 
 restore_prefs() {
     set -e${debug}
-    
+
     root=$1
     bkpdir=$2
 
@@ -124,7 +124,7 @@ lock_repo() {
     set -e${debug}
 
     repo=$1
-    
+
     $CP ${repo}/.SVNAccessFile ${repo}/.SVNAccessFile.bck &&
     cat << EOF > ${repo}/.SVNAccessFile
 [/]
@@ -147,10 +147,10 @@ convert() {
     else
         fstype="bdb"
     fi
-    
-    if [ "${fstype}" != "fsfs" ]; then	    
+
+    if [ "${fstype}" != "fsfs" ]; then
 	last=$(${SVNLOOK} youngest ${svnrepository})
-	
+
 	if [ "${last}" = "0" ]; then
 	    echo -n "Convert empty repository ${svnrepository}... "
 	else
@@ -163,7 +163,7 @@ convert() {
 
 	# Dump
 	dump_repo ${svnrepository} ${BKPDIR}/${reponame}/${reponame}.dump
-	
+
 	${RM} -rf ${svnrepository} &&
 	create_repo ${svnrepository}
 
@@ -174,7 +174,7 @@ convert() {
 	set_access_rights ${svnrepository} ${reponame}
 
 	echo "Done"
-    else 
+    else
 	if [ "${verbose}" = "true" ]; then
 	    echo "Already fsfs (${svnrepository})"
 	fi
@@ -238,7 +238,7 @@ case $action in
         if [ ${svnrepository} != "false" ];
         then
             check_fstype ${svnrepository}
-        else 
+        else
             for repo in `${LS} ${svnroot}`
             do
                 check_fstype ${svnroot}/${repo}
@@ -257,7 +257,7 @@ case $action in
         if [ ${svnrepository} != "false" ];
         then
             convert ${svnrepository}
-        else 
+        else
             for repo in `${LS} ${svnroot}`
             do
                 convert ${svnroot}/${repo}

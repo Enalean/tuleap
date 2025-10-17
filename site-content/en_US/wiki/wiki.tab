@@ -2,7 +2,7 @@
 #  *
 #  * wiki class scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -20,8 +20,8 @@ wiki_views_wikiserviceviews	wiki_subtit_empty	<h3>$1Empty Wiki Pages</h3>
 wiki_views_wikiserviceviews	wiki_subtit_create	<h3>$1Create a new Wiki Page</h3>
 wiki_views_wikiserviceviews	wikientries	<li>$1<p><em>Description:&nbsp;</em>$2</p></li>
 wiki_views_wikiserviceviews	pagename	Page Name:
-wiki_views_wikiserviceviews	menuadmin	Admin	
-wiki_views_wikiserviceviews	menupages	Pages	
+wiki_views_wikiserviceviews	menuadmin	Admin
+wiki_views_wikiserviceviews	menupages	Pages
 wiki_views_wikiserviceviews	menudocuments	Documents
 wiki_views_wikiserviceviews	menuattch	Attach a file
 wiki_views_wikiserviceviews	attatch_page	UpLoad
@@ -108,7 +108,7 @@ wiki_views_wkserviews	entry_name	Entry name:
 wiki_views_wkserviews	wikipage	WikiPage:
 wiki_views_wkserviews	givename	Or give a page name:
 wiki_views_wkserviews	wikipage_em	<em>Select a <a href="$1&view=wikiPages">Project Wiki Page</a> or enter another WikiPage name (if the page doesn't exist, it will be created).</em>
-wiki_views_wkserviews	description	Description:	
+wiki_views_wkserviews	description	Description:
 wiki_views_wkserviews	description_em	<em>Description of the Wiki document</em>
 wiki_views_wkserviews	rank_screen	Rank on screen:
 wiki_views_wkserviews	rank_screen_em	<em>Documents are displayed with this reference</em>

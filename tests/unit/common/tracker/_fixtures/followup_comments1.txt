@@ -25,7 +25,7 @@ Pre-Condition
 ""This method can only be called after the hwdevice has been initialized with Initialize().""
 
 Description
-Freezes the input picture. Normal encoding can be continued using ReleaseFreeze(). 
+Freezes the input picture. Normal encoding can be continued using ReleaseFreeze().
 *********************
 ReleaseFreeze()
 virtual void ReleaseFreeze()=0;
@@ -37,31 +37,31 @@ Description
 Releases a frozen input picture. Video capturing and encoding continues normally
 ---------------------------------------------------------------------------------
 
-Regards 
+Regards
 Michel
 
 
 > >-----Original Message-----
-> >From: ext Steven GERRARD [mailto:steve.gerrard@mycomp.com] 
+> >From: ext Steven GERRARD [mailto:steve.gerrard@example.com]
 > >Sent: 10 June, 2009 17:26
 > >To: Martin Michel (MyComp-D/Paris)
-> >Cc: Holyfield Michael (MyComp-D/Berlin); Chomsky David 
-> >(MyComp-D/Madrid); Junior Robert (MyComp-D/London); Josh Mike 
+> >Cc: Holyfield Michael (MyComp-D/Berlin); Chomsky David
+> >(MyComp-D/Madrid); Junior Robert (MyComp-D/London); Josh Mike
 > >(MyComp-D/London); Lilly Allen (MyComp-D/San Francisco)
-> >Subject: Video YouTube, MyComp Sync up:n understanding freeze mode 
+> >Subject: Video YouTube, MyComp Sync up:n understanding freeze mode
 > >for video encoder
 > >
 > >Hello Michel,
 > >
-> >During video sync up, we raised a short point about one video 
+> >During video sync up, we raised a short point about one video
 > >requirement description.
 > >You may help us to understand what is the freeze mode described in
 > >VIDEO_AAA-009
-> >""video encoders must support record, pause/continue, 
+> >""video encoders must support record, pause/continue,
 > >freeze/continue ..""
-> >Freeze mode is not defined in CloseBOX standard, then 
-> >difference with encoder pause is a bit unclear. Does freeze 
-> >mode mean the encoder still encoding the same last frame? and 
+> >Freeze mode is not defined in CloseBOX standard, then
+> >difference with encoder pause is a bit unclear. Does freeze
+> >mode mean the encoder still encoding the same last frame? and
 > >for which use case did you expect this freeze mode?
 > >
 > >Thanks

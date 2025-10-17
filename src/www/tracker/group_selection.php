@@ -72,7 +72,7 @@ while ($groups_array = db_fetch_array($results)) {
 </select>
     </td>
   </tr>
-  <tr>  
+  <tr>
     <td><input type="radio" name="radiobutton" value="radiobutton"<?php if ($filter == 'member') {
         echo ' checked';
                                                                   } ?> onClick="onChangeMemberFilter()"> <?php echo $Language->getText('tracker_group_selection', 'my_proj'); ?></td>

@@ -40,13 +40,13 @@ class ArtifactGroupListDao extends DataAccessObject
         $browse_instructions          = $this->da->quoteSmart($browse_instructions);
         $instantiate_for_new_projects = $this->da->quoteSmart($instantiate_for_new_projects);
 
-        $sql = "UPDATE $this->table_name SET 
-			name=$name, 
-            description=$description, 
-            item_name=$itemname, 
-            allow_copy=$allow_copy, 
-            submit_instructions=$submit_instructions, 
-			browse_instructions=$browse_instructions, 
+        $sql = "UPDATE $this->table_name SET
+			name=$name,
+            description=$description,
+            item_name=$itemname,
+            allow_copy=$allow_copy,
+            submit_instructions=$submit_instructions,
+			browse_instructions=$browse_instructions,
             instantiate_for_new_projects=$instantiate_for_new_projects
 			WHERE group_artifact_id=$artifact_id AND group_id=$group_id";
 
@@ -58,7 +58,7 @@ class ArtifactGroupListDao extends DataAccessObject
         $group_id    = $this->da->quoteSmart($group_id);
         $itemname    = $this->da->quoteSmart($itemname);
         $oldItemname = $this->da->quoteSmart($oldItemname);
-        $sql         = "UPDATE $this->table_name SET 
+        $sql         = "UPDATE $this->table_name SET
 			item_name=$itemname
             WHERE item_name=$oldItemname AND group_id=$group_id";
 

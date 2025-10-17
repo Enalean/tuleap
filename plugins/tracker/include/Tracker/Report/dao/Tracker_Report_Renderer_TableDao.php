@@ -50,10 +50,10 @@ class Tracker_Report_Renderer_TableDao extends DataAccessObject
         $renderer_id = $this->da->escapeInt($renderer_id);
         $chunksz     = $this->da->escapeInt($chunksz);
         $multisort   = $multisort ? 1 : 0;
-        $sql         = "UPDATE $this->table_name SET 
+        $sql         = "UPDATE $this->table_name SET
                    chunksz = $chunksz,
                    multisort = $multisort
-                WHERE renderer_id = $renderer_id ";
+                WHERE renderer_id = $renderer_id";
         return $this->update($sql);
     }
 
@@ -67,10 +67,10 @@ class Tracker_Report_Renderer_TableDao extends DataAccessObject
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
-        $sql              = "INSERT INTO $this->table_name (renderer_id, chunksz, multisort) 
+        $sql              = "INSERT INTO $this->table_name (renderer_id, chunksz, multisort)
                 SELECT $to_renderer_id, chunksz, multisort
                 FROM $this->table_name
-                WHERE renderer_id = $from_renderer_id ";
+                WHERE renderer_id = $from_renderer_id";
         return $this->update($sql);
     }
 }

@@ -44,12 +44,12 @@ class b201211211457_refactor_tracker_rule_tables extends \Tuleap\ForgeUpgrade\Bu
         $this->createTable('tracker_rule_list', $sql);
 
         $sql = 'INSERT INTO tracker_rule_list (
-                    tracker_rule_id, 
-                    source_field_id, 
-                    source_value_id, 
+                    tracker_rule_id,
+                    source_field_id,
+                    source_value_id,
                     target_field_id,
                     target_value_id
-                ) 
+                )
                 SELECT id, source_field_id, source_value_id, target_field_id, target_value_id
                 FROM tracker_rule ';
 

@@ -13,5 +13,5 @@
 		<pubDate>[if-any commits.rss_date][commits.rss_date][else](unknown date)[end]</pubDate>
 		<description>&#x3C;pre&#x3E;[format "xml"][format "html"][commits.log][end][end]&#x3C;/pre&#x3E;</description>
     </item>[end]
-</channel>	
+</channel>
 </rss>

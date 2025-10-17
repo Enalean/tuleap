@@ -34,7 +34,7 @@ class b201206291629_add_missing_renderer_table_rows extends \Tuleap\ForgeUpgrade
     {
         $sql = 'INSERT INTO tracker_report_renderer_table (renderer_id, chunksz, multisort)
                 SELECT tracker_report_renderer.id, 15, 0
-                FROM tracker_report_renderer 
+                FROM tracker_report_renderer
                     LEFT JOIN tracker_report_renderer_table ON tracker_report_renderer_table.renderer_id=tracker_report_renderer.id
                 WHERE tracker_report_renderer_table.renderer_id IS NULL';
 
