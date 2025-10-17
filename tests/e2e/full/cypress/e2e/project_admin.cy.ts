@@ -125,7 +125,7 @@ describe("Project admin", function () {
     let public_project_name: string,
         private_project_name: string,
         project_visibility: string,
-        project_acces_log: string,
+        project_access_log: string,
         service_site_admin: string,
         project_reference: string,
         now: number;
@@ -135,11 +135,11 @@ describe("Project admin", function () {
         public_project_name = "public-admin-" + now;
         private_project_name = "private-admin-" + now;
         project_visibility = `visibility-${now}`;
-        project_acces_log = `access-${now}`;
+        project_access_log = `access-${now}`;
         service_site_admin = `service-${now}`;
         project_reference = `reference-${now}`;
         cy.projectAdministratorSession();
-        cy.createNewPublicProject(project_acces_log, "agile_alm").as("access_project_id");
+        cy.createNewPublicProject(project_access_log, "agile_alm").as("access_project_id");
         cy.createNewPublicProject(project_reference, "agile_alm").as("project_reference_id");
     });
 
@@ -294,15 +294,15 @@ describe("Project admin", function () {
             cy.createFRSPackage(this.access_project_id, "P1");
 
             cy.log("access to svn repo");
-            cy.enableService(project_acces_log, "svn");
-            cy.visitProjectService(project_acces_log, "SVN");
+            cy.enableService(project_access_log, "svn");
+            cy.visitProjectService(project_access_log, "SVN");
             cy.get("[data-test=create-repository-creation]").click();
             cy.get("[data-test=create-repository-field-name]").type("My_new_repo");
             cy.get("[data-test=create-repository]").click();
             cy.get("[data-test=svn-repository-access-My_new_repo]").click();
 
             cy.log("access to git repo");
-            cy.visitProjectService(project_acces_log, "Git");
+            cy.visitProjectService(project_access_log, "Git");
             cy.get("[data-test=create-repository-button]").click();
             cy.get("[data-test=create_repository_name]").type("Aquali");
             cy.get("[data-test=create_repository]").click();
@@ -312,7 +312,7 @@ describe("Project admin", function () {
             });
 
             cy.log("Download access file");
-            cy.visitProjectAdministration(project_acces_log);
+            cy.visitProjectAdministration(project_access_log);
             cy.get("[data-test=access-log]").click({ force: true });
 
             const download_folder = Cypress.config("downloadsFolder");
@@ -323,11 +323,10 @@ describe("Project admin", function () {
                 });
 
             cy.log("Download project history");
-            cy.visitProjectAdministration(project_acces_log);
+            cy.visitProjectAdministration(project_access_log);
             cy.get("[data-test=project-history]").click({ force: true });
-            cy.get("[data-test=search-in-history]").click();
             // select can be outside of viewport
-            cy.get("[data-test=selectbox]").select("Permissions", { force: true });
+            cy.get("[data-test=events_box]").select("Permissions", { force: true });
             cy.get("[data-test=filter-history-submit]").click();
             // button is outside of viewport
             cy.get("[data-test=export-history-button]")
@@ -337,12 +336,12 @@ describe("Project admin", function () {
                 });
 
             cy.log("Download project structure");
-            cy.visitProjectAdministration(project_acces_log);
+            cy.visitProjectAdministration(project_access_log);
             cy.get("[data-test=project-structure-export]").click({ force: true });
             cy.get("[data-test=export-project-structure]")
                 .click()
                 .then(() => {
-                    cy.readFile(`${download_folder}/${project_acces_log}.zip`).should("exist");
+                    cy.readFile(`${download_folder}/${project_access_log}.zip`).should("exist");
                 });
         });
         describe("project reference", function () {

@@ -145,7 +145,6 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
     {
         if (
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
-            && ! strpos($_SERVER['REQUEST_URI'], 'project_stat.php')
         ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
@@ -239,7 +238,7 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style-fp.css') . '" />' . "\n";
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('disk-usage.css') . '" />' . "\n";
         }
     }
 
@@ -278,7 +277,9 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
 
     public function burning_parrot_get_stylesheets(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/project_stat.php') === 0) {
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('disk-usage.css');
+        } elseif (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['stylesheets'][] = $this->getAssets()->getFileURL('style-bp.css');
         }
     }

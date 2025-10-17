@@ -25,7 +25,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const entry_points = {
-    "style-fp": "./themes/FlamingParrot/css/style.scss",
+    "disk-usage": "./themes/BurningParrot/css/disk-usage.scss",
     "disk-usage-pie": "./scripts/disk-usage-pie/src/disk-usage-pie-chart.js",
     admin: "./scripts/admin.js",
     "style-bp": "./themes/BurningParrot/css/statistics.scss",

@@ -68,6 +68,7 @@ class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             return null;
         }
         include_once $path;
+        ForgeConfig::set('sys_user_theme', 'BurningParrot');
         return new BurningParrotTheme('/themes/BurningParrot', $current_user);
     }
 

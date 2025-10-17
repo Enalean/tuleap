@@ -145,30 +145,41 @@ project_admin_header(
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 
-echo '
+echo '<div class="tlp-framed-horizontally">
 <h2>' . $Language->getText('project_admin_index', 'member_request_delegation_title') . '</h2>';
 
-echo '<table>';
-echo '<tr><td colspan="2"><p>';
+echo '<p>';
 if (! $project->isPublic()) {
     echo $Language->getOverridableText('project_admin_index', 'member_request_delegation_desc_private_group');
 } else {
     echo $Language->getOverridableText('project_admin_index', 'member_request_delegation_desc_restricted_user');
 }
 echo '</p>';
+
+$title = gettext('Users groups');
+echo <<<EOS
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="tlp-pane-title-icon fa-solid fa-users" aria-hidden="true"></i>
+                $title
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+EOS;
+
 $notices = [];
 EventManager::instance()->processEvent(
     'permission_request_information',
     ['group_id' => $group_id, 'notices' => &$notices]
 );
 if ($notices) {
-    echo '<div class="alert alert-info">';
+    echo '<div class="tlp-alert-info">';
     echo implode('<br>', $notices);
     echo '</div>';
 }
 
-echo '<p>' . $Language->getText('project_admin_index', 'member_request_delegation_desc_selected_group');
-echo '</p></td></tr>';
 
 //Retrieve the saved ugroups for notification from DB
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
@@ -191,37 +202,75 @@ while ($row = db_fetch_array($res)) {
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">';
 echo '<input type="hidden" name="func" value="member_req_notif_group" />';
 echo '<input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">';
-echo html_build_multiple_select_box_from_array($ugroupList, 'ugroups[]', $selectedUgroup, 8, false, '', false, '', false, '', false);
-echo '<br />';
-echo '<input type="submit" name="submit" value="' . $Language->getText('global', 'btn_update') . '" />';
+
+echo '<div class="tlp-form-element">';
+echo '<label class="tlp-label" for="select-user-group">';
+echo $Language->getText('project_admin_index', 'member_request_delegation_desc_selected_group');
+echo '</label>';
+echo '<select multiple class="tlp-select tlp-select-adjusted" id="select-user-group">';
+foreach ($ugroupList as $ugroup) {
+    $selected = in_array($ugroup['value'], $selectedUgroup, true) ? 'selected' : '';
+    echo '<option value="' . $ugroup['value'] . '" ' . $selected . '>' . $ugroup['text'] . '</option>';
+}
+echo '</select>';
+echo '</div>';
+
+echo '<div class="tlp-pane-section-submit">';
+echo '<input type="submit" name="submit" class="tlp-button-primary" value="' . $Language->getText('global', 'btn_update') . '" />';
+echo '</div>';
 echo '</form>';
-echo '</td></tr>';
 
-echo '<tr><td colspan="2"><p>';
+echo <<<EOS
+        </section>
+    </div>
+</section>
+EOS;
+
+$title = gettext('Default message');
+echo <<<EOS
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="tlp-pane-title-icon fa-solid fa-message" aria-hidden="true"></i>
+                $title
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+EOS;
+echo '<p>';
 echo $Language->getText('project_admin_index', 'member_request_delegation_msg_desc');
-echo '</p></td></tr>';
+echo '</p>';
 
-$message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+$placeholder = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+
+$message = '';
 $dar     = $pm->getMessageToRequesterForAccessProject($group_id);
 if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
     $row = $dar->current();
-    if ($row['msg_to_requester'] != 'member_request_delegation_msg_to_requester') {
+    if ($row['msg_to_requester'] !== 'member_request_delegation_msg_to_requester') {
         $message = $row['msg_to_requester'];
     }
 }
-echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">
-          <textarea wrap="virtual" rows="5" cols="70" name="text">' . $purifier->purify($message) . '</textarea>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="default-message">' . gettext('Default message') . '</label>
+            <textarea wrap="virtual" id="default-message" class="tlp-textarea" rows="5" cols="70" name="text" placeholder="' . $purifier->purify($placeholder) . '">' . $purifier->purify($message) . '</textarea>
+        </div>
           <input type="hidden" name="func" value="member_req_notif_message">
           <input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">
-          <br><input name="submit" type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_update') . '"/></br>
+          <div class="tlp-pane-section-submit">
+            <input name="submit" class="tlp-button-primary" type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_update') . '"/>
+          </div>
      </form>';
 
-echo '</td></tr>';
-echo '</table>';
+echo <<<EOS
+        </section>
+    </div>
+</section>
+EOS;
 
 project_admin_footer([]);

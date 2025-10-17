@@ -70,8 +70,8 @@ function logs_display($sql, int $span, $field, $title = '')
         $row = db_fetch_array($res);
         print ' - ' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'in_total', $hp->purify($nb_downloads)) . '</u></b>';
 
-        print '<table width="100%" cellpadding="2" cellspacing="0" border="0">' . "\n"
-            . '<tr valign="top">' . "\n"
+        print '<table class="tlp-table">' . "\n"
+            . '<thead><tr>' . "\n"
             . ' <th>' . $GLOBALS['Language']->getText('project_admin_utils', 'date') . '</th>' . "\n";
 
         if (isset($row['type'])) {
@@ -81,7 +81,7 @@ function logs_display($sql, int $span, $field, $title = '')
             . ' <th>' . $GLOBALS['Language']->getText('project_export_artifact_history_export', 'email') . '</th>' . "\n"
             . ' <th>' . $hp->purify($field) . '</th>' . "\n"
             . ' <th align="right">' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'time') . '</th>' . "\n"
-            . '</tr>' . "\n";
+            . '</tr></thead><tbody>' . "\n";
         $i = 0;
         do {
             print '<tr class="' . util_get_alt_row_color($i++) . '">'
@@ -104,7 +104,8 @@ function logs_display($sql, int $span, $field, $title = '')
             print '</tr>' . "\n";
         } while ($row = db_fetch_array($res));
 
-        print '</table>';
+        print '</tbody></table>';
+        print '<br>';
     } else {
         echo '</u></b>
         <p>' . $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'no_access') . '</p>';

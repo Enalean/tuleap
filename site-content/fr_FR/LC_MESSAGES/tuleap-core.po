@@ -1089,6 +1089,9 @@ msgstr "Format par défaut pour les champs texte des trackers"
 msgid "Default license agreement"
 msgstr "Licence par défaut"
 
+msgid "Default message"
+msgstr "Message par défaut"
+
 msgid "Default project visibility"
 msgstr "Visibilité du projet par défaut"
 
@@ -1343,6 +1346,9 @@ msgstr "Expire le"
 
 msgid "Export"
 msgstr "Exporter"
+
+msgid "Export CSV"
+msgstr "Export CSV"
 
 msgid "Export project structure"
 msgstr "Exporter la structure du projet"

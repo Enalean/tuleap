@@ -82,7 +82,7 @@ class ProjectHistoryPresenter
         $limit,
         $offset,
     ) {
-        $base_url       = '/admin/projecthistory.php';
+        $base_url       = '';
         $default_params = [
             'group_id' => $project->getId(),
         ];
