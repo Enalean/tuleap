@@ -70,6 +70,7 @@ final class LicenseContentCheckerTest extends TestCase
             Uuid::uuid4(),
             [],
             null,
+            null,
         ));
 
         self::assertTrue(Result::isErr($result));
@@ -89,6 +90,7 @@ final class LicenseContentCheckerTest extends TestCase
             new DateTimeImmutable(),
             Uuid::uuid4(),
             [],
+            null,
             null,
         ));
 
@@ -110,6 +112,7 @@ final class LicenseContentCheckerTest extends TestCase
             Uuid::uuid4(),
             [],
             null,
+            null,
         ));
 
         self::assertTrue(Result::isErr($result));
@@ -130,6 +133,7 @@ final class LicenseContentCheckerTest extends TestCase
             Uuid::uuid4(),
             [],
             new DateTimeImmutable(),
+            null,
         ));
 
         self::assertTrue(Result::isErr($result));
@@ -150,6 +154,7 @@ final class LicenseContentCheckerTest extends TestCase
             Uuid::uuid7(),
             [],
             null,
+            null,
         ));
 
         self::assertTrue(Result::isErr($result));
@@ -168,6 +173,7 @@ final class LicenseContentCheckerTest extends TestCase
             new DateTimeImmutable('now'),
             Uuid::uuid4(),
             [],
+            null,
             null,
         ));
 

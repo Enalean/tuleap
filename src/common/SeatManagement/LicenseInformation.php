@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,27 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
-use DateTimeImmutable;
-use Ramsey\Uuid\UuidInterface;
-
 /**
  * @psalm-immutable
  */
-final readonly class LicenseContent
+final readonly class LicenseInformation
 {
-    /**
-     * @param 'enalean-tuleap-enterprise' $iss
-     * @param non-empty-list<non-empty-string> $aud
-     */
-    public function __construct(
-        public string $iss,
-        public array $aud,
-        public DateTimeImmutable $iat,
-        public DateTimeImmutable $nbf,
-        public UuidInterface $jti,
-        public array $restrictions,
-        public ?DateTimeImmutable $exp,
-        public ?LicenseInformation $license_information,
-    ) {
+    public function __construct(public string $kind)
+    {
     }
 }

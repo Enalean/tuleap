@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,27 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\SeatManagement;
 
-use DateTimeImmutable;
-use Ramsey\Uuid\UuidInterface;
-
-/**
- * @psalm-immutable
- */
-final readonly class LicenseContent
+enum LicenseKind: string
 {
-    /**
-     * @param 'enalean-tuleap-enterprise' $iss
-     * @param non-empty-list<non-empty-string> $aud
-     */
-    public function __construct(
-        public string $iss,
-        public array $aud,
-        public DateTimeImmutable $iat,
-        public DateTimeImmutable $nbf,
-        public UuidInterface $jti,
-        public array $restrictions,
-        public ?DateTimeImmutable $exp,
-        public ?LicenseInformation $license_information,
-    ) {
+    case EXPERT    = 'expert';
+    case TCP       = 'tcp';
+    case MY_TULEAP = 'mytuleap';
+    case PARTNER   = 'partner';
+
+    public static function fromKind(string $kind_name): self
+    {
+        $valid_kind = self::tryFrom($kind_name);
+        if ($valid_kind === null) {
+            return self::default();
+        }
+        return $valid_kind;
+    }
+
+    public static function default(): self
+    {
+        return self::EXPERT;
     }
 }

@@ -2380,8 +2380,17 @@ msgstr "Por favor, confirme a sua ação."
 msgid "Please contact the administrators at:"
 msgstr "Por favor, contate os administradores em:"
 
+msgid ""
+"Please contact your Tuleap Partner to renew or upgrade your subscription."
+msgstr ""
+
 msgid "Please explain why you are applying for registration on this site"
 msgstr "Por favor explique o motivo para você solicitar registro neste site"
+
+msgid ""
+"Please get in touch with your usual company contact or send an email to "
+"sales@enalean.com."
+msgstr ""
 
 msgid ""
 "Please make sure the users who will be imported are already registered and "
@@ -2398,6 +2407,11 @@ msgstr ""
 
 msgid ""
 "Please note the login <code>%1$s</code> and the password <code>%2$s</code>"
+msgstr ""
+
+msgid ""
+"Please renew or upgrade your contract on your client account or send an "
+"email to sales@enalean.com."
 msgstr ""
 
 msgid "Please select a file to upload"
@@ -4670,6 +4684,16 @@ msgstr ""
 
 msgid "You're about to withdraw %s invitation from this project."
 msgstr "Você está prestes a remover o convite de %s para este projeto."
+
+#, php-format
+msgid ""
+"Your Tuleap subscription will expire in %d day. Please renew to avoid any "
+"disruption. %s"
+msgid_plural ""
+"Your Tuleap subscription will expire in %d days. Please renew to avoid any "
+"disruption. %s"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Your account has been created"
 msgstr "Sua conta foi criada"

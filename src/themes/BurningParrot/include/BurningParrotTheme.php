@@ -73,6 +73,7 @@ use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\SeatManagement\CachedLicenseBuilder;
+use Tuleap\SeatManagement\FeedbackBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 use Tuleap\User\SwitchToPresenterBuilder;
@@ -111,6 +112,7 @@ class BurningParrotTheme extends BaseLayout
     private ThemeVariantColor $theme_variant_color;
     private ThemeVariation $theme_variation;
     private bool $header_has_been_written = false;
+    private FeedbackBuilder $feedback_builder;
 
     public function __construct($root, private CurrentUserWithLoggedInInformation $current_user)
     {
@@ -118,13 +120,16 @@ class BurningParrotTheme extends BaseLayout
         $this->event_manager    = EventManager::instance();
         $this->request          = HTTPRequest::instance();
         $this->renderer         = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->version          = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()));
+        $license_builder        = CachedLicenseBuilder::instance();
+        $this->version          = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense($license_builder));
         $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($this->request);
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
 
         $this->theme_variant_color = (new ThemeVariant())->getVariantColorForUser($this->current_user->user);
         $this->theme_variation     = new ThemeVariation($this->theme_variant_color, $this->current_user->user);
+
+        $this->feedback_builder = new FeedbackBuilder($license_builder, $this->current_user->user);
 
         $this->includeFooterJavascriptFile((new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'))->getFileURL());
         $this->includeFooterJavascriptFile(
@@ -264,6 +269,7 @@ class BurningParrotTheme extends BaseLayout
             new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
         );
         $invite_buddies_presenter         = $invite_buddies_presenter_builder->build($this->current_user->user, $project);
+        $this->feedback_builder->build($this->_feedback);
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),

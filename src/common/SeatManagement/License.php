@@ -39,6 +39,7 @@ final readonly class License
         public Option $expiration_date,
         public array $restrictions,
         public bool $has_valid_signature,
+        public LicenseKind $license_kind,
     ) {
     }
 
@@ -50,6 +51,9 @@ final readonly class License
             Option::fromNullable($license_content->exp),
             $license_content->restrictions,
             true,
+            $license_content->license_information !== null
+                ? LicenseKind::fromKind($license_content->license_information->kind)
+                : LicenseKind::default(),
         );
     }
 
@@ -61,16 +65,17 @@ final readonly class License
             Option::nothing(DateTimeImmutable::class),
             [],
             true,
+            LicenseKind::default(),
         );
     }
 
     public static function buildInvalidEnterpriseEdition(): self
     {
-        return new self(true, new DateTimeImmutable(), Option::nothing(DateTimeImmutable::class), [], false);
+        return new self(true, new DateTimeImmutable(), Option::nothing(DateTimeImmutable::class), [], false, LicenseKind::default());
     }
 
     public static function buildCommunityEdition(): self
     {
-        return new self(false, new DateTimeImmutable(), Option::nothing(DateTimeImmutable::class), [], true);
+        return new self(false, new DateTimeImmutable(), Option::nothing(DateTimeImmutable::class), [], true, LicenseKind::default());
     }
 }

@@ -135,6 +135,7 @@ final class LicenseBuilderTest extends TestCase
                 Uuid::uuid4(),
                 [],
                 null,
+                null,
             )),
             CheckLicenseContentStub::buildWithInvalid(),
         );
@@ -157,6 +158,7 @@ final class LicenseBuilderTest extends TestCase
             Uuid::uuid7($date),
             [],
             $date,
+            null,
         );
         $builder         = new LicenseBuilder(
             CheckPublicKeyPresenceStub::buildWithKey(),
