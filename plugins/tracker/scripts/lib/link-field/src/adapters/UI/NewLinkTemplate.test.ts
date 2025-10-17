@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import type { ParentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
@@ -49,6 +49,7 @@ import { ChangeLinkTypeStub } from "../../../tests/stubs/links/ChangeLinkTypeStu
 import { LabeledFieldStub } from "../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../domain/ParentTrackerIdentifier";
 import { ProjectStub } from "../../../tests/stubs/ProjectStub";
+import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -187,10 +188,18 @@ describe(`NewLinkTemplate`, () => {
             );
 
             const new_links: ReadonlyArray<NewLink> = [new_link];
+
+            const autocompleter = {
+                autoComplete(): void {
+                    //Do nothing
+                },
+            } as ArtifactLinkSelectorAutoCompleterType;
+
             return {
                 current_artifact_reference,
                 new_links,
                 controller,
+                autocompleter,
             } as HostElement;
         };
 
@@ -199,14 +208,17 @@ describe(`NewLinkTemplate`, () => {
             update(host, target);
         };
 
-        it(`will delete the new link`, () => {
+        it(`will delete the new link and call the autocompleter with an empty string`, () => {
             const new_link = NewLinkStub.withDefaults();
             const host = getHost(new_link);
+            const autoComplete = vi.spyOn(host.autocompleter, "autoComplete");
+
             render(host, new_link);
             const button = selectOrThrow(target, "[data-test=action-button]", HTMLButtonElement);
             button.click();
 
             expect(host.new_links).toHaveLength(0);
+            expect(autoComplete).toHaveBeenCalledWith(host, "");
         });
     });
 });
