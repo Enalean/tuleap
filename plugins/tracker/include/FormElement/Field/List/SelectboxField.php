@@ -26,14 +26,13 @@ use Override;
 use PFUser;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_IComputeValues;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueUnchanged;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use WorkflowFactory;
 
 class SelectboxField extends ListField implements Tracker_FormElement_IComputeValues
@@ -270,7 +269,7 @@ class SelectboxField extends ListField implements Tracker_FormElement_IComputeVa
     public function getFieldDataFromCSVValue($csv_value, ?Artifact $artifact = null)
     {
         if ($csv_value !== '100' && $this->isNone($csv_value)) {
-            return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;
+            return ListFieldStaticBindNoneValue::VALUE_ID;
         }
         return $this->getFieldData($csv_value);
     }
@@ -291,7 +290,7 @@ class SelectboxField extends ListField implements Tracker_FormElement_IComputeVa
             return array_shift($keys);
         }
 
-        return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
+        return ListFieldBind::NONE_VALUE;
     }
 
     #[Override]

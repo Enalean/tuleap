@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML;
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML;
 
 use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReference;
 use Tuleap\Tracker\FormElement\Field\XML\XMLChangesetValue;
@@ -50,7 +50,7 @@ final class XMLBindStaticChangesetValue extends XMLChangesetValue
         $field_change = parent::export($changeset_xml, $form_elements);
 
         $field_change->addAttribute('type', 'list');
-        $field_change->addAttribute('bind', \Tracker_FormElement_Field_List_Bind_Static::TYPE);
+        $field_change->addAttribute('bind', \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE);
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
         foreach ($this->values as $value) {

@@ -188,14 +188,14 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         string $first_label,
         string $second_label,
         string $third_label,
-    ): \Tuleap\Tracker\FormElement\Field\ListField {
+    ): \Tuleap\Tracker\FormElement\Field\List\ListField {
         $first_value  = ListStaticValueBuilder::aStaticValue($first_label)->withId(self::FIRST_BIND_VALUE_ID)->build();
         $second_value = ListStaticValueBuilder::aStaticValue($second_label)->withId(self::SECOND_BIND_VALUE_ID)->build();
         $third_value  = ListStaticValueBuilder::aStaticValue($third_label)->withId(self::THIRD_BIND_VALUE_ID)->build();
 
-        $static_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $static_bind = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class);
         $static_bind->method('getAllValues')->willReturn([$first_value, $second_value, $third_value]);
-        $status_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\ListField::class);
+        $status_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $status_field->method('getBind')->willReturn($static_bind);
         $status_field->method('getId')->willReturn(1984);
         $status_field->method('getTrackerId')->willReturn(54);
@@ -208,10 +208,10 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildStatusFieldWithBindValues(
         \Tracker_FormElement_Field_List_BindValue ...$bind_values,
-    ): \Tuleap\Tracker\FormElement\Field\ListField {
-        $static_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind::class);
+    ): \Tuleap\Tracker\FormElement\Field\List\ListField {
+        $static_bind = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind::class);
         $static_bind->method('getAllValues')->willReturn($bind_values);
-        $status_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\ListField::class);
+        $status_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $status_field->method('getBind')->willReturn($static_bind);
         $status_field->method('getId')->willReturn(101);
         $status_field->method('getLabel')->willReturn('Status');

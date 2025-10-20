@@ -24,6 +24,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
@@ -50,7 +51,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
     private Workflow&MockObject $unused_legacy_workflow;
     private \Tuleap\Tracker\Artifact\Artifact&MockObject $artifact;
     private EventManager&MockObject $event_manager;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $open_value;
+    private ListFieldStaticBindValue $open_value;
 
 
     #[\Override]

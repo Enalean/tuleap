@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\Closure;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_NoChangeException;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\GlobalLanguageMock;
@@ -39,6 +38,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
@@ -75,8 +75,8 @@ final class ArtifactCloserTest extends TestCase
     private CreateCommentOnlyChangesetStub $comment_creator;
     private CreateNewChangesetStub $changeset_creator;
     private RetrieveSemanticStatusFieldStub $status_retriever;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $done_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $closed_value;
+    private ListFieldStaticBindValue $done_value;
+    private ListFieldStaticBindValue $closed_value;
     private bool $changeset_creator_was_called;
 
     #[\Override]

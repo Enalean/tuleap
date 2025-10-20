@@ -22,21 +22,21 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Tracker_FormElement_Field_List_Bind_StaticValue $to_do_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $on_going_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $done_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $hidden_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $xml_to_do_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $xml_on_going_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $xml_done_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $xml_hidden_value;
+    private ListFieldStaticBindValue $to_do_value;
+    private ListFieldStaticBindValue $on_going_value;
+    private ListFieldStaticBindValue $done_value;
+    private ListFieldStaticBindValue $hidden_value;
+    private ListFieldStaticBindValue $xml_to_do_value;
+    private ListFieldStaticBindValue $xml_on_going_value;
+    private ListFieldStaticBindValue $xml_done_value;
+    private ListFieldStaticBindValue $xml_hidden_value;
     private SimpleXMLElement $xml_semantic_status;
     private SemanticDoneValueChecker $value_checker;
     private TrackerSemanticStatus&MockObject $semantic_status;

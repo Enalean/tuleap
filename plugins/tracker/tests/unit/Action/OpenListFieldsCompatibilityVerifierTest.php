@@ -27,7 +27,7 @@ final class OpenListFieldsCompatibilityVerifierTest extends \Tuleap\Test\PHPUnit
     {
         self::assertFalse(
             (new OpenListFieldsCompatibilityVerifier())->areOpenListFieldsCompatible(
-                $this->getOpenListFieldWithBindType(\Tracker_FormElement_Field_List_Bind_Static::class),
+                $this->getOpenListFieldWithBindType(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class),
                 $this->getOpenListFieldWithBindType(\Tracker_FormElement_Field_List_Bind_Users::class)
             )
         );

@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Ass
 
 use LogicException;
 use PFUser;
-use Tracker_FormElement_Field_List_Bind;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
@@ -33,6 +32,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentatio
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\User\RetrieveUserById;
 use UserHelper;
@@ -104,7 +104,7 @@ final readonly class AssignedToResultBuilder implements BuildResultAssignedTo
      */
     private function buildUserValueFromAssignedTo(int $user_id): Option
     {
-        if ($user_id === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
+        if ($user_id === ListFieldBind::NONE_VALUE) {
             return Option::nothing(UserRepresentation::class);
         }
 

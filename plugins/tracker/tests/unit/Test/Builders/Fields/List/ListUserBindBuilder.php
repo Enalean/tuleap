@@ -33,11 +33,11 @@ final class ListUserBindBuilder
      */
     private array $bind_values;
 
-    private function __construct(private readonly \Tuleap\Tracker\FormElement\Field\ListField $field)
+    private function __construct(private readonly \Tuleap\Tracker\FormElement\Field\List\ListField $field)
     {
     }
 
-    public static function aUserBind(\Tuleap\Tracker\FormElement\Field\ListField $field): self
+    public static function aUserBind(\Tuleap\Tracker\FormElement\Field\List\ListField $field): self
     {
         return new self($field);
     }

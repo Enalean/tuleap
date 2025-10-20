@@ -19,27 +19,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\Static;
+
+use Codendi_HTMLPurifier;
+use ColorHelper;
+use Feedback;
+use HTML_Element_Input_Checkbox;
+use SimpleXMLElement;
+use TemplateRenderer;
+use TemplateRendererFactory;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_FormElement_Field_List_BindDecorator;
+use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_Field_List_OpenValue;
+use Tracker_FormElement_Field_List_Value;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticXmlExporter;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListValueDao;
-use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;
 use Tuleap\Tracker\REST\FieldListOpenValueRepresentation;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
+use UserXMLExporter;
+use XML_SimpleXMLCDATAFactory;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind
+class ListFieldStaticBind extends ListFieldBind
 {
     public const string TYPE = 'static';
 
     /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue[]
+     * @var ListFieldStaticBindValue[]
      */
     protected $values;
 
@@ -74,9 +91,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      *
      */
     #[\Override]
-    public function getValueFromRow($row): Tracker_FormElement_Field_List_Bind_StaticValue
+    public function getValueFromRow($row): ListFieldStaticBindValue
     {
-        return new Tracker_FormElement_Field_List_Bind_StaticValue(
+        return new ListFieldStaticBindValue(
             $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
             $row['id'],
             $row['label'],
@@ -125,7 +142,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     #[\Override]
     public function formatCriteriaValue($value_id)
     {
-         return $this->format($this->values[$value_id]);
+        return $this->format($this->values[$value_id]);
     }
 
     /**
@@ -147,8 +164,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if (is_array($value)) {
             if (isset($this->values[$value['id']])) {
                 $value = $this->values[$value['id']];
-            } elseif ($value['id'] == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
-                $value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            } elseif ($value['id'] == ListFieldStaticBindNoneValue::VALUE_ID) {
+                $value = new ListFieldStaticBindNoneValue();
             }
         }
         if ($value) {
@@ -181,7 +198,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_StaticValue[]
+     * @return ListFieldStaticBindValue[]
      */
     #[\Override]
     public function getAllValues()
@@ -193,7 +210,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * Get the field data for artifact submission
      *
      * @param string $submitted_value the field value
-     * @param bool   $is_multiple     if the value is multiple or not
+     * @param bool $is_multiple if the value is multiple or not
      *
      * @return mixed the field data corresponding to the value for artifact submision
      */
@@ -228,7 +245,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     /**
      * @param int $value_id
-     * @return Tracker_FormElement_Field_List_Bind_StaticValue
+     * @return ListFieldStaticBindValue
      * @throws Tracker_FormElement_InvalidFieldValueException
      */
     #[\Override]
@@ -557,9 +574,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '<strong>' . dgettext('tuleap-tracker', 'Add new values') . '</strong><br />';
         $html .= '<textarea name="bind[add]" rows="5" cols="30"></textarea><br />';
         $html .= '<span style="color:#999; font-size:0.8em;">' . dgettext(
-            'tuleap-tracker',
-            'Add one value per row'
-        ) . '</span><br />';
+                'tuleap-tracker',
+                'Add one value per row'
+            ) . '</span><br />';
         $html .= '</p>';
 
         //Select default values
@@ -577,7 +594,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             return $html;
         }
 
-        $html       .= '<h3>' . dgettext('tuleap-tracker', 'Values added by users') . '</h3>';
+        $html        .= '<h3>' . dgettext('tuleap-tracker', 'Values added by users') . '</h3>';
         $user_values = [];
 
         foreach ($user_row_values as $row_value) {
@@ -605,7 +622,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     private function fetchAdminEditRowModifiable(Tracker_FormElement_Field_List_Value $value): string
     {
-        assert($value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
+        assert($value instanceof ListFieldStaticBindValue);
 
         if (isset($this->decorators[$value->getId()])) {
             $decorator = $this->decorators[$value->getId()]->decorateEdit();
@@ -637,7 +654,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     private function fetchAdminEditRowNotModifiable(Tracker_FormElement_Field_List_Value $v)
     {
-        $html  = '';
+        $html = '';
         $html .= '<tr valign="top" class="' . ($v->isHidden() ? 'tracker_admin_static_value_hidden' : '') . '">';
         $html .= '<td>' . $this->formatChangesetValue(['id' => $v->getId()]) . '</td>';
         $html .= '</tr>';
@@ -654,7 +671,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * Process the request
      *
      * @param array $params the request parameters
-     * @param bool  $no_redirect true if we do not have to redirect the user
+     * @param bool $no_redirect true if we do not have to redirect the user
      *
      * @return void
      */
@@ -762,7 +779,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         $params['decorator'] = [];
                         foreach ($params['decorators'] as $key => $deco) {
                             $params['decorator'][$valueMapping[$key]] =
-                                   ColorHelper::RGBtoHexa($deco->r, $deco->g, $deco->b);
+                                ColorHelper::RGBtoHexa($deco->r, $deco->g, $deco->b);
                         }
                     }
                     break;

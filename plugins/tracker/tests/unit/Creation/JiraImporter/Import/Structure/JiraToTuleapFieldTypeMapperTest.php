@@ -27,7 +27,6 @@ use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLTracker;
@@ -248,14 +248,14 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, (string) $node['type']);
                 self::assertEquals('priority', $node->name);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertEquals(ListFieldStaticBind::TYPE, $node->bind['type']);
                 self::assertCount(2, $node->bind->items->item);
                 self::assertEquals('P1', $node->bind->items->item[0]['label']);
                 self::assertEquals('P2', $node->bind->items->item[1]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('priority');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -283,7 +283,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField('radiobuttonsid');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -311,7 +311,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField('multiselectid');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -339,7 +339,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField('selectid');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -366,7 +366,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField('selectid');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -483,14 +483,14 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $node['type']);
                 self::assertEquals('Identified in version', $node->label);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertEquals(ListFieldStaticBind::TYPE, $node->bind['type']);
                 self::assertCount(2, $node->bind->items->item);
                 self::assertEquals('1.0', $node->bind->items->item[0]['label']);
                 self::assertEquals('2.0', $node->bind->items->item[1]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('versions');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -511,14 +511,14 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $node['type']);
                 self::assertEquals('Components', $node->label);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertEquals(ListFieldStaticBind::TYPE, $node->bind['type']);
                 self::assertCount(2, $node->bind->items->item);
                 self::assertEquals('Comp 01', $node->bind->items->item[0]['label']);
                 self::assertEquals('Comp 02', $node->bind->items->item[1]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('components');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -539,14 +539,14 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $node['type']);
                 self::assertEquals('Version', $node->label);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertEquals(ListFieldStaticBind::TYPE, $node->bind['type']);
                 self::assertCount(2, $node->bind->items->item);
                 self::assertEquals('1.0', $node->bind->items->item[0]['label']);
                 self::assertEquals('2.0', $node->bind->items->item[1]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('customfield_10002');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -567,14 +567,14 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $node['type']);
                 self::assertEquals('Version(s)', $node->label);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertEquals(ListFieldStaticBind::TYPE, $node->bind['type']);
                 self::assertCount(2, $node->bind->items->item);
                 self::assertEquals('1.0', $node->bind->items->item[0]['label']);
                 self::assertEquals('2.0', $node->bind->items->item[1]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('customfield_10001');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -595,14 +595,14 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 self::assertEquals(Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE, $node['type']);
                 self::assertEquals('CheckBox', $node->label);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertEquals(ListFieldStaticBind::TYPE, $node->bind['type']);
                 self::assertCount(2, $node->bind->items->item);
                 self::assertEquals('1.0', $node->bind->items->item[0]['label']);
                 self::assertEquals('2.0', $node->bind->items->item[1]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('customfield_10004');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -623,14 +623,14 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $node['type']);
                 self::assertEquals('Issuetype', $node->label);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertEquals(ListFieldStaticBind::TYPE, $node->bind['type']);
                 self::assertCount(2, $node->bind->items->item);
                 self::assertEquals('Story', $node->bind->items->item[0]['label']);
                 self::assertEquals('Bug', $node->bind->items->item[1]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('issuetype');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldStaticBind::TYPE, $mapping->getBindType());
             },
         ];
 

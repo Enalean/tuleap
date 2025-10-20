@@ -20,13 +20,13 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field_List_Bind_Null;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
@@ -45,7 +45,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractor implements BindVi
     }
 
     #[\Override]
-    public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters)
+    public function visitListBindStatic(ListFieldStaticBind $bind, BindParameters $parameters)
     {
         $list_values       = $parameters->getField()->getAllValues();
         $list_label_values = [];
@@ -89,7 +89,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractor implements BindVi
     }
 
     #[\Override]
-    public function visitListBindNull(Tracker_FormElement_Field_List_Bind_Null $bind, BindParameters $parameters)
+    public function visitListBindNull(ListFieldNullBind $bind, BindParameters $parameters)
     {
     }
 }

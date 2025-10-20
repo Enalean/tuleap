@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Tracker;
 

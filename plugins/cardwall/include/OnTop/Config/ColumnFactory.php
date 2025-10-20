@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Cardwall\OnTop\Config;
 
 use Cardwall_Column;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Cardwall\Column\ColumnColorRetriever;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Tracker;
 
 class ColumnFactory
@@ -97,7 +97,7 @@ class ColumnFactory
 
         foreach ($filter as $value_id) {
             if ($field->isNone($value_id)) {
-                $field_values[] = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+                $field_values[] = new ListFieldStaticBindNoneValue();
             } else {
                 try {
                     $field_values[] = $field->getBind()->getValue($value_id);

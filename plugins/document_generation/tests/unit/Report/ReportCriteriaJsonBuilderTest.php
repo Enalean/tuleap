@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\DocumentGeneration\Report;
 
 use ProjectUGroup;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_UnsavedValue;
@@ -36,8 +35,9 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
@@ -309,7 +309,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             0
         );
 
-        $static_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $static_bind = $this->createMock(ListFieldStaticBind::class);
         $static_bind
             ->method('getValue')
             ->willReturnMap([
@@ -430,7 +430,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             0
         );
 
-        $static_bind = $this->createStub(Tracker_FormElement_Field_List_Bind_Static::class);
+        $static_bind = $this->createStub(ListFieldStaticBind::class);
         $static_bind
             ->method('getValue')
             ->willThrowException(new Tracker_FormElement_InvalidFieldValueException());

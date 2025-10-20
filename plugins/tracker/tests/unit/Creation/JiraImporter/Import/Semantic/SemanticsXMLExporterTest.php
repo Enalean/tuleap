@@ -70,7 +70,7 @@ final class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Fstatus',
                 'status',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE,
                 [],
             )
         );

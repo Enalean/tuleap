@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Tracker;
@@ -91,7 +92,7 @@ class Tracker_SharedFormElementFactory // phpcs:ignore PSR1.Classes.ClassDeclara
     {
         if (
             ! ($field instanceof SelectboxField
-                && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)
+                && $field->getBind() instanceof ListFieldStaticBind)
         ) {
             $exception_message = dgettext('tuleap-tracker', 'Can only share static selectbox fields');
             throw new Exception($exception_message);

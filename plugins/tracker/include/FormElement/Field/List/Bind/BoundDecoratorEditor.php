@@ -39,7 +39,7 @@ class BoundDecoratorEditor
 
     public function update(\Tuleap\Tracker\FormElement\Field\TrackerField $field, int $value_id, string $color, bool $will_be_required): void
     {
-        if ($value_id === \Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE) {
+        if ($value_id === \Tuleap\Tracker\FormElement\Field\List\ListField::NONE_VALUE) {
             $this->updateNone($field, $value_id, $color, $will_be_required);
             return;
         }

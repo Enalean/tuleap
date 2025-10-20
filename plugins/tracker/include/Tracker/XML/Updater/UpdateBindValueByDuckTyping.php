@@ -26,8 +26,8 @@ interface UpdateBindValueByDuckTyping
 {
     public function updateValueForDuckTypingMove(
         SimpleXMLElement $changeset_xml,
-        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
-        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $destination_field,
         int $index,
     ): void;
 }

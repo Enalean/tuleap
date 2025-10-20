@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 class BindParameters
 {

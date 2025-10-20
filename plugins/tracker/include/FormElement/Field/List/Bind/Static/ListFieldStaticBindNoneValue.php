@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\Static;
+
 use Tuleap\DB\DatabaseUUIDV7Factory;
 
-final class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormElement_Field_List_Bind_StaticValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+final class ListFieldStaticBindNoneValue extends ListFieldStaticBindValue
 {
-    public const int VALUE_ID        = 100;
+    public const int    VALUE_ID     = 100;
     public const string XML_VALUE_ID = '';
 
     public function __construct()

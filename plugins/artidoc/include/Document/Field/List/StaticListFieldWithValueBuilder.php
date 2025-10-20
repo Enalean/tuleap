@@ -29,7 +29,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldW
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 final readonly class StaticListFieldWithValueBuilder
 {

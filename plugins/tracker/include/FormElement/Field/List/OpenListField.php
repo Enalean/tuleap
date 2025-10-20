@@ -30,8 +30,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_OpenList;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement_Field_List_Bind_Null;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_OpenValue;
@@ -48,9 +46,10 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\OpenListSpecificPropertiesDAO;
@@ -1129,7 +1128,7 @@ class OpenListField extends ListField implements BindVisitor
 
     #[Override]
     public function visitListBindStatic(
-        Tracker_FormElement_Field_List_Bind_Static $bind,
+        ListFieldStaticBind $bind,
         BindParameters $parameters,
     ) {
         return '';
@@ -1153,7 +1152,7 @@ class OpenListField extends ListField implements BindVisitor
 
     #[Override]
     public function visitListBindNull(
-        Tracker_FormElement_Field_List_Bind_Null $bind,
+        ListFieldNullBind $bind,
         BindParameters $parameters,
     ) {
         return '';

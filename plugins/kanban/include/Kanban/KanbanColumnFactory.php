@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Kanban;
 
 use PFUser;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindValue;
 use TrackerFactory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
@@ -101,7 +101,7 @@ class KanbanColumnFactory
         return $this->column_dao->getColumnWipLimit($kanban->getId(), $column_id);
     }
 
-    private function isColumnRemovable(Kanban $kanban, Tracker_FormElement_Field_List_Bind_StaticValue $value): bool
+    private function isColumnRemovable(Kanban $kanban, ListFieldStaticBindValue $value): bool
     {
         $semantic = $this->getSemanticStatus($kanban);
 

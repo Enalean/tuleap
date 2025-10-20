@@ -27,9 +27,9 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_OpenList;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -151,7 +151,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
 
     private function setUpStaticTest(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind = $this->createMock(ListFieldStaticBind::class);
         $bind->method('getType')->willReturn('static');
         $open_value = OpenListValueBuilder::anOpenListValue('keyword01')->build();
 

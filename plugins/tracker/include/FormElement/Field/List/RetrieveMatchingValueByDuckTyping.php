@@ -20,8 +20,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\List;
 
-use Tuleap\Tracker\FormElement\Field\ListField;
-
 interface RetrieveMatchingValueByDuckTyping
 {
     public function getMatchingValueByDuckTyping(

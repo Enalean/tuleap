@@ -38,13 +38,13 @@ final readonly class ListFieldWithValueBuilder
 
     public function buildListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue|StaticListFieldWithValue|UserListFieldWithValue
     {
-        assert($configured_field->field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
+        assert($configured_field->field instanceof \Tuleap\Tracker\FormElement\Field\List\ListField);
 
         return match ($configured_field->field->getBind()?->getType()) {
-            \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE => $this->user_group_list_with_value_builder->buildUserGroupsListFieldWithValue($configured_field, $changeset_value),
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE  => $this->static_list_field_with_value_builder->buildStaticListFieldWithValue($configured_field, $changeset_value),
-            \Tracker_FormElement_Field_List_Bind_Users::TYPE   => $this->user_list_field_with_value_builder->buildUserListFieldWithValue($configured_field, $changeset_value),
-            default => throw new \Exception("Unknown bind type for field #{$configured_field->field->getId()}"),
+            \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE                           => $this->user_group_list_with_value_builder->buildUserGroupsListFieldWithValue($configured_field, $changeset_value),
+            \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE => $this->static_list_field_with_value_builder->buildStaticListFieldWithValue($configured_field, $changeset_value),
+            \Tracker_FormElement_Field_List_Bind_Users::TYPE                             => $this->user_list_field_with_value_builder->buildUserListFieldWithValue($configured_field, $changeset_value),
+            default                                                                      => throw new \Exception("Unknown bind type for field #{$configured_field->field->getId()}"),
         };
     }
 }

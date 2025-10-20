@@ -19,11 +19,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ListField;
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\Static;
+
+use Codendi_HTMLPurifier;
+use Tracker_FormElement_Field_List_BindDecorator;
+use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElement_Field_List_BindValue
+class ListFieldStaticBindValue extends Tracker_FormElement_Field_List_BindValue
 {
     protected string $label;
 

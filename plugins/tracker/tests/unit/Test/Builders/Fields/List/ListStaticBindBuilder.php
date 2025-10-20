@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
-use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 final class ListStaticBindBuilder
 {
     /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue[]|Tracker_FormElement_Field_List_OpenValue[]
+     * @var ListFieldStaticBindValue[]|Tracker_FormElement_Field_List_OpenValue[]
      */
     private array $bind_values = [];
     /**
@@ -57,7 +57,7 @@ final class ListStaticBindBuilder
     {
         $uuid_factory = new DatabaseUUIDV7Factory();
         foreach ($values_labels as $id => $label) {
-            $bind_value = new Tracker_FormElement_Field_List_Bind_StaticValue(
+            $bind_value = new ListFieldStaticBindValue(
                 $uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()),
                 $id,
                 $label,
@@ -73,7 +73,7 @@ final class ListStaticBindBuilder
     }
 
     /**
-     * @param list<Tracker_FormElement_Field_List_Bind_StaticValue|Tracker_FormElement_Field_List_OpenValue> $values
+     * @param list<ListFieldStaticBindValue|Tracker_FormElement_Field_List_OpenValue> $values
      */
     public function withBuildStaticValues(array $values): self
     {
@@ -96,7 +96,7 @@ final class ListStaticBindBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_List_Bind_Static
+    public function build(): ListFieldStaticBind
     {
         $bind = new class (
             new DatabaseUUIDV7Factory(),
@@ -105,7 +105,7 @@ final class ListStaticBindBuilder
             $this->bind_values,
             [],
             $this->decorators,
-        ) extends Tracker_FormElement_Field_List_Bind_Static {
+        ) extends ListFieldStaticBind {
             #[\Override]
             public function getQuerySelect(): string
             {

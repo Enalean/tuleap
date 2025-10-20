@@ -22,7 +22,7 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\TestManagement\Step\Step;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class TestStatusAccordingToStepsStatusChangesBuilder

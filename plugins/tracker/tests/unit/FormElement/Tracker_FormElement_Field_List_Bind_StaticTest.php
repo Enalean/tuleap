@@ -25,12 +25,12 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
@@ -41,10 +41,10 @@ use UserXMLExporter;
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
-    private Tracker_FormElement_Field_List_Bind_Static $bind;
-    private Tracker_FormElement_Field_List_Bind_Static $bind_without_values;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $first_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $second_value;
+    private ListFieldStaticBind $bind;
+    private ListFieldStaticBind $bind_without_values;
+    private ListFieldStaticBindValue $first_value;
+    private ListFieldStaticBindValue $second_value;
     private ListField $field;
 
     #[\Override]
@@ -63,7 +63,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
         $default_values = [];
         $decorators     = [];
 
-        $this->bind = new Tracker_FormElement_Field_List_Bind_Static(
+        $this->bind = new ListFieldStaticBind(
             new DatabaseUUIDV7Factory(),
             $this->field,
             $is_rank_alpha,
@@ -72,7 +72,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
             $decorators
         );
 
-        $this->bind_without_values = new Tracker_FormElement_Field_List_Bind_Static(
+        $this->bind_without_values = new ListFieldStaticBind(
             new DatabaseUUIDV7Factory(),
             $this->field,
             $is_rank_alpha,
@@ -107,7 +107,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
         $bv2    = ListStaticValueBuilder::aStaticValue('2')->build();
         $field  = $is_rank_alpha = $default_values = $decorators = '';
         $values = [101 => $bv1, 102 => $bv2];
-        $static = new Tracker_FormElement_Field_List_Bind_Static(new DatabaseUUIDV7Factory(), $field, $is_rank_alpha, $values, $default_values, $decorators);
+        $static = new ListFieldStaticBind(new DatabaseUUIDV7Factory(), $field, $is_rank_alpha, $values, $default_values, $decorators);
         self::assertEquals($values, $static->getBindValues());
         self::assertEquals([], $static->getBindValues([]), 'Dont give more than what we are asking');
         self::assertEquals([102 => $bv2], $static->getBindValues([102]));
@@ -131,7 +131,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
     {
         $value_dao = $this->createMock(BindStaticValueDao::class);
         $value_dao->method('propagateCreation');
-        $bind_static = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Static::class)
+        $bind_static = $this->getMockBuilder(ListFieldStaticBind::class)
             ->setConstructorArgs([
                 new DatabaseUUIDV7Factory(),
                 SelectboxFieldBuilder::aSelectboxField(101)->build(),
@@ -163,7 +163,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
     {
         $value_dao = $this->createMock(BindStaticValueDao::class);
         $value_dao->method('propagateCreation');
-        $bind_static = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Static::class)
+        $bind_static = $this->getMockBuilder(ListFieldStaticBind::class)
             ->setConstructorArgs([
                 new DatabaseUUIDV7Factory(),
                 SelectboxFieldBuilder::aSelectboxField(101)->build(),
@@ -194,14 +194,14 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
     public function testItDoesntCrashWhenInvalidValueShouldBePrinted(): void
     {
         $field = SelectboxFieldBuilder::aSelectboxField(851)->build();
-        $bind  = new Tracker_FormElement_Field_List_Bind_Static(new DatabaseUUIDV7Factory(), $field, 0, [], null, null);
+        $bind  = new ListFieldStaticBind(new DatabaseUUIDV7Factory(), $field, 0, [], null, null);
         self::assertEquals('-', $bind->formatArtifactValue(0));
     }
 
     /**
      * @param array<int, string> $values
      */
-    protected function getListFieldWIthBindValues(array $values): Tracker_FormElement_Field_List_Bind_Static
+    protected function getListFieldWIthBindValues(array $values): ListFieldStaticBind
     {
         $field = SelectboxFieldBuilder::aSelectboxField(101)->build();
         return ListStaticBindBuilder::aStaticBind($field)->withStaticValues($values)->build();

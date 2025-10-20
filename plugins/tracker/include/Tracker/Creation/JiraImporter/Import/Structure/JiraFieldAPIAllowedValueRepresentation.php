@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\IDGenerator;
 
@@ -101,7 +101,7 @@ class JiraFieldAPIAllowedValueRepresentation
 
     public function getXMLId(): string
     {
-        return \Tracker_FormElement_Field_List_Bind_StaticValue::XML_ID_PREFIX . $this->xml_id;
+        return \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue::XML_ID_PREFIX . $this->xml_id;
     }
 
     public function getXMLIdValue(): string

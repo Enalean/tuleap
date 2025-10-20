@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Artifact\Renderer;
 use Codendi_Request;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Semantic\Status\StatusValuesCollection;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;

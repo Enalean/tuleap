@@ -26,7 +26,7 @@ use Tracker_FormElement_Field_List_OpenValue;
 use Tracker_FormElement_Field_List_Value;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class FormElementListValueAdminViewPresenterBuilder

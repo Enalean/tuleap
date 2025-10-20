@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\List\XML;
 
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue;
 use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValue;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
@@ -31,7 +31,7 @@ use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 abstract class XMLListField extends XMLField
 {
     /**
-     * @var null | \Tracker_FormElement_Field_List_Bind_Static::TYPE | \Tracker_FormElement_Field_List_Bind_Users::TYPE | \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE
+     * @var null | \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE | \Tracker_FormElement_Field_List_Bind_Users::TYPE | \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE
      * @readonly
      */
     public ?string $bind_type = null;
@@ -62,7 +62,7 @@ abstract class XMLListField extends XMLField
     public function withBindStatic(): self
     {
         $new            = clone $this;
-        $new->bind_type = \Tracker_FormElement_Field_List_Bind_Static::TYPE;
+        $new->bind_type = \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE;
         return $new;
     }
 
@@ -71,11 +71,11 @@ abstract class XMLListField extends XMLField
      */
     public function withStaticValues(XMLBindStaticValue ...$bind_value): self
     {
-        if ($this->bind_type !== null && $this->bind_type !== \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
+        if ($this->bind_type !== null && $this->bind_type !== \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE) {
             throw new \LogicException(sprintf('Cannot mix bind type, %s already set', $this->bind_type));
         }
         $new              = clone $this;
-        $new->bind_type   = \Tracker_FormElement_Field_List_Bind_Static::TYPE;
+        $new->bind_type   = \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE;
         $new->bind_values = array_merge($new->bind_values, $bind_value);
         return $new;
     }
@@ -104,7 +104,7 @@ abstract class XMLListField extends XMLField
 
         $bind = $form_element->addChild('bind');
         $bind->addAttribute('type', $this->bind_type);
-        if ($this->bind_type === \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
+        if ($this->bind_type === \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE) {
             $bind->addAttribute('is_rank_alpha', $this->is_rank_alphanumeric ? '1' : '0');
         }
         if (count($this->bind_values) > 0) {

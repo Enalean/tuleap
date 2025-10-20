@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_List_Bind_Null;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -42,7 +41,8 @@ use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
 use Tuleap\TestManagement\Test\Builders\StepsExecutionFieldBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
@@ -233,7 +233,7 @@ final class SuitableFieldRetrieverTest extends TestCase
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();
-        $list_field->setBind(new Tracker_FormElement_Field_List_Bind_Null(new DatabaseUUIDV7Factory(), $list_field));
+        $list_field->setBind(new ListFieldNullBind(new DatabaseUUIDV7Factory(), $list_field));
         $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
 
         $result = $this->retrieve();

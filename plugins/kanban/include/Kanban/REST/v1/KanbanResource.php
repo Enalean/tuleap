@@ -33,7 +33,6 @@ use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
 use Tracker_Artifact_PriorityHistoryChange;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tracker_Permission_PermissionRetrieveAssignee;
@@ -113,7 +112,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilde
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
@@ -686,7 +686,7 @@ final class KanbanResource extends AuthenticatedResource
         PFUser $user,
         KanbanAddRepresentation $add,
     ): void {
-        $this->moveArtifactsInColumn($kanban, $user, $add, Tracker_FormElement_Field_List_Bind::NONE_VALUE);
+        $this->moveArtifactsInColumn($kanban, $user, $add, ListFieldBind::NONE_VALUE);
     }
 
     private function moveArtifactsInArchive(

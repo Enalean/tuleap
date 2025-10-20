@@ -24,11 +24,11 @@ namespace Tuleap\Tracker\FormElement\Field\List;
 use Override;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 final class CheckboxField extends MultiSelectboxField
@@ -46,7 +46,7 @@ final class CheckboxField extends MultiSelectboxField
     #[Override]
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
     {
-        if ($value->getId() == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+        if ($value->getId() == ListFieldStaticBindNoneValue::VALUE_ID) {
             return '';
         }
         $id      = $value->getId();
@@ -79,12 +79,12 @@ final class CheckboxField extends MultiSelectboxField
         if (empty($visible_values)) {
             return $this->getNoValueLabel();
         }
-        if (count($visible_values) === 1 && isset($visible_values[Tracker_FormElement_Field_List_Bind::NONE_VALUE])) {
+        if (count($visible_values) === 1 && isset($visible_values[ListFieldBind::NONE_VALUE])) {
             return $this->getNoValueLabel();
         }
         $html = '<ul class="tracker-read-only-checkbox-list">';
         foreach ($visible_values as $bind_id => $bind_value) {
-            if ($bind_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+            if ($bind_id == ListFieldStaticBindNoneValue::VALUE_ID) {
                 continue;
             }
             $checked = in_array($bind_id, $selected_values_ids);

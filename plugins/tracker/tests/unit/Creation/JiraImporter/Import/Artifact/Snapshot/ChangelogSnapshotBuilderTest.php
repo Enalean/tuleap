@@ -27,7 +27,6 @@ use DateTimeImmutable;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ChangelogSnapshotBuilderTest extends TestCase
@@ -483,7 +483,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                 'Fstatus',
                 'status',
                 'sb',
-                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                ListFieldStaticBind::TYPE,
                 [],
             )
         );
@@ -495,7 +495,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                 'Fcustomfield_10040',
                 'Field 02',
                 'msb',
-                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                ListFieldStaticBind::TYPE,
                 []
             ),
         );
@@ -594,7 +594,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                 'Fcustomfield_10058',
                 'customfield_10058',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                ListFieldStaticBind::TYPE,
                 [],
             )
         );
@@ -607,7 +607,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                 'Fcustomfield_10059',
                 'customfield_10059',
                 Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
-                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                ListFieldStaticBind::TYPE,
                 [],
             )
         );
@@ -630,7 +630,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
             'Fversions',
             'versions',
             Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
     }
@@ -644,7 +644,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
             'Ffixversions',
             'fixversions',
             Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
     }
@@ -658,7 +658,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
             'Fcomponents',
             'components',
             Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
     }
@@ -672,7 +672,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
             'Fcustomfield_10100',
             'customfield_10100',
             Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
     }
@@ -686,7 +686,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
             'Fcustomfield_10101',
             'customfield_10101',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
     }
@@ -700,7 +700,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
             'Fcustomfield_10102',
             'customfield_10102',
             Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
     }

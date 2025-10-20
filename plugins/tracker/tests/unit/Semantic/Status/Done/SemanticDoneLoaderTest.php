@@ -76,7 +76,7 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->value_checker->method('isValueAPossibleDoneValue')->willReturn(true);
 
-        $bind = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class);
         $bind->method('getValue')->willReturnCallback(static fn (int $id) => match ($id) {
             3 => $done_value,
             4 => $delivered_value,
@@ -108,7 +108,7 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
                 static fn(Tracker_FormElement_Field_List_Value $value) => $value === $done_value
             );
 
-        $bind = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class);
         $bind->method('getValue')->willReturnCallback(static fn (int $id) => match ($id) {
             3 => $done_value,
             4 => $delivered_value,
@@ -132,7 +132,7 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->value_checker->method('isValueAPossibleDoneValue')->willReturn(true);
 
-        $bind = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class);
         $bind->method('getValue')->willReturnCallback(static fn (int $id) => match ($id) {
             3 => $done_value,
             4 => throw new Tracker_FormElement_InvalidFieldValueException(),

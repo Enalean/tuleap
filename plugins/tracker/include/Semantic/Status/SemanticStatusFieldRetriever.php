@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status;
 
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
-use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 final readonly class SemanticStatusFieldRetriever implements RetrieveSemanticStatusField

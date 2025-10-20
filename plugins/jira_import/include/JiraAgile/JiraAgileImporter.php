@@ -36,7 +36,7 @@ use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateChangesetValue;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticChangesetValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticChangesetValue;
 use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\String\XML\XMLStringChangesetValue;
 use Tuleap\Tracker\XML\IDGenerator;

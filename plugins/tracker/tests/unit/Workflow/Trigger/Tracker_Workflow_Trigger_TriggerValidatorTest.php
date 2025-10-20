@@ -184,7 +184,7 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \Tuleap\Test\P
 
         $json->triggering_fields = [$triggering_field, $triggering_field2];
 
-        $field_list = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
+        $field_list = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $bind_value = $this->createMock(\Tracker_FormElement_Field_List_BindValue::class);
         $bind_value->method('getId')->willReturn(75);
         $target    = new Tracker_Workflow_Trigger_FieldValue($field_list, $bind_value);

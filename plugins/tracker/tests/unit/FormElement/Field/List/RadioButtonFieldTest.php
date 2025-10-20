@@ -27,8 +27,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\List;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
@@ -91,7 +91,7 @@ final class RadioButtonFieldTest extends TestCase
     {
         $field = $this->getField();
         self::assertEquals(
-            Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
+            ListFieldStaticBindNoneValue::VALUE_ID,
             $field->getFieldDataFromCSVValue(null, null)
         );
     }

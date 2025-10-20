@@ -23,7 +23,7 @@
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
 use DataAccessObject;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 class BindDecoratorDao extends DataAccessObject
 {

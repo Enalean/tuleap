@@ -26,8 +26,8 @@ final class AreListFieldsCompatibleVerifier implements VerifyListFieldsAreCompat
 {
     #[\Override]
     public function areListFieldsCompatible(
-        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
-        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $destination_field,
     ): bool {
         if (
             ($source_field->isMultiple() && ! $destination_field->isMultiple()) ||

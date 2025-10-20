@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\FormElement;
 
-use Tracker_FormElement_Field_List_Bind;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeRepresentation;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -43,8 +43,8 @@ final class LinksFieldRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $link_field->method('getDefaultRESTValue')->willReturn(null);
         $link_field->method('getRESTAvailableValues')->willReturn(null);
         $link_field->method('getRESTBindingProperties')->willReturn([
-            Tracker_FormElement_Field_List_Bind::REST_TYPE_KEY => null,
-            Tracker_FormElement_Field_List_Bind::REST_LIST_KEY => [],
+            ListFieldBind::REST_TYPE_KEY => null,
+            ListFieldBind::REST_LIST_KEY => [],
         ]);
 
         $allowed_link_types = [

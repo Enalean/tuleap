@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Action;
 interface VerifyListFieldsAreCompatible
 {
     public function areListFieldsCompatible(
-        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
-        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $destination_field,
     ): bool;
 }

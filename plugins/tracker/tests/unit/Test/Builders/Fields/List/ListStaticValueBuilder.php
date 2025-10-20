@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 
 final class ListStaticValueBuilder
 {
@@ -43,7 +43,7 @@ final class ListStaticValueBuilder
 
     public static function noneStaticValue(): self
     {
-        return (new self('None'))->withId(\Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE);
+        return (new self('None'))->withId(\Tuleap\Tracker\FormElement\Field\List\ListField::NONE_VALUE);
     }
 
     public function withId(int $id): self
@@ -70,9 +70,9 @@ final class ListStaticValueBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_List_Bind_StaticValue
+    public function build(): ListFieldStaticBindValue
     {
         $uuid_factory = new DatabaseUUIDV7Factory();
-        return new Tracker_FormElement_Field_List_Bind_StaticValue($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $this->id, $this->value, $this->description, 1, $this->is_hidden);
+        return new ListFieldStaticBindValue($uuid_factory->buildUUIDFromBytesData($uuid_factory->buildUUIDBytes()), $this->id, $this->value, $this->description, 1, $this->is_hidden);
     }
 }

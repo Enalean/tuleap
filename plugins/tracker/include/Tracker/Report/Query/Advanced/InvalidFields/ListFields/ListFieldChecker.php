@@ -45,7 +45,7 @@ final readonly class ListFieldChecker
      * @throws ListToStatusOpenComparisonException
      * @throws ListValueDoNotExistComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\ListField $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\List\ListField $field): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
@@ -65,7 +65,7 @@ final readonly class ListFieldChecker
      */
     private function checkListValueIsValid(
         Comparison $comparison,
-        \Tuleap\Tracker\FormElement\Field\ListField $field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $field,
         bool $is_empty_string_a_problem,
     ): void {
         $values_extractor  = new CollectionOfListValuesExtractor();

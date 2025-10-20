@@ -23,7 +23,7 @@
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {

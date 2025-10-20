@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Rule;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -48,13 +48,13 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private ListField&MockObject $target_field;
 
-    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
+    private ListFieldStaticBind&MockObject $bind;
 
-    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind_2;
+    private ListFieldStaticBind&MockObject $bind_2;
 
-    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind_3;
+    private ListFieldStaticBind&MockObject $bind_3;
 
-    private Tracker_FormElement_Field_List_Bind_Static $bind_4;
+    private ListFieldStaticBind $bind_4;
 
     private array $list_rules;
 
@@ -64,18 +64,18 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $this->tracker             = TrackerTestBuilder::aTracker()->withId(110)->withName('MyTracker')->build();
 
-        $this->bind   = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->bind_2 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->bind_3 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->bind_4 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind   = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class);
+        $this->bind_2 = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class);
+        $this->bind_3 = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class);
+        $this->bind_4 = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class);
 
-        $this->source_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
+        $this->source_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $this->source_field->method('getID')->willReturn(123);
         $this->source_field->method('getLabel')->willReturn('aaaaa');
         $this->source_field->method('getBind')->willReturn($this->bind);
         $this->source_field->method('getTracker')->willReturn($this->tracker);
 
-        $this->target_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
+        $this->target_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $this->target_field->method('getID')->willReturn(789);
         $this->target_field->method('getLabel')->willReturn('bbbbb');
         $this->target_field->method('getBind')->willReturn($this->bind_2);

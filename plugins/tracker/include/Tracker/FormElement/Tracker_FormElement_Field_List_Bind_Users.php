@@ -23,9 +23,10 @@ use Tuleap\Tracker\FormElement\Field\List\Bind\BindListUserValueGetter;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsersDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\PlatformUsersGetterSingleton;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\UserListValueRepresentation;
@@ -34,7 +35,7 @@ use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
 
-class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string TYPE = 'users';
 

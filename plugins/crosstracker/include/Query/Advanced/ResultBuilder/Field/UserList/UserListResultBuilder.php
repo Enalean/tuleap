@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\UserList;
 
 use LogicException;
-use Tracker_FormElement_Field_List_Bind;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
@@ -33,6 +32,7 @@ use Tuleap\CrossTracker\Query\Advanced\SelectResultKey;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 use Tuleap\User\RetrieveUserByEmail;
 use Tuleap\User\RetrieveUserById;
 use Tuleap\User\RetrieveUserByUserName;
@@ -106,7 +106,7 @@ final readonly class UserListResultBuilder
      */
     private function buildUserValueFromList(int $user_id): Option
     {
-        if ($user_id === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
+        if ($user_id === ListFieldBind::NONE_VALUE) {
             return Option::nothing(UserRepresentation::class);
         }
         $user = $this->user_id_retriever->getUserById($user_id);

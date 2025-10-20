@@ -59,7 +59,7 @@ final class CardColumnFinderTest extends TestCase
     private ColumnFactory&Stub $column_factory;
     private \PFUser $user;
     private \Tuleap\Tracker\FormElement\Field\List\SelectboxField $mapped_list_field;
-    private \Tracker_FormElement_Field_List_Bind_Static $list_bind;
+    private \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind $list_bind;
     private \Cardwall_Column $todo_column;
     private \Cardwall_Column $ongoing_column;
     private \Cardwall_Column $done_column;

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\XML;
 
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\List\XML\XMLSelectBoxField;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;

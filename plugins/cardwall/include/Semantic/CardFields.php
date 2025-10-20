@@ -32,13 +32,13 @@ use Tuleap\Cardwall\Semantic\CardsPreviewBuilder;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
 use Tuleap\Cardwall\Semantic\SingleCardPreviewDetailsBuilder;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
-class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string NAME                  = 'plugin_cardwall_card_fields';
     public const string BACKGROUND_COLOR_NAME = 'plugin_cardwell_card_fields_background_color';

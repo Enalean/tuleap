@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue;
 use Tuleap\Tracker\FormElement\Field\List\XML\XMLSelectBoxField;
 use Tuleap\Tracker\XML\IDGenerator;

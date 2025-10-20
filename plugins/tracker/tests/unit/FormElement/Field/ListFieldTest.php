@@ -29,7 +29,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use TestHelper;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElement_InvalidFieldValueException;
@@ -44,6 +43,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\ListValueDao;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
@@ -65,7 +66,7 @@ final class ListFieldTest extends TestCase
     private Tracker_Artifact_ChangesetValue_List&MockObject $changeset_value;
     private ListField&MockObject $list_field;
     private Tracker_FormElement_Field_List_BindValue $bind_value;
-    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
+    private ListFieldStaticBind&MockObject $bind;
     private ListValueDao&MockObject $value_dao;
 
     #[\Override]
@@ -78,7 +79,7 @@ final class ListFieldTest extends TestCase
         ]);
         $this->value_dao       = $this->createMock(ListValueDao::class);
         $this->changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
-        $this->bind            = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind            = $this->createMock(ListFieldStaticBind::class);
         $this->bind_value      = ListStaticValueBuilder::aStaticValue('value')->build();
 
         $this->list_field->method('getValueDao')->willReturn($this->value_dao);

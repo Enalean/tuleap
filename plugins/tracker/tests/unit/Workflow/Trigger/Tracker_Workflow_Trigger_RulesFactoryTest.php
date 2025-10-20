@@ -23,6 +23,8 @@ declare(strict_types=1);
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -38,7 +40,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
     private stdClass $json_input;
     private Tracker_Workflow_Trigger_TriggerValidator&MockObject $validator;
     private int $target_value_id = 250;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $target_field_value;
+    private ListFieldStaticBindValue $target_field_value;
     private SelectboxField&MockObject $target_field;
     private int $target_field_id  = 30;
     private int $trigger_field_id = 369;
@@ -263,7 +265,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
     {
         $target_field_value = ListStaticValueBuilder::aStaticValue('Target Value Label')->withId($this->target_value_id)->build();
 
-        $target_bind_static = new Tracker_FormElement_Field_List_Bind_Static(
+        $target_bind_static = new ListFieldStaticBind(
             new DatabaseUUIDV7Factory(),
             null,
             null,
@@ -280,7 +282,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
         $target_field->method('getAllValues')->willReturn([$target_field_value]);
 
         $trigger_field_value_1 = ListStaticValueBuilder::aStaticValue('Triggering Value Label')->withId(852)->build();
-        $trigger_bind_static   = new Tracker_FormElement_Field_List_Bind_Static(
+        $trigger_bind_static   = new ListFieldStaticBind(
             new DatabaseUUIDV7Factory(),
             null,
             null,

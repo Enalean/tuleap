@@ -26,14 +26,14 @@ use Tracker_Artifact_ChangesetValue_List;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanUserFieldValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Stub&\Tuleap\Tracker\FormElement\Field\ListField $source_field;
-    private Stub&\Tuleap\Tracker\FormElement\Field\ListField $destination_field;
+    private Stub&\Tuleap\Tracker\FormElement\Field\List\ListField $source_field;
+    private Stub&\Tuleap\Tracker\FormElement\Field\List\ListField $destination_field;
     private Stub&Artifact $artifact;
     private Stub&Tracker_Artifact_ChangesetValue_List $changeset_value;
     private \PFUser $user;

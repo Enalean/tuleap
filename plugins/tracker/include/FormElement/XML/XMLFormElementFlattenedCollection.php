@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\XML;
 
 use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\List\XML\XMLSelectBoxField;
 
 /**

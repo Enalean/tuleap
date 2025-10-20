@@ -40,8 +40,8 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
     #[\Override]
     public function updateValueForDuckTypingMove(
         SimpleXMLElement $changeset_xml,
-        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
-        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $destination_field,
         int $index,
     ): void {
         $list_value_ids = $changeset_xml->field_change[$index]->value;

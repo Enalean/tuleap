@@ -26,7 +26,11 @@ use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsersDao;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
@@ -90,7 +94,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
             );
         }
 
-        $bind = new Tracker_FormElement_Field_List_Bind_Null($this->uuid_factory, $field);
+        $bind = new ListFieldNullBind($this->uuid_factory, $field);
         switch ($type) {
             case self::STATIK:
                 $dao = new BindStaticDao();
@@ -106,7 +110,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                             $row_value['is_hidden']
                         );
                     }
-                    $bind = new Tracker_FormElement_Field_List_Bind_Static($this->uuid_factory, $field, $row['is_rank_alpha'], $values, $default_value, $decorators);
+                    $bind = new ListFieldStaticBind($this->uuid_factory, $field, $row['is_rank_alpha'], $values, $default_value, $decorators);
                 }
                 break;
             case self::USERS:
@@ -194,13 +198,13 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
 
     /**
      * @param array the row allowing the construction of a bind
-     * @return Tracker_FormElement_Field_List_Bind Object
+     * @return ListFieldBind Object
      */
     public function getInstanceFromRow($row)
     {
         switch ($row['type']) {
             case self::STATIK:
-                return new Tracker_FormElement_Field_List_Bind_Static(
+                return new ListFieldStaticBind(
                     $this->uuid_factory,
                     $row['field'],
                     $row['is_rank_alpha'],
@@ -228,7 +232,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                 );
             default:
                 $this->logger->warning('Unknown bind "' . $row['type'] . '"');
-                return new Tracker_FormElement_Field_List_Bind_Null($this->uuid_factory, $row['field']);
+                return new ListFieldNullBind($this->uuid_factory, $row['field']);
         }
     }
 
@@ -239,7 +243,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
      * @param TrackerField $field       to which the bind is attached
      * @param array                     &$xmlMapping where the newly created formElements indexed by their XML IDs are stored
      *
-     * @return Tracker_FormElement_Field_List_Bind Object
+     * @return ListFieldBind Object
      */
     public function getInstanceFromXML(
         SimpleXMLElement $xml,
@@ -346,11 +350,11 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
     /**
      * Buil an instance of static value
      *
-     * @return Tracker_FormElement_Field_List_Bind_StaticValue
+     * @return ListFieldStaticBindValue
      */
     public function getStaticValueInstance($id, $label, $description, $rank, $is_hidden)
     {
-        return new Tracker_FormElement_Field_List_Bind_StaticValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $id, $label, $description, $rank, $is_hidden);
+        return new ListFieldStaticBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $id, $label, $description, $rank, $is_hidden);
     }
 
     /**
@@ -399,7 +403,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
         $html .= '</dt>';
 
         $html .= '<dd class="tracker-bind-def">';
-        $html .= Tracker_FormElement_Field_List_Bind_Static::fetchAdminCreateForm($field);
+        $html .= ListFieldStaticBind::fetchAdminCreateForm($field);
         $html .= '</dd>';
 
         $html .= '<dt class="tracker-bind-type">';
@@ -434,7 +438,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
      * @param array $bind_data the data used to create the bind
      *
      */
-    public function createBind($field, $type, $bind_data): ?Tracker_FormElement_Field_List_Bind
+    public function createBind($field, $type, $bind_data): ?ListFieldBind
     {
         $bind = null;
         switch ($type) {
@@ -442,7 +446,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
             case self::STATIK:
                 $dao = new BindStaticDao();
                 if ($dao->save($field->getId(), 0)) {
-                    $bind = new Tracker_FormElement_Field_List_Bind_Static($this->uuid_factory, $field, 0, [], [], []);
+                    $bind = new ListFieldStaticBind($this->uuid_factory, $field, 0, [], [], []);
                     $bind->process($bind_data, 'no redirect');
                 }
                 break;
@@ -465,7 +469,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
 
     public function getType($bind)
     {
-        return $bind instanceof \Tracker_FormElement_Field_List_Bind_Static ? self::STATIK :
+        return $bind instanceof \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind ? self::STATIK :
                 ($bind instanceof \Tracker_FormElement_Field_List_Bind_Users ? self::USERS :
                     ($bind instanceof \Tracker_FormElement_Field_List_Bind_Ugroups ? self::UGROUPS : '')
                 );

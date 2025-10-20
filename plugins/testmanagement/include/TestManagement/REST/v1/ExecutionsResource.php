@@ -27,7 +27,6 @@ use PFUser;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactFactory;
 use Tracker_Exception;
-use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
@@ -97,6 +96,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -752,10 +752,10 @@ class ExecutionsResource
 
         if ($status_field) {
             $status_field_binds = [];
-            assert($status_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
+            assert($status_field instanceof \Tuleap\Tracker\FormElement\Field\List\ListField);
             $bind = $status_field->getBind();
             if ($bind) {
-                assert($bind instanceof Tracker_FormElement_Field_List_Bind);
+                assert($bind instanceof ListFieldBind);
                 $status_field_binds = $bind->getValuesByKeyword($status);
             }
             $status_field_bind = array_pop($status_field_binds);

@@ -19,25 +19,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\List\Bind;
+
+use ColorHelper;
+use SimpleXMLElement;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_List;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement_Field_List_BindDecorator;
+use Tracker_FormElement_Field_List_BindFactory;
+use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_Field_List_Value;
+use Tracker_FormElement_Field_Shareable;
+use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_IProvideJsonFormatOfMyself;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Option\Option;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorDao;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitable;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BoundDecoratorEditor;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BoundDecoratorSaver;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\FieldValueRepresentation;
+use UserXMLExporter;
 
 /**
  * @template ListValueBinding of Tracker_FormElement_Field_List_Value
  */
-abstract class Tracker_FormElement_Field_List_Bind implements // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-    Tracker_FormElement_Field_Shareable,
-    Tracker_IProvideJsonFormatOfMyself,
-    BindVisitable
+abstract class ListFieldBind implements Tracker_FormElement_Field_Shareable, Tracker_IProvideJsonFormatOfMyself, BindVisitable
 {
     public const string REST_ID_KEY    = 'bind_value_id';
     public const string REST_LABEL_KEY = 'bind_value_label';
@@ -164,7 +172,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements // phpcs:ignore PS
      * Get the field data for artifact submission
      *
      * @param string $submitted_value
-     * @param bool   $is_multiple     if the value is multiple or not
+     * @param bool $is_multiple if the value is multiple or not
      *
      * @return mixed the field data corresponding to the value for artifact submision
      */
@@ -441,7 +449,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements // phpcs:ignore PS
      * Process the request
      *
      * @param array $params the request parameters
-     * @param bool  $no_redirect true if we do not have to redirect the user
+     * @param bool $no_redirect true if we do not have to redirect the user
      *
      * @return bool true if we want to redirect
      */
@@ -470,9 +478,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements // phpcs:ignore PS
                 return true;
             }
             $GLOBALS['Response']->redirect('?' . http_build_query([
-                'tracker'            => $tracker->getId(),
-                'func'               => 'admin-formElements',
-            ]));
+                    'tracker' => $tracker->getId(),
+                    'func'    => 'admin-formElements',
+                ]));
         }
         return true;
     }
@@ -657,7 +665,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements // phpcs:ignore PS
      * Retrieve all values which match the keyword
      *
      * @param string $keyword The keyword to search
-     * @param int    $limit   The max number of values to return. Default is 10
+     * @param int $limit The max number of values to return. Default is 10
      *
      * @return array
      */
@@ -684,7 +692,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements // phpcs:ignore PS
     abstract public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value);
 
     /**
-     * @psalm-param ListValueBinding $value
+     * @psalm-param Tracker_FormElement_Field_List_Value $value
      */
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {

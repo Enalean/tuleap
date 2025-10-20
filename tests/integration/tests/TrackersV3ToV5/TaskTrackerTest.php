@@ -30,7 +30,6 @@ use Tracker_DateReminder;
 use Tracker_DateReminder_Role_Submitter;
 use Tracker_DateReminderFactory;
 use Tracker_DateReminderRenderer;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElementFactory;
 use Tracker_Migration_V3;
 use Tracker_Report_Renderer_Table;
@@ -42,7 +41,8 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
@@ -309,7 +309,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(count($labels), $values);
         $i = 0;
         while ($value = array_shift($values)) {
-            self::assertInstanceOf(Tracker_FormElement_Field_List_Bind_StaticValue::class, $value);
+            self::assertInstanceOf(ListFieldStaticBindValue::class, $value);
             self::assertSame($labels[$i++], $value->getLabel());
             self::assertSame('0', $value->isHidden());
         }

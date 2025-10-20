@@ -22,9 +22,9 @@
 namespace Tuleap\Tracker\Report\dao;
 
 use ParagonIE\EasyDB\EasyDB;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReportCriteriaDaoTest extends TestIntegrationTestCase
@@ -60,7 +60,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
         ];
         $field_mapping[] = [
             'values' => [
-                201 => Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
+                201 => ListFieldStaticBindNoneValue::VALUE_ID,
             ],
             'from' => $from_other_field_id,
             'to' => $to_other_field_id,
@@ -83,7 +83,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
 
         $duplicated_data = $this->getNewReportCriteriaListValues($to_other_field_id);
         $expected        = [
-            ['value' => Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID],
+            ['value' => ListFieldStaticBindNoneValue::VALUE_ID],
         ];
         $this->assertEquals($expected, $duplicated_data);
     }
