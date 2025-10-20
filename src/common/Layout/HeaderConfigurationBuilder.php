@@ -27,6 +27,7 @@ use Tuleap\Layout\HeaderConfiguration\InProjectWithoutProjectContext\BackToLinkP
 use Tuleap\Layout\HeaderConfiguration\InSiteAdministration;
 use Tuleap\Layout\HeaderConfiguration\WithoutProjectContext;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\OpenGraph\OpenGraphPresenter;
 
 final class HeaderConfigurationBuilder
 {
@@ -44,6 +45,7 @@ final class HeaderConfigurationBuilder
     private ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter = null;
     private bool $include_fat_combined                                            = false;
     private ?InSiteAdministration $in_site_administration                         = null;
+    private ?OpenGraphPresenter $open_graph                                       = null;
 
     private function __construct(private string $title)
     {
@@ -171,6 +173,13 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
+    public function withOpenGraph(OpenGraphPresenter $open_graph): self
+    {
+        $this->open_graph = $open_graph;
+
+        return $this;
+    }
+
     public function build(): HeaderConfiguration
     {
         return new HeaderConfiguration(
@@ -182,6 +191,7 @@ final class HeaderConfigurationBuilder
             $this->new_dropdown_link_section_presenter,
             $this->include_fat_combined,
             $this->in_site_administration,
+            $this->open_graph,
         );
     }
 }

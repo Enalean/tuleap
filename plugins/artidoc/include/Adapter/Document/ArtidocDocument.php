@@ -62,6 +62,12 @@ class ArtidocDocument extends OtherDocument implements Artidoc
     }
 
     #[Override]
+    public function getDescription(): string
+    {
+        return parent::getDescription() ?? '';
+    }
+
+    #[Override]
     public function getParentId(): int
     {
         if (parent::getParentId() === null) {

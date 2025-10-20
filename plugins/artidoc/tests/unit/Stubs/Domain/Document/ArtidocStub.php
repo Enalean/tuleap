@@ -58,4 +58,10 @@ final class ArtidocStub implements Artidoc
     {
         return 101;
     }
+
+    #[\Override]
+    public function getDescription(): string
+    {
+        return 'Description';
+    }
 }
