@@ -17,80 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    TYPE_EMBEDDED,
-    TYPE_EMPTY,
-    TYPE_FILE,
-    TYPE_FOLDER,
-    TYPE_LINK,
-    TYPE_WIKI,
-} from "../../constants";
-import {
-    putEmbeddedFilePermissions,
-    putEmptyDocumentPermissions,
-    putFilePermissions,
-    putFolderPermissions,
-    putLinkPermissions,
-    putOtherTypeDocumentPermissions,
-    putWikiPermissions,
-} from "../../api/permissions-rest-querier";
 import type { ActionContext } from "vuex";
-import type { Item, Permissions, RootState, State } from "../../type";
+import type { RootState } from "../../type";
 import type { PermissionsState } from "./permissions-default-state";
-import { getItem } from "../../api/rest-querier";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../helpers/permissions/ugroups";
-import emitter from "../../helpers/emitter";
-
-interface PermissionUpdatePayload {
-    item: Item;
-    updated_permissions: Permissions;
-}
-export const updatePermissions = async (
-    context: ActionContext<PermissionsState, State>,
-    payload: PermissionUpdatePayload,
-): Promise<void> => {
-    try {
-        const item_id = payload.item.id;
-        switch (payload.item.type) {
-            case TYPE_FILE:
-                await putFilePermissions(item_id, payload.updated_permissions);
-                break;
-            case TYPE_EMBEDDED:
-                await putEmbeddedFilePermissions(item_id, payload.updated_permissions);
-                break;
-            case TYPE_LINK:
-                await putLinkPermissions(item_id, payload.updated_permissions);
-                break;
-            case TYPE_WIKI:
-                await putWikiPermissions(item_id, payload.updated_permissions);
-                break;
-            case TYPE_EMPTY:
-                await putEmptyDocumentPermissions(item_id, payload.updated_permissions);
-                break;
-            case TYPE_FOLDER:
-                await putFolderPermissions(item_id, payload.updated_permissions);
-                break;
-            default:
-                await putOtherTypeDocumentPermissions(item_id, payload.updated_permissions);
-                break;
-        }
-        const updated_item = await getItem(item_id);
-
-        emitter.emit("item-permissions-have-just-been-updated");
-
-        if (context.rootState.current_folder && item_id === context.rootState.current_folder.id) {
-            context.commit("replaceCurrentFolder", updated_item, { root: true });
-            await context.dispatch("loadFolder", item_id, { root: true });
-        } else {
-            updated_item.updated = true;
-            context.commit("removeItemFromFolderContent", updated_item, { root: true });
-            context.commit("addJustCreatedItemToFolderContent", updated_item, { root: true });
-            context.commit("updateCurrentItemForQuickLokDisplay", updated_item, { root: true });
-        }
-    } catch (exception) {
-        await context.dispatch("error/handleErrorsForModal", exception, { root: true });
-    }
-};
 
 export const loadProjectUserGroupsIfNeeded = async (
     context: ActionContext<PermissionsState, RootState>,

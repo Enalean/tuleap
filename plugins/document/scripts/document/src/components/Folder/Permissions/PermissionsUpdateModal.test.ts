@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -28,6 +29,7 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
 import { PROJECT } from "../../../configuration-keys";
 import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
+import * as permissions from "../../../helpers/permissions/permissions";
 
 vi.useFakeTimers();
 
@@ -35,10 +37,11 @@ describe("PermissionsUpdateModal", () => {
     let load_project_ugroups = vi.fn().mockImplementation(() => {
         return { id: "102_3", label: "Project members" };
     });
-    const update_permissions = vi.fn().mockImplementation(() => {
-        return { id: "102_3", label: "Project members" };
-    });
-    const factory = (props = {}, ugroups = null): VueWrapper<PermissionsUpdateModal> => {
+    let update_permissions: MockInstance;
+    const factory = (
+        props = {},
+        ugroups = null,
+    ): VueWrapper<InstanceType<typeof PermissionsUpdateModal>> => {
         return shallowMount(PermissionsUpdateModal, {
             props: { ...props },
             global: {
@@ -49,7 +52,6 @@ describe("PermissionsUpdateModal", () => {
                             state: { project_ugroups: ugroups },
                             actions: {
                                 loadProjectUserGroupsIfNeeded: load_project_ugroups,
-                                updatePermissions: update_permissions,
                             },
                         },
                         error: {
@@ -69,7 +71,7 @@ describe("PermissionsUpdateModal", () => {
 
     beforeEach(() => {
         load_project_ugroups.mockReset();
-        update_permissions.mockReset();
+        update_permissions = vi.spyOn(permissions, "updatePermissions");
 
         let hideFunction = null;
         vi.spyOn(tlp_modal, "createModal").mockReturnValue({
@@ -206,10 +208,11 @@ describe("PermissionsUpdateModal", () => {
             can_manage: wrapper.vm.updated_permissions.can_manage,
         };
 
-        expect(update_permissions).toHaveBeenCalledWith(expect.anything(), {
-            item: item,
-            updated_permissions: permissions_to_update,
-        });
+        expect(update_permissions).toHaveBeenCalledWith(
+            expect.anything(),
+            item,
+            permissions_to_update,
+        );
         await vi.runOnlyPendingTimersAsync();
         expect(wrapper.vm.can_be_submitted).toBe(true);
     });
