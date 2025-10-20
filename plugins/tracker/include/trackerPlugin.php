@@ -342,7 +342,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         bindtextdomain('tuleap-tracker', __DIR__ . '/../site-content');
 
         $this->addHook('javascript_file');
-        $this->addHook('cssfile', 'cssFile');
         $this->addHook(NatureCollection::NAME);
         $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, 'get_artifact_reference_group_id');
         $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
@@ -560,7 +559,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return array_keys($output) === ['group_id'];
     }
 
-    public function cssFile()
+    #[ListeningToEventName('cssfile')]
+    public function cssFile(): void
     {
         $include_tracker_css_file = false;
         EventManager::instance()->processEvent(self::TRACKER_EVENT_INCLUDE_CSS_FILE, ['include_tracker_css_file' => &$include_tracker_css_file]);

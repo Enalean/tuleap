@@ -28,6 +28,7 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
@@ -48,7 +49,6 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook('cssfile', 'cssFile');
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(RootDailyStartEvent::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
@@ -231,7 +231,8 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
         $this->removeOrphanWidgets(['plugin_statistics_projectstatistics']);
     }
 
-    public function cssFile($params)
+    #[ListeningToEventName('cssfile')]
+    public function cssFile($params): void
     {
         // This stops styles inadvertently clashing with the main site.
         if (

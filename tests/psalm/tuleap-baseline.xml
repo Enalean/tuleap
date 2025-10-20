@@ -2818,14 +2818,12 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[botmattermost_bot_deleted]]></code>
-      <code><![CDATA[cssfile]]></code>
       <code><![CDATA[getController]]></code>
       <code><![CDATA[getFactory]]></code>
       <code><![CDATA[getGitRepositoryFactory]]></code>
@@ -21109,7 +21107,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
       <code><![CDATA[load]]></code>
       <code><![CDATA[load]]></code>
     </DeprecatedMethod>
@@ -21157,7 +21154,6 @@
       <code><![CDATA[codendi_daily_start]]></code>
       <code><![CDATA[collectProjectAdminNavigationPermissionDropdownQuickLinks]]></code>
       <code><![CDATA[collectRoutesEvent]]></code>
-      <code><![CDATA[cssFile]]></code>
       <code><![CDATA[dump_ssh_keys]]></code>
       <code><![CDATA[edit_ssh_keys]]></code>
       <code><![CDATA[file_exists_in_data_dir]]></code>
@@ -24869,7 +24865,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
       <code><![CDATA[current]]></code>
       <code><![CDATA[current]]></code>
       <code><![CDATA[getRow]]></code>
@@ -24888,7 +24883,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[canIncludeStylesheets]]></code>
-      <code><![CDATA[cssFile]]></code>
       <code><![CDATA[getMinimalHudsonJobFactory]]></code>
       <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[getProjectWidgetList]]></code>
@@ -25316,7 +25310,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -25325,7 +25318,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[collectGitRoutesEvent]]></code>
-      <code><![CDATA[cssFile]]></code>
       <code><![CDATA[display_hudson_addition_info]]></code>
       <code><![CDATA[getCSRF]]></code>
       <code><![CDATA[plugin_git_settings_additional_webhooks]]></code>
@@ -25461,7 +25453,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -25476,7 +25467,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[collect_ci_triggers]]></code>
-      <code><![CDATA[cssfile]]></code>
       <code><![CDATA[delete_ci_triggers]]></code>
       <code><![CDATA[getAccessFileHistoryFactory]]></code>
       <code><![CDATA[getJobFactory]]></code>
@@ -28125,7 +28115,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <InvalidOperand>
       <code><![CDATA[filesize($file)]]></code>
@@ -28923,7 +28912,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -28934,7 +28922,6 @@
     <MissingReturnType>
       <code><![CDATA[anonymous_access_to_script_allowed]]></code>
       <code><![CDATA[burning_parrot_get_stylesheets]]></code>
-      <code><![CDATA[cssfile]]></code>
       <code><![CDATA[get_login_url]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
@@ -32949,7 +32936,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -32968,7 +32954,6 @@
       <code><![CDATA[burning_parrot_get_javascript_files]]></code>
       <code><![CDATA[burning_parrot_get_stylesheets]]></code>
       <code><![CDATA[collectProjectAdminNavigationItems]]></code>
-      <code><![CDATA[cssFile]]></code>
       <code><![CDATA[getConfigurationManager]]></code>
       <code><![CDATA[getDiskUsagePurger]]></code>
       <code><![CDATA[getProjectQuota]]></code>
@@ -53464,7 +53449,6 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$project_with_tracker_administration]]></code>
@@ -53521,7 +53505,6 @@
       <code><![CDATA[collectRoutesEvent]]></code>
       <code><![CDATA[collect_errors_without_importing_xml_project]]></code>
       <code><![CDATA[configureAtXMLImport]]></code>
-      <code><![CDATA[cssFile]]></code>
       <code><![CDATA[default_widgets_for_new_user]]></code>
       <code><![CDATA[display_deleted_trackers]]></code>
       <code><![CDATA[event_additional_admin_buttons]]></code>
