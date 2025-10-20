@@ -66,6 +66,7 @@ use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\SeatManagement\CachedLicenseBuilder;
+use Tuleap\SeatManagement\FeedbackBuilder;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\SwitchToPresenterBuilder;
 use Tuleap\Widget\WidgetFactory;
@@ -94,15 +95,19 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private bool $header_has_been_written = false;
 
+    private FeedbackBuilder $feedback_builder;
+
     public function __construct($root)
     {
         parent::__construct($root);
 
         $this->renderer         = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->tuleap_version   = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense(CachedLicenseBuilder::instance()));
+        $license_builder        = CachedLicenseBuilder::instance();
+        $this->tuleap_version   = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense($license_builder));
         $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
+        $this->feedback_builder      = new FeedbackBuilder($license_builder, UserManager::instance()->getCurrentUser());
     }
 
     private function render($template_name, $presenter)
@@ -460,6 +465,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
+        $this->feedback_builder->build($this->_feedback);
 
         $this->render('container', new FlamingParrot_ContainerPresenter(
             $breadcrumbs,

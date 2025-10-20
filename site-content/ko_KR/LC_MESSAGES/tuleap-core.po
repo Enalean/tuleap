@@ -2327,8 +2327,17 @@ msgstr "작업을 확인해주십시오."
 msgid "Please contact the administrators at:"
 msgstr "다음 연락처로 관리자에게 문의하십시오."
 
+msgid ""
+"Please contact your Tuleap Partner to renew or upgrade your subscription."
+msgstr ""
+
 msgid "Please explain why you are applying for registration on this site"
 msgstr "이 사이트에 등록을 신청하는 이유를 설명하십시오."
+
+msgid ""
+"Please get in touch with your usual company contact or send an email to "
+"sales@enalean.com."
+msgstr ""
 
 msgid ""
 "Please make sure the users who will be imported are already registered and "
@@ -2345,6 +2354,11 @@ msgid ""
 msgstr ""
 "로그인 정보 <code>%1$s</code>와 비밀번호 <code>%2$s</code>을(를) 기록해 두세"
 "요."
+
+msgid ""
+"Please renew or upgrade your contract on your client account or send an "
+"email to sales@enalean.com."
+msgstr ""
 
 msgid "Please select a file to upload"
 msgstr "업로드할 파일을 선택하세요."
@@ -4536,6 +4550,15 @@ msgstr "프로젝트가 승인되면 이메일을 받게 됩니다."
 
 msgid "You're about to withdraw %s invitation from this project."
 msgstr "이 프로젝트에서 %s 초대를 철회하려고 합니다."
+
+#, php-format
+msgid ""
+"Your Tuleap subscription will expire in %d day. Please renew to avoid any "
+"disruption. %s"
+msgid_plural ""
+"Your Tuleap subscription will expire in %d days. Please renew to avoid any "
+"disruption. %s"
+msgstr[0] ""
 
 msgid "Your account has been created"
 msgstr "계정이 생성되었습니다."
