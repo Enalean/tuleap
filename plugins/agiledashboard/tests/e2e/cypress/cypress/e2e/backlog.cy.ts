@@ -152,22 +152,37 @@ describe(`Backlog`, function () {
             visitTopBacklog(project_id);
         });
 
+        cy.intercept({ method: "GET", url: "/api/v1/backlog_items/*" }).as("getItem");
+        cy.intercept({ method: "PATCH", url: "/api/v1/milestones/*/content" }).as("dropElements");
+        cy.intercept({ method: "PATCH", url: "/api/v1/backlog_items/*/children" }).as(
+            "saveChildren",
+        );
+
         cy.log("User can create new release");
         createARelease("R1", today, next_month);
 
         cy.log("create some story with some tasks");
         addUserStory("User story 1");
+        cy.wait("@getItem");
         addTask("task1");
+        cy.wait("@saveChildren");
+        cy.wait("@getItem");
         addTask("task2");
+        cy.wait("@saveChildren");
+        cy.wait("@getItem");
         addUserStory("User story 2");
+        cy.wait("@getItem");
 
-        cy.get("[data-test=backlog-item-show-children-handle]").last().click();
+        cy.getContains("[data-test=backlog-item]", "User story 1")
+            .find("[data-test=backlog-item-show-children-handle]")
+            .should("be.visible")
+            .click();
         cy.getContains("[data-test=backlog-item]", "User story 1")
             .should("contain", "task1")
             .should("contain", "task2");
 
         cy.log("story can be planned");
-        cy.get("[data-test=milestone]").click();
+        cy.getContains("[data-test=milestone]", "R1").click();
 
         hideEmptyStateSVGToNotConfuseDragAndDrop();
         cy.dragAndDrop(
@@ -177,29 +192,36 @@ describe(`Backlog`, function () {
             "R1",
             "[data-test=milestone-backlog-items]",
         );
+        cy.wait("@dropElements");
+
         cy.log("User story 1 is now in release R1");
         cy.getContains("[data-test=milestone]", "R1")
             .find("[data-test=milestone-content]")
             .should("contain", "User story 1");
 
         cy.log("tasks can be moved from one story to another");
-        cy.intercept({ method: "PATCH", url: "/api/v1/backlog_items/*/children" }).as(
-            "saveChildren",
-        );
+        cy.wait("@getItem");
         cy.dragAndDrop(
             "[data-test=backlog-item-child]",
             "task1",
             "[data-test=backlog-item]",
             "User story 2",
         );
+        cy.root().click(); // Force AngularJS to react
         cy.wait("@saveChildren");
+        /* There is a digest issue in AngularJS code, the User story 2 card should be refreshed,
+           but we cannot make cypress trigger it and wait for the request reliably.
+        */
+        cy.reload();
 
-        cy.intercept("/api/v1/backlog_items/*/children?*").as("getChildren");
-        cy.get("[data-test=backlog-item-show-children-handle]").first().click();
-        cy.wait("@getChildren");
+        cy.getContains("[data-test=backlog-item]", "User story 2")
+            .find("[data-test=backlog-item-show-children-handle]")
+            .should("be.visible")
+            .click();
         cy.getContains("[data-test=backlog-item]", "User story 2").should("contain", "task1");
 
         cy.log("story can be moved to another release");
+        cy.getContains("[data-test=milestone]", "R1").click();
         createARelease("R2", today, next_month);
         cy.getContains("[data-test=milestone]", "R2").click();
 
@@ -211,6 +233,7 @@ describe(`Backlog`, function () {
             "R2",
             "[data-test=milestone-backlog-items]",
         );
+        cy.wait("@dropElements");
 
         cy.getContains("[data-test=milestone]", "R2")
             .find("[data-test=milestone-content]")
@@ -223,9 +246,14 @@ describe(`Backlog`, function () {
             visitTopBacklog(project_id);
         });
 
+        cy.intercept({ method: "GET", url: "/api/v1/backlog_items/*" }).as("getItem");
+        cy.intercept({ method: "PATCH", url: "/api/v1/milestones/*/content" }).as("dropElements");
+
         createARelease("R1", today, next_month);
         addUserStory("User story 1");
+        cy.wait("@getItem");
         addUserStory("User story 2");
+        cy.wait("@getItem");
 
         cy.log("story can be planned");
         cy.get("[data-test=milestone]").click();
@@ -244,6 +272,7 @@ describe(`Backlog`, function () {
             "R1",
             "[data-test=milestone-backlog-items]",
         );
+        cy.wait("@dropElements");
         cy.get("[data-test=milestone-backlog-items]")
             .should("contain", "User story 1")
             .should("contain", "User story 2");
@@ -255,6 +284,12 @@ describe(`Backlog`, function () {
             visitTopBacklog(project_id);
         });
 
+        cy.intercept({ method: "GET", url: "/api/v1/backlog_items/*" }).as("getItem");
+        cy.intercept({ method: "PATCH", url: "/api/v1/milestones/*/content" }).as("dropElements");
+        cy.intercept({ method: "PATCH", url: "/api/v1/backlog_items/*/children" }).as(
+            "saveChildren",
+        );
+
         createARelease("R1", today, next_month);
         cy.get("[data-test=milestone]").click();
         cy.get("[data-test=go-to-submilestone-planning]").click();
@@ -262,17 +297,26 @@ describe(`Backlog`, function () {
 
         cy.log("create some story with some tasks");
         addUserStory("User story 1");
+        cy.wait("@getItem");
         addTask("task1");
+        cy.wait("@saveChildren");
+        cy.wait("@getItem");
         addTask("task2");
+        cy.wait("@saveChildren");
+        cy.wait("@getItem");
         addUserStory("User story 2");
+        cy.wait("@getItem");
 
-        cy.get("[data-test=backlog-item-show-children-handle]").last().click();
+        cy.getContains("[data-test=backlog-item]", "User story 1")
+            .find("[data-test=backlog-item-show-children-handle]")
+            .should("be.visible")
+            .click();
         cy.getContains("[data-test=backlog-item]", "User story 1")
             .should("contain", "task1")
             .should("contain", "task2");
 
         cy.log("story can be planned");
-        cy.get("[data-test=milestone]").click();
+        cy.getContains("[data-test=milestone]", "Sprint 1").click();
 
         hideEmptyStateSVGToNotConfuseDragAndDrop();
         cy.dragAndDrop(
@@ -282,29 +326,36 @@ describe(`Backlog`, function () {
             "Sprint 1",
             "[data-test=milestone-backlog-items]",
         );
+        cy.wait("@dropElements");
+
         cy.log("User story 1 is now in Sprint 1");
         cy.getContains("[data-test=milestone]", "Sprint 1")
             .find("[data-test=milestone-content]")
             .should("contain", "User story 1");
 
         cy.log("tasks can be moved from one story to another");
-        cy.intercept({ method: "PATCH", url: "/api/v1/backlog_items/*/children" }).as(
-            "saveChildren",
-        );
+        cy.wait("@getItem");
         cy.dragAndDrop(
             "[data-test=backlog-item-child]",
             "task1",
             "[data-test=backlog-item]",
             "User story 2",
         );
+        cy.root().click(); // Force AngularJS to react
         cy.wait("@saveChildren");
+        /* There is a digest issue in AngularJS code, the User story 2 card should be refreshed,
+           but we cannot make cypress trigger it and wait for the request reliably.
+        */
+        cy.reload();
 
-        cy.intercept("/api/v1/backlog_items/*/children?*").as("getChildren");
-        cy.get("[data-test=backlog-item-show-children-handle]").first().click();
-        cy.wait("@getChildren");
+        cy.getContains("[data-test=backlog-item]", "User story 2")
+            .find("[data-test=backlog-item-show-children-handle]")
+            .should("be.visible")
+            .click();
         cy.getContains("[data-test=backlog-item]", "User story 2").should("contain", "task1");
 
         cy.log("story can be moved to another sprint");
+        cy.getContains("[data-test=milestone]", "Sprint 1").click();
         createARelease("Sprint 2", today, next_month);
         cy.getContains("[data-test=milestone]", "Sprint 2").click();
 
@@ -316,6 +367,7 @@ describe(`Backlog`, function () {
             "Sprint 2",
             "[data-test=milestone-backlog-items]",
         );
+        cy.wait("@dropElements");
 
         cy.getContains("[data-test=milestone]", "Sprint 2")
             .find("[data-test=milestone-content]")
@@ -328,13 +380,18 @@ describe(`Backlog`, function () {
             visitTopBacklog(project_id);
         });
 
+        cy.intercept({ method: "GET", url: "/api/v1/backlog_items/*" }).as("getItem");
+        cy.intercept({ method: "PATCH", url: "/api/v1/milestones/*/content" }).as("dropElements");
+
         createARelease("R1", today, next_month);
         cy.get("[data-test=milestone]").click();
         cy.get("[data-test=go-to-submilestone-planning]").click();
 
         createARelease("Sprint 1", today, next_month);
         addUserStory("User story 1");
+        cy.wait("@getItem");
         addUserStory("User story 2");
+        cy.wait("@getItem");
 
         cy.log("story can be planned");
         cy.get("[data-test=milestone]").click();
@@ -353,6 +410,7 @@ describe(`Backlog`, function () {
             "Sprint 1",
             "[data-test=milestone-backlog-items]",
         );
+        cy.wait("@dropElements");
         cy.get("[data-test=milestone-backlog-items]")
             .should("contain", "User story 1")
             .should("contain", "User story 2");
