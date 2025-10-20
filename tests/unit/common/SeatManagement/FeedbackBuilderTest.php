@@ -33,28 +33,7 @@ use Tuleap\Test\Stubs\SeatManagement\BuildLicenseStub;
 #[DisableReturnValueGenerationForTestDoubles]
 final class FeedbackBuilderTest extends TestCase
 {
-    public function testItShouldNotAddFeedbackForRegularUser(): void
-    {
-        $feedback = new Feedback();
-
-        new FeedbackBuilder(
-            BuildLicenseStub::buildWithLicense(License::buildEnterpriseEdition(new LicenseContent(
-                'enalean-tuleap-enterprise',
-                ['abc'],
-                new DateTimeImmutable(),
-                new DateTimeImmutable(),
-                Uuid::uuid4(),
-                [],
-                null,
-                null,
-            ))),
-            UserTestBuilder::anActiveUser()->build(),
-        )->build($feedback);
-
-        self::assertEmpty($feedback->logs);
-    }
-
-    public function testItShouldNotAddFeedbackForSiteAdminWhenNoExpirationDate(): void
+    public function testItShouldNotAddFeedbackWhenNoExpirationDate(): void
     {
         $feedback = new Feedback();
 
@@ -75,7 +54,28 @@ final class FeedbackBuilderTest extends TestCase
         self::assertEmpty($feedback->logs);
     }
 
-    public function testItShouldAddFeedbackForSiteAdminWhenOneMonthBeforeExpirationDate(): void
+    public function testOneMonthBeforeExpirationItShouldNotAddFeedbackForRegularUser(): void
+    {
+        $feedback = new Feedback();
+
+        new FeedbackBuilder(
+            BuildLicenseStub::buildWithLicense(License::buildEnterpriseEdition(new LicenseContent(
+                'enalean-tuleap-enterprise',
+                ['abc'],
+                new DateTimeImmutable(),
+                new DateTimeImmutable(),
+                Uuid::uuid4(),
+                [],
+                new DateTimeImmutable('+2 days')->modify('+1 hour'),
+                null,
+            ))),
+            UserTestBuilder::anActiveUser()->build(),
+        )->build($feedback);
+
+        self::assertEmpty($feedback->logs);
+    }
+
+    public function testOneMonthBeforeItShouldAddFeedbackForSiteAdmin(): void
     {
         $feedback = new Feedback();
 
@@ -99,5 +99,99 @@ final class FeedbackBuilderTest extends TestCase
             'purify' => CODENDI_PURIFIER_CONVERT_HTML,
         ],
         ], $feedback->logs);
+    }
+
+    public function testOneMonthBeforeItShouldNotAddFeedbackForAnonymous(): void
+    {
+        $feedback = new Feedback();
+
+        new FeedbackBuilder(
+            BuildLicenseStub::buildWithLicense(License::buildEnterpriseEdition(new LicenseContent(
+                'enalean-tuleap-enterprise',
+                ['abc'],
+                new DateTimeImmutable(),
+                new DateTimeImmutable(),
+                Uuid::uuid4(),
+                [],
+                new DateTimeImmutable('+2 days')->modify('+1 hour'),
+                null,
+            ))),
+            UserTestBuilder::anAnonymousUser()->build(),
+        )->build($feedback);
+
+        self::assertEmpty($feedback->logs);
+    }
+
+    public function testAtExpirationDateItShouldAddFeedbackForRegularUser(): void
+    {
+        $feedback = new Feedback();
+
+        new FeedbackBuilder(
+            BuildLicenseStub::buildWithLicense(License::buildEnterpriseEdition(new LicenseContent(
+                'enalean-tuleap-enterprise',
+                ['abc'],
+                new DateTimeImmutable(),
+                new DateTimeImmutable(),
+                Uuid::uuid4(),
+                [],
+                new DateTimeImmutable('-2 days'),
+                null,
+            ))),
+            UserTestBuilder::anActiveUser()->build(),
+        )->build($feedback);
+
+        self::assertSame([[
+            'level' => Feedback::WARN,
+            'msg' => 'Your subscription has expired. Please contact your administrator to continue using Tuleap.',
+            'purify' => CODENDI_PURIFIER_CONVERT_HTML,
+        ],
+        ], $feedback->logs);
+    }
+
+    public function testAtExpirationDateItShouldAddFeedbackForSiteAdmin(): void
+    {
+        $feedback = new Feedback();
+
+        new FeedbackBuilder(
+            BuildLicenseStub::buildWithLicense(License::buildEnterpriseEdition(new LicenseContent(
+                'enalean-tuleap-enterprise',
+                ['abc'],
+                new DateTimeImmutable(),
+                new DateTimeImmutable(),
+                Uuid::uuid4(),
+                [],
+                new DateTimeImmutable('-1 month')->modify('+2 day')->modify('+1 hour'),
+                null,
+            ))),
+            UserTestBuilder::anActiveUser()->withSiteAdministrator()->build(),
+        )->build($feedback);
+
+        self::assertSame([[
+            'level' => Feedback::WARN,
+            'msg' => 'Your Tuleap subscription has expired. All accounts will be in read only mode in 2 days. Please get in touch with your usual company contact or send an email to sales@enalean.com.',
+            'purify' => CODENDI_PURIFIER_CONVERT_HTML,
+        ],
+        ], $feedback->logs);
+    }
+
+    public function testAtExpirationDateItShouldNotAddFeedbackForAnonymous(): void
+    {
+        $feedback = new Feedback();
+
+        new FeedbackBuilder(
+            BuildLicenseStub::buildWithLicense(License::buildEnterpriseEdition(new LicenseContent(
+                'enalean-tuleap-enterprise',
+                ['abc'],
+                new DateTimeImmutable(),
+                new DateTimeImmutable(),
+                Uuid::uuid4(),
+                [],
+                new DateTimeImmutable('-1 month')->modify('+2 day')->modify('+1 hour'),
+                null,
+            ))),
+            UserTestBuilder::anAnonymousUser()->build(),
+        )->build($feedback);
+
+        self::assertEmpty($feedback->logs);
     }
 }

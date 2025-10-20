@@ -38,16 +38,17 @@ final readonly class FeedbackBuilder
 
         if ($this->current_user->isSuperUser()) {
             $this->buildForSuperUser($feedback, $license);
+        } elseif (! $this->current_user->isAnonymous()) {
+            $this->buildForRegularUser($feedback, $license);
         }
     }
 
     private function buildForSuperUser(Feedback $feedback, License $license): void
     {
         $license->expiration_date->apply(function (DateTimeImmutable $expiration_date) use ($feedback, $license) {
-            $today                       = new DateTimeImmutable('now');
-            $one_month_before_expiration = $expiration_date->modify('-1 month');
+            $today = new DateTimeImmutable('now');
 
-            if ($today >= $one_month_before_expiration && $today < $expiration_date) {
+            if ($this->isOneMonthBeforeExpiration($expiration_date)) {
                 $nb_days_before_expiration = $today->diff($expiration_date)->days;
 
                 $feedback->log(Feedback::WARN, sprintf(
@@ -60,6 +61,19 @@ final readonly class FeedbackBuilder
                     $this->getInfoContact($license),
                 ));
             }
+            if ($this->isAtExpirationDate($expiration_date)) {
+                $nb_days_before_expiration_plus_one_month = $expiration_date->modify('+1 month')->diff($today)->days;
+
+                $feedback->log(Feedback::WARN, sprintf(
+                    ngettext(
+                        'Your Tuleap subscription has expired. All accounts will be in read only mode in %d day. %s',
+                        'Your Tuleap subscription has expired. All accounts will be in read only mode in %d days. %s',
+                        $nb_days_before_expiration_plus_one_month,
+                    ),
+                    $nb_days_before_expiration_plus_one_month,
+                    $this->getInfoContact($license),
+                ));
+            }
         });
     }
 
@@ -67,8 +81,33 @@ final readonly class FeedbackBuilder
     {
         return match ($license->license_kind) {
             LicenseKind::EXPERT, LicenseKind::TCP => _('Please get in touch with your usual company contact or send an email to sales@enalean.com.'),
-            LicenseKind::MY_TULEAP => _('Please renew or upgrade your contract on your client account or send an email to sales@enalean.com.'),
-            LicenseKind::PARTNER => _('Please contact your Tuleap Partner to renew or upgrade your subscription.'),
+            LicenseKind::MY_TULEAP                => _('Please renew or upgrade your contract on your client account or send an email to sales@enalean.com.'),
+            LicenseKind::PARTNER                  => _('Please contact your Tuleap Partner to renew or upgrade your subscription.'),
         };
+    }
+
+    private function buildForRegularUser(Feedback $feedback, License $license): void
+    {
+        $license->expiration_date->apply(function (DateTimeImmutable $expiration_date) use ($feedback) {
+            if ($this->isAtExpirationDate($expiration_date)) {
+                $feedback->log(Feedback::WARN, _('Your subscription has expired. Please contact your administrator to continue using Tuleap.'));
+            }
+        });
+    }
+
+    private function isOneMonthBeforeExpiration(DateTimeImmutable $expiration_date): bool
+    {
+        $today                       = new DateTimeImmutable('now');
+        $one_month_before_expiration = $expiration_date->modify('-1 month');
+
+        return $today >= $one_month_before_expiration && $today < $expiration_date;
+    }
+
+    private function isAtExpirationDate(DateTimeImmutable $expiration_date): bool
+    {
+        $today                      = new DateTimeImmutable('now');
+        $one_month_after_expiration = $expiration_date->modify('+1 month');
+
+        return $today >= $expiration_date && $today < $one_month_after_expiration;
     }
 }
