@@ -47,6 +47,7 @@ export function createPreviewEditButton(
             type="button"
             class="btn btn-small rte-button"
             @click="${presenter.onClickCallback}"
+            data-test="preview-edit-button"
         >
             <i class="fas fa-fw ${icon_class}" aria-hidden="true" data-test="button-icon"></i>
             ${button_label}

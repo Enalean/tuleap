@@ -483,6 +483,18 @@ describe("Tracker artifacts", function () {
                     cy.getContains("[data-test=artifact-form-element]", "Title")
                         .find("[data-test-field-input]")
                         .type("My new bug");
+
+                    cy.log("Add some Markdown content");
+                    cy.getFieldWithLabel("Description")
+                        .find("[data-test-cypress=text-area]")
+                        .type("**Some markdown**");
+                    cy.get("[data-test=preview-edit-button]").should("contain", "Preview").click();
+                    cy.get("[data-test=preview-area]").should("be.visible");
+                    cy.get("[data-test=preview-edit-button]").should("contain", "Edit").click();
+                    cy.get("[data-test=preview-area]").should("not.exist");
+                    cy.getFieldWithLabel("Description")
+                        .find("[data-test-cypress=text-area]")
+                        .should("be.visible");
                     submitAndStay();
 
                     cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
@@ -505,8 +517,35 @@ describe("Tracker artifacts", function () {
 
                     cy.log("Edit the artifact and add a comment");
                     editSimpleField("Title").clear().type("My edited bug");
+
+                    cy.log("Add some Markdown content to a text field at artifact edition");
+
+                    cy.getContains("[data-test-artifact-form-element]", "Description")
+                        .find("[data-test=textarea-value]")
+                        .should("have.html", "<p><strong>Some markdown</strong></p>\n");
+
+                    editSimpleField("Description").clear().type("_Other text_");
+                    cy.getContains("[data-test-artifact-form-element]", "Description")
+                        .find("[data-test=preview-edit-button]")
+                        .should("contain", "Preview")
+                        .click();
+
+                    cy.get("[data-test=preview-area]").should("be.visible");
+                    cy.getContains("[data-test-artifact-form-element]", "Description")
+                        .find("[data-test=preview-edit-button]")
+                        .should("contain", "Edit")
+                        .click();
+                    cy.get("[data-test=preview-area]").should("not.exist");
+                    cy.getContains("[data-test-artifact-form-element]", "Description")
+                        .find("[data-test-cypress=text-area]")
+                        .should("be.visible");
                     cy.get("[data-test=artifact_followup_comment]").type("Changed the title");
+
                     submitAndStay();
+
+                    cy.getContains("[data-test-artifact-form-element]", "Description")
+                        .find("[data-test=textarea-value]")
+                        .should("have.html", "<p><em>Other text</em></p>\n");
 
                     cy.log("Edit a comment");
                     cy.intercept("POST", "/plugins/tracker/?aid=*").as("editComment");

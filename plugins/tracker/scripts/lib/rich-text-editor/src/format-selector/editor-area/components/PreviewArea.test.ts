@@ -83,7 +83,7 @@ describe(`PreviewArea`, () => {
         return promise.catch(identity).then(() => {
             expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
 "
-        <div>
+        <div data-test="preview-area">
             
     <div class="alert alert-error">
         There was an error in the Markdown preview:

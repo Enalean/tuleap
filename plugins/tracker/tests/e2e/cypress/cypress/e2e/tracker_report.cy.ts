@@ -17,14 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type CypressWrapper = Cypress.Chainable<JQuery<HTMLElement>>;
-function getFieldWithLabel(label: string): CypressWrapper {
-    return cy
-        .get("[data-test=artifact-form-element] [data-test=field-label]")
-        .contains(label)
-        .parents("[data-test=artifact-form-element]");
-}
-
 function checkBoxWithLabel(label: string): void {
     cy.get("[data-test=checkbox-field-value]")
         .contains(label)
@@ -47,27 +39,27 @@ function createArtifactWithValues(now: number): void {
     cy.intercept("api/v1/artifacts/*").as("getArtifact");
 
     cy.log("Create an artifact with all fields");
-    getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
-    getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
-    getFieldWithLabel("String").find("[data-test-field-input]").type("String A");
-    getFieldWithLabel("Text").find("[data-test-cypress=text-area]").type("Description A");
-    getFieldWithLabel("Integer").find("[data-test-field-input]").type("12");
-    getFieldWithLabel("Float").find("[data-test-field-input]").type("5.12");
-    getFieldWithLabel("Date").find("[data-test=date-time-date]").clear().type("2025-02-01");
-    getFieldWithLabel("Datetime")
+    cy.getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
+    cy.getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
+    cy.getFieldWithLabel("String").find("[data-test-field-input]").type("String A");
+    cy.getFieldWithLabel("Text").find("[data-test-cypress=text-area]").type("Description A");
+    cy.getFieldWithLabel("Integer").find("[data-test-field-input]").type("12");
+    cy.getFieldWithLabel("Float").find("[data-test-field-input]").type("5.12");
+    cy.getFieldWithLabel("Date").find("[data-test=date-time-date]").clear().type("2025-02-01");
+    cy.getFieldWithLabel("Datetime")
         .find("[data-test=date-time-datetime]")
         .clear()
         .type("2025-02-01 02:23");
-    getFieldWithLabel("Computed").find("[data-test-field-input]").type("13.5");
+    cy.getFieldWithLabel("Computed").find("[data-test-field-input]").type("13.5");
 
-    getFieldWithLabel("Attachments").then(($field) => {
+    cy.getFieldWithLabel("Attachments").then(($field) => {
         cy.wrap($field)
             .find("[data-test=file-field-file-input]")
             .selectFile("cypress/fixtures/attachment.json");
         cy.wrap($field).find("[data-test=file-field-description-input]").type("My JSON attachment");
     });
 
-    getFieldWithLabel("Permissions").then(($field) => {
+    cy.getFieldWithLabel("Permissions").then(($field) => {
         cy.wrap($field).find("[data-test=artifact-permission-enable-checkbox]").check();
         cy.wrap($field)
             .find("[data-test=artifact-permissions-selectbox]")
@@ -89,56 +81,56 @@ function createArtifactWithValues(now: number): void {
 
 function createArtifactWithListValues(now: number): void {
     cy.log("Create an artifact with list fields");
-    getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
-    getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
+    cy.getFieldWithLabel("Title").find("[data-test-field-input]").type(`Title ${now}`);
+    cy.getFieldWithLabel("Description").find("[data-test-cypress=text-area]").type("Description A");
 
-    getFieldWithLabel("Selectbox static").within(() => {
+    cy.getFieldWithLabel("Selectbox static").within(() => {
         cy.searchItemInListPickerDropdown("Dos").click();
     });
 
-    getFieldWithLabel("Selectbox users (members)").within(() => {
+    cy.getFieldWithLabel("Selectbox users (members)").within(() => {
         cy.searchItemInListPickerDropdown("ProjectMember").click();
     });
 
-    getFieldWithLabel("Selectbox ugroups").within(() => {
+    cy.getFieldWithLabel("Selectbox ugroups").within(() => {
         cy.searchItemInListPickerDropdown("Integrators").click();
     });
 
-    getFieldWithLabel("Radio static").within(() => {
+    cy.getFieldWithLabel("Radio static").within(() => {
         checkRadioButtonWithLabel("二");
     });
 
-    getFieldWithLabel("Radio users (members)").within(() => {
+    cy.getFieldWithLabel("Radio users (members)").within(() => {
         checkRadioButtonWithLabel("ProjectMember");
     });
 
-    getFieldWithLabel("Radio ugroups").within(() => {
+    cy.getFieldWithLabel("Radio ugroups").within(() => {
         checkRadioButtonWithLabel("Integrators");
     });
 
-    getFieldWithLabel("MSB static").within(() => {
+    cy.getFieldWithLabel("MSB static").within(() => {
         cy.searchItemInListPickerDropdown("Deux").click();
         cy.searchItemInListPickerDropdown("Trois").click();
     });
 
-    getFieldWithLabel("MSB users (members)").within(() => {
+    cy.getFieldWithLabel("MSB users (members)").within(() => {
         cy.searchItemInListPickerDropdown("ProjectMember").click();
     });
 
-    getFieldWithLabel("MSB ugroups").within(() => {
+    cy.getFieldWithLabel("MSB ugroups").within(() => {
         cy.searchItemInListPickerDropdown("Integrators").click();
     });
 
-    getFieldWithLabel("Checkbox static").within(() => {
+    cy.getFieldWithLabel("Checkbox static").within(() => {
         checkBoxWithLabel("One");
         checkBoxWithLabel("Three");
     });
 
-    getFieldWithLabel("Checkbox users (members)").within(() => {
+    cy.getFieldWithLabel("Checkbox users (members)").within(() => {
         checkBoxWithLabel("ProjectMember");
     });
 
-    getFieldWithLabel("Checkbox ugroups").within(() => {
+    cy.getFieldWithLabel("Checkbox ugroups").within(() => {
         checkBoxWithLabel("Project administrators");
         checkBoxWithLabel("Contributors");
     });

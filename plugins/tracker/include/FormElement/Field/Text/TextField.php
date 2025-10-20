@@ -460,7 +460,7 @@ class TextField extends AlphaNumericField
             return $this->getNoValueLabel();
         }
 
-        return '<div class="textarea-value">' . $text . '</div>';
+        return '<div class="textarea-value" data-test="textarea-value">' . $text . '</div>';
     }
 
     #[\Override]
