@@ -329,4 +329,23 @@ describe("CrossTracker artifact links", function () {
         });
         cy.get("[data-test=link-arrow]").should("be.visible");
     });
+
+    it("It displays all child artifacts when a field exists in only one of the linked tracker types, or when field does not exists at all", function () {
+        cy.projectMemberSession();
+        cy.visit("projects/xts-field-unknown/");
+
+        cy.intercept("GET", "/api/v1/crosstracker_widget/*/forward_links*").as("getForwardLinks");
+        cy.intercept("GET", "/api/v1/crosstracker_widget/*/reverse_links*").as("getReverseLinks");
+
+        cy.get("[data-test=artifact-row]").should("have.length", 1);
+        cy.getContains("[data-test=artifact-row]", "US1").within(() => {
+            cy.get("[data-test=pretty-title-links-button]").click();
+            cy.wait(["@getForwardLinks", "@getReverseLinks"]);
+        });
+
+        cy.log("user story is expanded without error");
+        cy.get("[data-test=artifact-row]").should("have.length", 2);
+        cy.get("[data-test=cell]").contains("I only exist in story");
+        cy.get("[data-test=cell]").contains("I exist in task only");
+    });
 });
