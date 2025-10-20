@@ -23,9 +23,9 @@ namespace Tuleap\AgileDashboard\XML;
 use Override;
 use Project;
 use SimpleXMLElement;
-use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
-use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter;
+use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
+use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
 use XML_ParseException;
 use XML_RNGValidator;
 
