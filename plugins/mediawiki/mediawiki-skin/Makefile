@@ -15,7 +15,7 @@ FusionForge.php.renamed: $(MWSKINPATH)
 	    -e "s/skinname = 'monobook/skinname = 'fusionforge/" \
 	    -e "s/stylename = 'monobook/stylename = 'fusionforge/" \
 	    <$(MWSKINPATH)/MonoBook.php >$@
-	
+
 
 $(MWSKINPATH):
 	echo 'You must install mediawiki to get reference files'

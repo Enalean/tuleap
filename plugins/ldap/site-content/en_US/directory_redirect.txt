@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Return a link to the LDAP Directory Web site of your company for the 
+ * Return a link to the LDAP Directory Web site of your company for the
  * given user.
- * 
+ *
  * @param  LDAPResult $lr    Object that contains all the LDAP details of the user
  * @param  String     $value Display value of the link
  * @return String

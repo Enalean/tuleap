@@ -29,9 +29,9 @@ abstract class HTML_Element_Input extends HTML_Element
     protected function renderValue()
     {
         $hp   = Codendi_HTMLPurifier::instance();
-        $html = '<input type="' . $this->getInputType() . '" 
-                         id="' . $this->id . '" 
-                         name="' .  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '" 
+        $html = '<input type="' . $this->getInputType() . '"
+                         id="' . $this->id . '"
+                         name="' .  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '"
                          value="' .  parent::renderValue() . '" ';
         foreach ($this->params as $key => $value) {
             $html .= $key . '="' . $value . '" ';

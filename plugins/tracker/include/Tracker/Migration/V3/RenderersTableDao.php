@@ -54,11 +54,11 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject
         $this->update('SET @counter = 0');
         $this->update('SET @previous = NULL');
 
-        $sql = "UPDATE tracker_report_renderer_table_columns 
-                INNER JOIN (SELECT @counter := IF(@previous = renderer_id, @counter + 1, 1) AS new_rank, 
-                                   @previous := renderer_id, 
-                                   tracker_report_renderer_table_columns.* 
-                            FROM tracker_report_renderer_table_columns 
+        $sql = "UPDATE tracker_report_renderer_table_columns
+                INNER JOIN (SELECT @counter := IF(@previous = renderer_id, @counter + 1, 1) AS new_rank,
+                                   @previous := renderer_id,
+                                   tracker_report_renderer_table_columns.*
+                            FROM tracker_report_renderer_table_columns
                             ORDER BY renderer_id, `rank`, field_id
                 ) as R1 USING(renderer_id,field_id)
                 INNER JOIN tracker_report_renderer ON (tracker_report_renderer.id = tracker_report_renderer_table_columns.renderer_id)

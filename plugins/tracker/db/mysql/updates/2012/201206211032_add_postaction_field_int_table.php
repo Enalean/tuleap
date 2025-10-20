@@ -37,7 +37,6 @@ class b201206211032_add_postaction_field_int_table extends \Tuleap\ForgeUpgrade\
                     transition_id INT(11) NOT NULL,
                     field_id      INT(11) UNSIGNED DEFAULT NULL,
                     value         INT(11) DEFAULT NULL,
-                    
                     INDEX idx_wf_transition_id (transition_id)
                 );';
         $this->db->createTable('tracker_workflow_transition_postactions_field_int', $sql);

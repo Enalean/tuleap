@@ -46,9 +46,9 @@ EOT;
         $this->db->createTable('user_access', $sql);
 
         $sql = 'INSERT INTO user_access
-                           SELECT user_id, last_access_date, 
-                                  prev_auth_success, last_auth_success, 
-                                  last_auth_failure, nb_auth_failure 
+                           SELECT user_id, last_access_date,
+                                  prev_auth_success, last_auth_success,
+                                  last_auth_failure, nb_auth_failure
                            FROM user';
         if ($this->db->tableNameExists('user') && $this->db->tableNameExists('user_access')) {
             $res = $this->db->dbh->exec($sql);

@@ -1,4 +1,4 @@
-## 
+##
 ## Sql Install Script
 ##
 DROP TABLE IF EXISTS plugin_graphontrackersv5_report_graphic;
@@ -8,7 +8,7 @@ CREATE TABLE plugin_graphontrackersv5_report_graphic (
   user_id int(11) ,
   name varchar(255) ,
   description varchar(255) ,
-  scope char(1) 
+  scope char(1)
 );
 DROP TABLE IF EXISTS plugin_graphontrackersv5_chart;
 CREATE TABLE plugin_graphontrackersv5_chart (
@@ -34,7 +34,7 @@ CREATE TABLE plugin_graphontrackersv5_gantt_chart(
   field_righttext varchar(255) ,
   scale varchar(20) ,
   as_of_date int(11) ,
-  summary varchar(255) 
+  summary varchar(255)
 );
 DROP TABLE IF EXISTS plugin_graphontrackersv5_pie_chart;
 CREATE TABLE plugin_graphontrackersv5_pie_chart(

@@ -30,9 +30,9 @@ class Tracker_CannedResponseDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $id         = $this->da->escapeInt($id);
-        $sql        = "SELECT * 
+        $sql        = "SELECT *
                 FROM $this->table_name
-                WHERE id = $id 
+                WHERE id = $id
                   AND tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
@@ -40,7 +40,7 @@ class Tracker_CannedResponseDao extends DataAccessObject
     public function searchByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql        = "SELECT * 
+        $sql        = "SELECT *
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id
                 ORDER BY title ASC";
@@ -62,8 +62,8 @@ class Tracker_CannedResponseDao extends DataAccessObject
         $id    = $this->da->escapeInt($canned->id);
         $title = $this->da->quoteSmart($canned->title);
         $body  = $this->da->quoteSmart($canned->body);
-        $sql   = "UPDATE $this->table_name 
-                SET title      = $title, 
+        $sql   = "UPDATE $this->table_name
+                SET title      = $title,
                     body       = $body
                 WHERE id = $id";
         return $this->update($sql);
@@ -72,7 +72,7 @@ class Tracker_CannedResponseDao extends DataAccessObject
     public function delete($id)
     {
         $id  = $this->da->escapeInt($id);
-        $sql = "DELETE FROM $this->table_name 
+        $sql = "DELETE FROM $this->table_name
                 WHERE id = $id";
         return $this->update($sql);
     }

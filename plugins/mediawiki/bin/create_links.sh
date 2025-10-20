@@ -13,7 +13,7 @@ absolutedir=`cd $scriptdir;pwd`
 plugindir=`dirname $absolutedir`
 
 if [ -e /usr/share/codendi ]
-then 
+then
 	OLDPACKAGE=codendi
 else
 	OLDPACKAGE=gforge

@@ -4,8 +4,8 @@ window.sajax_debug_mode = false;
 window.sajax_request_type = 'GET';
 
 /**
- * if sajax_debug_mode is true, this function outputs given the message into 
- * the element with id = sajax_debug; if no such element exists in the document, 
+ * if sajax_debug_mode is true, this function outputs given the message into
+ * the element with id = sajax_debug; if no such element exists in the document,
  * it is injected.
  */
 window.sajax_debug = function(text) {

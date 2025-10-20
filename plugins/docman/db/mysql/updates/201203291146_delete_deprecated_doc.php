@@ -35,19 +35,19 @@ EOT;
 
     public function up()
     {
-        $sql = "UPDATE plugin_docman_item 
+        $sql = "UPDATE plugin_docman_item
                 SET link_url = '/documentation/cli/html/fr_FR/CLI.html'
                 WHERE link_url = '/documentation/cli/html/fr_FR/Codendi_CLI.html'";
 
         $res = $this->db->dbh->exec($sql);
 
-        $sql = "UPDATE plugin_docman_item 
+        $sql = "UPDATE plugin_docman_item
                 SET link_url = '/documentation/cli/html/en_US/CLI.html'
                 WHERE link_url = '/documentation/cli/html/en_US/Codendi_CLI.html'";
 
         $res = $this->db->dbh->exec($sql);
 
-        $sql = "UPDATE plugin_docman_item 
+        $sql = "UPDATE plugin_docman_item
                 SET delete_date = UNIX_TIMESTAMP(NOW())
                 WHERE link_url IN ('/plugins/eclipse/documentation/doc/help/pdf/Codendi_Eclipse_Plugin_User_Guide.pdf',
                                    '/plugins/eclipse/documentation/doc/help/html/Codendi_Eclipse_Plugin_User_Guide.html',

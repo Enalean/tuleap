@@ -36,7 +36,7 @@ EOT;
     public function up()
     {
         if ($this->permissionTypesMissing()) {
-            $sql = "INSERT INTO permissions_values (permission_type, ugroup_id, is_default) 
+            $sql = "INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
                     VALUES ('PLUGIN_GIT_READ', 2, 1),
                            ('PLUGIN_GIT_READ', 3, 0),
                            ('PLUGIN_GIT_READ', 4, 0),

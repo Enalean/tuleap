@@ -34,11 +34,9 @@ class b201206151041_delete_invalid_tracker_hierarchy_data extends \Tuleap\ForgeU
     {
         $sql    = <<<SQL
             DELETE h.*
-            
             FROM tracker_hierarchy AS h
             LEFT JOIN tracker      AS p ON h.parent_id = p.id AND p.deletion_date IS NULL
             LEFT JOIN tracker      AS c ON h.child_id  = c.id AND c.deletion_date IS NULL
-            
             WHERE p.id IS NULL
             OR    c.id IS NULL
             OR    h.parent_id = 0

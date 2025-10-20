@@ -56,7 +56,7 @@ EOT;
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating the column repository_scope to the table plugin_git');
         }
 
-        $sql = 'ALTER TABLE plugin_git 
+        $sql = 'ALTER TABLE plugin_git
                     DROP user_id';
 
         $res = $this->db->dbh->exec($sql);

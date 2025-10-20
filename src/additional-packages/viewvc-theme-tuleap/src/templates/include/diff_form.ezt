@@ -24,7 +24,7 @@
     <option value="[tags.rev]:[tags.name]">[tags.name]</option>
   [end]
   </select>
-  <input type="text" size="12" name="tr1" 
+  <input type="text" size="12" name="tr1"
          value="[if-any rev_selected][rev_selected][else][first_revision][end]"
          onchange="document.getElementById('diff_select').r1.selectedIndex=0" />
 [else]

@@ -7,6 +7,6 @@ The FusionForge.php is built from MonoBook.php mediawiki file.
 
 It is highly recommended to touch these files as few as possible
 so mediawiki upgrade doesn't require too much update.
-Please don't apply mediawiki related bugs, rather provide the 
+Please don't apply mediawiki related bugs, rather provide the
 patch to mediawiki developpers
 

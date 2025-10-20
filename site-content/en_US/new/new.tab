@@ -2,7 +2,7 @@
 #  *
 #  * Include scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -16,7 +16,7 @@ new_index	new_file_release	New File Releases
 new_index	new_releases	New Releases
 new_index	no_release_found	No new releases found.
 new_index	no_projects_found	No new projects found.
-new_index	db_err	DB error.	
+new_index	db_err	DB error.
 new_index	released_by	Released by
 new_index	module	Module
 new_index	version	Version

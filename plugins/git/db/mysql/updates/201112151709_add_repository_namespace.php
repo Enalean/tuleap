@@ -50,7 +50,7 @@ EOT;
      */
     public function up()
     {
-        $sql = 'ALTER TABLE plugin_git 
+        $sql = 'ALTER TABLE plugin_git
                     ADD repository_namespace varchar(255) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

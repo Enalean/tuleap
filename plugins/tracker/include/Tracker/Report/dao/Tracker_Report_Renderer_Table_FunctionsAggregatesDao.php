@@ -55,7 +55,7 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
         $field_id    = $this->da->escapeInt($field_id);
         $aggregate   = $this->da->quoteSmart($aggregate);
 
-        $sql = "DELETE FROM $this->table_name 
+        $sql = "DELETE FROM $this->table_name
                 WHERE renderer_id = $renderer_id
                   AND field_id = $field_id
                   AND aggregate = $aggregate";
@@ -87,7 +87,7 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
         foreach ($field_mapping as $mapping) {
             $from = $this->da->escapeInt($mapping['from']);
             $to   = $this->da->escapeInt($mapping['to']);
-            $sql  = "UPDATE $this->table_name 
+            $sql  = "UPDATE $this->table_name
                     SET field_id = $to
                     WHERE renderer_id = $to_renderer_id
                       AND field_id = $from";

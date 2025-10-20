@@ -111,7 +111,7 @@ class Docman_ReportDao extends DataAccessObject
      */
     public function verifyQueryUnicity($name, $groupId, $userId, $scope)
     {
-        $stm = 'SELECT NULL FROM plugin_docman_report WHERE 
+        $stm = 'SELECT NULL FROM plugin_docman_report WHERE
              name = ' . $this->da->quoteSmart($name) . ' AND  group_id = ' . $this->da->escapeInt($groupId) . ' AND ';
         if ($scope == 'P') {
             // Retrieve project report having same name for all users belonging to this project

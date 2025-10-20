@@ -40,7 +40,7 @@ umask 077
 
 TMPFILE=`mktemp -t tv3-export.XXXXXXXXXX` && {
     # Keep tmpfile name by remove it
-    # We need a tmp file name but it should not exists 
+    # We need a tmp file name but it should not exists
     # mktemp create a temp unique filename, so we just delete
     # it to reuse the name.
     rm $TMPFILE

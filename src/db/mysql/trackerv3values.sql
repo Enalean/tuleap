@@ -457,7 +457,7 @@ INSERT INTO artifact_field_value_list VALUES (10,5,7,'7','',70,'P');
 INSERT INTO artifact_field_value_list VALUES (10,5,8,'8','',80,'P');
 INSERT INTO artifact_field_value_list VALUES (10,5,9,'9 - Critical','',90,'P');
 
-INSERT INTO artifact_field_value_list VALUES (12,5,1,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',10,'A'); 
+INSERT INTO artifact_field_value_list VALUES (12,5,1,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',10,'A');
 -- ' For proper syntax highlighting in emacs :-)
 INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact was not accepted.',50,'A');
 

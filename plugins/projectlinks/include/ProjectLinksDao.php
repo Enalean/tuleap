@@ -55,7 +55,7 @@ class ProjectLinksDao extends DataAccessObject
                   group_name, unix_group_name, uri_plus, link_id, creation_date,
                   master_group_id, target_group_id, link_type.link_type_id
                 FROM plugin_projectlinks_relationship AS rel
-                  INNER JOIN plugin_projectlinks_link_type AS link_type 
+                  INNER JOIN plugin_projectlinks_link_type AS link_type
                     USING (link_type_id)
                   INNER JOIN `groups`
                     ON (`groups`.group_id = rel.target_group_id)
@@ -77,7 +77,7 @@ class ProjectLinksDao extends DataAccessObject
                   group_name, unix_group_name, uri_plus, link_id, creation_date,
                   master_group_id, target_group_id,  link_type.link_type_id
                 FROM plugin_projectlinks_relationship AS rel
-                  INNER JOIN plugin_projectlinks_link_type AS link_type 
+                  INNER JOIN plugin_projectlinks_link_type AS link_type
                     USING (link_type_id)
                   INNER JOIN `groups`
                     ON (`groups`.group_id = rel.master_group_id)

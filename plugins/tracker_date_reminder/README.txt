@@ -5,7 +5,7 @@ This plugin applies ONLY on TRACKERv3
 
 This plugins allows to configure date based reminder on tracker v3.
 
-Once installed, you can configure 'date' fields in trackers to send reminder 
+Once installed, you can configure 'date' fields in trackers to send reminder
 email depending on the values they hold.
 
 Example:

@@ -41,9 +41,9 @@ EOT;
         $this->db->createTable('svn_notification', $sql);
 
         $sql = 'INSERT INTO svn_notification (group_id, svn_events_mailing_list)
-                           SELECT group_id, svn_events_mailing_list 
+                           SELECT group_id, svn_events_mailing_list
                            FROM `groups`
-                           WHERE svn_events_mailing_list <>"" 
+                           WHERE svn_events_mailing_list <>""
                ';
         if ($this->db->tableNameExists('groups') && $this->db->tableNameExists('svn_notification')) {
             $res = $this->db->dbh->exec($sql);
