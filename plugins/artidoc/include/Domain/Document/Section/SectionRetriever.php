@@ -30,6 +30,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
 final class SectionRetriever implements RetrieveSection
 {
@@ -67,7 +68,7 @@ final class SectionRetriever implements RetrieveSection
     private function collectRequiredSectionInformation(ArtidocWithContext $artidoc, RetrievedSection $retrieved_section): Ok|Err
     {
         return $retrieved_section->content->apply(
-            fn (int $artifact_id) => $this->collect_required_section_information->collectRequiredSectionInformation($artidoc, $artifact_id),
+            fn (int $artifact_id) => $this->collect_required_section_information->collectRequiredSectionInformation($artidoc, $artifact_id, Option::nothing(\Psl\Type\int())),
             static fn () => Result::ok(null),
         );
     }

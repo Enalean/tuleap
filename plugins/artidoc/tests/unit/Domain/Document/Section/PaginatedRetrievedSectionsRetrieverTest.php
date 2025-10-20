@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\RetrieveArtidocWithContextStub;
 use Tuleap\Artidoc\Stubs\Domain\Document\Section\SearchPaginatedRetrievedSectionsStub;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -55,7 +56,7 @@ final class PaginatedRetrievedSectionsRetrieverTest extends TestCase
             SearchPaginatedRetrievedSectionsStub::withSections($sections),
         );
 
-        $result = $retriever->retrievePaginatedRetrievedSections(123, 4, 0);
+        $result = $retriever->retrievePaginatedRetrievedSections(123, Option::nothing(\Psl\Type\int()), 4, 0);
         self::assertTrue(Result::isOk($result));
         self::assertSame($sections, $result->value);
     }
@@ -67,7 +68,7 @@ final class PaginatedRetrievedSectionsRetrieverTest extends TestCase
             SearchPaginatedRetrievedSectionsStub::shouldNotBeCalled(),
         );
 
-        $result = $retriever->retrievePaginatedRetrievedSections(123, 4, 0);
+        $result = $retriever->retrievePaginatedRetrievedSections(123, Option::nothing(\Psl\Type\int()), 4, 0);
         self::assertTrue(Result::isErr($result));
     }
 }

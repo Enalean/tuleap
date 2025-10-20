@@ -39,6 +39,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
 final class RetrieveArtidocSectionDao extends DataAccessObject implements SearchOneSection, SearchPaginatedRetrievedSections, SearchAllSections, SearchAllArtifactSections
 {
@@ -103,9 +104,9 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
     }
 
     #[Override]
-    public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRetrievedSections
+    public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, Option $before_changeset_id, int $limit, int $offset): PaginatedRetrievedSections
     {
-        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $limit, $offset) {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $before_changeset_id, $limit, $offset) {
             $item_id = $artidoc->document->getId();
 
             $rows = $db->run(
@@ -132,16 +133,30 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
                 $offset,
             );
 
-            $total = $db->cell(
-                <<<EOS
-                SELECT COUNT(*)
-                FROM plugin_artidoc_section AS section
-                    INNER JOIN plugin_artidoc_section_version AS section_version
-                        ON (section.id = section_version.section_id)
-                WHERE item_id = ?
-                EOS,
-                $item_id,
-            );
+            $total = $before_changeset_id
+                ->match(
+                    static fn(int $changeset_id): int => $db->cell(
+                        <<<EOS
+                        SELECT COUNT(DISTINCT section.id)
+                        FROM plugin_artidoc_section AS section
+                             INNER JOIN plugin_artidoc_section_version AS version ON (section.id = version.section_id)
+                             LEFT JOIN tracker_changeset AS changeset ON (version.artifact_id = changeset.artifact_id)
+                        WHERE section.item_id = ? AND (changeset.id <= ? OR version.freetext_id IS NOT NULL)
+                        EOS,
+                        $item_id,
+                        $changeset_id,
+                    ),
+                    static fn(): int => $db->cell(
+                        <<<EOS
+                        SELECT COUNT(*)
+                        FROM plugin_artidoc_section AS section
+                            INNER JOIN plugin_artidoc_section_version AS section_version
+                                ON (section.id = section_version.section_id)
+                        WHERE item_id = ?
+                        EOS,
+                        $item_id,
+                    )
+                );
 
             return new PaginatedRetrievedSections(
                 $artidoc,

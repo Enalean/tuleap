@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\SectionDidNotExistBeforeGivenVersionsFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -51,7 +52,13 @@ final readonly class SectionRepresentationBuilder
     ): Ok|Err {
         return $section->content->apply(
             fn (int $artifact_id) => $collector->getCollectedRequiredSectionInformation($artifact_id)
-                ->map(fn(RequiredArtifactInformation $info) => new SectionWrapper($section->id, $info))
+                ->andThen(function (?RequiredArtifactInformation $info) use ($section) {
+                    if ($info === null) {
+                        return Result::err(SectionDidNotExistBeforeGivenVersionsFault::build());
+                    }
+
+                    return Result::ok(new SectionWrapper($section->id, $info));
+                })
                 ->map(
                     /**
                      * @return SectionRepresentation

@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Option\Option;
 
 final readonly class PaginatedRetrievedSectionsRetriever
 {
@@ -37,14 +38,16 @@ final readonly class PaginatedRetrievedSectionsRetriever
     }
 
     /**
+     * @param Option<int> $before_changeset_id
      * @return Ok<PaginatedRetrievedSections>|Err<Fault>
      */
-    public function retrievePaginatedRetrievedSections(int $id, int $limit, int $offset): Ok|Err
+    public function retrievePaginatedRetrievedSections(int $id, Option $before_changeset_id, int $limit, int $offset): Ok|Err
     {
         return $this->retrieve_artidoc
             ->retrieveArtidocUserCanRead($id)
             ->map(fn (ArtidocWithContext $artidoc) => $this->search->searchPaginatedRetrievedSections(
                 $artidoc,
+                $before_changeset_id,
                 $limit,
                 $offset,
             ));

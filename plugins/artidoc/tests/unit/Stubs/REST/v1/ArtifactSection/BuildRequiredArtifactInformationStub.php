@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
 final readonly class BuildRequiredArtifactInformationStub implements BuildRequiredArtifactInformation
 {
@@ -58,13 +59,13 @@ final readonly class BuildRequiredArtifactInformationStub implements BuildRequir
     }
 
     #[\Override]
-    public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, \PFUser $user): Ok|Err
+    public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, Option $before_changeset_id, \PFUser $user): Ok|Err
     {
         if ($this->info === null) {
             throw new \Exception('Unexpected call to ' . __METHOD__);
         }
 
-        if (isset($this->info[$artifact_id])) {
+        if (array_key_exists($artifact_id, $this->info)) {
             return Result::ok($this->info[$artifact_id]);
         }
 

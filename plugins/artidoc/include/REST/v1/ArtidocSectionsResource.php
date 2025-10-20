@@ -54,6 +54,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\SaveSectionDao;
 use Tuleap\Artidoc\Adapter\Document\Section\UnableToFindSiblingSectionFault;
 use Tuleap\Artidoc\Adapter\Document\Section\UpdateLevelDao;
+use Tuleap\Artidoc\Adapter\Document\Section\Versions\ChangesetBeforeAGivenOneRetriever;
 use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
@@ -203,6 +204,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 Tracker_ArtifactFactory::instance(),
                 CachedSemanticDescriptionFieldRetriever::instance(),
                 CachedSemanticTitleFieldRetriever::instance(),
+                new ChangesetBeforeAGivenOneRetriever(),
             ),
         );
 
@@ -271,6 +273,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 Tracker_ArtifactFactory::instance(),
                 $retrieve_description_field,
                 $retrieve_title_field,
+                new ChangesetBeforeAGivenOneRetriever(),
             ),
         );
 
@@ -413,6 +416,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 Tracker_ArtifactFactory::instance(),
                 CachedSemanticDescriptionFieldRetriever::instance(),
                 CachedSemanticTitleFieldRetriever::instance(),
+                new ChangesetBeforeAGivenOneRetriever()
             ),
         );
 

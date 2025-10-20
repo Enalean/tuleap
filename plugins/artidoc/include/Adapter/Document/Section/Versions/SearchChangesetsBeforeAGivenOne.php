@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
+namespace Tuleap\Artidoc\Adapter\Document\Section\Versions;
 
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tracker_Artifact_Changeset;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\Artifact\Artifact;
 
-interface BuildRequiredArtifactInformation
+interface SearchChangesetsBeforeAGivenOne
 {
     /**
-     * @param Option<int> $before_changeset_id
-     * @return Ok<RequiredArtifactInformation>|Ok<null>|Err<Fault>
+     * @return Option<Tracker_Artifact_Changeset>
      */
-    public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, Option $before_changeset_id, \PFUser $user): Ok|Err;
+    public function searchChangesetBefore(Artifact $artifact, int $changeset_id): Option;
 }

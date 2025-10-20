@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\RetrievedSectionContentFreetext;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use function PHPUnit\Framework\assertSame;
 
 /**
@@ -47,7 +48,7 @@ final readonly class SectionsAsserter
             new UUIDFreetextIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory()),
         );
 
-        $paginated_retrieved_sections = $dao->searchPaginatedRetrievedSections($artidoc, 50, 0);
+        $paginated_retrieved_sections = $dao->searchPaginatedRetrievedSections($artidoc, Option::nothing(\Psl\Type\int()), 50, 0);
 
         assertSame(count($expected_content), $paginated_retrieved_sections->total);
         assertSame($expected_content, array_map(

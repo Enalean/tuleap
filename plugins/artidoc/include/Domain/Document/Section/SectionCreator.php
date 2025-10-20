@@ -57,7 +57,7 @@ final readonly class SectionCreator
             ->andThen($this->checkUserCanReadAllCurrentSectionsOfDocument(...))
             ->andThen(fn (ArtidocWithContext $artidoc) => $content->apply(
                 fn (ImportContent $import) => $this->collect_required_section_information_for_creation
-                    ->collectRequiredSectionInformation($artidoc, $import->artifact_id)
+                    ->collectRequiredSectionInformation($artidoc, $import->artifact_id, Option::nothing(\Psl\Type\int()))
                     ->andThen(fn () => $this->saveSection($artidoc, ContentToInsert::fromArtifactId($import->artifact_id, $import->level), $before_section_id)),
                 fn (FreetextContent $freetext) => $this->saveSection($artidoc, ContentToInsert::fromFreetext($freetext), $before_section_id),
                 fn (ArtifactContent $artifact) => $this->artifact_content_creator->createArtifact($artidoc, $artifact)
@@ -89,7 +89,7 @@ final readonly class SectionCreator
             $result = $section->content->apply(
                 function (int $artifact_id) use ($artidoc) {
                     return $this->collect_required_section_information_for_creation
-                        ->collectRequiredSectionInformation($artidoc, $artifact_id);
+                        ->collectRequiredSectionInformation($artidoc, $artifact_id, Option::nothing(\Psl\Type\int()));
                 },
                 static fn () => Result::ok(null),
             );

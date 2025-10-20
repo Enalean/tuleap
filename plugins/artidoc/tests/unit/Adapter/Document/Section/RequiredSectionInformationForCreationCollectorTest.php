@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Stubs\REST\v1\ArtifactSection\BuildRequiredArtifactInformationStub;
 use Tuleap\Artidoc\Tests\Builders\RequiredArtifactInformationTestBuilder;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -54,6 +55,7 @@ final class RequiredSectionInformationForCreationCollectorTest extends TestCase
         $result = $collector->collectRequiredSectionInformation(
             new ArtidocWithContext(new ArtidocDocument([])),
             self::ARTIFACT_ID,
+            Option::nothing(\Psl\Type\int()),
         );
 
         self::assertTrue(Result::isOk($result));
@@ -76,6 +78,7 @@ final class RequiredSectionInformationForCreationCollectorTest extends TestCase
         $result = $collector->collectRequiredSectionInformation(
             new ArtidocWithContext(new ArtidocDocument([])),
             self::ARTIFACT_ID,
+            Option::nothing(\Psl\Type\int()),
         );
 
         self::assertTrue(Result::isErr($result));

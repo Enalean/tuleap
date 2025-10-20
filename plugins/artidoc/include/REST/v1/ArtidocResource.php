@@ -39,6 +39,7 @@ use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFact
 use Tuleap\Artidoc\Adapter\Document\Section\ReorderSectionsDao;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Adapter\Document\Section\RetrieveArtidocSectionDao;
+use Tuleap\Artidoc\Adapter\Document\Section\Versions\ChangesetBeforeAGivenOneRetriever;
 use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfigurationSaver;
@@ -115,6 +116,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Option\Option;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -242,12 +244,17 @@ final class ArtidocResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $user = UserManager::instance()->getCurrentUser();
+        $user                = UserManager::instance()->getCurrentUser();
+        $before_changeset_id = Option::nothing(\Psl\Type\int());
 
         return $this->getPaginatedRetrievedSectionsRetriever($user)
-            ->retrievePaginatedRetrievedSections($id, $limit, $offset)
+            ->retrievePaginatedRetrievedSections($id, $before_changeset_id, $limit, $offset)
             ->andThen(fn (PaginatedRetrievedSections $retrieved_sections) =>
-                $this->getRepresentationTransformer($retrieved_sections->artidoc, $user)->getRepresentation($retrieved_sections, $user))->match(
+                $this->getRepresentationTransformer($retrieved_sections->artidoc, $user)->getRepresentation(
+                    $retrieved_sections,
+                    $user,
+                    $before_changeset_id
+                ))->match(
                     function (PaginatedArtidocSectionRepresentationCollection $collection) use ($limit, $offset) {
                         Header::sendPaginationHeaders($limit, $offset, $collection->total, self::MAX_LIMIT);
                         return $collection->sections;
@@ -584,6 +591,7 @@ final class ArtidocResource extends AuthenticatedResource
                     \Tracker_ArtifactFactory::instance(),
                     CachedSemanticDescriptionFieldRetriever::instance(),
                     CachedSemanticTitleFieldRetriever::instance(),
+                    new ChangesetBeforeAGivenOneRetriever()
                 )
             ),
         );
