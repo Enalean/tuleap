@@ -68,10 +68,6 @@ msgid "%1$s invited you to register to %2$s."
 msgstr "%1$s vous invite à vous enregistrer sur %1$s."
 
 #, php-format
-msgid "%1$s message(s) deleted"
-msgstr "%1$s message(s) détruit(s)"
-
-#, php-format
 msgid "%1$s users will receive this email."
 msgstr "%1$s utilisateurs vont recevoir ce courrier électronique."
 
@@ -1117,12 +1113,6 @@ msgstr "Supprimer"
 msgid "Delete %s"
 msgstr "Supprimer %s"
 
-msgid "Delete Message"
-msgstr "Détruire un message"
-
-msgid "Delete a message"
-msgstr "Détruire un message"
-
 msgid "Delete binding"
 msgstr "Supprimer le lien"
 
@@ -1319,9 +1309,6 @@ msgid ""
 msgstr ""
 "Entrez les personnes à inviter sur %s. Nous leur enverrons un email "
 "d'invitation."
-
-msgid "Enter the Message ID"
-msgstr "Entrer l'identifiant (ID) du message"
 
 msgid ""
 "Enter your login name below to receive a link allowing you to change your "
@@ -1962,12 +1949,6 @@ msgstr "Message"
 
 msgid "Message from %s:"
 msgstr "Message de la part de %s :"
-
-msgid "Message is not in your group"
-msgstr "Ce message n'est pas de votre projet"
-
-msgid "Message not found"
-msgstr "Message introuvable"
 
 msgid "Message sent to administrator should not be empty."
 msgstr "Le message envoyé à l'administrateur ne doit pas être vide."
@@ -4185,13 +4166,6 @@ msgstr "Voir les navigateurs recommandés"
 
 msgid "Visibility"
 msgstr "Visibilité"
-
-msgid ""
-"WARNING! You are about to permanently delete a message and all of its "
-"followups!!"
-msgstr ""
-"ATTENTION ! Vous êtes sur le point de détruire un message et tout son fil de "
-"discussion !!"
 
 msgid "Warnings"
 msgstr "Alertes"

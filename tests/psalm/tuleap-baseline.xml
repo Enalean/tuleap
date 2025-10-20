@@ -84373,12 +84373,9 @@
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($is_public)]]></code>
-      <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_es(htmlspecialchars($description))]]></code>
       <code><![CDATA[db_es(htmlspecialchars($forum_name))]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_result($result, $i, 'description')]]></code>
@@ -84388,8 +84385,6 @@
       <code><![CDATA[db_result($result, $i, 'is_public')]]></code>
       <code><![CDATA[db_result($result, $i, 'is_public')]]></code>
       <code><![CDATA[db_result($result, $i, 'is_public')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_forum_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
     </DeprecatedFunction>
   </file>
   <file src="src/www/forum/forum.php">
@@ -84462,10 +84457,6 @@
     <DeprecatedFunction>
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($msg_id)]]></code>
-      <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
@@ -84476,10 +84467,7 @@
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_query("INSERT INTO forum_thread_id VALUES ('')")]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -84492,7 +84480,6 @@
       <code><![CDATA[db_result($result, $i, 'date')]]></code>
       <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
       <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
@@ -84514,10 +84501,8 @@
       <code><![CDATA[$et]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_status]]></code>
       <code><![CDATA[$level]]></code>
-      <code><![CDATA[$msg_id]]></code>
       <code><![CDATA[$msg_id]]></code>
       <code><![CDATA[$thread_id]]></code>
       <code><![CDATA[$thread_id]]></code>
@@ -84531,7 +84516,6 @@
       <code><![CDATA[forum_utils_get_styles]]></code>
       <code><![CDATA[get_forum_saved_date]]></code>
       <code><![CDATA[get_next_thread_id]]></code>
-      <code><![CDATA[recursive_delete]]></code>
       <code><![CDATA[show_submessages]]></code>
       <code><![CDATA[show_thread]]></code>
     </MissingReturnType>

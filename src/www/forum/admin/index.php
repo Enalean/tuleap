@@ -53,42 +53,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         $vIsPublic = new Valid_WhiteList('is_public', [0, 1, 9]);
         $vIsPublic->required();
 
-        if ($request->existAndNonEmpty('delete')) {
-            $vMsg = new Valid_UInt('msg_id');
-            $vMsg->required();
-            if ($request->valid($vMsg)) {
-                $msg_id = $request->get('msg_id');
-                    /*
-                     Deleting messages or threads
-                    */
-
-                    // First, check if the message exists
-                    $sql = 'SELECT forum_group_list.group_id, forum.group_forum_id FROM forum,forum_group_list ' .
-                        'WHERE forum.group_forum_id=forum_group_list.group_forum_id AND forum.msg_id=' . db_ei($msg_id);
-
-                    $result = db_query($sql);
-
-                if (db_numrows($result) > 0) {
-                    $message_group_id = db_result($result, 0, 'group_id');
-                    $forum_id         =  db_result($result, 0, 'group_forum_id');
-
-                    $authorized_to_delete_message = false;
-
-                    if ($message_group_id == $group_id) {
-                        // the message belongs to this group's forums
-                        $authorized_to_delete_message = true;
-                    }
-
-                    if ($authorized_to_delete_message) {
-                        $GLOBALS['Response']->addFeedback(Feedback::INFO, sprintf(_('%1$s message(s) deleted'), recursive_delete($msg_id, $forum_id)));
-                    } else {
-                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Message is not in your group'));
-                    }
-                } else {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Message not found'));
-                }
-            }
-        } elseif ($request->existAndNonEmpty('change_status')) {
+        if ($request->existAndNonEmpty('change_status')) {
             /*
                 Change a forum to public/private
             */
@@ -123,32 +88,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
     $purifier = Codendi_HTMLPurifier::instance();
 
-    if ($request->existAndNonEmpty('delete')) {
-        /*
-            Show page for deleting messages
-        */
-        forum_header(\Tuleap\Layout\HeaderConfigurationBuilder::get(_('Delete a message'))
-            ->inProject($current_project, Service::FORUM)
-            ->build());
-
-        echo '
-			<H2>' . _('Delete a message') . '</H2>
-
-			<div class="alert">' . _('WARNING! You are about to permanently delete a message and all of its followups!!') . '</div>
-			<FORM METHOD="POST" ACTION="?">
-			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-			<INPUT TYPE="HIDDEN" NAME="delete" VALUE="y">
-			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
-			<div class="control-group">
-                <label for="msg_id">' . _('Enter the Message ID') . '</label>
-			    <div class="controls">
-                    <INPUT TYPE="TEXT" NAME="msg_id" id="msg_id" VALUE=""><BR>
-                </div>
-			<INPUT CLASS="btn" TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '">
-			</FORM>';
-
-        forum_footer();
-    } elseif ($request->existAndNonEmpty('change_status')) {
+    if ($request->existAndNonEmpty('change_status')) {
         /*
             Change a forum to public/private
         */
@@ -224,7 +164,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         echo '
 			<H2>' . _('Forum Administration') . '</H2>
 			<P>
-			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&delete=1">' . _('Delete Message') . '</A><BR>
 			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&change_status=1">' . _('Update Forum Info/Status') . '</A>';
 
         forum_footer();
