@@ -31,7 +31,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;

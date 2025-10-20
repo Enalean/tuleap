@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\FormElement;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use DateTime;
 use Override;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
-use ColinODell\PsrTestLogger\TestLogger;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsModeChecker;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;

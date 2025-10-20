@@ -18,28 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\FormElement\Burnup;
+namespace Tuleap\AgileDashboard\FormElement\Burnup\Count;
 
 use Project;
 
-class CountElementsModeUpdater
+readonly class CountElementsModeChecker
 {
-    /**
-     * @var ProjectsCountModeDao
-     */
-    private $projects_count_mode_dao;
-
-    public function __construct(ProjectsCountModeDao $projects_count_mode_dao)
+    public function __construct(private ProjectsCountModeDao $projects_count_mode_dao)
     {
-        $this->projects_count_mode_dao = $projects_count_mode_dao;
     }
 
-    public function updateBurnupMode(Project $project, bool $use_count_mode): void
+    public function burnupMustUseCountElementsMode(Project $project): bool
     {
-        if ($use_count_mode) {
-            $this->projects_count_mode_dao->enableBurnupCountMode((int) $project->getID());
-        } else {
-            $this->projects_count_mode_dao->disableBurnupCountMode((int) $project->getID());
-        }
+        return $this->projects_count_mode_dao->isBurnupInCountMode((int) $project->getID());
     }
 }

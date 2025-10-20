@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsInfo;
 use Tuleap\Date\DatePeriodWithOpenDays;
 
 class BurnupData

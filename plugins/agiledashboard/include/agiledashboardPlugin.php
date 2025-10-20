@@ -48,9 +48,9 @@ use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionMatchingIdsRet
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\BurnupEffortCalculatorForArtifact;
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_GENERATE;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
-use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCalculator;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;

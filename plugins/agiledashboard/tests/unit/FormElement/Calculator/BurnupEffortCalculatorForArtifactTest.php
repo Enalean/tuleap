@@ -20,11 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\FormElement\Burnup\Calculator;
+namespace Tuleap\AgileDashboard\FormElement\Calculator;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
+use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\BurnupEffortCalculatorForArtifact;
 use Tuleap\AgileDashboard\FormElement\BurnupEffort;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;

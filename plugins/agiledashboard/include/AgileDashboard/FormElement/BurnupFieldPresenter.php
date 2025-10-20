@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsModeChecker;
 use Tuleap\AgileDashboard\v1\Artifact\BurnupRepresentation;
 
 class BurnupFieldPresenter

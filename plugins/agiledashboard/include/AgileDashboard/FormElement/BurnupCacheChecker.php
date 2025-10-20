@@ -24,8 +24,8 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsModeChecker;
 use Tuleap\Date\DatePeriod;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\FormElement\Burnup;
+namespace Tuleap\AgileDashboard\FormElement\Burnup\Count;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
