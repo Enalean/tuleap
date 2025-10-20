@@ -200,14 +200,6 @@ msgstr "5 dias atrás"
 
 #, php-format
 msgid ""
-"<A HREF=\"%1$s\"><u>Log in first</u></A><span class=\"highlight\"> to post "
-"messages</span>"
-msgstr ""
-"<A HREF=\"%1$s\"><u>Faça o login primeiro</u></A>><span class=\"highlight\"> "
-"para postar mensagens</span>"
-
-#, php-format
-msgid ""
 "<h4><i class=\"fa-solid fa-triangle-exclamation\"></i> Your local.inc file "
 "is outdated!</h4><p>It appears that your local.inc file contains definitions "
 "of variables that are unused and it may lead to confusion.</p><p>Please edit "
@@ -1505,9 +1497,6 @@ msgstr "Membros do grupo"
 msgid "Groups"
 msgstr "Grupos"
 
-msgid "HTML tags will display in your post as text"
-msgstr "As tags HTML serão exibidas no seu post como texto"
-
 msgid "Header background"
 msgstr "Fundo do cabeçalho"
 
@@ -1560,9 +1549,6 @@ msgstr "Eu aceito"
 
 msgid "I decline"
 msgstr "Eu recuso"
-
-msgid "INSERT FAILED"
-msgstr "FALHA AO INSERIR"
 
 msgid "Icon"
 msgstr "Ícone"
@@ -1933,9 +1919,6 @@ msgstr "Gestão dos membros"
 msgid "Message"
 msgstr "Mensagem"
 
-msgid "Message Posted"
-msgstr "Mensagem Postada"
-
 msgid "Message from %s:"
 msgstr "Mensagem de %s:"
 
@@ -2099,11 +2082,6 @@ msgstr "Não há projetos filhos"
 
 msgid "No email for user account"
 msgstr "Não há email para a conta deste usuário"
-
-msgid "No followup ID present when trying to post to an existing thread."
-msgstr ""
-"Não há identificação de acompanhamento presente quando se tenta postar para "
-"um tópico existente."
 
 msgid "No forum for this project"
 msgstr "Nenhum Fórum para este projeto"
@@ -2435,15 +2413,6 @@ msgstr "Por favor, introduza um link http:// ou https://"
 
 msgid "Plugins"
 msgstr "Plugins"
-
-msgid "Post Comment"
-msgstr "Comentário"
-
-msgid "Post a followup to this message"
-msgstr "Postar um acompanhamento a esta mensagem"
-
-msgid "Posting Failed"
-msgstr "Postagem falhou"
 
 msgid "Predefined project references"
 msgstr "Referências de projetos pré-definidas"
@@ -3156,9 +3125,6 @@ msgstr "Projeto específico"
 msgid "Start New Thread"
 msgstr "Iniciar Novo Tópico"
 
-msgid "Start a New Thread"
-msgstr "Iniciar um novo tópico"
-
 msgid "Start a new project"
 msgstr "Inicie um novo projeto"
 
@@ -3794,9 +3760,6 @@ msgstr "Isto vai remover este serviço de todos os projetos."
 msgid "Thread"
 msgstr "Tópico"
 
-msgid "Thread View"
-msgstr "Visualizar Discussão"
-
 msgid "Threaded"
 msgstr "Discutido"
 
@@ -3859,12 +3822,6 @@ msgstr "Importação de Tracker v3"
 
 msgid "Trove categories"
 msgstr "Categorias de baú de projetos"
-
-msgid "Trying to followup to a message that doesn't exist."
-msgstr "Tentando acompanhar uma mensagem que não existe."
-
-msgid "Trying to post without a forum ID"
-msgstr "Tentando postar sem uma identificação do Fórum"
 
 msgid ""
 "Tuleap helps teams to deliver awesome applications, better, faster, and "
@@ -4290,13 +4247,6 @@ msgid "Yesterday"
 msgstr "Ontem"
 
 msgid ""
-"You appear to be double-posting this message, since it has the same subject "
-"and followup information as a prior post."
-msgstr ""
-"Você parece estar postando esta mensagem duas vezes, já que ela tem o mesmo "
-"assunto e informações de acompanhamento de um post anterior."
-
-msgid ""
 "You are about to allow access to a resource for every projects on the "
 "platform."
 msgstr ""
@@ -4543,9 +4493,6 @@ msgstr ""
 
 msgid "You cannot create an already expired access key."
 msgstr "Não se pode criar uma chave de acesso já expirada."
-
-msgid "You could post if you were logged in"
-msgstr "Você poderia postar se estivesse logado"
 
 msgid "You do not have permission to access the site administration."
 msgstr "Você não tem permissão para acessar a administração do site."

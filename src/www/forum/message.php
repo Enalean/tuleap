@@ -78,26 +78,6 @@ if ($request->valid($vMsg)) {
     echo '</TD></TR>';
 
     echo '</TABLE>';
-
-    if ($pv == 0) {
-    /*
-     Show entire thread
-    */
-        echo '<BR>&nbsp;<P><H3>' . _('Thread View') . '</H3>';
-
-        //highlight the current message in the thread list
-        $current_message = $msg_id;
-        echo show_thread($message->getThreadId());
-
-    /*
-     Show post followup form
-    */
-
-        echo '<P>&nbsp;<P>';
-        echo '<CENTER><h3>' . _('Post a followup to this message') . '</h3></CENTER>';
-
-        show_post_form($forum_id, $message->getThreadId(), $msg_id, $message->getSubject());
-    }
 } else {
     exit_error($Language->getText('global', 'error'), _('Must choose a message first'));
 }

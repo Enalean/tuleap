@@ -144,21 +144,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         $vBody = new Valid_Text('body');
         $vBody->required();
         $vBody->setErrorMessage(_('Must include a message body and subject'));
-
-        if (
-            $request->valid($vThreadId)
-            && $request->valid($vFollowUp)
-            && $request->valid($vSubject)
-            && $request->valid($vBody)
-        ) {
-               post_message(
-                   $request->get('thread_id'),
-                   $request->get('is_followup_to'),
-                   $request->get('subject'),
-                   $request->get('body'),
-                   $forum_id
-               );
-        }
     }
 
     /*
@@ -468,13 +453,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     }
 
         echo $ret_val;
-
-    if (! $pv) {
-            echo '<P>&nbsp;<P>';
-
-            echo '<h3>' . _('Start a New Thread') . ':</H3><a name="start_new_thread"></a>';
-            show_post_form($forum_id);
-    }
 
     forum_footer();
 } else {
