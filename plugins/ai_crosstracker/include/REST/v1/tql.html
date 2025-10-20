@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" data-content_root="../../"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+
+
+  <title>TQL in Cross-Tracker Search — Tuleap latest version documentation</title>
+
+</head>
+
+
+
+    <body role="document" class="user-guide">
+
+
+
+
+
+  <main class="tuleap-doc">
+    <div class="container">
+
+      <section class="doc-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="doc-breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
+
+    <span class="button small orange outline doc-show-navigation">
+      <i class="fas fa-long-arrow-alt-right"></i> Menu
+    </span>
+
+    <a class="doc-breadcrumb-item" href="https://docs.tuleap.org/index.html">Docs</a> <i class="fas fa-angle-double-right doc-breadcrumb-separator"></i>
+
+      <a class="doc-breadcrumb-item" href="https://docs.tuleap.org/user.html">User guide</a> <i class="fas fa-angle-double-right doc-breadcrumb-separator"></i>
+
+      <a class="doc-breadcrumb-item" href="https://docs.tuleap.org/user-guide/tql.html">Tuleap Query Language (<span class="highlighted">TQL</span>)</a> <i class="fas fa-angle-double-right doc-breadcrumb-separator"></i>
+
+    <span class="doc-breadcrumb-item"><span class="highlighted">TQL</span> in Cross-Tracker Search</span>
+
+
+
+
+
+
+
+</nav>
+
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div itemprop="articleBody">
+
+  <section id="tql-in-cross-tracker-search">
+<span id="tql-xts"></span><h1><span class="highlighted">TQL</span> in Cross-Tracker Search<a class="headerlink" href="#tql-in-cross-tracker-search" title="Link to this heading"></a></h1>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This module is part of <a class="reference internal" href="https://docs.tuleap.org/user-guide/tuleap-entreprise.html#tuleap-enterprise"><span class="std std-ref">Tuleap Enterprise</span></a>. It might
+not be available on your installation of Tuleap.</p>
+</div>
+<section id="widget">
+<h2>Widget<a class="headerlink" href="#widget" title="Link to this heading"></a></h2>
+<p><span class="highlighted">TQL</span> can be used in the <a class="reference internal" href="https://docs.tuleap.org/user-guide/trackers/cross-tracker-search.html#xts"><span class="std std-ref">Cross-Tracker Search widget</span></a>, in the search area. The widget is part of the <a class="reference internal" href="https://docs.tuleap.org/installation-guide/step-by-step/install-plugins.html#install-plugins"><span class="std std-ref">Cross-Tracker Search plugin</span></a> and can be added on any dashboard that you have permission to modify.</p>
+</section>
+<section id="queries">
+<h2>Queries<a class="headerlink" href="#queries" title="Link to this heading"></a></h2>
+<p>The widget uses an extended <span class="highlighted">TQL</span> syntax. In this syntax of <span class="highlighted">TQL</span>, you can choose which fields you want to display on the widget through <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> syntax, and also on which trackers to perform the query with <code class="docutils literal notranslate"><span class="pre">FROM</span></code>:</p>
+<div class="highlight-tql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="no">@pretty_title</span><span class="p">,</span><span class="w"> </span><span class="no">@status</span><span class="p">,</span><span class="w"> </span><span class="l">open_date</span>
+<span class="k">FROM</span><span class="w"> </span><span class="no">@project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'self'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="no">@tracker.name</span><span class="w"> </span><span class="n">IN</span><span class="o">(</span><span class="s">'activity'</span><span class="p">,</span><span class="w"> </span><span class="s">'task'</span><span class="o">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="no">@assigned_to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MYSELF</span><span class="o">()</span>
+<span class="k">ORDER BY</span><span class="w"> </span><span class="no">@last_update_date</span><span class="w"> </span><span class="n">DESCENDING</span>
+<span class="c">// Returns all artifacts from current project activity and task trackers assigned to me.</span>
+<span class="c">// Display their title, status and opening date ordered according to their last modification date.</span>
+</pre></div>
+</div>
+<p>When using Cross-tracker search, you must use <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> syntax with at least one field, <code class="docutils literal notranslate"><span class="pre">FROM</span></code> with at least one condition, and a condition after the <code class="docutils literal notranslate"><span class="pre">WHERE</span></code>. The <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> part is optional.</p>
+<section id="select">
+<h3><code class="docutils literal notranslate"><span class="pre">SELECT</span></code><a class="headerlink" href="#select" title="Link to this heading"></a></h3>
+<p><span class="highlighted">TQL</span> <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> syntax helps you select which columns you want to see on the artifacts that match the conditions. In <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>,
+ you may choose several fields, semantics, or “special fields” that will
+ be shown. Each time you select something, it will add another column to
+ the results table. The order of items in <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> will be respected in the columns.</p>
+<p>You may use the same fields allowed for the conditions (<code class="docutils literal notranslate"><span class="pre">WHERE</span></code>) plus some special fields:</p>
+<dl class="simple">
+<dt>Semantics and always there fields:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@id</span></code>: Artifact id.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@submitted_on</span></code>: The creation date and time of the artifact.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@last_update_date</span></code>: The date and time of the last change to the artifact.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@submitted_by</span></code>: The user who first created the artifact.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@last_update_by</span></code>: The user who made the last change to the artifact.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@title</span></code>: Artifact title semantic.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@description</span></code>: Artifact description semantic.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@status</span></code>: Artifact status semantic.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@assigned_to</span></code>: Artifact assignee/contributor semantic.</p></li>
+</ul>
+</dd>
+<dt>Fields short name:</dt><dd><ul class="simple">
+<li><p>Same as for condition (see <a class="reference internal" href="#tql-duck-typing"><span class="std std-ref">Similar fields rules</span></a>)</p></li>
+<li><p>Note that in <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> date and datetime fields are considered compatible</p></li>
+</ul>
+</dd>
+<dt>Special fields:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@project.name</span></code>: The name and icon of the project that the artifact belongs to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@tracker.name</span></code>: The label and color of the tracker the artifact belongs to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@pretty_title</span></code>: The reference to the artifact colored with the tracker color and the title semantic of the artifact. For example: <code class="docutils literal notranslate"><span class="pre">user_story</span> <span class="pre">#123</span> <span class="pre">My</span> <span class="pre">Story</span> <span class="pre">title</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="from">
+<h3><code class="docutils literal notranslate"><span class="pre">FROM</span></code><a class="headerlink" href="#from" title="Link to this heading"></a></h3>
+<p><span class="highlighted">TQL</span> <code class="docutils literal notranslate"><span class="pre">FROM</span></code>
+ syntax allows you to select on which trackers to perform the query by
+filtering projects and trackers. You can use only one condition of each
+type joined by <code class="docutils literal notranslate"><span class="pre">AND</span></code>:</p>
+<dl class="simple">
+<dt>Project condition:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@project</span> <span class="pre">=</span> <span class="pre">'self'</span></code> get current project. Works only in a project dashboard.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@project</span> <span class="pre">=</span> <span class="pre">'aggregated'</span></code> get project aggregated to the current one. Works only in a <a class="reference internal" href="https://docs.tuleap.org/user-guide/program-management.html#program-management"><span class="std std-ref">program</span></a> project dashboard.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@project</span> <span class="pre">=</span> <span class="pre">MY_PROJECTS()</span></code> get the projects I’m member of.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@project.name</span></code> either with <code class="docutils literal notranslate"><span class="pre">=</span> <span class="pre">'project_name'</span></code> or <code class="docutils literal notranslate"><span class="pre">IN('project_name',</span> <span class="pre">'another_project')</span></code>, get all projects with the corresponding short name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@project.category</span> <span class="pre">=</span> <span class="pre">'Topic::Hardware'</span></code>
+ get all projects with corresponding category or sub category. A
+category is specified by its full path (root category to current one)
+with <code class="docutils literal notranslate"><span class="pre">::</span></code> as delimiter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@project.category</span> <span class="pre">IN('Topic::Hardware',</span> <span class="pre">'License::Open</span> <span class="pre">Source')</span></code> get all projects with corresponding category.</p></li>
+</ul>
+</dd>
+<dt>Tracker condition:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@tracker.name</span></code> either with <code class="docutils literal notranslate"><span class="pre">=</span> <span class="pre">'release'</span></code> or <code class="docutils literal notranslate"><span class="pre">IN('release',</span> <span class="pre">'sprint')</span></code>, get all trackers with corresponding short name.</p></li>
+</ul>
+</dd>
+</dl>
+<p>There cannot be multiple conditions on  <code class="docutils literal notranslate"><span class="pre">@project</span></code>. For example, the following query will be rejected: <code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">@project.category</span> <span class="pre">=</span> <span class="pre">'Type::Helpdesk'</span> <span class="pre">AND</span> <span class="pre">@project.name</span> <span class="pre">=</span> <span class="pre">'foo'</span></code>. Similarly, there cannot be multiple conditions on <code class="docutils literal notranslate"><span class="pre">@tracker</span></code>. For example, the following query will be rejected: <code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">@tracker.name</span> <span class="pre">=</span> <span class="pre">'sla'</span> <span class="pre">AND</span> <span class="pre">@tracker.name</span> <span class="pre">=</span> <span class="pre">'request'</span></code>. If only the project condition is given, then it gets all trackers from corresponding projects (for example: <code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">@project.name</span> <span class="pre">=</span> <span class="pre">'foo'</span></code>). If only the tracker condition is provided, then it matches the trackers from the current project (for example: <code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">@tracker.name</span> <span class="pre">=</span> <span class="pre">'sla'</span></code>). It means that in a personal dashboard, the project condition is mandatory.</p>
+<p>To provide both conditions, you must use <code class="docutils literal notranslate"><span class="pre">AND</span></code> between them. There is no restriction for the order of the conditions. For example: <code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">@project.category</span> <span class="pre">=</span> <span class="pre">'Type::Helpdesk'</span> <span class="pre">AND</span> <span class="pre">@tracker.name</span> <span class="pre">=</span> <span class="pre">'request'</span></code></p>
+<p>Note that Tuleap’s permissions apply when selecting trackers and
+projects: projects and trackers you don’t have access to are ignored. If
+ you don’t have read permission for any tracker selected by the <code class="docutils literal notranslate"><span class="pre">FROM</span></code> expression, an error message will be displayed.</p>
+</section>
+<section id="where">
+<h3><code class="docutils literal notranslate"><span class="pre">WHERE</span></code><a class="headerlink" href="#where" title="Link to this heading"></a></h3>
+<p><span class="highlighted">TQL</span> <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> syntax allows you to filter artifacts based on values in their fields.</p>
+<p>You can assemble your different comparisons with logical operators <code class="docutils literal notranslate"><span class="pre">AND</span></code> and <code class="docutils literal notranslate"><span class="pre">OR</span></code> and use parenthesis <code class="docutils literal notranslate"><span class="pre">()</span></code> to force precedence.</p>
+<section id="preconditions-for-multi-tracker-search">
+<h4>Preconditions for multi-tracker search<a class="headerlink" href="#preconditions-for-multi-tracker-search" title="Link to this heading"></a></h4>
+<p>When you use a semantic, at least one of the selected trackers must
+have it configured and the field linked to the semantic must be readable
+ by the current user.</p>
+<p>For example, if you run a query containing <code class="docutils literal notranslate"><span class="pre">@status</span></code>, at least one of the selected trackers <strong>must</strong> have defined a “Status” semantic and the “Status” field <strong>must</strong> be readable by the user viewing the widget.
+If <strong>none</strong> of the trackers defines the “Status” semantic, it will cause an error to be shown. The same is true for permissions: if <strong>none</strong> of the “Status” fields are readable by the current user, it will raise an error.</p>
+<p>If only part of the selected trackers match these preconditions, the query will be performed only on those trackers.</p>
+</section>
+<section id="similar-fields">
+<span id="tql-duck-typing"></span><h4>Similar fields<a class="headerlink" href="#similar-fields" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>You can search on any custom field with its name as long as there is
+ at least one Tracker with a compatible definition. We consider that 2
+fields from 2 Trackers are compatible if:</dt><dd><ul class="simple">
+<li><p>You can see both fields</p></li>
+<li><p>They have the same name</p></li>
+<li><p>Their types are compatible</p></li>
+</ul>
+</dd>
+<dt>Compatible field types:</dt><dd><ul class="simple">
+<li><p>Numerics: integer and float</p></li>
+<li><p>Lists with same bind (user, user group, static)</p></li>
+<li><p>String and text</p></li>
+<li><p>Date</p></li>
+<li><p>Date time</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="semantics-and-dynamic-fields">
+<h4>Semantics and dynamic fields<a class="headerlink" href="#semantics-and-dynamic-fields" title="Link to this heading"></a></h4>
+<p>The following keywords are supported:</p>
+<dl class="simple">
+<dt>String/Text semantics:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@title</span></code>: the “Title” semantic. It behaves like a string field.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@description</span></code>: the “Description” semantic. It behaves like a text field.</p></li>
+</ul>
+</dd>
+<dt>Integer:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@id</span></code>: the “Artifact id” dynamic field. It contains the unique id of the artifact, a strictly positive integer.</p></li>
+</ul>
+</dd>
+<dt>Dates:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@submitted_on</span></code>: the “Submitted On” dynamic field. It behaves like a date field, but the empty string <code class="docutils literal notranslate"><span class="pre">''</span></code> is not allowed (this field cannot be empty).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@last_update_date</span></code>: the “Last Update Date” dynamic field. It behaves like a date field, but the empty string <code class="docutils literal notranslate"><span class="pre">''</span></code> is not allowed (this field cannot be empty).</p></li>
+</ul>
+</dd>
+<dt>Lists:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@status</span></code>: the “Status” semantic. It can only be compared to <code class="docutils literal notranslate"><span class="pre">OPEN()</span></code></p></li>
+</ul>
+</dd>
+<dt>Lists bound to users:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">@submitted_by</span></code>: the “Submitted By” dynamic field. It behaves like a list and can have only a single value at a time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@last_update_by</span></code>: the “Last Updated by” dynamic field. It behaves like a list and can have only a single value at a time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">@assigned_to</span></code>:
+ the “Contributor/assignee” semantic. It behaves like a list and can
+have multiple values at a time (multiple users assigned to an artifact).</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="comparison">
+<h4>Comparison<a class="headerlink" href="#comparison" title="Link to this heading"></a></h4>
+<blockquote>
+<div><ul class="simple">
+<li><p>For string and text fields: <code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code></p></li>
+<li><p>For date, integer and float fields: <code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">BETWEEN()</span></code></p></li>
+<li><p>For list fields: <code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">IN()</span></code>, <code class="docutils literal notranslate"><span class="pre">NOT</span> <span class="pre">IN()</span></code></p></li>
+</ul>
+</div></blockquote>
+<section id="comparison-values">
+<h5>Comparison values<a class="headerlink" href="#comparison-values" title="Link to this heading"></a></h5>
+<blockquote>
+<div><ul class="simple">
+<li><p>For string and text fields: simple quote or double quote string like <code class="docutils literal notranslate"><span class="pre">'simple</span> <span class="pre">quote'</span></code> or <code class="docutils literal notranslate"><span class="pre">"double</span> <span class="pre">quote"</span></code>.</p></li>
+<li><p>For integer fields: integer (<code class="docutils literal notranslate"><span class="pre">3</span></code>) or string convertible to integer (<code class="docutils literal notranslate"><span class="pre">"3"</span></code>)</p></li>
+<li><p>For float fields: integer (<code class="docutils literal notranslate"><span class="pre">3</span></code>), float (<code class="docutils literal notranslate"><span class="pre">4.2</span></code>) or string convertible to float (<code class="docutils literal notranslate"><span class="pre">"5.6"</span></code>)</p></li>
+<li><p>For date fields: <code class="docutils literal notranslate"><span class="pre">NOW()</span></code> or string convertible to date (<code class="docutils literal notranslate"><span class="pre">"2024-10-07"</span></code>)</p></li>
+<li><p>For list fields: matching list values (for example: <code class="docutils literal notranslate"><span class="pre">"In</span> <span class="pre">Review"</span></code>, <code class="docutils literal notranslate"><span class="pre">"Ongoing"</span></code>)</p></li>
+<li><p>For list fields bound to users: <code class="docutils literal notranslate"><span class="pre">MYSELF()</span></code> or <code class="docutils literal notranslate"><span class="pre">string</span></code> user names (for example: <code class="docutils literal notranslate"><span class="pre">"jdoe"</span></code>, <code class="docutils literal notranslate"><span class="pre">"John</span> <span class="pre">Doe"</span></code>)</p></li>
+<li><p>For list fields bound to user groups: <code class="docutils literal notranslate"><span class="pre">string</span></code> matching either the name of a user-defined (“Static”) user group (for example: <code class="docutils literal notranslate"><span class="pre">"Customers"</span></code>)
+or matching the translated system-defined (“Dynamic”) user group name (for example: <code class="docutils literal notranslate"><span class="pre">"Project</span> <span class="pre">members"</span></code>).</p></li>
+</ul>
+</div></blockquote>
+<p>Empty string <code class="docutils literal notranslate"><span class="pre">''</span></code> can be used for any field to specify no value.</p>
+<p><code class="docutils literal notranslate"><span class="pre">@submitted_by</span></code>, <code class="docutils literal notranslate"><span class="pre">@last_update_by</span></code>, <code class="docutils literal notranslate"><span class="pre">@submitted_on</span></code>, <code class="docutils literal notranslate"><span class="pre">@last_update_date</span></code> and <code class="docutils literal notranslate"><span class="pre">@id</span></code> cannot be compared to empty string <code class="docutils literal notranslate"><span class="pre">''</span></code> as these fields always have a value.</p>
+</section>
+<section id="dynamic-value-for-date-fields">
+<h5>Dynamic value for date fields<a class="headerlink" href="#dynamic-value-for-date-fields" title="Link to this heading"></a></h5>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start_date</span> <span class="pre">&gt;</span> <span class="pre">NOW()</span></code> matches all artifacts where the field <code class="docutils literal notranslate"><span class="pre">start_date</span></code> is greater (more recent) than the current time (time when the query
+is displayed).</p></li>
+<li><p>You can use interval periods with <code class="docutils literal notranslate"><span class="pre">NOW()</span></code>, for example <code class="docutils literal notranslate"><span class="pre">submitted_on</span> <span class="pre">&gt;</span> <span class="pre">NOW()</span> <span class="pre">-</span> <span class="pre">1m</span></code> will matches
+all artifacts that have been created during the last month. The supported specificators are:</p></li>
+<li><p>years (<code class="docutils literal notranslate"><span class="pre">y</span></code>)</p></li>
+<li><p>months (<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p></li>
+<li><p>weeks (<code class="docutils literal notranslate"><span class="pre">w</span></code>)</p></li>
+<li><p>days (<code class="docutils literal notranslate"><span class="pre">d</span></code>)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="dynamic-value-for-list-fields-bound-to-users-myself">
+<h5>Dynamic value for list fields bound to users: <code class="docutils literal notranslate"><span class="pre">MYSELF()</span></code><a class="headerlink" href="#dynamic-value-for-list-fields-bound-to-users-myself" title="Link to this heading"></a></h5>
+<p><code class="docutils literal notranslate"><span class="pre">owner</span> <span class="pre">=</span> <span class="pre">MYSELF()</span></code> matches all artifacts where the field <code class="docutils literal notranslate"><span class="pre">owner</span></code> is equal to the current user.</p>
+</section>
+</section>
+</section>
+<section id="search-for-linked-artifacts">
+<h3>Search for linked artifacts<a class="headerlink" href="#search-for-linked-artifacts" title="Link to this heading"></a></h3>
+<section id="generic-syntax">
+<h4>Generic syntax<a class="headerlink" href="#generic-syntax" title="Link to this heading"></a></h4>
+<p>Artifact links make an oriented graph: you have to specify in which direction the links should be matched with <code class="docutils literal notranslate"><span class="pre">TO</span></code> or <code class="docutils literal notranslate"><span class="pre">FROM</span></code>:</p>
+<section id="forward-links">
+<h5>Forward links<a class="headerlink" href="#forward-links" title="Link to this heading"></a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span></code> matches all artifacts that have a link to another artifact</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">TO</span></code> matches all artifacts that don’t have a link to another artifact</p></li>
+</ul>
+</section>
+<section id="reverse-links">
+<h5>Reverse links<a class="headerlink" href="#reverse-links" title="Link to this heading"></a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">FROM</span></code> matches all artifacts that are linked to by another artifact</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">FROM</span></code> matches all artifacts that are not linked to by another artifact</p></li>
+</ul>
+</section>
+<section id="link-type">
+<h5>Link type<a class="headerlink" href="#link-type" title="Link to this heading"></a></h5>
+<p>The query can be refined by specifying the type of the link: <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'my_type'</span></code>.</p>
+<p>For example if you want to target all “fixed in” requests: <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'fixed_in'</span></code>.</p>
+</section>
+<section id="origin-destination">
+<h5>Origin &amp; destination<a class="headerlink" href="#origin-destination" title="Link to this heading"></a></h5>
+<p>Origin or destination can also be specified: to match an artifact <code class="docutils literal notranslate"><span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span></code>, a tracker <code class="docutils literal notranslate"><span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">'epic'</span></code>, or a different tracker <code class="docutils literal notranslate"><span class="pre">TRACKER</span> <span class="pre">!=</span> <span class="pre">'epic'</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span></code> matches all artifacts that are linked to by the artifact #123.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">'release'</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'fixed_in'</span></code> matches all artifacts that are “fixed in” an artifact of <code class="docutils literal notranslate"><span class="pre">release</span></code> tracker.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">TRACKER</span> <span class="pre">!=</span> <span class="pre">'release'</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'fixed_in'</span></code> matches all artifacts that are “fixed in” an artifact other than <code class="docutils literal notranslate"><span class="pre">release</span></code> tracker.</p></li>
+</ul>
+</section>
+</section>
+<section id="query-aliases">
+<h4>Query aliases<a class="headerlink" href="#query-aliases" title="Link to this heading"></a></h4>
+<p>Some builtin types are not easy to express/understand (hello <code class="docutils literal notranslate"><span class="pre">_is_child</span></code> 👋) so <span class="highlighted">TQL</span> offers some aliases for better expressiveness of the query.</p>
+<section id="search-for-parent-relationship">
+<h5>Search for parent relationship<a class="headerlink" href="#search-for-parent-relationship" title="Link to this heading"></a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">PARENT</span></code> matches all artifacts that have a parent artifact (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITHOUT</span> <span class="pre">PARENT</span></code> matches all artifacts that don’t have a parent artifact (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">PARENT</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span></code> matches all artifacts that have artifact #123 as a parent (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITHOUT</span> <span class="pre">PARENT</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span></code> matches all artifacts that don’t have artifact #123 as a parent (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">PARENT</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">'epic'</span></code> matches all artifacts that have an artifact from tracker <code class="docutils literal notranslate"><span class="pre">epic</span></code> (regardless of the project) as a parent (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">"epic"</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITHOUT</span> <span class="pre">PARENT</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">'epic'</span></code> matches all artifacts that don’t have an artifact from tracker <code class="docutils literal notranslate"><span class="pre">epic</span></code> (regardless of the project) as a parent (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">"epic"</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+</ul>
+</section>
+<section id="search-for-children-relationship">
+<h5>Search for children relationship<a class="headerlink" href="#search-for-children-relationship" title="Link to this heading"></a></h5>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">CHILDREN</span></code> matches all artifacts that have a least one child artifact (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITHOUT</span> <span class="pre">CHILDREN</span></code> matches all artifacts that don’t have a child artifact (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">CHILDREN</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span></code> matches all artifacts that have artifact #123 as a child (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITHOUT</span> <span class="pre">CHILDREN</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span></code> matches all artifacts that don’t have artifact #123 as a child (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">CHILDREN</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">'task'</span></code> matches all artifacts that have an artifact from tracker <code class="docutils literal notranslate"><span class="pre">task</span></code> (regardless of the project) as a child (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">"epic"</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WITHOUT</span> <span class="pre">CHILDREN</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">'task'</span></code> matches all artifacts that don’t have an artifact from tracker <code class="docutils literal notranslate"><span class="pre">task</span></code> (regardless of the project) as a child (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">TRACKER</span> <span class="pre">=</span> <span class="pre">"epic"</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_is_child'</span></code>)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use both <code class="docutils literal notranslate"><span class="pre">CHILD</span></code> and <code class="docutils literal notranslate"><span class="pre">CHILDREN</span></code> in queries to better suit your taste:
+<code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">CHILDREN</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span></code> is the same than <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">CHILD</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span></code></p>
+</div>
+</section>
+<section id="search-for-test-coverage">
+<h5>Search for test coverage<a class="headerlink" href="#search-for-test-coverage" title="Link to this heading"></a></h5>
+<p>Looking for test coverage is another common use case that benefits of a dedicated syntax:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">COVERED</span></code> matches all artifacts (eg: user stories) that are covered by tests (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_covered_by'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">COVERED</span> <span class="pre">BY</span> <span class="pre">artifact</span> <span class="pre">=</span> <span class="pre">123</span></code> matches all artifacts (eg: user stories) that covered by test 123 (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_covered_by'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">COVERED</span></code> matches all artifacts (eg: user stories) that are not covered by any test (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">TO</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_covered_by'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">COVERING</span></code> matches all artifacts (eg: tests) that are covering other artifacts (eg: user stories) (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_covered_by'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">COVERING</span> <span class="pre">artifact</span> <span class="pre">=</span> <span class="pre">123</span></code>  matches all artifacts (eg: tests) that are covering artifact (eg: user story) 123 (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">ARTIFACT</span> <span class="pre">=</span> <span class="pre">123</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_covered_by'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">COVERING</span></code> matches all artifacts (eg: tests) that doesn’t cover any other artifacts (eg: user stories) (alias of <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">LINKED</span> <span class="pre">FROM</span> <span class="pre">WITH</span> <span class="pre">TYPE</span> <span class="pre">'_covered_by'</span></code>)</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="order-by">
+<h3><code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code><a class="headerlink" href="#order-by" title="Link to this heading"></a></h3>
+<p><span class="highlighted">TQL</span> <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> syntax allows you to sort artifacts on a single field. Ordering on more than one criteria is not possible.</p>
+<p>There are some restrictions on the fields you can use. As for the condition (<code class="docutils literal notranslate"><span class="pre">WHERE</span></code>) their types must be compatible. Date and date with time fields are not compatible together.
+For list fields, only selectbox and radio buttons are allowed. All the <code class="docutils literal notranslate"><span class="pre">@</span></code> fields and semantics valid in conditions (<code class="docutils literal notranslate"><span class="pre">WHERE</span></code>) are allowed.</p>
+<dl class="simple">
+<dt>You must provide the direction of the ordering:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ASC</span></code> or <code class="docutils literal notranslate"><span class="pre">ASCENDING</span></code> from smallest to largest</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DESC</span></code> or <code class="docutils literal notranslate"><span class="pre">DESCENDING</span></code> from largest to smallest</p></li>
+</ul>
+</dd>
+</dl>
+<p>User list and user group list fields are compared on displayed value.
+ For user lists, it means that the ordering depends on your preference
+on user display (login, real name or both).
+For user groups like Project members or Project administrators, the sort
+ is done on their translated name and so the ordering depends on your
+language.</p>
+<p>If you do not provide an <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> to your query, it will default to <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span> <span class="pre">@id</span> <span class="pre">DESCENDING</span></code>.</p>
+</section>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<div class="highlight-tql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="no">@pretty_title</span><span class="p">,</span><span class="w"> </span><span class="no">@status</span><span class="p">,</span><span class="w"> </span><span class="no">@submitted_by</span><span class="p">,</span><span class="w"> </span><span class="no">@last_update_date</span>
+<span class="k">FROM</span><span class="w"> </span><span class="no">@project.name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'support'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="no">@tracker.name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'ticket'</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="no">@status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OPEN</span><span class="o">()</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="no">@assigned_to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MYSELF</span><span class="o">()</span>
+<span class="k">ORDER BY</span><span class="w"> </span><span class="no">@last_update_date</span><span class="w"> </span><span class="n">DESC</span>
+<span class="c">// Get tickets assigned to me from support project. Display their title, status, who opened the ticket and the last modification date</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="no">@pretty_title</span><span class="p">,</span><span class="w"> </span><span class="no">@submitted_by</span><span class="p">,</span><span class="w"> </span><span class="no">@last_update_date</span><span class="p">,</span><span class="w"> </span><span class="no">@status</span>
+<span class="k">FROM</span><span class="w"> </span><span class="no">@project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="l">MY_PROJECTS</span><span class="o">()</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="no">@status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OPEN</span><span class="o">()</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="no">@assigned_to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MYSELF</span><span class="o">()</span>
+<span class="k">ORDER BY</span><span class="w"> </span><span class="no">@last_update_date</span><span class="w"> </span><span class="n">DESC</span>
+<span class="c">// Get artifacts with open status and assigned to me from projects I'm member of,</span>
+<span class="c">// display title, who created the artifact, the last modification date and status</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="no">@title</span><span class="p">,</span><span class="w"> </span><span class="no">@status</span><span class="p">,</span><span class="w"> </span><span class="no">@project.name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="no">@project.category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'Topic::Team'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="no">@tracker.name</span><span class="w"> </span><span class="n">IN</span><span class="o">(</span><span class="s">'epic'</span><span class="p">,</span><span class="w"> </span><span class="s">'story'</span><span class="o">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="no">@status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OPEN</span><span class="o">()</span>
+<span class="c">// Get open epics and stories from project with category Topic::Team (or sub category)</span>
+<span class="c">// display their title, status and from which project it comes</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="no">@pretty_title</span>
+<span class="k">FROM</span><span class="w"> </span><span class="no">@project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'self'</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="no">@id</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">1</span>
+<span class="c">// Display title of all artifacts of current project</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="no">@pretty_title</span><span class="p">,</span><span class="w"> </span><span class="no">@status</span><span class="p">,</span><span class="w"> </span><span class="no">@assigned_to</span><span class="p">,</span><span class="w"> </span><span class="no">@project.name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="no">@project</span><span class="w"> </span><span class="n">IN</span><span class="o">(</span><span class="s">'self'</span><span class="p">,</span><span class="w"> </span><span class="s">'aggregated'</span><span class="o">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="no">@status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OPEN</span><span class="o">()</span>
+<span class="c">// Display artifacts from current project and teams projects in the context of a program project</span>
+</pre></div>
+</div>
+</section>
+<section id="errors">
+<h2>Errors<a class="headerlink" href="#errors" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be careful, you must use the name of fields and not the label to construct queries.</p>
+</div>
+<p>Sending the query to the server can produce the following errors:</p>
+<ul class="simple">
+<li><p>The query syntax is incorrect (for example: if you forget a closing quote <code class="docutils literal notranslate"><span class="pre">"</span></code>)</p></li>
+<li><p>The name used in a comparison doesn’t match any existing field
+name in any of the trackers selected (or there is a mistake in the name)</p></li>
+<li><p>The value is not defined for the list field (for example: <code class="docutils literal notranslate"><span class="pre">assigned_to</span> <span class="pre">=</span> <span class="pre">"non_existent_user"</span></code>)</p></li>
+<li><p>The dynamic value is not supported for this field (for example: <code class="docutils literal notranslate"><span class="pre">text_field</span> <span class="pre">=</span> <span class="pre">NOW()</span></code>)</p></li>
+<li><p>The comparison operator is not supported for this field (for example: <code class="docutils literal notranslate"><span class="pre">list_field</span> <span class="pre">&gt;=</span> <span class="pre">3</span></code>)</p></li>
+<li><p>The empty value is not allowed for this comparison (for example: <code class="docutils literal notranslate"><span class="pre">date_field</span> <span class="pre">BETWEEN("",</span> <span class="pre">"2017-01-18")</span></code>)</p></li>
+<li><p>The query uses <code class="docutils literal notranslate"><span class="pre">MYSELF()</span></code> and the current user is not logged in (for example: when browsing a Tuleap platform as an anonymous user)</p></li>
+<li><p>The field type is unsupported</p></li>
+<li><p>Missing part of the query (missing <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> or <code class="docutils literal notranslate"><span class="pre">FROM</span></code> or <code class="docutils literal notranslate"><span class="pre">WHERE</span></code>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">FROM</span></code> part found no trackers (for example: <code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">@tracker.name</span> <span class="pre">=</span> <span class="pre">'sprint'</span></code> but there is no tracker <code class="docutils literal notranslate"><span class="pre">sprint</span></code> in the current project).</p></li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">@project</span> <span class="pre">=</span> <span class="pre">'self'</span></code> in a personal dashboard.</p></li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">FROM</span> <span class="pre">@project</span> <span class="pre">=</span> <span class="pre">'aggregated'</span></code> in a personal dashboard or a project without <a class="reference internal" href="https://docs.tuleap.org/user-guide/program-management.html#program-management"><span class="std std-ref">Program management service</span></a> enabled.</p></li>
+<li><p>Fields with the same name are not compatible between them (for example: date and int field). This can happen for fields used in <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> and <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code>.</p></li>
+<li><p>Using a list field with multiple values in <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> (open list, multi-selectbox, checkbox fields are not allowed).</p></li>
+<li><p><a class="reference internal" href="#xts-tql-error-query-too-complex"><span class="std std-ref">The query is too complex</span></a></p></li>
+</ul>
+<section id="query-is-too-complex">
+<span id="xts-tql-error-query-too-complex"></span><h3>Query is too complex<a class="headerlink" href="#query-is-too-complex" title="Link to this heading"></a></h3>
+<p>The query is too complex when it exceeds one of the three limits set on <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>, <code class="docutils literal notranslate"><span class="pre">FROM</span></code> and <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clauses.</p>
+<p>The limit on <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> is defined by Site Administrators on Site Administration &gt; Tracker &gt; Report</p>
+<p>Limits on <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> and <code class="docutils literal notranslate"><span class="pre">FROM</span></code> are both set at server level using <code class="docutils literal notranslate"><span class="pre">tuleap</span> <span class="pre">config-set</span></code> with respectively
+<code class="docutils literal notranslate"><span class="pre">crosstracker_maximum_selected_columns</span></code> and <code class="docutils literal notranslate"><span class="pre">crosstracker_maximum_tracker_get_from</span></code>. See the
+<a class="reference internal" href="https://docs.tuleap.org/administration-guide/application-management/configuration-variables.html#administration-guide-configuration-variables"><span class="std std-ref">Administration guide’s section on configuration variables</span></a> for more
+info on how to deal with such configuration.</p>
+</section>
+</section>
+</section>
+
+
+            </div>
+
+            <div class="articleComments">
+
+            </div>
+        </div>
+
+
+
+          <div class="doc-previous-next" role="navigation" aria-label="footer navigation">
+
+              <a href="https://docs.tuleap.org/user-guide/tql/tracker-report.html" class="button orange small outline" title="TQL in tracker reports" accesskey="p" rel="prev"><span class="fas fa-arrow-circle-left"></span> Previous</a>
+
+            <span class="doc-previous-next-spacer"></span>
+
+              <a href="https://docs.tuleap.org/user-guide/misc.html" class="button orange small outline" title="Miscellaneous" accesskey="n" rel="next">Next <span class="fas fa-arrow-circle-right"></span></a>
+
+          </div>
+
+      </section>
+    </div>
+
+  </main>
+
+
+</body></html>
