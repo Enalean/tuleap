@@ -18,6 +18,7 @@
  */
 
 import { ReadonlyDateFieldFormatter } from "./readonly-date-field-formatter";
+import { en_US_LOCALE } from "@tuleap/locale";
 
 describe("readonly-date-field-formatter", () => {
     afterEach(() => {
@@ -40,7 +41,7 @@ describe("readonly-date-field-formatter", () => {
             ]),
         } as unknown as Intl.DateTimeFormat);
 
-        const formatter = ReadonlyDateFieldFormatter("en-us");
+        const formatter = ReadonlyDateFieldFormatter(en_US_LOCALE);
         const date = formatter.format("2022-01-31T08:30:00Z");
 
         expect(date).toBe("2022-01-31 08:30");

@@ -22,15 +22,17 @@ import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP } from "@tuleap/tlp-relative-date";
 import type { CommentUserPreferences } from "../../src/domain/comments/CommentUserPreferences";
-import type { DateTimeFormat, LocaleString } from "@tuleap/core-constants";
-import { en_US_DATE_TIME_FORMAT, en_US_LOCALE } from "@tuleap/core-constants";
+import type { DateTimeFormat } from "@tuleap/core-constants";
+import { en_US_DATE_TIME_FORMAT } from "@tuleap/core-constants";
+import type { LocaleString } from "@tuleap/locale";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 
 export class CommentUserPreferencesBuilder {
     #is_comment_order_inverted = false;
     #is_allowed_to_add_comment = true;
     #text_format: TextFieldFormat = TEXT_FORMAT_COMMONMARK;
     #date_time_format: DateTimeFormat = en_US_DATE_TIME_FORMAT;
-    #locale: LocaleString = en_US_LOCALE;
+    #locale: LocaleString = DEFAULT_LOCALE;
     #relative_dates_display: RelativeDatesDisplayPreference =
         PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP;
     #are_mentions_effective = true;

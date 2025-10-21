@@ -20,7 +20,8 @@
 import artifact_modal_module from "./tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
-import { fr_FR_DATE_TIME_FORMAT, fr_FR_LOCALE } from "@tuleap/core-constants";
+import { fr_FR_DATE_TIME_FORMAT } from "@tuleap/core-constants";
+import { fr_FR_LOCALE } from "@tuleap/locale";
 import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import * as modal_creation_mode_state from "./modal-creation-mode-state.ts";
 import * as rest_service from "./rest/rest-service";
@@ -81,15 +82,15 @@ describe("NewTuleapArtifactModalService", () => {
             .spyOn(field_values_formatter, "getSelectedValues")
             .mockReturnValue({});
 
-        document.body.dataset.userLocale = USER_LOCALE;
-        document.body.dataset.dateTimeFormat = USER_DATE_TIME_FORMAT;
+        document.body.setAttribute("data-user-locale", USER_LOCALE);
+        document.body.setAttribute("data-date-time-format", USER_DATE_TIME_FORMAT);
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
     afterEach(() => {
-        document.body.dataset.userLocale = undefined;
-        document.body.dataset.dateTimeFormat = undefined;
+        document.body.removeAttribute("data-user-locale");
+        document.body.removeAttribute("data-date-time-format");
     });
 
     describe("initCreationModalModel() -", () => {

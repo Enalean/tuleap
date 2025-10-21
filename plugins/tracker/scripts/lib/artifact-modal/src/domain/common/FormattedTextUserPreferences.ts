@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LocaleString, TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import type { LocaleString } from "@tuleap/locale";
 
 export interface FormattedTextUserPreferences {
     readonly default_format: TextFieldFormat;

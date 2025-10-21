@@ -20,6 +20,7 @@
 import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
 import type { ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import type { LocaleString } from "@tuleap/locale";
 import type { SelectBoxFieldValueModelType } from "./SelectBoxFieldValueModelType";
 import { SelectBoxFieldPresenter } from "./SelectBoxFieldPresenter";
 import type { EventDispatcherType } from "../../../../domain/AllEvents";
@@ -45,7 +46,7 @@ export const SelectBoxFieldController = (
     field: ListFieldStructure,
     value_model: SelectBoxFieldValueModelType,
     is_field_disabled: boolean,
-    user_locale: string,
+    user_locale: LocaleString,
 ): ControlSelectBoxField => {
     let list_picker_instance: ListPicker;
 

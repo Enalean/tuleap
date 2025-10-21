@@ -20,7 +20,7 @@
 import "../styles/main.scss";
 import type flatpickr from "flatpickr";
 import type { LocaleString } from "@tuleap/locale";
-import { fr_FR_LOCALE, en_US_LOCALE } from "@tuleap/locale";
+import { fr_FR_LOCALE } from "@tuleap/locale";
 import { French } from "flatpickr/dist/l10n/fr";
 import type { DatePickerInstance } from "./flatpickr";
 import { datePicker as flatpickrDatePicker } from "./flatpickr";
@@ -39,12 +39,4 @@ export function createDatePicker(
         defaulted_options.locale = French;
     }
     return flatpickrDatePicker(element, defaulted_options);
-}
-
-/** @deprecated replaced by createDatePicker */
-export function datePicker(
-    element: HTMLInputElement,
-    options?: flatpickr.Options.Options,
-): DatePickerInstance {
-    return createDatePicker(element, en_US_LOCALE, options);
 }

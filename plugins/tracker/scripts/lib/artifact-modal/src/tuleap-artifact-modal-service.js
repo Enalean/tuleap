@@ -19,15 +19,15 @@
 
 import "./tuleap-artifact-modal.tpl.html";
 import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js";
-
 import { has } from "lodash-es";
 import { CurrentArtifactIdentifier } from "@tuleap/plugin-tracker-artifact-common";
+import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
+import { getLocaleWithDefault } from "@tuleap/locale";
 import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.ts";
 import { getTracker, getUserPreference } from "./rest/rest-service";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
-import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import { getSelectedValues } from "./model/field-values-formatter.js";
 import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.js";
 import { InitializationAPIClient } from "./adapters/REST/initialization/InitializationAPIClient";
@@ -119,12 +119,13 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
     }
 
     function initCreationModalModel(user_id, tracker_id, parent_artifact_id, prefill_values) {
+        const user_locale = getLocaleWithDefault(document);
         const modal_model = {
             user_id,
             tracker_id,
             parent_artifact_id,
             user_date_time_format: document.body.dataset.dateTimeFormat,
-            user_locale: document.body.dataset.userLocale,
+            user_locale,
         };
 
         const creation_mode = true;
@@ -151,12 +152,13 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
 
     function initEditionModalModel(user_id, tracker_id, artifact_id, api_client) {
         const current_artifact_identifier = CurrentArtifactIdentifier.fromId(artifact_id);
+        const user_locale = getLocaleWithDefault(document);
         const modal_model = {
             user_id,
             tracker_id,
             current_artifact_identifier,
             user_date_time_format: document.body.dataset.dateTimeFormat,
-            user_locale: document.body.dataset.userLocale,
+            user_locale,
         };
 
         const creation_mode = false;

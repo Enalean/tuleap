@@ -19,7 +19,6 @@
 
 import { loadTooltips } from "@tuleap/tooltip";
 import { Option } from "@tuleap/option";
-import { en_US_LOCALE } from "@tuleap/core-constants";
 import { EVENT_TLP_MODAL_WILL_HIDE } from "@tuleap/tlp-modal";
 import {
     CurrentProjectIdentifier,
@@ -108,7 +107,7 @@ function ArtifactModalController(
     const parent_tracker_identifier = Option.fromNullable(modal_model.tracker.parent).map(
         (parent_tracker) => ParentTrackerIdentifier.fromId(parent_tracker.id),
     );
-    const user_locale = document.body.getAttribute("data-user-locale") ?? en_US_LOCALE;
+    const user_locale = modal_model.user_locale;
 
     const event_dispatcher = EventDispatcher();
     const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
@@ -157,7 +156,7 @@ function ArtifactModalController(
             links_marked_for_removal_store,
             new_links_store,
         ),
-        date_picker_initializer: DatePickerInitializer(),
+        date_picker_initializer: DatePickerInitializer(user_locale),
         readonly_date_field_formatter: ReadonlyDateFieldFormatter(user_locale),
         parent_feedback_controller: ParentFeedbackController(
             api_client,
@@ -172,7 +171,7 @@ function ArtifactModalController(
                 event_dispatcher,
                 current_artifact_option.unwrapOr(null), // It is not built in creation mode
                 {
-                    locale: modal_model.user_locale,
+                    locale: user_locale,
                     date_time_format: modal_model.user_date_time_format,
                     relative_dates_display: modal_model.relative_dates_display,
                     is_comment_order_inverted: modal_model.invert_followups_comments_order,
