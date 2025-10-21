@@ -32,6 +32,10 @@ vi.mock("./mermaid-render", () => {
     return { render };
 });
 
+vi.mock("./panzoom", () => {
+    return { panzoom: vi.fn() };
+});
+
 describe("MermaidDiagramElement", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
 
