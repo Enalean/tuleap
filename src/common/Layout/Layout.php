@@ -46,20 +46,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     private $javascript;
 
-    //Define all the icons for this theme
-    public $icons = ['Summary' => 'ic/anvil24.png',
-        'Homepage' => 'ic/home.png',
-        'Forums' => 'ic/notes.png',
-        'Bugs' => 'ic/bug.png',
-        'Support' => 'ic/support.png',
-        'Patches' => 'ic/patch.png',
-        'Lists' => 'ic/mail.png',
-        'Tasks' => 'ic/index.png',
-        'Docs' => 'ic/docman.png',
-        'Files' => 'ic/save.png',
-        'Trackers' => 'ic/tracker20w.png',
-    ];
-
     public const string INCLUDE_FAT_COMBINED = 'include_fat_combined';
 
     /**
