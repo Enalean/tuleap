@@ -14,9 +14,6 @@ dependencies:
   '@tuleap/tlp-badge':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-badge
-  '@tuleap/tlp-dropdown':
-    specifier: workspace:*
-    version: link:../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-modal
