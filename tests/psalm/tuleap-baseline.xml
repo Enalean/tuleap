@@ -69113,26 +69113,6 @@
       <code><![CDATA[$title]]></code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/Search/Presenters/SearchForumResultPresenter.php">
-    <MissingReturnType>
-      <code><![CDATA[message_author]]></code>
-      <code><![CDATA[message_date]]></code>
-      <code><![CDATA[message_subject]]></code>
-      <code><![CDATA[message_uri]]></code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->message_author]]></code>
-      <code><![CDATA[$this->message_date]]></code>
-      <code><![CDATA[$this->message_id]]></code>
-      <code><![CDATA[$this->message_subject]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->message_author]]></code>
-      <code><![CDATA[$this->message_date]]></code>
-      <code><![CDATA[$this->message_id]]></code>
-      <code><![CDATA[$this->message_subject]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="src/common/Search/Presenters/SearchPanePresenter.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[! empty($search_types)]]></code>
@@ -69255,21 +69235,6 @@
       <code><![CDATA[index]]></code>
       <code><![CDATA[renderResults]]></code>
       <code><![CDATA[results]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchForum.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$results]]></code>
-      <code><![CDATA[$results]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$maybe_more_results]]></code>
-      <code><![CDATA[$words]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getResultsPresenters]]></code>
-      <code><![CDATA[getSearchForumResultPresenter]]></code>
-      <code><![CDATA[search]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/Search/SearchPeople.php">

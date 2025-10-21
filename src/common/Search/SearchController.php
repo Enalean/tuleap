@@ -20,7 +20,7 @@
 
 use Tuleap\Layout\FooterConfiguration;
 
-class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string DEFAULT_SEARCH = Search_SearchProject::NAME;
 
@@ -48,7 +48,6 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             Search_SearchTrackerV3::NAME => new Search_SearchTrackerV3(new ArtifactDao()),
             Search_SearchProject::NAME   => new Search_SearchProject(new ProjectDao()),
             Search_SearchPeople::NAME    => new Search_SearchPeople(UserManager::instance()),
-            Search_SearchForum::NAME     => new Search_SearchForum(new ForumDao()),
             Search_SearchWiki::NAME      => new Search_SearchWiki(new WikiDao()),
         ];
     }
