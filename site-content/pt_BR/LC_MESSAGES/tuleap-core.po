@@ -826,9 +826,6 @@ msgstr "Projetos Filhos"
 msgid "Choose a category…"
 msgstr "Escolha uma categoria..."
 
-msgid "Choose a forum First"
-msgstr "Escolha um Fórum primeiro"
-
 msgid "Choose a forum and you can browse, search, and post messages."
 msgstr "Escolha um fórum e você pode navegar, pesquisar e postar mensagens."
 
@@ -1285,12 +1282,6 @@ msgstr "Erro"
 
 msgid "Error - choose a forum first"
 msgstr "Erro - escolha primeiro um Fórum"
-
-msgid "Error inserting into forum_saved_place"
-msgstr "Erro ao inserir no forum_saved_place"
-
-msgid "Error updating time in forum_saved_place"
-msgstr "Erro no tempo de atualização no forum_saved_place"
 
 msgid "Error:"
 msgstr ""
@@ -1985,9 +1976,6 @@ msgstr ""
 
 msgid "New events"
 msgstr "Novos eventos"
-
-msgid "New messages will be highlighted when you return."
-msgstr "Novas mensagens serão destacadas quando você retornar."
 
 msgid "New password"
 msgstr "Nova senha"
@@ -2865,12 +2853,6 @@ msgstr "Os tokens SVN foram excluídos com sucesso"
 msgid "Save"
 msgstr "Gravar"
 
-msgid "Save Place"
-msgstr "Salvar Lugar"
-
-msgid "Save Your Place"
-msgstr "Grave o Seu Lugar"
-
 msgid "Save categories"
 msgstr "Gravar categorias"
 
@@ -2897,9 +2879,6 @@ msgstr "Gravar configurações"
 
 msgid "Save the link"
 msgstr "Gravar o link"
-
-msgid "Save your place"
-msgstr "Grave o seu lugar"
 
 msgid "Scope"
 msgstr "Escopo"
@@ -4653,9 +4632,6 @@ msgid "Your password will expire in %d day."
 msgid_plural "Your password will expire in %d days."
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Your place was saved"
-msgstr "O seu lugar foi gravado"
 
 msgid "Your platform does not allow restricted users."
 msgstr "A sua plataforma não permite usuários restritos."

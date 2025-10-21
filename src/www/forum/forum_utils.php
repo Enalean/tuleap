@@ -67,8 +67,6 @@ function forum_header(HeaderConfiguration $params)
     if ($params->printer_version) {
         $request = HTTPRequest::instance();
         if ($forum_id && user_isloggedin() && ! $request->exist('delete')) {
-            echo '<A HREF="/forum/save.php?forum_id=' . $forum_id . '">';
-            echo html_image('ic/save.png', []) . ' ' . _('Save Place') . '</A> | ';
             print ' <a href="forum.php?forum_id=' . $forum_id . '#start_new_thread">';
             echo html_image('ic/thread.png', []) . ' ' . _('Start New Thread') . '</A> | ';
             if (isset($msg_id) && $msg_id) {

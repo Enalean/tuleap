@@ -84447,24 +84447,6 @@
       <code><![CDATA[$poster]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/www/forum/save.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-    </DeprecatedFunction>
-  </file>
   <file src="src/www/help/index.php">
     <UndefinedGlobalVariable>
       <code><![CDATA[$HTML]]></code>

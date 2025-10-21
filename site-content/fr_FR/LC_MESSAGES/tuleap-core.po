@@ -849,9 +849,6 @@ msgstr "Projets enfants"
 msgid "Choose a category…"
 msgstr "Choisissez une catégorie…"
 
-msgid "Choose a forum First"
-msgstr "Veuillez d'abord choisir un forum"
-
 msgid "Choose a forum and you can browse, search, and post messages."
 msgstr ""
 "Choisissez un forum et vous pourrez le parcourir, effectuer une recherche et "
@@ -1316,12 +1313,6 @@ msgstr "Erreur"
 
 msgid "Error - choose a forum first"
 msgstr "Erreur - Veuillez d'abord choisir un forum"
-
-msgid "Error inserting into forum_saved_place"
-msgstr "Erreur lors de l'insertion dans forum_saved_place"
-
-msgid "Error updating time in forum_saved_place"
-msgstr "Erreur lors de la mise de la date et de l'heure dans forum_saved_place"
 
 msgid "Error:"
 msgstr "Erreur :"
@@ -2025,9 +2016,6 @@ msgstr ""
 
 msgid "New events"
 msgstr "Nouveaux événements"
-
-msgid "New messages will be highlighted when you return."
-msgstr "Les nouveaux messages seront mis en valeur lorsque vous reviendrez."
 
 msgid "New password"
 msgstr "Nouveau mot de passe"
@@ -2931,12 +2919,6 @@ msgstr "Les clés d'accès ont été supprimées avec succès"
 msgid "Save"
 msgstr "Enregistrer"
 
-msgid "Save Place"
-msgstr "Sauvegarder cette position"
-
-msgid "Save Your Place"
-msgstr "Sauvegarder cette position"
-
 msgid "Save categories"
 msgstr "Sauvegarder les catégories"
 
@@ -2963,9 +2945,6 @@ msgstr "Enregister"
 
 msgid "Save the link"
 msgstr "Enregister le lien"
-
-msgid "Save your place"
-msgstr "Sauvegarder cette position"
 
 msgid "Scope"
 msgstr "Portée"
@@ -4682,11 +4661,7 @@ msgid_plural ""
 "Your Tuleap subscription has expired. All accounts will be in read only mode "
 "in %d days. %s"
 msgstr[0] ""
-"Votre abonnement Tuleap a expiré. Tout les comptes vont passer en mode "
-"lecture seule dans %d jour. %s"
 msgstr[1] ""
-"Votre abonnement Tuleap a expiré. Tout les comptes vont passer en mode "
-"lecture seule dans %d jours. %s"
 
 #, php-format
 msgid ""
@@ -4778,9 +4753,6 @@ msgid_plural "Your password will expire in %d days."
 msgstr[0] "Votre mot de passe sera expiré dans %d jour."
 msgstr[1] "Votre mot de passe sera expiré dans %d jours."
 
-msgid "Your place was saved"
-msgstr "Position dans le forum sauvegardée"
-
 msgid "Your platform does not allow restricted users."
 msgstr "Votre plateforme n’autorise pas les utilisateurs restreints."
 
@@ -4794,8 +4766,6 @@ msgid ""
 "Your subscription has expired. Please contact your administrator to continue "
 "using Tuleap."
 msgstr ""
-"Votre abonnement a expiré. Merci de contacter votre administrateur pour "
-"continuer à utiliser Tuleap."
 
 msgid ""
 "Your web browser is no longer supported. Please upgrade to a modern, fully "
