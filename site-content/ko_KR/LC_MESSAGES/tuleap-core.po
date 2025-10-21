@@ -66,10 +66,6 @@ msgid "%1$s invited you to register to %2$s."
 msgstr "%1$s님이 사용자님을 %2$s에 등록하도록 초대했습니다."
 
 #, php-format
-msgid "%1$s message(s) deleted"
-msgstr "%1$s 메시지 삭제됨"
-
-#, php-format
 msgid "%1$s users will receive this email."
 msgstr "%1$s명의 유저들이 이 이메일을 받게됩니다."
 
@@ -1060,12 +1056,6 @@ msgstr "삭제"
 msgid "Delete %s"
 msgstr "%s 삭제"
 
-msgid "Delete Message"
-msgstr "메시지 삭제"
-
-msgid "Delete a message"
-msgstr "메시지 삭제"
-
 msgid "Delete binding"
 msgstr "바인딩 삭제"
 
@@ -1259,9 +1249,6 @@ msgid ""
 "behalf."
 msgstr ""
 "%s에 초대할 사람을 입력하세요. 사용자님을 대신해 초대 메일을 보내드립니다."
-
-msgid "Enter the Message ID"
-msgstr "메시지 ID를 입력하세요."
 
 msgid ""
 "Enter your login name below to receive a link allowing you to change your "
@@ -1877,12 +1864,6 @@ msgstr "메시지"
 
 msgid "Message from %s:"
 msgstr "%s에서 온 메시지:"
-
-msgid "Message is not in your group"
-msgstr "메시지가 그룹에 없습니다."
-
-msgid "Message not found"
-msgstr "메시지를 찾을 수 없음"
 
 msgid "Message sent to administrator should not be empty."
 msgstr "관리자에게 보낸 메시지는 비워 둘 수 없습니다."
@@ -4013,11 +3994,6 @@ msgstr "권장 브라우저 보기"
 
 msgid "Visibility"
 msgstr "공개 범위"
-
-msgid ""
-"WARNING! You are about to permanently delete a message and all of its "
-"followups!!"
-msgstr "경고! 메시지와 모든 후속 메시지를 영구적으로 삭제하려고 합니다."
 
 msgid "Warnings"
 msgstr "경고"

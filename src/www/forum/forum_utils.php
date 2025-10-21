@@ -284,30 +284,6 @@ function get_forum_saved_date($forum_id)
     }
 }
 
-function recursive_delete($msg_id, $forum_id)
-{
-    /*
-        Take a message id and recurse, deleting all followups
-    */
-
-    if ($msg_id == '' || $msg_id == '0' || (strlen($msg_id) < 1)) {
-        return 0;
-    }
-
-    $sql    = 'SELECT msg_id FROM forum WHERE is_followup_to=' . db_ei($msg_id) . ' AND group_forum_id=' . db_ei($forum_id);
-    $result = db_query($sql);
-    $rows   = db_numrows($result);
-    $count  = 1;
-
-    for ($i = 0; $i < $rows; $i++) {
-        $count += recursive_delete(db_result($result, $i, 'msg_id'), $forum_id);
-    }
-    $sql  = 'DELETE FROM forum WHERE msg_id=' . db_ei($msg_id) . ' AND group_forum_id=' . db_ei($forum_id);
-    $toss = db_query($sql);
-
-    return $count;
-}
-
 function forum_utils_access_allowed($forum_id)
 {
     $result = db_query('SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id));

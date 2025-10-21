@@ -68,10 +68,6 @@ msgid "%1$s invited you to register to %2$s."
 msgstr "%1$s lhe convidou para se registrar em %2$s."
 
 #, php-format
-msgid "%1$s message(s) deleted"
-msgstr "Mensagem(s) de %1$s excluída(s)"
-
-#, php-format
 msgid "%1$s users will receive this email."
 msgstr "Os usuários do %1$s receberão este email."
 
@@ -1089,12 +1085,6 @@ msgstr "Excluir"
 msgid "Delete %s"
 msgstr "Excluir %s"
 
-msgid "Delete Message"
-msgstr "Excluir mensagem"
-
-msgid "Delete a message"
-msgstr "Excluir uma mensagem"
-
 msgid "Delete binding"
 msgstr "Excluir vínculo"
 
@@ -1290,9 +1280,6 @@ msgid ""
 msgstr ""
 "Insira as pessoas que deseja convidar para %s. Nós enviaremos um email de "
 "convite em seu nome."
-
-msgid "Enter the Message ID"
-msgstr "Digite o ID da mensagem"
 
 msgid ""
 "Enter your login name below to receive a link allowing you to change your "
@@ -1921,12 +1908,6 @@ msgstr "Mensagem"
 
 msgid "Message from %s:"
 msgstr "Mensagem de %s:"
-
-msgid "Message is not in your group"
-msgstr "A mensagem não está no seu grupo"
-
-msgid "Message not found"
-msgstr "Mensagem não encontrada"
 
 msgid "Message sent to administrator should not be empty."
 msgstr "Mensagem enviada ao administrador não deve ser em branco."
@@ -4099,13 +4080,6 @@ msgstr "Ver navegadores recomendados"
 
 msgid "Visibility"
 msgstr "Visibilidade do projeto"
-
-msgid ""
-"WARNING! You are about to permanently delete a message and all of its "
-"followups!!"
-msgstr ""
-"ATENÇÃO! Você está prestes a excluir permanentemente uma mensagem e todos os "
-"seus andamentos!!"
 
 msgid "Warnings"
 msgstr "Avisos"
