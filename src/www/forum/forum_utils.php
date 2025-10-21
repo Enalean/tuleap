@@ -32,9 +32,6 @@
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
-use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\Layout\HeaderConfiguration;
 
 function forum_header(HeaderConfiguration $params)
@@ -52,17 +49,7 @@ function forum_header(HeaderConfiguration $params)
             $breadcrumb = new BreadCrumb(
                 new BreadCrumbLink($service_forum->getInternationalizedName(), $service_forum->getUrl())
             );
-            if (user_ismember($group_id, 'F2')) {
-                $admin_link = new BreadCrumbLink(
-                    _('Administration'),
-                    '/forum/admin/?group_id=' . urlencode((string) $group_id),
-                );
 
-                $sub_items = new BreadCrumbSubItems();
-                $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$admin_link])));
-
-                $breadcrumb->setSubItems($sub_items);
-            }
             $breadcrumb_collection = new BreadCrumbCollection();
             $breadcrumb_collection->addBreadCrumb($breadcrumb);
             $GLOBALS['HTML']->addBreadcrumbs($breadcrumb_collection);

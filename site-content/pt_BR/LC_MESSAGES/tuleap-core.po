@@ -810,9 +810,6 @@ msgstr ""
 msgid "Category short name cannot contain '::'."
 msgstr ""
 
-msgid "Change Forum Status"
-msgstr "Alterar o Status do Fórum"
-
 msgid "Change View"
 msgstr "Mudar visão"
 
@@ -1292,9 +1289,6 @@ msgstr "Erro"
 msgid "Error - choose a forum first"
 msgstr "Erro - escolha primeiro um Fórum"
 
-msgid "Error Updating Forum Info"
-msgstr "Erro ao Atualizar as Informações do Fórum"
-
 msgid "Error inserting into forum_saved_place"
 msgstr "Erro ao inserir no forum_saved_place"
 
@@ -1392,17 +1386,8 @@ msgstr "Forçar a criação de padrões de referência"
 msgid "Force usage?"
 msgstr "Forçar a utilização?"
 
-msgid "Forum"
-msgstr "Fórum"
-
 msgid "Forum Administration"
 msgstr "Administração do Fórum"
-
-msgid "Forum Info Updated Successfully"
-msgstr "Informações do Fórum Atualizadas com Sucesso"
-
-msgid "Forum Name"
-msgstr "Nome do Fórum"
 
 msgid "Forum is restricted"
 msgstr "Fórum é restrito"
@@ -1683,9 +1668,6 @@ msgstr "Convidar alguém para %s"
 msgid "Invited by"
 msgstr "Convidado por"
 
-msgid "Is Public?"
-msgstr "É público?"
-
 msgid "Is default?"
 msgstr "É padrão?"
 
@@ -1922,13 +1904,6 @@ msgid "Missing Information. PLEASE fill in all required information."
 msgstr ""
 "Faltam informações. POR FAVOR preencha todas as informações solicitadas."
 
-msgid ""
-"Missing forum name or description, please press the \"Back\" button and "
-"complete this information"
-msgstr ""
-"Falta o Nome ou Descrição do Fórum, por favor pressione o botão \"Voltar\" e "
-"complete esta informação"
-
 msgid "Moderation"
 msgstr "Moderação"
 
@@ -2045,9 +2020,6 @@ msgstr "Não"
 msgid "No Comments"
 msgstr "Sem Comentários"
 
-msgid "No Forums Found"
-msgstr "Não foram encontrados Fóruns"
-
 #, php-format
 msgid "No Messages in %1$s"
 msgstr "Sem Mensagens em %1$s"
@@ -2063,9 +2035,6 @@ msgstr "Não há projetos filhos"
 
 msgid "No email for user account"
 msgstr "Não há email para a conta deste usuário"
-
-msgid "No forum for this project"
-msgstr "Nenhum Fórum para este projeto"
 
 #, php-format
 msgid "No forums found for '%1$s'"
@@ -3860,12 +3829,6 @@ msgstr "Até 2 categorias podem ser utilizadas como flag."
 msgid "Update"
 msgstr "Atualizar"
 
-msgid "Update Forum Info/Status"
-msgstr "Atualizar Informações/Status do Fórum"
-
-msgid "Update Forum Status"
-msgstr "Atualizar status do Fórum"
-
 msgid "Update failed"
 msgstr "Falha na atualização"
 
@@ -4378,14 +4341,6 @@ msgstr ""
 
 msgid "You can include empty lines in the import file."
 msgstr "Você pode incluir linhas vazias no arquivo de importação."
-
-msgid ""
-"You can make forums private from here. Please note that private forums can "
-"still be viewed by members of your project, not the general public."
-msgstr ""
-"Você pode tornar os Fóruns privados a partir daqui. Note que os Fóruns "
-"privados ainda podem ser vistos pelos membros do seu projeto, não pelo "
-"público em geral."
 
 msgid ""
 "You can no longer invite people to use %1$s you have reached the limit of "
