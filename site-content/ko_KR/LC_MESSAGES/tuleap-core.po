@@ -802,9 +802,6 @@ msgstr "하위 프로젝트"
 msgid "Choose a category…"
 msgstr "카테고리 선택"
 
-msgid "Choose a forum First"
-msgstr "포럼 먼저 선택"
-
 msgid "Choose a forum and you can browse, search, and post messages."
 msgstr "포럼을 선택해 메시지를 찾아보고, 검색하고, 게시할 수 있습니다."
 
@@ -1254,12 +1251,6 @@ msgstr "오류"
 
 msgid "Error - choose a forum first"
 msgstr "오류 - 포럼을 먼저 선택하세요."
-
-msgid "Error inserting into forum_saved_place"
-msgstr "forum_saved_place에 삽입하는 중 오류 발생"
-
-msgid "Error updating time in forum_saved_place"
-msgstr "forum_saved_place에 시간 업데이트 중 오류 발생"
 
 msgid "Error:"
 msgstr "오류:"
@@ -1937,9 +1928,6 @@ msgstr ""
 
 msgid "New events"
 msgstr "새 이벤트"
-
-msgid "New messages will be highlighted when you return."
-msgstr "돌아오시면 새 메시지가 강조 표시됩니다."
 
 msgid "New password"
 msgstr "새 비밀번호"
@@ -2807,12 +2795,6 @@ msgstr "SVN 토큰이 성공적으로 삭제되었습니다."
 msgid "Save"
 msgstr "저장"
 
-msgid "Save Place"
-msgstr "장소 저장"
-
-msgid "Save Your Place"
-msgstr "장소 저장"
-
 msgid "Save categories"
 msgstr "카테고리 저장"
 
@@ -2839,9 +2821,6 @@ msgstr "설정 저장"
 
 msgid "Save the link"
 msgstr "링크 저장"
-
-msgid "Save your place"
-msgstr "장소 저장"
 
 msgid "Scope"
 msgstr "범위"
@@ -4517,9 +4496,6 @@ msgstr ""
 msgid "Your password will expire in %d day."
 msgid_plural "Your password will expire in %d days."
 msgstr[0] ""
-
-msgid "Your place was saved"
-msgstr "장소가 저장되었습니다."
 
 msgid "Your platform does not allow restricted users."
 msgstr "플랫폼에서 제한된 사용자를 허용하지 않습니다."
