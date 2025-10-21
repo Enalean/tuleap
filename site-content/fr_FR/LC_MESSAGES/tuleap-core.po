@@ -1941,9 +1941,6 @@ msgstr "Mois"
 msgid "Must be project admin to add a project member"
 msgstr "Doit être administrateur de projet pour ajouter un membre de projet"
 
-msgid "Must choose a message first"
-msgstr "Veuillez d'abord choisir un message"
-
 msgid "Must include a message body and subject"
 msgstr "Veuillez remplir le sujet et le corps du message"
 
@@ -4857,9 +4854,6 @@ msgstr "en attente"
 
 msgid "permissions"
 msgstr "permissions"
-
-msgid "reply"
-msgstr "répondre"
 
 msgid "restricted"
 msgstr "restreint"

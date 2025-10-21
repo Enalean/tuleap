@@ -84344,7 +84344,6 @@
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'subject')]]></code>
       <code><![CDATA[db_result($result, $i, 'thread_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'thread_id')]]></code>
@@ -84352,8 +84351,6 @@
       <code><![CDATA[db_result($result, $row, 'body')]]></code>
       <code><![CDATA[db_result($result, $row, 'date')]]></code>
       <code><![CDATA[db_result($result, $row, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, $row, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $row, 'subject')]]></code>
       <code><![CDATA[db_result($result, $row, 'user_name')]]></code>
       <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
@@ -84399,8 +84396,6 @@
       <code><![CDATA[db_result($result, $i, 'date')]]></code>
       <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'subject')]]></code>
       <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
@@ -84441,11 +84436,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$pv]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="src/www/forum/message.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$poster]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="src/www/help/index.php">
     <UndefinedGlobalVariable>
