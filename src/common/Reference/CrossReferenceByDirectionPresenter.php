@@ -71,4 +71,14 @@ final class CrossReferenceByDirectionPresenter
         );
         return $cross_references_nature;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'sources_by_nature' => array_map(static fn(CrossReferenceNaturePresenter $presenter) => $presenter->toArray(), $this->sources_by_nature),
+            'targets_by_nature' => array_map(static fn(CrossReferenceNaturePresenter $presenter) => $presenter->toArray(), $this->targets_by_nature),
+            'has_source'        => $this->has_source,
+            'has_target'        => $this->has_target,
+        ];
+    }
 }

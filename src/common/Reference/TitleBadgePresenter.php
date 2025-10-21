@@ -56,4 +56,13 @@ final class TitleBadgePresenter
     {
         return new self('', $color, $icon);
     }
+
+    public function toArray(): array
+    {
+        return [
+            'label' => $this->label,
+            'color' => $this->color,
+            'icon'  => $this->icon,
+        ];
+    }
 }

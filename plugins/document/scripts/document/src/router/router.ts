@@ -24,6 +24,7 @@ import ChildFolder from "../components/Folder/ChildFolder.vue";
 import DisplayEmbedded from "../components/EmbeddedDisplay/DisplayEmbedded.vue";
 import DisplayHistory from "../components/History/DisplayHistory.vue";
 import DisplayVersions from "../components/Versions/DisplayVersions.vue";
+import DisplayReferences from "../components/References/DisplayReferences.vue";
 import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
@@ -81,6 +82,14 @@ export const routes: RouteRecordRaw[] = [
         path: "/versions/:item_id",
         name: "versions",
         component: DisplayVersions,
+        props: (route) => ({
+            item_id: Number(route.params.item_id),
+        }),
+    },
+    {
+        path: "/references/:item_id",
+        name: "references",
+        component: DisplayReferences,
         props: (route) => ({
             item_id: Number(route.params.item_id),
         }),

@@ -57,4 +57,12 @@ final class CrossReferenceSectionPresenter
             )
         );
     }
+
+    public function toArray(): array
+    {
+        return [
+            'label'            => $this->label,
+            'cross_references' => array_map(static fn(CrossReferencePresenter $presenter) => $presenter->toArray(), $this->cross_references),
+        ];
+    }
 }

@@ -80,6 +80,16 @@
         <i class="fa-regular fa-fw fa-square-check tlp-dropdown-menu-item-icon"></i>
         <span>{{ $gettext("Approval tables") }}</span>
     </a>
+    <router-link
+        v-bind:to="{ name: 'references', params: { item_id: item.id } }"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        data-shortcut-references
+        data-test="document-references"
+    >
+        <i class="fa-solid fa-fw fa-list-ol tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+        <span>{{ $gettext("References") }}</span>
+    </router-link>
 
     <drop-down-separator v-if="item.user_can_write" />
 

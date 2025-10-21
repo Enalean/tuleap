@@ -148,4 +148,18 @@ final class CrossReferencePresenter
             new CreationMetadataPresenter($created_by, $created_on),
         );
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id'           => $this->id,
+            'title'        => $this->title,
+            'url'          => $this->url,
+            'delete_url'   => $this->delete_url,
+            'type'         => $this->type,
+            'target_gid'   => $this->target_gid,
+            'target_value' => $this->target_value,
+            'title_badge'  => $this->title_badge?->toArray(),
+        ];
+    }
 }

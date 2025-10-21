@@ -93,6 +93,9 @@ msgstr "Une erreur est survenue lors de la suppression de la version"
 msgid "An error occurred while loading logs"
 msgstr "Une erreur est survenue lors du chargement des logs"
 
+msgid "An error occurred while loading references"
+msgstr "Une erreur est survenue lors du chargement des références"
+
 msgid "An error occurred while searching for results."
 msgstr "Une erreur est survenue lors de la recherche."
 
@@ -598,6 +601,18 @@ msgstr "Lecteur"
 
 msgid "Recursion option"
 msgstr "Options de récursion"
+
+msgid "Referenced by document"
+msgstr "Référencé par le document"
+
+msgid "References"
+msgstr "Références"
+
+msgid "References list is empty"
+msgstr "Ce document n'est pas référencé, et n'est pas source de références"
+
+msgid "Referencing document"
+msgstr "Référence le document"
 
 msgid "Rejected"
 msgstr "Rejeté"
