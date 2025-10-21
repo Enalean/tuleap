@@ -387,10 +387,6 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             $this->appendUgroups($ugroups, $project, ProjectUGroup::WIKI_ADMIN);
         }
 
-        if ($member['forum_flags'] === UserPermissionsDao::FORUM_ADMIN_FLAG && $project->usesForum()) {
-            $this->appendUgroups($ugroups, $project, ProjectUGroup::FORUM_ADMIN);
-        }
-
         if (! $member['ugroups_ids']) {
             return $ugroups;
         }

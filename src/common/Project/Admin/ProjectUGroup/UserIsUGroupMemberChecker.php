@@ -66,8 +66,6 @@ class UserIsUGroupMemberChecker
                 return $this->user_permissions_dao->isUserPartOfProjectAdmins($project->getID(), $user->getId());
             case ProjectUGroup::WIKI_ADMIN:
                 return $this->user_permissions_dao->isUserPartOfWikiAdmins($project->getID(), $user->getId());
-            case ProjectUGroup::FORUM_ADMIN:
-                return $this->user_permissions_dao->isUserPartOfForumAdmins($project->getID(), $user->getId());
         }
     }
 }
