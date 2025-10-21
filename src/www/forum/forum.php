@@ -48,10 +48,6 @@ function forum_show_a_nested_message($result, $row = 0)
 		<TABLE BORDER="0" WIDTH="100%">
 			<TR>
               <TD class="thread" NOWRAP>' . _('By') . ': ' . UserHelper::instance()->getLinkOnUser($poster) .
-                    '<BR><A HREF="/forum/message.php?msg_id=' .
-                    db_result($result, $row, 'msg_id') . '">' .
-                    '<IMG SRC="' . util_get_image_theme('msg.png') . '" BORDER=0 HEIGHT=12 WIDTH=10> ' .
-                    db_result($result, $row, 'subject') . ' [ ' . _('reply') . ' ]</A> &nbsp; ' .
                     '<BR>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $row, 'date')) . '
                 </TD>
 
@@ -369,17 +365,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
                 $ret_val .= forum_show_a_nested_message($result, $i) . '<BR>';
             } else {
-                /*
-                 no-comments or threaded use the "old" colored-row style
-
-                 phorum-esque threaded list of messages,
-                 not showing message bodies
-                */
-
-                $ret_val .= '
-					<TR class="' . util_get_alt_row_color($total_rows) . '"><TD><A HREF="/forum/message.php?msg_id=' .
-                 db_result($result, $i, 'msg_id') . '">' .
-                 '<IMG SRC="' . util_get_image_theme('msg.png') . '" BORDER=0 HEIGHT=12 WIDTH=10> ';
                 /*
 
                  See if this message is new or not

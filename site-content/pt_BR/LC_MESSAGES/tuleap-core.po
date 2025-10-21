@@ -1903,9 +1903,6 @@ msgstr ""
 "É necessário ser um administrador do projeto para adicionar um membro ao "
 "projeto"
 
-msgid "Must choose a message first"
-msgstr "Deve escolher uma mensagem primeiro"
-
 msgid "Must include a message body and subject"
 msgstr "Deve incluir um corpo e um assunto de mensagem"
 
@@ -4734,9 +4731,6 @@ msgstr "pendente"
 
 msgid "permissions"
 msgstr "permissões"
-
-msgid "reply"
-msgstr "responder"
 
 msgid "restricted"
 msgstr "restrito"

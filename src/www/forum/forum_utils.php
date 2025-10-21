@@ -118,12 +118,6 @@ function show_submessages($thread_id, $msg_id, $level, $et = 0)
             }
 
          /*
-          If it this is the message being displayed, don't show a link to it
-         */
-            $ret_val .= (($current_message != db_result($result, $i, 'msg_id')) ?
-            '<A HREF="/forum/message.php?msg_id=' . db_result($result, $i, 'msg_id') . '">' : '') .
-            '<IMG SRC="' . util_get_image_theme('msg.png') . '" BORDER=0 HEIGHT=12 WIDTH=10> ';
-         /*
           See if this message is new or not
          */
             if (get_forum_saved_date($forum_id) < db_result($result, $i, 'date')) {

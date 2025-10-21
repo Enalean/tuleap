@@ -1856,9 +1856,6 @@ msgstr "월"
 msgid "Must be project admin to add a project member"
 msgstr "프로젝트 관리자만 프로젝트 멤버를 추가할 수 있습니다."
 
-msgid "Must choose a message first"
-msgstr "메시지를 먼저 선택해야 합니다."
-
 msgid "Must include a message body and subject"
 msgstr "메시지 본문과 제목을 포함해야 합니다."
 
@@ -4597,9 +4594,6 @@ msgstr "보류중"
 
 msgid "permissions"
 msgstr "권한"
-
-msgid "reply"
-msgstr "답글"
 
 msgid "restricted"
 msgstr "제한됨"
