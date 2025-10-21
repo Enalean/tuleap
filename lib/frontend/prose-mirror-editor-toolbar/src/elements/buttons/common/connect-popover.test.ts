@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi, beforeAll } from "vitest";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import { EVENT_TLP_POPOVER_HIDDEN } from "@tuleap/tlp-popovers";
@@ -30,6 +30,21 @@ vi.mock("@tuleap/tlp-popovers");
 
 describe("connect-popover", () => {
     let doc: Document;
+
+    beforeAll(() => {
+        // Good enough mock for the tests
+        global.ResizeObserver = class ResizeObserver {
+            observe(): void {
+                // do nothing
+            }
+            unobserve(): void {
+                // do nothing
+            }
+            disconnect(): void {
+                // do nothing
+            }
+        };
+    });
 
     beforeEach(() => {
         doc = createLocalDocument();
