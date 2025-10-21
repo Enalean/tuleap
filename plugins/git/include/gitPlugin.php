@@ -176,6 +176,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -265,7 +266,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook('cssfile', 'cssFile');
         $this->addHook('javascript_file', 'jsFile');
         $this->addHook(Event::JAVASCRIPT, 'javascript');
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
@@ -503,7 +503,8 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $event->addConfigClass(GitRepositoryBrowserController::class);
     }
 
-    public function cssFile($params)
+    #[ListeningToEventName('cssfile')]
+    public function cssFile($params): void
     {
         // Only show the stylesheet if we're actually in the Git pages.
         // This stops styles inadvertently clashing with the main site.

@@ -37,6 +37,7 @@ use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationSender;
 use Tuleap\Git\Hook\PostReceiveExecuteEvent;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\PullRequest\GetCreatePullRequest;
 
@@ -46,7 +47,7 @@ require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../../pullrequest/include/pullrequestPlugin.php';
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 {
     public function __construct($id)
@@ -65,7 +66,6 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
     #[Override]
     public function getHooksAndCallbacks()
     {
-        $this->addHook('cssfile');
         $this->addHook('javascript_file');
 
         if (defined('GIT_BASE_URL')) {
@@ -155,7 +155,8 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function cssfile()
+    #[ListeningToEventName('cssfile')]
+    public function cssfile(): void
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {

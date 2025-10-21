@@ -26,6 +26,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\AddMissingService;
@@ -39,7 +40,7 @@ use Tuleap\Hudson\Reference\HudsonCrossReferenceOrganizer;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
-class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Project\Service\PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Project\Service\PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public const string ICONS_PATH          = '/plugins/hudson/themes/default/images/ic/';
     public const string HUDSON_JOB_NATURE   = 'hudson_job';
@@ -52,7 +53,6 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         bindtextdomain('tuleap-hudson', __DIR__ . '/../site-content');
 
         $this->addHook('javascript_file', 'jsFile');
-        $this->addHook('cssfile', 'cssFile');
 
         $this->addHook(ProjectStatusUpdate::NAME);
 
@@ -122,7 +122,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         // nothing to do for hudson
     }
 
-    public function cssFile($params)
+    #[ListeningToEventName('cssfile')]
+    public function cssFile($params): void
     {
         // Only show the stylesheet if we're actually in the hudson pages.
         // This stops styles inadvertently clashing with the main site.

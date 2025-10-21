@@ -36,6 +36,7 @@ use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginInfo;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\BackendSVN;
@@ -45,7 +46,7 @@ use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\SvnAdmin;
 
-class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function __construct($id)
     {
@@ -54,7 +55,6 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
 
         bindtextdomain('tuleap-hudson_svn', __DIR__ . '/../site-content');
 
-        $this->addHook('cssfile');
         $this->addHook('javascript_file');
 
         $this->addHook('collect_ci_triggers');
@@ -88,7 +88,8 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
         return $this->pluginInfo;
     }
 
-    public function cssfile($params)
+    #[ListeningToEventName('cssfile')]
+    public function cssfile($params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('default-style.css') . '" />';
