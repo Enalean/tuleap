@@ -40005,9 +40005,6 @@
     <TooManyArguments>
       <code><![CDATA[searchById]]></code>
     </TooManyArguments>
-    <UndefinedConstant>
-      <code><![CDATA[__DIR____DIR__]]></code>
-    </UndefinedConstant>
     <UndefinedMethod>
       <code><![CDATA[getListValues]]></code>
       <code><![CDATA[getListValues]]></code>
@@ -84370,27 +84367,6 @@
       <code><![CDATA[$HTML]]></code>
       <code><![CDATA[$HTML]]></code>
     </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/forum/admin/index.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_affected_rows($result)]]></code>
-      <code><![CDATA[db_ei($group_forum_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($is_public)]]></code>
-      <code><![CDATA[db_es(htmlspecialchars($description))]]></code>
-      <code><![CDATA[db_es(htmlspecialchars($forum_name))]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($result, $i, 'description')]]></code>
-      <code><![CDATA[db_result($result, $i, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'group_forum_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'is_public')]]></code>
-      <code><![CDATA[db_result($result, $i, 'is_public')]]></code>
-      <code><![CDATA[db_result($result, $i, 'is_public')]]></code>
-    </DeprecatedFunction>
   </file>
   <file src="src/www/forum/forum.php">
     <DeprecatedFunction>
