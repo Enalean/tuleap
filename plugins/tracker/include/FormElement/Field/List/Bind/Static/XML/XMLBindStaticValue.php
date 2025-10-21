@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\List\Bind\BindStatic\XML;
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML;
 
 use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValue;
 use Tuleap\Tracker\FormElement\Field\List\XML\XMLDecorator;

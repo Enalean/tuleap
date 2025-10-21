@@ -63,11 +63,11 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
     private Transition|Stub $transition_1;
     private Transition|Stub $transition_2;
 
-    private \Tracker_FormElement_Field_List_Bind_StaticValue $test_value_1;
-    private \Tracker_FormElement_Field_List_Bind_StaticValue $test_value_2;
-    private \Tracker_FormElement_Field_List_Bind_StaticValue $test_value_3;
-    private \Tracker_FormElement_Field_List_Bind_StaticValue $test_value_4;
-    private \Tracker_FormElement_Field_List_Bind_StaticValue $value_from_artifact;
+    private \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue $test_value_1;
+    private \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue $test_value_2;
+    private \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue $test_value_3;
+    private \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue $test_value_4;
+    private \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue $value_from_artifact;
     private SelectboxField|Stub $field_changed;
     private SelectboxField|Stub $field_not_changed_1;
     private SelectboxField|Stub $field_not_changed_2;
@@ -125,7 +125,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         );
 
         $this->field_changed->method('getListValueById')->willReturnCallback(
-            fn (int $value_id): \Tracker_FormElement_Field_List_Bind_StaticValue => match ($value_id) {
+            fn (int $value_id): \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue => match ($value_id) {
                 self::ORIGINAL_FIELD_CHANGED_VALUE_ID => $this->value_from_artifact,
                 self::FIRST_VALUE_ID => $this->test_value_1,
                 self::SECOND_VALUE_ID => $this->test_value_2,
@@ -278,7 +278,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->workflow->method('isUsed')->willReturn(true);
 
         $this->field_changed->method('getListValueById')->willReturnCallback(
-            fn (int $field_id): \Tracker_FormElement_Field_List_Bind_StaticValue => match ($field_id) {
+            fn (int $field_id): \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue => match ($field_id) {
                 self::ORIGINAL_FIELD_CHANGED_VALUE_ID => $this->value_from_artifact,
                 self::FIRST_VALUE_ID => $this->test_value_1,
                 self::SECOND_VALUE_ID => $this->test_value_2,

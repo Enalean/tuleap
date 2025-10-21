@@ -28,7 +28,7 @@ use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker_FormElementFactory;
 use TrackerManager;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;

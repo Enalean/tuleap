@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 final class StatusValueMapper implements MapStatusByValue
 {
@@ -60,7 +60,7 @@ final class StatusValueMapper implements MapStatusByValue
 
     private function getMatchingValueByDuckTyping(
         BindValueLabel $source_label,
-        \Tuleap\Tracker\FormElement\Field\ListField $target_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $target_field,
     ): ?BindValueIdentifier {
         $lowercase_label = strtolower($source_label->getLabel());
         foreach ($target_field->getBind()->getAllValues() as $target_value) {

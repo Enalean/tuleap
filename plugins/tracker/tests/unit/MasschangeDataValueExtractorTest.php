@@ -25,7 +25,7 @@ namespace Tuleap\Tracker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tracker_FormElementFactory;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Masschange\MasschangeDataValueExtractor;

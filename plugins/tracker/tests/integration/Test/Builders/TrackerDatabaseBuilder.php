@@ -26,7 +26,7 @@ use ParagonIE\EasyDB\EasyDB;
 use Tracker_FormElementFactory;
 use Tuleap\Color\ColorName;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;

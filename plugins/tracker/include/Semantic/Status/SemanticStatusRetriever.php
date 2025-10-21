@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Tracker_FormElement_Field_List_Bind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 use Tuleap\Tracker\Tracker;
 
 final readonly class SemanticStatusRetriever implements RetrieveSemanticStatus
@@ -43,7 +43,7 @@ final readonly class SemanticStatusRetriever implements RetrieveSemanticStatus
 
         $open_values = $this->search_open_values->searchOpenValuesByFieldId($field->getId());
         if ($open_values === []) {
-            $open_values[] = Tracker_FormElement_Field_List_Bind::NONE_VALUE;
+            $open_values[] = ListFieldBind::NONE_VALUE;
         }
 
         return new TrackerSemanticStatus($tracker, $field, $open_values);

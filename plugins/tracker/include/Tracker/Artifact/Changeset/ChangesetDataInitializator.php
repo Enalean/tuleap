@@ -21,8 +21,8 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 
 class Tracker_Artifact_Changeset_ChangesetDataInitializator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {

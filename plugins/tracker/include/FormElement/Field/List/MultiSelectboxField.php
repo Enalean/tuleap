@@ -22,12 +22,11 @@
 namespace Tuleap\Tracker\FormElement\Field\List;
 
 use Override;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\MultiSelectboxFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
@@ -169,7 +168,7 @@ class MultiSelectboxField extends SelectboxField
     public function getFieldDataFromCSVValue($csv_value, ?Artifact $artifact = null)
     {
         if ($csv_value == null) {
-            return [Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID];
+            return [ListFieldStaticBindNoneValue::VALUE_ID];
         }
 
         return parent::getFieldDataFromCSVValue($csv_value, $artifact);
@@ -231,7 +230,7 @@ class MultiSelectboxField extends SelectboxField
     {
         $default_array = $this->getBind()->getDefaultValues();
         if (! $default_array) {
-            return [Tracker_FormElement_Field_List_Bind::NONE_VALUE];
+            return [ListFieldBind::NONE_VALUE];
         }
         return array_keys($default_array);
     }

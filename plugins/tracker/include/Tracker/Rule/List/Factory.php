@@ -18,6 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
+
 /**
 * Factory of rules
 *
@@ -122,7 +124,7 @@ class Tracker_Rule_List_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     $duplicate_source_field_id = $mapping['to'];
 
                     $mapping_values = $mapping['values'];
-                    if ((int) $source_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                    if ((int) $source_value_id === ListFieldStaticBindNoneValue::VALUE_ID) {
                         $duplicate_source_value_id = $source_value_id;
                     } else {
                         $duplicate_source_value_id = $mapping_values[$source_value_id];
@@ -132,7 +134,7 @@ class Tracker_Rule_List_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     $duplicate_target_field_id = $mapping['to'];
 
                     $mapping_values = $mapping['values'];
-                    if ((int) $target_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                    if ((int) $target_value_id === ListFieldStaticBindNoneValue::VALUE_ID) {
                         $duplicate_target_value_id = $target_value_id;
                     } else {
                         $duplicate_target_value_id = $mapping_values[$target_value_id];
@@ -162,13 +164,13 @@ class Tracker_Rule_List_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 $child = $list_rules->addChild('rule');
                 $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
                 $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
-                if ($rule->source_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                if ($rule->source_value == ListFieldStaticBindNoneValue::VALUE_ID) {
                     $child->addChild('source_value')->addAttribute('is_none', '1');
                 } else {
                     $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
                 }
 
-                if ($rule->target_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                if ($rule->target_value == ListFieldStaticBindNoneValue::VALUE_ID) {
                     $child->addChild('target_value')->addAttribute('is_none', '1');
                 } else {
                     $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));

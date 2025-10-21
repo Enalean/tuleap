@@ -28,7 +28,7 @@ use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticXmlExporter;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\NoneStaticValueBuilder;
 use XML_SimpleXMLCDATAFactory;

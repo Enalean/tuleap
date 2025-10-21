@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CardwallConfigXmlImport
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
+
+class CardwallConfigXmlImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var Cardwall_OnTop_ColumnMappingFieldValueDao
@@ -254,8 +256,8 @@ class CardwallConfigXmlImport
     {
         $xml_value_id = (string) $xml_value['value_id'];
 
-        if ($xml_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::XML_VALUE_ID) {
-            return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;
+        if ($xml_value_id === ListFieldStaticBindNoneValue::XML_VALUE_ID) {
+            return ListFieldStaticBindNoneValue::VALUE_ID;
         }
 
         if (isset($this->field_mapping[$xml_value_id])) {

@@ -24,14 +24,14 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use LogicException;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\NoBindDecoratorException;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindDecoratorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -46,7 +46,7 @@ final class BindDecoratorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $changeset;
     /** @var Tracker_FormElement_Field_List_BindDecorator */
     private $decorator;
-    /** @var Tracker_FormElement_Field_List_Bind_Static */
+    /** @var ListFieldStaticBind */
     private $bind_static;
 
     #[\Override]
@@ -60,7 +60,7 @@ final class BindDecoratorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset           = $this->createMock(Tracker_Artifact_Changeset::class);
         $this->changeset->method('getId')->willReturn(747);
         $this->decorator   = $this->createMock(Tracker_FormElement_Field_List_BindDecorator::class);
-        $this->bind_static = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind_static = $this->createMock(ListFieldStaticBind::class);
     }
 
     public function testItReturnsTheDecoratorForTheFirstValue(): void

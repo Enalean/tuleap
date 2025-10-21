@@ -20,10 +20,10 @@
 
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 
-final class BindStaticValueUnchanged extends Tracker_FormElement_Field_List_Bind_StaticValue
+final class BindStaticValueUnchanged extends ListFieldStaticBindValue
 {
     public const int VALUE_ID = -1;
 

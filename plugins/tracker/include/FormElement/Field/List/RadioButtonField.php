@@ -23,10 +23,10 @@ namespace Tuleap\Tracker\FormElement\Field\List;
 
 use Override;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use WorkflowFactory;
 
@@ -41,7 +41,7 @@ final class RadioButtonField extends SelectboxField
     #[Override]
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
     {
-        if ($value->getId() == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+        if ($value->getId() == ListFieldStaticBindNoneValue::VALUE_ID) {
             if ($this->isRequired()) {
                 return '';
             }

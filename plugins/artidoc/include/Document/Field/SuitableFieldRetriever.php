@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
-use Tracker_FormElement_Field_List_Bind_Null;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -37,7 +36,8 @@ use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -116,7 +116,7 @@ final readonly class SuitableFieldRetriever
 
         $bind_type = $field->getBind()?->getType();
 
-        if ($bind_type !== Tracker_FormElement_Field_List_Bind_Null::TYPE && $bind_type !== null) {
+        if ($bind_type !== ListFieldNullBind::TYPE && $bind_type !== null) {
             return Result::ok($field);
         }
 

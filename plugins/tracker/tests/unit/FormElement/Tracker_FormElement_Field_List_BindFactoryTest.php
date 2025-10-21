@@ -28,8 +28,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Project;
 use ProjectUGroup;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -38,6 +36,8 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -153,7 +153,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
         $factory = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory(), $this->createStub(UGroupManager::class), $logger);
 
         self::assertInstanceOf(
-            Tracker_FormElement_Field_List_Bind_Null::class,
+            ListFieldNullBind::class,
             $factory->getInstanceFromRow(['type' => 'unknown', 'field' => 'a_field_object'])
         );
         self::assertTrue($logger->hasWarningRecords());
@@ -268,7 +268,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
         self::assertTrue((bool) $values['F1-V0']->isHidden());
     }
 
-    protected function getListBindFactory(UGroupManager $ugroup_manager, Project $project, SimpleXMLElement $xml): Tracker_FormElement_Field_List_Bind
+    protected function getListBindFactory(UGroupManager $ugroup_manager, Project $project, SimpleXMLElement $xml): ListFieldBind
     {
         $bind_factory = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory(), $ugroup_manager);
 

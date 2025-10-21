@@ -17,14 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Option\Option;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
-use Tuleap\Tracker\FormElement\Field\ListField;
-use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field_List_Bind
+use SimpleXMLElement;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_Field_List_Value;
+use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
+use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use UserXMLExporter;
+
+class ListFieldNullBind extends ListFieldBind
 {
     public const string TYPE = 'null';
 
@@ -58,7 +64,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * Get the field data for artifact submission
      *
      * @param string $submitted_value
-     * @param bool   $is_multiple     if the value is multiple or not
+     * @param bool $is_multiple if the value is multiple or not
      *
      * @return mixed the field data corresponding to the alue for artifact submision
      */
@@ -351,7 +357,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     #[\Override]
     public function getBindValueById($bindvalue_id)
     {
-        return new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+        return new ListFieldStaticBindNoneValue();
     }
 
     /**

@@ -26,7 +26,7 @@ use Feedback;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Tracker;
 
 class TrackerRulesListValidator

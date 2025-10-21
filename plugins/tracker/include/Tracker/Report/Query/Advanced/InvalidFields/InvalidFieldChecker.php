@@ -82,7 +82,7 @@ final readonly class InvalidFieldChecker
         };
     }
 
-    private function checkOpenList(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\ListField $field): void
+    private function checkOpenList(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\List\ListField $field): void
     {
         if ($this->is_cross_tracker_search) {
             $this->openlist_field_checker->checkFieldIsValidForComparison($comparison, $field);

@@ -26,8 +26,8 @@ use Tuleap\Tracker\Artifact\Artifact;
 interface VerifyUserGroupValuesCanBeFullyMoved
 {
     public function canAllUserGroupFieldValuesBeMoved(
-        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
-        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $destination_field,
         Artifact $artifact,
         LoggerInterface $logger,
     ): bool;

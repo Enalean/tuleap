@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Value;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 
 /**
  * @psalm-immutable
@@ -78,12 +78,12 @@ class FormElementListValueAdminViewPresenter
     ) {
         $this->id                   = $value->getId();
         $this->label                = self::getListValueLabel($value);
-        $this->description          = ($value instanceof Tracker_FormElement_Field_List_Bind_StaticValue) ? $value->getDescription() : '';
+        $this->description          = ($value instanceof ListFieldStaticBindValue) ? $value->getDescription() : '';
         $this->is_hidden            = (bool) $value->isHidden();
         $this->value_can_be_hidden  = $value_can_be_hidden;
         $this->value_can_be_deleted = $value_can_be_deleted;
         $this->decorator            = $decorator;
-        $this->is_none_value        = (int) $value->getId() === Field\ListField::NONE_VALUE;
+        $this->is_none_value        = (int) $value->getId() === Field\List\ListField::NONE_VALUE;
         $this->is_custom_value      = $is_custom_value;
     }
 

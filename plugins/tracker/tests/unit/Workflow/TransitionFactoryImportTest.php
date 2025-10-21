@@ -28,7 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_RulesManager;
 use Tracker_Workflow_Trigger_RulesManager;
 use Transition_PostActionFactory;
@@ -36,6 +35,7 @@ use TransitionFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Workflow;
@@ -52,7 +52,7 @@ final class TransitionFactoryImportTest extends TestCase
 
     private Transition_PostActionFactory&MockObject $postaction_factory;
     private Project $project;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $to_value;
+    private ListFieldStaticBindValue $to_value;
     private array $xml_mapping;
 
     private Workflow_TransitionDao&MockObject $transition_dao;

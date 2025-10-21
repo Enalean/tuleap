@@ -23,15 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\List;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -63,7 +62,7 @@ final class SelectboxFieldTest extends TestCase
     public function testEmptyCSVStringIsRecognizedAsTheNoneValue(): void
     {
         $value = $this->field->getFieldDataFromCSVValue('');
-        self::assertEquals(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $value);
+        self::assertEquals(ListFieldStaticBindNoneValue::VALUE_ID, $value);
     }
 
     public function testCSVString100CanBeUsedAsACSVValue(): void
@@ -109,7 +108,7 @@ final class SelectboxFieldTest extends TestCase
 
     public function testGetFieldDataFromRESTValueThrowsExceptionIfValueIsUnknown(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind = $this->createMock(ListFieldBind::class);
         $bind->method('getFieldDataFromRESTValue')->willReturn(0);
         $this->field->setBind($bind);
 
@@ -119,7 +118,7 @@ final class SelectboxFieldTest extends TestCase
 
     public function testGetFieldDataFromRESTValueReturnsValue(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind = $this->createMock(ListFieldBind::class);
         $bind->method('getFieldDataFromRESTValue')->willReturn(112);
         $this->field->setBind($bind);
 
@@ -131,7 +130,7 @@ final class SelectboxFieldTest extends TestCase
 
     public function testGetFieldDataFromRESTValueReturnsValueForDynamicGroup(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind = $this->createMock(ListFieldBind::class);
         $bind->method('getFieldDataFromRESTValue')->willReturn(3);
         $this->field->setBind($bind);
 

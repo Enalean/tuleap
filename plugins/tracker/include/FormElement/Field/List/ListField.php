@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\FormElement\Field;
+namespace Tuleap\Tracker\FormElement\Field\List;
 
 use Codendi_HTMLPurifier;
 use Feedback;
@@ -31,10 +31,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElement_Field_List_BindValue;
@@ -53,11 +49,17 @@ use Tracker_Report_REST;
 use TransitionFactory;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueUnchanged;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 use Tuleap\Tracker\FormElement\Field\List\ItemsDataset\ItemsDatasetBuilder;
-use Tuleap\Tracker\FormElement\Field\List\ListValueDao;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
+use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
@@ -97,7 +99,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
     abstract public function isNone($value);
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind|null
+     * @return ListFieldBind|null
      * @psalm-ignore-nullable-return
      */
     public function getBind()
@@ -106,7 +108,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
             $dao          = new ListFieldSpecificPropertiesDAO();
             $bind_factory = $this->getBindFactory();
             $this->bind   = $dao->searchBindByFieldId($this->id)
-                ->mapOr(fn(string $bind_type): ?Tracker_FormElement_Field_List_Bind => $bind_factory->getBind($this, $bind_type), null);
+                ->mapOr(fn(string $bind_type): ?ListFieldBind => $bind_factory->getBind($this, $bind_type), null);
         }
         return $this->bind;
     }
@@ -403,7 +405,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
     public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria, array $xml_mapping): void
     {
         $bind = $this->getBind();
-        if (! $bind instanceof Tracker_FormElement_Field_List_Bind_Static) {
+        if (! $bind instanceof ListFieldStaticBind) {
             return;
         }
 
@@ -413,7 +415,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
             $criteria_value_node->addAttribute('type', 'list');
 
             foreach ($criteria_value as $value_id) {
-                if ($value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                if ($value_id == ListFieldStaticBindNoneValue::VALUE_ID) {
                     $criteria_value_node->addChild('none_value');
                 } else {
                     try {
@@ -441,7 +443,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
         SimpleXMLElement $xml_criteria_value,
         array $xml_field_mapping,
     ) {
-        if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static) {
+        if (! $this->getBind() instanceof ListFieldStaticBind) {
             return;
         }
 
@@ -458,13 +460,13 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
             }
 
             $field_value = $xml_field_mapping[$ref_value];
-            assert($field_value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
+            assert($field_value instanceof ListFieldStaticBindValue);
 
             $criteria_list_value[] = $field_value;
         }
 
         if (isset($xml_criteria_value->none_value)) {
-            $criteria_list_value[] = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            $criteria_list_value[] = new ListFieldStaticBindNoneValue();
         }
 
         if (count($criteria_list_value) > 0) {
@@ -476,7 +478,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
     #[Override]
     public function saveCriteriaValueFromXML(Tracker_Report_Criteria $criteria)
     {
-        if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static) {
+        if (! $this->getBind() instanceof ListFieldStaticBind) {
             return;
         }
 
@@ -491,7 +493,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
         $value_in_field_value     = $cache->get($criteria->getReport()->getId());
         $formatted_criteria_value = [];
         foreach ($value_in_field_value as $field_value) {
-            assert($field_value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
+            assert($field_value instanceof ListFieldStaticBindValue);
             $formatted_criteria_value[] = (int) $field_value->getId();
         }
 
@@ -553,11 +555,11 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
         $selected = count($criteria_value) && ! in_array('', $criteria_value) ? '' : 'selected="selected"';
         $html    .= '<option value="" ' . $selected . ' title="' . $GLOBALS['Language']->getText('global', 'any') . '">' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
         //None value
-        $selected = in_array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $criteria_value) ? 'selected="selected"' : '';
-        $styles   = $tracker_form_element_field_list_bind->getSelectOptionStyles(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+        $selected = in_array(ListFieldStaticBindNoneValue::VALUE_ID, $criteria_value) ? 'selected="selected"' : '';
+        $styles   = $tracker_form_element_field_list_bind->getSelectOptionStyles(ListFieldStaticBindNoneValue::VALUE_ID);
 
         $html .= $this->buildOptionHTML(
-            Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
+            ListFieldStaticBindNoneValue::VALUE_ID,
             $selected,
             $styles,
             $GLOBALS['Language']->getText('global', 'none')
@@ -758,7 +760,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
             return $this->getNoValueLabel();
         }
 
-        if (count($selected_values) === 1 && isset($selected_values[Tracker_FormElement_Field_List_Bind::NONE_VALUE])) {
+        if (count($selected_values) === 1 && isset($selected_values[ListFieldBind::NONE_VALUE])) {
             return $this->getNoValueLabel();
         }
 
@@ -943,7 +945,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
 
         if ($values) {
             if (! $this->isRequired()) {
-                $none   = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+                $none   = new ListFieldStaticBindNoneValue();
                 $values = [$none->getId() => $none] + $values;
             }
         }
@@ -1010,13 +1012,13 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
 
         $from = $this->getSelectedValue($selected_values);
         if ($from == null && ! isset($submitted_values_for_this_list)) {
-            $none_is_selected = isset($selected_values[Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID]);
+            $none_is_selected = isset($selected_values[ListFieldStaticBindNoneValue::VALUE_ID]);
         } else {
-            $none_is_selected = ($submitted_values_for_this_list == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+            $none_is_selected = ($submitted_values_for_this_list == ListFieldStaticBindNoneValue::VALUE_ID);
         }
 
         if (! $this->fieldHasEnableWorkflow()) {
-            $none_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            $none_value = new ListFieldStaticBindNoneValue();
             $html      .= $this->fetchFieldValue($none_value, $name, $none_is_selected);
         }
 
@@ -1073,7 +1075,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
     {
         $value_id  = $value->getId();
         $list_bind = $this->getBind();
-        if ($value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+        if ($value_id == ListFieldStaticBindNoneValue::VALUE_ID) {
             $label = $value->getLabel();
         } else {
             $label = $list_bind->formatArtifactValue($value_id);
@@ -1129,7 +1131,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
 
         $html .= '<option value="' . $purifier->purify(BindStaticValueUnchanged::VALUE_ID) . '" selected="selected">' .
                  $GLOBALS['Language']->getText('global', 'unchanged') . '</option>';
-        $html .= '<option value="' . Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID . '">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
+        $html .= '<option value="' . ListFieldStaticBindNoneValue::VALUE_ID . '">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
 
         foreach ($this->getBind()->getAllValues() as $id => $value) {
             if (! $value->isHidden()) {
@@ -1381,7 +1383,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
     public function getFieldData($value)
     {
         if ($value === $GLOBALS['Language']->getText('global', 'none')) {
-            return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;
+            return ListFieldStaticBindNoneValue::VALUE_ID;
         }
 
         $bind = $this->getBind();
@@ -1407,13 +1409,13 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
             $new_value = [$new_value];
         }
         if (empty($new_value)) {
-            $new_value = [Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID];
+            $new_value = [ListFieldStaticBindNoneValue::VALUE_ID];
         }
         if ($previous_changesetvalue) {
             $old_value = $previous_changesetvalue->getValue();
         }
         if (empty($old_value)) {
-            $old_value = [Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID];
+            $old_value = [ListFieldStaticBindNoneValue::VALUE_ID];
         }
         sort($old_value);
         sort($new_value);
@@ -1436,7 +1438,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
 
     protected function permission_is_authorized($type, $transition_id, $user_id, $group_id) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
+        include_once __DIR__ . '/../../../../../../src/www/project/admin/permissions.php';
 
         return permission_is_authorized($type, $transition_id, $user_id, $group_id);
     }
@@ -1485,7 +1487,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
     {
         $default_array = $this->getBind()->getDefaultValues();
         if (! $default_array) {
-            return [Tracker_FormElement_Field_List_Bind::NONE_VALUE];
+            return [ListFieldBind::NONE_VALUE];
         }
         return array_keys($default_array);
     }
@@ -1631,7 +1633,7 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
         if ($this->isMultiple()) {
             $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
         } else {
-            $none_value             = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            $none_value             = new ListFieldStaticBindNoneValue();
             $is_none_value_selected = count($default_values) === 0 ? 'selected="selected"' : '';
 
             $html .= '<select name="bind[default][]" class="bind_default_values">';

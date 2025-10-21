@@ -44,7 +44,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
     private TaskOutOfDateDetector $detector;
     private MockObject&\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus $semantic_status;
     private Artifact $artifact;
-    private \Tuleap\Tracker\FormElement\Field\ListField&MockObject $status_field;
+    private \Tuleap\Tracker\FormElement\Field\List\ListField&MockObject $status_field;
     private LoggerInterface&MockObject $logger;
     private \PFUser $user;
     private MockObject&TimeframeWithEndDate $timeframe_calculator;
@@ -59,7 +59,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(150)->build();
 
-        $this->status_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
+        $this->status_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
         $this->logger       = $this->createMock(LoggerInterface::class);
         $this->user         = UserTestBuilder::aUser()->build();
 

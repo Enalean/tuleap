@@ -51,7 +51,7 @@ final class SemanticStatusFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-    public function getStatusField(): ?\Tuleap\Tracker\FormElement\Field\ListField
+    public function getStatusField(): ?\Tuleap\Tracker\FormElement\Field\List\ListField
     {
         $tracker = TrackerTestBuilder::aTracker()->build();
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Color\ColorName;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -36,8 +37,8 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
     private Artifact $artifact;
     private SelectboxField $trigger_field_task;
     private SelectboxField $trigger_field_bug;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $trigger_value_task;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $trigger_value_bug;
+    private ListFieldStaticBindValue $trigger_value_task;
+    private ListFieldStaticBindValue $trigger_value_bug;
     private Tracker $task_tracker;
     private Tracker $bug_tracker;
     private Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy $strategy;

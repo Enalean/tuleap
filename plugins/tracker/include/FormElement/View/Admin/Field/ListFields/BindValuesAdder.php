@@ -22,19 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\View\Admin\Field\ListFields;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 
 class BindValuesAdder
 {
     /**
-     * @param Tracker_FormElement_Field_List_Bind_StaticValue[] $values
+     * @param ListFieldStaticBindValue[] $values
      *
-     * @return Tracker_FormElement_Field_List_Bind_StaticValue[]
+     * @return ListFieldStaticBindValue[]
      */
     public function addNoneValue(array $values): array
     {
-        $none_value = [new Tracker_FormElement_Field_List_Bind_StaticValue_None()];
+        $none_value = [new ListFieldStaticBindNoneValue()];
         return array_merge($none_value, $values);
     }
 }

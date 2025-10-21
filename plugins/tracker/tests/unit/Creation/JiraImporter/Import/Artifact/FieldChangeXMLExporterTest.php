@@ -28,7 +28,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -49,6 +48,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\Import\Artifact\GetExistingArtifactLinkTypesStub;
 use Tuleap\Tracker\Test\Stub\XML\IDGeneratorStub;
 use UserManager;
@@ -229,7 +229,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Fsb',
             'sb',
             'sb',
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id,
@@ -278,7 +278,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Fsb',
             'sb',
             'sb',
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
 
@@ -320,7 +320,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Frb',
             'rb',
             'rb',
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id,
@@ -372,7 +372,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Fmsb',
             'msb',
             'msb',
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id_1,
@@ -436,7 +436,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Fcb',
             'cb',
             'cb',
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id_1,
@@ -498,7 +498,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Fstatus',
             'status',
             'sb',
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
                     $jira_value_id,
@@ -876,7 +876,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Flabels',
             'labels',
             'tbl',
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
                     0,
@@ -924,7 +924,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Flabels',
             'labels',
             'tbl',
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [
                 JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
                     0,

@@ -27,8 +27,8 @@ use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 
 class ReportCriteriaJsonBuilder
 {

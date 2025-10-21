@@ -69,7 +69,7 @@ final readonly class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDa
     private function hasBeenClosedMoreThanOneYearAgo(
         Artifact $artifact,
         \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus $semantic_status,
-        \Tuleap\Tracker\FormElement\Field\ListField $status_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $status_field,
         DateTimeImmutable $now,
         \PFUser $user,
         TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection,

@@ -30,7 +30,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use Tuleap\Tracker\Tracker;
 

@@ -25,12 +25,12 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -63,7 +63,7 @@ final class ListFieldChangeInitialValueRetrieverTest extends TestCase
                 'Fstatus',
                 'status',
                 'sb',
-                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                ListFieldStaticBind::TYPE,
                 [],
             )
         );

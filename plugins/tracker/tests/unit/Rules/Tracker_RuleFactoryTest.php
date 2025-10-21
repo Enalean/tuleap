@@ -30,7 +30,7 @@ use Tracker_Rule_List_Dao;
 use Tracker_Rule_List_Factory;
 use Tracker_RuleDao;
 use Tracker_RuleFactory;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;

@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\View\Admin\Field\ListFields;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
@@ -51,9 +51,9 @@ final class BindValuesAdderTest extends TestCase
 
         $result = $this->adder->addNoneValue([$value]);
 
-        $expected_values = [new Tracker_FormElement_Field_List_Bind_StaticValue_None(), $value];
+        $expected_values = [new ListFieldStaticBindNoneValue(), $value];
 
-        self::assertInstanceOf(Tracker_FormElement_Field_List_Bind_StaticValue_None::class, $expected_values[0]);
+        self::assertInstanceOf(ListFieldStaticBindNoneValue::class, $expected_values[0]);
         self::assertSame($expected_values[1], $result[1]);
     }
 }

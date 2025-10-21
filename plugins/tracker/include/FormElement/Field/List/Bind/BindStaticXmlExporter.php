@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use XML_SimpleXMLCDATAFactory;
 
 final readonly class BindStaticXmlExporter
@@ -33,7 +33,7 @@ final readonly class BindStaticXmlExporter
     }
 
     /**
-     * @param Tracker_FormElement_Field_List_Bind_StaticValue[] $values
+     * @param ListFieldStaticBindValue[] $values
      * @param Tracker_FormElement_Field_List_BindDecorator[]|null $decorators
      * @param array|null $default_values
      */

@@ -33,7 +33,7 @@ final class StatusFieldReferenceProxy implements StatusFieldReference
     {
     }
 
-    public static function fromTrackerField(\Tuleap\Tracker\FormElement\Field\ListField $field): self
+    public static function fromTrackerField(\Tuleap\Tracker\FormElement\Field\List\ListField $field): self
     {
         return new self($field->getId(), $field->getLabel());
     }

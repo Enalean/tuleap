@@ -26,13 +26,12 @@ use PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use TrackerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
@@ -229,7 +228,7 @@ final class MultiSelectboxFieldTest extends TestCase
 
     public function testGetFieldDataFromRESTValueThrowsExceptionIfValueIsUnknown(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind = $this->createMock(ListFieldBind::class);
         $bind->method('getFieldDataFromRESTValue')->willReturn(0);
         $this->field->setBind($bind);
 
@@ -239,7 +238,7 @@ final class MultiSelectboxFieldTest extends TestCase
 
     public function testGetFieldDataFromRESTValueReturnsValue(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind = $this->createMock(ListFieldBind::class);
         $bind->method('getFieldDataFromRESTValue')->willReturn(112);
         $this->field->setBind($bind);
 
@@ -251,7 +250,7 @@ final class MultiSelectboxFieldTest extends TestCase
 
     public function testGetFieldDataFromRESTValueReturnsValueForDynamicGroup(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind = $this->createMock(ListFieldBind::class);
         $bind->method('getFieldDataFromRESTValue')->willReturn(3);
         $this->field->setBind($bind);
 
@@ -263,7 +262,7 @@ final class MultiSelectboxFieldTest extends TestCase
 
     public function testGetFieldDataFromRESTValueReturnsMultipleValues(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind = $this->createMock(ListFieldBind::class);
         $this->field->setBind($bind);
         $bind->method('getFieldDataFromRESTValue')->willReturnCallback(static fn(string $value) => match ($value) {
             '103_3' => 3,

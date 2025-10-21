@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue;
 
 final class ListUserValueBuilder
 {
@@ -42,7 +42,7 @@ final class ListUserValueBuilder
 
     public static function noneUser(): self
     {
-        return new self(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+        return new self(ListFieldStaticBindNoneValue::VALUE_ID);
     }
 
     public function withDisplayedName(string $displayed_name): self

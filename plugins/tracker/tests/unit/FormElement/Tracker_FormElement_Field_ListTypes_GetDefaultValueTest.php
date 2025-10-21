@@ -25,25 +25,25 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
-    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
+    private ListFieldStaticBind&MockObject $bind;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind = $this->createMock(ListFieldStaticBind::class);
     }
 
     public function testSelectBoxWithOneValue(): void
@@ -63,7 +63,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = SelectboxFieldBuilder::aSelectboxField(456)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(ListFieldBind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testSelectBoxWithNoValue(): void
@@ -73,7 +73,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = SelectboxFieldBuilder::aSelectboxField(456)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(ListFieldBind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testMultiSelectBoxWithOneValue(): void
@@ -103,7 +103,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = MultiSelectboxFieldBuilder::aMultiSelectboxField(789)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals([Tracker_FormElement_Field_List_Bind::NONE_VALUE], $field->getDefaultValue());
+        self::assertEquals([ListFieldBind::NONE_VALUE], $field->getDefaultValue());
     }
 
     public function testRadioWithOneValue(): void
@@ -123,7 +123,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = RadioButtonFieldBuilder::aRadioButtonField(963)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(ListFieldBind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testRadioWithNoValue(): void
@@ -133,7 +133,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = RadioButtonFieldBuilder::aRadioButtonField(963)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(ListFieldBind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testCheckboxWithOneValue(): void
@@ -163,7 +163,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = CheckboxFieldBuilder::aCheckboxField(852)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals([Tracker_FormElement_Field_List_Bind::NONE_VALUE], $field->getDefaultValue());
+        self::assertEquals([ListFieldBind::NONE_VALUE], $field->getDefaultValue());
     }
 
     public function testOpenListWithOneValue(): void
@@ -203,7 +203,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = SubmittedByFieldBuilder::aSubmittedByField(458)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(ListFieldBind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testSubmittedByWithMultipleValues(): void
@@ -213,7 +213,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = SubmittedByFieldBuilder::aSubmittedByField(458)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(ListFieldBind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testSubmittedByWithNoValue(): void
@@ -223,6 +223,6 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
         $field = SubmittedByFieldBuilder::aSubmittedByField(458)->build();
         $field->setBind($this->bind);
 
-        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(ListFieldBind::NONE_VALUE, $field->getDefaultValue());
     }
 }

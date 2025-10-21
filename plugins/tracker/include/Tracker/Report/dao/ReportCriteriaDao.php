@@ -96,7 +96,7 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                     break;
                 }
 
-                if ((int) $row['value'] === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                if ((int) $row['value'] === \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue::VALUE_ID) {
                     return $row['value'];
                 }
                 return $mapping['values'][$row['value']] ?? null;

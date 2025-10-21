@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
@@ -34,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedVal
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class XmlReportDoneIssuesExporterTest extends TestCase
@@ -76,7 +76,7 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
 
@@ -87,7 +87,7 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            ListFieldStaticBind::TYPE,
             [],
         );
 

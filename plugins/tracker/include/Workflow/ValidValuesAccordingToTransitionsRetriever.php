@@ -34,7 +34,7 @@ class ValidValuesAccordingToTransitionsRetriever
 
     public function getValidValuesAccordingToTransitions(
         Artifact $artifact,
-        \Tuleap\Tracker\FormElement\Field\ListField $field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $field,
         BindValueIdCollection $list_of_values,
         Workflow $workflow,
         PFUser $user,

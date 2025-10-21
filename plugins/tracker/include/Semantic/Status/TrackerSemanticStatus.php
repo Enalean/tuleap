@@ -28,14 +28,14 @@ use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\SemanticStatusRepresentation;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
@@ -473,7 +473,7 @@ class TrackerSemanticStatus extends TrackerSemantic
     {
         $bindType = $this->list_field?->getBind()->getType();
 
-        return ($bindType == Tracker_FormElement_Field_List_Bind_Static::TYPE);
+        return ($bindType == ListFieldStaticBind::TYPE);
     }
 
     public function isBasedOnASharedField()

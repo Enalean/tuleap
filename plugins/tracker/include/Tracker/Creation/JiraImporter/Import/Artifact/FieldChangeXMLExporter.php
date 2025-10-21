@@ -186,8 +186,8 @@ class FieldChangeXMLExporter
             if (! $mapping instanceof ListFieldMapping) {
                 throw new \RuntimeException('Mapping type ' . $mapping->getType() . ' must be a ' . ListFieldMapping::class);
             }
-            if ($mapping->getBindType() !== \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
-                throw new \RuntimeException('Bind type ' . $mapping->getBindType() . ' must only be ' . \Tracker_FormElement_Field_List_Bind_Static::TYPE . ' for OpenList fields.');
+            if ($mapping->getBindType() !== \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE) {
+                throw new \RuntimeException('Bind type ' . $mapping->getBindType() . ' must only be ' . \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE . ' for OpenList fields.');
             }
 
             if (is_string($value)) {

@@ -26,7 +26,7 @@ namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Bar;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase

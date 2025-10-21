@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 
 final class NoneStaticValueBuilder
 {
-    public static function build(): Tracker_FormElement_Field_List_Bind_StaticValue
+    public static function build(): ListFieldStaticBindValue
     {
-        return new \Tracker_FormElement_Field_List_Bind_StaticValue_None();
+        return new \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindNoneValue();
     }
 }

@@ -24,15 +24,15 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
@@ -42,7 +42,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
 {
     private Tracker_FormElement_Field_List_BindValue&MockObject $value_2;
     private Tracker_FormElement_Field_List_BindValue&MockObject $value_1;
-    private Tracker_FormElement_Field_List_Bind&MockObject $bind;
+    private ListFieldBind&MockObject $bind;
     private ListField $field;
 
     #[\Override]
@@ -50,7 +50,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
     {
         $decorator   = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 0, 0, 0, 'inca-silver');
         $this->field = SelectboxFieldBuilder::aSelectboxField(42)->build();
-        $this->bind  = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Static::class)
+        $this->bind  = $this->getMockBuilder(ListFieldStaticBind::class)
             ->setConstructorArgs([new DatabaseUUIDV7Factory(), $this->field, '', [], [], $decorator])
             ->onlyMethods(['getAllValues', 'getAllVisibleValues'])
             ->getMock();

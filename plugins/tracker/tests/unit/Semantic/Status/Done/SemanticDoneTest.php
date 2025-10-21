@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -34,9 +34,9 @@ final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
     private SemanticDoneDao&MockObject $dao;
     private \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus&MockObject $semantic_status;
     private Tracker $tracker;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $done_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $on_going_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $to_do_value;
+    private ListFieldStaticBindValue $done_value;
+    private ListFieldStaticBindValue $on_going_value;
+    private ListFieldStaticBindValue $to_do_value;
 
     #[\Override]
     protected function setUp(): void
@@ -58,7 +58,7 @@ final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
             2,
         ]);
 
-        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\ListField::class);
 
         $field->method('getId')->willReturn(101);
         $field->method('getAllVisibleValues')->willReturn([

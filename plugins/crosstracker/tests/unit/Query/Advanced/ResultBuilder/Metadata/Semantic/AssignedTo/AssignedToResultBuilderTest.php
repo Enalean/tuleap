@@ -21,13 +21,13 @@
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Tracker_FormElement_Field_List_Bind;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
@@ -111,7 +111,7 @@ final class AssignedToResultBuilderTest extends TestCase
 
     public function testItDoesNothingWhenAssignedToIsForNoneUser(): void
     {
-        $select_results = [['id' => 41, '@assigned_to' => Tracker_FormElement_Field_List_Bind::NONE_VALUE]];
+        $select_results = [['id' => 41, '@assigned_to' => ListFieldBind::NONE_VALUE]];
         $builder        = new AssignedToResultBuilder($this->user_retriever, $this->user_helper, $this->retrieve_artifact);
         $this->setSemanticContributorWithUserCanRead(true);
 

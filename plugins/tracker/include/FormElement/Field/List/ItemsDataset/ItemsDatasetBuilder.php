@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\List\ItemsDataset;
 
 use Tracker_FormElement_Field_List_Value;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 final class ItemsDatasetBuilder
 {

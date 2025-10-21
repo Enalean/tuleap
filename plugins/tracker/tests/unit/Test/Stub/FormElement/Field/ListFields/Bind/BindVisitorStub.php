@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\Bind;
 
-use Tracker_FormElement_Field_List_Bind_Null;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
 
 final readonly class BindVisitorStub implements BindVisitor
 {
@@ -42,7 +42,7 @@ final readonly class BindVisitorStub implements BindVisitor
     }
 
     #[\Override]
-    public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters): mixed
+    public function visitListBindStatic(ListFieldStaticBind $bind, BindParameters $parameters): mixed
     {
         return $this->result;
     }
@@ -60,7 +60,7 @@ final readonly class BindVisitorStub implements BindVisitor
     }
 
     #[\Override]
-    public function visitListBindNull(Tracker_FormElement_Field_List_Bind_Null $bind, BindParameters $parameters): mixed
+    public function visitListBindNull(ListFieldNullBind $bind, BindParameters $parameters): mixed
     {
         return $this->result;
     }

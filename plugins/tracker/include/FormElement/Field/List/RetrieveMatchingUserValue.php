@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\FormElement\Field\List;
 
 use SimpleXMLElement;
-use Tuleap\Tracker\FormElement\Field\ListField;
 
 interface RetrieveMatchingUserValue
 {

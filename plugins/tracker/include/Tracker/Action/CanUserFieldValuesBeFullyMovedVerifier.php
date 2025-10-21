@@ -36,8 +36,8 @@ final class CanUserFieldValuesBeFullyMovedVerifier implements VerifyUserFieldVal
 
     #[\Override]
     public function canAllUserFieldValuesBeMoved(
-        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
-        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\ListField $destination_field,
         Artifact $artifact,
         LoggerInterface $logger,
     ): bool {

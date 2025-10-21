@@ -26,7 +26,6 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
@@ -45,8 +44,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\DefaultLinkTypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\LinkDirection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -241,7 +241,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
         StringField $title_field,
         ?string $title,
         ListField $status_field,
-        ?Tracker_FormElement_Field_List_Bind_StaticValue $status_value,
+        ?ListFieldStaticBindValue $status_value,
     ): Artifact {
         $changeset = ChangesetTestBuilder::aChangeset(853)->build();
         $changeset->setFieldValue(

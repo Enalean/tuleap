@@ -27,7 +27,7 @@ use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\List\ListField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap\Test\PHPUnit\TestCase

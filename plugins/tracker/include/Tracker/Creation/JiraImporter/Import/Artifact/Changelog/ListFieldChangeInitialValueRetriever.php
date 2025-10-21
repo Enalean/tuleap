@@ -55,7 +55,7 @@ class ListFieldChangeInitialValueRetriever
         string $changed_field_from,
         FieldMapping $field_mapping,
     ) {
-        if ($field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
+        if ($field_mapping->getBindType() === \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE) {
             return $this->creation_state_list_value_formatter->formatListValue(
                 $changed_field_from,
             );

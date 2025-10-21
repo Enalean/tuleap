@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\REST\v1;
 use ForgeConfig;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tracker_REST_FormElementRepresentation;
 use Tuleap\DB\DBFactory;
@@ -37,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\Files\Upload\EmptyFileToUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\FileToUploadCreator;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\UploadPathAllocator;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use UserManager;
 
@@ -109,7 +109,7 @@ class TrackerFieldsResource extends AuthenticatedResource
             throw new RestException(400, 'Field is not a simple list.');
         }
 
-        if (! is_a($field->getBind(), Tracker_FormElement_Field_List_Bind_Static::class)) {
+        if (! is_a($field->getBind(), ListFieldStaticBind::class)) {
             throw new RestException(400, 'Field values can be only add with static values.');
         }
 
