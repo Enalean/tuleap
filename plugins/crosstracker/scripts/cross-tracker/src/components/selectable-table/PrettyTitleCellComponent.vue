@@ -82,13 +82,14 @@ import {
 } from "../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
-import type { ArrowDataEntry } from "../../domain/ArrowDataStore";
+import type { ArrowDataEntry, ArrowDataStore } from "../../domain/ArrowDataStore";
 import { loadTooltips } from "@tuleap/tooltip";
+import type { TableDataStore } from "../../domain/TableDataStore";
 
 const dashboard_id = strictInject(DASHBOARD_ID);
 const dashboard_type = strictInject(DASHBOARD_TYPE);
-const table_data_store = strictInject(TABLE_DATA_STORE);
-const arrow_data_store = strictInject(ARROW_DATA_STORE);
+const table_data_store: TableDataStore = strictInject(TABLE_DATA_STORE);
+const arrow_data_store: ArrowDataStore = strictInject(ARROW_DATA_STORE);
 
 const { $gettext } = useGettext();
 

@@ -36,7 +36,7 @@ describe("ArtifactsLinksRetriever", () => {
     const artifact_id = 34;
 
     const getRetriever = (): RetrieveArtifactLinks => {
-        return ArtifactLinksRetriever(ArtifactsTableBuilder());
+        return ArtifactLinksRetriever(widget_id, ArtifactsTableBuilder());
     };
 
     it.each([
@@ -79,7 +79,6 @@ describe("ArtifactsLinksRetriever", () => {
                 .mockReturnValue(okAsync([query_content]));
 
             const result = await retriever_call(
-                widget_id,
                 artifact_id,
                 'SELECT @pretty_title FROM @project="self"',
             );
@@ -94,11 +93,9 @@ describe("ArtifactsLinksRetriever", () => {
                 throw Error("Expected an Ok");
             }
             result.match(
-                (artifacts: ArtifactsTable[]) => {
-                    artifacts.forEach((artifact) => {
-                        expect(artifact.columns).toHaveLength(2);
-                        expect(artifact.rows).toHaveLength(2);
-                    });
+                (artifacts: ArtifactsTable) => {
+                    expect(artifacts.columns).toHaveLength(2);
+                    expect(artifacts.rows).toHaveLength(2);
                 },
                 (error) => {
                     throw new Error(`Unexpected error: ${error}`);
@@ -151,7 +148,6 @@ describe("ArtifactsLinksRetriever", () => {
             );
 
             const result = await retriever_call(
-                widget_id,
                 artifact_id,
                 'SELECT @pretty_title FROM @project="self"',
             );

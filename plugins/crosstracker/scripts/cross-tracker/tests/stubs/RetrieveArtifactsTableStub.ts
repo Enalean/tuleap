@@ -31,7 +31,7 @@ import { ArtifactRowBuilder } from "../builders/ArtifactRowBuilder";
 export const RetrieveArtifactsTableStub = {
     withContent(
         query_table_with_total: ArtifactsTableWithTotal,
-        report_table_with_all_artifact: ReadonlyArray<ArtifactsTable>,
+        report_table_with_all_artifact: ArtifactsTable,
     ): RetrieveArtifactsTable {
         return {
             getSelectableQueryResult: () => okAsync(query_table_with_total),
@@ -63,6 +63,6 @@ export const RetrieveArtifactsTableStub = {
             table,
             total: 1,
         };
-        return RetrieveArtifactsTableStub.withContent(table_result, [table_result.table]);
+        return RetrieveArtifactsTableStub.withContent(table_result, table_result.table);
     },
 };

@@ -114,9 +114,10 @@ import TextCell from "./TextCell.vue";
 import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
 import type { ToggleLinks } from "../../helpers/ToggleLinksEmit";
 import LinkTypeCellComponent from "./LinkTypeCellComponent.vue";
+import type { IntlFormatter } from "@tuleap/date-helper/src/IntlFormatter";
 
-const date_formatter = strictInject(DATE_FORMATTER);
-const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
+const date_formatter: IntlFormatter = strictInject(DATE_FORMATTER);
+const date_time_formatter: IntlFormatter = strictInject(DATE_TIME_FORMATTER);
 
 const props = defineProps<{
     uuid: string;

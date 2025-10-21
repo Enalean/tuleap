@@ -32,13 +32,16 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
-import { RETRIEVE_ARTIFACT_LINKS, TABLE_DATA_STORE, WIDGET_ID } from "../../injection-symbols";
+import { TABLE_DATA_ORCHESTRATOR, TABLE_DATA_STORE } from "../../injection-symbols";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import RowArtifact from "./RowArtifact.vue";
 import SelectableCell from "./SelectableCell.vue";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import LoadAllButton from "../feedback/LoadAllButton.vue";
 import { TableDataStore } from "../../domain/TableDataStore";
+import { TableDataOrchestrator } from "../../domain/TableDataOrchestrator";
+import type { RetrieveArtifactsTable } from "../../domain/RetrieveArtifactsTable";
+import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
 
 vi.useFakeTimers();
 
@@ -76,10 +79,12 @@ const reverse_table = new ArtifactsTableBuilder()
 
 describe("RowArtifact", () => {
     let artifact_links_table_retriever: RetrieveArtifactLinks,
+        artifact_table_retriever: RetrieveArtifactsTable,
         ancestors: number[],
         artifact_id: number,
         level: number,
-        table_data_store: TableDataStore;
+        table_data_store: TableDataStore,
+        table_data_orchestrator: TableDataOrchestrator;
 
     beforeEach(() => {
         artifact_id = 512;
@@ -87,31 +92,44 @@ describe("RowArtifact", () => {
         artifact_links_table_retriever = RetrieveArtifactLinksStub.withDefaultContent();
         level = 0;
         table_data_store = TableDataStore();
+        artifact_table_retriever = RetrieveArtifactsTableStub.withDefaultContent();
         table_data_store.setColumns(new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME));
     });
 
-    function getWrapper(): VueWrapper<InstanceType<typeof RowArtifact>> {
+    function getWrapper(
+        artifact_links_table_retriever: RetrieveArtifactLinks,
+    ): VueWrapper<InstanceType<typeof RowArtifact>> {
+        table_data_orchestrator = TableDataOrchestrator(
+            artifact_table_retriever,
+            artifact_links_table_retriever,
+            table_data_store,
+        );
+
+        const row = new ArtifactRowBuilder()
+            .withRowId(artifact_id)
+            .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                type: PRETTY_TITLE_CELL,
+                title: "earthmaking",
+                tracker_name: "lifesome",
+                artifact_id,
+                color: "inca-silver",
+            })
+            .buildWithExpectedNumberOfLinks(1, 1);
+        table_data_store.addEntry({
+            parent_row_uuid: null,
+            row: row,
+        });
         return shallowMount(RowArtifact, {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
-                    [RETRIEVE_ARTIFACT_LINKS.valueOf()]: artifact_links_table_retriever,
-                    [WIDGET_ID.valueOf()]: 101,
                     [TABLE_DATA_STORE.valueOf()]: table_data_store,
+                    [TABLE_DATA_ORCHESTRATOR.valueOf()]: table_data_orchestrator,
                 },
             },
             props: {
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
-                row: new ArtifactRowBuilder()
-                    .withRowId(artifact_id)
-                    .addCell(PRETTY_TITLE_COLUMN_NAME, {
-                        type: PRETTY_TITLE_CELL,
-                        title: "earthmaking",
-                        tracker_name: "lifesome",
-                        artifact_id,
-                        color: "inca-silver",
-                    })
-                    .buildWithExpectedNumberOfLinks(1, 1),
+                row: row,
                 level,
                 is_last: false,
                 parent_element: undefined,
@@ -126,7 +144,7 @@ describe("RowArtifact", () => {
     it("should display forward and reverse links when caret is clicked with one level deeper", async () => {
         const getForwardLinks = vi.spyOn(artifact_links_table_retriever, "getForwardLinks");
         const getReverseLinks = vi.spyOn(artifact_links_table_retriever, "getReverseLinks");
-        const wrapper = getWrapper();
+        const wrapper = getWrapper(artifact_links_table_retriever);
 
         wrapper.findComponent(SelectableCell).vm.$emit("toggle-links", html_element, html_element);
         await vi.runOnlyPendingTimersAsync();
@@ -142,7 +160,7 @@ describe("RowArtifact", () => {
     });
 
     it("should propagate its own level to selectable cells", async () => {
-        const wrapper = getWrapper();
+        const wrapper = getWrapper(artifact_links_table_retriever);
         await vi.runOnlyPendingTimersAsync();
 
         const selectable_cells = wrapper.findAllComponents(SelectableCell);
@@ -150,33 +168,6 @@ describe("RowArtifact", () => {
         selectable_cells.forEach((cell) => {
             expect(cell.props("level")).toBe(wrapper.props("level"));
         });
-    });
-
-    it("should not fetch forward or reverse links if they already have been called", async () => {
-        const getForwardLinks = vi.spyOn(artifact_links_table_retriever, "getForwardLinks");
-        const getReverseLinks = vi.spyOn(artifact_links_table_retriever, "getReverseLinks");
-        const wrapper = getWrapper();
-
-        // Expand artifact links for the first time
-        await wrapper.findComponent(SelectableCell).trigger("toggle-links");
-        await vi.runOnlyPendingTimersAsync();
-
-        expect(getForwardLinks).toHaveBeenCalledTimes(1);
-        expect(getReverseLinks).toHaveBeenCalledTimes(1);
-
-        // Hide artifact links
-        await wrapper.findComponent(SelectableCell).trigger("toggle-links");
-        await vi.runOnlyPendingTimersAsync();
-
-        expect(getForwardLinks).toHaveBeenCalledTimes(1);
-        expect(getReverseLinks).toHaveBeenCalledTimes(1);
-
-        // Expand artifact links for the second time
-        await wrapper.findComponent(SelectableCell).trigger("toggle-links");
-        await vi.runOnlyPendingTimersAsync();
-
-        expect(getForwardLinks).toHaveBeenCalledTimes(1);
-        expect(getReverseLinks).toHaveBeenCalledTimes(1);
     });
 
     it.each([
@@ -190,7 +181,7 @@ describe("RowArtifact", () => {
                 forward,
                 reverse,
             );
-            const wrapper = getWrapper();
+            const wrapper = getWrapper(artifact_links_table_retriever);
 
             wrapper
                 .findComponent(SelectableCell)
@@ -209,7 +200,7 @@ describe("RowArtifact", () => {
                 MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED - 5,
                 MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED - 1,
             );
-            const wrapper = getWrapper();
+            const wrapper = getWrapper(artifact_links_table_retriever);
             wrapper
                 .findComponent(SelectableCell)
                 .vm.$emit("toggle-links", html_element, html_element);
@@ -233,7 +224,7 @@ describe("RowArtifact", () => {
                     number_of_forward_links,
                     number_of_reverse_links,
                 );
-                const wrapper = getWrapper();
+                const wrapper = getWrapper(artifact_links_table_retriever);
                 wrapper
                     .findComponent(SelectableCell)
                     .vm.$emit("toggle-links", html_element, html_element);
@@ -276,7 +267,7 @@ describe("RowArtifact", () => {
                     artifact_links_table_retriever,
                     "getAllReverseLinks",
                 );
-                const wrapper = getWrapper();
+                const wrapper = getWrapper(artifact_links_table_retriever);
 
                 wrapper
                     .findComponent(SelectableCell)
@@ -305,7 +296,7 @@ describe("RowArtifact", () => {
         it("Should include its own row into the ancestors collection passed to ArtifactLinks", async () => {
             ancestors = [472];
 
-            const wrapper = getWrapper();
+            const wrapper = getWrapper(artifact_links_table_retriever);
 
             wrapper
                 .findComponent(SelectableCell)
@@ -372,7 +363,7 @@ describe("RowArtifact", () => {
                         okAsync(links_table),
                     );
 
-                const wrapper = getWrapper();
+                const wrapper = getWrapper(artifact_links_table_retriever);
 
                 wrapper
                     .findComponent(SelectableCell)
@@ -439,7 +430,7 @@ describe("RowArtifact", () => {
 
                 ancestors = [345, 5498, artifact_id];
 
-                const wrapper = getWrapper();
+                const wrapper = getWrapper(artifact_links_table_retriever);
 
                 wrapper
                     .findComponent(SelectableCell)
@@ -502,7 +493,7 @@ describe("RowArtifact", () => {
 
             ancestors = [];
 
-            const wrapper = getWrapper();
+            const wrapper = getWrapper(artifact_links_table_retriever);
 
             wrapper
                 .findComponent(SelectableCell)

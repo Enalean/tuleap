@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { DASHBOARD_TYPE, EMITTER, GET_SUGGESTED_QUERIES } from "../../injection-symbols";
-import type { QuerySuggestion } from "../../domain/SuggestedQueriesGetter";
+import type { QuerySuggestion, SuggestedQueriesGetter } from "../../domain/SuggestedQueriesGetter";
 import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
 import QuerySuggestedModal from "./QuerySuggestedModal.vue";
 import { DISPLAY_QUERY_PREVIEW_EVENT } from "../../helpers/widget-events";
@@ -61,7 +61,7 @@ const emit = defineEmits<{
 }>();
 
 const dashboard_type = strictInject(DASHBOARD_TYPE);
-const suggested_query_getter = strictInject(GET_SUGGESTED_QUERIES);
+const suggested_query_getter: SuggestedQueriesGetter = strictInject(GET_SUGGESTED_QUERIES);
 const emitter = strictInject(EMITTER);
 
 function handleButtonClick(query: QuerySuggestion): void {

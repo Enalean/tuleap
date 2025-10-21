@@ -81,18 +81,18 @@ export const RetrieveArtifactLinksStub = {
                         .buildWithTotal(total_number_of_reverse_links),
                 ),
             getAllForwardLinks: () =>
-                okAsync([
+                okAsync(
                     new ArtifactsTableBuilder()
                         .withTotalNumberOfRow(artifact_row, total_number_of_forward_links)
                         .build(),
-                ]),
+                ),
             getAllReverseLinks: () =>
-                okAsync([
+                okAsync(
                     new ArtifactsTableBuilder()
                         .withTotalNumberOfRow(direct_parent_row, 1)
                         .withTotalNumberOfRow(artifact_row, total_number_of_reverse_links - 1)
                         .build(),
-                ]),
+                ),
         };
     },
 
@@ -103,8 +103,8 @@ export const RetrieveArtifactLinksStub = {
         return {
             getForwardLinks: () => forward_links,
             getReverseLinks: () => reverse_links,
-            getAllForwardLinks: () => okAsync([new ArtifactsTableBuilder().build()]),
-            getAllReverseLinks: () => okAsync([new ArtifactsTableBuilder().build()]),
+            getAllForwardLinks: () => okAsync(new ArtifactsTableBuilder().build()),
+            getAllReverseLinks: () => okAsync(new ArtifactsTableBuilder().build()),
         };
     },
 
@@ -112,8 +112,8 @@ export const RetrieveArtifactLinksStub = {
         return {
             getForwardLinks: () => okAsync(new ArtifactsTableBuilder().buildWithTotal(1)),
             getReverseLinks: () => okAsync(new ArtifactsTableBuilder().buildWithTotal(1)),
-            getAllForwardLinks: () => okAsync([new ArtifactsTableBuilder().build()]),
-            getAllReverseLinks: () => okAsync([new ArtifactsTableBuilder().build()]),
+            getAllForwardLinks: () => okAsync(new ArtifactsTableBuilder().build()),
+            getAllReverseLinks: () => okAsync(new ArtifactsTableBuilder().build()),
         };
     },
 };

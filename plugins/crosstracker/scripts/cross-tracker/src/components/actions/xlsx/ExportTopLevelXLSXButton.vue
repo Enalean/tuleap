@@ -41,9 +41,11 @@ import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../../inj
 import type { Query } from "../../../type";
 import { NOTIFY_FAULT_EVENT, STARTING_XLSX_EXPORT_EVENT } from "../../../helpers/widget-events";
 import { XLSXExportFault } from "../../../domain/XLSXExportFault";
+import type { RetrieveArtifactsTable } from "../../../domain/RetrieveArtifactsTable";
+import type { GetColumnName } from "../../../domain/ColumnNameGetter";
 
-const artifact_table_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
-const column_name_getter = strictInject(GET_COLUMN_NAME);
+const artifact_table_retriever: RetrieveArtifactsTable = strictInject(RETRIEVE_ARTIFACTS_TABLE);
+const column_name_getter: GetColumnName = strictInject(GET_COLUMN_NAME);
 const emitter = strictInject(EMITTER);
 
 const props = defineProps<{

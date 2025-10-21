@@ -39,8 +39,9 @@ import {
     ARROW_REDRAW_TRIGGERER,
     QUERY_UPDATER,
     WIDGET_CONTAINER,
-    RETRIEVE_ARTIFACT_LINKS,
     DASHBOARD_ID,
+    TABLE_DATA_STORE,
+    TABLE_DATA_ORCHESTRATOR,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -56,6 +57,8 @@ import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 import { QueryUpdater } from "./api/QueryUpdater";
 import { ArtifactLinksRetriever } from "./api/ArtifactLinksRetriever";
 import { ArrowRedrawTriggerer } from "./ArrowRedrawTriggerer";
+import { TableDataStore } from "./domain/TableDataStore";
+import { TableDataOrchestrator } from "./domain/TableDataOrchestrator";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleWithDefault(document);
@@ -97,6 +100,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
         const artifacts_table_builder = ArtifactsTableBuilder();
+        const table_data_store = TableDataStore();
+
+        const artifacts_table_retriever = ArtifactsTableRetriever(
+            widget_data.widget_id,
+            artifacts_table_builder,
+        );
+        const artifacts_links_retriever = ArtifactLinksRetriever(
+            widget_data.widget_id,
+            artifacts_table_builder,
+        );
+        const table_data_orchestrator = TableDataOrchestrator(
+            artifacts_table_retriever,
+            artifacts_links_retriever,
+            table_data_store,
+        );
 
         createApp(CrossTrackerWidget)
             /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
@@ -104,11 +122,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             .use(VueDOMPurifyHTML)
             .provide(DATE_FORMATTER, date_formatter)
             .provide(DATE_TIME_FORMATTER, date_time_formatter)
-            .provide(
-                RETRIEVE_ARTIFACTS_TABLE,
-                ArtifactsTableRetriever(widget_data.widget_id, artifacts_table_builder),
-            )
-            .provide(RETRIEVE_ARTIFACT_LINKS, ArtifactLinksRetriever(artifacts_table_builder))
+            .provide(RETRIEVE_ARTIFACTS_TABLE, artifacts_table_retriever)
+            .provide(TABLE_DATA_ORCHESTRATOR, table_data_orchestrator)
+            .provide(TABLE_DATA_STORE, table_data_store)
             .provide(WIDGET_ID, widget_data.widget_id)
             .provide(DASHBOARD_ID, widget_data.dashboard_id)
             .provide(IS_USER_ADMIN, widget_data.is_widget_admin)

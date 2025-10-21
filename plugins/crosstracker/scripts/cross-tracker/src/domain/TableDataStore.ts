@@ -32,7 +32,7 @@ export type TableDataStore = {
     setColumns(columns: ArtifactsTable["columns"]): void;
     getColumns(): ArtifactsTable["columns"];
     addEntry(row: RowEntry): void;
-    removeEntry(uuid: string): void;
+    removeEntryByParentUUID(parent_uuid: string): void;
 };
 
 export const TableDataStore = (): TableDataStore => {
@@ -96,30 +96,14 @@ export const TableDataStore = (): TableDataStore => {
         return ELEMENT_OF_COLLECTION_NOT_FOUND;
     };
 
-    const addEntry = (row: RowEntry): void => {
-        if (isATopLevelRow(row)) {
-            row_collection.push(row);
-            return;
-        }
-        const parent = getParentOfRow(row);
-
-        let insertion_index = ELEMENT_OF_COLLECTION_NOT_FOUND;
-
-        if (parentAlreadyHasChildren(parent)) {
-            insertion_index = getInsertionIndexForParentWithChildren(parent, row);
-        } else {
-            insertion_index = row_collection.indexOf(parent);
-        }
-
-        if (insertion_index === ELEMENT_OF_COLLECTION_NOT_FOUND) {
-            throw new Error("Error while trying to determine parent’s position");
-        }
-
-        row_collection.splice(insertion_index + 1, 0, row);
-    };
-
     const removeEntry = (uuid: string): void => {
-        row_collection = row_collection.filter((item) => item.row.row_uuid !== uuid);
+        const direct_children = row_collection.filter((item) => item.parent_row_uuid === uuid);
+
+        for (const child of direct_children) {
+            removeEntry(child.row.row_uuid);
+        }
+
+        row_collection = row_collection.filter((item) => item.parent_row_uuid !== uuid);
     };
 
     return {
@@ -148,8 +132,29 @@ export const TableDataStore = (): TableDataStore => {
             return table_columns;
         },
 
-        addEntry: addEntry,
+        addEntry(row: RowEntry): void {
+            if (isATopLevelRow(row)) {
+                row_collection.push(row);
+                return;
+            }
+            const parent = getParentOfRow(row);
 
-        removeEntry: removeEntry,
+            let insertion_index = ELEMENT_OF_COLLECTION_NOT_FOUND;
+
+            if (parentAlreadyHasChildren(parent)) {
+                insertion_index = getInsertionIndexForParentWithChildren(parent, row);
+            } else {
+                insertion_index = row_collection.indexOf(parent);
+            }
+
+            if (insertion_index === ELEMENT_OF_COLLECTION_NOT_FOUND) {
+                throw new Error("Error while trying to determine parent’s position");
+            }
+
+            row_collection.splice(insertion_index + 1, 0, row);
+        },
+        removeEntryByParentUUID(uuid: string): void {
+            removeEntry(uuid);
+        },
     };
 };

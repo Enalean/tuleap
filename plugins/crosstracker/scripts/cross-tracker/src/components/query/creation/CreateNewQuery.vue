@@ -116,6 +116,7 @@ import { useGettext } from "vue3-gettext";
 import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
 import QueryEditor from "../QueryEditor.vue";
 import SelectableTable from "../../selectable-table/SelectableTable.vue";
+import type { PostNewQuery } from "../../../domain/PostNewQuery";
 
 const { $gettext } = useGettext();
 
@@ -127,7 +128,7 @@ const query_editor = ref<InstanceType<typeof QueryEditor>>();
 const emitter = strictInject(EMITTER);
 const widget_id = strictInject(WIDGET_ID);
 
-const new_query_creator = strictInject(NEW_QUERY_CREATOR);
+const new_query_creator: PostNewQuery = strictInject(NEW_QUERY_CREATOR);
 
 const title = ref("");
 const description = ref("");

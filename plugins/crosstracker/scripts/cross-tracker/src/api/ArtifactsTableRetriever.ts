@@ -54,8 +54,8 @@ export const ArtifactsTableRetriever = (
                     (query_content) => {
                         return {
                             table: table_builder.mapQueryContentToArtifactsTable(
-                                query_content,
                                 NO_DIRECTION,
+                                query_content,
                             ),
                             total,
                         };
@@ -64,7 +64,7 @@ export const ArtifactsTableRetriever = (
             });
         },
 
-        getSelectableQueryFullResult(query_id): ResultAsync<readonly ArtifactsTable[], Fault> {
+        getSelectableQueryFullResult(query_id): ResultAsync<ArtifactsTable, Fault> {
             return getAllJSON<SelectableQueryContentRepresentation>(
                 uri`/api/v1/crosstracker_query/${query_id}/content`,
                 {
@@ -73,8 +73,9 @@ export const ArtifactsTableRetriever = (
                     },
                 },
             ).map((query_content) => {
-                return query_content.map((table) =>
-                    table_builder.mapQueryContentToArtifactsTable(table, NO_DIRECTION),
+                return table_builder.mapQueryContentToArtifactsTable(
+                    NO_DIRECTION,
+                    ...query_content,
                 );
             });
         },
