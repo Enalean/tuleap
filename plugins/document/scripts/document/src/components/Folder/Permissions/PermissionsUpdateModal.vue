@@ -23,7 +23,7 @@
         role="dialog"
         aria-labelledby="document-update-permissions-modal"
         enctype="multipart/form-data"
-        v-on:submit.prevent="updatePermissions"
+        v-on:submit.prevent="onSubmit"
         ref="form"
     >
         <modal-header
@@ -83,6 +83,7 @@ import type { PermissionsState } from "../../../store/permissions/permissions-de
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT } from "../../../configuration-keys";
+import { updatePermissions } from "../../../helpers/permissions/permissions";
 
 const { $gettext } = useGettext();
 const $store = useStore();
@@ -163,13 +164,10 @@ function reset(): void {
     $store.commit("error/resetModalError");
 }
 
-async function updatePermissions(): Promise<void> {
+async function onSubmit(): Promise<void> {
     is_submitting_new_permissions.value = true;
     $store.commit("error/resetModalError");
-    await $store.dispatch("permissions/updatePermissions", {
-        item: props.item,
-        updated_permissions: updated_permissions.value,
-    });
+    await updatePermissions($store, props.item, updated_permissions.value);
     is_submitting_new_permissions.value = false;
     if (!has_modal_error.value) {
         modal?.hide();
