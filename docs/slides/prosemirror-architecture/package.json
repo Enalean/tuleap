@@ -10,7 +10,7 @@
     "@slidev/theme-default": "^0.25.0"
   },
   "devDependencies": {
-    "@slidev/cli": "^51.4.0",
+    "@slidev/cli": "^52.4.0",
     "@slidev/theme-default": "^0.25.0"
   },
   "pnpm": {
