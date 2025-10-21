@@ -36,7 +36,7 @@ use Tuleap\Layout\HeaderConfiguration;
 
 function forum_header(HeaderConfiguration $params)
 {
-    global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;
+    global $group_id,$forum_name,$msg_id,$forum_id,$Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('forums');
 
@@ -84,79 +84,6 @@ function forum_header(HeaderConfiguration $params)
 function forum_footer()
 {
     site_project_footer([]);
-}
-
-function show_thread($thread_id, $et = 0)
-{
-    global $Language;
-    /*
-        Takes a thread_id and fetches it, then invokes show_submessages to nest the threads
-
-        $et is whether or not the forum is "expanded" or in flat mode
-    */
-    global $total_rows,$is_followup_to,$subject,$forum_id,$current_message;
-
-    $ret_val = '';
-    $sql     = 'SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ' .
-    "FROM forum,user WHERE forum.thread_id='" . db_ei($thread_id) . "' AND user.user_id=forum.posted_by AND forum.is_followup_to='0' " .
-    'ORDER BY forum.msg_id DESC;';
-
-    $result = db_query($sql);
-
-    $total_rows = 0;
-
-    if (! $result || db_numrows($result) < 1) {
-        return _('Broken Thread');
-    } else {
-        $title_arr   = [];
-        $title_arr[] = _('Thread');
-        $title_arr[] = _('Author');
-        $title_arr[] = _('Date');
-
-        $ret_val .= html_build_list_table_top($title_arr);
-
-        $rows           = db_numrows($result);
-        $is_followup_to = db_result($result, ($rows - 1), 'msg_id');
-        $subject        = db_result($result, ($rows - 1), 'subject');
-   /*
-    Short - term compatibility fix. Leaving the iteration in for now -
-    will remove in the future. If we remove now, some messages will become hidden
-
-    No longer iterating here. There should only be one root message per thread now.
-    Messages posted at the thread level are shown as followups to the first message
-   */
-        for ($i = 0; $i < $rows; $i++) {
-            $total_rows++;
-            $ret_val .= '<TR class="' . util_get_alt_row_color($total_rows) . '"><TD>' .
-            (($current_message != db_result($result, $i, 'msg_id')) ? '<A HREF="/forum/message.php?msg_id=' . db_result($result, $i, 'msg_id') . '">' : '') .
-            '<IMG SRC="' . util_get_image_theme('msg.png') . '" BORDER=0 HEIGHT=12 WIDTH=10> ';
-         /*
-          See if this message is new or not
-         */
-            if (get_forum_saved_date($forum_id) < db_result($result, $i, 'date')) {
-                $ret_val .= '<B>';
-            }
-
-            $poster   = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
-            $ret_val .= db_result($result, $i, 'subject') . '</A></TD>' .
-            '<TD>' . UserHelper::instance()->getLinkOnUser($poster) . '</TD>' .
-            '<TD>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'date')) . '</TD></TR>';
-         /*
-          Show the body/message if requested
-         */
-            if ($et == 1) {
-                $ret_val .= '
-				<TR class="' . util_get_alt_row_color($total_rows) . '"><TD>&nbsp;</TD><TD COLSPAN=2>' .
-                nl2br(db_result($result, $i, 'body')) . '</TD><TR>';
-            }
-
-            if (db_result($result, $i, 'has_followups') > 0) {
-                $ret_val .= show_submessages($thread_id, db_result($result, $i, 'msg_id'), 1, $et);
-            }
-        }
-        $ret_val .= '</TABLE>';
-    }
-    return $ret_val;
 }
 
 function show_submessages($thread_id, $msg_id, $level, $et = 0)
@@ -230,23 +157,6 @@ function show_submessages($thread_id, $msg_id, $level, $et = 0)
     return $ret_val;
 }
 
-function get_next_thread_id()
-{
-    global $Language;
-    /*
-        Get around limitation in MySQL - Must use a separate table with an auto-increment
-    */
-    $result = db_query("INSERT INTO forum_thread_id VALUES ('')");
-
-    if (! $result) {
-        echo '<H1>' . $Language->getText('global', 'error') . '!</H1>';
-        echo db_error();
-        exit;
-    } else {
-        return db_insertid($result);
-    }
-}
-
 function get_forum_saved_date($forum_id)
 {
     /*
@@ -288,18 +198,4 @@ function forum_utils_access_allowed($forum_id)
 function forum_utils_get_styles()
 {
     return ['nested', 'flat', 'threaded', 'nocomments'];
-}
-
-function forum_can_be_public(Project $project)
-{
-    return $project->getAccess() == Project::ACCESS_PUBLIC ||
-        $project->getAccess() == Project::ACCESS_PUBLIC_UNRESTRICTED;
-}
-
-function forum_is_public_value_allowed(Project $project, $forum_status)
-{
-    return (
-            in_array($project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)
-            && ($forum_status == 0 || $forum_status == 9)
-        ) || forum_can_be_public($project);
 }
