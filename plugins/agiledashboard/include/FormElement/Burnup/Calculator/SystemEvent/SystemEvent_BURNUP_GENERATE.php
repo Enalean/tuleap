@@ -25,8 +25,8 @@ use Override;
 use Psr\Log\LoggerInterface;
 use SystemEvent;
 use Tracker_ArtifactFactory;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
@@ -37,7 +37,7 @@ use Tuleap\Date\TimezoneWrapper;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-final class SystemEvent_BURNUP_GENERATE extends SystemEvent // phpcs:ignore
+final class SystemEvent_BURNUP_GENERATE extends SystemEvent // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public BurnupCalculator $burnup_calculator;
     private BurnupDataDAO $burnup_dao;

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use Project;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsModeUpdater;
 
 class AgileDashboardChartsConfigurationUpdater
 {

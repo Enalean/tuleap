@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\FormElement\Burnup;
+namespace Tuleap\AgileDashboard\FormElement\Count;
 
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -27,6 +27,7 @@ use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;

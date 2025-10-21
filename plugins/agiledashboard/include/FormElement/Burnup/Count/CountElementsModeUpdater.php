@@ -18,33 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Artifact;
+namespace Tuleap\AgileDashboard\FormElement\Burnup\Count;
 
-use Tuleap\AgileDashboard\FormElement\Burnup\Count\CountElementsInfo;
-use Tuleap\REST\JsonCast;
+use Project;
 
-final class BurnupCountElementsPointRepresentation
+class CountElementsModeUpdater
 {
-    /**
-     * @var string {@type date}
-     */
-    public $date;
-
-    /**
-     * @var int
-     */
-    public $closed_elements;
-
-    /**
-     * @var int
-     */
-    public $total_elements;
-
-
-    public function __construct(CountElementsInfo $count_elements, int $timestamp)
+    public function __construct(private ProjectsCountModeDao $projects_count_mode_dao)
     {
-        $this->date            = JsonCast::toDate($timestamp);
-        $this->closed_elements = JsonCast::toInt($count_elements->getClosedElements());
-        $this->total_elements  = JsonCast::toInt($count_elements->getTotalElements());
+    }
+
+    public function updateBurnupMode(Project $project, bool $use_count_mode): void
+    {
+        if ($use_count_mode) {
+            $this->projects_count_mode_dao->enableBurnupCountMode((int) $project->getID());
+        } else {
+            $this->projects_count_mode_dao->disableBurnupCountMode((int) $project->getID());
+        }
     }
 }
