@@ -52,6 +52,7 @@ describe("data-with-link-formater", () => {
 
     const parent_row_1 = new ArtifactRowBuilder()
         .withRowUuid(parent_row_1_uuid)
+        .withRowId(123)
         .addCell(PRETTY_TITLE_COLUMN_NAME, parent_row_1_pretty_title)
         .addCell(PROJECT_COLUMN_NAME, {
             type: PROJECT_CELL,
@@ -75,6 +76,7 @@ describe("data-with-link-formater", () => {
     };
     const parent_row_2 = new ArtifactRowBuilder()
         .withRowUuid(parent_row_2_uuid)
+        .withRowId(456)
         .addCell(PRETTY_TITLE_COLUMN_NAME, parent_row_2_pretty_title)
         .addCell(PROJECT_COLUMN_NAME, {
             type: PROJECT_CELL,
@@ -99,6 +101,7 @@ describe("data-with-link-formater", () => {
 
     const link_row_first_level_1 = new ArtifactRowBuilder()
         .isAForwardRow()
+        .withRowId(789)
         .withRowUuid(link_row_first_level_1_uuid)
         .addCell(PRETTY_TITLE_COLUMN_NAME, link_row_first_level_1_pretty_title)
         .addCell(PROJECT_COLUMN_NAME, {
@@ -123,6 +126,7 @@ describe("data-with-link-formater", () => {
     };
     const link_row_first_level_2 = new ArtifactRowBuilder()
         .isAReverseRow()
+        .withRowId(101)
         .withRowUuid(link_row_first_level_2_uuid)
         .addCell(PRETTY_TITLE_COLUMN_NAME, link_row_first_level_2_pretty_title)
         .addCell(PROJECT_COLUMN_NAME, {
@@ -148,6 +152,7 @@ describe("data-with-link-formater", () => {
 
     const link_row_second_level_1 = new ArtifactRowBuilder()
         .withRowUuid(link_row_second_level_1_uuid)
+        .withRowId(201)
         .addCell(PRETTY_TITLE_COLUMN_NAME, link_row_second_level_1_pretty_title)
         .addCell(PROJECT_COLUMN_NAME, {
             type: PROJECT_CELL,

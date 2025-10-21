@@ -17,48 +17,49 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { ArtifactLinkDirection, ArtifactRow } from "../../domain/ArtifactsTable";
-import { FORWARD_DIRECTION, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
+import type { ArtifactRow } from "../../domain/ArtifactsTable";
+import { NO_DIRECTION, FORWARD_DIRECTION, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
-import CaretIndentation from "./CaretIndentation.vue";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 import {
     ARROW_DATA_STORE,
     DASHBOARD_ID,
     DASHBOARD_TYPE,
     TABLE_DATA_STORE,
+    TABLE_WRAPPER_OPERATIONS,
 } from "../../injection-symbols";
 import { PROJECT_DASHBOARD, USER_DASHBOARD } from "../../domain/DashboardType";
 import { TableDataStore } from "../../domain/TableDataStore";
 import { ArrowDataStore } from "../../domain/ArrowDataStore";
 import { v4 as uuidv4 } from "uuid";
+import type { TableDataState, TableWrapperOperations } from "../TableWrapper.vue";
+import * as has_expandable_links from "../../domain/CheckExpandableLink";
+import * as get_number_of_parents from "../../domain/NumberOfParentForRowCalculator";
+
+vi.mock("../../domain/CheckExpandableLink");
+vi.mock("../../domain/IsRowALastElementChecker");
+vi.mock("../../domain/NumberOfParentForRowCalculator");
 
 describe("PrettyTitleCellComponent", () => {
     let artifact_uri: string;
-    let expected_number_of_forward_link: number;
-    let expected_number_of_reverse_link: number;
-    let direction: ArtifactLinkDirection | undefined;
-    let reverse_links_count: number | undefined;
-    let level: number;
+    let direction = NO_DIRECTION;
     let dashboard_type: string;
     let table_data_store: TableDataStore;
     let arrow_data_store: ArrowDataStore;
+    let mock_table_wrapper_operations: TableWrapperOperations;
+    let parent_row_uuid: string | null = null;
 
     const parent_uuid = uuidv4();
     const row_uuid = uuidv4();
 
     beforeEach(() => {
         artifact_uri = "/plugins/tracker/?aid=286";
-        expected_number_of_forward_link = 0;
-        expected_number_of_reverse_link = 0;
-        level = 0;
-        direction = undefined;
-        reverse_links_count = undefined;
+        direction = NO_DIRECTION;
         dashboard_type = PROJECT_DASHBOARD;
         table_data_store = TableDataStore();
         table_data_store.addEntry({
@@ -71,6 +72,15 @@ describe("PrettyTitleCellComponent", () => {
         });
         arrow_data_store = ArrowDataStore();
         arrow_data_store.addEntry(parent_uuid, {} as HTMLElement, {} as HTMLElement);
+
+        mock_table_wrapper_operations = {
+            expandRow: vi.fn(),
+            collapseRow: vi.fn(),
+            loadAllArtifacts: vi.fn(),
+        };
+
+        vi.spyOn(has_expandable_links, "hasExpandableLinks").mockReturnValue(true);
+        vi.spyOn(get_number_of_parents, "getNumberOfParent").mockReturnValue(0);
     });
 
     const getWrapper = (): VueWrapper<InstanceType<typeof PrettyTitleCellComponent>> => {
@@ -82,10 +92,18 @@ describe("PrettyTitleCellComponent", () => {
                     [DASHBOARD_ID.valueOf()]: 22,
                     [TABLE_DATA_STORE.valueOf()]: table_data_store,
                     [ARROW_DATA_STORE.valueOf()]: arrow_data_store,
+                    [TABLE_WRAPPER_OPERATIONS.valueOf()]: mock_table_wrapper_operations,
                 },
             },
             props: {
-                uuid: row_uuid,
+                row_entry: {
+                    row: {
+                        row_uuid,
+                        artifact_uri,
+                        direction,
+                    } as ArtifactRow,
+                    parent_row_uuid,
+                },
                 cell: {
                     type: PRETTY_TITLE_CELL,
                     title: "uncensorable litigant",
@@ -93,13 +111,7 @@ describe("PrettyTitleCellComponent", () => {
                     artifact_id: 76,
                     color: "coral-pink",
                 },
-                artifact_uri,
-                expected_number_of_forward_link,
-                expected_number_of_reverse_link,
-                level,
-                is_last: false,
-                reverse_links_count,
-                direction,
+                table_state: {} as TableDataState,
             },
         });
     };
@@ -120,17 +132,9 @@ describe("PrettyTitleCellComponent", () => {
     });
 
     describe("Button", () => {
-        it("should hide the button, when artifact has no links ", () => {
-            const wrapper = getWrapper();
+        it("should display the button when row has expandable links", () => {
+            vi.spyOn(has_expandable_links, "hasExpandableLinks").mockReturnValue(true);
 
-            expect(
-                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
-            ).toBe("true");
-        });
-
-        it("should not hide the button, when artifact has links", () => {
-            expected_number_of_forward_link = 2;
-            expected_number_of_reverse_link = 1;
             const wrapper = getWrapper();
 
             expect(
@@ -138,64 +142,14 @@ describe("PrettyTitleCellComponent", () => {
             ).toBe("false");
         });
 
-        it("should not display the button if level > 0 and there is only one reverse link and no forward links", () => {
-            level = 1;
-            expected_number_of_forward_link = 0;
-            expected_number_of_reverse_link = 1;
+        it("should NOT display the button when row does NOT have any children", () => {
+            vi.spyOn(has_expandable_links, "hasExpandableLinks").mockReturnValue(false);
 
             const wrapper = getWrapper();
 
             expect(
                 wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
             ).toBe("true");
-        });
-
-        it("should display the button if level = 0 and there is only one reverse link and no forward links", () => {
-            level = 0;
-            expected_number_of_forward_link = 0;
-            expected_number_of_reverse_link = 1;
-
-            const wrapper = getWrapper();
-
-            expect(
-                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
-            ).toBe("false");
-        });
-
-        it("should not display the button if level > 0 and there is only one forward link and no reverse links", () => {
-            level = 1;
-            expected_number_of_forward_link = 1;
-            expected_number_of_reverse_link = 0;
-
-            const wrapper = getWrapper();
-
-            expect(
-                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
-            ).toBe("true");
-        });
-
-        it("should not display the button if level = 0 and there is only one forward link and no reverse links", () => {
-            level = 0;
-            expected_number_of_forward_link = 1;
-            expected_number_of_reverse_link = 0;
-
-            const wrapper = getWrapper();
-
-            expect(
-                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
-            ).toBe("false");
-        });
-
-        it("should display the button if level > 0 and there is one reverse link and one forward link", () => {
-            level = 1;
-            expected_number_of_forward_link = 1;
-            expected_number_of_reverse_link = 1;
-
-            const wrapper = getWrapper();
-
-            expect(
-                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
-            ).toBe("false");
         });
     });
 
@@ -204,7 +158,6 @@ describe("PrettyTitleCellComponent", () => {
         const caret_down = "fa-caret-down";
 
         it("should display a caret down, when caret is clicked", async () => {
-            expected_number_of_forward_link = 2;
             const wrapper = getWrapper();
 
             expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_right);
@@ -213,7 +166,6 @@ describe("PrettyTitleCellComponent", () => {
         });
 
         it("should display a caret right, when caret is clicked again", async () => {
-            expected_number_of_reverse_link = 1;
             const wrapper = getWrapper();
 
             expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_right);
@@ -221,17 +173,6 @@ describe("PrettyTitleCellComponent", () => {
             expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_down);
             await wrapper.find("[data-test=pretty-title-caret]").trigger("click");
             expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_right);
-        });
-    });
-
-    describe("Caret indentation", () => {
-        it("should display a Caret Indentation component with the same level", () => {
-            expected_number_of_forward_link = 2;
-            const wrapper = getWrapper();
-
-            expect(wrapper.findComponent(CaretIndentation).props("level")).toBe(
-                wrapper.props("level"),
-            );
         });
     });
 
@@ -244,7 +185,7 @@ describe("PrettyTitleCellComponent", () => {
 
         it("should include an ArtifactLinkArrow if there are parent elements", async () => {
             direction = FORWARD_DIRECTION;
-            reverse_links_count = 3;
+            parent_row_uuid = parent_uuid;
 
             const wrapper = getWrapper();
 
@@ -254,14 +195,27 @@ describe("PrettyTitleCellComponent", () => {
         });
 
         it("should include an ArtifactLinkArrow if there are parent elements BUT no reverse links", async () => {
+            vi.spyOn(get_number_of_parents, "getNumberOfParent").mockReturnValue(2);
             direction = FORWARD_DIRECTION;
-            reverse_links_count = 0;
+            parent_row_uuid = parent_uuid;
 
             const wrapper = getWrapper();
 
             await nextTick();
 
             expect(wrapper.findComponent(ArtifactLinkArrow).exists()).toBe(true);
+        });
+
+        it("should NOT include an ArtifactLinkArrow when link has no direction", async () => {
+            vi.spyOn(get_number_of_parents, "getNumberOfParent").mockReturnValue(2);
+            direction = NO_DIRECTION;
+            parent_row_uuid = parent_uuid;
+
+            const wrapper = getWrapper();
+
+            await nextTick();
+
+            expect(wrapper.findComponent(ArtifactLinkArrow).exists()).toBe(false);
         });
     });
 
@@ -278,5 +232,17 @@ describe("PrettyTitleCellComponent", () => {
             wrapper.unmount();
             expect(arrow_data_store.getByUUID(row_uuid)).toBeUndefined();
         });
+    });
+
+    it("should expand/collapse row", () => {
+        const wrapper = getWrapper();
+        wrapper.find("[data-test=pretty-title-links-button]").trigger("click");
+        expect(mock_table_wrapper_operations.expandRow).toHaveBeenCalled();
+
+        wrapper.find("[data-test=pretty-title-links-button]").trigger("click");
+        expect(mock_table_wrapper_operations.collapseRow).toHaveBeenCalled();
+
+        wrapper.find("[data-test=pretty-title-links-button]").trigger("click");
+        expect(mock_table_wrapper_operations.expandRow).toHaveBeenCalled();
     });
 });

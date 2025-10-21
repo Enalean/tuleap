@@ -41,12 +41,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import LoadAllConfirmationModal from "./LoadAllConfirmationModal.vue";
+import type { RowEntry } from "../../domain/TableDataStore";
+import { TABLE_WRAPPER_OPERATIONS } from "../../injection-symbols";
+import type { TableWrapperOperations } from "../TableWrapper.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const should_the_modal_be_displayed = ref(false);
 const is_loading = ref(false);
+const table_wrapper_operations: TableWrapperOperations = strictInject(TABLE_WRAPPER_OPERATIONS);
 
-const emit = defineEmits<{
-    (e: "load-all"): void;
+const props = defineProps<{
+    row_entry: RowEntry;
 }>();
 
 function openConfirmationModal(): void {
@@ -57,7 +62,7 @@ function shouldLoadAll(should_load_all: boolean): void {
     should_the_modal_be_displayed.value = false;
     if (should_load_all) {
         is_loading.value = true;
-        emit("load-all");
+        table_wrapper_operations.loadAllArtifacts(props.row_entry);
     }
 }
 </script>

@@ -33,6 +33,7 @@ import type { Events } from "./helpers/widget-events";
 import type { TableDataStore } from "./domain/TableDataStore";
 import type { ArrowDataStore } from "./domain/ArrowDataStore";
 import type { TableDataOrchestrator } from "./domain/TableDataOrchestrator";
+import type { TableWrapperOperations } from "./components/TableWrapper.vue";
 
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
@@ -54,3 +55,4 @@ export const WIDGET_CONTAINER: StrictInjectionKey<HTMLElement> = Symbol();
 export const DASHBOARD_ID: StrictInjectionKey<number> = Symbol();
 export const TABLE_DATA_STORE: StrictInjectionKey<TableDataStore> = Symbol();
 export const ARROW_DATA_STORE: StrictInjectionKey<ArrowDataStore> = Symbol();
+export const TABLE_WRAPPER_OPERATIONS: StrictInjectionKey<TableWrapperOperations> = Symbol();

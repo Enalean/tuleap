@@ -171,9 +171,6 @@ msgstr "Les artifacts ouverts qui me sont assignés dans mes projets"
 msgid "Overwrite current query"
 msgstr "Remplacer la requête actuelle"
 
-msgid "Please create a new query."
-msgstr "Veuillez créer une nouvelle requête."
-
 msgid "Previous"
 msgstr "Précédent"
 
@@ -191,9 +188,6 @@ msgstr "La création de requête est en cours d'implémentation"
 
 msgid "Query details"
 msgstr "Détails de la requête"
-
-msgid "Query is empty"
-msgstr "La requête est vide"
 
 msgid "Query suggestions"
 msgstr "Requêtes suggérées"

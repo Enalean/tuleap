@@ -31,14 +31,12 @@ import type {
     Events,
     InitializedWithQueryEvent,
     NotifyFaultEvent,
-    RefreshArtifactsEvent,
     SwitchQueryEvent,
 } from "../helpers/widget-events";
 import {
     INITIALIZED_WITH_QUERY_EVENT,
     NOTIFY_FAULT_EVENT,
     QUERY_DELETED_EVENT,
-    REFRESH_ARTIFACTS_EVENT,
     SWITCH_QUERY_EVENT,
     TOGGLE_QUERY_DETAILS_EVENT,
 } from "../helpers/widget-events";
@@ -53,7 +51,6 @@ describe("ReadQuery", () => {
     let dispatched_switch_query_events: SwitchQueryEvent[];
     let dispatched_initialized_with_query_events: InitializedWithQueryEvent[];
     let dispatched_fault_events: NotifyFaultEvent[];
-    let dispatched_refresh_events: RefreshArtifactsEvent[];
     let emitter: Emitter<Events>;
     let selected_query: Query | undefined;
 
@@ -68,22 +65,16 @@ describe("ReadQuery", () => {
         dispatched_fault_events.push(event);
     };
 
-    const registerRefreshArtifactsEvent = (event: RefreshArtifactsEvent): void => {
-        dispatched_refresh_events.push(event);
-    };
-
     beforeEach(() => {
         selected_query = undefined;
         is_user_admin = true;
         dispatched_switch_query_events = [];
         dispatched_initialized_with_query_events = [];
         dispatched_fault_events = [];
-        dispatched_refresh_events = [];
         emitter = mitt<Events>();
         emitter.on(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
         emitter.on(INITIALIZED_WITH_QUERY_EVENT, registerInitializedWithQueryEvent);
         emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
-        emitter.on(REFRESH_ARTIFACTS_EVENT, registerRefreshArtifactsEvent);
 
         vi.spyOn(rest_querier, "getQueries").mockReturnValue(
             okAsync([
@@ -102,7 +93,6 @@ describe("ReadQuery", () => {
         emitter.off(SWITCH_QUERY_EVENT, registerSwitchQueryEvent);
         emitter.off(INITIALIZED_WITH_QUERY_EVENT, registerInitializedWithQueryEvent);
         emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
-        emitter.off(REFRESH_ARTIFACTS_EVENT, registerRefreshArtifactsEvent);
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ReadQuery>> {
@@ -310,8 +300,6 @@ describe("ReadQuery", () => {
 
             expect(dispatched_switch_query_events).toHaveLength(1);
             expect(dispatched_switch_query_events[0]).toStrictEqual({ query: query_2 });
-            expect(dispatched_refresh_events).toHaveLength(1);
-            expect(dispatched_refresh_events[0]).toStrictEqual({ query: query_2 });
         });
 
         it("delete the event query and then display the creation pane", async () => {

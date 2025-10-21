@@ -29,9 +29,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER } from "../../injection-symbols";
 import { SELECTABLE_TABLE_RESIZED_EVENT } from "../../helpers/widget-events";
-import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
 import { REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
 import type { ArrowDataEntry } from "../../domain/ArrowDataStore";
+import type { RowEntry } from "../../domain/TableDataStore";
+import { checkHasChildrenForReverseDirection } from "../../domain/CheckRowHasChildren";
+import { isLastChildForDirection } from "../../domain/IsRowALastElementChecker";
+import type { TableDataState } from "../TableWrapper.vue";
 
 interface Point {
     x: number;
@@ -50,12 +53,13 @@ const OFFSET_TO_AVOID_CUT_ARROW = 1;
 const ARROWHEAD_STEEPNESS = 4;
 
 const props = defineProps<{
-    is_last_link: boolean;
-    direction: ArtifactLinkDirection;
-    reverse_links_count: number;
+    row_entry: RowEntry;
     parent_element: ArrowDataEntry;
     current_element: ArrowDataEntry;
+    table_state: TableDataState;
 }>();
+
+const is_last_link = isLastChildForDirection(props.table_state.row_collection, props.row_entry);
 
 const svg_styling = ref<string>(getSVGStyle());
 const arrow_points = ref<ArrowPoints>(
@@ -67,9 +71,9 @@ const arrow_points = ref<ArrowPoints>(
 );
 
 const path = computed((): string =>
-    props.direction === REVERSE_DIRECTION
+    props.row_entry.row.direction === REVERSE_DIRECTION
         ? getReversePath()
-        : props.reverse_links_count > 0
+        : checkHasChildrenForReverseDirection(props.table_state.row_collection, props.row_entry)
           ? getForwardPath(FORWARD_LINKS_OFFSET)
           : getForwardPath(0),
 );
@@ -149,7 +153,7 @@ function getForwardPath(path_offset: number): string {
         arrow_points.value.child_point.y,
     );
 
-    if (props.is_last_link) {
+    if (is_last_link) {
         path += drawLine(
             parent_point_x_with_offset,
             parent_point_x_with_offset,
@@ -169,7 +173,7 @@ function getReversePath(): string {
         arrow_points.value.child_point.y,
     );
 
-    if (props.is_last_link) {
+    if (is_last_link) {
         path += drawVerticalArrow(
             arrow_points.value.child_point.y,
             arrow_points.value.parent_point.y,

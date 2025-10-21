@@ -24,11 +24,7 @@ import { beforeEach, expect, describe, it } from "vitest";
 import ChooseQueryMenu from "./ChooseQueryMenu.vue";
 import { EmitterStub } from "../../../tests/stubs/EmitterStub";
 import type { Query } from "../../type";
-import {
-    REFRESH_ARTIFACTS_EVENT,
-    SWITCH_QUERY_EVENT,
-    CREATE_NEW_QUERY_EVENT,
-} from "../../helpers/widget-events";
+import { SWITCH_QUERY_EVENT, CREATE_NEW_QUERY_EVENT } from "../../helpers/widget-events";
 
 describe("ChooseQueryMenu", () => {
     let backend_query: Query;
@@ -87,13 +83,9 @@ describe("ChooseQueryMenu", () => {
         const wrapper = getWrapper();
         await wrapper.find("[data-test=query]").trigger("click");
 
-        expect(emitter.emitted_event_name.length).toBe(2);
-        expect(emitter.emitted_event_name[0]).toBe(REFRESH_ARTIFACTS_EVENT);
+        expect(emitter.emitted_event_name.length).toBe(1);
+        expect(emitter.emitted_event_name[0]).toBe(SWITCH_QUERY_EVENT);
         expect(emitter.emitted_event_message[0].unwrapOr("")).toStrictEqual({
-            query: queries[0],
-        });
-        expect(emitter.emitted_event_name[1]).toBe(SWITCH_QUERY_EVENT);
-        expect(emitter.emitted_event_message[1].unwrapOr("")).toStrictEqual({
             query: queries[0],
         });
     });

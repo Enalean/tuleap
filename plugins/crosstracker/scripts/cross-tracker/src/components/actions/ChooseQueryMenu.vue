@@ -60,11 +60,7 @@ import { computed, ref } from "vue";
 import { EMITTER, IS_USER_ADMIN } from "../../injection-symbols";
 import type { Query } from "../../type";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    CREATE_NEW_QUERY_EVENT,
-    REFRESH_ARTIFACTS_EVENT,
-    SWITCH_QUERY_EVENT,
-} from "../../helpers/widget-events";
+import { CREATE_NEW_QUERY_EVENT, SWITCH_QUERY_EVENT } from "../../helpers/widget-events";
 
 const emitter = strictInject(EMITTER);
 const is_user_admin = strictInject(IS_USER_ADMIN);
@@ -94,7 +90,6 @@ function updateFilter(event: Event): void {
 }
 
 function updateSelectedQuery(query: Query): void {
-    emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
     emitter.emit(SWITCH_QUERY_EVENT, { query });
     resetFilter();
     props.on_selected_query_callback();

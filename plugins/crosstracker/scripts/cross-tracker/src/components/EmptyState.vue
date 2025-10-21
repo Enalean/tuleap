@@ -21,7 +21,7 @@
     <div class="empty-state-zone" data-test="cross-tracker-no-results">
         <empty-state-tumbleweed />
         <p class="empty-state-title" data-test="selectable-empty-state-title">
-            {{ tql_query !== "" ? $gettext("No artifact found") : $gettext("Query is empty") }}
+            {{ $gettext("No artifact found") }}
         </p>
         <p class="empty-state-text" data-test="selectable-empty-state-text">
             {{ getEmptyStateMessage() }}
@@ -33,16 +33,9 @@
 import { useGettext } from "vue3-gettext";
 import EmptyStateTumbleweed from "./EmptyStateTumbleweed.vue";
 
-const props = defineProps<{
-    tql_query: string;
-}>();
-
 const { $gettext } = useGettext();
 
 function getEmptyStateMessage(): string {
-    if (props.tql_query === "") {
-        return $gettext("Please create a new query.");
-    }
     return $gettext("There is no artifact matching the query.");
 }
 </script>

@@ -20,30 +20,28 @@
 
 <template>
     <span
-        v-if="props.cell && props.cell.type === PRETTY_TITLE_CELL"
+        v-if="cell && cell.type === PRETTY_TITLE_CELL"
         data-test="cell"
         ref="pretty-title-cell-element"
     >
         <artifact-link-arrow
             v-if="
                 current_arrow_data_entry &&
-                direction &&
-                reverse_links_count !== undefined &&
+                row_entry.row.direction !== NO_DIRECTION &&
                 get_parent_element !== undefined
             "
-            v-bind:is_last_link="is_last"
-            v-bind:direction="direction"
-            v-bind:reverse_links_count="reverse_links_count"
+            v-bind:row_entry="row_entry"
             v-bind:current_element="current_arrow_data_entry"
             v-bind:parent_element="get_parent_element"
+            v-bind:table_state="table_state"
         />
         <caret-indentation v-bind:level="level" />
         <button
             type="button"
             v-on:click="toggleArtifactLinksDisplay()"
             class="caret-button"
-            v-bind:aria-hidden="!should_display_links()"
-            v-bind:disabled="!should_display_links()"
+            v-bind:aria-hidden="doesNotHaveExpandableLinks()"
+            v-bind:disabled="doesNotHaveExpandableLinks()"
             data-test="pretty-title-links-button"
         >
             <i
@@ -55,9 +53,9 @@
             ></i>
         </button>
         <a v-bind:href="artifact_url" class="link cross-reference"
-            ><span v-bind:class="getCrossRefBadgeClass(props.cell)"
-                >{{ props.cell.tracker_name }} #{{ props.cell.artifact_id }}</span
-            >{{ props.cell.title }}</a
+            ><span v-bind:class="getCrossRefBadgeClass(cell)"
+                >{{ cell.tracker_name }} #{{ cell.artifact_id }}</span
+            >{{ cell.title }}</a
         >
     </span>
 </template>
@@ -65,64 +63,53 @@
 <script setup lang="ts">
 import { computed, ref, useTemplateRef, onMounted, onBeforeUnmount } from "vue";
 import { useGettext } from "vue3-gettext";
-import {
-    type ArtifactLinkDirection,
-    type Cell,
-    PRETTY_TITLE_CELL,
-    type PrettyTitleCell,
-} from "../../domain/ArtifactsTable";
-import type { ToggleLinks } from "../../helpers/ToggleLinksEmit";
+import { NO_DIRECTION, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
+import type { Cell, PrettyTitleCell } from "../../domain/ArtifactsTable";
 import CaretIndentation from "./CaretIndentation.vue";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 import {
     DASHBOARD_TYPE,
     DASHBOARD_ID,
-    TABLE_DATA_STORE,
     ARROW_DATA_STORE,
+    TABLE_WRAPPER_OPERATIONS,
 } from "../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
 import type { ArrowDataEntry, ArrowDataStore } from "../../domain/ArrowDataStore";
 import { loadTooltips } from "@tuleap/tooltip";
-import type { TableDataStore } from "../../domain/TableDataStore";
+import type { RowEntry } from "../../domain/TableDataStore";
+import type { TableDataState, TableWrapperOperations } from "../TableWrapper.vue";
+import { hasExpandableLinks } from "../../domain/CheckExpandableLink";
+import { getNumberOfParent } from "../../domain/NumberOfParentForRowCalculator";
 
 const dashboard_id = strictInject(DASHBOARD_ID);
 const dashboard_type = strictInject(DASHBOARD_TYPE);
-const table_data_store: TableDataStore = strictInject(TABLE_DATA_STORE);
 const arrow_data_store: ArrowDataStore = strictInject(ARROW_DATA_STORE);
+const table_wrapper_operations: TableWrapperOperations = strictInject(TABLE_WRAPPER_OPERATIONS);
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
-    uuid: string;
     cell: Cell | undefined;
-    artifact_uri: string;
-    expected_number_of_forward_link: number;
-    expected_number_of_reverse_link: number;
-    level: number;
-    is_last: boolean;
-    direction: ArtifactLinkDirection | undefined;
-    reverse_links_count: number | undefined;
+    row_entry: RowEntry;
+    table_state: TableDataState;
 }>();
 
 const cell_element = useTemplateRef<HTMLElement>("pretty-title-cell-element");
 const caret_element = useTemplateRef<HTMLElement>("target-caret-element");
 const current_arrow_data_entry = ref<ArrowDataEntry>();
-const emit = defineEmits<ToggleLinks>();
+const level = getNumberOfParent(props.table_state.row_collection, props.row_entry);
 
 const artifact_url = computed((): string => {
     if (dashboard_type === PROJECT_DASHBOARD) {
-        return `${props.artifact_uri}&project-dashboard-id=${dashboard_id}`;
+        return `${props.row_entry.row.artifact_uri}&project-dashboard-id=${dashboard_id}`;
     }
 
-    return `${props.artifact_uri}&my-dashboard-id=${dashboard_id}`;
+    return `${props.row_entry.row.artifact_uri}&my-dashboard-id=${dashboard_id}`;
 });
 
-function should_display_links(): boolean {
-    if (props.level === 0) {
-        return props.expected_number_of_forward_link + props.expected_number_of_reverse_link > 0;
-    }
-    return props.expected_number_of_reverse_link + props.expected_number_of_forward_link > 1;
+function doesNotHaveExpandableLinks(): boolean {
+    return !hasExpandableLinks(props.row_entry, level);
 }
 
 const are_artifact_links_expanded = ref(false);
@@ -145,15 +132,21 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 
 function toggleArtifactLinksDisplay(): void {
     are_artifact_links_expanded.value = !are_artifact_links_expanded.value;
-    emit("toggle-links");
+    if (are_artifact_links_expanded.value) {
+        table_wrapper_operations.expandRow(props.row_entry.row);
+        return;
+    }
+
+    table_wrapper_operations.collapseRow(props.row_entry.row);
 }
 
 const get_parent_element = computed(() => {
-    const parent_row = table_data_store.getParentByUUId(props.uuid);
-    if (!parent_row) {
+    const parent_uuid = props.row_entry.parent_row_uuid;
+    if (parent_uuid === null) {
         return undefined;
     }
-    return arrow_data_store.getByUUID(parent_row.row.row_uuid);
+
+    return arrow_data_store.getByUUID(parent_uuid);
 });
 
 onMounted(() => {
@@ -162,17 +155,21 @@ onMounted(() => {
     }
 
     current_arrow_data_entry.value = {
-        uuid: props.uuid,
+        uuid: props.row_entry.row.row_uuid,
         caret: caret_element.value,
         element: cell_element.value,
     };
 
-    arrow_data_store.addEntry(props.uuid, cell_element.value, caret_element.value);
+    arrow_data_store.addEntry(
+        props.row_entry.row.row_uuid,
+        cell_element.value,
+        caret_element.value,
+    );
     loadTooltips(cell_element.value);
 });
 
 onBeforeUnmount(() => {
-    arrow_data_store.removeEntry(props.uuid);
+    arrow_data_store.removeEntry(props.row_entry.row.row_uuid);
 });
 </script>
 
