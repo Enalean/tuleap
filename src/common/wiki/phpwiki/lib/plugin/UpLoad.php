@@ -218,13 +218,13 @@ ws[cfh]'
             $limit = 10;
         }
 
-        $attchTab = HTML::table(['border' => '1',
-            'width'  => '100%',
+        $attchTab = HTML::table([
+            'class' => 'tlp-table',
         ]);
-        $attchTab->pushContent(HTML::tr(
+        $attchTab->pushContent(HTML::thead(HTML::tr(
             HTML::th(_('Attachment')),
             HTML::th(_('Number of revision'))
-        ));
+        )));
         $wai = WikiAttachment::getListWithCounter(
             GROUP_ID,
             UserManager::instance()->getCurrentUser()->getId(),

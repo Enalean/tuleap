@@ -60,7 +60,8 @@ class BurningParrotCompatiblePageDetector
             || $this->isInHelp()
             || $this->isInBurningParrotCompatiblePage()
             || $this->isSoftwareMap()
-            || $this->isTos();
+            || $this->isTos()
+            || $this->isPhpWiki();
     }
 
     private function isManagingLabels()
@@ -133,6 +134,15 @@ class BurningParrotCompatiblePageDetector
         }
 
         return strpos($_SERVER['REQUEST_URI'], '/file/') === 0;
+    }
+
+    private function isPhpWiki(): bool
+    {
+        if (! isset($_SERVER['REQUEST_URI'])) {
+            return false;
+        }
+
+        return str_starts_with($_SERVER['REQUEST_URI'], '/wiki/');
     }
 
     private function isInBurningParrotCompatiblePage()

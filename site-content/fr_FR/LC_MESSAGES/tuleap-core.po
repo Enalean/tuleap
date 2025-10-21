@@ -3577,6 +3577,15 @@ msgstr ""
 "Il y a déjà une opération de renommage prévue pour ce projet. Merci de "
 "consulter les <a href=\"/admin/system_events/\">Événements Système</a>."
 
+msgid "There is no Wiki Document yet"
+msgstr "Il n'y a pas de Document Wiki"
+
+msgid "There is no attachment"
+msgstr "Il n'y a pas d'attachements"
+
+msgid "There is no page to display here"
+msgstr "Il n'y a pas de page à afficher ici"
+
 msgid "There is no project references"
 msgstr "Il n'y a pas de références projet"
 
@@ -4276,6 +4285,9 @@ msgstr "Disponibilité des widgets"
 
 msgid "Wiki"
 msgstr "Wiki"
+
+msgid "Wiki Documents"
+msgstr "Documents wiki"
 
 msgid "Withdraw invitation"
 msgstr "Annuler l'invitation"

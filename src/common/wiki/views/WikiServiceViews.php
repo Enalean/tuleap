@@ -21,13 +21,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\PHPWiki\WikiPage;
 
 require_once(dirname(__FILE__) . '/WikiViews.php');
 require_once(dirname(__FILE__) . '/../lib/WikiPage.php');
 require_once(dirname(__FILE__) . '/../lib/WikiEntry.php');
 
-class WikiServiceViews extends WikiViews
+class WikiServiceViews extends WikiViews // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     protected $purifier;
     private $base_url;
@@ -38,7 +41,7 @@ class WikiServiceViews extends WikiViews
     public function __construct(&$controler, $id = 0, $view = null)
     {
         $this->purifier = Codendi_HTMLPurifier::instance();
-        parent::WikiView($controler, $id, $view);
+        parent::__construct($controler, $id, $view);
         $pm = ProjectManager::instance();
         if (isset($_REQUEST['pagename']) && ! is_null($_REQUEST['pagename'])) {
             $this->title    = $GLOBALS['Language']->getText(
@@ -60,27 +63,9 @@ class WikiServiceViews extends WikiViews
         $GLOBALS['wiki_view'] = $this;
     }
 
-  /**
-   * View
-   *
-   * <p>Default browsing page of Wiki Service.
-   * It display</p>
-   * <ul>
-   * <li>Wiki Documents - _browseWikiDocuments</li>
-   * <li>Project Wiki Pages _browseProjectWikiPage </li>
-   * <li>Empty Wiki Pages - _browseEmptyWikiPage</li>
-   * <li>A form to create new pages - _newPageForm</li>
-   * </ul>
-   * @access public
-   */
     public function browse()
     {
-        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
-        $hurl                               = '<a href="' . $this->wikiLink . '&' . $hideUrl . '">' . $hideImg . '</a>';
-        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_docu', [$hurl]);
-        if (! $hideFlag) {
-            $this->_browseWikiDocuments();
-        }
+        $this->browseWikiDocuments();
     }
 
   /**
@@ -95,39 +80,64 @@ class WikiServiceViews extends WikiViews
    * </ul>
    * @access public
    */
-    public function browsePages()
+    public function browsePages(): void
     {
-        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
-        $hurl                               = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
-        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages', [$hurl]);
-        if (! $hideFlag) {
-            $this->_browseProjectWikiPages();
-        }
+        echo '
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages') . '</h1>
+                </div>
+                <section class="tlp-pane-section">
+        ';
+        $this->browseProjectWikiPages();
+        echo <<<EOT
+                </section>
+            </div>
+        </section>
+        EOT;
 
-        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_empty_pages', $this->gid);
-        $hurl                               = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
-        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_empty', [$hurl]);
-        if (! $hideFlag) {
-            $this->_browseEmptyWikiPages();
-        }
+        echo '
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_empty') . '</h1>
+                </div>
+                <section class="tlp-pane-section">
+        ';
+        $this->browseEmptyWikiPages();
+        echo <<<EOT
+                </section>
+            </div>
+        </section>
+        EOT;
 
-        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_create_new_page', $this->gid);
-        $hurl                               = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
-        print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_create', [$hurl]);
-        if (! $hideFlag) {
-            $this->_newPageForm($this->wikiLink . '&view=browsePages');
-        }
+        echo '
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_create') . '</h1>
+                </div>
+                <section class="tlp-pane-section">
+        ';
+        $this->newPageForm($this->wikiLink . '&view=browsePages');
+        echo <<<EOT
+                </section>
+            </div>
+        </section>
+        EOT;
     }
 
-    public function _browseWikiDocuments()
+    private function browseWikiDocuments(): void
     {
         $wei = WikiEntry::getEntryIterator($this->gid);
 
+        print '<div class="tlp-card">';
         print '<ul class="WikiEntries">';
         while ($wei->valid()) {
             $we = $wei->current();
 
-            $href = $this->_buildPageLink($we->wikiPage, $we->getName());
+            $href = $this->buildPageLink($we->wikiPage, $we->getName());
             if (! empty($href)) {
                 $description = $this->purifier->purify($we->getDesc());
                 print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wikientries', [$href, $description]);
@@ -136,43 +146,29 @@ class WikiServiceViews extends WikiViews
             $wei->next();
         }
         print '</ul>';
+        print '</div>';
     }
 
-  /**
-   * _browseProjectPages - private
-   *
-   * Display project pages.
-   */
-    public function _browseProjectWikiPages()
+    private function browseProjectWikiPages(): void
     {
         WikiPage::globallySetProjectID($this->gid);
         $allPages = WikiPage::getAllUserPages();
-        $this->_browsePages($allPages);
+        $this->browsePageList($allPages);
     }
 
-  /**
-   * _browseProjectPages - private
-   *
-   * Display empty pages.
-   */
-    public function _browseEmptyWikiPages()
+    private function browseEmptyWikiPages(): void
     {
         $wpw      = new WikiPageWrapper($this->gid);
         $allPages = $wpw->getProjectEmptyLinks();
-        $this->_browsePages($allPages);
+        $this->browsePageList($allPages);
     }
 
-  /**
-   * _browsePages - private
-   *
-   * @param  string[] &$pageList List of page names.
-   */
-    public function _browsePages(&$pageList)
+    private function browsePageList(array $pageList): void
     {
         print '<ul class="WikiEntries">';
         foreach ($pageList as $pagename) {
             $wp   = new WikiPage($this->gid, $pagename);
-            $href = $this->_buildPageLink($wp);
+            $href = $this->buildPageLink($wp);
             if (! empty($href)) {
                 print '<li>' . $href . '</li>';
             }
@@ -180,29 +176,23 @@ class WikiServiceViews extends WikiViews
         print '</ul>';
     }
 
-  /**
-   * _newPageForm - private
-   *
-   * @param  string $addr Form action adress
-   */
-    public function _newPageForm($addr = '')
+    private function newPageForm(string $addr = ''): void
     {
         print '
     <form name="newPage" method="post" action="' . $addr . '">
       <input type="hidden" name="action" value="add_temp_page" />
-      <input type="hidden" name="group_id" value="' . $this->gid . '" />' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'pagename') . ' <input type="text" name="name" value="" size="20" maxsize="255" data-test="new-wiki-page" />
-      <input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_create') . '">
+      <input type="hidden" name="group_id" value="' . $this->gid . '" />
+      <div class="tlp-form-element">
+        <label class="tlp-label" for="name">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'pagename') . '</label>
+        <input type="text" name="name" id="name" value="" size="20" maxsize="255" data-test="new-wiki-page" class="tlp-input" />
+      </div>
+      <div class="tlp-pane-section-submit">
+        <input type="submit" class="tlp-button-primary" value="' . $GLOBALS['Language']->getText('global', 'btn_create') . '">
+      </div>
     </form>';
     }
 
-  /**
-   * _buildPageLink - private
-   *
-   * @param  WikiPage $wikiPage
-   * @param  string   $title
-   * @return string   $href
-   */
-    public function _buildPageLink(&$wikiPage, $title = null)
+    private function buildPageLink(WikiPage $wikiPage, ?string $title = null): string
     {
         $href = '';
       // Check permission
@@ -218,47 +208,64 @@ class WikiServiceViews extends WikiViews
 
             $link = '/wiki/index.php?group_id=' . $this->gid . '&pagename=' . urlencode($pagename);
 
-          // Display title as emphasis if corresponding page does't exist.
             if ($wikiPage->isEmpty()) {
                 $title = '<em>' . $title . '</em>';
                 $link .= '&action=edit';
             }
 
-          // Build Lock image if a permission is set on the corresponding page
+            $lock = '';
             if ($wikiPage->permissionExist()) {
-                $permLink = $this->wikiLink . '&view=pagePerms&id=' . $wikiPage->getId();
-                $title    = $title . '<img src="' . util_get_image_theme('ic/lock.png') . '" border="0" alt="Lock" />';
+                $lock = ' <i class="fa-solid fa-lock" aria-hidden="true"></i>';
             }
 
-            $href = '<a href="' . $link . '" data-test="phpwiki-page-' . urlencode($pagename) . '">' . $title . '</a>';
+            $href = '<a href="' . $link . '" data-test="phpwiki-page-' . urlencode($pagename) . '">' . $title . '</a>' . $lock;
         }
         return $href;
     }
 
     #[\Override]
-    protected function addStylesheets(): void
+    public function header(): void
     {
-        $GLOBALS['Response']->addStylesheet('/wiki/themes/Codendi/phpwiki.css');
-        parent::addStylesheets();
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb($this->getServiceCrumb());
+        $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
+
+        $GLOBALS['Response']->addCssAsset(CssViteAsset::fromFileName(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../scripts/phpwiki/frontend-assets',
+                '/assets/core/phpwiki',
+            ),
+            'src/phpwiki.scss',
+        ));
+
+        $project = ProjectManager::instance()->getProject($this->gid);
+        site_project_header(
+            $project,
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($this->title)
+                ->inProject($project, Service::WIKI)
+                ->build()
+        );
+        echo '<h1 class="project-administration-title">PhpWiki</h1>';
+        $this->displayMenu();
+        echo '<div class="tlp-framed phpwiki-service-content">';
     }
 
-  /**
-   * displayMenu - public
-   */
     #[\Override]
-    public function displayMenu()
+    public function footer(): void
     {
-        print '
-    <table class="ServiceMenu">
-      <tr>
-        <td>';
+        echo '</div>';
+        site_project_footer([]);
+    }
+
+    private function displayMenu(): void
+    {
         $language_id = '';
         if (defined('DEFAULT_LANGUAGE')) {
             $language_id = DEFAULT_LANGUAGE;
         }
         switch ($language_id) {
             case 'fr_FR':
-                 $attatch_page    = 'DéposerUnFichier';
+                $attatch_page     = 'DéposerUnFichier';
                 $preferences_page = 'PréférencesUtilisateurs';
                 break;
             case 'en_US':
@@ -267,58 +274,30 @@ class WikiServiceViews extends WikiViews
                 $preferences_page = 'UserPreferences';
                 break;
         }
-        $attatch_menu     = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuattch');
-        $preferences_menu = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuprefs');
-        print '
-    <ul class="ServiceMenu">
-      <li><a href="' . $this->wikiLink . '&view=browsePages" data-test="wiki-browse-pages">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menupages') . '</a>&nbsp;|&nbsp;</li>';
-        if (UserManager::instance()->getCurrentUserWithLoggedInInformation()->is_logged_in) {
-            print '<li><a data-help-window href="' . $this->wikiLink . '&pagename=' . $attatch_page . '&pv=1">' . $attatch_menu . '</a>&nbsp;|&nbsp;</li>';
-            print '<li><a href="' . $this->wikiLink . '&pagename=' . $preferences_page . '" data-test="wiki-preferences">' . $preferences_menu . '</a>&nbsp;|&nbsp;</li>';
+
+        $selected_tab = 'docs';
+        if (isset($_REQUEST['view']) && $_REQUEST['view'] === 'browsePages') {
+            $selected_tab = 'browsePages';
         }
-        if (user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
-            print '<li><a href="' . $this->wikiAdminLink . '" data-test="wiki-admin">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuadmin') . '</a>&nbsp;|&nbsp;</li>';
-        }
-
-        print '</ul>';
-
-        print '
-  </td>
-  <td align="right" valign="top">';
-
-        if (user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
-              $wiki     = new Wiki($this->gid);
-              $permInfo = '';
-            if ('wiki' == $this->view) {
-            // User is browsing a wiki page
-                $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
-
-                $permLink = Codendi_HTMLPurifier::instance()->purify($this->wikiAdminLink . '&view=pagePerms&id=' . urlencode((string) $wp->getId()));
-                if ($wp->permissionExist()) {
-                      $permInfo =  '<a href="' . $permLink . '"> ' . '<img src="' . util_get_image_theme('ic/lock.png') . '" border="0" alt="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_alt') . '" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_title_spec') . '"/></a>';
-                }
-            }
-            if ($wiki->permissionExist()) {
-                $permInfo .=  '<a href="/wiki/admin/index.php?group_id=' . $this->gid . '&view=wikiPerms"> ' . '<img src="' . util_get_image_theme('ic/lock.png') . '" border="0" alt="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_alt') . '" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_title_set') . '"/>' . '</a>';
-            }
-            if ($permInfo) {
-                print $permInfo;
-            }
-        }
-
-    //Display printer_version link only in wiki pages
         if (isset($_REQUEST['pagename'])) {
-              print '
-          (<a href="' . $this->base_url . '&pv=1" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lighter_display') . '">
-          <img src="' . util_get_image_theme('msg.png') . '" border="0">&nbsp;' .
-              $GLOBALS['Language']->getText('global', 'printer_version') . '</A> )
-          </li>';
+            $selected_tab = match ($_REQUEST['pagename']) {
+                $attatch_page => 'attach',
+                $preferences_page => 'prefs',
+                default => 'docs',
+            };
         }
 
-        print '
-     </td>
-    </tr>
-  </table>';
+        print '<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+      <a href="' . $this->wikiLink . '" class="tlp-tab' . ($selected_tab === 'docs' ? ' tlp-tab-active' : '') . '">' . _('Wiki Documents') . '</a>
+      <a href="' . $this->wikiLink . '&view=browsePages" data-test="wiki-browse-pages" class="tlp-tab' . ($selected_tab === 'browsePages' ? ' tlp-tab-active' : '') . '">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menupages') . '</a>';
+        if (UserManager::instance()->getCurrentUserWithLoggedInInformation()->is_logged_in) {
+            print '<a href="' . $this->wikiLink . '&pagename=' . $attatch_page . '" class="tlp-tab' . ($selected_tab === 'attach' ? ' tlp-tab-active' : '') . '">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuattch') . '</a>';
+            print '<a href="' . $this->wikiLink . '&pagename=' . $preferences_page . '" data-test="wiki-preferences" class="tlp-tab' . ($selected_tab === 'prefs' ? ' tlp-tab-active' : '') . '">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuprefs') . '</a>';
+        }
+
+        print '</nav>
+        </div>';
     }
 
   /**
@@ -331,7 +310,7 @@ class WikiServiceViews extends WikiViews
     public function pagePerms()
     {
         $postUrl = '/wiki/index.php?group_id=' . $this->gid . '&action=setWikiPagePerms';
-        $this->_pagePerms($postUrl);
+        $this->renderPerms($postUrl);
         print '<p><a href="' . $this->wikiLink . '">' . $GLOBALS['Language']->getText('global', 'back') . '</a></p>' . "\n";
     }
 

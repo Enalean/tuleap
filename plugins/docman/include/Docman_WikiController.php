@@ -23,7 +23,7 @@
 
 require_once __DIR__ . '/../../../src/common/wiki/phpwiki/lib/HtmlElement.php';
 
-class Docman_WikiController extends Docman_Controller
+class Docman_WikiController extends Docman_Controller // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $params;
 
@@ -227,7 +227,7 @@ class Docman_WikiController extends Docman_Controller
         return $this->viewsManagement();
     }
 
-    public function wiki_display_remove_button()
+    public function wiki_display_remove_button() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $wiki_page = $this->request->get('wiki_page');
         $group_id  = $this->request->get('group_id');
@@ -237,31 +237,13 @@ class Docman_WikiController extends Docman_Controller
         }
     }
 
-    public function wiki_before_content()
+    public function wiki_before_content() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $wiki_page = $this->request->get('wiki_page');
         $group_id  = $this->request->get('group_id');
         $item_dao  = $this->_getItemDao();
 
         $docman_references = HTML();
-        // Add js part for toogling referencers section.
-        $js_code = '
-            function toggle_documents(id) {
-                Element.toggle(id);
-                toggle_image(id);
-            }
-            function toggle_image(id) {
-                var img_element = $(\'img_\' + id);
-                if (img_element.src.indexOf(\'' . util_get_image_theme('ic/toggle_plus.png') . '\') != -1) {
-                    img_element.src = \'' . util_get_image_theme('ic/toggle_minus.png') . '\';
-                    img_element.title = \'' . dgettext('tuleap-docman', 'Hide related documents') . '\';
-                } else {
-                    img_element.src = \'' . util_get_image_theme('ic/toggle_plus.png') . '\';
-                    img_element.title = \'' . dgettext('tuleap-docman', 'Open to see related documents') . '\';
-                }
-            }
-                ';
-        $docman_references->pushContent(HTML::script(['type' => 'text/javascript'], $js_code));
 
         if ($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
             $docman_item_id = $item_dao->getItemIdByWikiPageAndGroupId($wiki_page, $group_id);
@@ -270,14 +252,10 @@ class Docman_WikiController extends Docman_Controller
             }
             if (isset($docman_item_id) && $docman_item_id) {
                 $content = HTML();
-                $script  = HTML::script(['type' => 'text/javascript'], "toggle_documents('documents');");
                 $user    = $this->getUser();
                 $dpm     = Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if (is_array($docman_item_id)) {
-                    $icon        = HTML::img(['id' => 'img_documents', 'src' => util_get_image_theme('ic/toggle_minus.png'), 'title' => dgettext('tuleap-docman', 'Open to see related documents'), 'data-test' => 'wiki-document-location-toggle']);
-                    $linked_icon = HTML::a(['href' => '#', 'onclick' => "javascript:toggle_documents('documents'); return false;"], $icon);
-
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
                     if (count($docman_item_id) > 1) {
                         $title = '';
@@ -295,7 +273,7 @@ class Docman_WikiController extends Docman_Controller
                     //create Full legend of the section
                     $legend  = HTML::legend(
                         ['class' => 'docman_md_frame'],
-                        count($docman_item_id) > 1 ? $linked_icon : '',
+                        '',
                         $title,
                         isset($referrer_id) && $referrer_id ? HTML($this->showReferrerPath($referrer_id, $group_id)) : ''
                     );
@@ -322,7 +300,7 @@ class Docman_WikiController extends Docman_Controller
                         $docman_references->pushContent(HTML::br());
                     } else {
                         $docman_references->pushContent(HTML::br());
-                        $docman_references->pushContent(HTML::fieldset(['class' => 'docman_md_frame'], $legend, $content, $script));
+                        $docman_references->pushContent(HTML::fieldset(['class' => 'docman_md_frame'], $legend, $content));
                     }
                 } else {
                     if ($dpm->userCanAccess($user, $docman_item_id)) {
@@ -455,7 +433,7 @@ class Docman_WikiController extends Docman_Controller
     }
 
     public $dao;
-    private function _getItemDao()
+    private function _getItemDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $this->dao) {
             $this->dao = new Docman_ItemDao(CodendiDataAccess::instance());

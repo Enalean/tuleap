@@ -1169,9 +1169,6 @@ msgstr "Recherche globale de texte"
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
-msgid "Hide related documents"
-msgstr "Cacher les documents liés"
-
 msgid ""
 "How to use folder selector:<ul><li><em>[other folders: ]</em> link displays "
 "the whole folder tree.</li><li><em>Position</em> select box allows to select "
@@ -1552,9 +1549,6 @@ msgstr "Aujourd'hui obsolète"
 
 msgid "Only admin can delete Project wide reports."
 msgstr "Seuls les admins peuvent supprimer un rapport 'projet'."
-
-msgid "Open to see related documents"
-msgstr "Ouvrir la liste des documents liés"
 
 msgid "Operation Canceled"
 msgstr "Operation annulée"

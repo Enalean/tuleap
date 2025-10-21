@@ -149,14 +149,16 @@ context("PHPWiki notifications", function () {
         });
 
         cy.visitProjectService(project, "Wiki");
-        cy.get("[data-test=wiki-admin]").click();
+        // eslint-disable-next-line cypress/no-force
+        cy.get("[data-test=wiki-admin]").click({ force: true });
         cy.get("[data-test=manage-wiki-documents]").click();
         cy.get("[data-test=table-test]").contains("[Define Permissions]").click();
         cy.get("[data-test=form-permissions] select").select("AccessToHomePage");
         cy.get("[data-test=submit-form-permissions]").click();
 
         cy.visitProjectService(project, "Wiki");
-        cy.get("[data-test=wiki-admin]").click();
+        // eslint-disable-next-line cypress/no-force
+        cy.get("[data-test=wiki-admin]").click({ force: true });
         cy.get("[data-test=set-wiki-permissions]").click();
         cy.get("[data-test=form-permissions] select").select("AccessToWikiService");
         cy.get("[data-test=submit-form-permissions]").click();

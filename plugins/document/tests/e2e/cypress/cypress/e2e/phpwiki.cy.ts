@@ -90,7 +90,6 @@ describe("Document PhpWiki integration", () => {
         cy.visitProjectService(project_unixname, "Documents");
         cy.get("[data-test=wiki-document-link]").first().click();
 
-        cy.get("[data-test=wiki-document-location-toggle]").click();
         cy.get("[data-test=wiki-document-location]").contains(`A wiki document${now}`);
         cy.get("[data-test=wiki-document-location]").contains(`An other wiki document${now}`);
         cy.get("[data-test=wiki-document-location]").contains(`A third wiki document${now}`);
@@ -124,7 +123,8 @@ describe("Document PhpWiki integration", () => {
         cy.get("[data-test=main-content]").contains(`My Wiki & Page document${now}`);
 
         cy.visitProjectService(project_unixname, "Wiki");
-        cy.get("[data-test=wiki-admin]").click();
+        // eslint-disable-next-line cypress/no-force
+        cy.get("[data-test=wiki-admin]").click({ force: true });
         cy.get("[data-test=manage-wiki-page]").click();
 
         cy.log("Document delegated permissions");

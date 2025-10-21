@@ -1,0 +1,163 @@
+/**
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.phpwiki-create-wiki-page {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+}
+
+/* stylelint-disable unit-allowed-list,color-named,declaration-property-value-disallowed-list */
+.phpwiki-service-content {
+    /**
+     * Diff Output
+     */
+
+    /* main box */
+    .diff {
+        margin-top: 1ex;
+        margin-bottom: 0.5ex;
+        padding: 1px 0.125em;
+
+        /* "paper" borders */
+
+        /* border-top: 2px #d2d2d2 solid;
+        border-left:  2px #b2b2b2 solid;
+        border-bottom:  2px #e8e6df solid;
+        border-right: 2px #e8e6df solid; */
+
+        /*  padding-left:  0em;
+          padding-bottom: 0ex; */
+
+        /*  border-style: inset; */
+
+        /* This breaks Netscape 4: (display does not go full width).
+         * width: auto;
+         */
+
+        /* I'm not sure what the intent of this was, but it's
+         *  not valid CSS: */
+
+        /* display: editarea; */
+        clear: both;
+
+        /* Netscape 4 requires this 1px border.
+           Without it, the paper borders below cause
+           the white background to disappear. */
+        border: 1px #cccccc solid;
+        border-top: 1px solid #494f5d;
+        border-right: 1px solid #c6d2de;
+        border-bottom: 1px solid #c6d2de;
+        border-left: 1px solid #494f5d;
+        background: white;
+        color: black;
+    }
+
+    .diff .block {
+        padding-left: 1em;
+        background: #dddddd;
+
+        /* for NS4 */
+
+        /* border: none; */
+    }
+
+    /* individual blocks */
+    .diff .context {
+        /* for NS4 */
+        border: none;
+        background: white;
+    }
+
+    /* entire difftextblock */
+    .difftext {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding: 0;
+
+        /* This breaks Netscape 4: (display does not go full width).
+         * width: auto;
+         */
+        clear: both;
+
+        /* Netscape 4 requires this 1px border.
+           Without it, the paper borders below cause
+           the white background to disappear. */
+        border: 1px black solid;
+
+        /* "paper" borders */
+        border-top: 1px #e8e6df solid;
+        border-right: 1px #b2b2b2 solid;
+        border-bottom: 1px #d2d2d2 solid;
+        border-left: 1px #e8e6df solid;
+        background: white;
+    }
+
+    /* + - line prefix */
+    .diff .block tt {
+        /* for NS4 */
+        margin-left: 0;
+        border: none;
+        color: black;
+        font-family: monospace;
+        font-weight: normal;
+    }
+
+    /* changed words */
+    .diff del,
+    .diff ins {
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    /* blocks containing deleted or added words */
+    .diff .original,
+    .diff .deleted,
+    .diff .final,
+    .diff .added {
+        background: white;
+    }
+
+    /* blocks containing deleted words */
+    .diff .original,
+    .diff .deleted {
+        /* for NS4 */
+        border: none;
+        background: #ffcccc;
+    }
+
+    /* blocks containing added words */
+    .diff .final,
+    .diff .added {
+        /* for NS4 */
+        border: none;
+        background: #ccffcc;
+    }
+
+    /* deleted words */
+    .diff del {
+        background: #ff9999;
+    }
+
+    /* added words */
+    .diff ins {
+        background: #99ff99;
+    }
+}
+
+/* stylelint-enable */

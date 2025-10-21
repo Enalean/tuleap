@@ -993,9 +993,6 @@ msgstr ""
 msgid "Granted groups"
 msgstr ""
 
-msgid "Hide related documents"
-msgstr ""
-
 msgid ""
 "How to use folder selector:<ul><li><em>[other folders: ]</em> link displays "
 "the whole folder tree.</li><li><em>Position</em> select box allows to select "
@@ -1350,9 +1347,6 @@ msgid "Obsolete today"
 msgstr ""
 
 msgid "Only admin can delete Project wide reports."
-msgstr ""
-
-msgid "Open to see related documents"
 msgstr ""
 
 msgid "Operation Canceled"

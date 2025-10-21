@@ -3428,6 +3428,15 @@ msgstr ""
 "이 프로젝트의 이름을 변경하는 이벤트가 이미 등록되어 있습니다. <a href=\"/"
 "admin/system_events/\">시스템 이벤트 모니터</a>를 확인하십시오."
 
+msgid "There is no Wiki Document yet"
+msgstr ""
+
+msgid "There is no attachment"
+msgstr ""
+
+msgid "There is no page to display here"
+msgstr ""
+
 msgid "There is no project references"
 msgstr ""
 
@@ -4099,6 +4108,9 @@ msgstr "위젯 가용성"
 
 msgid "Wiki"
 msgstr "위키"
+
+msgid "Wiki Documents"
+msgstr ""
 
 msgid "Withdraw invitation"
 msgstr "초대 철회"

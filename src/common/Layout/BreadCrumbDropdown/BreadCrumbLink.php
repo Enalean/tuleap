@@ -46,9 +46,10 @@ final class BreadCrumbLink
         return $this->url;
     }
 
-    public function setDataAttribute(string $name, string $value): void
+    public function setDataAttribute(string $name, string $value): self
     {
         $this->data_attributes[$name] = $value;
+        return $this;
     }
 
     /**
