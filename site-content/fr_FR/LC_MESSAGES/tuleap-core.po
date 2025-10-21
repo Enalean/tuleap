@@ -4723,6 +4723,20 @@ msgstr "Vous êtes sur le point d'annuler l'invitation de %s pour ce projet."
 
 #, php-format
 msgid ""
+"Your Tuleap subscription has expired. All accounts will be in read only mode "
+"in %d day. %s"
+msgid_plural ""
+"Your Tuleap subscription has expired. All accounts will be in read only mode "
+"in %d days. %s"
+msgstr[0] ""
+"Votre abonnement Tuleap a expiré. Tout les comptes vont passer en mode "
+"lecture seule dans %d jour. %s"
+msgstr[1] ""
+"Votre abonnement Tuleap a expiré. Tout les comptes vont passer en mode "
+"lecture seule dans %d jours. %s"
+
+#, php-format
+msgid ""
 "Your Tuleap subscription will expire in %d day. Please renew to avoid any "
 "disruption. %s"
 msgid_plural ""
@@ -4822,6 +4836,13 @@ msgstr "Votre projet a été soumis aux administrateurs pour validation."
 
 msgid "Your request is invalid"
 msgstr "Votre requête n'est pas valide"
+
+msgid ""
+"Your subscription has expired. Please contact your administrator to continue "
+"using Tuleap."
+msgstr ""
+"Votre abonnement a expiré. Merci de contacter votre administrateur pour "
+"continuer à utiliser Tuleap."
 
 msgid ""
 "Your web browser is no longer supported. Please upgrade to a modern, fully "
