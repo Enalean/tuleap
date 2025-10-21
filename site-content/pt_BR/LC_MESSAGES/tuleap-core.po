@@ -692,9 +692,6 @@ msgstr "Azul"
 msgid "Bound to service"
 msgstr "Vinculado ao serviço"
 
-msgid "Broken Thread"
-msgstr "Discussão interrompida"
-
 msgid "Built from template"
 msgstr "Construído a partir do modelo"
 

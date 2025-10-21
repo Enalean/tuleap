@@ -84423,68 +84423,42 @@
       <code><![CDATA[db_ei($forum_id)]]></code>
       <code><![CDATA[db_ei($msg_id)]]></code>
       <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
       <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_insertid($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
       <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query("INSERT INTO forum_thread_id VALUES ('')")]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query('SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
       <code><![CDATA[db_result($result, $i, 'body')]]></code>
-      <code><![CDATA[db_result($result, $i, 'body')]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
       <code><![CDATA[db_result($result, $i, 'date')]]></code>
       <code><![CDATA[db_result($result, $i, 'date')]]></code>
       <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
-      <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
       <code><![CDATA[db_result($result, $i, 'subject')]]></code>
-      <code><![CDATA[db_result($result, $i, 'subject')]]></code>
       <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($result, ($rows - 1), 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, ($rows - 1), 'subject')]]></code>
       <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
       <code><![CDATA[db_result($result, 0, 'is_public')]]></code>
       <code><![CDATA[db_result($result, 0, 'save_date')]]></code>
     </DeprecatedFunction>
     <MissingParamType>
       <code><![CDATA[$et]]></code>
-      <code><![CDATA[$et]]></code>
       <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_status]]></code>
       <code><![CDATA[$level]]></code>
       <code><![CDATA[$msg_id]]></code>
       <code><![CDATA[$thread_id]]></code>
-      <code><![CDATA[$thread_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[forum_can_be_public]]></code>
       <code><![CDATA[forum_footer]]></code>
       <code><![CDATA[forum_header]]></code>
-      <code><![CDATA[forum_is_public_value_allowed]]></code>
       <code><![CDATA[forum_utils_access_allowed]]></code>
       <code><![CDATA[forum_utils_get_styles]]></code>
       <code><![CDATA[get_forum_saved_date]]></code>
-      <code><![CDATA[get_next_thread_id]]></code>
       <code><![CDATA[show_submessages]]></code>
-      <code><![CDATA[show_thread]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
-      <code><![CDATA[$poster]]></code>
       <code><![CDATA[$poster]]></code>
     </PossiblyNullArgument>
   </file>

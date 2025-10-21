@@ -711,9 +711,6 @@ msgstr "Bleu"
 msgid "Bound to service"
 msgstr "Lié au service"
 
-msgid "Broken Thread"
-msgstr "Fil de discussion brisée"
-
 msgid "Built from template"
 msgstr "Créé à partir du modèle"
 

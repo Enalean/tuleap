@@ -671,9 +671,6 @@ msgstr "파란색"
 msgid "Bound to service"
 msgstr "서비스에 바인드"
 
-msgid "Broken Thread"
-msgstr "끊어진 스레드"
-
 msgid "Built from template"
 msgstr "템플릿에서 구축"
 
