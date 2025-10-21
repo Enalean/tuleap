@@ -138,19 +138,19 @@ if (! IS_SCRIPT) {
         );
         $csp_script_origin = "script-src-elem 'self' 'unsafe-inline' " . implode(' ', $allowlist_scripts) . ' ' . ForgeConfig::get('sys_csp_script_scr_whitelist');
 
-        $csp_nonce_value = \Tuleap\ContentSecurityPolicy\CSPNonce::build()->value;
-        $csp_rules      .= "script-src-elem 'nonce-$csp_nonce_value' 'strict-dynamic'; ";
-        $csp_rules      .= "script-src-attr 'unsafe-inline' 'report-sample'; ";
-        $csp_rules      .= "style-src 'self' 'unsafe-inline' 'report-sample'; ";
-        $csp_rules      .= "font-src 'self'; ";
-        $csp_rules      .= "form-action 'self'; ";
-        $csp_rules      .= "manifest-src 'self'; ";
-        $csp_rules      .= 'img-src * data: blob:; ';
-        $csp_rules      .= "media-src 'self'; ";
-        $csp_rules      .= 'connect-src *; ';
-        $csp_rules      .= 'child-src *; ';
-        $csp_rules      .= 'upgrade-insecure-requests; ';
-        $csp_rules      .= 'report-uri /csp-violation; ';
+        // The next rule should use a nonce ('nonce-<value>' 'strict-dynamic') but CKEDITOR4 is currently blocking us from doing that
+        $csp_rules .= "$csp_script_origin; ";
+        $csp_rules .= "script-src-attr 'unsafe-inline' 'report-sample'; ";
+        $csp_rules .= "style-src 'self' 'unsafe-inline' 'report-sample'; ";
+        $csp_rules .= "font-src 'self'; ";
+        $csp_rules .= "form-action 'self'; ";
+        $csp_rules .= "manifest-src 'self'; ";
+        $csp_rules .= 'img-src * data: blob:; ';
+        $csp_rules .= "media-src 'self'; ";
+        $csp_rules .= 'connect-src *; ';
+        $csp_rules .= 'child-src *; ';
+        $csp_rules .= 'upgrade-insecure-requests; ';
+        $csp_rules .= 'report-uri /csp-violation; ';
 
         header("Content-Security-Policy: $csp_script_origin, default-src 'report-sample'; base-uri 'self'; $csp_rules");
     })();
