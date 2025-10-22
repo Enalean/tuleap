@@ -7,10 +7,10 @@
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.0.29",
-    "vue": "^3.5.13"
+    "vue": "^3.5.22"
   },
   "devDependencies": {
-    "@slidev/cli": "^51.4.0",
+    "@slidev/cli": "^52.4.0",
     "@slidev/theme-default": "^0.25.0"
   },
   "pnpm": {
