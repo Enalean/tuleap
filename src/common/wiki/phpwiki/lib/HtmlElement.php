@@ -199,7 +199,7 @@ class HTML extends HtmlElement
         return $el->_init2(func_get_args());
     }
 
-    public static function script(array $attributes, string ...$content)
+    public static function script(array $attributes, mixed ...$content)
     {
         $el         = new HtmlElement('script');
         $purifier   = Codendi_HTMLPurifier::instance();
