@@ -26,7 +26,6 @@ class UserPermissionsDao extends DataAccessObject
 {
     public const string PROJECT_ADMIN_FLAG = 'A';
     public const string WIKI_ADMIN_FLAG    = '2';
-    public const string FORUM_ADMIN_FLAG   = '2';
     public function isUserPartOfProjectMembers($project_id, $user_id)
     {
         $sql  = 'SELECT NULL FROM user_group WHERE group_id = ? AND user_id = ?';
@@ -118,37 +117,6 @@ class UserPermissionsDao extends DataAccessObject
                 WHERE group_id = ? AND user_id = ? AND wiki_flags = ?';
 
         $rows = $this->getDB()->run($sql, $project_id, $user_id, self::WIKI_ADMIN_FLAG);
-
-        return count($rows) > 0;
-    }
-
-    public function addUserAsForumAdmin($project_id, $user_id)
-    {
-        $sql = 'UPDATE user_group
-                SET forum_flags = ?
-                WHERE group_id = ?
-                  AND user_id = ?';
-
-        $this->getDB()->run($sql, self::FORUM_ADMIN_FLAG, $project_id, $user_id);
-    }
-
-    public function removeUserFromForumAdmin($project_id, $user_id)
-    {
-        $sql = 'UPDATE user_group
-                SET forum_flags = 0
-                WHERE group_id = ?
-                  AND user_id = ?';
-
-        $this->getDB()->run($sql, $project_id, $user_id);
-    }
-
-    public function isUserPartOfForumAdmins($project_id, $user_id)
-    {
-        $sql = 'SELECT NULL
-                FROM user_group
-                WHERE group_id = ? AND user_id = ? AND forum_flags = ?';
-
-        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::FORUM_ADMIN_FLAG);
 
         return count($rows) > 0;
     }

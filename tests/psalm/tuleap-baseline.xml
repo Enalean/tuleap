@@ -67927,12 +67927,6 @@
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
-      <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
@@ -67943,14 +67937,11 @@
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[addUserAsForumAdmin]]></code>
       <code><![CDATA[addUserAsProjectAdmin]]></code>
       <code><![CDATA[addUserAsProjectMember]]></code>
       <code><![CDATA[addUserAsWikiAdmin]]></code>
-      <code><![CDATA[isUserPartOfForumAdmins]]></code>
       <code><![CDATA[isUserPartOfProjectMembers]]></code>
       <code><![CDATA[isUserPartOfWikiAdmins]]></code>
-      <code><![CDATA[removeUserFromForumAdmin]]></code>
       <code><![CDATA[removeUserFromProjectAdmin]]></code>
       <code><![CDATA[removeUserFromWikiAdmin]]></code>
     </MissingReturnType>
