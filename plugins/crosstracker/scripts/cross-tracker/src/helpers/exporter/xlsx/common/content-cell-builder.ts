@@ -19,6 +19,7 @@
 
 import type { Cell } from "../../../../domain/ArtifactsTable";
 import {
+    LINK_TYPE_CELL,
     STATIC_LIST_CELL,
     TEXT_CELL,
     PROJECT_CELL,
@@ -100,6 +101,9 @@ export function buildXLSXContentCell(current_artifact_cell: Cell | undefined): R
                 " " +
                 current_artifact_cell.title,
         );
+    }
+    if (current_artifact_cell.type === LINK_TYPE_CELL) {
+        return new TextCell(current_artifact_cell.label);
     }
     return new EmptyCell();
 }
