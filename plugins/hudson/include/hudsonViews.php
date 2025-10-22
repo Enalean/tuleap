@@ -21,52 +21,39 @@
 
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Hudson\CSRFSynchronizerTokenProvider;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Sanitizer\URISanitizer;
 
-require_once __DIR__ . '/../../../src/www/include/help.php';
-
-class hudsonViews extends Views
+class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
+    private const string EDIT = 'edit';
+    private const string ADD  = 'add';
+
+    private readonly CSRFSynchronizerTokenProvider $csrf_token_provider;
+
     public function __construct(&$controler, $view = null)
     {
         $this->View($controler, $view);
+        $this->csrf_token_provider = new CSRFSynchronizerTokenProvider();
     }
 
     #[\Override]
     public function header()
     {
-        $request  = HTTPRequest::instance();
-        $purifier = Codendi_HTMLPurifier::instance();
-        $locale   = $request->getCurrentUser()->getShortLocale();
-        $GLOBALS['HTML']->addToolbarItem('<a data-help-window href="' .
-                                         $purifier->purify('/doc/' . urlencode($locale) . '/user-guide/ci.html')
-                                         . '">' . $purifier->purify($GLOBALS['Language']->getText('global', 'help')) . '</a>');
+        $request = HTTPRequest::instance();
         $GLOBALS['HTML']->header(
-            \Tuleap\Layout\HeaderConfigurationBuilder::get($this->_getTitle())
+            \Tuleap\Layout\HeaderConfigurationBuilder::get($this->getTitle())
                 ->inProject($request->getProject(), 'hudson')
                 ->withBodyClass(['continuous-integration-body'])
                 ->build()
         );
-        echo '<h2 class="almost-tlp-title project-header-title">' . $this->_getTitle() . '</h2>';
+        echo '<h1 class="continuous-integration-title">' . $this->getTitle() . '</h1>';
     }
 
-    public function _getTitle()
+    private function getTitle(): string
     {
         return dgettext('tuleap-hudson', 'Continuous Integration');
-    }
-
-    public function _getHelp($section = '', $questionmark = false)
-    {
-        if (trim($section) !== '' && $section[0] !== '#') {
-            $section = '#' . $section;
-        }
-        if ($questionmark) {
-            $help_label = '[?]';
-        } else {
-            $help_label = $GLOBALS['Language']->getText('global', 'help');
-        }
-        return help_button('ci.html' . $section, $help_label);
     }
 
     #[\Override]
@@ -110,15 +97,35 @@ class hudsonViews extends Views
             )
         */
         echo '<div class="continuous-integration-content">';
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $title = dgettext('tuleap-hudson', 'Jobs');
+        echo <<<EOS
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                        {$purifier->purify($title)}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+        EOS;
+
         $em->processEvent('collect_ci_triggers', $params);
-        $this->_display_jobs_table($group_id, $services);
         if ($user->isMember($request->get('group_id'), 'A')) {
-            $this->_display_add_job_form($group_id, $services);
+            $this->displayAddJobForm($group_id, $services);
         }
+        $this->displayJobsTable($group_id, $services);
+        echo <<<EOS
+                </section>
+            </div>
+        </section>
+        EOS;
         echo '</div>';
     }
 
-    public function job_details()
+    public function job_details(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
@@ -131,21 +138,48 @@ class hudsonViews extends Views
             $job_name = $request->get('job');
             $dar      = $job_dao->searchByJobName($job_name, $group_id);
         }
+
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        echo '<div class="continuous-integration-content">';
         if ($dar->valid()) {
-            $row           = $dar->current();
+            $title = dgettext('tuleap-hudson', 'Job details');
+            echo <<<EOS
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                            {$purifier->purify($title)}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section">
+            EOS;
+            $row = $dar->current();
+
+            echo '<p>';
+            echo Codendi_HTMLPurifier::instance()->purify($row['job_url'], CODENDI_PURIFIER_BASIC_NOBR, $group_id);
+            echo '</p>';
+
             $crossref_fact = new CrossReferenceFactory($row['name'], 'hudson_job', $group_id);
             $crossref_fact->fetchDatas();
             if ($crossref_fact->getNbReferences() > 0) {
                 echo '<b> ' . $GLOBALS['Language']->getText('cross_ref_fact_include', 'references') . '</b>';
                 $crossref_fact->DisplayCrossRefs();
             }
-            echo Codendi_HTMLPurifier::instance()->purify($row['job_url'], CODENDI_PURIFIER_BASIC_NOBR, $group_id);
+
+            echo <<<EOS
+                    </section>
+                </div>
+            </section>
+            EOS;
         } else {
-            echo '<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>';
+            echo '<div class="tlp-alert-danger">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</div>';
         }
+        echo '</div>';
     }
 
-    public function build_number()
+    public function build_number(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
@@ -171,115 +205,134 @@ class hudsonViews extends Views
             }
         }
 
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        echo '<div class="continuous-integration-content">';
         if ($dar && $dar->valid()) {
-            $row           = $dar->current();
+            $title = dgettext('tuleap-hudson', 'Build details');
+            echo <<<EOS
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                            {$purifier->purify($title)}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section">
+            EOS;
+
+            $row = $dar->current();
+
+            echo '<p>';
+            echo Codendi_HTMLPurifier::instance()->purify(
+                $row['job_url'] . '/' . $build_id . '/',
+                CODENDI_PURIFIER_BASIC_NOBR,
+                $group_id
+            );
+            echo '</p>';
+
             $crossref_fact = new CrossReferenceFactory($row['name'] . '/' . $build_id, 'hudson_build', $group_id);
             $crossref_fact->fetchDatas();
             if ($crossref_fact->getNbReferences() > 0) {
                 echo '<b> ' . $GLOBALS['Language']->getText('cross_ref_fact_include', 'references') . '</b>';
                 $crossref_fact->DisplayCrossRefs();
             }
-            echo Codendi_HTMLPurifier::instance()->purify(
-                $row['job_url'] . '/' . $build_id . '/',
-                CODENDI_PURIFIER_BASIC_NOBR,
-                $group_id
-            );
+            echo <<<EOS
+                    </section>
+                </div>
+            </section>
+            EOS;
         } else {
-            echo '<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>';
+            echo '<div class="tlp-alert-danger">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</div>';
         }
+        echo '</div>';
     }
 
-    public function last_test_result()
+    public function last_test_result(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id   = $request->get('job_id');
-        $user     = UserManager::instance()->getCurrentUser();
+        $purifier = Codendi_HTMLPurifier::instance();
 
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar     = $job_dao->searchByJobID($job_id);
+
+        echo '<div class="continuous-integration-content">';
         if ($dar->valid()) {
+            $title = dgettext('tuleap-hudson', 'Latest test result');
+            echo <<<EOS
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                            {$purifier->purify($title)}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section">
+            EOS;
             $row = $dar->current();
             echo Codendi_HTMLPurifier::instance()->purify(
                 $row['job_url'] . '/lastBuild/testReport/',
                 CODENDI_PURIFIER_BASIC_NOBR,
                 $group_id
             );
+            echo <<<EOS
+                    </section>
+                </div>
+            </section>
+            EOS;
         } else {
-            echo '<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>';
+            echo '<div class="tlp-alert-danger">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</div>';
         }
+        echo '</div>';
     }
 
-    public function test_trend()
+    public function test_trend(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id   = $request->get('job_id');
-        $user     = UserManager::instance()->getCurrentUser();
+        $purifier = Codendi_HTMLPurifier::instance();
 
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar     = $job_dao->searchByJobID($job_id);
+        echo '<div class="continuous-integration-content">';
         if ($dar->valid()) {
+            $title = dgettext('tuleap-hudson', 'Test trend');
+            echo <<<EOS
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                            {$purifier->purify($title)}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section">
+            EOS;
             $row = $dar->current();
             echo Codendi_HTMLPurifier::instance()->purify(
                 $row['job_url'] . '/test/?width=800&height=600&failureOnly=false',
                 CODENDI_PURIFIER_BASIC_NOBR,
                 $group_id
             );
+            echo <<<EOS
+                    </section>
+                </div>
+            </section>
+            EOS;
         } else {
-            echo '<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>';
-        }
-    }
-
-    public function editJob()
-    {
-        echo '<div class="continuous-integration-content">';
-        $request  = HTTPRequest::instance();
-        $group_id = $request->get('group_id');
-        $job_id   = $request->get('job_id');
-        $user     = UserManager::instance()->getCurrentUser();
-        if ($user->isMember($group_id, 'A')) {
-            $project_manager = ProjectManager::instance();
-            $project         = $project_manager->getProject($group_id);
-
-            $em      = EventManager::instance();
-            $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-            $dar     = $job_dao->searchByJobID($job_id);
-            if ($dar->valid()) {
-                $row = $dar->current();
-
-                echo '<a href="/plugins/hudson/?group_id=' . Codendi_HTMLPurifier::instance()->purify(urlencode($group_id)) . '">' . dgettext('tuleap-hudson', 'Back to jobs list') . '</a>';
-
-                echo '<h3>' . dgettext('tuleap-hudson', 'Edit job') . '</h3>';
-
-                $services = [];
-                $params   = ['group_id' => $group_id, 'job_id' => $job_id, 'services' => &$services];
-                $em->processEvent('collect_ci_triggers', $params);
-
-                $button = dgettext('tuleap-hudson', 'Update job');
-                $this->displayForm(
-                    $project,
-                    $services,
-                    'edit',
-                    'update',
-                    $button,
-                    $job_id,
-                    $row['job_url'],
-                    $row['name'],
-                    $row['use_svn_trigger'],
-                    $row['token'],
-                    $row['svn_paths']
-                );
-            }
+            echo '<div class="tlp-alert-danger">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</div>';
         }
         echo '</div>';
     }
-    // }}}
 
-    public function _display_jobs_table($group_id, $services)
+    private function displayJobsTable($group_id, $services): void
     {
         $request  = HTTPRequest::instance();
-        $group_id = $request->get('group_id');
         $purifier = Codendi_HTMLPurifier::instance();
         $user     = UserManager::instance()->getCurrentUser();
         $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
@@ -289,7 +342,7 @@ class hudsonViews extends Views
             $project_manager = ProjectManager::instance();
             $project         = $project_manager->getProject($group_id);
 
-            echo '<table id="jobs_table" class="table">';
+            echo '<table id="jobs_table" class="tlp-table">';
             echo ' <thead><tr>';
             echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'Job')) . '</th>';
             echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'Last Success')) . '</th>';
@@ -304,7 +357,7 @@ class hudsonViews extends Views
                 }
             }
             if ($user->isMember($request->get('group_id'), 'A')) {
-                echo '  <th>' . $purifier->purify(dgettext('tuleap-hudson', 'Actions')) . '</th>';
+                echo '  <th></th>';
             }
             echo ' </tr></thead>';
             echo '<tbody>';
@@ -317,8 +370,10 @@ class hudsonViews extends Views
             $minimal_hudson_jobs                   = [];
             $hudson_jobs_complementary_information = [];
 
+            $rows = [];
             foreach ($dar as $row) {
-                $job_id = $row['job_id'];
+                $job_id        = $row['job_id'];
+                $rows[$job_id] = $row;
                 try {
                     $minimal_hudson_jobs[$job_id]                   = $minimal_job_factory->getMinimalHudsonJob($row['job_url'], $row['name']);
                     $hudson_jobs_complementary_information[$job_id] = [
@@ -354,22 +409,35 @@ class hudsonViews extends Views
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td align="center"><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '/rssAll"><img src="' . hudsonPlugin::ICONS_PATH . 'rss_feed.png" alt="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'RSS feed of all builds for %1$s job'), $job->getName())) . '" title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'RSS feed of all builds for %1$s job'), $job->getName())) . '"></a></td>';
+                    echo '  <td align="center">
+                        <a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '/rssAll">
+                            <i class="fa-solid fa-square-rss"
+                                role="img"
+                                title="' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'RSS feed of all builds for %1$s job'), $job->getName())) . '"
+                            ></i>
+                        </a>
+                    </td>';
 
                     if ($project->usesSVN()) {
+                        echo '<td>';
                         if ($hudson_jobs_complementary_information[$job_id]['use_svn_trigger'] == 1) {
-                            echo '  <td align="center"><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'server_lightning.png" alt="' . dgettext('tuleap-hudson', 'SVN commit will trigger a build') . '" title="' . dgettext('tuleap-hudson', 'SVN commit will trigger a build') . '"></td>';
-                        } else {
-                            echo '  <td>&nbsp;</td>';
+                            echo '<i class="fa-solid fa-check"
+                                role="img"
+                                title="' . $purifier->purify(dgettext('tuleap-hudson', 'SVN commit will trigger a build')) . '"
+                            ></i>';
                         }
+                        echo '</td>';
                     }
                     if (! empty($services)) {
                         foreach ($services as $service) {
+                            echo '<td>';
                             if (isset($service['used'][$job_id]) && $service['used'][$job_id] == true) {
-                                echo '  <td align="center"><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'server_lightning.png" alt="' . $purifier->purify($service['title']) . '" title="' . $purifier->purify($service['title']) . '"></td>';
-                            } else {
-                                echo '  <td>&nbsp;</td>';
+                                echo '<i class="fa-solid fa-check"
+                                    role="img"
+                                    title="' . $purifier->purify($service['title']) . '"
+                                ></i>';
                             }
+                            echo '</td>';
                         }
                     }
                 } catch (Exception $e) {
@@ -387,31 +455,52 @@ class hudsonViews extends Views
                     foreach ($services as $service) {
                         $nb_columns++;
                     }
-                    echo '  <td colspan="' . $nb_columns . '"><span class="error">' . $purifier->purify($e->getMessage()) . '</span></td>';
+                    echo '  <td colspan="' . $nb_columns . '"><div class="tlp-alert-danger">' . $purifier->purify($e->getMessage()) . '</div></td>';
                 }
 
                 if ($user->isMember($request->get('group_id'), 'A')) {
-                    echo '  <td>';
+                    $job_services = [];
+                    $params       = ['group_id' => $group_id, 'job_id' => $job_id, 'services' => &$job_services];
+                    EventManager::instance()->processEvent('collect_ci_triggers', $params);
+
+                    echo '  <td class="tlp-table-cell-actions">';
+
                     // edit job
-                    echo '   <span class="job_action">';
-                    echo '    <a href="?action=edit_job&group_id=' . $purifier->purify(urlencode($group_id)) . '&job_id=' . $purifier->purify(urlencode($job_id)) . '">' . $GLOBALS['HTML']->getimage(
-                        'ic/edit.png',
-                        ['alt' => $purifier->purify(dgettext('tuleap-hudson', 'Edit this job')),
-                            'title' => $purifier->purify(dgettext('tuleap-hudson', 'Edit this job')),
-                        ]
-                    ) . '</a>';
-                    echo '   </span>';
+                    $edit_modal_id = 'continuous-integration-edit-job-modal-' . $job_id;
+                    $this->displayForm(
+                        $edit_modal_id,
+                        $project,
+                        $job_services,
+                        self::EDIT,
+                        'update',
+                        dgettext('tuleap-hudson', 'Update job'),
+                        $job_id,
+                        $rows[$job_id]['job_url'],
+                        $rows[$job_id]['name'],
+                        $rows[$job_id]['use_svn_trigger'],
+                        $rows[$job_id]['token'],
+                        $rows[$job_id]['svn_paths']
+                    );
+                    echo '<button
+                        type="button"
+                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small continuous-integration-modal-button"
+                        data-target-modal-id="' . $purifier->purify($edit_modal_id) . '"
+                    >';
+                    echo '<i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>';
+                    echo $purifier->purify(_('Edit'));
+                    echo '</button>';
+
                     // delete job
-                    echo '   <span class="job_action">';
-                    echo '    <a href="?action=delete_job&group_id=' .  $purifier->purify(urlencode($group_id)) . '&job_id=' . $purifier->purify(urlencode($job_id)) . '" onclick="return confirm(';
-                    echo "'" . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Are you sure you want to delete Job %1$s from project %2$s?'), $hudson_jobs_complementary_information[$job_id]['name'], $project->getUnixName())) . "'";
-                    echo ');">' . $GLOBALS['HTML']->getimage(
-                        'ic/cross.png',
-                        ['alt' => dgettext('tuleap-hudson', 'Delete this job from this project'),
-                            'title' => dgettext('tuleap-hudson', 'Delete this job from this project'),
-                        ]
-                    ) . '</a>';
-                    echo '   </span>';
+                    $delete_modal_id = 'continuous-integration-delete-job-modal-' . $job_id;
+                    $this->displayDeleteModal($delete_modal_id, $job_id, $hudson_jobs_complementary_information[$job_id]['name'], $project);
+                    echo '<button
+                        type="button"
+                        class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small continuous-integration-modal-button"
+                        data-target-modal-id="' . $purifier->purify($delete_modal_id) . '"
+                    >';
+                    echo '<i class="fa-regular fa-trash-can tlp-button-icon" aria-hidden="true"></i>';
+                    echo $purifier->purify(_('Delete'));
+                    echo '</button>';
                     echo '  </td>';
                 }
 
@@ -425,21 +514,30 @@ class hudsonViews extends Views
         }
     }
 
-    public function _display_add_job_form($group_id, $services)
+    private function displayAddJobForm($group_id, $services): void
     {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($group_id);
+        $purifier        = Codendi_HTMLPurifier::instance();
 
-        // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
-        echo '<input class="btn btn-primary" value="' . dgettext('tuleap-hudson', 'Add job') . '" type="submit" onclick="toggle_addurlform(); return false;">';
-        echo ' ' . $this->_getHelp('hudson-service', true);
-        echo '<div id="hudson_add_job">';
-        $this->displayForm($project, $services, 'add', 'add', dgettext('tuleap-hudson', 'Submit'), null, null, null, null, null, '');
+        $add = dgettext('tuleap-hudson', 'Add job');
+        echo <<<EOS
+            <div class="tlp-table-actions">
+                <button type="button"
+                    class="tlp-button-primary tlp-table-actions-element continuous-integration-modal-button"
+                    data-target-modal-id="continuous-integration-add-job-modal"
+                >
+                    <i class="tlp-button-icon fa-solid fa-plus" aria-hidden="true"></i>
+                    {$purifier->purify($add)}
+                </button>
+            EOS;
+        $this->displayForm('continuous-integration-add-job-modal', $project, $services, self::ADD, 'add', dgettext('tuleap-hudson', 'Submit'), null, null, null, null, null, '');
+
         echo '</div>';
-        echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
     }
 
     private function displayForm(
+        string $modal_id,
         $project,
         $services,
         $add_or_edit,
@@ -451,68 +549,113 @@ class hudsonViews extends Views
         $use_svn_trigger,
         $token,
         $svn_paths,
-    ) {
+    ): void {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        echo '  <form class="form-horizontal">
+        $title = $add_or_edit === self::ADD ? dgettext('tuleap-hudson', 'Add job') : dgettext('tuleap-hudson', 'Update job');
+        $close = _('Close');
+        echo <<<EOS
+        <form class="tlp-modal" id="{$purifier->purify($modal_id)}" role="dialog" aria-labelledby="{$purifier->purify($modal_id)}-title">
+            <div class="tlp-modal-header">
+                <h1 class="tlp-modal-title" id="{$purifier->purify($modal_id)}-title">{$purifier->purify($title)}</h1>
+                <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{$purifier->purify($close)}">
+                    <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="tlp-modal-body">
+        EOS;
+
+        $csrf = $this->csrf_token_provider->getCSRF($project);
+
+        echo '      <input type="hidden" name="' . $purifier->purify($csrf->getTokenName()) . '" value="' . $purifier->purify($csrf->getToken()) . '">
                     <input type="hidden" name="group_id" value="' . $purifier->purify($project->getId()) . '" />
                     <input type="hidden" name="job_id" value="' . $purifier->purify($job_id) . '" />
                     <input type="hidden" name="action" value="' . $purifier->purify($action) . '_job" />
-                    <div class="control-group">
-                        <label class="control-label" for="hudson_job_url">' . $purifier->purify(dgettext('tuleap-hudson', 'Job URL:')) . '</label>
-                        <div class="controls">
-                            <input id="hudson_job_url" required name="hudson_job_url" type="text" size="64" value="' . $purifier->purify($job_url) . '" />
-                            <span class="help help-inline">' . $purifier->purify(dgettext('tuleap-hudson', 'eg: http://myCIserver/jenkins/job/myJob or http://myCIserver/jenkins/job/myJob/buildWithParameters?param1=value1 for parameterized jobs')) . '</span>
-                        </div>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="hudson_job_url">
+                            ' . $purifier->purify(dgettext('tuleap-hudson', 'Job URL')) . '
+                            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                        </label>
+                        <input type="text"
+                            id="hudson_job_url"
+                            name="hudson_job_url"
+                            class="tlp-input"
+                            placeholder="https://"
+                            required
+                            value="' . $purifier->purify($job_url) . '"
+                        >
+                        <p class="tlp-text-info">
+                            ' . $purifier->purify(dgettext('tuleap-hudson', 'eg: http://myCIserver/jenkins/job/myJob or http://myCIserver/jenkins/job/myJob/buildWithParameters?param1=value1 for parameterized jobs')) . '
+                        </p>
                     </div>';
         if ($name !== null) {
-            echo '  <div class="control-group">
-                        <label class="control-label" for="hudson_job_name">' . $purifier->purify(dgettext('tuleap-hudson', 'Job name:')) . '</label>
-                        <div class="controls">
-                            <input id="hudson_job_name" name="hudson_job_name" type="text" size="64" value="' . $purifier->purify($name) . '" />
-                            <span class="help help-inline">' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Name (with no space) used to make a reference to this job. Eg: job #%1$s'), $name)) . '</span>
-                        </div>
-                    </div>';
+            echo '<div class="tlp-form-element">
+                <label class="tlp-label" for="hudson_job_name">
+                    ' . $purifier->purify(dgettext('tuleap-hudson', 'Job name')) . '
+                </label>
+                <input type="text" id="hudson_job_name" name="hudson_job_name" class="tlp-input" value="' . $purifier->purify($name) . '">
+                <p class="tlp-text-info">
+                    ' . $purifier->purify(sprintf(dgettext('tuleap-hudson', 'Name (with no space) used to make a reference to this job. Eg: job #%1$s'), $name)) . '
+                </p>
+            </div>';
         }
         if ($project->usesSVN() || ! empty($services)) {
-            echo '  <div class="control-group">
-                        <label class="control-label" for="hudson_job_url">' . dgettext('tuleap-hudson', 'Trigger a build after commits:') . '</label>
-                            <div class="controls">';
-            if ($project->usesSVN()) {
+            echo '<div class="tlp-form-element">
+                <label class="tlp-label">' . dgettext('tuleap-hudson', 'Trigger a build after commits') . '</label>';
+            if (! $project->usesSVN()) {
                 $checked = '';
                 if ($use_svn_trigger) {
                     $checked = ' checked="checked" ';
                 }
-                echo '<label class="checkbox">
-                        <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" ' . $checked . '/>
+                echo '<label class="tlp-label tlp-checkbox continuous-integration-trigger-option">
+                        <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" class="continuous-integration-trigger-option-checkbox" type="checkbox" ' . $checked . '/>
                         ' . $purifier->purify(dgettext('tuleap-hudson', 'SVN')) . '
                       </label>
-                      <div id="hudson_svn_paths">
-                        <label for="hudson_svn_paths_textarea">' . $purifier->purify(dgettext('tuleap-hudson', 'Only when commit occurs on following paths:')) . '</label>
-                        <textarea
-                          id="hudson_svn_paths_textarea"
-                          name="hudson_svn_paths"
-                          placeholder="' . $purifier->purify(dgettext('tuleap-hudson', 'One path per line...')) . '"
-                        >' . $purifier->purify($svn_paths) . '</textarea>
-                        <p class="help">' . $purifier->purify(dgettext('tuleap-hudson', 'If empty, every commits will trigger a build.')) . '</p>
-                      </div>
+                      <blockquote class="continuous-integration-trigger-option-details">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="hudson_svn_paths_textarea">' . $purifier->purify(dgettext('tuleap-hudson', 'Only when commit occurs on following paths')) . '</label>
+                            <textarea
+                              id="hudson_svn_paths_textarea"
+                              class="tlp-textarea"
+                              name="hudson_svn_paths"
+                              placeholder="' . $purifier->purify(dgettext('tuleap-hudson', 'One path per line...')) . '"
+                            >' . $purifier->purify($svn_paths) . '</textarea>
+                            <p class="tlp-text-info">' . $purifier->purify(dgettext('tuleap-hudson', 'If empty, every commits will trigger a build.')) . '</p>
+                      </blockquote>
                     ';
             }
             foreach ($services as $service) {
                 echo $service[$add_or_edit . '_form'];
             }
-            echo '          <label class="hudson_token_label">
-                                ' . dgettext('tuleap-hudson', 'with (optional) token:') . '
-                                <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" value="' . $purifier->purify($token) . '" />
-                            </label>
-                        </div>
-                  </div>';
+            echo '</div>';
+
+            echo '<div class="tlp-form-element">
+                <label class="tlp-label" for="hudson_trigger_token">
+                    ' . $purifier->purify(dgettext('tuleap-hudson', 'with (optional) token')) . '
+                </label>
+                <input type="text" id="hudson_trigger_token" name="hudson_trigger_token" class="tlp-input" value="' . $purifier->purify($token) . '">
+            </div>';
         }
-        echo '    <div class="control-group">
-                    <div class="controls">
-                        <input type="submit" class="btn btn-primary" value="' . $purifier->purify($button) . '" />
-                    </div>
-                  </div>
-                </form>';
+        echo '</div>
+            <div class="tlp-modal-footer">
+                <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+                ' . _('Cancel') . '
+                </button>
+                <button type="submit" class="tlp-button-primary tlp-modal-action">' . $purifier->purify($button) . '</button>
+            </div>
+        </form>';
+    }
+
+    private function displayDeleteModal(string $delete_modal_id, int $job_id, string $name, Project $project): void
+    {
+        TemplateRendererFactory::build()->getRenderer(__DIR__)
+            ->renderToPage('delete-modal', [
+                'delete_modal_id' => $delete_modal_id,
+                'job_id' => $job_id,
+                'name' => $name,
+                'project_name' => $project->getUnixName(),
+                'project_id' => $project->getID(),
+                'csrf_token' => $this->csrf_token_provider->getCSRF($project),
+            ]);
     }
 }

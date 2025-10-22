@@ -35,7 +35,7 @@ msgstr ""
 msgid "One path per line..."
 msgstr ""
 
-msgid "Only when commit occurs on following paths:"
+msgid "Only when commit occurs on following paths"
 msgstr ""
 
 msgid "Repository not found."
@@ -50,7 +50,7 @@ msgstr ""
 msgid "This request is not valid."
 msgstr ""
 
-msgid "Trigger a build after a commit in repository:"
+msgid "Trigger a build after a commit in repository"
 msgstr ""
 
 msgid ""

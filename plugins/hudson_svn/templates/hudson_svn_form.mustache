@@ -1,38 +1,40 @@
-<div>
-    <label class="checkbox">
+<label class="tlp-label tlp-checkbox continuous-integration-trigger-option">
     <input name="hudson_use_plugin_svn_trigger_checkbox" type="hidden" value="0" />
     <input name="hudson_use_plugin_svn_trigger_checkbox"
            id="hudson_use_plugin_svn_trigger_checkbox"
+           class="continuous-integration-trigger-option-checkbox"
            type="checkbox"
            value="1"
            {{# is_checked }} checked="checked" {{/ is_checked }}
     >
        {{ label_svn_multirepo }}
-    </label>
-    <div id="hudson_use_plugin_svn_trigger_form">
-        <label for="hudson_use_plugin_svn_trigger"> {{ selectbox_label }} </label>
-        <select id="hudson_use_plugin_svn_trigger" name="hudson_use_plugin_svn_trigger">
+</label>
+<blockquote class="continuous-integration-trigger-option-details">
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="hudson_use_plugin_svn_trigger"> {{ selectbox_label }} </label>
+        <select class="tlp-select" id="hudson_use_plugin_svn_trigger" name="hudson_use_plugin_svn_trigger">
             {{# repositories }}
             <option value="{{ id }}" {{# is_selected }} selected="selected" {{/ is_selected }}>{{ name }}</option>
             {{/ repositories }}
         </select>
-        <div id="hudson_paths">
-            <label for="hudson_svn_trigger_path">{{ svn_paths_label }}</label>
-            <textarea
-              id="hudson_svn_trigger_path"
-              name="hudson_svn_trigger_path"
-              placeholder="{{ svn_paths_placeholder }}"
-            >{{ path }}</textarea>
-            <p class="help">{{ svn_paths_helper }}</p>
-            <div class="workflow_action workflow_action_ci_build">
-                <p class="help">{{ params_header }}</p>
-                <ul class="help">
-                    <li>{{ project_param_description }}</li>
-                    <li>{{ user_param_description }}</li>
-                    <li>{{ repository_param_description }}</li>
-                    <li>{{ path_param_description }}</li>
-                </ul>
-            </div>
+    </div>
+    <div id="tlp-form-element">
+        <label class="tlp-label" for="hudson_svn_trigger_path">{{ svn_paths_label }}</label>
+        <textarea
+          id="hudson_svn_trigger_path"
+          class="tlp-textarea"
+          name="hudson_svn_trigger_path"
+          placeholder="{{ svn_paths_placeholder }}"
+        >{{ path }}</textarea>
+        <p class="tlp-text-info">{{ svn_paths_helper }}</p>
+        <div class="workflow_action workflow_action_ci_build">
+            <p>{{ params_header }}</p>
+            <ul>
+                <li>{{ project_param_description }}</li>
+                <li>{{ user_param_description }}</li>
+                <li>{{ repository_param_description }}</li>
+                <li>{{ path_param_description }}</li>
+            </ul>
         </div>
     </div>
-</div>
+</blockquote>

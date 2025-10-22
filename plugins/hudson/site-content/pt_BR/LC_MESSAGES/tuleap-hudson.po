@@ -30,9 +30,6 @@ msgstr ""
 msgid "%1$s Test Results (%2$s / %3$s)"
 msgstr ""
 
-msgid "Actions"
-msgstr ""
-
 msgid "Add job"
 msgstr ""
 
@@ -45,11 +42,10 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#, php-format
 msgid "Are you sure you want to delete Job %1$s from project %2$s?"
 msgstr ""
 
-msgid "Back to jobs list"
+msgid "Build details"
 msgstr ""
 
 msgid "Build performed on:"
@@ -67,13 +63,10 @@ msgstr ""
 msgid "Continuous integration service is not enabled"
 msgstr ""
 
-msgid "Delete this job from this project"
+msgid "Delete job"
 msgstr ""
 
-msgid "Edit job"
-msgstr ""
-
-msgid "Edit this job"
+msgid "Delete this job"
 msgstr ""
 
 msgid "Error: Jenkins object not found."
@@ -117,13 +110,19 @@ msgstr ""
 msgid "Job"
 msgstr ""
 
-msgid "Job URL:"
+msgid "Job URL"
 msgstr ""
 
-msgid "Job name:"
+msgid "Job details"
+msgstr ""
+
+msgid "Job name"
 msgstr ""
 
 msgid "Job not found."
+msgstr ""
+
+msgid "Jobs"
 msgstr ""
 
 msgid "Last Build:"
@@ -139,6 +138,9 @@ msgid "Last Success"
 msgstr ""
 
 msgid "Last Success:"
+msgstr ""
+
+msgid "Latest test result"
 msgstr ""
 
 msgid "Missing Jenkins job ID"
@@ -197,7 +199,7 @@ msgstr ""
 msgid "One path per line..."
 msgstr ""
 
-msgid "Only when commit occurs on following paths:"
+msgid "Only when commit occurs on following paths"
 msgstr ""
 
 #, php-format
@@ -291,7 +293,10 @@ msgstr ""
 msgid "Test Results"
 msgstr ""
 
-msgid "Trigger a build after commits:"
+msgid "Test trend"
+msgstr ""
+
+msgid "Trigger a build after commits"
 msgstr ""
 
 msgid "Unable to add Jenkins job."
@@ -338,5 +343,5 @@ msgid ""
 "myJob/buildWithParameters?param1=value1 for parameterized jobs"
 msgstr ""
 
-msgid "with (optional) token:"
+msgid "with (optional) token"
 msgstr ""

@@ -18,6 +18,15 @@
  */
 
 @use "pkg:@tuleap/pie-chart";
+@use "project-continuous-integration-background";
+
+.continuous-integration-title {
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
+}
+
+.continuous-integration-content {
+    margin: 0 var(--tlp-medium-spacing);
+}
 
 .widget-jenkins-job-icon {
     max-width: 10px;
@@ -72,4 +81,15 @@
 
 .test-results-pie-slice-text {
     font-weight: 600;
+}
+
+.continuous-integration-trigger-option-details {
+    display: none;
+}
+
+.continuous-integration-trigger-option:has(
+        > .continuous-integration-trigger-option-checkbox:checked
+    )
+    + .continuous-integration-trigger-option-details {
+    display: block;
 }

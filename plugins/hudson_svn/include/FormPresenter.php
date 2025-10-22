@@ -56,10 +56,10 @@ class FormPresenter
         $this->is_checked   = $is_checked;
         $this->path         = $path;
 
-        $this->selectbox_label       = dgettext('tuleap-hudson_svn', 'Trigger a build after a commit in repository:');
+        $this->selectbox_label       = dgettext('tuleap-hudson_svn', 'Trigger a build after a commit in repository');
         $this->label_svn_multirepo   = dgettext('tuleap-hudson_svn', 'SVN multiple repositories');
         $this->svn_paths_helper      = dgettext('tuleap-hudson_svn', 'If empty, every commits will trigger a build.');
-        $this->svn_paths_label       = dgettext('tuleap-hudson_svn', 'Only when commit occurs on following paths:');
+        $this->svn_paths_label       = dgettext('tuleap-hudson_svn', 'Only when commit occurs on following paths');
         $this->svn_paths_placeholder = dgettext('tuleap-hudson_svn', 'One path per line...');
         $this->params_header         = sprintf(dgettext('tuleap-hudson_svn', '%1$s will automatically pass following parameters to the job:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
 

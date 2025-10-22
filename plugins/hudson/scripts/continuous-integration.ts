@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import jQuery from "jquery";
-import "./form.js";
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 
-(function ($) {
-    window.toggle_addurlform = function () {
-        $("#hudson_add_job").slideToggle(300);
-    };
-})(jQuery);
+document.addEventListener("DOMContentLoaded", () => {
+    openAllTargetModalsOnClick(document, ".continuous-integration-modal-button");
+});
