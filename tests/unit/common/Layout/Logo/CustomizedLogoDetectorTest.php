@@ -47,7 +47,7 @@ class CustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($detector->isLegacyOrganizationLogoCustomized());
     }
 
-    public function testItConsidersLogoNotCustomizedIfItIsTheSameAsOurs(): void
+    public function testItConsidersLogoNotCustomizedIfItsHashMatchesTheCommonThemeLogo(): void
     {
         copy(
             __DIR__ . '/../../../../../src/www/themes/common/images/organization_logo.png',
@@ -56,7 +56,25 @@ class CustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $detector = new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator());
 
-        self::assertFalse($detector->isLegacyOrganizationLogoCustomized());
+        self::assertFalse(
+            $detector->isLegacyOrganizationLogoCustomized(),
+            'The hash of src/www/themes/common/images/organization_logo.png was not in the list of expected hashes, please add it'
+        );
+    }
+
+    public function testItConsidersLogoNotCustomizedIfItsHashMatchesTheBurningParrotLogo(): void
+    {
+        copy(
+            __DIR__ . '/../../../../../src/www/themes/BurningParrot/images/organization_logo.png',
+            $this->data_dir_path . '/images/organization_logo.png',
+        );
+
+        $detector = new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator());
+
+        self::assertFalse(
+            $detector->isLegacyOrganizationLogoCustomized(),
+            'The hash of src/www/themes/BurningParrot/images/organization_logo.png was not in the list of expected hashes, please add it'
+        );
     }
 
     public function testItConsidersLogoCustomizedIfContentIsNotTheSameAsOurs(): void
