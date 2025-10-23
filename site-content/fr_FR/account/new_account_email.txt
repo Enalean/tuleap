@@ -9,9 +9,7 @@ $title = "Bienvenue sur ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariable
 
 $section_one = "Vous êtes maintenant un utilisateur enregistré avec le nom d'utilisateur : ";
 
-$section_two = "En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
-              .". Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés ou même démarrer votre "
-              ."propre projet.";
+$section_two = "En tant que tel, vous pouvez maintenant rejoindre un projet existant ou créer le vôtre.";
 
 
 $section_three = "** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit disponible dès maintenant, ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
