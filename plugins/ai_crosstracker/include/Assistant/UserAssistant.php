@@ -30,13 +30,16 @@ use Tuleap\AI\Mistral\Completion;
 use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\Model;
 use Tuleap\AI\Mistral\Role;
-use Tuleap\AI\Mistral\StringContent;
 use Tuleap\AI\Mistral\TextChunk;
 
 final class UserAssistant implements Assistant
 {
+    /**
+     * @param Message[] $messages
+     * @throws RestException
+     */
     #[Override]
-    public function getCompletion(\PFUser $user): Completion
+    public function getCompletion(\PFUser $user, array $messages): Completion
     {
         $tql_doc = file_get_contents(__DIR__ . '/tql.html');
         if ($tql_doc === false) {
@@ -63,10 +66,7 @@ final class UserAssistant implements Assistant
                     ),
                 ),
             ),
-            new Message(
-                Role::USER,
-                new StringContent('je veux toutes les artifacts ouverts la semaine dernière')
-            ),
+            ... $messages
         );
     }
 }
