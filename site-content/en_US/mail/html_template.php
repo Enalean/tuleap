@@ -371,7 +371,7 @@ height:auto;
 .bodyContent span.cta a:visited,
 .bodyContent span.cta a:hover,
 .bodyContent span.cta a:active {
-    background: orange;
+    background: #ff6e30;
     font-weight: bold;
     line-height: 150%;
     color: white;
