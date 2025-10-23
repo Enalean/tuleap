@@ -25,14 +25,18 @@ namespace Tuleap\Project\REST\v1;
 use ThemeVariant;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ThemeVariation;
+use Tuleap\User\Account\Appearance\FaviconVariant;
 
 /**
  * @psalm-immutable
  */
 final class ThirdPartyIntegrationStylesRepresentation
 {
-    private function __construct(public string $content, public string $variant_name)
-    {
+    private function __construct(
+        public string $content,
+        public string $variant_name,
+        public bool $should_display_favicon_variant,
+    ) {
     }
 
     public static function fromUser(\PFUser $user): self
@@ -51,6 +55,10 @@ final class ThirdPartyIntegrationStylesRepresentation
             throw new \RuntimeException("Could not read TLP vars stylesheet at $path");
         }
 
-        return new self($css_file_content, $theme_variant_color->getName());
+        return new self(
+            $css_file_content,
+            $theme_variant_color->getName(),
+            FaviconVariant::shouldDisplayFaviconVariant($user)
+        );
     }
 }
