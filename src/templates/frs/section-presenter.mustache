@@ -1,18 +1,25 @@
-<div id="frs-admin-header">
-    <h1 class="almost-tlp-title project-header-title">{{ title_frs_administration }}</h1>
+<div>
+    <h1 class="project-administration-title">{{ title_frs_administration }}</h1>
     {{# sections }}
         <div class="main-project-tabs">
-            <ul class="nav nav-tabs">
-                <li {{# permissions_active }}class="active"{{/ permissions_active }}>
-                    <a href="{{ permissions_url }}">{{ permissions }}</a>
-                </li>
-                <li {{# processors_active }}class="active"{{/ processors_active }}>
-                    <a href="{{ processors_url }}">{{ processors }}</a>
-                </li>
-                <li {{# license_agreements_active }}class="active"{{/ license_agreements_active }}>
-                    <a href="{{ license_agreements_url }}" data-test="license-agreements">{{# gettext }}License Agreements{{/ gettext }}</a>
-                </li>
-            </ul>
+            <nav class="tlp-tabs">
+                <a class="tlp-tab {{# permissions_active }}tlp-tab-active{{/ permissions_active }}"
+                    href="{{ permissions_url }}"
+                >
+                    {{ permissions }}
+                </a>
+                <a class="tlp-tab {{# processors_active }}tlp-tab-active{{/ processors_active }}"
+                   href="{{ processors_url }}"
+                >
+                    {{ processors }}
+                </a>
+                <a class="tlp-tab {{# license_agreements_active }}tlp-tab-active{{/ license_agreements_active }}"
+                   href="{{ license_agreements_url }}"
+                   data-test="license-agreements"
+                >
+                    {{# gettext }}License Agreements{{/ gettext }}
+                </a>
+            </nav>
         </div>
     {{/ sections }}
 </div>

@@ -73,9 +73,6 @@ $presenter = new ToolbarPresenter($project);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 
-$service->displayFRSHeader($project, _('Files Administration'));
-$renderer->renderToPage('toolbar-presenter', $presenter);
-
 $vAdd      = new Valid_String('add');
 $vProcName = new Valid_String('procname');
 $vProcName->required();
@@ -123,50 +120,95 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
         $processname = $request->get('processname');
         $processrank = $request->get('processrank');
         if ($processrank == '') {
-            $feedback .= ' ' . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank'));
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_rank')),
+            );
         } elseif ($processname == '') {
-            $feedback .= ' ' . $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name'));
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $Language->getText('file_admin_manageprocessors', 'proc_fill', $Language->getText('file_file_utils', 'proc_name')),
+            );
         } else {
             file_utils_update_proc($proc_id, $processname, $processrank);
         }
     } else {
-        $feedback .= $Language->getText('file_file_utils', 'update_proc_fail');
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('file_file_utils', 'update_proc_fail'));
     }
 }
 
 $sql    = 'SELECT * FROM frs_processor WHERE group_id=' . db_ei($group_id) . ' OR group_id=100 ORDER BY `rank`';
 $result = db_query($sql);
 
-?>
+$service->displayFRSHeader($project, _('Files Administration'));
+$renderer->renderToPage('toolbar-presenter', $presenter);
 
-<P>
-<H2><?php echo $Language->getText('file_admin_manageprocessors', 'manage_proclist'); ?></H2>
-<?php echo $Language->getText('file_admin_manageprocessors', 'edit_proc'); ?>
-<P>
+?>
+<div class="tlp-framed">
+    <h2><?php echo $Language->getText('file_admin_manageprocessors', 'manage_proclist'); ?></h2>
+
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                    <?php echo _('Processors list'); ?>
+                </h1>
+            </div>
+            <div class="tlp-pane-section">
 <?php
 
 file_utils_show_processors($result);
 
 ?>
 
-<HR>
-<H3><?php echo $Language->getText('file_admin_manageprocessors', 'add_proc'); ?></H3>
+            </div>
+        </div>
+    </section>
 
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fa-solid fa-plus" aria-hidden="true"></i>
+                    <?php echo $Language->getText('file_admin_manageprocessors', 'add_proc'); ?>
+                </h1>
+            </div>
+            <form action="" method="post" class="tlp-pane-section">
 <?php
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-$return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id=' . $purifier->purify(urlencode($group_id)) . '" METHOD="POST">
-    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
-    <TR><TD>' . $Language->getText('file_file_utils', 'proc_name') . ': <font color=red>*</font> </TD>
-    <TD><INPUT TYPE="TEXT" NAME="procname" VALUE="" SIZE=30></TD></TR>
-    <TR><TD>' . $Language->getText('file_file_utils', 'proc_rank') . ': <font color=red>*</font> </TD>
-    <TD><INPUT TYPE="TEXT" NAME="procrank" VALUE="" SIZE=10></TD></TR></TABLE>
-    <p><INPUT TYPE="SUBMIT" NAME="add" VALUE="' . $Language->getText('file_file_utils', 'add_proc') . '"></p></FORM>
-    <p><font color="red">*</font>: ' . $Language->getText('file_file_utils', 'required_fields') . '</p>';
+$return = '
+    <input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">
 
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="procname">
+            ' . $Language->getText('file_file_utils', 'proc_name') . '
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+        </label>
+        <input type="text" id="procname" name="procname" class="tlp-input" size="30" placeholder="x86_64">
+    </div>
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="procrank">
+            ' . $Language->getText('file_file_utils', 'proc_rank') . '
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+        </label>
+        <input type="text" id="procrank" name="procrank" class="tlp-input" size="10">
+    </div>
+
+    <div class="tlp-pane-section-submit">
+        <button type="submit" name="add" value="1" class="tlp-button-primary">
+            <i class="tlp-pane-title-icon fa-solid fa-save" aria-hidden="true"></i>
+            ' . $Language->getText('file_file_utils', 'add_proc') . '
+        </button>
+    </div>';
 echo $return;
+?>
+            </form>
+        </div>
+    </section>
+</div>
+<?php
 
 file_utils_footer([]);
-
-?>

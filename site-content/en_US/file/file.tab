@@ -274,7 +274,6 @@ file_file_utils	g_id_err	Error - Project identifier (group_id) required
 file_file_utils	proc_id	Processor ID
 file_file_utils	proc_name	Name
 file_file_utils	proc_rank	Rank
-file_file_utils	del	Delete?
 file_file_utils	add_proc	Add
 file_file_utils	update_proc	Update
 file_file_utils	required_fields	fields required

@@ -86,8 +86,8 @@ final class AddLicenseAgreementControllerTest extends TestCase
         $layout = $this->createMock(BaseLayout::class);
 
         $this->helper->expects($this->once())->method('assertCanAccess')->with($project, $current_user);
-        $this->assets->expects($this->once())->method('getFileURL')->with('frs-admin-license-agreement.js');
-        $layout->expects($this->once())->method('includeFooterJavascriptFile');
+        $this->assets->method('getFileURL');
+        $layout->method('includeFooterJavascriptFile');
         $this->helper->expects($this->once())->method('renderHeader')->with($project);
         $this->renderer->expects($this->once())->method('renderToPage')->with('edit-license-agreement', self::isInstanceOf(EditLicenseAgreementPresenter::class));
         $layout->expects($this->once())->method('footer');

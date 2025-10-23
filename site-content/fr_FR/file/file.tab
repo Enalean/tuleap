@@ -267,7 +267,6 @@ file_file_utils	g_id_err	ERREUR - Identifiant de projet (group_id) obligatoire
 file_file_utils	proc_id	ID du processeur
 file_file_utils	proc_name	Nom
 file_file_utils	proc_rank	Rang
-file_file_utils	del	Effacer ?
 file_file_utils	add_proc	Ajouter
 file_file_utils	update_proc	Modifier
 file_file_utils	required_fields	champs obligatoires

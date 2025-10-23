@@ -31,12 +31,13 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
 
-class EditLicenseAgreementController implements DispatchableWithRequest
+class EditLicenseAgreementController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var ProjectRetriever
@@ -126,6 +127,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest
 
         $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
 
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('frs-admin-license-agreement.js'));
 
         $this->helper->renderHeader($project);

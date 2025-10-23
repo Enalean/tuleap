@@ -1,32 +1,60 @@
-<h2>{{# gettext }}Edit license agreement{{/ gettext }}</h2>
-<div class="row-fluid">
-    <div class="span6">
-        <form action="{{ save_url }}" method="post">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-            {{# is_update }}
-                <input type="hidden" name="id" value="{{ id }}" />
-            {{/ is_update }}
-            <label for="license-agreement-title">{{# gettext }}Title{{/ gettext }}</label>
-            <input id="license-agreement-title" type="text" name="title" value="{{ title }}" />
-            <label for="license-agreement-content">{{# gettext }}Content{{/ gettext }}</label>
-            <textarea id="license-agreement-content" name="content">{{ content }}</textarea>
-            <button type="submit" class="btn btn-primary" name="save">{{# gettext }}Save{{/ gettext }}</button>
-            {{# can_be_deleted }}
-            <button type="submit" class="btn btn-danger" name="delete">{{# gettext }}Delete{{/ gettext }}</button>
-            {{/ can_be_deleted }}
-            <a href="{{ list_url }}" class="btn">{{# gettext }}Cancel{{/ gettext }}</a>
-        </form>
-    </div>
-    {{# is_used_by }}
-        <div class="span6">
-            <p>{{# gettext }}This license agreement cannot be deleted because it's used by following packages: {{/ gettext }}</p>
-            <ul>
-                {{# used_by }}
-                    <li><a href="{{ url }}">{{ name }}</a></li>
-                {{/ used_by }}
-            </ul>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fa-regular fa-file-lines" aria-hidden="true"></i>
+                    {{# gettext }}Edit license agreement{{/ gettext }}
+                </h1>
+            </div>
+            <form action="{{ save_url }}" method="post" class="tlp-pane-section">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+
+                {{# is_update }}
+                    <input type="hidden" name="id" value="{{ id }}" />
+                {{/ is_update }}
+
+                {{# is_used_by }}
+                    <div class="tlp-alert-info">
+                        <p>{{# gettext }}This license agreement cannot be deleted because it's used by following packages: {{/ gettext }}</p>
+                        <ul>
+                            {{# used_by }}
+                                <li><a href="{{ url }}">{{ name }}</a></li>
+                            {{/ used_by }}
+                        </ul>
+                    </div>
+                {{/ is_used_by }}
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="license-agreement-title">{{# gettext }}Title{{/ gettext }}</label>
+                    <input type="text" id="license-agreement-title" name="title" class="tlp-input" value="{{ title }}">
+                </div>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="license-agreement-content">Description </label>
+                    <textarea id="license-agreement-content" name="content" class="tlp-textarea">
+                        {{ content }}
+                    </textarea>
+                </div>
+
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary" name="save">
+                        <i class="tlp-button-icon fa-solid fa-save" aria-hidden="true"></i>
+                        {{# gettext }}Save{{/ gettext }}
+                    </button>
+                    {{# can_be_deleted }}
+                        <button type="submit" class="tlp-button-danger" name="delete">
+                        <i class="tlp-button-icon fa-solid fa-trash-alt" aria-hidden="true"></i>
+                            {{# gettext }}Delete{{/ gettext }}
+                        </button>
+                    {{/ can_be_deleted }}
+                    <a href="{{ list_url }}" class="tlp-button-secondary">
+                        {{# gettext }}Cancel{{/ gettext }}
+                    </a>
+                </div>
+            </form>
         </div>
-    {{/ is_used_by }}
+    </section>
 </div>

@@ -1,43 +1,71 @@
-<h2>{{# gettext }}License Agreements{{/ gettext }}</h2>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                    {{# gettext }}License Agreements{{/ gettext }}
+                </h1>
+            </div>
+            <form action="{{ set_default_agreement_url }}" method="post" class="tlp-pane-section">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
 
-<div class="row-fluid">
-    <div class="span6">
-        <p><a href="{{ create_url }}" class="btn btn-primary">{{# gettext }}Create new License Agreement{{/ gettext }}</a></p>
-        <form action="{{ set_default_agreement_url }}" method="post">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-            <table class="table">
-                <thead>
-                <th>{{# gettext }}Title{{/ gettext }}</th>
-                <th>{{# gettext }}Is default?{{/ gettext }}</th>
-                <th>{{# gettext }}Actions{{/ gettext }}</th>
-                </thead>
-                <tbody>
-                {{# license_agreements }}
-                    <tr>
-                        <td>{{ title }}</td>
-                        <td>
-                            <input type="radio" data-test="default-agreement" name="default_agreement" value="{{ id }}" {{# is_default }}checked{{/ is_default }}/>
-                        </td>
-                        {{# can_edit }}
+                <div class="tlp-table-actions">
+                    <a href="{{ create_url }}" class="tlp-button-primary tlp-table-actions-element">
+                        <i class="tlp-button-icon fa-solid fa-plus" aria-hidden="true"></i>
+                        {{# gettext }}Create new License Agreement{{/ gettext }}
+                    </a>
+                </div>
+
+                <table class="tlp-table">
+                    <thead>
+                        <th>{{# gettext }}Title{{/ gettext }}</th>
+                        <th>{{# gettext }}Is default?{{/ gettext }}</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                    {{# license_agreements }}
+                        <tr>
+                            <td>{{ title }}</td>
                             <td>
-                                <a href="{{ url }}" class="far fa-edit">{{# gettext }}edit{{/ gettext }}</a>
+                                <input type="radio" data-test="default-agreement" name="default_agreement" value="{{ id }}" {{# is_default }}checked{{/ is_default }}/>
                             </td>
-                        {{/ can_edit }}
-                        {{# can_view_only }}
-                            <td>
-                                <a href="{{ url }}" class="fa-solid fa-eye">{{# gettext }}view{{/ gettext }}</a>
-                            </td>
-                        {{/ can_view_only }}
-                        {{# no_actions }}
-                            <td></td>
-                        {{/ no_actions }}
-                    </tr>
-                {{/ license_agreements }}
-                </tbody>
-            </table>
-            <button type="submit" class="btn" data-test="save-agreements">{{# gettext }}Set default{{/ gettext }}</button>
-        </form>
-    </div>
+                            {{# can_edit }}
+                                <td class="tlp-table-cell-actions">
+                                    <a href="{{ url }}"
+                                       class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                    >
+                                        <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+                                        {{# gettext }}edit{{/ gettext }}
+                                    </a>
+                                </td>
+                            {{/ can_edit }}
+                            {{# can_view_only }}
+                                <td class="tlp-table-cell-actions">
+                                    <a href="{{ url }}"
+                                       class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                    >
+                                        <i class="fa-solid fa-eye tlp-button-icon" aria-hidden="true"></i>
+                                        {{# gettext }}view{{/ gettext }}
+                                    </a>
+                                </td>
+                            {{/ can_view_only }}
+                            {{# no_actions }}
+                                <td class="tlp-table-cell-actions"></td>
+                            {{/ no_actions }}
+                        </tr>
+                    {{/ license_agreements }}
+                    </tbody>
+                </table>
+
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary" data-test="save-agreements">
+                        {{# gettext }}Set default{{/ gettext }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
 </div>

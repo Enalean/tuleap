@@ -29,10 +29,11 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
 
-class AddLicenseAgreementController implements DispatchableWithRequest
+class AddLicenseAgreementController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var ProjectRetriever
@@ -93,6 +94,7 @@ class AddLicenseAgreementController implements DispatchableWithRequest
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->helper->assertCanAccess($project, $request->getCurrentUser());
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('frs-admin-license-agreement.js'));
 
         $this->helper->renderHeader($project);
