@@ -31,11 +31,12 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
 final class RequiredSectionInformationCollector implements CollectRequiredSectionInformation
 {
     /**
-     * @var array<int, RequiredArtifactInformation>
+     * @var array<int, ?RequiredArtifactInformation>
      */
     private array $collected = [];
 
@@ -46,11 +47,11 @@ final class RequiredSectionInformationCollector implements CollectRequiredSectio
     }
 
     #[Override]
-    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
+    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id, Option $before_changeset_id): Ok|Err
     {
         return $this->required_artifact_information_builder
-            ->getRequiredArtifactInformation($artidoc, $artifact_id, $this->current_user)
-            ->map(function (RequiredArtifactInformation $info) use ($artifact_id) {
+            ->getRequiredArtifactInformation($artidoc, $artifact_id, $before_changeset_id, $this->current_user)
+            ->map(function (?RequiredArtifactInformation $info) use ($artifact_id) {
                 $this->collected[$artifact_id] = $info;
 
                 return null;
@@ -58,11 +59,11 @@ final class RequiredSectionInformationCollector implements CollectRequiredSectio
     }
 
     /**
-     * @return Ok<RequiredArtifactInformation>|Err<Fault>
+     * @return Ok<?RequiredArtifactInformation>|Err<Fault>
      */
     public function getCollectedRequiredSectionInformation(int $artifact_id): Ok|Err
     {
-        return isset($this->collected[$artifact_id])
+        return array_key_exists($artifact_id, $this->collected)
             ? Result::ok($this->collected[$artifact_id])
             : Result::err(Fault::fromMessage('Unable to retrieve required section information for creation.'));
     }

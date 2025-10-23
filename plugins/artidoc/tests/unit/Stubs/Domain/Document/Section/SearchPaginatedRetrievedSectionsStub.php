@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Stubs\Domain\Document\Section;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\SearchPaginatedRetrievedSections;
+use Tuleap\Option\Option;
 
 final readonly class SearchPaginatedRetrievedSectionsStub implements SearchPaginatedRetrievedSections
 {
@@ -43,7 +44,7 @@ final readonly class SearchPaginatedRetrievedSectionsStub implements SearchPagin
     }
 
     #[\Override]
-    public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRetrievedSections
+    public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, Option $before_changeset_id, int $limit, int $offset): PaginatedRetrievedSections
     {
         if ($this->sections === null) {
             throw new \Exception('Unexpected call to searchPaginatedRetrievedSectionsById()');

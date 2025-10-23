@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Option\Option;
 
-interface BuildRequiredArtifactInformation
+/**
+ * @psalm-immutable
+ */
+final readonly class SectionDidNotExistBeforeGivenVersionsFault extends Fault
 {
-    /**
-     * @param Option<int> $before_changeset_id
-     * @return Ok<RequiredArtifactInformation>|Ok<null>|Err<Fault>
-     */
-    public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, Option $before_changeset_id, \PFUser $user): Ok|Err;
+    public static function build(): Fault
+    {
+        return new self('This section did not exist before the given version.');
+    }
 }

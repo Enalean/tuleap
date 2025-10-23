@@ -49,12 +49,14 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
+use Tuleap\Artidoc\Stubs\Document\Section\Versions\SearchChangesetsBeforeAGivenOneStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -95,6 +97,11 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     private GetFileUploadDataStub $file_upload_provider;
     private RetrieveSemanticDescriptionFieldStub $retrieve_description_field;
     private RetrieveSemanticTitleFieldStub $retrieve_title_field;
+    private SearchChangesetsBeforeAGivenOneStub $search_changesets;
+    /**
+     * @var Option<int>
+     */
+    private Option $below_changeset_id;
 
     #[\Override]
     protected function setUp(): void
@@ -108,6 +115,9 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         $this->file_upload_provider       = GetFileUploadDataStub::withoutField();
         $this->retrieve_description_field = RetrieveSemanticDescriptionFieldStub::build();
         $this->retrieve_title_field       = RetrieveSemanticTitleFieldStub::build();
+        $this->search_changesets          = SearchChangesetsBeforeAGivenOneStub::build();
+
+        $this->below_changeset_id = Option::nothing(\Psl\Type\int());
     }
 
     /**
@@ -164,6 +174,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                     $this->artifact_retriever,
                     $this->retrieve_description_field,
                     $this->retrieve_title_field,
+                    $this->search_changesets,
                 ),
             ),
         );
@@ -173,7 +184,8 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 $sections,
                 10,
             ),
-            $this->user
+            $this->user,
+            $this->below_changeset_id,
         );
     }
 
@@ -301,18 +313,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testHappyPathWithDescriptionInMarkdownFormat(): void
     {
-        $title_field = StringFieldBuilder::aStringField(1001)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $title_field = $this->buildTitleFieldUserCanWrite();
         $this->retrieve_title_field->withTitleField($title_field);
 
-        $description_field = TextFieldBuilder::aTextField(1002)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $description_field = $this->buildDescriptionFieldUserCanWrite();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
         $file = $this->createMock(FilesField::class);
@@ -346,18 +350,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testHappyPathWithDescriptionInTextFormat(): void
     {
-        $title_field = StringFieldBuilder::aStringField(1001)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $title_field = $this->buildTitleFieldUserCanWrite();
         $this->retrieve_title_field->withTitleField($title_field);
 
-        $description_field = TextFieldBuilder::aTextField(1002)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $description_field = $this->buildDescriptionFieldUserCanWrite();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
         $file = $this->createMock(FilesField::class);
@@ -391,18 +387,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testHappyPathWithFreetext(): void
     {
-        $title_field = StringFieldBuilder::aStringField(1001)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $title_field = $this->buildTitleFieldUserCanWrite();
         $this->retrieve_title_field->withTitleField($title_field);
 
-        $description_field = TextFieldBuilder::aTextField(1002)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $description_field = $this->buildDescriptionFieldUserCanWrite();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
         $file = $this->createMock(FilesField::class);
@@ -450,20 +438,85 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         self::assertSame('Title for 1', $second->title);
     }
 
-    public function testArtifactHasEmptyAttachmentFieldThatHasBeenCreatedAfterArtifactCreation(): void
+    public function testHappyPathWithAGivenVersion(): void
     {
-        $title_field = StringFieldBuilder::aStringField(1001)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $title_field = $this->buildTitleFieldUserCanWrite();
         $this->retrieve_title_field->withTitleField($title_field);
 
-        $description_field = TextFieldBuilder::aTextField(1002)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $description_field = $this->buildDescriptionFieldUserCanWrite();
+        $this->retrieve_description_field->withDescriptionField($description_field);
+
+        $art1 = $this->getArtifact(1, $title_field, $description_field, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art2 = $this->getArtifact(2, $title_field, $description_field, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $art3 = $this->getArtifact(3, $title_field, $description_field, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+
+        $this->below_changeset_id = Option::fromValue(100);
+        $art_1_changeset          = ChangesetTestBuilder::aChangeset(100)->ofArtifact($art1)->build();
+        $art_1_changeset->setFieldValue(
+            $title_field,
+            ChangesetValueTextTestBuilder::aValue(1, $art_1_changeset, $title_field)
+                ->withValue('Version 1.0 of section 1', \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
+                ->build()
+        );
+        $art_1_changeset->setFieldValue(
+            $description_field,
+            ChangesetValueTextTestBuilder::aValue(2, $art_1_changeset, $description_field)
+                ->withValue('Desc 1.0 of section 1', \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
+                ->build()
+        );
+
+        $art_2_changeset = ChangesetTestBuilder::aChangeset(98)->ofArtifact($art2)->build();
+        $art_2_changeset->setFieldValue(
+            $title_field,
+            ChangesetValueTextTestBuilder::aValue(3, $art_2_changeset, $title_field)
+                ->withValue('Version 1.0 of section 2', \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
+                ->build()
+        );
+        $art_2_changeset->setFieldValue(
+            $description_field,
+            ChangesetValueTextTestBuilder::aValue(4, $art_2_changeset, $description_field)
+                ->withValue('Desc 1.0 of section 2', \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT)
+                ->build()
+        );
+
+        $this->search_changesets->withChangeset($art1, $art_1_changeset);
+        $this->search_changesets->withChangeset($art2, $art_2_changeset);
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($art1, $art2, $art3);
+
+        $result = $this->getRepresentation(
+            [
+                RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 0, 'level' => 1]),
+                RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 1, 'level' => 1]),
+                RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 2, 'level' => 1]),
+            ],
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(10, $result->value->total);
+        self::assertCount(2, $result->value->sections);
+
+        $expected = [
+            ['id' => 1, 'title' => 'Version 1.0 of section 1', 'description' => 'Desc 1.0 of section 1', 'can_user_edit_section' => true],
+            ['id' => 2, 'title' => 'Version 1.0 of section 2', 'description' => 'Desc 1.0 of section 2', 'can_user_edit_section' => true],
+        ];
+
+        array_walk(
+            $expected,
+            static function (array $expected, int $index) use ($result) {
+                self::assertInstanceOf(ArtifactSectionRepresentation::class, $result->value->sections[$index]);
+                self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
+                self::assertSame($expected['title'], $result->value->sections[$index]->title);
+                self::assertSame($expected['description'], $result->value->sections[$index]->description);
+            }
+        );
+    }
+
+    public function testArtifactHasEmptyAttachmentFieldThatHasBeenCreatedAfterArtifactCreation(): void
+    {
+        $title_field = $this->buildTitleFieldUserCanWrite();
+        $this->retrieve_title_field->withTitleField($title_field);
+
+        $description_field = $this->buildDescriptionFieldUserCanWrite();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
         $file = $this->createMock(FilesField::class);
@@ -491,18 +544,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
 
     public function testArtifactHasNoAttachmentField(): void
     {
-        $title_field = StringFieldBuilder::aStringField(1001)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $title_field = $this->buildTitleFieldUserCanWrite();
         $this->retrieve_title_field->withTitleField($title_field);
 
-        $description_field = TextFieldBuilder::aTextField(1002)
-            ->inTracker($this->tracker)
-            ->withReadPermission($this->user, true)
-            ->withUpdatePermission($this->user, true)
-            ->build();
+        $description_field = $this->buildDescriptionFieldUserCanWrite();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
         $art1                     = $this->getArtifact(1, $title_field, $description_field, \Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
@@ -784,8 +829,21 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         ]);
     }
 
-    private function notCalledCallback(): never
+    private function buildTitleFieldUserCanWrite(): StringField
     {
-        throw new \Exception('This test was not supposed to build these fields.');
+        return StringFieldBuilder::aStringField(1001)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
+            ->build();
+    }
+
+    private function buildDescriptionFieldUserCanWrite(): TextField
+    {
+        return TextFieldBuilder::aTextField(1002)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->withUpdatePermission($this->user, true)
+            ->build();
     }
 }

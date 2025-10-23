@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
 final class CollectRequiredSectionInformationStub implements CollectRequiredSectionInformation
 {
@@ -88,7 +89,7 @@ final class CollectRequiredSectionInformationStub implements CollectRequiredSect
     }
 
     #[\Override]
-    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
+    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id, Option $before_changeset_id): Ok|Err
     {
         $this->called = true;
 

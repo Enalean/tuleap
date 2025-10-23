@@ -24,11 +24,13 @@ use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Option\Option;
 
 interface TransformRetrievedSectionsToRepresentation
 {
     /**
+     * @param Option<int> $before_changeset_id
      * @return Ok<PaginatedArtidocSectionRepresentationCollection>|Err<Fault>
      */
-    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user): Ok|Err;
+    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user, Option $before_changeset_id): Ok|Err;
 }

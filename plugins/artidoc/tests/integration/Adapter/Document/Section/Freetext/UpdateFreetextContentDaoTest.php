@@ -40,6 +40,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DBFactory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -58,7 +59,7 @@ final class UpdateFreetextContentDaoTest extends TestIntegrationTestCase
 
         $search = new RetrieveArtidocSectionDao($this->getSectionIdentifierFactory(), $this->getFreetextIdentifierFactory());
 
-        $paginated_retrieved_sections = $search->searchPaginatedRetrievedSections($artidoc, 1, 0);
+        $paginated_retrieved_sections = $search->searchPaginatedRetrievedSections($artidoc, Option::nothing(\Psl\Type\int()), 1, 0);
         self::assertCount(1, $paginated_retrieved_sections->rows);
         self::assertTrue(Result::isOk($paginated_retrieved_sections->rows[0]->content->apply(
             static fn () => Result::err(Fault::fromMessage('Should get freetext, not an artifact section')),

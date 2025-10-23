@@ -26,11 +26,13 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Option\Option;
 
 interface CollectRequiredSectionInformation
 {
     /**
+     * @param Option<int> $before_changeset_id
      * @return Ok<null>|Err<Fault>
      */
-    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err;
+    public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id, Option $before_changeset_id): Ok|Err;
 }

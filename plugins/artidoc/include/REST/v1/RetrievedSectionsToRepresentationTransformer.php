@@ -25,10 +25,12 @@ namespace Tuleap\Artidoc\REST\v1;
 use Override;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\SectionDidNotExistBeforeGivenVersionsFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
 final readonly class RetrievedSectionsToRepresentationTransformer implements TransformRetrievedSectionsToRepresentation
 {
@@ -39,9 +41,9 @@ final readonly class RetrievedSectionsToRepresentationTransformer implements Tra
     }
 
     #[Override]
-    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user): Ok|Err
+    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user, Option $before_changeset_id): Ok|Err
     {
-        return $this->collectRequiredSectionInformationForAllSections($retrieved_sections)
+        return $this->collectRequiredSectionInformationForAllSections($retrieved_sections, $before_changeset_id)
             ->andThen(function () use ($retrieved_sections, $user) {
                 $representations = [];
                 foreach ($retrieved_sections->rows as $section) {
@@ -49,6 +51,10 @@ final readonly class RetrievedSectionsToRepresentationTransformer implements Tra
                         ->getSectionRepresentation($section, $this->required_section_information_collector, $user);
 
                     if (Result::isErr($result)) {
+                        if ($result->error::class === SectionDidNotExistBeforeGivenVersionsFault::class) {
+                            continue;
+                        }
+
                         return $result;
                     }
 
@@ -66,13 +72,13 @@ final readonly class RetrievedSectionsToRepresentationTransformer implements Tra
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function collectRequiredSectionInformationForAllSections(PaginatedRetrievedSections $retrieved_sections): Ok|Err
+    private function collectRequiredSectionInformationForAllSections(PaginatedRetrievedSections $retrieved_sections, Option $from_changeset): Ok|Err
     {
         foreach ($retrieved_sections->rows as $section) {
             $result = $section->content->apply(
-                function (int $artifact_id) use ($retrieved_sections) {
+                function (int $artifact_id) use ($retrieved_sections, $from_changeset) {
                     return $this->required_section_information_collector
-                        ->collectRequiredSectionInformation($retrieved_sections->artidoc, $artifact_id);
+                        ->collectRequiredSectionInformation($retrieved_sections->artidoc, $artifact_id, $from_changeset);
                 },
                 static fn () => Result::ok(null),
             );

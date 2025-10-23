@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
+declare(strict_types=1);
 
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\NeverThrow\Err;
+namespace Tuleap\Artidoc\Domain\Document\Section\Versions;
+
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Option\Option;
 
-interface BuildRequiredArtifactInformation
+/**
+ * @psalm-immutable
+ */
+final readonly class VersionDoesNotBelongToASectionOfCurrentArtidocFault extends Fault
 {
-    /**
-     * @param Option<int> $before_changeset_id
-     * @return Ok<RequiredArtifactInformation>|Ok<null>|Err<Fault>
-     */
-    public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, Option $before_changeset_id, \PFUser $user): Ok|Err;
+    public static function build(int $artidoc_id, int $version_id): self
+    {
+        return new self(sprintf(
+            'Version #%d does not belong to artidoc #%d.',
+            $version_id,
+            $artidoc_id
+        ));
+    }
 }

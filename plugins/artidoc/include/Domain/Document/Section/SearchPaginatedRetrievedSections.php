@@ -21,8 +21,12 @@
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Option\Option;
 
 interface SearchPaginatedRetrievedSections
 {
-    public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRetrievedSections;
+    /**
+     * @param Option<int> $before_changeset_id
+     */
+    public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, Option $before_changeset_id, int $limit, int $offset): PaginatedRetrievedSections;
 }

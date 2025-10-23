@@ -34,6 +34,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
 use Tuleap\DB\DBFactory;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -180,39 +181,39 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
 
         $dao = new RetrieveArtidocSectionDao($identifier_factory, $this->getFreetextIdentifierFactory());
 
-        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_101, 50, 0)->total);
+        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_101, Option::nothing(\Psl\Type\int()), 50, 0)->total);
         self::assertSame(
             [1001, 1002, 1003, 1004],
             array_map(
                 $this->getContentForAssertion(...),
-                $dao->searchPaginatedRetrievedSections($this->artidoc_101, 50, 0)->rows,
+                $dao->searchPaginatedRetrievedSections($this->artidoc_101, Option::nothing(\Psl\Type\int()), 50, 0)->rows,
             ),
         );
 
-        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_101, 2, 1)->total);
+        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_101, Option::nothing(\Psl\Type\int()), 2, 1)->total);
         self::assertSame(
             [1002, 1003],
             array_map(
                 $this->getContentForAssertion(...),
-                $dao->searchPaginatedRetrievedSections($this->artidoc_101, 2, 1)->rows,
+                $dao->searchPaginatedRetrievedSections($this->artidoc_101, Option::nothing(\Psl\Type\int()), 2, 1)->rows,
             ),
         );
 
-        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_102, 50, 0)->total);
+        self::assertSame(4, $dao->searchPaginatedRetrievedSections($this->artidoc_102, Option::nothing(\Psl\Type\int()), 50, 0)->total);
         self::assertSame(
             ['Introduction', 'Requirements', 2001, 1001],
             array_map(
                 $this->getContentForAssertion(...),
-                $dao->searchPaginatedRetrievedSections($this->artidoc_102, 50, 0)->rows,
+                $dao->searchPaginatedRetrievedSections($this->artidoc_102, Option::nothing(\Psl\Type\int()), 50, 0)->rows,
             )
         );
 
-        self::assertSame(0, $dao->searchPaginatedRetrievedSections($this->artidoc_103, 50, 0)->total);
+        self::assertSame(0, $dao->searchPaginatedRetrievedSections($this->artidoc_103, Option::nothing(\Psl\Type\int()), 50, 0)->total);
         self::assertSame(
             [],
             array_map(
                 $this->getContentForAssertion(...),
-                $dao->searchPaginatedRetrievedSections($this->artidoc_103, 50, 0)->rows,
+                $dao->searchPaginatedRetrievedSections($this->artidoc_103, Option::nothing(\Psl\Type\int()), 50, 0)->rows,
             ),
         );
     }
@@ -250,7 +251,7 @@ final class RetrieveArtidocSectionDaoTest extends TestIntegrationTestCase
         $dao = $this->getDao();
 
         $this->createArtidocSections($this->artidoc_101, $this->getArtifactIdsToInsert(1001, 1002, 1003));
-        $rows = $dao->searchPaginatedRetrievedSections($this->artidoc_101, 50, 0)->rows;
+        $rows = $dao->searchPaginatedRetrievedSections($this->artidoc_101, Option::nothing(\Psl\Type\int()), 50, 0)->rows;
 
         foreach ($rows as $row) {
             $dao->searchSectionById($row->id)->match(

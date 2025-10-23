@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
 final class TransformRetrievedSectionsToRepresentationStub implements TransformRetrievedSectionsToRepresentation
 {
@@ -55,7 +56,7 @@ final class TransformRetrievedSectionsToRepresentationStub implements TransformR
     }
 
     #[\Override]
-    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user): Ok|Err
+    public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user, Option $before_changeset_id): Ok|Err
     {
         if ($this->result === null) {
             throw new \Exception('Unexpected call to getRepresentation()');
