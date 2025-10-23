@@ -21,7 +21,7 @@
 
 /**
  * hudson */
-class hudson extends Controler
+class hudson extends Controler // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     #[\Override]
     public function request()
@@ -45,18 +45,6 @@ class hudson extends Controler
                                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Missing Jenkins job URL (eg: http://myCIserver:8080/jenkins/job/MyJob)'));
                                 }
                                 $this->view = 'projectOverview';
-                            } else {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-                                $this->view = 'projectOverview';
-                            }
-                            break;
-                        case 'edit_job':
-                            if ($user->isMember($group_id, 'A')) {
-                                if ($request->exist('job_id')) {
-                                    $this->view = 'editJob';
-                                } else {
-                                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Missing Jenkins job ID'));
-                                }
                             } else {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
                                 $this->view = 'projectOverview';

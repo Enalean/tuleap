@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #, php-format
@@ -37,11 +37,8 @@ msgstr "Resultats des tests %1$s"
 msgid "%1$s Test Results (%2$s / %3$s)"
 msgstr "Résultats des tests %1$s (%2$s / %3$s)"
 
-msgid "Actions"
-msgstr "Actions"
-
 msgid "Add job"
-msgstr "Soumettre"
+msgstr "Ajouter un job"
 
 msgid ""
 "An issue have been encountered while retrieving information, a job can not "
@@ -56,12 +53,11 @@ msgstr[1] ""
 "Des problèmes ont été rencontrés lors de la récupération d'informations, "
 "certains jobs ne peuvent pas être affichés"
 
-#, php-format
 msgid "Are you sure you want to delete Job %1$s from project %2$s?"
 msgstr "Etes-vous sûr de vouloir supprimer le job %1$s du projet %2$s ?"
 
-msgid "Back to jobs list"
-msgstr "Revenir à la liste des jobs"
+msgid "Build details"
+msgstr "Détails du build"
 
 msgid "Build performed on:"
 msgstr "Build exécuté le :"
@@ -78,14 +74,11 @@ msgstr "Intégration continue"
 msgid "Continuous integration service is not enabled"
 msgstr "Le service d'intégration continue n'est pas actif"
 
-msgid "Delete this job from this project"
-msgstr "Supprimer ce job de ce projet"
+msgid "Delete job"
+msgstr "Supprimer le job"
 
-msgid "Edit job"
-msgstr "Modifier le job"
-
-msgid "Edit this job"
-msgstr "Editer ce job"
+msgid "Delete this job"
+msgstr "Supprimer ce job"
 
 msgid "Error: Jenkins object not found."
 msgstr "Erreur : Objet Jenkins non trouvé."
@@ -128,14 +121,20 @@ msgstr "Le job Jenkins a été modifié."
 msgid "Job"
 msgstr "Job"
 
-msgid "Job URL:"
-msgstr "URL du job :"
+msgid "Job URL"
+msgstr "URL du job"
 
-msgid "Job name:"
-msgstr "Nom du job :"
+msgid "Job details"
+msgstr "Détails du job"
+
+msgid "Job name"
+msgstr "Nom du job"
 
 msgid "Job not found."
 msgstr "Job non trouvé."
+
+msgid "Jobs"
+msgstr "Jobs"
 
 msgid "Last Build:"
 msgstr "Dernier Build :"
@@ -152,8 +151,11 @@ msgstr "Dernier succès"
 msgid "Last Success:"
 msgstr "Dernier succès :"
 
+msgid "Latest test result"
+msgstr "Dernier résultat de test"
+
 msgid "Missing Jenkins job ID"
-msgstr "Identifiant du job Jenkins manquant."
+msgstr "Identifiant du job Jenkins manquant"
 
 msgid "Missing Jenkins job URL (eg: http://myCIserver:8080/jenkins/job/MyJob)"
 msgstr ""
@@ -215,8 +217,8 @@ msgstr "Nombre de jobs jusqu'au %1$s"
 msgid "One path per line..."
 msgstr "Un chemin par ligne..."
 
-msgid "Only when commit occurs on following paths:"
-msgstr "Uniquement lors de commit sur les répertoires suivants :"
+msgid "Only when commit occurs on following paths"
+msgstr "Uniquement lors de commit sur les répertoires suivants"
 
 #, php-format
 msgid "Passed (%s)"
@@ -336,11 +338,14 @@ msgstr "Succès"
 msgid "Test Results"
 msgstr "Resultats des tests"
 
-msgid "Trigger a build after commits:"
-msgstr "Déclencher un build après un commit :"
+msgid "Test trend"
+msgstr "Tendance de test"
+
+msgid "Trigger a build after commits"
+msgstr "Déclencher un build après un commit"
 
 msgid "Unable to add Jenkins job."
-msgstr "Impossible d'ajouter le job Jenkins"
+msgstr "Impossible d'ajouter le job Jenkins."
 
 msgid "Unable to delete Jenkins job"
 msgstr "Impossible de supprimer le job Jenkins"
@@ -385,5 +390,5 @@ msgstr ""
 "ex : http://monICserveur/jenkins/job/monJob ou http://monICserveur/jenkins/"
 "job/myJob/buildWithParameters?param1=value1 pour les jobs avec parametres"
 
-msgid "with (optional) token:"
-msgstr "avec le token (optionnel) :"
+msgid "with (optional) token"
+msgstr "avec le token (optionnel)"

@@ -5,7 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/pie-chart": "workspace:*"
+    "@tuleap/burningparrot-theme": "workspace:^",
+    "@tuleap/pie-chart": "workspace:*",
+    "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:^"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

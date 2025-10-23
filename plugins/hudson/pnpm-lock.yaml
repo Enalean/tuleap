@@ -5,9 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/burningparrot-theme':
+    specifier: workspace:^
+    version: link:../../src/themes/BurningParrot
   '@tuleap/pie-chart':
     specifier: workspace:*
     version: link:../../lib/frontend/pie-chart
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../lib/frontend/project-background
+  '@tuleap/tlp-modal':
+    specifier: workspace:^
+    version: link:../../lib/frontend/tlp-modal
 
 devDependencies:
   '@tuleap/build-system-configurator':

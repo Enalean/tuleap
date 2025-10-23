@@ -35,8 +35,6 @@ use Tuleap\HudsonSvn\Job\Launcher;
 use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginInfo;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\BackendSVN;
@@ -54,8 +52,6 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->setScope(self::SCOPE_SYSTEM);
 
         bindtextdomain('tuleap-hudson_svn', __DIR__ . '/../site-content');
-
-        $this->addHook('javascript_file');
 
         $this->addHook('collect_ci_triggers');
         $this->addHook('save_ci_triggers');
@@ -86,31 +82,6 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
             $this->pluginInfo = new HudsonSvnPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    #[ListeningToEventName('cssfile')]
-    public function cssfile($params): void
-    {
-        if (strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('default-style.css') . '" />';
-        }
-    }
-
-    public function javascript_file($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL) === 0) {
-            $layout = $params['layout'];
-            assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'form.js'));
-        }
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/hudson_svn'
-        );
     }
 
     public function collect_ci_triggers($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

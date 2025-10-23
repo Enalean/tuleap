@@ -20,6 +20,7 @@
  */
 
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Http\HttpClientFactory;
@@ -51,8 +52,6 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         parent::__construct($id);
 
         bindtextdomain('tuleap-hudson', __DIR__ . '/../site-content');
-
-        $this->addHook('javascript_file', 'jsFile');
 
         $this->addHook(ProjectStatusUpdate::NAME);
 
@@ -122,28 +121,32 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         // nothing to do for hudson
     }
 
-    #[ListeningToEventName('cssfile')]
-    public function cssFile($params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function burningParrotCompatiblePageEvent(BurningParrotCompatiblePageEvent $event): void
     {
-        // Only show the stylesheet if we're actually in the hudson pages.
-        // This stops styles inadvertently clashing with the main site.
+        if (
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
+        ) {
+            $event->setIsInBurningParrotCompatiblePage();
+        }
+    }
+
+    #[ListeningToEventName(Event::BURNING_PARROT_GET_STYLESHEETS)]
+    public function burningParrontGetStylesheets(array $params): void
+    {
         if (
             $this->canIncludeStylesheets() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('default-style.css') . '" />';
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('hudson-style.css');
         }
     }
 
-    public function jsFile($params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES)]
+    public function burningParrotGetJavascriptFiles(array $params): void
     {
-        // Only include the js files if we're actually in the IM pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $layout = $params['layout'];
-            assert($layout instanceof \Layout);
-            $layout->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'hudson_tab.js'));
+        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['javascript_files'][] = (new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'continuous-integration.js'))->getFileURL();
         }
     }
 

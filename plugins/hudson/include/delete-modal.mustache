@@ -1,0 +1,40 @@
+<form action=""
+      method="POST"
+      id="{{ delete_modal_id }}"
+      role="dialog"
+      aria-labelledby="{{ delete_modal_id }}-title"
+      class="tlp-modal tlp-modal-danger"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="{{ delete_modal_id }}-title">
+            {{# dgettext }}tuleap-hudson | Delete job{{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="group_id" value="{{ project_id }}" />
+        <input type="hidden" name="job_id" value="{{ job_id }}" />
+        <input type="hidden" name="action" value="delete_job" />
+        <p>
+            {{# dgettext }}
+                tuleap-hudson |
+                Are you sure you want to delete Job %1$s from project %2$s? |
+                {{ name }} |
+                {{ project_name }}
+            {{/ dgettext }}
+        </p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button id="button-close" type="button" data-dismiss="modal" class="tlp-button-danger tlp-button-outline tlp-modal-action">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            {{# dgettext }}tuleap-hudson | Delete this job{{/ dgettext }}
+        </button>
+    </div>
+</form>

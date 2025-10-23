@@ -21,25 +21,33 @@
 
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Hudson\CSRFSynchronizerTokenProvider;
 use Tuleap\Hudson\HudsonJobBuilder;
 
 /**
  * hudsonActions
  */
-class hudsonActions extends Actions
+class hudsonActions extends Actions // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
+    private readonly SVNPathsUpdater $svn_paths_updater;
+    private readonly CSRFSynchronizerTokenProvider $csrf_token_provider;
+
     public function __construct($controler)
     {
         parent::__construct($controler);
 
-        $this->svn_paths_updater = new SVNPathsUpdater();
+        $this->svn_paths_updater   = new SVNPathsUpdater();
+        $this->csrf_token_provider = new CSRFSynchronizerTokenProvider();
     }
 
-    public function addJob()
+    public function addJob(): void
     {
-        $request  = HTTPRequest::instance();
+        $request = HTTPRequest::instance();
+        $this->csrf_token_provider->getCSRF($request->getProject())->check();
+
         $group_id = $request->get('group_id');
         $job_url  = $request->get('hudson_job_url');
+
         try {
             $minimal_job_factory = new MinimalHudsonJobFactory();
             $job_builder         = new HudsonJobBuilder(HTTPFactoryBuilder::requestFactory(), HttpClientFactory::createAsyncClient());
@@ -67,7 +75,7 @@ class hudsonActions extends Actions
                 $em     = EventManager::instance();
                 $params = ['job_id' => $jobId, 'request' => $request];
                 $em->processEvent('save_ci_triggers', $params);
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job added.'));
+                $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, dgettext('tuleap-hudson', 'Jenkins job added.'));
                 $GLOBALS['Response']->redirect('/plugins/hudson/?group_id=' . intval($group_id));
             }
         } catch (Exception $e) {
@@ -75,9 +83,11 @@ class hudsonActions extends Actions
         }
     }
 
-    public function updateJob()
+    public function updateJob(): void
     {
-        $request      = HTTPRequest::instance();
+        $request = HTTPRequest::instance();
+        $this->csrf_token_provider->getCSRF($request->getProject())->check();
+
         $job_id       = $request->get('job_id');
         $new_job_url  = $request->get('hudson_job_url');
         $new_job_name = $request->get('hudson_job_name');
@@ -104,25 +114,29 @@ class hudsonActions extends Actions
         ) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Unable to update Jenkins job'));
         } else {
-            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job updated.'));
+            $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, dgettext('tuleap-hudson', 'Jenkins job updated.'));
             $em     = EventManager::instance();
             $params = ['request' => $request];
             $em->processEvent('update_ci_triggers', $params);
+            $GLOBALS['Response']->redirect('/plugins/hudson/?group_id=' . urlencode((string) $request->getProject()->getID()));
         }
     }
 
-    public function deleteJob()
+    public function deleteJob(): void
     {
         $request = HTTPRequest::instance();
+        $this->csrf_token_provider->getCSRF($request->getProject())->check();
+
         $job_id  = $request->get('job_id');
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if (! $job_dao->deleteHudsonJob($job_id)) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Unable to delete Jenkins job'));
         } else {
-            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job deleted.'));
+            $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, dgettext('tuleap-hudson', 'Jenkins job deleted.'));
             $em     = EventManager::instance();
             $params = ['job_id' => $job_id];
             $em->processEvent('delete_ci_triggers', $params);
+            $GLOBALS['Response']->redirect('/plugins/hudson/?group_id=' . urlencode((string) $request->getProject()->getID()));
         }
     }
 }

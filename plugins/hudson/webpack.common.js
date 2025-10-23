@@ -23,9 +23,8 @@ const context = __dirname;
 const output = webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets"));
 
 const entry_points = {
-    "default-style": "./themes/default/style.scss",
     "test-results-pie": "./scripts/test-results-pie-chart.js",
-    hudson_tab: "./scripts/hudson_tab.js",
+    "continuous-integration": "./scripts/continuous-integration.ts",
     "hudson-style": "./themes/BurningParrot/hudson.scss",
 };
 

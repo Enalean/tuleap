@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+declare(strict_types=1);
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+namespace Tuleap\Hudson;
+
+use Override;
+use Tuleap\Project\Routing\ProjectCSRFSynchronizerTokenProvider;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
+final class CSRFSynchronizerTokenProvider implements ProjectCSRFSynchronizerTokenProvider
+{
+    #[Override]
+    public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
+    {
+        return new \CSRFSynchronizerToken('/plugins/hudson/?' . http_build_query(['group_id' => $project->getID()]));
+    }
+}
