@@ -97,6 +97,8 @@ class Git_Ci // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squi
                         ' </div>';
                 }
 
+                $html_purifier = Codendi_HTMLPurifier::instance();
+
                 $dao          = new GitDao();
                 $repositories = $dao->getProjectRepositoryList($params['group_id'], false);
                 $selectBox    = '<select class="tlp-select" id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger">';
@@ -106,15 +108,15 @@ class Git_Ci // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squi
                     if (! empty($repository['repository_namespace'])) {
                         $nameSpace = $repository['repository_namespace'] . '/';
                     }
-                    $selectBox .= '<option value="' . $repository['repository_id'] . '" ';
+                    $selectBox .= '<option value="' . $html_purifier->purify((string) $repository['repository_id']) . '" ';
                     if ($repositoryId == $repository['repository_id']) {
                         $selectBox .= 'selected="selected"';
                     }
-                    $selectBox .= '>' . $nameSpace . $repository['repository_name'] . '</option>';
+                    $selectBox .= '>' . $html_purifier->purify($nameSpace . $repository['repository_name']) . '</option>';
                 }
                 $selectBox .= '</select>';
 
-                $addForm  = '<label class="tlp-label tlp-checkbox continuous-integration-trigger-option">
+                $addForm = '<label class="tlp-label tlp-checkbox continuous-integration-trigger-option">
                         <input name="hudson_use_plugin_git_trigger_checkbox" type="hidden" value="0" />
                         <input name="hudson_use_plugin_git_trigger_checkbox" class="continuous-integration-trigger-option-checkbox" type="checkbox" ' . $checked . ' value="1" />
                         Git
@@ -126,7 +128,6 @@ class Git_Ci // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squi
                             ' . $selectBox . '
                         </div>
                     </blockquote>';
-                $editForm = $warning . '<label for="hudson_use_plugin_git_trigger">' . dgettext('tuleap-git', 'Trigger a build after Git pushes in repository') . ': </label>' . $selectBox;
                 return ['service'       => GitPlugin::SERVICE_SHORTNAME,
                     'title'         => dgettext('tuleap-git', 'Git trigger'),
                     'used'          => $used,
