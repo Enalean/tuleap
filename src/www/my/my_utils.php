@@ -13,7 +13,7 @@
 
 Input:
   $svc : service name to hide/show (sr, bug, pm...)
-  $db_item_id : the item (group, forum, task sub-project,...) from the
+  $db_item_id : the item (group, task sub-project,...) from the
      database that we are curently processing and about to display
   $item_id : the item_id as given in the URL and on which the show/hide switch
      is going to apply.

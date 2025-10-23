@@ -56,16 +56,6 @@ class SearchFormPresenterBuilder
                 'value' => $group_id,
             ];
 
-            if ($this->request->exist('forum_id')) {
-                $search_entries[] = [
-                    'value'    => 'forums',
-                    'selected' => true,
-                ];
-                $hidden[]         = [
-                    'name'  => 'forum_id',
-                    'value' => $this->request->get('forum_id'),
-                ];
-            }
             if ($this->request->exist('atid')) {
                 $search_entries[] = [
                     'value'    => 'tracker',

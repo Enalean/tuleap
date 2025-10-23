@@ -22,7 +22,6 @@ group	developer_info	Equipe-Projet
 group	developers	Développeurs&nbsp;
 group	long_bugs	Gestion des bugs
 group	long_docman	Gestion de documents&nbsp;: Documentation du projet
-group	long_forum	Forums de discussion
 group	long_ftp	Espace FTP anonyme
 group	long_homepage	Page d'accueil du projet
 group	long_mail	Listes de diffusion
@@ -41,7 +40,6 @@ group	short_admin	Administration
 group	short_bugs	Bugs
 group	short_docman	Documents
 group	short_files	Fichiers
-group	short_forum	Forums
 group	short_homepage	Accueil
 group	short_mail	Listes
 group	short_main	Écran principal
@@ -59,7 +57,6 @@ menu	bookmark_page	Ajouter aux favoris
 menu	change_my_theme	Changer de thème
 menu	compile_farm	Ferme de compilation
 menu	diary_notes	Journal et notes
-menu	discussion_forums	Forums de discussion
 menu	documentation	Documentations sur le site
 menu	home	Accueil
 menu	login	Identification

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchQuery
+class Search_SearchQuery //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private $project;
     private $type_of_search;
@@ -26,7 +26,6 @@ class Search_SearchQuery
     private $offset;
     private $exact;
     private $trackerv3id;
-    private $forum_id;
     private $is_ajax;
     private $number_of_results;
 
@@ -37,7 +36,6 @@ class Search_SearchQuery
         $this->offset         = intval($request->getValidated('offset', 'uint', 0));
         $this->exact          = $request->getValidated('exact', 'uint', false);
         $this->trackerv3id    = $request->getValidated('atid', 'uint', 0);
-        $this->forum_id       = $request->getValidated('forum_id', 'uint', 0);
         $this->is_ajax        = $request->isAjax();
         $this->type_of_search = $request->get('type_of_search');
     }
@@ -70,11 +68,6 @@ class Search_SearchQuery
     public function getProject()
     {
         return $this->project;
-    }
-
-    public function getForumId()
-    {
-        return $this->forum_id;
     }
 
     public function getTrackerV3Id()

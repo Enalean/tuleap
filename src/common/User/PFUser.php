@@ -357,9 +357,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
                     case 'A': //admin for this group
                         $is_member = ($group_perm['admin_flags'] && $group_perm['admin_flags'] === 'A');
                         break;
-                    case 'F2': //forum admin
-                        $is_member = ($group_perm['forum_flags'] == 2);
-                        break;
                     case 'W2': //wiki release admin
                         $is_member = ($group_perm['wiki_flags'] == 2);
                         break;

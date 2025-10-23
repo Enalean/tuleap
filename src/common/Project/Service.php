@@ -27,7 +27,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public const string SUMMARY   = 'summary';
     public const string ADMIN     = 'admin';
-    public const string FORUM     = 'forum';
     public const string HOMEPAGE  = 'homepage';
     public const string FILE      = 'file';
     public const string SVN       = 'svn';
@@ -39,7 +38,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public const array ICONS = [
         self::ADMIN     => 'fas fa-cogs',
-        self::FORUM     => 'fas fa-users',
         self::HOMEPAGE  => 'fas fa-home',
         self::WIKI      => 'fas fa-tlp-wiki',
         self::TRACKERV3 => 'fas fa-list-ol',

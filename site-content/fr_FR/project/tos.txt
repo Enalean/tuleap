@@ -77,8 +77,7 @@ utilisateurs un accès à une riche collection de ressources accessibles
 en ligne chez <?php echo \ForgeConfig::get('sys_org_name'); ?> pour des
 activités de développement logiciel et de création de contenu,
 incluant divers outils de communication, de contrôle de version et de
-gestion de projet, de publication de fichiers, de forums en
-ligne... (collectivement appelés "les services").  </p>
+gestion de projet, de publication de fichiers (collectivement appelés "les services").  </p>
 
     </section>
     <section class="tlp-pane-section">

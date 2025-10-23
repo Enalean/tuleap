@@ -100,29 +100,6 @@ class URL //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $group_id = $dao_results->getRow();
             $group_id = $group_id['group_id'];
         }
-        // Forum
-        if (strpos($req_uri, '/forum/') === 0) {
-            if (array_key_exists('forum_id', $_REQUEST) && $_REQUEST['forum_id']) {
-                // Get corresponding project
-                $dao      = $this->getForumDao();
-                $result   = $dao->searchByGroupForumId($_REQUEST['forum_id']);
-                $group_id = $result->getRow();
-                if ($group_id === false) {
-                    return false;
-                }
-                $group_id = $group_id['group_id'];
-            }
-
-            if (array_key_exists('msg_id', $_REQUEST) && $_REQUEST['msg_id']) {
-                // Get corresponding project
-                $dao = $this->getForumDao();
-                $row = $dao->getMessageProjectIdAndForumId($_REQUEST['msg_id']);
-                if ($row === false) {
-                    return false;
-                }
-                $group_id = $row['group_id'];
-            }
-        }
 
         // Artifact attachment download...
         if (strpos($req_uri, '/tracker/download.php') === 0) {
@@ -159,11 +136,6 @@ class URL //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function getProjectDao()
     {
         return new ProjectDao(CodendiDataAccess::instance());
-    }
-
-    public function getForumDao()
-    {
-        return new ForumDao(CodendiDataAccess::instance());
     }
 
     public function getArtifactDao()

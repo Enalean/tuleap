@@ -112,11 +112,6 @@ msgid_plural "%d members"
 msgstr[0] "%d명의 멤버"
 
 #, php-format
-msgid "%d message"
-msgid_plural "%d messages"
-msgstr[0] "%d개의 메시지"
-
-#, php-format
 msgid "%s (opens in a new tab)"
 msgstr "%s (새 탭에서 열림)"
 
@@ -623,9 +618,6 @@ msgstr "이 프로젝트에 가입하도록 요청"
 msgid "Authenticated users (Registered + Restricted) label"
 msgstr "인증된 사용자 (등록됨 + 제한됨) 레이블"
 
-msgid "Author"
-msgstr "작성자"
-
 msgid "Available?"
 msgstr "사용 가능?"
 
@@ -673,9 +665,6 @@ msgstr "서비스에 바인드"
 
 msgid "Built from template"
 msgstr "템플릿에서 구축"
-
-msgid "By"
-msgstr "작성자"
 
 msgid "By %s"
 msgstr "작성자 %s"
@@ -784,9 +773,6 @@ msgstr ""
 msgid "Category short name cannot contain '::'."
 msgstr ""
 
-msgid "Change View"
-msgstr "뷰 변경"
-
 msgid "Change avatar"
 msgstr "사진 변경"
 
@@ -801,9 +787,6 @@ msgstr "하위 프로젝트"
 
 msgid "Choose a category…"
 msgstr "카테고리 선택"
-
-msgid "Choose a forum and you can browse, search, and post messages."
-msgstr "포럼을 선택해 메시지를 찾아보고, 검색하고, 게시할 수 있습니다."
 
 msgid "Choose a timezone"
 msgstr "시간대 선택"
@@ -1107,9 +1090,6 @@ msgstr "모든 프로젝트에 대해 허용 안 함"
 msgid "Disallowing for all projects"
 msgstr "모든 프로젝트에 대해 허용되지 않음"
 
-msgid "Discussion Forums"
-msgstr "토론 포럼"
-
 msgid "Display density"
 msgstr "화면 밀도"
 
@@ -1252,9 +1232,6 @@ msgstr "아래에 로그인 이름을 입력해 비밀번호를 변경할 수 �
 msgid "Error"
 msgstr "오류"
 
-msgid "Error - choose a forum first"
-msgstr "오류 - 포럼을 먼저 선택하세요."
-
 msgid "Error:"
 msgstr "오류:"
 
@@ -1335,9 +1312,6 @@ msgstr "작성됨"
 msgid "Filter by name"
 msgstr "이름으로 필터링"
 
-msgid "Flat"
-msgstr "플랫"
-
 msgid "Forbidden"
 msgstr "금지됨"
 
@@ -1346,20 +1320,6 @@ msgstr "참조 패턴 강제 생성"
 
 msgid "Force usage?"
 msgstr "강제 사용하시겠습니까?"
-
-msgid "Forum Administration"
-msgstr "포럼 관리"
-
-msgid "Forum is restricted"
-msgstr "포럼이 제한되어 있습니다."
-
-#, php-format
-msgid "Forums for '%1$s'"
-msgstr "'%1$s’에 대한 포럼"
-
-msgid ""
-"Forums service is deprecated. It will be completely removed in March 2025."
-msgstr ""
 
 msgid "Full name"
 msgstr "전체 이름"
@@ -1862,9 +1822,6 @@ msgstr "월"
 msgid "Must be project admin to add a project member"
 msgstr "프로젝트 관리자만 프로젝트 멤버를 추가할 수 있습니다."
 
-msgid "Must include a message body and subject"
-msgstr "메시지 본문과 제목을 포함해야 합니다."
-
 msgid "My Dashboard"
 msgstr "내 대시보드"
 
@@ -1904,9 +1861,6 @@ msgstr "허용되는 값의 최대값은 1이어야 합니다."
 
 msgid "Nb members"
 msgstr "멤버 수"
-
-msgid "Nested"
-msgstr "중첩됨"
 
 msgid "Never"
 msgstr "안함"
@@ -1951,18 +1905,8 @@ msgstr ""
 msgid "New user"
 msgstr "신규 사용자"
 
-msgid "Next Messages"
-msgstr "다음 메시지"
-
 msgid "No"
 msgstr "아니오"
-
-msgid "No Comments"
-msgstr "댓글이 없습니다."
-
-#, php-format
-msgid "No Messages in %1$s"
-msgstr "%1$s에 메시지가 없습니다."
 
 msgid "No activity yet"
 msgstr "아직 활동이 없습니다."
@@ -1975,10 +1919,6 @@ msgstr "하위 프로젝트 없음"
 
 msgid "No email for user account"
 msgstr "사용자 계정에 대한 이메일 없음"
-
-#, php-format
-msgid "No forums found for '%1$s'"
-msgstr "'%1$s'에 대한 포럼을 찾을 수 없습니다."
 
 msgid "No items can use labels in this project."
 msgstr "이 프로젝트에서는 어떤 항목도 레이블을 사용할 수 없습니다."
@@ -2315,9 +2255,6 @@ msgstr "미리보기 전송됨"
 
 msgid "Preview:"
 msgstr "미리보기:"
-
-msgid "Previous Messages"
-msgstr "이전 메시지"
 
 msgid "Previous successful login"
 msgstr "이전에 성공한 로그인"
@@ -2944,10 +2881,6 @@ msgid ""
 msgstr ""
 "사용자님의 계정이 필요한 경우 이 프로젝트의 담당자 %s님께 문의하십시오."
 
-#, php-format
-msgid "Show %1$s"
-msgstr "%1$s 보기"
-
 msgid "Show project announcement"
 msgstr "프로젝트 공지 보기"
 
@@ -2991,9 +2924,6 @@ msgstr ""
 
 msgid "Specific project"
 msgstr "특정 프로젝트"
-
-msgid "Start New Thread"
-msgstr "새 스레드 시작"
 
 msgid "Start a new project"
 msgstr "새 프로젝트 시작"
@@ -3604,12 +3534,6 @@ msgstr ""
 
 msgid "This will remove this service from all projects."
 msgstr "이는 모든 프로젝트에서 이 서비스를 제거합니다."
-
-msgid "Thread"
-msgstr "스레드"
-
-msgid "Threaded"
-msgstr "스레드 됨"
 
 msgid "Timezone"
 msgstr "시간대"

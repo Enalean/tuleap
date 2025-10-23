@@ -366,15 +366,6 @@ function ugroup_db_get_dynamic_members(
     } elseif ($atid && $ugroup_id == $GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         return '(SELECT user.user_id, ' . $sqlname . ", user.realname, user.user_name,  user.email, user.status FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND " . $user_status . '  ORDER BY ' . $sqlorder . ')';
-    } elseif ((int) $ugroup_id === ProjectUGroup::FORUM_ADMIN) {
-        // Forum admins
-        return "(SELECT user.user_id, $sqlname, user.realname, user.user_name, user.email, user.status
-                    FROM user, user_group ug
-                    WHERE user.user_id = ug.user_id
-                    AND ug.group_id = $group_id
-                    AND forum_flags = '2'
-                    AND " . $user_status . '
-                    ORDER BY ' . $sqlorder . ' )';
     }
     return null;
 }

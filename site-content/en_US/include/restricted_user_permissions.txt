@@ -24,12 +24,11 @@
 //$allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
 
 // The following variables define access rules for the support project(s)
-// For instance $allow_access_to_project_forums = array(105) will give
-// access to project number 105 forums to all users (restricted or not).
+// For instance $allow_access_to_project_trackers = array(105) will give
+// access to project number 105 trackers to all users (restricted or not).
 
 // Default support project is project 1.
 
-//$allow_access_to_project_forums      = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
 //$allow_access_to_project_trackers    = array(1); // Support project trackers are used for support requests
 //$allow_access_to_project_docs        = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
 //$allow_access_to_project_mail        = array(1); // Support project mailing lists (Developers Channels)

@@ -588,9 +588,6 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
         ]);
 
         $this->getFrsPermissionsCreator()->updateProjectAccess($project, $old_access, $access_level);
-        if ($is_private) {
-            $this->updateForumVisibilityToPrivate($project_id);
-        }
         $this->getSynchronizedProjectMembershipProjectVisibilityToggler()->enableAccordingToVisibility($project, $old_access, $access_level);
     }
 
@@ -1014,12 +1011,6 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
         }
         $dar->freeMemory();
         return $result;
-    }
-
-    private function updateForumVisibilityToPrivate($group_id)
-    {
-            $forum_dao = new ForumDao(CodendiDataAccess::instance());
-            return $forum_dao->updatePublicForumToPrivate($group_id);
     }
 
     public function countRegisteredProjectsBefore($timestamp)

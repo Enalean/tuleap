@@ -63388,31 +63388,6 @@
       <code><![CDATA[BucketFilter]]></code>
     </MissingTemplateParam>
   </file>
-  <file src="src/common/Forum/MessageRetriever.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_ei($id)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id
-            FROM forum_group_list,forum
-            WHERE forum_group_list.group_forum_id=forum.group_forum_id
-              AND forum_group_list.is_public IN (0, 1)
-              AND forum.msg_id=' . db_ei($id))]]></code>
-      <code><![CDATA[db_result($result, 0, 'body')]]></code>
-      <code><![CDATA[db_result($result, 0, 'date')]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_forum_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'subject')]]></code>
-      <code><![CDATA[db_result($result, 0, 'thread_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'user_name')]]></code>
-    </DeprecatedFunction>
-    <UndefinedFunction>
-      <code><![CDATA[forum_utils_access_allowed($forum_id)]]></code>
-    </UndefinedFunction>
-  </file>
   <file src="src/common/Glyph/Glyph.php">
     <MissingParamType>
       <code><![CDATA[$svg_content]]></code>
@@ -67106,7 +67081,6 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id_or_row]]></code>
       <code><![CDATA[$instance]]></code>
       <code><![CDATA[$limit]]></code>
@@ -67155,7 +67129,6 @@
       <code><![CDATA[setMessageToRequesterForAccessProject]]></code>
       <code><![CDATA[setTruncatedEmailsUsage]]></code>
       <code><![CDATA[testInstance]]></code>
-      <code><![CDATA[updateForumVisibilityToPrivate]]></code>
     </MissingReturnType>
     <NullableReturnStatement>
       <code><![CDATA[$p]]></code>
@@ -69248,7 +69221,6 @@
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$exact]]></code>
-      <code><![CDATA[$forum_id]]></code>
       <code><![CDATA[$is_ajax]]></code>
       <code><![CDATA[$number_of_results]]></code>
       <code><![CDATA[$offset]]></code>
@@ -69259,7 +69231,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getExact]]></code>
-      <code><![CDATA[getForumId]]></code>
       <code><![CDATA[getNumberOfResults]]></code>
       <code><![CDATA[getOffset]]></code>
       <code><![CDATA[getProject]]></code>
@@ -70876,6 +70847,19 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/UserGroup/NameTranslator.php">
+    <MissingClassConstType>
+      <code><![CDATA[ANON                       = 'ugroup_anonymous_users_name_key']]></code>
+      <code><![CDATA[AUTHENTICATED              = 'ugroup_authenticated_users_name_key']]></code>
+      <code><![CDATA[CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label']]></code>
+      <code><![CDATA[CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label']]></code>
+      <code><![CDATA[FILE_ADMINS                = 'ugroup_file_manager_admin_name_key']]></code>
+      <code><![CDATA[NOBODY                     = 'ugroup_nobody_name_key']]></code>
+      <code><![CDATA[PROJECT_ADMINS             = 'ugroup_project_admins_name_key']]></code>
+      <code><![CDATA[PROJECT_MEMBERS            = 'ugroup_project_members_name_key']]></code>
+      <code><![CDATA[REGISTERED                 = 'ugroup_registered_users_name_key']]></code>
+      <code><![CDATA[TV3_TRACKER_ADMINS         = 'ugroup_tracker_admins_name_key']]></code>
+      <code><![CDATA[WIKI_ADMINS                = 'ugroup_wiki_admin_name_key']]></code>
+    </MissingClassConstType>
     <MissingPropertyType>
       <code><![CDATA[$names]]></code>
     </MissingPropertyType>
@@ -72112,6 +72096,11 @@
       <code><![CDATA[usersNeedApproval]]></code>
       <code><![CDATA[validatedUsersCount]]></code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[countAllUsers]]></code>
+      <code><![CDATA[countUsersByStatus]]></code>
+      <code><![CDATA[countUsersByStatus]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="src/common/admin/Admin_ProjectListExporter.php">
     <MissingReturnType>
@@ -73981,51 +73970,6 @@
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $package_id]]></code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/dao/ForumDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct($da)]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[searchExactMatch]]></code>
-      <code><![CDATA[searchExactMatch]]></code>
-      <code><![CDATA[searchExactMatch]]></code>
-      <code><![CDATA[searchExactMatch]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$da]]></code>
-      <code><![CDATA[$exact]]></code>
-      <code><![CDATA[$exact]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$message_id]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$words]]></code>
-      <code><![CDATA[$words]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getMessageProjectIdAndForumId]]></code>
-      <code><![CDATA[searchByGroupForumId]]></code>
-      <code><![CDATA[searchGlobal]]></code>
-      <code><![CDATA[searchGlobalPaginated]]></code>
-      <code><![CDATA[updatePublicForumToPrivate]]></code>
-    </MissingReturnType>
-    <TooManyArguments>
-      <code><![CDATA[searchExactMatch]]></code>
-      <code><![CDATA[searchExactMatch]]></code>
-    </TooManyArguments>
   </file>
   <file src="src/common/dao/IPermissionsNGDao.php">
     <MissingParamType>
@@ -76286,7 +76230,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[getArtifactDao]]></code>
-      <code><![CDATA[getForumDao]]></code>
       <code><![CDATA[getGroupIdFromUrl]]></code>
       <code><![CDATA[getHost]]></code>
       <code><![CDATA[getProjectDao]]></code>
@@ -76297,9 +76240,6 @@
     <PossiblyUndefinedVariable>
       <code><![CDATA[$group_id]]></code>
     </PossiblyUndefinedVariable>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$_REQUEST['msg_id']]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/include/URLRedirect.php">
     <InvalidArgument>
@@ -84307,127 +84247,6 @@
       <code><![CDATA[$HTML]]></code>
     </UndefinedGlobalVariable>
   </file>
-  <file src="src/www/forum/forum.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($max_rows + 1)]]></code>
-      <code><![CDATA[db_ei($msg_id)]]></code>
-      <code><![CDATA[db_ei($offset)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('SELECT group_forum_id,forum_name ' .
-            'FROM forum_group_list ' .
-            "WHERE group_id='" . db_ei($group_id) . "' AND is_public IN ($public_flag)")]]></code>
-      <code><![CDATA[db_query('SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
-      <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
-      <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
-      <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'subject')]]></code>
-      <code><![CDATA[db_result($result, $i, 'thread_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'thread_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($result, $row, 'body')]]></code>
-      <code><![CDATA[db_result($result, $row, 'date')]]></code>
-      <code><![CDATA[db_result($result, $row, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, $row, 'user_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'is_public')]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $texts, 'forum_id', $forum_id, false)]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $texts, 'max_rows', $max_rows, false)]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($vals, $texts, 'style', $style, false)]]></code>
-      <code><![CDATA[user_set_preference('forum_style', $_pref)]]></code>
-      <code><![CDATA[user_set_preference('forum_style', $_pref)]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$msg_id]]></code>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[$row]]></code>
-      <code><![CDATA[$thread_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[forum_show_a_nested_message]]></code>
-      <code><![CDATA[forum_show_nested_messages]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$poster]]></code>
-      <code><![CDATA[$poster]]></code>
-    </PossiblyNullArgument>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $pv]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="src/www/forum/forum_utils.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($forum_id)]]></code>
-      <code><![CDATA[db_ei($msg_id)]]></code>
-      <code><![CDATA[db_ei($thread_id)]]></code>
-      <code><![CDATA[db_ei(UserManager::instance()->getCurrentUser()->getId())]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query('SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=' . db_ei($forum_id))]]></code>
-      <code><![CDATA[db_result($result, $i, 'body')]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
-      <code><![CDATA[db_result($result, $i, 'date')]]></code>
-      <code><![CDATA[db_result($result, $i, 'has_followups')]]></code>
-      <code><![CDATA[db_result($result, $i, 'msg_id')]]></code>
-      <code><![CDATA[db_result($result, $i, 'subject')]]></code>
-      <code><![CDATA[db_result($result, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($result, 0, 'group_id')]]></code>
-      <code><![CDATA[db_result($result, 0, 'is_public')]]></code>
-      <code><![CDATA[db_result($result, 0, 'save_date')]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code><![CDATA[$et]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$forum_id]]></code>
-      <code><![CDATA[$level]]></code>
-      <code><![CDATA[$msg_id]]></code>
-      <code><![CDATA[$thread_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[forum_footer]]></code>
-      <code><![CDATA[forum_header]]></code>
-      <code><![CDATA[forum_utils_access_allowed]]></code>
-      <code><![CDATA[forum_utils_get_styles]]></code>
-      <code><![CDATA[get_forum_saved_date]]></code>
-      <code><![CDATA[show_submessages]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$poster]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="src/www/forum/index.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_error()]]></code>
-      <code><![CDATA[db_numrows($result)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_result($result, $j, 'description')]]></code>
-      <code><![CDATA[db_result($result, $j, 'forum_name')]]></code>
-      <code><![CDATA[db_result($result, $j, 'group_forum_id')]]></code>
-      <code><![CDATA[db_result($result, $j, 'total')]]></code>
-    </DeprecatedFunction>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$pv]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="src/www/help/index.php">
     <UndefinedGlobalVariable>
       <code><![CDATA[$HTML]]></code>
@@ -88900,11 +88719,6 @@
     <PossiblyFalseOperand>
       <code><![CDATA[fileperms($file_path)]]></code>
     </PossiblyFalseOperand>
-  </file>
-  <file src="tests/unit/common/Forum/ForumRetrieverTest.php">
-    <PossiblyNullReference>
-      <code><![CDATA[getName]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="tests/unit/common/HelpDropdown/ReleaseNoteManagerTest.php">
     <MissingClassConstType>
