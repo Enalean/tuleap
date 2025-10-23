@@ -165,6 +165,7 @@ Edit the [Version
 field](https://my.enalean.com/plugins/tracker/?tracker=221&func=admin-formElements)
 to add the new release and to hide the oldest one.
 
+<span id="release-a-js-library-developed-in-the-main-tuleap-repository"></span>
 ## Release a JS library developed in the main Tuleap repository
 
 This section is only useful if you want to release a new version of a JS
