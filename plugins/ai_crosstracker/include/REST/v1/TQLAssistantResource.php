@@ -24,26 +24,30 @@ declare(strict_types=1);
 namespace Tuleap\AICrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\AI\Mistral\ChunkContent;
-use Tuleap\AI\Mistral\Completion;
+use ProjectManager;
 use Tuleap\AI\Mistral\CompletionResponse;
-use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\MistralConnectorLive;
-use Tuleap\AI\Mistral\Model;
-use Tuleap\AI\Mistral\Role;
-use Tuleap\AI\Mistral\StringContent;
-use Tuleap\AI\Mistral\TextChunk;
+use Tuleap\AICrossTracker\Assistant\ProjectAssistant;
+use Tuleap\AICrossTracker\Assistant\UserAssistant;
+use Tuleap\CrossTracker\REST\v1\CrossTrackerWidgetNotFoundException;
+use Tuleap\CrossTracker\REST\v1\UserIsAllowedToSeeWidgetChecker;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
+use URLVerification;
 
 final class TQLAssistantResource extends AuthenticatedResource
 {
     public const string ROUTE = 'crosstracker_assistant';
 
     /**
-     * @url OPTIONS
+     * @url {id}/helper
      */
     public function optionsHelper(): void
     {
@@ -53,39 +57,58 @@ final class TQLAssistantResource extends AuthenticatedResource
     /**
      * (EXPERIMENTAL) Get help on TQL
      *
-     * @url    POST
+     * @url    POST {id}/helper
      * @access hybrid
      *
      * @status 200
      * @throws RestException
      */
-    public function post(): HelperRepresentation
+    public function post(int $id): HelperRepresentation
     {
         $this->checkAccess();
 
-        $tql_doc = file_get_contents(__DIR__ . '/tql.html');
-        if ($tql_doc === false) {
-            throw new RestException(500, 'TQL doc error');
-        }
+        try {
+            if (! $this->getWidgetDao()->searchWidgetExistence($id)) {
+                throw new CrossTrackerWidgetNotFoundException();
+            }
 
-        $completion        = new Completion(
-            Model::SMALL_LATEST,
-            new Message(
-                Role::SYSTEM,
-                new ChunkContent(
-                    new TextChunk('You are an assistant that helps to generate TQL queries for users. TQL is a pseudo programming language, described in this documentation.'),
-                    new TextChunk('### TQL documentation' . PHP_EOL . $tql_doc),
-                ),
-            ),
-            new Message(
-                Role::USER,
-                new StringContent('je veux toutes les exigences ouvertes non couvertes par des tests')
-            ),
-        );
-        $mistral_connector = new MistralConnectorLive(HttpClientFactory::createClientWithCustomTimeout(30));
-        return $mistral_connector->sendCompletion($completion)->match(
-            static fn (CompletionResponse $response) => new HelperRepresentation((string) $response->choices[0]->message->content),
-            static fn (Fault $fault) => throw new RestException(400, (string) $fault)
+            $current_user = \UserManager::instance()->getCurrentUser();
+            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $id);
+
+            $cross_tracker_retriever = new CrossTrackerWidgetRetriever($this->getWidgetDao());
+            return $cross_tracker_retriever->retrieveWidgetById($id)->match(
+                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user): HelperRepresentation {
+                    $assistant = match ($widget::class) {
+                        ProjectCrossTrackerWidget::class => new ProjectAssistant($widget),
+                        UserCrossTrackerWidget::class => new UserAssistant(),
+                    };
+
+                    $mistral_connector = new MistralConnectorLive(HttpClientFactory::createClientWithCustomTimeout(30));
+                    return $mistral_connector->sendCompletion($assistant->getCompletion($current_user))->match(
+                        static fn (CompletionResponse $response) => new HelperRepresentation((string) $response->choices[0]->message->content),
+                        static fn (Fault $fault) => throw new RestException(400, (string) $fault)
+                    );
+                },
+                static fn() => throw new RestException(400, 'Unknown widget type'),
+            );
+        } catch (\Project_NotFoundException) {
+            throw new RestException(404, 'Project not found');
+        } catch (CrossTrackerWidgetNotFoundException) {
+            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $id));
+        }
+    }
+
+    private function getWidgetDao(): CrossTrackerWidgetDao
+    {
+        return new CrossTrackerWidgetDao();
+    }
+
+    private function getUserIsAllowedToSeeWidgetChecker(): UserIsAllowedToSeeWidgetChecker
+    {
+        return new UserIsAllowedToSeeWidgetChecker(
+            ProjectManager::instance(),
+            new URLVerification(),
+            new CrossTrackerWidgetRetriever($this->getWidgetDao()),
         );
     }
 }
