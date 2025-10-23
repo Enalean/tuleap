@@ -42,10 +42,13 @@ import jQuery from "jquery";
         });
     }
 
-    function formatOptionColor(option) {
+    function formatOptionColor(option, default_text) {
         const color = document.createElement("span");
         if (option.id !== "") {
             color.classList.add(option.id);
+        } else {
+            color.classList.add("provider-color-selector-default");
+            color.textContent = default_text;
         }
         return color;
     }
@@ -53,12 +56,17 @@ import jQuery from "jquery";
     function initColorSelectors() {
         var color_select_elements = document.querySelectorAll(".provider-color-selector");
         [].forEach.call(color_select_elements, function (color_select_element) {
+            const default_text = color_select_element.dataset.default;
             select2(color_select_element, {
                 containerCssClass: "provider-color-container",
                 dropdownCssClass: "provider-color-results",
                 minimumResultsForSearch: Infinity,
-                templateResult: formatOptionColor,
-                templateSelection: formatOptionColor,
+                templateResult(option) {
+                    return formatOptionColor(option, default_text);
+                },
+                templateSelection(option) {
+                    return formatOptionColor(option, default_text);
+                },
             });
         });
     }

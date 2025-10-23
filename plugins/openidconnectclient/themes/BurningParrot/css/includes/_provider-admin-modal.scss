@@ -42,6 +42,11 @@
     display: block;
     height: 25px;
     border-radius: 3px;
+
+    &.provider-color-selector-default {
+        display: flex;
+        align-items: center;
+    }
 }
 
 .provider-admin-modal-name-container {
@@ -58,9 +63,12 @@
     margin: 0 0 var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) * 2);
 }
 
-.provider-icon-selector,
-.provider-color-selector {
+.provider-icon-selector {
     width: 80px;
+}
+
+.provider-color-selector {
+    width: 100px;
 }
 
 .provider-icon-results {
@@ -116,6 +124,16 @@
     span {
         @extend %color-area;
     }
+}
+
+/* stylelint-disable-next-line selector-class-pattern,selector-no-qualifying-type */
+span.select2-container--tlp-select2
+    .select2-dropdown
+    /* stylelint-disable-next-line selector-class-pattern */
+    .select2-results__option[aria-selected="true"]::before {
+    // magic value for better alignment of check mark
+    // (6px of margin + half of span 25px - half of icon 12px)
+    top: 12px;
 }
 
 .provider-admin-modal-userinfo-endpoint-container {

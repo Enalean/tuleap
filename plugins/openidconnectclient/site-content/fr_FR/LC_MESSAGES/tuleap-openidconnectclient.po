@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "Add Azure Active Directory provider"
 msgstr "Ajouter un fournisseur s'appuyant sur Azure Active Directory"
@@ -65,6 +65,9 @@ msgstr "Fournisseurs OpenID Connect connectés"
 
 msgid "Create the provider"
 msgstr "Créer le fournisseur"
+
+msgid "Default"
+msgstr "Défaut"
 
 msgid "Delete"
 msgstr "Supprimer"
