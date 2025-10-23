@@ -1034,6 +1034,9 @@ msgstr "트래커 텍스트 필드의 기본 형식"
 msgid "Default license agreement"
 msgstr "기본 라이선스 계약"
 
+msgid "Default message"
+msgstr ""
+
 msgid "Default project visibility"
 msgstr "프로젝트 공개 범위 기본값"
 
@@ -1279,6 +1282,9 @@ msgstr "만료일"
 
 msgid "Export"
 msgstr "내보내기"
+
+msgid "Export CSV"
+msgstr ""
 
 msgid "Export project structure"
 msgstr "프로젝트 구조 내보내기"

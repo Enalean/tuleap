@@ -25,6 +25,7 @@ use FastRoute\RouteCollector;
 use Tuleap\Date\DateHelper;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
@@ -132,10 +133,13 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
             $this->adminPageUpdate_Service($request);
         }
 
-        project_admin_header(
-            $Language->getText('project_admin_servicebar', 'edit_s_bar'),
-            'project_links'
+        $navigation_displayer = new HeaderNavigationDisplayer();
+        $navigation_displayer->displayFlamingParrotNavigation(
+            dgettext('tuleap-projectlinks', 'Project Links'),
+            $project,
+            'project_links',
         );
+
         if ($request->exist('disp')) {
             $disp = $request->get('disp');
             switch ($disp) {
@@ -398,7 +402,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
     }
 
     //========================================================================
-    public function _adminPage_Default($group_id, $project) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function _adminPage_Default($group_id, $project) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore,PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // show the default configuration page
         global $HTML, $Language;
@@ -486,7 +490,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
     }
 
     //========================================================================
-    public function _adminPage_UpdateLinkType($group_id, $link_type_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function _adminPage_UpdateLinkType($group_id, $link_type_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore,PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         global $HTML, $Language;
 
@@ -615,7 +619,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
     }
 
     //========================================================================
-    public function _adminPage_ResyncTemplate($group_id, $template_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function _adminPage_ResyncTemplate($group_id, $template_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore,PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hp = Codendi_HTMLPurifier::instance();
         // re-synchronise project links and types with originating template
@@ -841,7 +845,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
     }
 
     //========================================================================
-    public function _link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = null) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function _link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = null) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore,PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // update link, but check the change would not create a duplicate
         // (same target project and link type)
@@ -892,7 +896,7 @@ class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
      *
      * @return string
      */
-    public function _admin_links_table($link_type_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function _admin_links_table($link_type_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore,PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';

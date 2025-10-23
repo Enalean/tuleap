@@ -20,17 +20,12 @@
 @use "disk-usage-pie";
 
 /* stylelint-disable-next-line selector-class-pattern */
-.stat_help {
-    width: auto;
-    margin: 0.5em;
-    padding: 0.5em 0.5em 0.5em 40px;
-    border: 1px solid #dddddd;
-    background: url("../images/ic/help.png") no-repeat 5px center;
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
 .plugin_statistics_table_legend {
     margin: 1em;
     padding-left: 1em;
     border: 1px solid #000000;
+}
+
+.statistics-disk-usage-button {
+    margin: 0 0 var(--tlp-medium-spacing);
 }

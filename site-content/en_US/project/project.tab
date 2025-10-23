@@ -72,7 +72,6 @@ project_admin_grouptrove	changed_trove	Changed Trove
 # Script: SF/www/project/admin/history.php
 #
 project_admin_history	proj_history	Project History
-project_admin_history	proj_change_log_msg	This log shows who made significant changes to your project and when.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/index.php
@@ -99,7 +98,7 @@ project_admin_index	no_tracker_found	No Accessible Trackers Found
 project_admin_index	admin	Admin
 project_admin_index	member_request_delegation_title	Project membership requests delegation
 project_admin_index	member_request_delegation_desc_private_group	When people don't have access to your project, because your project is private, they can request to be added as members.
-project_admin_index	member_request_delegation_desc_selected_group	The request is sent to the following users group:
+project_admin_index	member_request_delegation_desc_selected_group	The request is sent to the following users group
 project_admin_index	member_request_delegation_desc_restricted_user	When people don't have access to your project, because they are restricted and only have access to projects they are member of, they can request to be added as members.
 project_admin_index	member_request_delegation_ugroups_error	Invalid user groups
 project_admin_index	member_request_delegation_ugroups_all_invalid	All selected user groups could not be added, they contain no project admins or they are empty
@@ -203,13 +202,9 @@ project_admin_utils	event_placeholder	Choose an event?
 project_admin_utils	val	Value
 project_admin_utils	date	Date
 project_admin_utils	access	Change Access
-project_admin_utils	no_g_change	No changes, that corresponds to the filter, have been made to this project
 project_admin_utils	permission_request	Update Selected groups and message
 project_admin_utils	selected_ugroups_title	User group(s) to be notified for admin delegation:
 project_admin_utils	notif_message_title	Default notification message:
-
-project_admin_utils	previous	Previous
-project_admin_utils	next	Next
 
 project_admin_utils	search_user	Search by user name:
 
@@ -283,10 +278,7 @@ project_admin_utils	event_user	Users
 project_admin_utils	event_ug	User Group
 project_admin_utils	event_project	Project
 project_admin_utils	event_others	Others
-project_admin_utils	export_history	Export project history
 project_admin_utils	toggle_search	Toggle search
-project_admin_utils	history_search_title	Search within project history
-project_admin_utils	choose_event	--Choose an event--
 project_admin_utils	verify_start_date	Verify start date
 project_admin_utils	verify_end_date	Verify end date
 project_admin_utils	verify_dates	Start date must be inferior to end date

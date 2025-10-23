@@ -182,7 +182,6 @@ const fat_combined_files = [
         "./node_modules/jquery/dist/jquery.min.js",
         "./node_modules/jquery-ui/dist/jquery-ui.min.js",
         "../../www/scripts/jquery/jquery-noconflict.js",
-        "../../www/scripts/tuleap/project-history.js",
         "../../www/scripts/bootstrap/bootstrap-dropdown.js",
         "../../www/scripts/bootstrap/bootstrap-button.js",
         "../../www/scripts/bootstrap/bootstrap-modal.js",

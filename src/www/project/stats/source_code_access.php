@@ -84,22 +84,23 @@ project_admin_header(
 );
 
 // BEGIN PAGE CONTENT CODE
-echo "\n\n";
+echo '<div class="tlp-framed-horizontally">';
 
 echo '<h2>' . $Language->getText('project_admin_utils', 'access_logs') . '</h2>';
 
 print '
 <FORM action="?" method="get">
-<TABLE BORDER="0" WIDTH="80%">
-<tr><td><b>' . $Language->getText('project_stats_source_code_access', 'access_log_from') . '</b></td><td><b>' . $Language->getText('project_stats_source_code_access', 'for_last') . '</b></td><td> </td></tr>
-<tr><td>
-<SELECT NAME="who">
+<div class="tlp-form-element">
+<label class="tlp-label" for="who">' . $Language->getText('project_stats_source_code_access', 'access_log_from') . '</label>
+<SELECT NAME="who" id="who" class="tlp-select tlp-select-adjusted">
 <OPTION VALUE="nonmembers" ' . (($who == 'nonmembers') ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_source_code_access', 'non_proj_members') . '</OPTION>
 <OPTION VALUE="members" ' . (($who == 'members') ? 'SELECTED' : '') . '>' . $Language->getText('project_admin_editugroup', 'proj_members') . '</OPTION>
 <OPTION VALUE="allusers" ' . (($who == 'allusers') ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_source_code_access', 'all_users') . '</OPTION>
-</SELECT></td>
-<td>
-<SELECT NAME="span">
+</SELECT>
+</div>
+<div class="tlp-form-element">
+<label class="tlp-label" for="span">' . $Language->getText('project_stats_source_code_access', 'for_last') . '</label>
+<SELECT NAME="span" id="span" class="tlp-select tlp-select-adjusted project-administration-access-logs-select-for-last">
 <OPTION VALUE="4" ' . (($span == 4) ? 'SELECTED' : '') . '>4</OPTION>
 <OPTION VALUE="7" ' . (($span == 7 || ! isset($span) ) ? 'SELECTED' : '') . '>7</OPTION>
 <OPTION VALUE="12" ' . (($span == 12) ? 'SELECTED' : '') . '>12</OPTION>
@@ -108,17 +109,18 @@ print '
 <OPTION VALUE="52" ' . (($span == 52) ? 'SELECTED' : '') . '>52</OPTION>
 </SELECT>
 
-<SELECT NAME="view">
+<SELECT NAME="view" class="tlp-select tlp-select-adjusted project-administration-access-logs-select-for-last">
 <OPTION VALUE="monthly" ' . (($view == 'monthly') ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_index', 'months') . '</OPTION>
 <OPTION VALUE="weekly" ' . (($view == 'weekly') ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_index', 'weeks') . '</OPTION>
 <OPTION VALUE="daily" ' . (($view == 'daily' || ! isset($view)) ? 'SELECTED' : '') . '>' . $Language->getText('project_stats_index', 'days') . '</OPTION>
 </SELECT>
-</td>
-<td>
+</div>
 
-<INPUT type="submit" value="' . $Language->getText('global', 'btn_browse') . '">
+<p>
+<INPUT type="submit"  class="tlp-button-primary" value="' . $Language->getText('global', 'btn_browse') . '">
+</p>
 <INPUT type="hidden" name="group_id" value="' . $group_id . '">
-</td></tr></table></FORM>';
+</FORM>';
 
 switch ($view) {
     case 'monthly':
@@ -150,16 +152,18 @@ switch ($view) {
 }
 
 $purifier = Codendi_HTMLPurifier::instance();
-echo '<BR><FORM METHOD="POST" NAME="access_logs_export_form">
+echo '<FORM METHOD="POST" class="project-administration-access-logs-export-form">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 	<INPUT TYPE="HIDDEN" NAME="who" VALUE="' . $purifier->purify($who) . '">
 	<INPUT TYPE="HIDDEN" NAME="span" VALUE="' . $purifier->purify($span) . '">
 	<INPUT TYPE="HIDDEN" NAME="view" VALUE="' . $purifier->purify($view) . '">
-	<TABLE align="left"><TR><TD>
-	<INPUT TYPE="SUBMIT" NAME="SUBMIT" data-test="export-access-log" VALUE="' . $GLOBALS['Language']->getText('project_stats_source_code_access', 'logs_export') . '">
-	</TD></TR></TABLE></FORM>';
+	<button TYPE="SUBMIT" NAME="SUBMIT" class="tlp-button-primary tlp-button-outline" data-test="export-access-log">
+	    <i class="fa-solid fa-download tlp-button-icon" aria-hidden="true"></i>
+	    ' . $GLOBALS['Language']->getText('project_stats_source_code_access', 'logs_export') . '
+	</button>
+	</FORM>';
 
-print '<BR><P>';
+print '</div>';
 
 // END PAGE CONTENT CODE
 site_project_footer([]);

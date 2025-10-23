@@ -73,13 +73,8 @@ class BurningParrotCompatiblePageDetector
             return false;
         }
 
-        return strpos($_SERVER['REQUEST_URI'], '/project/admin/editgroupinfo.php') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/project/admin/ugroup.php') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup.php') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup.php') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/project/admin/reference.php?view=creation') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/project/admin/reference.php?view=edit') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group.php') === 0;
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/project/stats/source_code_access.php') === 0;
     }
 
     private function isInCoreServicesSiteAdmin(PFUser $current_user)
