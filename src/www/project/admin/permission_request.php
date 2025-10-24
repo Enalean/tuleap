@@ -213,7 +213,7 @@ echo '</label>';
 echo '<select multiple class="tlp-select tlp-select-adjusted" id="select-user-group">';
 foreach ($ugroupList as $ugroup) {
     $selected = in_array($ugroup['value'], $selectedUgroup, true) ? 'selected' : '';
-    echo '<option value="' . $ugroup['value'] . '" ' . $selected . '>' . $ugroup['text'] . '</option>';
+    echo '<option value="' . $purifier->purify($ugroup['value']) . '" ' . $selected . '>' . $purifier->purify($ugroup['text']) . '</option>';
 }
 echo '</select>';
 echo '</div>';
