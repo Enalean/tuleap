@@ -161,12 +161,15 @@ function file_utils_show_processors($result)
     $hp   = Codendi_HTMLPurifier::instance();
     $rows =  db_numrows($result);
 
-    $title_arr   = [];
-    $title_arr[] = $Language->getText('file_file_utils', 'proc_name');
-    $title_arr[] = $Language->getText('file_file_utils', 'proc_rank');
-    $title_arr[] = $Language->getText('file_file_utils', 'del');
-
-    echo html_build_list_table_top($title_arr);
+    echo '<table class="tlp-table">
+        <thead>
+            <tr>
+                <th>' . $hp->purify($Language->getText('file_file_utils', 'proc_name')) . '</th>
+                <th>' . $hp->purify($Language->getText('file_file_utils', 'proc_rank')) . '</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>';
 
     for ($j = 0; $j < $rows; $j++) {
         $proc_id   = db_result($result, $j, 'processor_id');
@@ -176,27 +179,33 @@ function file_utils_show_processors($result)
 
         echo '<tr class="' . html_get_alt_row_color($j) . '">' . "\n";
 
-        if ($gr_id == '100') {
-            echo '<td>' . $hp->purify($proc_name) . '</td>';
-        } else {
-            echo '<td><A HREF="/file/admin/editproc.php?group_id=' . $group_id . '&proc_id=' . $proc_id . '" title="' . $hp->purify($proc_id . ' - ' . $proc_name) . '">' . $hp->purify($proc_name) . '</td>';
-        }
-
-        echo '<td>' . $proc_rank . "</td>\n";
+        echo '<td>' . $hp->purify($proc_name) . '</td>';
+        echo '<td>' . $hp->purify($proc_rank) . '</td>';
 
         if ($gr_id == '100') {
             // pre-defined processors are not manageable
-            echo '<TD align=center>-</TD>';
+            echo '<td class="tlp-table-cell-actions"></td>';
         } else {
-            echo '<TD align=center>' .
-            '<a href="/file/admin/manageprocessors.php?mode=delete&group_id=' . $group_id . '&proc_id=' . $proc_id . '" ' .
-            '" onClick="return confirm(\'' . $Language->getText('file_file_utils', 'del_proc') . '\')">' .
-            '<IMG SRC="' . util_get_image_theme('ic/trash.png') . '" HEIGHT="16" WIDTH="16" BORDER="0" ALT="' . $Language->getText('file_file_utils', 'del') . '"></A></TD>';
+            echo '<td class="tlp-table-cell-actions">
+                <a href="/file/admin/editproc.php?group_id=' . urlencode((string) $group_id) . '&proc_id=' . urlencode((string) $proc_id) . '"
+                    class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
+                >
+                    <i class="tlp-button-icon fa-solid fa-pencil" aria-hidden="true"></i>
+                    ' . _('Edit') . '
+                </a>
+                <a href="/file/admin/manageprocessors.php?mode=delete&group_id=' . urlencode((string) $group_id) . '&proc_id=' . urlencode((string) $proc_id) . '"
+                    class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small"
+                    onClick="return confirm(\'' . $Language->getText('file_file_utils', 'del_proc') . '\')"
+                >
+                    <i class="tlp-button-icon fa-regular fa-trash-alt" aria-hidden="true"></i>
+                    ' . _('Delete') . '
+                </a>
+            </td>';
         }
 
         echo '</tr>';
     }
-    echo '</table>';
+    echo '</tbody></table>';
 }
 
 function file_utils_add_proc($pname, $prank)
@@ -215,9 +224,9 @@ function file_utils_add_proc($pname, $prank)
     $result = db_query($sql);
 
     if ($result) {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_file_utils', 'add_proc_success'));
+        $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $Language->getText('file_file_utils', 'add_proc_success'));
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_file_utils', 'add_proc_fail'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('file_file_utils', 'add_proc_fail'));
     }
 }
 
@@ -238,9 +247,9 @@ function file_utils_update_proc($pid, $pname, $prank)
     $result = db_query($sql);
 
     if ($result) {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_file_utils', 'update_proc_success'));
+        $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $Language->getText('file_file_utils', 'update_proc_success'));
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_file_utils', 'update_proc_fail'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('file_file_utils', 'update_proc_fail'));
     }
 }
 
@@ -258,9 +267,9 @@ function file_utils_delete_proc($pid)
     $result = db_query($sql);
 
     if ($result) {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_file_utils', 'delete_proc_success'));
+        $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $Language->getText('file_file_utils', 'delete_proc_success'));
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_file_utils', 'delete_proc_fail'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('file_file_utils', 'delete_proc_fail'));
     }
 }
 
@@ -346,7 +355,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         if (count($files) > 0) {
             for ($i = 0; $i < count($files); $i++) {
                 if (! $files_factory->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', [basename($files[$i]->getFileName()), $files[$i]->getComputedMd5()]));
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', [basename($files[$i]->getFileName()), $files[$i]->getComputedMd5()]));
                 }
             }
         }
@@ -773,7 +782,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $release['name']       = $res['name'];
         $release['package_id'] = $res['package_id'];
     } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_update_failed'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_update_failed'));
         $GLOBALS['Response']->redirect('/file/showfiles.php?group_id=' . $group_id);
     }
 
@@ -1308,22 +1317,22 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     }
 
     foreach ($warning as $warning_message) {
-        $GLOBALS['Response']->addFeedback('warning', $warning_message);
+        $GLOBALS['Response']->addFeedback(Feedback::WARN, $warning_message);
     }
 
     foreach ($info as $info_message) {
-        $GLOBALS['Response']->addFeedback('info', $info_message);
+        $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $info_message);
     }
 
     if (count($error) === 0 && isset($info_success)) {
-        $GLOBALS['Response']->addFeedback('info', $info_success);
+        $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $info_success);
         http_build_query(['group_id' => $group_id]);
         $GLOBALS['Response']->redirect('/file/showfiles.php?' . http_build_query(
             ['group_id'   => $group_id, 'show_release_id' => $release_id]
         ));
     } else {
         foreach ($error as $error_message) {
-            $GLOBALS['Response']->addFeedback('error', $error_message);
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $error_message);
         }
 
         $GLOBALS['Response']->redirect('/file/showfiles.php?group_id=' . urlencode($group_id));
@@ -1333,6 +1342,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 function detectSpecialCharactersInName($name, $type)
 {
     if (preg_match('/\+/', $name)) {
-        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_showfiles', 'warn_chars', [$type, $name]));
+        $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('file_showfiles', 'warn_chars', [$type, $name]));
     }
 }

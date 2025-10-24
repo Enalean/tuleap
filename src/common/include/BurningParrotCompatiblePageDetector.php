@@ -56,6 +56,7 @@ class BurningParrotCompatiblePageDetector
             || $this->isManagingLabels()
             || $this->isInProjectAdmin()
             || $this->isInContact()
+            || $this->isInFrs()
             || $this->isInHelp()
             || $this->isInBurningParrotCompatiblePage()
             || $this->isSoftwareMap()
@@ -123,6 +124,26 @@ class BurningParrotCompatiblePageDetector
     private function isTos(): bool
     {
         return strpos($_SERVER['REQUEST_URI'], '/tos/') === 0;
+    }
+
+    private function isInFrs(): bool
+    {
+        if (! isset($_SERVER['REQUEST_URI'])) {
+            return false;
+        }
+
+        $query_string = [];
+        if (isset($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING'], $query_string);
+        }
+
+        return strpos($_SERVER['REQUEST_URI'], '/file/admin/manageprocessors.php') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/file/admin/editproc.php') === 0
+            || (
+                strpos($_SERVER['REQUEST_URI'], '/file/admin/') === 0 &&
+                isset($query_string['action']) &&
+                $query_string['action'] === 'edit-permissions'
+            );
     }
 
     private function isInBurningParrotCompatiblePage()

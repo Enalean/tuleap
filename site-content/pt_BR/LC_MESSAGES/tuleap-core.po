@@ -387,9 +387,6 @@ msgstr "Situação da conta"
 msgid "Action required"
 msgstr "Ação requerida"
 
-msgid "Actions"
-msgstr "Ações"
-
 msgid "Activate"
 msgstr "Ativar"
 
@@ -2326,6 +2323,9 @@ msgstr "Privado incluindo restrito"
 
 msgid "Processors"
 msgstr "Processadores"
+
+msgid "Processors list"
+msgstr ""
 
 msgid "Project"
 msgstr "Projeto"

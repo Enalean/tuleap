@@ -378,9 +378,6 @@ msgstr "계정 상태"
 msgid "Action required"
 msgstr "조치 필요"
 
-msgid "Actions"
-msgstr "작업"
-
 msgid "Activate"
 msgstr "활성화"
 
@@ -2273,6 +2270,9 @@ msgstr "비공개 (제한됨 포함)"
 
 msgid "Processors"
 msgstr "프로세서"
+
+msgid "Processors list"
+msgstr ""
 
 msgid "Project"
 msgstr "프로젝트"

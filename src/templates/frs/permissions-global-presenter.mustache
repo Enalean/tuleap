@@ -1,31 +1,58 @@
-<form method="POST" action="{{ frs_admins_form_action }}" id="frs-admin-perms-form">
-    <input type="hidden" value="{{ project_id }}" name="group_id"/>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa-solid fa-lock tlp-pane-title-icon" aria-hidden="true"></i>
+                    {{# gettext }}Access controls{{/ gettext }}
+                </h1>
+            </div>
+            <form method="POST" action="{{ frs_admins_form_action }}" class="tlp-pane-section">
+                <input type="hidden" value="{{ project_id }}" name="group_id"/>
 
-    <section>
-        <h2>{{ administrators_title }}</h2>
+                <p>{{ administrator_info }}</p>
 
-        <p>{{ administrator_info }}</p>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="permission_frs_admins">
+                        {{ administrators_title }}
+                    </label>
+                    <select size="8"
+                            class="tlp-select tlp-select-adjusted"
+                            multiple
+                            name="permission_frs_admins[]"
+                            id="permission_frs_admins"
+                    >
+                        {{# ugroups_admin }}
+                            <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
+                        {{/ ugroups_admin }}
+                    </select>
+                </div>
 
-        <select size="8" multiple name="permission_frs_admins[]">
-            {{# ugroups_admin }}
-                <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
-            {{/ ugroups_admin }}
-        </select>
+                <p>{{ readers_info }}</p>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="permission_frs_readers">
+                        {{ readers_title }}
+                    </label>
+                    <select size="8"
+                            class="tlp-select tlp-select-adjusted"
+                            multiple
+                            name="permission_frs_readers[]"
+                            id="permission_frs_readers"
+                    >
+                        {{# ugroups_reader }}
+                            <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
+                        {{/ ugroups_reader }}
+                    </select>
+                </div>
+
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
+                        {{ frs_admins_submit_button }}
+                    </button>
+                </div>
+            </form>
+        </div>
     </section>
-
-    <section>
-        <h2>{{ readers_title }}</h2>
-
-        <p>{{ readers_info }}</p>
-
-        <select size="8" multiple name="permission_frs_readers[]">
-            {{# ugroups_reader }}
-                <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
-            {{/ ugroups_reader }}
-        </select>
-    </section>
-
-    <button type="submit" class="btn btn-primary" id="frs-admin-perms-submit">
-        <i class="far fa-save"></i> {{ frs_admins_submit_button }}
-    </button>
-</form>
+</section>

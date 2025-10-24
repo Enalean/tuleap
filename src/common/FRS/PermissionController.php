@@ -132,7 +132,7 @@ class PermissionController extends BaseFrsPresenter
             FRSPermission::FRS_READER
         );
 
-        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('file_file_utils', 'updated_permissions'));
+        $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $GLOBALS['Language']->getText('file_file_utils', 'updated_permissions'));
     }
 
     private function displayHeader(ServiceFile $service, TemplateRenderer $renderer)

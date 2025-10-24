@@ -404,9 +404,6 @@ msgstr "Statut du compte utilisateur"
 msgid "Action required"
 msgstr "Action requise"
 
-msgid "Actions"
-msgstr "Actions"
-
 msgid "Activate"
 msgstr "Activer le compte"
 
@@ -2385,6 +2382,9 @@ msgstr "Privé incluant les utilisateurs restreints"
 
 msgid "Processors"
 msgstr "Processeurs"
+
+msgid "Processors list"
+msgstr "Liste des processeurs"
 
 msgid "Project"
 msgstr "Projet"

@@ -33,12 +33,13 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
 
-class ListLicenseAgreementsController implements DispatchableWithRequest
+class ListLicenseAgreementsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var ProjectRetriever

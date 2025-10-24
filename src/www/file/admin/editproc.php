@@ -76,7 +76,7 @@ $presenter->displaySectionNavigation();
 $service->displayFRSHeader($project, _('Files Administration'));
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
-$sql    = 'SELECT name,rank FROM frs_processor WHERE group_id=' . db_ei($group_id) . ' AND processor_id=' . db_ei($proc_id);
+$sql    = 'SELECT name, `rank` FROM frs_processor WHERE group_id=' . db_ei($group_id) . ' AND processor_id=' . db_ei($proc_id);
 $result = db_query($sql);
 $name   = db_result($result, 0, 'name');
 $rank   = db_result($result, 0, 'rank');
@@ -89,23 +89,51 @@ if (db_numrows($result) < 1) {
 }
 
 ?>
-
-<P>
-<H2><?php echo $Language->getText('file_admin_manageprocessors', 'update_proc'); ?></H2>
-
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fa-solid fa-pencil" aria-hidden="true"></i>
+                    <?php echo $Language->getText('file_admin_manageprocessors', 'update_proc'); ?>
+                </h1>
+            </div>
 <?php
-$hp     = Codendi_HTMLPurifier::instance();
-$return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id=' . $hp->purify(urlencode($group_id)) . '" METHOD="POST">
-    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $hp->purify($group_id) . '">
-    <INPUT TYPE="HIDDEN" NAME="proc_id" VALUE="' . $hp->purify($proc_id) . '">
-    <TR><TD>' . $Language->getText('file_file_utils', 'proc_name') . ': <font color=red>*</font> </TD>
-    <TD><INPUT TYPE="TEXT" NAME="processname" VALUE="' . $hp->purify($name) . '" SIZE=30></TD></TR>
-    <TR><TD>' . $Language->getText('file_file_utils', 'proc_rank') . ': <font color=red>*</font> </TD>
-    <TD><INPUT TYPE="TEXT" NAME="processrank" VALUE="' . $rank . '" SIZE=10></TD></TR></TABLE>
-    <p><INPUT TYPE="SUBMIT" NAME="update" VALUE="' . $Language->getText('file_file_utils', 'update_proc') . '"></p></FORM>
-    <p><font color="red">*</font>: ' . $Language->getText('file_file_utils', 'required_fields') . '</p>';
 
+$purifier = Codendi_HTMLPurifier::instance();
+
+$return = '
+<form action="/file/admin/manageprocessors.php?group_id=' . $purifier->purify(urlencode($group_id)) . '" method="post" class="tlp-pane-section">
+    <input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">
+    <input type="hidden" name="proc_id" value="' . $purifier->purify($proc_id) . '">
+
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="processname">
+            ' . $Language->getText('file_file_utils', 'proc_name') . '
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+        </label>
+        <input type="text" id="processname" name="processname" class="tlp-input" size="30" placeholder="x86_64" value="' . $purifier->purify($name) . '">
+    </div>
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="processrank">
+            ' . $Language->getText('file_file_utils', 'proc_rank') . '
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+        </label>
+        <input type="text" id="processrank" name="processrank" class="tlp-input" size="10" value="' . $purifier->purify($rank) . '" >
+    </div>
+
+    <div class="tlp-pane-section-submit">
+        <button type="submit" name="update" value="1" class="tlp-button-primary">
+            <i class="tlp-pane-title-icon fa-solid fa-save" aria-hidden="true"></i>
+            ' . $Language->getText('file_file_utils', 'update_proc') . '
+        </button>
+    </div>
+</form>';
 echo $return;
-
+?>
+        </div>
+    </section>
+</div>
+<?php
 
 file_utils_footer([]);
