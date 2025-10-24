@@ -6,9 +6,7 @@
 //
 
 $body = "Vous êtes maintenant un utilisateur enregistré sur ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
-.". En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
-.". Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés,ou même démarrer votre "
-."propre projet ."
+.". En tant que tel, vous pouvez maintenant rejoindre un projet existant ou créer le vôtre."
 ."\n\n\n Nous vous recommandons vivement de parcourir le site,lire la documentation du site ("
 ."<". $base_url ."/help/>) et de peaufiner la configuration de votre compte utilisateur (<". $base_url ."/account/>) "
 ."(définir vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "

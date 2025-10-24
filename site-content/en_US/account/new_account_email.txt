@@ -11,9 +11,7 @@ $title = "Welcome to ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::
 
 $section_one = "You are now a registered user with the login: ";
 
-$section_two = "As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." Web Site. "
-               ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own "
-               ."project.";
+$section_two = "As a registered user, you can now join an existing project or start your own.";
 
 $section_three = "** IMPORTANT REMARKS **\n\nWhile your Web account is available right now, it takes some time for ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
                    ." to create your Shell account. Some features like SVN access depend on it. Your Shell account will be activated in less than two"
