@@ -29,4 +29,15 @@ treefmt-nix.mkWrapper pkgs {
     package = pkgs.nixfmt;
   };
   programs.oxipng.enable = true;
+  settings.formatter.stylelint = {
+    command = pkgs.writeShellScriptBin "tuleap-stylelint" ''
+      set -eou pipefail
+
+      pnpm run stylelint --fix --allow-empty-input -- "$@"
+    '';
+    includes = [
+      "*.scss"
+      "*.vue"
+    ];
+  };
 }

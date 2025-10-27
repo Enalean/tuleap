@@ -57,8 +57,8 @@ pipeline {
                 stage('ESLint static analysis') {
                     steps { script { actions.runESLint() } }
                 }
-                stage('SCSS coding standards') {
-                    steps { script { actions.runStylelint() } }
+                stage ('Treefmt linter/formatter') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runTreefmt() }) } }
                 }
                 stage ('JS Unit tests') {
                     steps { script { actions.runJSUnitTests() } }
