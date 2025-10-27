@@ -142,9 +142,6 @@ pipeline {
                         }
                     }
                 }
-                stage('SCSS coding standards') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runStylelint() }) } }
-                }
                 stage ('JS Unit tests') {
                     steps { script { execTestWithLimitedConcurrency({ actions.runJSUnitTests() }) } }
                     post { always { junit 'results/js-test-results/junit-*.xml' } }

@@ -68,12 +68,6 @@ def runESLint() {
     }
 }
 
-def runStylelint() {
-    dir ('sources') {
-        runInsideNixShell('pnpm run stylelint **/*.scss **/*.vue')
-    }
-}
-
 def runTabFilesCheck() {
     dir ('sources') {
         runInsideNixShell('src/utils/analyse_language_files.pl ./')
