@@ -101,13 +101,31 @@ This will create a new change on MediaWiki's Gerrit.
 
 Then the process is similar to Tuleap: wait for a review, react to the reviewer's feedback, until they merge your commit.
 
-Once your change has been merged, you should cherry-pick it on top of the `master` branch and on top of the next Long-Term Support branch (for example, `REL1_43` for MediaWiki 1.43).
+### Step 6: MediaWiki side — Back-port the change to the maintained branches
 
-### Step 6: Tuleap side — Release the MediaWiki Standalone RPM packages
+Once your change has been merged, you must cherry-pick it on top of the `master` branch and once again on top of the next Long-Term Support branch (for example, `REL1_43` for MediaWiki 1.43). Push the cherry-picked commits for review:
 
-The Tuleap project sidebar is installed in MediaWiki via the `mediawiki/tuleap-skin` Composer package, which in fact points to the release branch of the TuleapSkin repository on GitHub.
+```shell
+git switch -d gerrit/master
+git cherry-pick <commit ref>
+git push gerrit HEAD:refs/for/master
+```
 
-Once the commit is merged on MediaWiki side, it will be mirrored to GitHub. Tuleap will pull the new commit from the release branch via the [mediawiki-extensions-current-lts composer file][11]. It will then be released as part of Tuleap's usual RPM build. There is nothing more to do, the update is done!
+```shell
+git switch -d gerrit/REL1_43
+git cherry-pick <commit ref>
+git push gerrit HEAD:refs/for/REL1_43
+```
+
+Then the process is similar to Tuleap: wait for reviews, react to the reviewer's feedback, until they merge your commits.
+
+### Step 7: Tuleap side — Release the MediaWiki Standalone RPM packages
+
+The Tuleap project sidebar is installed in MediaWiki Standalone via the `mediawiki/tuleap-skin` Composer package, which in fact points to the last tag of the TuleapSkin repository on GitHub. Once the commit is merged on MediaWiki side, it will be mirrored to GitHub.
+
+Create a new patch for Tuleap to upgrade the [mediawiki-extensions-current-lts composer file][11] to the latest tag, and push it to be reviewed as usual. The reviewer can test it similarly to Step 4: rebuild the RPM with `nix-build`, copy it, install it in the container and restart the MediaWiki FPM service.
+
+Once this last commit is merged, the Tuleap CI job to build the RPMs will pull the new tag with the up-to-date Tuleap Project Sidebar and TuleapSkin. It will then be released as part of Tuleap's usual RPM build. There is nothing more to do, the update is done!
 
 ## Links
 
