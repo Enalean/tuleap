@@ -260,14 +260,6 @@ eslint-fix: ## Execute eslint with --fix to try to fix problems automatically. U
 	$(eval FILES ?= .)
 	@pnpm run eslint --fix --quiet -- $(FILES)
 
-stylelint: ## Execute stylelint. Use FILES parameter to execute on specific files.
-	$(eval FILES ?= **/*.{vue,scss})
-	@pnpm run stylelint -- $(FILES)
-
-stylelint-fix: ## Execute stylelint with --fix to try to fix problems automatically. Use FILES parameter to execute on specific file or directory.
-	$(eval FILES ?= **/*.{vue,scss})
-	@pnpm run stylelint --fix -- $(FILES)
-
 .PHONY:treefmt
 treefmt: ## Run treefmt
 	@treefmt
