@@ -20,7 +20,16 @@
  */
 
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\ReleasePermissionManager;
+use Tuleap\FRS\UploadedLinkPresentersBuilder;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\FRS\UploadedLinksTablePresenter;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/file_utils.php';
@@ -44,41 +53,206 @@ if (
 }
 
 $group_id = $release->getGroupID();
-file_utils_header(['title' => $Language->getText('file_shownotes', 'release_notes')]);
+$GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset(
+    new IncludeViteAssets(
+        __DIR__ . '/../../scripts/frs/frontend-assets',
+        '/assets/core/frs',
+    ),
+    'src/frs.ts',
+));
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+
+$service = $project->getService(Service::FILE);
+if (! ($service instanceof ServiceFile)) {
+    exit_error(
+        $GLOBALS['Language']->getText(
+            'project_service',
+            'service_not_used',
+            $GLOBALS['Language']->getText('project_admin_editservice', 'service_file_lbl_key')
+        )
+    );
+}
+$service->displayFRSHeader($project, $release->getName());
 
 $hp = Codendi_HTMLPurifier::instance();
 
-$HTML->box1_top($Language->getText('file_shownotes', 'notes'));
+$url_package = '/file/' . urlencode((string) $release->getGroupID()) . '/package/' . urlencode((string) $release->getPackageID());
 
-echo '<h3>' . $Language->getText('file_shownotes', 'release_name') . ': <A HREF="showfiles.php?group_id=' . $group_id . '">' . $hp->purify($release->getName()) . '</A></H3>
-    <P>';
+echo '<h1 class="project-administration-title">' . $hp->purify($release->getName()) . '</h1>';
+echo '<div class="tlp-framed">';
+echo '<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa-regular fa-file-lines tlp-pane-title-icon" aria-hidden="true"></i>
+                ' . $hp->purify(_('Release details')) . '
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            <div class="tlp-property">
+                <label class="tlp-label">
+                ' . $hp->purify(_('Package')) . '
+                </label>
+                <p>
+                    <a href="' . $url_package . '">' . $hp->purify($release->getPackage()->getName()) . '</a>
+                </p>
+            </div>
 
-/*
-    Show preformatted or plain notes/changes
-*/
-$purify_level = CODENDI_PURIFIER_BASIC;
-if ($release->isPreformatted()) {
-    echo '<PRE>' . PHP_EOL;
-    $purify_level = CODENDI_PURIFIER_BASIC_NOBR;
+                <div class="tlp-property">
+                    <label class="tlp-label">
+                        ' . $hp->purify($Language->getText('file_shownotes', 'notes')) . '
+                    </label>';
+if ($release->getNotes() === '') {
+    echo '<p class="tlp-property-empty">' . _('Empty') . '</p>';
+} elseif ($release->isPreformatted()) {
+    echo '<pre>';
+    echo $hp->purify($release->getNotes(), Codendi_HTMLPurifier::CONFIG_BASIC_NOBR, $group_id);
+    echo '</pre>';
+} else {
+    echo '<blocquote>';
+    echo $hp->purify($release->getNotes(), Codendi_HTMLPurifier::CONFIG_BASIC, $group_id);
+    echo '</blocquote>';
 }
-echo '<B>' . $Language->getText('file_shownotes', 'notes') . ':</B>' . PHP_EOL
-     . $hp->purify($release->getNotes(), $purify_level, $group_id) .
-    '<HR NOSHADE SIZE=1>' .
-    '<B>' . $Language->getText('file_shownotes', 'changes') . ':</B>' . PHP_EOL
-    . $hp->purify($release->getChanges(), $purify_level, $group_id);
-if ($release->isPreformatted()) {
-    echo '</PRE>';
+echo '</div>';
+
+echo '<div class="tlp-property">
+    <label class="tlp-label">
+        ' . $Language->getText('file_shownotes', 'changes') . '
+    </label>';
+if ($release->getChanges() === '') {
+    echo '<p class="tlp-property-empty">' . _('Empty') . '</p>';
+} elseif ($release->isPreformatted()) {
+    echo '<pre>';
+    echo $hp->purify($release->getChanges(), Codendi_HTMLPurifier::CONFIG_BASIC_NOBR, $group_id);
+    echo '</pre>';
+} else {
+    echo '<blocquote>';
+    echo $hp->purify($release->getChanges(), Codendi_HTMLPurifier::CONFIG_BASIC, $group_id);
+    echo '</blocquote>';
 }
+echo '</div>';
 
 $crossref_fact = new CrossReferenceFactory($release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
 $crossref_fact->fetchDatas();
 if ($crossref_fact->getNbReferences() > 0) {
-    echo '<hr noshade>';
     echo '<b> ' . $Language->getText('cross_ref_fact_include', 'references') . '</b>';
     $crossref_fact->DisplayCrossRefs();
 }
+echo '</section>';
 
+$license_agreement_display = new LicenseAgreementDisplay(
+    $hp,
+    TemplateRendererFactory::build(),
+    new LicenseAgreementFactory(
+        new LicenseAgreementDao()
+    ),
+);
 
-$HTML->box1_bottom();
+echo '<section class="tlp-pane-section">
+    <div class="frs-release-files-container">
+        <table class="tlp-table frs-release-files-table">
+            <thead>
+                <tr>
+                    <th class="frs-release-file-name-column">
+                        ' . $hp->purify($Language->getText('file_admin_editreleases', 'filename')) . '
+                    </th>
+                    <th>
+                        ' . $hp->purify($Language->getText('file_showfiles', 'size')) . '
+                    </th>
+                    <th>
+                        ' . $hp->purify($Language->getText('file_showfiles', 'd_l')) . '
+                    </th>
+                    <th>
+                        ' . $hp->purify($Language->getText('file_showfiles', 'arch')) . '
+                    </th>
+                    <th>
+                        ' . $hp->purify($Language->getText('file_showfiles', 'type')) . '
+                    </th>
+                    <th>
+                        ' . $hp->purify($Language->getText('file_showfiles', 'date')) . '
+                    </th>
+                    <th>
+                        ' . $hp->purify($Language->getText('file_showfiles', 'md5sum')) . '
+                    </th>
+                    <th>
+                        ' . $hp->purify($Language->getText('file_showfiles', 'user')) . '
+                    </th>
+                </tr>
+            </thead>';
+$factory = new FRSFileFactory();
+$files   = $factory->getFRSFileInfoListByReleaseFromDb($release->getReleaseID());
+if (! $files) {
+    echo '<tbody class="frs-release-files-table-tbody-empty">
+        <tr>
+            <td class="tlp-table-cell-empty" colspan="8">' . $hp->purify(_('No files are part of this release')) . '</td>
+        </tr>
+    </tbody>';
+} else {
+    echo '<tbody class="frs-release-files-table-tbody-files">';
+    $filetypes = [];
+    /** @psalm-suppress DeprecatedFunction */
+    $res_filetype = db_query('select * from frs_filetype');
+    foreach ($res_filetype as $resrow) {
+        $filetypes[$resrow['type_id']] = $resrow['name'];
+    }
+
+    $processors = [];
+    /** @psalm-suppress DeprecatedFunction */
+    $res_processor = db_query('select * from frs_processor');
+    foreach ($res_processor as $resrow) {
+        $processors[$resrow['processor_id']] = $resrow['name'];
+    }
+
+    foreach ($files as $file) {
+        $size_precision = 0;
+        if ($file['file_size'] < 1024) {
+            $size_precision = 2;
+        }
+
+        $owner = UserManager::instance()->getUserById($file['user_id']);
+
+        echo '<tr>';
+        echo '<td class="frs-release-file-name-column">';
+        echo $license_agreement_display->getDownloadLink($release->getPackage(), (int) $file['file_id'], basename($file['filename']));
+        if ($file['comment'] !== '') {
+            echo '<p class="frs-release-file-comment">' . $hp->purify($file['comment'], CODENDI_PURIFIER_BASIC, $group_id) . '</p>';
+        }
+        echo '</td>';
+        echo '<td>' . $hp->purify(FRSFile::convertBytesToKbytes($file['file_size'], $size_precision)) . '</td>';
+        echo '<td>' . $hp->purify($file['downloads'] ?: '0') . '</td>';
+        echo '<td>' . $hp->purify($processors[$file['processor']] ?? '') . '</td>';
+        echo '<td>' . $hp->purify($filetypes[$file['type']] ?? '') . '</td>';
+        echo '<td>' . $hp->purify(format_date('Y-m-d', $file['release_time'])) . '</td>';
+        echo '<td>' . $hp->purify($file['computed_md5'] ?? '') . '</td>';
+        echo '<td>' . $hp->purify($owner ? $owner->getRealName() : '') . '</td>';
+        echo '</tr>';
+    }
+}
+echo '
+            </tbody>
+        </table>
+    </div>
+</section>';
+echo $license_agreement_display->getModals($release->getProject());
+
+$uploaded_links_retriever         = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
+$uploaded_link_presenters_builder = new UploadedLinkPresentersBuilder();
+$uploaded_links                   = $uploaded_links_retriever->getLinksForRelease($release);
+if (count($uploaded_links) > 0) {
+    $link_presenters = $uploaded_link_presenters_builder->build($uploaded_links);
+
+    echo '<section class="tlp-pane-section">';
+    TemplateRendererFactory::build()
+        ->getRenderer(__DIR__ . '/../../templates/frs/')
+        ->renderToPage(
+            'uploaded-links',
+            new UploadedLinksTablePresenter($link_presenters),
+        );
+    echo '</section>';
+}
+
+echo '</div>
+</section>';
 
 file_utils_footer([]);

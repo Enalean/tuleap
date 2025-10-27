@@ -49,7 +49,7 @@ if ($request->valid($vFilemodule_id)) {
     $package_permission_manager = new PackagePermissionManager($package_factory);
     $package                    = $package_factory->getFRSPackageFromDb($filemodule_id);
 
-    if ($package_permission_manager->canUserSeePackage($current_user, $package, $request->getProject())) {
+    if ($package && $package_permission_manager->canUserSeePackage($current_user, $package, $request->getProject())) {
         $fmmf->processMonitoringActions($request, $current_user, $group_id, $filemodule_id, $um, $userHelper);
 
         file_utils_header(
@@ -61,7 +61,7 @@ if ($request->valid($vFilemodule_id)) {
                 ),
             ]
         );
-        echo $fmmf->getMonitoringHTML($current_user, $group_id, $filemodule_id, $um, $userHelper);
+        echo $fmmf->getMonitoringHTML($current_user, $group_id, $package, $um, $userHelper);
         file_utils_footer([]);
     } else {
         $GLOBALS['Response']->addFeedback(

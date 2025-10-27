@@ -159,11 +159,17 @@ msgid ""
 "Event Monitor"
 msgstr ""
 "%s est déjà réservé pour un autre renommage d'utilisateur. Merci de "
-"consulter les Événements Système."
+"consulter les Événements Système"
 
 #, php-format
 msgid "%s new projects"
 msgstr "Annonces %s"
+
+#, php-format
+msgid "%s user is monitoring anonymously"
+msgid_plural "%s users are monitoring anonymously"
+msgstr[0] "%s utilisateur surveille anonymement"
+msgstr[1] "%s utilisateurs surveillent anonymement"
 
 msgid "(day/month/year)"
 msgstr "(jour/mois/année)"
@@ -416,6 +422,9 @@ msgstr "Actif"
 msgid "Active sessions browser statistics"
 msgstr "Statistiques navigateur sur les sessions actives"
 
+msgid "Add"
+msgstr "Ajouter"
+
 msgid "Add SSH key"
 msgstr "Ajouter une clef SSH"
 
@@ -427,6 +436,9 @@ msgstr "Ajouter le lien"
 
 msgid "Add dashboard"
 msgstr "Ajouter un tableau de bord"
+
+msgid "Add file from staging area"
+msgstr "Ajouter un fichier depuis la zone de transit"
 
 msgid "Add label"
 msgstr "Ajouter un label"
@@ -451,6 +463,9 @@ msgstr "Ajouter un groupe"
 
 msgid "Add users group binding"
 msgstr "Ajouter un lien à un groupe"
+
+msgid "Add users to the monitoring list"
+msgstr "Ajouter un utilisateur à la liste"
 
 msgid "Add widget"
 msgstr "Ajouter un widget"
@@ -818,6 +833,9 @@ msgstr "Le nom court de la catégorie ne peut pas contenir '::'."
 msgid "Change avatar"
 msgstr "Changer l'avatar"
 
+msgid "Change log"
+msgstr "Modifications"
+
 msgid ""
 "Check this option if you want to force the usage of this preference for all "
 "users."
@@ -833,6 +851,9 @@ msgstr "Choisissez une catégorie…"
 
 msgid "Choose a timezone"
 msgstr "Sélectionnez un fuseau horaire"
+
+msgid "Choose..."
+msgstr "Choisir..."
 
 msgid "Clear history"
 msgstr "Effacer l'historique"
@@ -927,6 +948,9 @@ msgstr "Créer"
 msgid "Create a new reference pattern"
 msgstr "Créer un nouveau modèle de référence"
 
+msgid "Create a new release"
+msgstr "Créer une nouvelle version"
+
 msgid "Create a new user"
 msgstr "Créer un nouvel utilisateur"
 
@@ -944,6 +968,15 @@ msgstr "Créer mon compte"
 
 msgid "Create new License Agreement"
 msgstr "Créer une nouvelle licence"
+
+msgid "Create new package"
+msgstr "Créer un nouveau paquet"
+
+msgid "Create new release"
+msgstr "Créer une nouvelle version"
+
+msgid "Create release"
+msgstr "Créer une version"
 
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
@@ -1096,8 +1129,14 @@ msgstr "Supprimer le logo"
 msgid "Delete dashboard"
 msgstr "Supprimer le tableau de bord"
 
+msgid "Delete package"
+msgstr "Supprimer un paquet"
+
 msgid "Delete parent"
 msgstr "Supprimer le parent"
+
+msgid "Delete release"
+msgstr "Supprimer une version"
 
 msgid "Delete selected SSH keys"
 msgstr "Supprimer les clefs SSH sélectionnées"
@@ -1198,6 +1237,9 @@ msgstr "Éditer le tableau de bord"
 
 msgid "Edit license agreement"
 msgstr "Editer la licence"
+
+msgid "Edit package"
+msgstr "Éditer le paquet"
 
 msgid "Edit reference pattern"
 msgstr "Éditer le modèle de référence"
@@ -1488,6 +1530,9 @@ msgstr ""
 "Voici votre nouvelle clé d'accès. Assurez-vous de l'avoir copiée, vous ne "
 "pourrez plus la voir de nouveau !"
 
+msgid "Hidden"
+msgstr "Caché"
+
 msgid "History"
 msgstr "Historique"
 
@@ -1768,8 +1813,8 @@ msgstr "La licence \"%s\" a été supprimée avec succès"
 msgid "License Agreements"
 msgstr "Licences"
 
-msgid "License Approval:"
-msgstr "Approbation licence :"
+msgid "License Approval"
+msgstr "Approbation de licence"
 
 msgid "Light mode"
 msgstr "Mode clair"
@@ -1900,6 +1945,9 @@ msgstr "Information manquante. Veuillez saisir les informations demandées."
 msgid "Moderation"
 msgstr "Moderation"
 
+msgid "Monitor"
+msgstr "Surveillance"
+
 msgid "Month"
 msgstr "Mois"
 
@@ -2007,6 +2055,9 @@ msgstr "Aucun projet enfant"
 msgid "No email for user account"
 msgstr "Pas d'adresse email pour ce compte"
 
+msgid "No files are part of this release"
+msgstr "Aucun fichier ne fait partie de cette version"
+
 msgid "No items can use labels in this project."
 msgstr "Aucun éléments dans ce projet ne peux utiliser les labels."
 
@@ -2022,6 +2073,9 @@ msgstr "Il n'y a aucun label correspondant"
 msgid "No need to register, you are already logged in."
 msgstr "Pas besoin de vous enregistrer, vous êtes déjà connecté."
 
+msgid "No package available"
+msgstr "Aucun paquet disponible"
+
 msgid "No project ID has been provided for the template"
 msgstr "Aucun ID de projet a été fourni pour servir de modèle"
 
@@ -2036,6 +2090,9 @@ msgstr "Aucune information de template a été fournie pour créer le projet"
 
 msgid "No timezone set. Please select one."
 msgstr "Aucun fuseau horaire défini. Merci d'en choisir un."
+
+msgid "No users monitoring this package"
+msgstr "Aucun utilisateur ne surveille ce paquet"
 
 msgid "No users to validate"
 msgstr "Aucun utilisateur à valider"
@@ -2062,8 +2119,14 @@ msgstr "Page non trouvée"
 msgid "Note"
 msgstr "Note"
 
+msgid "Notes"
+msgstr "Notes"
+
 msgid "Nothing changed"
 msgstr "Rien n'a changé"
+
+msgid "Notification"
+msgstr "Notification"
 
 msgid "Notifications"
 msgstr "Notifications"
@@ -2123,6 +2186,21 @@ msgstr "Propriétaire"
 
 msgid "PHPWiki"
 msgstr "PHPWiki"
+
+msgid "Package"
+msgstr "Paquet"
+
+msgid "Package deletion"
+msgstr "Supprimer le paquet"
+
+msgid "Package details"
+msgstr "Détails du paquet"
+
+msgid "Package monitoring"
+msgstr "Surveillance du paquet"
+
+msgid "Packages"
+msgstr "Paquets"
 
 msgid "Page accessible to anonymous"
 msgstr "Pages accessible aux anonymes"
@@ -2207,6 +2285,9 @@ msgstr "Délégation de permission"
 
 msgid "Permission denied"
 msgstr "Permission refusée"
+
+msgid "Permissions"
+msgstr "Permissions"
 
 msgid "Permissions delegation"
 msgstr "Délégation des permissions"
@@ -2559,6 +2640,9 @@ msgstr "Le nom court de projet n'est pas valide. La raison est : %s"
 msgid "Project templates"
 msgstr "Modèles de projet"
 
+msgid "Project totals:"
+msgstr "Totaux du projet :"
+
 msgid "Project trove categories"
 msgstr "Catégories de projet"
 
@@ -2594,6 +2678,9 @@ msgid ""
 msgstr ""
 "Le changement du nom du projet sur le système va être traité dans quelques "
 "instants (%1$s -> %2$s)."
+
+msgid "Properties"
+msgstr "Propriétés"
 
 msgid "Provided release note URL is not well formed"
 msgstr "Le lien de la release note n'est pas au bon format"
@@ -2734,14 +2821,26 @@ msgstr "Date relative seulement"
 msgid "Relative dates display"
 msgstr "Affichage des dates relatives"
 
+msgid "Release"
+msgstr "Version"
+
 msgid "Release Note"
 msgstr "Information de mise à jour"
+
+msgid "Release deletion"
+msgstr "Supprimer la version"
+
+msgid "Release details"
+msgstr "Détails de la version"
 
 msgid "Release note link"
 msgstr "Lien de la release note"
 
 msgid "Release note link configuration"
 msgstr "Configuration du lien de release note"
+
+msgid "Release notes"
+msgstr "Notes de la version"
 
 msgid "Removal from projects"
 msgstr "Retrait de projets"
@@ -2763,6 +2862,9 @@ msgstr "Retirer du groupe"
 
 msgid "Remove group member"
 msgstr "Retirer un membre du groupe"
+
+msgid "Remove monitoring for selected users"
+msgstr "Supprimer la surveillance pour les utilisateurs sélectionnés"
 
 msgid "Remove project administrator"
 msgstr "Suppression d'un administrateur du projet"
@@ -2789,7 +2891,7 @@ msgid ""
 "Requested page currently loading. If it does not, try <a href=\"%s\">%s</a>"
 msgstr ""
 "La page demandée est en cours de chargement. Si ce n’est pas le cas, essayez "
-"<a href=\"%s\">%s</a>."
+"<a href=\"%s\">%s</a>"
 
 msgid "Resend invitation"
 msgstr "Réenvoyer l'invitation"
@@ -3068,6 +3170,9 @@ msgstr "Commencez le travail"
 msgid "Status"
 msgstr "Statut"
 
+msgid "Stop monitoring"
+msgstr "Arrêter la surveillance"
+
 msgid ""
 "Streamline your workflow and focus on what's hot with an easy-to-use board"
 msgstr ""
@@ -3079,6 +3184,9 @@ msgstr "Style"
 
 msgid "Subject"
 msgstr "Sujet"
+
+msgid "Submit"
+msgstr "Soumettre"
 
 msgid "Submitted CSV date format is not valid"
 msgstr "Le format de date CSV n'est pas valide"
@@ -3493,11 +3601,20 @@ msgstr "Il n'y a aucun groupe correspondant"
 msgid "There isn't any matching widgets"
 msgstr "Il n'y a aucun widget correspondant"
 
+msgid "There isn't any package yet"
+msgstr "Il n'y a pas encore de paquet"
+
+msgid "There isn't any release yet"
+msgstr "Il n'y pas encore de version"
+
 msgid "There isn't any users groups yet"
 msgstr "Aucun groupe n'est actuellement défini"
 
 msgid "These projects are already related."
 msgstr "Un lien de parenté existe déjà entre ces projets."
+
+msgid "This action is irreversible."
+msgstr "Cette action est irréversible."
 
 msgid "This archive is ready to be imported in a Tuleap instance."
 msgstr "Cette archive est prête à être importé dans une instance de Tuleap."
@@ -3592,6 +3709,9 @@ msgstr ""
 "l'Agiledashboard et sur les rapports de type cardwall dans les trackers. "
 "Ceci permet de mieux différencier les couleurs ainsi que leurs variantes."
 
+msgid "This package is hidden"
+msgstr "Ce paquet est caché"
+
 msgid ""
 "This permission grants the right to manage platform administration users. "
 "Every single user added here will be a platform administrator."
@@ -3650,6 +3770,9 @@ msgstr ""
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"
 
+msgid "This release is hidden"
+msgstr "Cette version est cachée"
+
 msgid "This service icon name is not allowed."
 msgstr "Cette icône de service n'est pas autorisée."
 
@@ -3694,6 +3817,13 @@ msgid ""
 msgstr ""
 "Ceci générera une archive zip avec un fichier project.xml qui contient la "
 "structure du projet."
+
+msgid ""
+"This will remove corresponding access logs, the links and previously deleted "
+"but not purged files."
+msgstr ""
+"Ceci supprimera les logs d'accès correspondants, les liens ainsi que les "
+"fichiers qui ont été supprimés antérieurement."
 
 msgid "This will remove this service from all projects."
 msgstr "Ceci supprimera ce service de tous les projets."
@@ -3745,6 +3875,10 @@ msgstr "Trop de projets créés par l'utilisateur sont en attente de validation.
 
 msgid "Tools"
 msgstr "Outils"
+
+#, php-format
+msgid "Total: %s"
+msgstr "Total : %s"
 
 msgid "Trace and Track all types of activities."
 msgstr "Suivez et gérez tous types d'activités."
@@ -3846,6 +3980,12 @@ msgstr "Mettre à jour vos préférences"
 msgid "Updating Project Info"
 msgstr "Mise à jour des infos du projet"
 
+msgid "Upload"
+msgstr "Téléverser"
+
+msgid "Upload new file"
+msgstr "Téléverser un nouveau fichier"
+
 msgid "Upload text file"
 msgstr "Téléverser un fichier texte"
 
@@ -3855,6 +3995,9 @@ msgstr "Uploadez votre propre logo"
 msgid "Uploaded file is too big"
 msgstr "Le fichier est trop gros"
 
+msgid "Uploaded files"
+msgstr "Fichiers téléversés"
+
 msgid "Use as project flag"
 msgstr "Utilisée en tant que marqueur de projet"
 
@@ -3863,6 +4006,9 @@ msgstr "Utiliser l'avatar par défaut"
 
 msgid "Use theme color for favicon"
 msgstr "Utiliser la couleur du thème pour le favicon"
+
+msgid "User"
+msgstr "Utilisateur"
 
 #, php-format
 msgid "User #%d is not administrator of project #%d"
@@ -4198,6 +4344,14 @@ msgstr ""
 "Wow, attendez une minute. Vous êtes sur le point de supprimer le groupe "
 "utilisateurs <b>%s</b>. Merci de confirmer votre action."
 
+msgid "You are about to delete permanently the package {{ name }}."
+msgstr ""
+"Vous êtes sur le point de supprimer définitivement le paquet {{ name }}."
+
+msgid "You are about to delete permanently the release {{ name }}."
+msgstr ""
+"Vous êtes sur le point de supprimer définitivement la version {{ name }}."
+
 #, php-format
 msgid ""
 "You are about to delete the dashboard \"%s\".\n"
@@ -4433,6 +4587,10 @@ msgstr ""
 msgid "You cannot create an already expired access key."
 msgstr "Vous ne pouvez pas créer une clé déja expirée."
 
+msgid "You cannot delete a package that still contains releases"
+msgstr ""
+"Vous ne pouvez pas supprimer un paquet qui contient encore des versions"
+
 msgid "You do not have permission to access the site administration."
 msgstr ""
 "Vous n'avez pas la permission d'accéder à l'administration de cette instance."
@@ -4455,6 +4613,9 @@ msgstr "Vous n'avez pas la permission de gérer les membres de ce projet."
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes d'utilisateurs."
+
+msgid "You exceed the max file size"
+msgstr "Vous excédez la taille maximum autorisée"
 
 msgid "You have a restricted user account"
 msgstr "Vous avez un compte utilisateur restreint"
@@ -4754,6 +4915,9 @@ msgstr "supprimés"
 msgid "edit"
 msgstr "éditer"
 
+msgid "hidden"
+msgstr "caché"
+
 #, php-format
 msgid "in %s"
 msgstr "dans %s"
@@ -4826,6 +4990,13 @@ msgstr "{{ nb_members }} membres"
 msgid "{{ real_name }} doesn't seem to be member of any projects you can see."
 msgstr ""
 "{{ real_name }} ne semble pas être membre d'un projet que vous pouvez voir."
+
+msgid ""
+"{{ releases }} releases, {{ files }} files, {{ size_in_kb }} Kb, "
+"{{ downloads }} downloads."
+msgstr ""
+"{{ releases }} versions, {{ files }} fichiers, {{ size_in_kb }} Kb, "
+"{{ downloads }} téléchargements."
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

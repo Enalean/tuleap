@@ -37,6 +37,6 @@ class AdditionalInformationPresenter
     {
         $this->linked_artifact_id    = $linked_artifact_id;
         $this->has_a_linked_artifact = $this->linked_artifact_id != null;
-        $this->artifact_id_title     = dgettext('tuleap-frs', 'Artifact id:');
+        $this->artifact_id_title     = dgettext('tuleap-frs', 'Artifact id');
     }
 }

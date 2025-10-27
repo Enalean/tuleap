@@ -207,39 +207,35 @@ class FRSRelease // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     /**
      * Determines if the release is active or not
-     * @return bool true if the release is active, false otherwise
      */
-    public function isActive()
+    public function isActive(): bool
     {
         $release_factory = new FRSReleaseFactory();
-        return $this->getStatusID() == $release_factory->STATUS_ACTIVE;
+        return (int) $this->getStatusID() === $release_factory->STATUS_ACTIVE;
     }
 
     /**
      * Determines if the release is hidden or not
-     * @return bool true if the release is hidden, false otherwise
      */
-    public function isHidden()
+    public function isHidden(): bool
     {
         $release_factory = new FRSReleaseFactory();
-        return $this->getStatusID() == $release_factory->STATUS_HIDDEN;
+        return (int) $this->getStatusID() === $release_factory->STATUS_HIDDEN;
     }
 
     /**
      * Determines if the release is deleted or not
-     * @return bool true if the release is boolean, false otherwise
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         $release_factory = new FRSReleaseFactory();
-        return $this->getStatusID() == $release_factory->STATUS_DELETED;
+        return (int) $this->getStatusID() === $release_factory->STATUS_DELETED;
     }
 
     /**
      * Determines if the release notes and changes are preformatted or not
-     * @return bool true if the release notes and changes are preformatted, false otherwise
      */
-    public function isPreformatted()
+    public function isPreformatted(): bool
     {
         return $this->getPreformatted() == 1;
     }

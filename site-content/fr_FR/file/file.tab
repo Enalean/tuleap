@@ -2,14 +2,6 @@
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
-#-----------------------------------------------
-# Script: SF/www/file/admin/editpackagepermissions.php
-#
-file_admin_editpackagepermissions	p_not_exist	Le paquet n'existe pas
-file_admin_editpackagepermissions	edit_p_perm	Modifier les permissions du paquet
-file_admin_editpackagepermissions	p	Paquet
-file_admin_editpackagepermissions	perm_explain	Vous pouvez définir des permissions d'accès spécifiques à un paquet. Ces permissions d'accès s'appliquent à toutes les versions et tous les fichiers qui appartiennent à ce paquet. Vous pouvez aussi définir des permissions différentes pour une version donnée. \n<p>Par défaut , les paquets sont accessibles à tous les utilisateurs enregistrés.
-file_admin_editpackagepermissions	select_u_group	Sélectionner les groupes d'utilisateurs qui ont accès à ce paquet
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editpackages.php
@@ -31,8 +23,6 @@ file_admin_editpackages	update	Valider
 file_admin_editpackages	releases	Versions
 file_admin_editpackages	perms	Permissions
 file_admin_editpackages	edit_releases	Modifier une version
-file_admin_editpackages	add_releases	Créer une version
-file_admin_editpackages	edit	Modifier
 file_admin_editpackages	define	Définir
 file_admin_editpackages	create_new_p	Créer un nouveau paquet
 file_admin_editpackages	create_this_p	Créer ce paquet
@@ -45,18 +35,7 @@ file_admin_editpackages	p_not_exists	Le paquet n'existe pas
 file_admin_editpackages	p_not_yours	Le paquet n'existe as ou ne vous appartient pas.
 file_admin_editpackages	p_del	Paquet supprimé
 file_admin_editpackages	p_not_empty	Désolé, vous ne pouvez pas supprimer un paquet qui contient encore des versions.
-file_admin_editpackages	warn	** ATTENTION!! ** Voulez vous vraiment supprimer ce paquet (il est impossible de revenir en arrière)?
 
-#
-#-----------------------------------------------
-# Script: SF/www/file/admin/editreleasepermissions.php
-#
-file_admin_editreleasepermissions	rel_not_exist	La version n'existe pas dans ce paquet.
-file_admin_editreleasepermissions	edit_rel_perm	Modifier les permissions de la version
-file_admin_editreleasepermissions	release	Version
-file_admin_editreleasepermissions	from_p	du paquet
-file_admin_editreleasepermissions	perm_explain	&nbsp;
-file_admin_editreleasepermissions	select_u_group	Sélectionner les groupes d'utilisateurs qui ont accès à cette version&nbsp;: \n<br><b>Note</b>&nbsp;: Quand aucune permission n'est définie pour une version, elle hérite des permissions du paquet parent. \n<br>Quand des permissions sont définies pour une version, elles prennent le pas sur les permissions du <a href="$1">paquet parent</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleases.php
@@ -130,7 +109,7 @@ file_admin_editreleases	file_type	Type de fichier
 file_admin_editreleases	update_refresh	Soumettre/rafraîchir
 file_admin_editreleases	delete_file	Détruire le fichier
 file_admin_editreleases	im_sure	Je suis sûr.
-file_admin_editreleases	mail_file_rel_notice	Notification par e-mail de la nouvelle version : 
+file_admin_editreleases	mail_file_rel_notice	Notification par e-mail de la nouvelle version
 file_admin_editreleases	send_notice	Envoyer la notification
 file_admin_editreleases	users_monitor	$1 utilisateur(s) surveillent ce paquet. Envoyez-leur une notification de cette nouvelle version.
 file_admin_editreleases	define_new_release	Créer une nouvelle version d'un paquet
@@ -138,10 +117,8 @@ file_admin_editreleases	contain_multiple_files	Une version d'un paquet peut cont
 file_admin_editreleases	your_release	Les versions du paquet : $1
 file_admin_editreleases	no_releases_defined	Vous n'avez aucune version définie $1
 file_admin_editreleases	release_name	Nom de la version
-file_admin_editreleases	delete	Détruire ?
 file_admin_editreleases	edit_this_release	Modifier cette version
 file_admin_editreleases	edit_this_p	Modifier ce paquet
-file_admin_editreleases	warn	** ATTENTION !! ** Voulez-vous vraiment détruire cette version, tous ses fichiers attachés, les logs d'accès correspondants, les liens ainsi que les fichiers qui ont été supprimés antérieurement (Il sera impossible de les restaurer) ?
 file_admin_editreleases	new_release_name	Nom de la nouvelle version
 file_admin_editreleases	belongs_to_p	appartient au paquet
 file_admin_editreleases	create_this_release	Créer cette version
@@ -149,26 +126,15 @@ file_admin_editreleases	rel_del	Version détruite
 file_admin_editreleases	of_this_package	dans ce paquet
 file_admin_editreleases	subject	Sujet
 file_admin_editreleases	details	Détails
-file_admin_editreleases	relname	<nom-de-version>
-file_admin_editreleases	fieldset_properties	Propriétés
 file_admin_editreleases	fieldset_uploaded_files	Fichiers téléchargés
 file_admin_editreleases	fieldset_notes	Notes
 file_admin_editreleases	fieldset_permissions	Permissions
 file_admin_editreleases	fieldset_notification	Notification
-file_admin_editreleases	browse	parcourir...
-file_admin_editreleases	local_file	fichier local
-file_admin_editreleases	scp_ftp_files	fichiers scp/ftp
-file_admin_editreleases	add_file	Ajouter un fichier
-file_admin_editreleases	upload	Télécharger
-file_admin_editreleases	add_change_log	Ajouter des modifications
-file_admin_editreleases	view_change	[voir/modifier]
-file_admin_editreleases	default_permissions	Les même permissions que celles du package parent.
-file_admin_editreleases	delete_col	Supprimer
 file_admin_editreleases	release_perm	Les permissions associées à cette version sont :
 file_admin_editreleases	upload_file_deleted	Vous avez récemment supprimez le fichier $1, vous pourrez à nouveau le télécharger dans moins de deux heures.
 file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	create_canceled	Création de la version annulée
-file_admin_editreleases	upload_file_msg	(La taille maximum autorisée est de $1 Mb - Veuillez compresser vos fichiers)
+file_admin_editreleases	upload_file_msg	La taille maximum autorisée est de $1 Mb - Veuillez compresser vos fichiers
 file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	Propriétaire
 file_admin_editreleases	fileforge_error	Une erreur s'est produite lors du déplacement du fichier dans le répertoire de destination (le fichier $1 était-il déjà détruit?)
@@ -177,32 +143,6 @@ file_admin_editreleases	comment	Commentaire
 file_admin_editreleases	move_event	Le fichier est en attente de déplacement. Il sera de nouveau disponible pour le téléchargement dans quelques minutes.
 file_admin_editreleases	notes_in_markdown	Les notes et modifications sont interprétées en Markdown.
 
-#
-#-----------------------------------------------
-# Script: SF/www/file/admin/index.php
-#
-file_admin_index	edit_release_files	Création/modification de versions
-file_admin_index	manage_explain	Créer ou modifier des paquets et versions, leur statut et les permissions d'accès.
-file_admin_index	quick_add	Création de version rapide
-file_admin_index	quick_add_explain	Spécifier en une seule étape toutes les informations nécessaires à la création d'une version. La contrepartie est que vous ne pouvez initialement attacher qu'un seul fichier à cette version et non pas plusieurs comme dans le processus complet (voir ci-dessus).
-#
-#-----------------------------------------------
-# Script: SF/www/file/admin/qrs.php
-#
-file_admin_qrs	define_rel_name	Veuillez définir un nom de version.
-file_admin_qrs	choose_processor_type	Veuillez choisir un type de processeur
-file_admin_qrs	choose_file_type	Veuillez choisir un type de fichier
-file_admin_qrs	added_success	$1 ajouté avec succès
-file_admin_qrs	no_email_sent	pas d'e-mail envoyé&nbsp;: la version est cachée
-file_admin_qrs	email_sent	e-mail envoyé à $1 utilisateur(s) qui surveillent ce paquet
-file_admin_qrs	no_p_available	Aucun paquet disponible
-file_admin_qrs	create_new_p	Créer un nouveau paquet
-file_admin_qrs	file_name	Nom de fichier
-file_admin_qrs	select_file	Sélectionner un fichier
-file_admin_qrs	upload_file	Ou télécharger un fichier
-file_admin_qrs	processor_type	Type de processeur
-file_admin_qrs	release_file	Créer la version
-file_admin_qrs	adding_file	Ajout du fichier
 #
 #-----------------------------------------------
 # Script: src/www/file/admin/manageprocessors.php
@@ -233,7 +173,6 @@ file_filemodule_monitor	monitor_package	Suivre un paquet
 file_filemodule_monitor	insert_err	Erreur lors de l'insertion dans filemodule_monitor
 file_filemodule_monitor	p_monitored	Le suivi de ce paquet est maintenant activé
 file_filemodule_monitor	now_emails	Vous recevrez un message électronique concernant les nouvelles versions de ce paquet.
-file_filemodule_monitor	turn_monitor_off	Pour arrêter le suivi, cliquer sur l'icône <B>Arrêter de surveiller ce paquet</B>.
 file_filemodule_monitor	monitor_turned_off	Le suivi de ce paquet est désactivé
 file_filemodule_monitor	no_emails	Vous ne recevrez plus de courrier électronique concernant les nouvelles versions de ce paquet.
 file_filemodule_monitor	choose_p	Erreur - Veuillez d'abord choisir un paquet
@@ -297,26 +236,14 @@ file_file_utils	error_data_incorrect	Les données semblent incorrectes.
 file_showfiles	file_p_for	Paquets du projet '$1'
 file_showfiles	no_file_p	Aucun paquet
 file_showfiles	no_p_available	Il n'y a aucun paquet disponible
-file_showfiles	p_releases	Versions
-file_showfiles	select_release	Sélectionner l'icône à côté du nom de la version pour voir les notes et les modifications correspondantes.&nbsp;Sélectionner un fichier pour démarrer le téléchargement.
 file_showfiles	release_notes	Versions et Notes
 file_showfiles	size	Taille (Ko)
 file_showfiles	d_l	D/L
 file_showfiles	arch	Arch.
 file_showfiles	type	Type
 file_showfiles	date	Date
-file_showfiles	no_releases	Aucune version
-file_showfiles	proj_total	Total du projet
-file_showfiles	no_files	Aucun fichier
-file_showfiles	read_notes	Lire les notes et les modifications de la version
 file_showfiles	start_monitoring	Surveiller ce paquet
 file_showfiles	stop_monitoring	Arrêter de surveiller ce paquet
-file_showfiles	stat_total_nb_releases	versions
-file_showfiles	stat_total_nb_files	fichiers
-file_showfiles	stat_total_size	Ko
-file_showfiles	stat_total_nb_downloads	téléchargements
-file_showfiles	hidden_package	Ce paquet est caché.
-file_showfiles	hidden_release	Cette version est cachée.
 file_showfiles	md5sum	Md5sum du fichier
 file_showfiles	user	Propriétaire
 file_showfiles	release	La version

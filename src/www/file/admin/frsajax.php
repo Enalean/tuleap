@@ -19,11 +19,9 @@
  */
 
 use Tuleap\FRS\FRSPackageController;
-use Tuleap\FRS\FRSReleaseController;
 use Tuleap\FRS\FRSValidator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\JSONHeader;
 
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../../project/admin/permissions.php';
@@ -35,7 +33,7 @@ if ($request->valid($vAction)) {
     exit_error('', '');
 }
 
-if ($action == 'permissions_frs_package') {
+if ($action === 'permissions_frs_package') {
     $vPackageId = new Valid_UInt('package_id');
     $vPackageId->required();
     $vGroupId = new Valid_GroupId();
@@ -55,107 +53,72 @@ if ($action == 'permissions_frs_package') {
             Codendi_HTMLPurifier::instance(),
         );
 
-        $package_controller->displayUserGroups($project, FRSPackage::PERM_READ);
+        $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $package_id);
     }
 } else {
-    if ($action == 'permissions_frs_release') {
-           $vReleaseId = new Valid_UInt('release_id');
+    header('Cache-Control: no-store, no-cache, must-revalidate'); // HTTP/1.1
+    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+    if ($action === 'validator_frs_create') {
+        $vName = new Valid_String('name');
+        $vDate = new Valid_String('date');
+        $vDate->required();
+        $vPackageId = new Valid_UInt('package_id');
+        $vPackageId->required();
+        $vGroupId = new Valid_GroupId();
+        $vGroupId->required();
+        if (
+            $request->valid($vName) &&
+            $request->valid($vDate) &&
+            $request->valid($vGroupId) &&
+            $request->valid($vPackageId)
+        ) {
+            $name       = $request->get('name');
+            $package_id = $request->get('package_id');
+            $date       = $request->get('date');
+            $group_id   = $request->get('group_id');
+            $validator  = new FRSValidator();
+            $release    = [
+                'name' => $name,
+                'package_id' => $package_id,
+                'date' => $date,
+            ];
+            if (! $validator->isValidForCreation($release, $group_id)) {
+                $errors = $validator->getErrors();
+                $GLOBALS['Response']->send400JSONErrors($errors[0]);
+            }
+        }
+    } elseif ($action === 'validator_frs_update') {
+        $vName = new Valid_String('name');
+        $vDate = new Valid_String('date');
+        $vDate->required();
+        $vPackageId = new Valid_UInt('package_id');
+        $vPackageId->required();
+        $vReleaseId = new Valid_UInt('release_id');
         $vReleaseId->required();
         $vGroupId = new Valid_GroupId();
         $vGroupId->required();
-        if ($request->valid($vReleaseId) && $request->valid($vGroupId)) {
-            $group_id           = $request->get('group_id');
-            $release_id         = $request->get('release_id');
-            $project            = ProjectManager::instance()->getProject($group_id);
-            $release_controller = new FRSReleaseController(
-                FRSReleaseFactory::instance(),
-                new User_ForgeUserGroupFactory(new UserGroupDao()),
-                Codendi_HTMLPurifier::instance()
-            );
-
-            $release_controller->displayUserGroups($project, FRSRelease::PERM_READ);
-        }
-    } else {
-        header('Cache-Control: no-store, no-cache, must-revalidate'); // HTTP/1.1
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-        if ($action == 'validator_frs_create') {
-            $vName = new Valid_String('name');
-            $vDate = new Valid_String('date');
-            $vDate->required();
-            $vPackageId = new Valid_UInt('package_id');
-            $vPackageId->required();
-            $vGroupId = new Valid_GroupId();
-            $vGroupId->required();
-            if (
-                $request->valid($vName) &&
-                $request->valid($vDate) &&
-                $request->valid($vGroupId) &&
-                $request->valid($vPackageId)
-            ) {
-                $name       = $request->get('name');
-                $package_id = $request->get('package_id');
-                $date       = $request->get('date');
-                $group_id   = $request->get('group_id');
-                $validator  = new FRSValidator();
-                $release    =  [
-                    'name' => $name,
-                    'package_id' => $package_id,
-                    'date' => $date,
-                ];
-                if ($validator->isValidForCreation($release, $group_id)) {
-                    //frs valid
-                    $header = ['valid' => true];
-                } else {
-                    //frs non valid
-                    $errors   = $validator->getErrors();
-                    $feedback = new Feedback();
-                    $feedback->log('error', $errors[0]);
-                    $header = ['valid' => false, 'msg' => $feedback->fetch()];
-                }
-                header(JSONHeader::getHeaderForPrototypeJS($header));
-            }
-        } else {
-            if ($action == 'validator_frs_update') {
-                $vName = new Valid_String('name');
-                $vDate = new Valid_String('date');
-                $vDate->required();
-                $vPackageId = new Valid_UInt('package_id');
-                $vPackageId->required();
-                $vReleaseId = new Valid_UInt('release_id');
-                $vReleaseId->required();
-                $vGroupId = new Valid_GroupId();
-                $vGroupId->required();
-                if (
-                    $request->valid($vName) &&
-                    $request->valid($vDate) &&
-                    $request->valid($vGroupId) &&
-                    $request->valid($vPackageId) &&
-                    $request->valid($vReleaseId)
-                ) {
-                    $name       = $request->get('name');
-                    $package_id = $request->get('package_id');
-                    $date       = $request->get('date');
-                    $group_id   = $request->get('group_id');
-                    $release_id = $request->get('release_id');
-                    $validator  = new FRSValidator();
-                    $release    =  [
-                        'name' => $name,
-                        'release_id' => $release_id,
-                        'package_id' => $package_id,
-                        'date' => $date,
-                    ];
-                    if ($validator->isValidForUpdate($release, $group_id)) {
-                        //frs valid
-                        $header = ['valid' => true];
-                    } else {
-                        //frs non valid
-                        $errors   = $validator->getErrors();
-                        $feedback = new Feedback();
-                        $feedback->log('error', $errors[0]);
-                        $header = ['valid' => false, 'msg' => $feedback->fetch()];
-                    }
-                    header(JSONHeader::getHeaderForPrototypeJS($header));
-                }
+        if (
+            $request->valid($vName) &&
+            $request->valid($vDate) &&
+            $request->valid($vGroupId) &&
+            $request->valid($vPackageId) &&
+            $request->valid($vReleaseId)
+        ) {
+            $name       = $request->get('name');
+            $package_id = $request->get('package_id');
+            $date       = $request->get('date');
+            $group_id   = $request->get('group_id');
+            $release_id = $request->get('release_id');
+            $validator  = new FRSValidator();
+            $release    = [
+                'name' => $name,
+                'release_id' => $release_id,
+                'package_id' => $package_id,
+                'date' => $date,
+            ];
+            if (! $validator->isValidForUpdate($release, $group_id)) {
+                $errors = $validator->getErrors();
+                $GLOBALS['Response']->send400JSONErrors($errors[0]);
             }
         }
     }

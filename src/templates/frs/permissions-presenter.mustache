@@ -1,6 +1,11 @@
-<select size="8" multiple name="ugroups[]">
+<div class="tlp-form-element">
+    <label class="tlp-label" for="permissions-ugroups">
+        {{# gettext }}Permissions{{/ gettext }}
+    </label>
+    <select size="8" multiple name="ugroups[]" id="permissions-ugroups" class="tlp-select tlp-select-adjusted">
     {{# user_groups }}
         <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}> {{ name }} </option>
     {{/ user_groups }}
-</select>
-<p>{{{ permission_information }}}</p>
+    </select>
+    <p class="tlp-text-muted">{{{ permission_information }}}</p>
+</div>

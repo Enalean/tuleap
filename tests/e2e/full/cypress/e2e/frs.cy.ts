@@ -52,9 +52,10 @@ describe("Frs", function () {
                 cy.get("[data-test=remove-package]").first().click({
                     timeout: 60000,
                 });
+                cy.get("[data-test=confirm-deletion]").click();
 
                 cy.visitProjectService(`frs-${now}`, "Files");
-                cy.get("[data-test=main-content]").should("not.contain", `edited${now}`);
+                cy.get("[data-test=packages-list]").should("not.contain", `edited${now}`);
             });
         });
 
@@ -64,6 +65,7 @@ describe("Frs", function () {
                 cy.visitProjectService(`frs-${now}`, "Files");
                 cy.createFRSPackage(parseInt(this.project_id, 10), "Package to test release");
                 cy.visitProjectService(`frs-${now}`, "Files");
+                cy.get("[data-test=package-name]").click();
 
                 cy.intercept({
                     url: /file\/admin\/frsajax\.php/,
@@ -100,16 +102,19 @@ describe("Frs", function () {
                 cy.wait("@createRelease", { timeout: 60000 });
 
                 cy.visitProjectService(`frs-${now}`, "Files");
+                cy.get("[data-test=package-name]").click();
                 cy.get("[data-test=edit-release]").first().click({ force: true });
                 cy.get('[data-test="release-name"]').should("have.value", `Edited${now}`);
 
                 cy.visitProjectService(`frs-${now}`, "Files");
+                cy.get("[data-test=package-name]").click();
                 cy.get("[data-test=release-delete-button]")
                     .first()
                     .click({ force: true, timeout: 60000 });
 
                 cy.visitProjectService(`frs-${now}`, "Files");
-                cy.get("[data-test=main-content]").should("not.contain", `edited${now}`);
+                cy.get("[data-test=package-name]").click();
+                cy.get("[data-test=releases-list]").should("not.contain", `edited${now}`);
             });
         });
 
@@ -120,12 +125,7 @@ describe("Frs", function () {
                 cy.visitProjectService(`frs-hidden-${now}`, "Files");
                 cy.get("[data-test=create-new-package]").click();
                 cy.get("[data-test=frs-create-package]").type(`My hidden package${now}`);
-                cy.get("[data-test=status]").within(() => {
-                    // the select is built with legacy `html_build_select_box_from_arrays` function
-                    // the best way to retrieve it, is having a selector on div, and then get the select element inside
-                    // eslint-disable-next-line cypress/require-data-selectors
-                    cy.get("select").select("Hidden");
-                });
+                cy.get("[data-test=status]").select("Hidden");
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });
@@ -138,7 +138,7 @@ describe("Frs", function () {
             cy.projectMemberSession();
             cy.visitProjectService(`frs-hidden-${now}`, "Files");
 
-            cy.get("[data-test=main-content]").then(($body) => {
+            cy.get("[data-test=packages-list]").then(($body) => {
                 expect($body).not.to.contain("My hidden package");
             });
         });

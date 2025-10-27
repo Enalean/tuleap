@@ -1,0 +1,50 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/rest-api-types
+  '@tuleap/lazybox':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/lazybox
+  '@tuleap/lazybox-users-autocomplete':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/lazybox-users-autocomplete
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/locale
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-date-picker
+  '@tuleap/tlp-fetch':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-modal
+  dompurify:
+    specifier: ^3.2.4
+    version: 3.3.0
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/build-system-configurator
+
+packages:
+
+  /@types/trusted-types@2.0.7:
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /dompurify@3.3.0:
+    resolution: {integrity: sha512-r+f6MYR1gGN1eJv0TVQbhA7if/U7P87cdPl3HN5rikqaBSBxLiCb/b9O+2eG0cxz0ghyU+mU1QkbsOwERMYlWQ==}
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
+    dev: false

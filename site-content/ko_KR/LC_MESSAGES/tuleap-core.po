@@ -154,6 +154,11 @@ msgstr ""
 msgid "%s new projects"
 msgstr "%s개의 새 프로젝트"
 
+#, php-format
+msgid "%s user is monitoring anonymously"
+msgid_plural "%s users are monitoring anonymously"
+msgstr[0] ""
+
 msgid "(day/month/year)"
 msgstr "(일/월/년)"
 
@@ -390,6 +395,9 @@ msgstr "활동 중"
 msgid "Active sessions browser statistics"
 msgstr "활성 세션 브라우저 통계"
 
+msgid "Add"
+msgstr ""
+
 msgid "Add SSH key"
 msgstr "SSH 키 추가"
 
@@ -401,6 +409,9 @@ msgstr "바인딩 추가"
 
 msgid "Add dashboard"
 msgstr "대시보드 추가"
+
+msgid "Add file from staging area"
+msgstr ""
 
 msgid "Add label"
 msgstr "레이블 추가"
@@ -425,6 +436,9 @@ msgstr "사용자 그룹 추가"
 
 msgid "Add users group binding"
 msgstr "사용자 그룹 바인딩 추가"
+
+msgid "Add users to the monitoring list"
+msgstr ""
 
 msgid "Add widget"
 msgstr "위젯 추가"
@@ -773,6 +787,9 @@ msgstr ""
 msgid "Change avatar"
 msgstr "사진 변경"
 
+msgid "Change log"
+msgstr ""
+
 msgid ""
 "Check this option if you want to force the usage of this preference for all "
 "users."
@@ -787,6 +804,9 @@ msgstr "카테고리 선택"
 
 msgid "Choose a timezone"
 msgstr "시간대 선택"
+
+msgid "Choose..."
+msgstr ""
 
 msgid "Clear history"
 msgstr "사용기록 삭제"
@@ -878,6 +898,9 @@ msgstr "생성하기"
 msgid "Create a new reference pattern"
 msgstr "새 참조 패턴 만들기"
 
+msgid "Create a new release"
+msgstr ""
+
 msgid "Create a new user"
 msgstr "새 사용자 만들기"
 
@@ -895,6 +918,15 @@ msgstr "내 계정 만들기"
 
 msgid "Create new License Agreement"
 msgstr "새 라이선스 계약 만들기"
+
+msgid "Create new package"
+msgstr ""
+
+msgid "Create new release"
+msgstr ""
+
+msgid "Create release"
+msgstr ""
 
 msgid "Create user group"
 msgstr "사용자 그룹 만들기"
@@ -1042,8 +1074,14 @@ msgstr "현재 로고 삭제"
 msgid "Delete dashboard"
 msgstr "대시보드 삭제"
 
+msgid "Delete package"
+msgstr ""
+
 msgid "Delete parent"
 msgstr "상위 항목 삭제"
+
+msgid "Delete release"
+msgstr ""
 
 msgid "Delete selected SSH keys"
 msgstr "선택한 SSH 키 삭제"
@@ -1142,6 +1180,9 @@ msgstr "대시보드 편집"
 
 msgid "Edit license agreement"
 msgstr "라이선스 계약 편집"
+
+msgid "Edit package"
+msgstr ""
 
 msgid "Edit reference pattern"
 msgstr "참조 패턴 편집"
@@ -1421,6 +1462,9 @@ msgid ""
 "to see it again!"
 msgstr "새 액세스 키입니다. 다시 볼 수 없으니 복사하십시오!"
 
+msgid "Hidden"
+msgstr ""
+
 msgid "History"
 msgstr "기록"
 
@@ -1691,8 +1735,8 @@ msgstr "라이선스 “%s”이(가) 성공적으로 삭제되었습니다."
 msgid "License Agreements"
 msgstr "라이선스 계약"
 
-msgid "License Approval:"
-msgstr "라이선스 승인:"
+msgid "License Approval"
+msgstr ""
 
 msgid "Light mode"
 msgstr ""
@@ -1819,6 +1863,9 @@ msgstr "정보가 누락되었습니다. 필요한 모든 정보를 입력하십
 msgid "Moderation"
 msgstr "수정"
 
+msgid "Monitor"
+msgstr ""
+
 msgid "Month"
 msgstr "월"
 
@@ -1923,6 +1970,9 @@ msgstr "하위 프로젝트 없음"
 msgid "No email for user account"
 msgstr "사용자 계정에 대한 이메일 없음"
 
+msgid "No files are part of this release"
+msgstr ""
+
 msgid "No items can use labels in this project."
 msgstr "이 프로젝트에서는 어떤 항목도 레이블을 사용할 수 없습니다."
 
@@ -1938,6 +1988,9 @@ msgstr "일치하는 레이블이 없습니다."
 msgid "No need to register, you are already logged in."
 msgstr "이미 로그인되어 있어 등록할 필요가 없습니다."
 
+msgid "No package available"
+msgstr ""
+
 msgid "No project ID has been provided for the template"
 msgstr "템플릿에 대한 프로젝트 ID가 제공되지 않았습니다."
 
@@ -1952,6 +2005,9 @@ msgstr "프로젝트 생성을 위한 템플릿 정보가 제공되지 않았습
 
 msgid "No timezone set. Please select one."
 msgstr "시간대가 설정되지 않았습니다. 시간대를 선택하십시오."
+
+msgid "No users monitoring this package"
+msgstr ""
 
 msgid "No users to validate"
 msgstr "승인할 사용자 없음"
@@ -1977,8 +2033,14 @@ msgstr "찾을 수 없음"
 msgid "Note"
 msgstr "메모"
 
+msgid "Notes"
+msgstr ""
+
 msgid "Nothing changed"
 msgstr "변경 내역 없음"
+
+msgid "Notification"
+msgstr ""
 
 msgid "Notifications"
 msgstr "알림"
@@ -2035,6 +2097,21 @@ msgstr "소유자"
 
 msgid "PHPWiki"
 msgstr "PHP위키"
+
+msgid "Package"
+msgstr ""
+
+msgid "Package deletion"
+msgstr ""
+
+msgid "Package details"
+msgstr ""
+
+msgid "Package monitoring"
+msgstr ""
+
+msgid "Packages"
+msgstr ""
 
 msgid "Page accessible to anonymous"
 msgstr "익명 사용자가 액세스할 수 있는 페이지"
@@ -2114,6 +2191,9 @@ msgstr "권한 위임"
 
 msgid "Permission denied"
 msgstr "사용 권한이 거부되었습니다."
+
+msgid "Permissions"
+msgstr ""
 
 msgid "Permissions delegation"
 msgstr "권한 위임"
@@ -2441,6 +2521,9 @@ msgstr "다음과 같은 이유로 프로젝트 약식 이름이 유효하지 �
 msgid "Project templates"
 msgstr "프로젝트 템플릿"
 
+msgid "Project totals:"
+msgstr ""
+
 msgid "Project trove categories"
 msgstr "프로젝트 트로브 카테고리"
 
@@ -2476,6 +2559,9 @@ msgid ""
 msgstr ""
 "프로젝트 이름 업데이트가 시스템에서 대기 중입니다 (%1$s -> %2$s). 잠시 후 처"
 "리됩니다."
+
+msgid "Properties"
+msgstr ""
 
 msgid "Provided release note URL is not well formed"
 msgstr "제공된 릴리스 노트 URL의 형식이 올바르지 않습니다."
@@ -2614,14 +2700,26 @@ msgstr "상대 날짜만"
 msgid "Relative dates display"
 msgstr "상대 날짜 표시"
 
+msgid "Release"
+msgstr ""
+
 msgid "Release Note"
 msgstr "릴리즈 노트"
+
+msgid "Release deletion"
+msgstr ""
+
+msgid "Release details"
+msgstr ""
 
 msgid "Release note link"
 msgstr "릴리즈 노트 링크"
 
 msgid "Release note link configuration"
 msgstr "릴리즈 노트 링크 설정"
+
+msgid "Release notes"
+msgstr ""
 
 msgid "Removal from projects"
 msgstr "프로젝트에서 삭제"
@@ -2643,6 +2741,9 @@ msgstr "사용자 그룹에서 삭제"
 
 msgid "Remove group member"
 msgstr "그룹 멤버 삭제"
+
+msgid "Remove monitoring for selected users"
+msgstr ""
 
 msgid "Remove project administrator"
 msgstr "프로젝트 관리자 삭제"
@@ -2943,6 +3044,9 @@ msgstr "작업 시작"
 msgid "Status"
 msgstr "상태"
 
+msgid "Stop monitoring"
+msgstr ""
+
 msgid ""
 "Streamline your workflow and focus on what's hot with an easy-to-use board"
 msgstr ""
@@ -2953,6 +3057,9 @@ msgstr "스타일"
 
 msgid "Subject"
 msgstr "제목"
+
+msgid "Submit"
+msgstr ""
 
 msgid "Submitted CSV date format is not valid"
 msgstr "제출된 CSV 날짜 형식이 잘못되었습니다."
@@ -3345,11 +3452,20 @@ msgstr "일치하는 사용자 그룹이 없습니다."
 msgid "There isn't any matching widgets"
 msgstr "일치하는 위젯이 없습니다."
 
+msgid "There isn't any package yet"
+msgstr ""
+
+msgid "There isn't any release yet"
+msgstr ""
+
 msgid "There isn't any users groups yet"
 msgstr "사용자 그룹이 없습니다."
 
 msgid "These projects are already related."
 msgstr "이 프로젝트들은 이미 연관되어 있습니다."
+
+msgid "This action is irreversible."
+msgstr ""
 
 msgid "This archive is ready to be imported in a Tuleap instance."
 msgstr "이 아카이브는 Tuleap 인스턴스로 불러올 준비가 되었습니다."
@@ -3440,6 +3556,9 @@ msgstr ""
 "이 옵션은 애자일 대시보드 및 카드월 트래커 보고서의 유색 카드에 패턴을 표시합"
 "니다. 이는 카드의 색상을 구별하는 데 도움이 됩니다."
 
+msgid "This package is hidden"
+msgstr ""
+
 msgid ""
 "This permission grants the right to manage platform administration users. "
 "Every single user added here will be a platform administrator."
@@ -3497,6 +3616,9 @@ msgstr ""
 msgid "This reference does not exist"
 msgstr "이 참조가 존재하지 않습니다."
 
+msgid "This release is hidden"
+msgstr ""
+
 msgid "This service icon name is not allowed."
 msgstr "이 서비스 아이콘 이름은 허용되지 않습니다."
 
@@ -3540,6 +3662,11 @@ msgid ""
 msgstr ""
 "이는 프로젝트 구조가 포함된 project.xml 파일이 있는 zip 아카이브를 생성합니"
 "다."
+
+msgid ""
+"This will remove corresponding access logs, the links and previously deleted "
+"but not purged files."
+msgstr ""
 
 msgid "This will remove this service from all projects."
 msgstr "이는 모든 프로젝트에서 이 서비스를 제거합니다."
@@ -3589,6 +3716,10 @@ msgstr "사용자에게 너무 많은 프로젝트가 승인 대기 중입니다
 
 msgid "Tools"
 msgstr "도구"
+
+#, php-format
+msgid "Total: %s"
+msgstr ""
 
 msgid "Trace and Track all types of activities."
 msgstr "모든 유형의 활동을 추적하고 감시합니다."
@@ -3689,6 +3820,12 @@ msgstr "이메일 설정 업데이트"
 msgid "Updating Project Info"
 msgstr "프로젝트 정보 업데이트"
 
+msgid "Upload"
+msgstr ""
+
+msgid "Upload new file"
+msgstr ""
+
 msgid "Upload text file"
 msgstr "텍스트 파일 업로드"
 
@@ -3698,6 +3835,9 @@ msgstr "나만의 로고 업로드"
 msgid "Uploaded file is too big"
 msgstr "업로드된 파일이 너무 큽니다."
 
+msgid "Uploaded files"
+msgstr ""
+
 msgid "Use as project flag"
 msgstr "프로젝트 플래그로 사용"
 
@@ -3705,6 +3845,9 @@ msgid "Use default avatar"
 msgstr "기본 사진 사용"
 
 msgid "Use theme color for favicon"
+msgstr ""
+
+msgid "User"
 msgstr ""
 
 #, php-format
@@ -4012,6 +4155,12 @@ msgid ""
 "You are about to delete <b>%s</b> users group. Please, confirm your action."
 msgstr "<b>%s</b> 사용자 그룹을 삭제하려고 합니다. 다시 한번 확인해주세요."
 
+msgid "You are about to delete permanently the package {{ name }}."
+msgstr ""
+
+msgid "You are about to delete permanently the release {{ name }}."
+msgstr ""
+
 #, php-format
 msgid ""
 "You are about to delete the dashboard \"%s\".\n"
@@ -4210,6 +4359,9 @@ msgstr "아카이브에서 프로젝트를 만들 때 드라이 런을 요청할
 msgid "You cannot create an already expired access key."
 msgstr "이미 만료된 액세스 키는 생성할 수 없습니다."
 
+msgid "You cannot delete a package that still contains releases"
+msgstr ""
+
 msgid "You do not have permission to access the site administration."
 msgstr "사이트 관리에 액세스할 수 있는 권한이 없습니다."
 
@@ -4230,6 +4382,9 @@ msgstr "이 프로젝트의 멤버를 관리할 수 있는 권한이 없습니�
 
 msgid "You don't have permissions to see user groups."
 msgstr "사용자 그룹을 볼 수 있는 권한이 없습니다."
+
+msgid "You exceed the max file size"
+msgstr ""
 
 msgid "You have a restricted user account"
 msgstr "제한된 사용자 계정입니다."
@@ -4494,6 +4649,9 @@ msgstr "삭제됨"
 msgid "edit"
 msgstr "편집"
 
+msgid "hidden"
+msgstr ""
+
 #, php-format
 msgid "in %s"
 msgstr "%s에서"
@@ -4563,6 +4721,11 @@ msgstr "{{ nb_members }}명의 멤버"
 
 msgid "{{ real_name }} doesn't seem to be member of any projects you can see."
 msgstr "{{ real_name }}님은 사용자님이 볼 수 있는 프로젝트의 멤버가 아닙니다."
+
+msgid ""
+"{{ releases }} releases, {{ files }} files, {{ size_in_kb }} Kb, "
+"{{ downloads }} downloads."
+msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }}에는 글로벌 권한이 없습니다."

@@ -1,56 +1,70 @@
-<div
+<section
         id="frs-license-agreement-modal_0"
-        class="modal hide fade"
-        tabindex="-1"
+        class="tlp-modal"
         role="dialog"
         data-download-file-id=""
+        aria-labelledby="frs-license-agreement-modal_0-title"
 >
-    <div class="modal-header">
-        <button
-                type="button"
-                class="close"
-                aria-hidden="true"
-                data-dismiss="modal"
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title"
+            id="frs-license-agreement-modal_0-title"
         >
-            <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
+            {{# gettext }}Download agreement{{/ gettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
         </button>
-        <h3>{{# gettext }}Download agreement{{/ gettext }}</h3>
     </div>
-    <div class="modal-body">
+    <div class="tlp-modal-body">
         <p>{{# gettext }}You are about to download software from this site. Software re-use and sharing <b>inside</b> %1$s is subject to the <a href="%2$s"><b>Code eXchange Corporate Policy</b></a>.| {{ organisation_name }} | {{ exchange_policy_url }}{{/ gettext }}</p>
         <p>{{# gettext }}By downloading this software you implicitly recognize that you have <a href="%s"><b>read the Policy</b></a> and agree with the terms and conditions.| {{ exchange_policy_url }} {{/ gettext }}</p>
         <p>{{# gettext }}To proceed with the file download, click on '<b>I accept</b>'. If you do not want to download the file click on '<b>I decline</b>' and <a href="mailto:%s"><b>contact us</b></a> if you need clarification or want to explain why you declined the agreement.| {{ contact_email }} {{/ gettext }}</p>
     </div>
-    <div class="modal-footer">
-        <a class="btn btn-large btn-primary frs-license-agreement-accept" id="frs-license-agreement-accept_0" data-download-file-id="-1" data-agreement-id="0">{{# gettext }}I accept{{/ gettext }}</a>
-        <a class="btn btn-large btn-danger" data-dismiss="modal" aria-hidden="true">{{# gettext }}I decline{{/ gettext }}</a>
+    <div class="tlp-modal-footer">
+        <a class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}I decline{{/ gettext }}
+        </a>
+        <a class="tlp-button-primary tlp-modal-action frs-license-agreement-accept"
+           id="frs-license-agreement-accept_0"
+           data-download-file-id="-1"
+           data-agreement-id="0"
+        >
+            {{# gettext }}I accept{{/ gettext }}
+        </a>
     </div>
-</div>
+</section>
 {{# custom_agreements }}
-    <div
+    <section
             id="frs-license-agreement-modal_{{ id }}"
-            class="modal hide fade"
-            tabindex="-1"
+            class="tlp-modal"
             role="dialog"
             data-download-file-id=""
+            aria-labelledby="frs-license-agreement-modal_{{ id }}-title"
     >
-        <div class="modal-header">
-            <button
-                    type="button"
-                    class="close"
-                    aria-hidden="true"
-                    data-dismiss="modal"
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title"
+                id="frs-license-agreement-modal_0-title"
             >
-                <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
+                <h3>{{ title }}</h3>
+            </h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+                <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
-            <h3>{{ title }}</h3>
         </div>
-        <div class="modal-body">
+        <div class="tlp-modal-body">
             {{{ content }}}
         </div>
-        <div class="modal-footer">
-            <a class="btn btn-large btn-primary frs-license-agreement-accept" id="frs-license-agreement-accept_{{ id }}" data-download-file-id="-1" data-agreement-id="{{ id }}">{{# gettext }}I accept{{/ gettext }}</a>
-            <a class="btn btn-large btn-danger" data-dismiss="modal" aria-hidden="true">{{# gettext }}I decline{{/ gettext }}</a>
+        <div class="tlp-modal-footer">
+            <a class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# gettext }}I decline{{/ gettext }}
+            </a>
+            <a class="tlp-button-primary tlp-modal-action frs-license-agreement-accept"
+               id="frs-license-agreement-accept_{{ id }}"
+               data-download-file-id="-1"
+               data-agreement-id="{{ id }}"
+            >
+                {{# gettext }}I accept{{/ gettext }}
+            </a>
         </div>
-    </div>
+    </section>
 {{/ custom_agreements }}

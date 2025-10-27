@@ -10,15 +10,6 @@
 #  */
 #
 #-----------------------------------------------
-# Script: SF/www/file/admin/editpackagepermissions.php
-#
-file_admin_editpackagepermissions	p_not_exist	Package does not exist
-file_admin_editpackagepermissions	edit_p_perm	Edit Package Permissions
-file_admin_editpackagepermissions	p	Package
-file_admin_editpackagepermissions	perm_explain	You can set specific permissions to a package. These permissions apply to all releases and files that belong to this package. But you may also set different permissions to specific releases. \n<p>By default, packages are accessible to all registered users.
-file_admin_editpackagepermissions	select_u_group	Select user groups who are granted access to this package
-#
-#-----------------------------------------------
 # Script: SF/www/file/admin/editpackages.php
 #
 file_admin_editpackages	p_name_exists	This package name already exists. Please choose another name.
@@ -39,8 +30,6 @@ file_admin_editpackages	releases	Releases
 file_admin_editpackages	perms	Permissions
 file_admin_editpackages	license	License Approval
 file_admin_editpackages	edit_releases	Edit Releases
-file_admin_editpackages	add_releases	Add Release
-file_admin_editpackages	edit	Edit
 file_admin_editpackages	define	Define
 file_admin_editpackages	create_new_p	Create a New Package
 file_admin_editpackages	create_this_p	Create This Package
@@ -53,18 +42,7 @@ file_admin_editpackages	p_not_exists	Package does not exist
 file_admin_editpackages	p_not_yours	Not Your Package Or Package Doesn't Exist
 file_admin_editpackages	p_del	Package Deleted
 file_admin_editpackages	p_not_empty	Sorry - you cannot delete a package that still contains releases.
-file_admin_editpackages	warn	** WARNING!! ** Delete this package (no possible restore operation)?
 
-#
-#-----------------------------------------------
-# Script: SF/www/file/admin/editreleasepermissions.php
-#
-file_admin_editreleasepermissions	rel_not_exist	Release does not exist in this package.
-file_admin_editreleasepermissions	edit_rel_perm	Edit Release Permissions
-file_admin_editreleasepermissions	release	Release
-file_admin_editreleasepermissions	from_p	from package
-file_admin_editreleasepermissions	perm_explain	&nbsp;
-file_admin_editreleasepermissions	select_u_group	Select user groups who are granted access to this release: \n<br><b>Note</b>: when no permission is defined for a release, then it has the same permissions as the parent package. \n<br>When a permission is defined for a release, then it overrides the permissions defined for the <a href="$1">package it belongs to</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleases.php
@@ -138,7 +116,7 @@ file_admin_editreleases	file_type	File Type
 file_admin_editreleases	update_refresh	Update/Refresh
 file_admin_editreleases	delete_file	Delete File
 file_admin_editreleases	im_sure	I'm Sure
-file_admin_editreleases	mail_file_rel_notice	Email File Release Notice: 
+file_admin_editreleases	mail_file_rel_notice	Email File Release Notice
 file_admin_editreleases	send_notice	Send Notice
 file_admin_editreleases	users_monitor	$1 user(s) are monitoring your package. You should send a notice of your file release.
 file_admin_editreleases	define_new_release	Define a New Release of a Package
@@ -146,10 +124,8 @@ file_admin_editreleases	contain_multiple_files	A release of a package can contai
 file_admin_editreleases	your_release	Releases of package : $1
 file_admin_editreleases	no_releases_defined	You Have No Releases $1 Defined
 file_admin_editreleases	release_name	Release Name
-file_admin_editreleases	delete	Delete?
 file_admin_editreleases	edit_this_release	Edit This Release
 file_admin_editreleases	edit_this_p	Edit This Package
-file_admin_editreleases	warn	** WARNING!! ** Delete this release, all its files, corresponding access logs, the links and previously deleted but not purged files ($1) without possible restore operation?
 file_admin_editreleases	new_release_name	New Release Name
 file_admin_editreleases	belongs_to_p	belongs to Package
 file_admin_editreleases	create_this_release	Create This Release
@@ -157,26 +133,15 @@ file_admin_editreleases	rel_del	Release Deleted
 file_admin_editreleases	of_this_package	Of This Package
 file_admin_editreleases	subject	Subject
 file_admin_editreleases	details	Details
-file_admin_editreleases	relname	<release-name>
-file_admin_editreleases	fieldset_properties	Properties
 file_admin_editreleases	fieldset_uploaded_files	Uploaded Files
 file_admin_editreleases	fieldset_notes	Notes
 file_admin_editreleases	fieldset_permissions	Permissions
 file_admin_editreleases	fieldset_notification	Notification
-file_admin_editreleases	browse	browse...
-file_admin_editreleases	local_file	local file
-file_admin_editreleases	scp_ftp_files	scp/ftp files
-file_admin_editreleases	add_file	Add file
-file_admin_editreleases	upload	Upload
-file_admin_editreleases	add_change_log	Add change log
-file_admin_editreleases	view_change	[view/change]
-file_admin_editreleases	default_permissions	Will be created with the same permissions than its parent package.
-file_admin_editreleases	delete_col	Delete
 file_admin_editreleases	release_perm	The release permissions are:
 file_admin_editreleases	upload_file_deleted	You recently deleted the file $1, you will be able to upload it again in less than two hours.
 file_admin_editreleases	create_new_release	Create a new release
 file_admin_editreleases	create_canceled	Release creation canceled
-file_admin_editreleases	upload_file_msg	(The maximum upload file size is $1 Mb - Please compress your files)
+file_admin_editreleases	upload_file_msg	The maximum upload file size is $1 Mb - Please compress your files
 file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	Owner
 file_admin_editreleases	fileforge_error	An error occured while moving file to destination (was the file $1 already deleted?)
@@ -184,32 +149,6 @@ file_admin_editreleases	db_error	An error occured while adding file into the dat
 file_admin_editreleases	comment	Comment
 file_admin_editreleases	move_event	The file is in the queue for being moved. Please wait a few minutes for it to become available again.
 file_admin_editreleases	notes_in_markdown	Release notes and change log will be interpreted in Markdown format.
-#
-#-----------------------------------------------
-# Script: SF/www/file/admin/index.php
-#
-file_admin_index	edit_release_files	Edit/Release Files
-file_admin_index	manage_explain	Create or modify packages and releases, set status and access permissions.
-file_admin_index	quick_add	Quick Add File Release
-file_admin_index	quick_add_explain	One step process where you can specify all the necessary information at the same time. The counterpart is that you can only attach one single file to a given release and not several as in the full File Release process.
-#
-#-----------------------------------------------
-# Script: SF/www/file/admin/qrs.php
-#
-file_admin_qrs	define_rel_name	Must define a release name.
-file_admin_qrs	choose_processor_type	Please choose Processor Type
-file_admin_qrs	choose_file_type	Please choose File Type
-file_admin_qrs	added_success	$1 added successfully
-file_admin_qrs	no_email_sent	no email sent: release is hidden
-file_admin_qrs	email_sent	email sent to $1 users monitoring this package
-file_admin_qrs	no_p_available	No Package Available
-file_admin_qrs	create_new_p	create a new package
-file_admin_qrs	file_name	File Name
-file_admin_qrs	select_file	Select a file
-file_admin_qrs	upload_file	Or, upload a new file
-file_admin_qrs	processor_type	Processor Type
-file_admin_qrs	release_file	Release File
-file_admin_qrs	adding_file	Adding File
 #
 #-----------------------------------------------
 # Script: src/www/file/admin/manageprocessors.php
@@ -240,7 +179,6 @@ file_filemodule_monitor	monitor_package	Monitor a Package
 file_filemodule_monitor	insert_err	Error inserting into filemodule_monitor
 file_filemodule_monitor	p_monitored	Package is now being monitored
 file_filemodule_monitor	now_emails	You will now be emailed when new files are released.
-file_filemodule_monitor	turn_monitor_off	To turn off monitoring, simply click the <B>Stop Monitoring</B> icon.
 file_filemodule_monitor	monitor_turned_off	Monitoring has been turned off
 file_filemodule_monitor	no_emails	You will not receive any more emails from this package.
 file_filemodule_monitor	choose_p	Error - Choose a package First
@@ -305,26 +243,14 @@ file_file_utils	error_data_incorrect	Data seem incorrect.
 file_showfiles	file_p_for	File packages for project '$1'
 file_showfiles	no_file_p	No File Packages
 file_showfiles	no_p_available	There are no file packages available
-file_showfiles	p_releases	Package Releases
-file_showfiles	select_release	Select the text icon (next to release name) to see Release Notes and Change Log.&nbsp;Select File to request file download.
 file_showfiles	release_notes	Release &amp; Notes
 file_showfiles	size	Size (Kb)
 file_showfiles	d_l	D/L
 file_showfiles	arch	Arch.
 file_showfiles	type	Type
 file_showfiles	date	Date
-file_showfiles	no_releases	No Releases
-file_showfiles	proj_total	Project Totals
-file_showfiles	no_files	No Files
-file_showfiles	read_notes	Read release notes and changelog
 file_showfiles	start_monitoring	Monitor this package
 file_showfiles	stop_monitoring	Stop monitoring this package
-file_showfiles	stat_total_nb_releases	releases
-file_showfiles	stat_total_nb_files	files
-file_showfiles	stat_total_size	Kb
-file_showfiles	stat_total_nb_downloads	downloads
-file_showfiles	hidden_package	This package is hidden.
-file_showfiles	hidden_release	This release is hidden.
 file_showfiles	md5sum	File md5sum
 file_showfiles	user	Owner
 file_showfiles	release	release

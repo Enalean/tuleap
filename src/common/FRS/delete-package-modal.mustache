@@ -1,0 +1,32 @@
+<form id="frs-delete-package-{{ id }}"
+      method="post"
+      role="dialog"
+      aria-labelledby="frs-delete-package-{{ id }}-title"
+      class="tlp-modal tlp-modal-danger"
+      action="{{ delete_url }}"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="frs-delete-package-{{ id }}-title">
+            {{# gettext }}Package deletion{{/ gettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <p>
+            {{# gettext }}You are about to delete permanently the package {{ name }}.{{/ gettext }}
+            {{# gettext }}This action is irreversible.{{/ gettext }}
+            {{# gettext }}Please confirm your action.{{/ gettext }}
+        </p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" data-dismiss="modal" class="tlp-button-danger tlp-button-outline tlp-modal-action">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action" data-test="confirm-deletion">
+            <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+            {{# gettext }}Delete package{{/ gettext }}
+        </button>
+    </div>
+</form>

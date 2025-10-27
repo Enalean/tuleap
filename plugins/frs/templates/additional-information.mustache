@@ -1,11 +1,15 @@
-<td>
-    <b>{{ artifact_id_title }}</b>
-</td>
-<td>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="release_name">
+        {{ artifact_id_title }}
+    </label>
     <input type="text"
            pattern="\d*"
+           class="tlp-input"
+           size="15"
            name="release[artifact-id]"
            data-test="release-artifact-id"
-           {{# has_a_linked_artifact }} value="{{ linked_artifact_id }}" {{/ has_a_linked_artifact }}
-    />
-</td>
+           {{# has_a_linked_artifact }}
+               value="{{ linked_artifact_id }}"
+           {{/ has_a_linked_artifact }}
+    >
+</div>
