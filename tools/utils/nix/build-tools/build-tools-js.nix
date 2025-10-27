@@ -1,7 +1,7 @@
 { pkgs }:
 
 let
-  node = pkgs.nodejs_22;
+  node = pkgs.nodejs_24;
   nodeBaseBin = pkgs.stdenvNoCC.mkDerivation {
     name = "node-base-bin";
     unpackPhase = "true";
