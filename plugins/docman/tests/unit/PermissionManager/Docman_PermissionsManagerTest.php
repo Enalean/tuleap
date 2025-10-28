@@ -91,8 +91,8 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
         self::assertTrue($this->permissions_manager->userCanRead($user, '2231'));
         self::assertTrue($this->permissions_manager->userCanWrite($user, '2112231'));
         self::assertTrue($this->permissions_manager->userCanManage($user, '2112231976'));
-        self::assertTrue($this->permissions_manager->userCanDelete($user, new Docman_Item(['item_id' => 123])));
-        self::assertTrue($this->permissions_manager->userCanUpdateItemProperties($user, new Docman_Item(['item_id' => 123])));
+        self::assertTrue($this->permissions_manager->userCanDelete($user, new Docman_Item(['item_id' => 123, 'parent_id' => 1])));
+        self::assertTrue($this->permissions_manager->userCanUpdateItemProperties($user, new Docman_Item(['item_id' => 123, 'parent_id' => 1])));
     }
 
     public function testAUserNotAbleToAccessTheProjectCanNotDoAnything(): void
@@ -130,8 +130,8 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
         self::assertTrue($this->permissions_manager->userCanRead($user, '42231'));
         self::assertTrue($this->permissions_manager->userCanWrite($user, '52112231'));
         self::assertTrue($this->permissions_manager->userCanManage($user, '82112231976'));
-        self::assertTrue($this->permissions_manager->userCanDelete($user, new Docman_Item(['item_id' => 123])));
-        self::assertTrue($this->permissions_manager->userCanUpdateItemProperties($user, new Docman_Item(['item_id' => 123])));
+        self::assertTrue($this->permissions_manager->userCanDelete($user, new Docman_Item(['item_id' => 123, 'parent_id' => 1])));
+        self::assertTrue($this->permissions_manager->userCanUpdateItemProperties($user, new Docman_Item(['item_id' => 123, 'parent_id' => 1])));
     }
 
     #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
@@ -249,8 +249,8 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
         self::assertFalse($this->permissions_manager->userCanManage($user, $itemId));
         self::assertFalse($this->permissions_manager->userCanWrite($user, $itemId));
         self::assertTrue($this->permissions_manager->userCanRead($user, $itemId));
-        self::assertFalse($this->permissions_manager->userCanDelete($user, new Docman_Item(['item_id' => $itemId])));
-        self::assertFalse($this->permissions_manager->userCanUpdateItemProperties($user, new Docman_Item(['item_id' => $itemId])));
+        self::assertFalse($this->permissions_manager->userCanDelete($user, new Docman_Item(['item_id' => $itemId, 'parent_id' => 1510])));
+        self::assertFalse($this->permissions_manager->userCanUpdateItemProperties($user, new Docman_Item(['item_id' => $itemId, 'parent_id' => 1510])));
     }
 
     // Functional test (should never change)

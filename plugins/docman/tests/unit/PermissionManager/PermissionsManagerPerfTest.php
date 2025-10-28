@@ -122,7 +122,7 @@ final class PermissionsManagerPerfTest extends TestCase
         $user = $this->createMock(PFUser::class);
         $user->method('isSuperUser')->willReturn(false);
         $user->method('getUgroups')->willReturn(['test']);
-        $user->method('getId');
+        $user->method('getId')->willReturn(1234);
         $user->method('isAdmin');
 
         $itemId = 78903;
@@ -152,7 +152,7 @@ final class PermissionsManagerPerfTest extends TestCase
         $user = $this->createMock(PFUser::class);
         $user->method('isSuperUser')->willReturn(false);
         $user->method('getUgroups')->willReturn(['test']);
-        $user->method('getId');
+        $user->method('getId')->willReturn(1234);
         $user->method('isAdmin');
 
         $itemId = 78903;
@@ -180,7 +180,7 @@ final class PermissionsManagerPerfTest extends TestCase
         $user = $this->createMock(PFUser::class);
         $user->method('isSuperUser')->willReturn(false);
         $user->method('getUgroups')->willReturn(['test']);
-        $user->method('getId');
+        $user->method('getId')->willReturn(1234);
         $user->method('isAdmin');
 
         $itemId = 78903;
@@ -211,7 +211,7 @@ final class PermissionsManagerPerfTest extends TestCase
         $user = $this->createMock(PFUser::class);
         $user->method('isSuperUser')->willReturn(false);
         $user->method('getUgroups')->willReturn(['test']);
-        $user->method('getId');
+        $user->method('getId')->willReturn(1234);
         $user->method('isAdmin');
 
         $itemId = 78903;
@@ -246,7 +246,7 @@ final class PermissionsManagerPerfTest extends TestCase
         $user = $this->createMock(PFUser::class);
         $user->method('isSuperUser')->willReturn(false);
         $user->method('getUgroups')->willReturn(['test']);
-        $user->method('getId');
+        $user->method('getId')->willReturn(1234);
         $user->method('isAdmin');
 
         $itemId = 78903;

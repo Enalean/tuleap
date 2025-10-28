@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata;
 
-use ArrayIterator;
 use Docman_MetadataListOfValuesElement;
 use Docman_MetadataValueDao;
 use Docman_MetadataValueList;
@@ -56,7 +55,7 @@ final class MetadataValueStoreTest extends TestCase
         $list_value->setId(42);
 
         $metadata_value = new Docman_MetadataValueList();
-        $metadata_value->setValue(new ArrayIterator([$list_value]));
+        $metadata_value->setValue([$list_value]);
         $metadata_value->setItemId(1);
         $metadata_value->setFieldId(10);
 
@@ -94,7 +93,7 @@ final class MetadataValueStoreTest extends TestCase
         $list_value->setId(42);
 
         $metadata_value = new Docman_MetadataValueList();
-        $metadata_value->setValue(new ArrayIterator([$list_value]));
+        $metadata_value->setValue([$list_value]);
         $metadata_value->setItemId(1);
         $metadata_value->setFieldId(10);
 
