@@ -44,15 +44,16 @@ be added.
 ### Contributors
 
 * Aurélien Tisné
-* Fábio F. Silva
 * Guilhem Bonnefille
-* Jihyun Park
 * Clément Gayot
 * Antoine Sauzeau
-* Jacques Fiadehoundji
+* Lucas Musy
 
 ### Previous contributors (no longer active committers)
 
+* Fábio F. Silva
+* Jihyun Park
+* Jacques Fiadehoundji
 * Lou-Evan Rouby
 * Chloé Masoni
 * Sandra Echinard
