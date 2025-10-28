@@ -1016,7 +1016,7 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         //for masschange look at the special case of changing the submitted_by param
         if ($masschange) {
             foreach ($_POST as $key => $val) {
-                $val = $request->get($key); //Don't use _POST value
+                $val = $request->get((string) $key); //Don't use _POST value
                 if ($key == 'submitted_by' && $val != $Language->getText('global', 'unchanged')) {
                     $sql   = 'UPDATE artifact SET submitted_by=' . db_ei($val) . ' WHERE artifact_id = ' . db_ei($this->getID());
                     $res   = db_query($sql);

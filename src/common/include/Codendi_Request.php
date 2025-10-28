@@ -60,7 +60,7 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      *
      * @psalm-taint-source input
      */
-    public function get($variable)
+    public function get(string $variable)
     {
         return $this->_get($variable, $this->params);
     }
@@ -69,7 +69,7 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * Add a param and/or set its value
      *
      */
-    public function set($name, $value)
+    public function set(string $name, $value)
     {
         $this->params[$name] = $value;
     }
@@ -108,7 +108,7 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      *
      * @psalm-taint-source input
      */
-    public function _get($variable, $array) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    public function _get(string $variable, $array) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->_exist($variable, $array)) {
             return $array[$variable];
@@ -121,9 +121,8 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * Check if $variable exists in user submitted parameters.
      *
      * @param string $variable Name of the parameter.
-     * @return bool
      */
-    public function exist($variable)
+    public function exist(string $variable): bool
     {
         return $this->_exist($variable, $this->params);
     }
@@ -133,9 +132,8 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      *
      * @access protected
      * @param string $variable Name of the parameter.
-     * @return bool
      */
-    protected function _exist($variable, $array) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    protected function _exist(string $variable, array $array): bool //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return isset($array[$variable]);
     }
@@ -146,7 +144,7 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * @param string $variable Name of the parameter.
      * @return bool
      */
-    public function existAndNonEmpty($variable)
+    public function existAndNonEmpty(string $variable)
     {
         return ($this->exist($variable) && trim($this->params[$variable]) != '');
     }
@@ -207,7 +205,7 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * @param Rule  Validator to apply
      * @return bool
      */
-    public function validKey($key, $rule)
+    public function validKey(string $key, $rule)
     {
         return $rule->isValid($this->get($key));
     }
@@ -221,7 +219,7 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      *
      * @psalm-taint-source input
      */
-    public function getValidated($variable, $validator = 'string', $default_value = null)
+    public function getValidated(string $variable, $validator = 'string', $default_value = null)
     {
         $is_valid = false;
         if ($v = ValidFactory::getInstance($validator, $variable)) {
@@ -232,7 +230,7 @@ class Codendi_Request // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         return $is_valid ? $this->get($variable) : $default_value;
     }
 
-    public function getToggleVariable($variable)
+    public function getToggleVariable(string $variable): int
     {
         if ($this->exist($variable) && (int) $this->get($variable) === 1) {
             return 1;

@@ -210,10 +210,10 @@ class ArtifactFieldFactory
                       // we add operator for date filtering (used for masschange)
                       // the field present in HTTP_POST_VARS is named like [$field_name]_op
                         if (
-                            (isset($this->USAGE_BY_NAME[substr($key, 0, strlen($key) - strlen('_op'))]) && substr($key, -3) == '_op') ||
-                            (isset($this->USAGE_BY_NAME[substr($key, 0, strlen($key) - strlen('_end'))]) && substr($key, -4) == '_end')
+                            (isset($this->USAGE_BY_NAME[substr($key, 0, strlen((string) $key) - strlen('_op'))]) && substr($key, -3) == '_op') ||
+                            (isset($this->USAGE_BY_NAME[substr($key, 0, strlen((string) $key) - strlen('_end'))]) && substr($key, -4) == '_end')
                         ) {
-                             $vfl[$key] = $request->get($key);
+                             $vfl[$key] = $request->get((string) $key);
                         } else {
                             //echo "Rejected key = ".$key." val = $val<BR>";
                         }
@@ -223,7 +223,7 @@ class ArtifactFieldFactory
         } else {
             foreach ($_GET as $key => $val) {
                 if (isset($this->USAGE_BY_NAME[$key])) {
-                    $vfl[$key] = $request->get($key);
+                    $vfl[$key] = $request->get((string) $key);
                  //echo "Accepted key = ".$key." val = $val<BR>";
                 } else {
               //echo "Rejected key = ".$key." val = $val<BR>";

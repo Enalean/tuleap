@@ -76,9 +76,9 @@ class Valid
      *
      * @access private
      */
-    public function getKey()
+    public function getKey(): string
     {
-        return $this->key;
+        return (string) $this->key;
     }
 
     /**
