@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_List_Bind_UgroupsValue;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use TrackerXmlFieldsMapping_ValueNotFoundException;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBindValue;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
@@ -114,7 +114,7 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends TestCase //p
         return ListStaticValueBuilder::aStaticValue('static')->withId($bind_value_id)->build();
     }
 
-    protected function getBindForUGroupWithId(int $ugroup_id): Tracker_FormElement_Field_List_Bind_UgroupsValue
+    protected function getBindForUGroupWithId(int $ugroup_id): ListFieldUserGroupBindValue
     {
         return ListUserGroupValueBuilder::aUserGroupValue(ProjectUGroupTestBuilder::aCustomUserGroup(123)->build())->withId($ugroup_id)->build();
     }

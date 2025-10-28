@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
 use ProjectUGroup;
-use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 use UserHelper;
 
 class BindListUserValueGetter
@@ -42,7 +42,7 @@ class BindListUserValueGetter
     }
 
     /**
-     * @return array<int, Tracker_FormElement_Field_List_Bind_UsersValue>
+     * @return array<int, ListFieldUserBindValue>
      */
     public function getSubsetOfUsersValueWithUserIds(
         array $ugroups,
@@ -61,7 +61,7 @@ class BindListUserValueGetter
     }
 
     /**
-     * @return array<int, Tracker_FormElement_Field_List_Bind_UsersValue>
+     * @return array<int, ListFieldUserBindValue>
      */
     public function getActiveUsersValue(
         array $ugroups,
@@ -84,7 +84,7 @@ class BindListUserValueGetter
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     * @return ListFieldUserBindValue[]
      */
     private function getUsersValueWithUserIdsAccordingToUserStatus(
         array $ugroups,
@@ -188,7 +188,7 @@ class BindListUserValueGetter
 
         $values = [];
         foreach ($rows as $row) {
-            $values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue(
+            $values[$row['user_id']] = new ListFieldUserBindValue(
                 $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
                 $row['user_id'],
                 $row['user_name'],

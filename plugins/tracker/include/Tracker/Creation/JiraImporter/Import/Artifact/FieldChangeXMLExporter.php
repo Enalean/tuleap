@@ -129,7 +129,7 @@ class FieldChangeXMLExporter
             }
             assert($mapping->getBindType() !== null);
 
-            if ($mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+            if ($mapping->getBindType() === \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE) {
                 $value_ids = [
                     $value['id'],
                 ];
@@ -161,7 +161,7 @@ class FieldChangeXMLExporter
             assert($mapping->getBindType() !== null);
 
             $value_ids = [];
-            if ($mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+            if ($mapping->getBindType() === \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE) {
                 foreach ($value as $value_from_api) {
                     $value_ids[] = $value_from_api['id'];
                 }

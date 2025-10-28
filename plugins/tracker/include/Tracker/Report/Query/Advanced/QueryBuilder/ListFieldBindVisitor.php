@@ -20,12 +20,12 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tracker_FormElement_Field_List_Bind_Ugroups;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
@@ -67,13 +67,13 @@ final class ListFieldBindVisitor implements BindVisitor
     }
 
     #[\Override]
-    public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters)
+    public function visitListBindUsers(ListFieldUserBind $bind, BindParameters $parameters)
     {
         return $this->users_builder;
     }
 
     #[\Override]
-    public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters)
+    public function visitListBindUgroups(ListFieldUserGroupBind $bind, BindParameters $parameters)
     {
         return $this->ugroups_builder;
     }

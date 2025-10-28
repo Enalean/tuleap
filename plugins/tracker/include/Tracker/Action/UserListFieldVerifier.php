@@ -31,7 +31,7 @@ final class UserListFieldVerifier implements VerifyIsUserListField
             return false;
         }
 
-        if ($field->getBind()->getType() !== \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+        if ($field->getBind()->getType() !== \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE) {
             return false;
         }
 

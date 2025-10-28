@@ -27,7 +27,6 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
@@ -38,6 +37,7 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
@@ -229,7 +229,7 @@ final class SubmittedByField extends ListField implements Tracker_FormElement_Fi
     #[Override]
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
-        $value              = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $changeset->getArtifact()->getSubmittedBy());
+        $value              = ListFieldUserBindValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $changeset->getArtifact()->getSubmittedBy());
         $submitted_by_value = $value->getFullRESTValue($this);
 
         $artifact_field_value_full_representation = new \Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
@@ -271,7 +271,7 @@ final class SubmittedByField extends ListField implements Tracker_FormElement_Fi
     {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
-        $bind_value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
+        $bind_value = ListFieldUserBindValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
         $bind_value = $purifier->purify($bind_value->getLabel());
         $html      .= $bind_value;
         return $html;
@@ -305,7 +305,7 @@ final class SubmittedByField extends ListField implements Tracker_FormElement_Fi
     ): string {
         $output = '';
 
-        $bind_value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
+        $bind_value = ListFieldUserBindValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
 
         switch ($format) {
             case 'html':
@@ -368,7 +368,7 @@ final class SubmittedByField extends ListField implements Tracker_FormElement_Fi
     {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
-        $fake_value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), (int) UserManager::instance()->getCurrentUser()->getId());
+        $fake_value = ListFieldUserBindValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), (int) UserManager::instance()->getCurrentUser()->getId());
         $html      .= $purifier->purify($fake_value->getLabel()) . '<br />';
         $html      .= '<span class="tracker-admin-form-element-help">';
         $html      .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission user');
@@ -384,7 +384,7 @@ final class SubmittedByField extends ListField implements Tracker_FormElement_Fi
         ?Tracker_Report $report = null,
         ?array $redirection_parameters = null,
     ): string {
-        return $this->getBind()->formatChangesetValue(Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
+        return $this->getBind()->formatChangesetValue(ListFieldUserBindValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
     }
 
     #[Override]
@@ -399,7 +399,7 @@ final class SubmittedByField extends ListField implements Tracker_FormElement_Fi
     #[Override]
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
-        $value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
+        $value = ListFieldUserBindValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
         return $value->fetchCard($display_preferences);
     }
 
@@ -410,7 +410,7 @@ final class SubmittedByField extends ListField implements Tracker_FormElement_Fi
     #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
-        return $this->getBind()->formatChangesetValueForCSV(Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
+        return $this->getBind()->formatChangesetValueForCSV(ListFieldUserBindValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
     }
 
     /**

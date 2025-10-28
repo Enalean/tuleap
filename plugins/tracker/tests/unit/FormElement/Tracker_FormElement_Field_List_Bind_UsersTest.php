@@ -26,10 +26,10 @@ namespace Tuleap\Tracker\FormElement;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
@@ -80,7 +80,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends TestCase //php
         $value_function = 'project_members';
         $default_values = $decorators = '';
 
-        $users = new Tracker_FormElement_Field_List_Bind_Users(new DatabaseUUIDV7Factory(), $field, $value_function, $default_values, $decorators);
+        $users = new ListFieldUserBind(new DatabaseUUIDV7Factory(), $field, $value_function, $default_values, $decorators);
         self::assertEquals(['u1', 'u2'], $users->getRecipients($changeset_value));
     }
 
@@ -105,7 +105,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends TestCase //php
         $user_manager->method('getUserById')->willReturnCallback(static fn(int $id) => match ($id) {
             101, 102 => UserTestBuilder::anActiveUser()->build(),
         });
-        $bind_users = $this->createPartialMock(Tracker_FormElement_Field_List_Bind_Users::class, ['getAllValues', 'getUserManager']);
+        $bind_users = $this->createPartialMock(ListFieldUserBind::class, ['getAllValues', 'getUserManager']);
         $bind_users->method('getAllValues')->willReturn([101 => 'user1']);
         $bind_users->method('getUserManager')->willReturn($user_manager);
 
@@ -123,9 +123,9 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends TestCase //php
         self::assertTrue($bind_users->isExistingValue(102));
     }
 
-    protected function getBindUsersField(array $values): Tracker_FormElement_Field_List_Bind_Users&MockObject
+    protected function getBindUsersField(array $values): ListFieldUserBind&MockObject
     {
-        return $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Users::class)
+        return $this->getMockBuilder(ListFieldUserBind::class)
             ->setConstructorArgs([new DatabaseUUIDV7Factory(), '', '', $values, '', ''])
             ->onlyMethods(['getAllValues'])
             ->getMock();
@@ -136,7 +136,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends TestCase //php
         $list_field     = SelectboxFieldBuilder::aSelectboxField(123)->build();
         $default_values = [];
 
-        $bind_users = new Tracker_FormElement_Field_List_Bind_Users(new DatabaseUUIDV7Factory(), $list_field, '', $default_values, []);
+        $bind_users = new ListFieldUserBind(new DatabaseUUIDV7Factory(), $list_field, '', $default_values, []);
 
         self::assertEmpty($bind_users->getDefaultValues());
         self::assertEmpty($bind_users->getDefaultRESTValues());

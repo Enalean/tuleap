@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\FormElement;
 
-use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 
 final class UserListValueRepresentation
 {
@@ -52,7 +52,7 @@ final class UserListValueRepresentation
      */
     public $avatar_url;
 
-    public function build(Tracker_FormElement_Field_List_Bind_UsersValue $user): void
+    public function build(ListFieldUserBindValue $user): void
     {
         $this->id         = $user->getId();
         $this->uri        = self::ROUTE . '/' . $this->id;

@@ -51,7 +51,7 @@ final class BindValueForDuckTypingUpdater implements UpdateBindValueByDuckTyping
 
         $destinations_values_ids = [];
         foreach ($list_value_ids as $value_id) {
-            if ($source_field->getBind()->getType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+            if ($source_field->getBind()->getType() === \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE) {
                 $user = $this->retrieve_user_by_user_name->getUserByUserName((string) $value_id);
                 if ($user) {
                     $value_id = $user->getId();

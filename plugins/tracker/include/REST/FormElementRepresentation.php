@@ -20,6 +20,7 @@
 
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
@@ -132,8 +133,8 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
             self::BIND_LIST => array_map(
                 function ($binding) {
                     return [
-                        Tracker_REST_FormElementRepresentation::BIND_ID   => $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_ID],
-                        Tracker_REST_FormElementRepresentation::BIND_LABEL => $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_LABEL],
+                        Tracker_REST_FormElementRepresentation::BIND_ID   => $binding[ListFieldUserBind::REST_BINDING_LIST_ID],
+                        Tracker_REST_FormElementRepresentation::BIND_LABEL => $binding[ListFieldUserBind::REST_BINDING_LIST_LABEL],
                     ];
                 },
                 $bindings[ListFieldBind::REST_LIST_KEY]

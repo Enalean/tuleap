@@ -28,7 +28,7 @@ final class OpenListFieldsCompatibilityVerifierTest extends \Tuleap\Test\PHPUnit
         self::assertFalse(
             (new OpenListFieldsCompatibilityVerifier())->areOpenListFieldsCompatible(
                 $this->getOpenListFieldWithBindType(\Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::class),
-                $this->getOpenListFieldWithBindType(\Tracker_FormElement_Field_List_Bind_Users::class)
+                $this->getOpenListFieldWithBindType(\Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::class)
             )
         );
     }
@@ -37,8 +37,8 @@ final class OpenListFieldsCompatibilityVerifierTest extends \Tuleap\Test\PHPUnit
     {
         self::assertTrue(
             (new OpenListFieldsCompatibilityVerifier())->areOpenListFieldsCompatible(
-                $this->getOpenListFieldWithBindType(\Tracker_FormElement_Field_List_Bind_Users::class),
-                $this->getOpenListFieldWithBindType(\Tracker_FormElement_Field_List_Bind_Users::class)
+                $this->getOpenListFieldWithBindType(\Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::class),
+                $this->getOpenListFieldWithBindType(\Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::class)
             )
         );
     }

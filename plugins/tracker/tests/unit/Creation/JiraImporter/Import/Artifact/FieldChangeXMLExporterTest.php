@@ -28,7 +28,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -49,6 +48,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\Import\Artifact\GetExistingArtifactLinkTypesStub;
 use Tuleap\Tracker\Test\Stub\XML\IDGeneratorStub;
 use UserManager;
@@ -554,7 +554,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Fassignee',
             'assignee',
             'sb',
-            Tracker_FormElement_Field_List_Bind_Users::TYPE,
+            ListFieldUserBind::TYPE,
             [],
         );
 
@@ -596,7 +596,7 @@ final class FieldChangeXMLExporterTest extends TestCase
             'Fhomies',
             'homies',
             'msb',
-            Tracker_FormElement_Field_List_Bind_Users::TYPE,
+            ListFieldUserBind::TYPE,
             [],
         );
 

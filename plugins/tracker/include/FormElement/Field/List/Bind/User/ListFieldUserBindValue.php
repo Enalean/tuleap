@@ -19,15 +19,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\User;
+
+use Codendi_HTMLPurifier;
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
+use UserHelper;
+use UserManager;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement_Field_List_BindValue
+class ListFieldUserBindValue extends Tracker_FormElement_Field_List_BindValue
 {
     protected $id;
     protected $user_name;

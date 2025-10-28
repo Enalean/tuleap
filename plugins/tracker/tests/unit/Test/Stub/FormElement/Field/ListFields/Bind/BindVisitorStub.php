@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\Bind;
 
-use Tracker_FormElement_Field_List_Bind_Ugroups;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
 
 final readonly class BindVisitorStub implements BindVisitor
 {
@@ -48,13 +48,13 @@ final readonly class BindVisitorStub implements BindVisitor
     }
 
     #[\Override]
-    public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters): mixed
+    public function visitListBindUsers(ListFieldUserBind $bind, BindParameters $parameters): mixed
     {
         return $this->result;
     }
 
     #[\Override]
-    public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters): mixed
+    public function visitListBindUgroups(ListFieldUserGroupBind $bind, BindParameters $parameters): mixed
     {
         return $this->result;
     }

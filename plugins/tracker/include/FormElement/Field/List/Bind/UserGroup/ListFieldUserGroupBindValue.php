@@ -17,12 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup;
+
+use ProjectUGroup;
+use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
+use UGroupManager;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-final class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue
+final class ListFieldUserGroupBindValue extends Tracker_FormElement_Field_List_BindValue
 {
     /**
      * @var ProjectUGroup

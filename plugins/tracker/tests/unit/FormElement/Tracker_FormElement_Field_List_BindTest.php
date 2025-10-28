@@ -24,14 +24,14 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
-use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
@@ -138,7 +138,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
             117 => ListUserValueBuilder::aUserWithId(117)->build(),
         ];
 
-        $bind = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Users::class)
+        $bind = $this->getMockBuilder(ListFieldUserBind::class)
             ->setConstructorArgs([new DatabaseUUIDV7Factory(), $field, [], [], $decorator])
             ->onlyMethods(['getAllValues'])
             ->getMock();
@@ -157,7 +157,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
 
     public function testItReturnOnlyValidDefaultValues(): void
     {
-        $bind = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Users::class)
+        $bind = $this->getMockBuilder(ListFieldUserBind::class)
             ->setConstructorArgs([new DatabaseUUIDV7Factory(), $this->field, [], [112 => true, 0 => 103, 111 => true], []])
             ->onlyMethods(['getAllValues'])
             ->getMock();

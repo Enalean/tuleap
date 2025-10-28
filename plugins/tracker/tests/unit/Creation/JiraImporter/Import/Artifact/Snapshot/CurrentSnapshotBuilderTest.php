@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 use ColinODell\PsrTestLogger\TestLogger;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class CurrentSnapshotBuilderTest extends TestCase
@@ -174,7 +174,7 @@ final class CurrentSnapshotBuilderTest extends TestCase
                 'Fassignee',
                 'assignee',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                ListFieldUserBind::TYPE,
                 [],
             )
         );
@@ -186,7 +186,7 @@ final class CurrentSnapshotBuilderTest extends TestCase
                 'Fhomies',
                 'homies',
                 Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                ListFieldUserBind::TYPE,
                 [],
             )
         );

@@ -25,12 +25,12 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_Ugroups;
-use Tracker_FormElement_Field_List_Bind_UgroupsValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBindValue;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
@@ -40,10 +40,10 @@ use UserXMLExporter;
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 {
-    private Tracker_FormElement_Field_List_Bind_UgroupsValue $customers_ugroup_value;
-    private Tracker_FormElement_Field_List_Bind_UgroupsValue $project_members_ugroup_value;
-    private Tracker_FormElement_Field_List_Bind_UgroupsValue $hidden_ugroup_value;
-    private Tracker_FormElement_Field_List_Bind_UgroupsValue $integrators_ugroup_value;
+    private ListFieldUserGroupBindValue $customers_ugroup_value;
+    private ListFieldUserGroupBindValue $project_members_ugroup_value;
+    private ListFieldUserGroupBindValue $hidden_ugroup_value;
+    private ListFieldUserGroupBindValue $integrators_ugroup_value;
     private BindDefaultValueDao&MockObject $default_value_dao;
     private BindUgroupsValueDao&MockObject $value_dao;
     private UGroupManager&MockObject $ugroup_manager;
@@ -89,8 +89,8 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
     private function buildBindUgroups(
         array $values = [],
         array $default_values = [],
-    ): Tracker_FormElement_Field_List_Bind_Ugroups {
-        $bind = new Tracker_FormElement_Field_List_Bind_Ugroups(
+    ): ListFieldUserGroupBind {
+        $bind = new ListFieldUserGroupBind(
             new DatabaseUUIDV7Factory(),
             $this->field,
             $values,

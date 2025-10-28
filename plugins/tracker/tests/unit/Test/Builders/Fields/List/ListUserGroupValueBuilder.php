@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use ProjectUGroup;
-use Tracker_FormElement_Field_List_Bind_UgroupsValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBindValue;
 
 final class ListUserGroupValueBuilder
 {
@@ -63,8 +63,8 @@ final class ListUserGroupValueBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_List_Bind_UgroupsValue
+    public function build(): ListFieldUserGroupBindValue
     {
-        return new Tracker_FormElement_Field_List_Bind_UgroupsValue($this->uuid, $this->id, $this->value, $this->is_hidden);
+        return new ListFieldUserGroupBindValue($this->uuid, $this->id, $this->value, $this->is_hidden);
     }
 }

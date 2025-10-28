@@ -27,9 +27,9 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_OpenList;
-use Tracker_FormElement_Field_List_Bind_Ugroups;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -74,7 +74,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
 
     private function setUpUserTests(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Users::class);
+        $bind = $this->createMock(ListFieldUserBind::class);
         $bind->method('getType')->willReturn('users');
         $open_value = OpenListValueBuilder::anOpenListValue('email@tuleap.org')->build();
 
@@ -114,7 +114,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
 
     private function setUpUGroupsTest(): void
     {
-        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Ugroups::class);
+        $bind = $this->createMock(ListFieldUserGroupBind::class);
         $bind->method('getType')->willReturn('ugroups');
         $open_value = OpenListValueBuilder::anOpenListValue('new_ugroup')->build();
 
