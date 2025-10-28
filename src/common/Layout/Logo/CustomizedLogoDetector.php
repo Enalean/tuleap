@@ -25,27 +25,24 @@ namespace Tuleap\Layout\Logo;
 use ForgeConfig;
 use LogoRetriever;
 
-class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
+readonly class CustomizedLogoDetector implements IDetectIfLogoIsCustomized
 {
     private const array ORGANIZATION_LOGO_SHA256_CONTENT_HASHES = [
-        'b61210cf44a87ced4209119267751439343f25da8f872feedebae1dea3b04277',
-        'f6aeea978b22cd40c9804fd1e897ad394643a3715fa8e6ab449dd18397dce1c0',
-        '1eabd948d8d077314370f9ee3b76c5e8bbf70ab993f1e3eea49c32074333cbdf',
+        self::BURNING_PARROT_DEFAULT_ORGANIZATION_LOGO_SHA256_HASH,
+        self::COMMON_THEME_DEFAULT_ORGANIZATION_LOGO_SHA256_HASH,
+        self::N_MINUS_ONE_CRUNCH_LOGO_SHA256_HASH,
+        self::N_MINUS_ONE_NON_OPTIMIZED_LOGO_SHA256_HASH,
     ];
 
-    /**
-     * @var LogoRetriever
-     */
-    private $logo_retriever;
-    /**
-     * @var FileContentComparator
-     */
-    private $comparator;
+    private const string BURNING_PARROT_DEFAULT_ORGANIZATION_LOGO_SHA256_HASH = '5620ae654644bb1d7a71ce659be0b2445e6899d49a003a84ebc6d0fe05270b5c';
+    private const string COMMON_THEME_DEFAULT_ORGANIZATION_LOGO_SHA256_HASH   = 'b61210cf44a87ced4209119267751439343f25da8f872feedebae1dea3b04277';
+    private const string N_MINUS_ONE_CRUNCH_LOGO_SHA256_HASH                  = '1eabd948d8d077314370f9ee3b76c5e8bbf70ab993f1e3eea49c32074333cbdf';
+    private const string N_MINUS_ONE_NON_OPTIMIZED_LOGO_SHA256_HASH           = 'f6aeea978b22cd40c9804fd1e897ad394643a3715fa8e6ab449dd18397dce1c0';
 
-    public function __construct(LogoRetriever $logo_retriever, FileContentComparator $comparator)
-    {
-        $this->logo_retriever = $logo_retriever;
-        $this->comparator     = $comparator;
+    public function __construct(
+        private LogoRetriever $logo_retriever,
+        private FileContentComparator $comparator,
+    ) {
     }
 
     #[\Override]
