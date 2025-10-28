@@ -35,7 +35,12 @@ final readonly class KeyFactoryFromFileSystem implements KeyFactory
     #[\Override]
     public function getEncryptionKey(): EncryptionKey
     {
-        return new EncryptionKey($this->getKeyMaterial());
+        $reflection_class = new \ReflectionClass(EncryptionKey::class);
+        return $reflection_class->newLazyProxy(
+            function (): EncryptionKey {
+                return new EncryptionKey($this->getKeyMaterial());
+            }
+        );
     }
 
     /**
@@ -44,7 +49,12 @@ final readonly class KeyFactoryFromFileSystem implements KeyFactory
     #[\Override]
     public function getLegacy2025EncryptionKey(): Legacy2025EncryptionKey
     {
-        return new Legacy2025EncryptionKey($this->getKeyMaterial());
+        $reflection_class = new \ReflectionClass(Legacy2025EncryptionKey::class);
+        return $reflection_class->newLazyProxy(
+            function (): Legacy2025EncryptionKey {
+                return new Legacy2025EncryptionKey($this->getKeyMaterial());
+            }
+        );
     }
 
     private function getKeyMaterial(): ConcealedString

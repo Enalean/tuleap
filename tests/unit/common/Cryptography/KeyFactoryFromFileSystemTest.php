@@ -37,8 +37,9 @@ final class KeyFactoryFromFileSystemTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(dirname($encryption_key_file));
         \ForgeConfig::set('sys_custom_dir', $temporary_dir);
 
-        $key_factory   = new KeyFactoryFromFileSystem();
-        $key_generated = $key_factory->getEncryptionKey();
+        $key_factory                = new KeyFactoryFromFileSystem();
+        $key_generated              = $key_factory->getEncryptionKey();
+        $key_generated_raw_material = $key_generated->getRawKeyMaterial();
 
         $this->assertFileExists($encryption_key_file);
         $file_read_only_permission = 0100400;
@@ -46,7 +47,7 @@ final class KeyFactoryFromFileSystemTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $key_from_file = $key_factory->getEncryptionKey();
 
-        $this->assertEquals($key_generated->getRawKeyMaterial(), $key_from_file->getRawKeyMaterial());
+        $this->assertEquals($key_generated_raw_material, $key_from_file->getRawKeyMaterial());
     }
 
     public function testEncryptionKeyCanBeRetrievedFromFile(): void
@@ -73,13 +74,14 @@ final class KeyFactoryFromFileSystemTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(dirname($encryption_key_file));
         \ForgeConfig::set('sys_custom_dir', $temporary_dir);
 
-        $key_factory     = new KeyFactoryFromFileSystem();
-        $key_generated_1 = $key_factory->getEncryptionKey();
+        $key_factory                = new KeyFactoryFromFileSystem();
+        $key_generated_1            = $key_factory->getEncryptionKey();
+        $key_generated_raw_material = $key_generated_1->getRawKeyMaterial();
 
         unlink($encryption_key_file);
 
         $key_generated_2 = $key_factory->getEncryptionKey();
 
-        $this->assertNotEquals($key_generated_1->getRawKeyMaterial(), $key_generated_2->getRawKeyMaterial());
+        $this->assertNotEquals($key_generated_raw_material, $key_generated_2->getRawKeyMaterial());
     }
 }

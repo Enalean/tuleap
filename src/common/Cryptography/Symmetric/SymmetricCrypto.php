@@ -54,8 +54,28 @@ final readonly class SymmetricCrypto
     /**
      * @throws \Tuleap\Cryptography\Exception\InvalidCiphertextException
      */
-    public static function decrypt(string $ciphertext_with_auth_tag, EncryptionAdditionalData $additional_data, EncryptionKey $secret_key): ConcealedString
-    {
+    public static function decrypt(
+        #[\SensitiveParameter]
+        string $ciphertext_with_auth_tag,
+        EncryptionAdditionalData $additional_data,
+        EncryptionKey $secret_key,
+    ): ConcealedString {
+        $reflection_class = new \ReflectionClass(ConcealedString::class);
+        return $reflection_class
+            ->newLazyProxy(
+                fn(): ConcealedString => self::nonLazyDecrypt($ciphertext_with_auth_tag, $additional_data, $secret_key)
+            );
+    }
+
+    /**
+     * @throws \Tuleap\Cryptography\Exception\InvalidCiphertextException
+     */
+    public static function nonLazyDecrypt(
+        #[\SensitiveParameter]
+        string $ciphertext_with_auth_tag,
+        EncryptionAdditionalData $additional_data,
+        EncryptionKey $secret_key,
+    ): ConcealedString {
         $auth_tag   = \mb_substr($ciphertext_with_auth_tag, 0, SODIUM_CRYPTO_AUTH_BYTES, '8bit');
         $nonce      = \mb_substr($ciphertext_with_auth_tag, SODIUM_CRYPTO_AUTH_BYTES, SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES, '8bit');
         $ciphertext = \mb_substr(
