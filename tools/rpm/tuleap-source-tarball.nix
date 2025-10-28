@@ -51,7 +51,6 @@ let
           plugins/*/themes
           tools/docker/
           tools/publish_additional_tools/
-          tools/publish_js_libraries/
           tools/rpm/
           tools/utils/
           !tools/setup_templates/*/*_template.xml

@@ -192,8 +192,8 @@ To release a new version, you need to:
         $ git tag -s -m '<PACKAGE_NAME> v<VERSION>' <PACKAGE_NAME>_<VERSION>
         $ git push stable <PACKAGE_NAME>_<VERSION>
 
-5.  Trigger the [pipeline to publish your new version to the npmjs.com
-    registry](https://ci.tuleap.org/jenkins/job/Publish_JS_libraries/job/Main_Tuleap_repository/)
+5.  The [pipeline building and releasing the npmjs.com packages](https://github.com/Enalean/tuleap/actions/workflows/release-js-libs.yml)
+    will be triggered once the tag is mirrored onto GitHub.
 
 ## Release an additional tool developed in the main Tuleap repository
 

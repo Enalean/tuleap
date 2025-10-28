@@ -1,0 +1,20 @@
+name: Publish JS packages to npmjs
+on:
+  push:
+    tags:
+      - '@tuleap/**'
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31.8.1
+      - run: nix-shell --run "tools/utils/scripts/generated-files-builder.sh prod"
+      - run: nix-shell --run "pnpm publish --access public --filter "@tuleap/*" --no-git-checks --provenance"
+        env:
+          NPM_CONFIG_PROVENANCE: true
