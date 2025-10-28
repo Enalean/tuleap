@@ -15494,11 +15494,6 @@
       <code><![CDATA[$repoAccess]]></code>
       <code><![CDATA[$toProject]]></code>
     </PossiblyUndefinedVariable>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $this->groupId]]></code>
-      <code><![CDATA[(int) $this->groupId]]></code>
-      <code><![CDATA[(int) $this->groupId]]></code>
-    </RedundantCastGivenDocblockType>
     <TooManyArguments>
       <code><![CDATA[new Valid_GroupId('group_id')]]></code>
     </TooManyArguments>
@@ -18655,7 +18650,6 @@
     </RedundantCast>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $groupId]]></code>
-      <code><![CDATA[(int) $groupId]]></code>
     </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$project_id]]></code>
@@ -20008,9 +20002,7 @@
       <code><![CDATA[adminGerritTemplatesView]]></code>
       <code><![CDATA[adminGitAdminsView]]></code>
       <code><![CDATA[confirmPrivate]]></code>
-      <code><![CDATA[fetchCopyToAnotherProject]]></code>
       <code><![CDATA[footer]]></code>
-      <code><![CDATA[forkRepositories]]></code>
       <code><![CDATA[generateMassUpdateCSRF]]></code>
       <code><![CDATA[getAccessRightsPresenterOptionsBuilder]]></code>
       <code><![CDATA[getGitRepositoryFactory]]></code>
@@ -20034,10 +20026,6 @@
       <code><![CDATA[$this->groupId]]></code>
       <code><![CDATA[$this->groupId]]></code>
       <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->user]]></code>
-      <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
@@ -20165,11 +20153,6 @@
       <code><![CDATA[getWaitingForRepositoryCreationInfo]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/GitViewsRepositoriesTraversalStrategy.php">
-    <DeprecatedMethod>
-      <code><![CDATA[load]]></code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/git/include/GitXMLExporter.php">
     <MissingParamType>
       <code><![CDATA[$permissions]]></code>
@@ -20255,15 +20238,12 @@
     </InvalidClass>
     <MissingParamType>
       <code><![CDATA[$dao]]></code>
-      <code><![CDATA[$newName]]></code>
       <code><![CDATA[$repository]]></code>
       <code><![CDATA[$repositoryId]]></code>
       <code><![CDATA[$type]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[clonePermissions]]></code>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[deleteArchivedRepository]]></code>
       <code><![CDATA[disconnectFromGerrit]]></code>
       <code><![CDATA[fork]]></code>
       <code><![CDATA[forkOnFilesystem]]></code>
@@ -20271,7 +20251,6 @@
       <code><![CDATA[getEventManager]]></code>
       <code><![CDATA[getPermissionsManager]]></code>
       <code><![CDATA[inSameProject]]></code>
-      <code><![CDATA[markAsDeleted]]></code>
       <code><![CDATA[restoreArchivedRepository]]></code>
       <code><![CDATA[savePermission]]></code>
       <code><![CDATA[setDao]]></code>
@@ -20283,17 +20262,6 @@
       <code><![CDATA[realpath(__DIR__ . '/../../../src/utils/php-launcher.sh')]]></code>
       <code><![CDATA[realpath(__DIR__ . '/../bin/gl-rename-project.php')]]></code>
     </PossiblyFalseOperand>
-  </file>
-  <file src="plugins/git/include/Git_Backend_Interface.php">
-    <MissingParamType>
-      <code><![CDATA[$newName]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[archiveBeforePurge]]></code>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[deleteArchivedRepository]]></code>
-      <code><![CDATA[markAsDeleted]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git_Exec.php">
     <MissingParamType>
@@ -21882,17 +21850,15 @@
       <code><![CDATA[setProject]]></code>
       <code><![CDATA[setProject]]></code>
       <code><![CDATA[setProject]]></code>
+      <code><![CDATA[setProject]]></code>
     </DeprecatedMethod>
-    <InternalMethod>
-      <code><![CDATA[numberOfInvocations]]></code>
-      <code><![CDATA[numberOfInvocations]]></code>
-    </InternalMethod>
     <MissingClosureParamType>
       <code><![CDATA[$parameters]]></code>
     </MissingClosureParamType>
   </file>
   <file src="plugins/git/tests/unit/GitForkRepositoriesTest.php">
     <DeprecatedMethod>
+      <code><![CDATA[setProject]]></code>
       <code><![CDATA[setProject]]></code>
     </DeprecatedMethod>
     <InternalMethod>
@@ -22031,10 +21997,10 @@
       <code><![CDATA[$uri]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/git/tests/unit/GitViewsRepositoriesTraversalStrategySelectboxTest.php">
-    <MissingParamType>
-      <code><![CDATA[$repositories]]></code>
-    </MissingParamType>
+  <file src="plugins/git/tests/unit/GitTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[setProject]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/git/tests/unit/GitViewsTest.php">
     <MissingClosureParamType>
@@ -24834,28 +24800,15 @@
     <MissingParamType>
       <code><![CDATA[$controler]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addJob]]></code>
-      <code><![CDATA[deleteJob]]></code>
-      <code><![CDATA[updateJob]]></code>
-    </MissingReturnType>
     <MissingTemplateParam>
       <code><![CDATA[hudsonActions]]></code>
     </MissingTemplateParam>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->svn_paths_updater]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->svn_paths_updater]]></code>
-      <code><![CDATA[$this->svn_paths_updater]]></code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/hudson/include/hudsonPlugin.php">
     <ArgumentTypeCoercion>
       <code><![CDATA['hudsonPluginInfo']]></code>
     </ArgumentTypeCoercion>
     <DeprecatedMethod>
-      <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
@@ -24874,8 +24827,6 @@
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$hudsonJobFactory]]></code>
@@ -24886,7 +24837,6 @@
       <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[getProjectWidgetList]]></code>
       <code><![CDATA[getUserWidgetList]]></code>
-      <code><![CDATA[jsFile]]></code>
       <code><![CDATA[referenceGetTooltipContentEvent]]></code>
       <code><![CDATA[uninstall]]></code>
       <code><![CDATA[widgetInstance]]></code>
@@ -24926,9 +24876,7 @@
       <code><![CDATA[current]]></code>
       <code><![CDATA[current]]></code>
       <code><![CDATA[current]]></code>
-      <code><![CDATA[current]]></code>
       <code><![CDATA[rowCount]]></code>
-      <code><![CDATA[valid]]></code>
       <code><![CDATA[valid]]></code>
       <code><![CDATA[valid]]></code>
       <code><![CDATA[valid]]></code>
@@ -24945,8 +24893,6 @@
       <code><![CDATA[$job_url]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$project]]></code>
-      <code><![CDATA[$questionmark]]></code>
-      <code><![CDATA[$section]]></code>
       <code><![CDATA[$services]]></code>
       <code><![CDATA[$services]]></code>
       <code><![CDATA[$services]]></code>
@@ -24956,19 +24902,9 @@
       <code><![CDATA[$view]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_display_add_job_form]]></code>
-      <code><![CDATA[_display_jobs_table]]></code>
-      <code><![CDATA[_getHelp]]></code>
-      <code><![CDATA[_getTitle]]></code>
-      <code><![CDATA[build_number]]></code>
-      <code><![CDATA[displayForm]]></code>
-      <code><![CDATA[editJob]]></code>
       <code><![CDATA[footer]]></code>
       <code><![CDATA[header]]></code>
-      <code><![CDATA[job_details]]></code>
-      <code><![CDATA[last_test_result]]></code>
       <code><![CDATA[projectOverview]]></code>
-      <code><![CDATA[test_trend]]></code>
     </MissingReturnType>
     <PossiblyUndefinedVariable>
       <code><![CDATA[$dar]]></code>
@@ -25451,13 +25387,10 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$job_id]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
@@ -25478,19 +25411,10 @@
       <code><![CDATA[isJobValid]]></code>
       <code><![CDATA[isPluginConcerned]]></code>
       <code><![CDATA[isRequestWellFormed]]></code>
-      <code><![CDATA[javascript_file]]></code>
       <code><![CDATA[process_post_commit]]></code>
       <code><![CDATA[save_ci_triggers]]></code>
       <code><![CDATA[update_ci_triggers]]></code>
     </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/jira_import/include/JiraAgile/JiraAgileImporter.php">
     <PossiblyNullArgument>
@@ -32979,9 +32903,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! strpos($_SERVER['REQUEST_URI'], 'project_stat.php')]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/statistics/tests/integration/DiskUsagePurgerIntegrationTest.php">
     <DeprecatedMethod>
@@ -33291,24 +33212,6 @@
       <code><![CDATA[$ugroups_not_added]]></code>
       <code><![CDATA[$users_not_added]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[addFeedbackPathError]]></code>
-      <code><![CDATA[addFeedbackUgroupsNotAdded]]></code>
-      <code><![CDATA[addFeedbackUsersNotAdded]]></code>
-      <code><![CDATA[createMailingList]]></code>
-      <code><![CDATA[deleteMailingList]]></code>
-      <code><![CDATA[deleteRepository]]></code>
-      <code><![CDATA[displayHooksConfig]]></code>
-      <code><![CDATA[displayRepositoryDelete]]></code>
-      <code><![CDATA[generateToken]]></code>
-      <code><![CDATA[generateTokenDeletion]]></code>
-      <code><![CDATA[redirect]]></code>
-      <code><![CDATA[redirectOnDisplayNotification]]></code>
-      <code><![CDATA[saveMailHeader]]></code>
-      <code><![CDATA[saveMailingList]]></code>
-      <code><![CDATA[updateHooksConfig]]></code>
-      <code><![CDATA[updateMailingList]]></code>
-    </MissingReturnType>
     <PossiblyInvalidOperand>
       <code><![CDATA[$project->getid()]]></code>
     </PossiblyInvalidOperand>
@@ -63862,7 +63765,6 @@
       <code><![CDATA[$value_prefix]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$icons]]></code>
       <code><![CDATA[$javascript]]></code>
       <code><![CDATA[$this->javascript]]></code>
     </MissingPropertyType>
@@ -65569,46 +65471,6 @@
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->group_id]]></code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/Project/Admin/ProjectHistoryPresenter.class.php">
-    <MissingParamType>
-      <code><![CDATA[$by]]></code>
-      <code><![CDATA[$end_date]]></code>
-      <code><![CDATA[$forward_sub_events]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$index]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$select_button]]></code>
-      <code><![CDATA[$start_date]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[choose_event_label]]></code>
-      <code><![CDATA[current_on_total]]></code>
-      <code><![CDATA[end_field_date]]></code>
-      <code><![CDATA[export_history]]></code>
-      <code><![CDATA[has_history_rows]]></code>
-      <code><![CDATA[has_offset]]></code>
-      <code><![CDATA[history_results]]></code>
-      <code><![CDATA[history_search_title]]></code>
-      <code><![CDATA[max_rows_not_reached]]></code>
-      <code><![CDATA[next]]></code>
-      <code><![CDATA[no_change]]></code>
-      <code><![CDATA[offset_minus_limit]]></code>
-      <code><![CDATA[offset_plus_limit]]></code>
-      <code><![CDATA[previous]]></code>
-      <code><![CDATA[row_color]]></code>
-      <code><![CDATA[start_field_date]]></code>
-      <code><![CDATA[table_head_by]]></code>
-      <code><![CDATA[table_head_event]]></code>
-      <code><![CDATA[table_head_from]]></code>
-      <code><![CDATA[table_head_to]]></code>
-      <code><![CDATA[table_head_val]]></code>
-      <code><![CDATA[title]]></code>
-      <code><![CDATA[toggle_search]]></code>
-      <code><![CDATA[toggler_class_name]]></code>
-    </MissingReturnType>
   </file>
   <file src="src/common/Project/Admin/ProjectHistoryPresenter.php">
     <MissingParamType>
@@ -70847,22 +70709,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/UserGroup/NameTranslator.php">
-    <MissingClassConstType>
-      <code><![CDATA[ANON                       = 'ugroup_anonymous_users_name_key']]></code>
-      <code><![CDATA[AUTHENTICATED              = 'ugroup_authenticated_users_name_key']]></code>
-      <code><![CDATA[CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label']]></code>
-      <code><![CDATA[CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label']]></code>
-      <code><![CDATA[FILE_ADMINS                = 'ugroup_file_manager_admin_name_key']]></code>
-      <code><![CDATA[NOBODY                     = 'ugroup_nobody_name_key']]></code>
-      <code><![CDATA[PROJECT_ADMINS             = 'ugroup_project_admins_name_key']]></code>
-      <code><![CDATA[PROJECT_MEMBERS            = 'ugroup_project_members_name_key']]></code>
-      <code><![CDATA[REGISTERED                 = 'ugroup_registered_users_name_key']]></code>
-      <code><![CDATA[TV3_TRACKER_ADMINS         = 'ugroup_tracker_admins_name_key']]></code>
-      <code><![CDATA[WIKI_ADMINS                = 'ugroup_wiki_admin_name_key']]></code>
-    </MissingClassConstType>
-    <MissingPropertyType>
-      <code><![CDATA[$names]]></code>
-    </MissingPropertyType>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(string) $name]]></code>
     </RedundantCastGivenDocblockType>
@@ -72096,11 +71942,6 @@
       <code><![CDATA[usersNeedApproval]]></code>
       <code><![CDATA[validatedUsersCount]]></code>
     </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[countAllUsers]]></code>
-      <code><![CDATA[countUsersByStatus]]></code>
-      <code><![CDATA[countUsersByStatus]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="src/common/admin/Admin_ProjectListExporter.php">
     <MissingReturnType>
@@ -84877,9 +84718,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/www/project/admin/history.php">
-    <InvalidArgument>
-      <code><![CDATA[show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by)]]></code>
-    </InvalidArgument>
     <UndefinedGlobalVariable>
       <code><![CDATA[$subEvents]]></code>
       <code><![CDATA[$subEvents]]></code>
@@ -85194,13 +85032,7 @@
     <MissingReturnType>
       <code><![CDATA[project_admin_footer]]></code>
     </MissingReturnType>
-    <PossiblyFalseOperand>
-      <code><![CDATA[json_encode($translated_events)]]></code>
-      <code><![CDATA[json_encode($translated_selected_sub_events)]]></code>
-    </PossiblyFalseOperand>
     <PossiblyNullArgument>
-      <code><![CDATA[$event]]></code>
-      <code><![CDATA[$old_value]]></code>
       <code><![CDATA[$old_value]]></code>
       <code><![CDATA[$user]]></code>
     </PossiblyNullArgument>
@@ -85209,12 +85041,8 @@
     </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$by]]></code>
-      <code><![CDATA[$by]]></code>
-      <code><![CDATA[$endDate]]></code>
       <code><![CDATA[$endDate]]></code>
       <code><![CDATA[$startDate]]></code>
-      <code><![CDATA[$startDate]]></code>
-      <code><![CDATA[stristr($old_value, $GLOBALS['Language']->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))]]></code>
       <code><![CDATA[stristr($old_value, $GLOBALS['Language']->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))]]></code>
       <code><![CDATA[strstr($msg_key, 'membership_request_updated')]]></code>
       <code><![CDATA[strstr($msg_key, 'perm_granted_for_')]]></code>

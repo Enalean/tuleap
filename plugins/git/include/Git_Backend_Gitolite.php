@@ -76,14 +76,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         return $this->driver->dumpProjectRepoConf($repository->getProject());
     }
 
-    /**
-     * Verify if the repository as already some content within
-     *
-     * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
-     * @return bool
-     */
     #[\Override]
-    public function isInitialized(GitRepository $repository)
+    public function isInitialized(GitRepository $repository): bool
     {
         $init = $this->driver->isInitialized($this->getGitRootPath() . '/' . $repository->getPath());
         if ($init) {
@@ -94,23 +88,14 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         }
     }
 
-    /**
-     *
-     * @return bool
-     */
     #[\Override]
-    public function isCreated(GitRepository $repository)
+    public function isCreated(GitRepository $repository): bool
     {
         return $this->driver->isRepositoryCreated($this->getGitRootPath() . '/' . $repository->getPath());
     }
 
-    /**
-     * Return URL to access the respository for remote git commands
-     *
-     * @return array
-     */
     #[\Override]
-    public function getAccessURL(GitRepository $repository)
+    public function getAccessURL(GitRepository $repository): array
     {
         $transports    = [];
         $ssh_transport = $this->gitolite_access_URL_generator->getSSHURL($repository);
@@ -124,13 +109,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         return $transports;
     }
 
-    /**
-     * Return the base root of all git repositories
-     *
-     * @return String
-     */
     #[\Override]
-    public function getGitRootPath()
+    public function getGitRootPath(): string
     {
         return ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/';
     }
@@ -153,13 +133,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $this->dao = $dao;
     }
 
-    /**
-     * Verify if given name is not already reserved on filesystem
-     *
-     * @return bool
-     */
     #[\Override]
-    public function isNameAvailable($newName)
+    public function isNameAvailable(string $newName): bool
     {
         return ! file_exists($this->getGitRootPath() . '/' . $newName);
     }
@@ -225,16 +200,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             && permission_clear_all($group_id, Git::PERM_WPLUS, $object_id);
     }
 
-    /**
-     * Test is user can read the content of this repository and metadata
-     *
-     * @param PFUser          $user       The user to test
-     * @param GitRepository $repository The repository to test
-     *
-     * @return bool
-     */
     #[\Override]
-    public function userCanRead($user, $repository)
+    public function userCanRead(PFUser $user, GitRepository $repository): bool
     {
         if ($user->isMember($repository->getProjectId(), 'A')) {
             return true;
@@ -252,53 +219,26 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         return false;
     }
 
-    /**
-     * Save the repository
-     *
-     * @param GitRepository $repository
-     *
-     * @return bool
-     */
     #[\Override]
-    public function save($repository)
+    public function save(GitRepository $repository): bool
     {
         return $this->getDao()->save($repository);
     }
 
-    /**
-     * Update list of people notified by post-receive-email hook
-     *
-     * @param GitRepository $repository
-     */
     #[\Override]
-    public function changeRepositoryMailingList($repository)
+    public function changeRepositoryMailingList(GitRepository $repository): bool
     {
         return true;
     }
 
-    /**
-     * Change post-receive-email hook mail prefix
-     *
-     * @param GitRepository $repository
-     *
-     * @return bool
-     */
     #[\Override]
-    public function changeRepositoryMailPrefix($repository)
+    public function changeRepositoryMailPrefix(GitRepository $repository): bool
     {
         return $this->changeRepositoryMailingList($repository);
     }
 
-    /**
-     * Rename a project
-     *
-     * @param Project $project The project to rename
-     * @param string  $newName The new name of the project
-     *
-     * @return bool true if success, false otherwise
-     */
     #[\Override]
-    public function renameProject(Project $project, $newName)
+    public function renameProject(Project $project, string $newName): bool
     {
         if (is_dir($this->driver->getRepositoriesPath() . '/' . $project->getUnixName())) {
             $backend = $this->getBackend();
@@ -352,19 +292,19 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     #[\Override]
-    public function canBeDeleted(GitRepository $repository)
+    public function canBeDeleted(GitRepository $repository): bool
     {
         return true;
     }
 
     #[\Override]
-    public function markAsDeleted(GitRepository $repository)
+    public function markAsDeleted(GitRepository $repository): void
     {
         $this->getDao()->delete($repository);
     }
 
     #[\Override]
-    public function delete(GitRepository $repository)
+    public function delete(GitRepository $repository): void
     {
         $this->updateRepoConf($repository);
         $this->logger->debug('Backuping ' . $repository->getPath());
@@ -376,7 +316,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     #[\Override]
-    public function deleteArchivedRepository(GitRepository $repository)
+    public function deleteArchivedRepository(GitRepository $repository): void
     {
         $this->logger->debug('Delete backup ' . $repository->getBackupPath());
         $this->getDriver()->deleteBackup(
@@ -387,12 +327,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     /**
      * Invoque 'archive deleted item' hook in order to make a backup of the git repository archive
-     *
-     *
-     * @return bool
      */
     #[\Override]
-    public function archiveBeforePurge(GitRepository $repository)
+    public function archiveBeforePurge(GitRepository $repository): bool
     {
         $backup = \ForgeConfig::get(\Tuleap\Git\LegacyConfigInc::BACKUP_DIR);
 

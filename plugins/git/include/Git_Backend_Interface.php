@@ -40,101 +40,72 @@ interface Git_Backend_Interface
     public function isCreated(GitRepository $repository);
 
     /**
-     * Return URL to access the respository for remote git commands
+     * Return URL to access the repository for remote git commands
      *
-     * @return array
+     * @return array<string, string>
      */
-    public function getAccessURL(GitRepository $repository);
+    public function getAccessURL(GitRepository $repository): array;
 
     /**
      * Return the base root of all git repositories
-     *
-     * @return String
      */
-    public function getGitRootPath();
+    public function getGitRootPath(): string;
 
     /**
      * Verify if given name is not already reserved on filesystem
-     *
-     * @return bool
      */
-    public function isNameAvailable($newName);
+    public function isNameAvailable(string $newName): bool;
 
     /**
      * Save the repository
-     *
-     * @param GitRepository $repository
-     *
-     * @return bool
      */
-    public function save($repository);
+    public function save(GitRepository $repository): bool;
 
     /**
      * Test is user can read the content of this repository and metadata
-     *
-     * @param PFUser          $user       The user to test
-     * @param GitRepository $repository The repository to test
-     *
-     * @return bool
      */
-    public function userCanRead($user, $repository);
+    public function userCanRead(PFUser $user, GitRepository $repository): bool;
 
     /**
      * Update list of people notified by post-receive-email hook
-     *
-     * @param GitRepository $repository
-     *
-     * @return bool
      */
-    public function changeRepositoryMailingList($repository);
+    public function changeRepositoryMailingList(GitRepository $repository): bool;
 
     /**
      * Change post-receive-email hook mail prefix
-     *
-     * @param GitRepository $repository
-     *
-     * @return bool
      */
-    public function changeRepositoryMailPrefix($repository);
+    public function changeRepositoryMailPrefix(GitRepository $repository): bool;
 
     /**
      * Rename a project
-     *
-     * @param Project $project The project to rename
-     * @param string  $newName The new name of the project
-     *
-     * @return bool true if success, false otherwise
      */
-    public function renameProject(Project $project, $newName);
+    public function renameProject(Project $project, string $newName): bool;
 
     /**
      * Check if repository can be deleted
-     *
-     * @return bool
      */
-    public function canBeDeleted(GitRepository $repository);
+    public function canBeDeleted(GitRepository $repository): bool;
 
     /**
      * Perform logical deletion repository in DB
      *
      */
-    public function markAsDeleted(GitRepository $repository);
+    public function markAsDeleted(GitRepository $repository): void;
 
     /**
      * Physically delete a repository already marked for deletion
      *
      */
-    public function delete(GitRepository $repository);
+    public function delete(GitRepository $repository): void;
 
     /**
      * Purge archived repository
      *
      */
-    public function deleteArchivedRepository(GitRepository $repository);
+    public function deleteArchivedRepository(GitRepository $repository): void;
 
     /**
      * Move the archived gitolite repositories to the archiving area before purge
-     *
      */
-    public function archiveBeforePurge(GitRepository $repository);
+    public function archiveBeforePurge(GitRepository $repository): bool;
 }

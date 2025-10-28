@@ -170,7 +170,7 @@ class GitForkPermissionsManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $form           .= '<form action="" method="POST">';
         $form           .= '<input type="hidden" name="group_id" value="' . (int) $groupId . '" />';
         $form           .= '<input type="hidden" name="action" value="do_fork_repositories" />';
-        $token           = new CSRFSynchronizerToken('/plugins/git/?group_id=' . (int) $groupId . '&action=fork_repositories');
+        $token           = new CSRFSynchronizerToken(\Tuleap\Git\ForkRepositories\ForkRepositoriesPOSTUrlBuilder::buildForksPermissionsURL($groupId));
         $form           .= $token->fetchHTMLInput();
         $form           .= '<input id="fork_repositories_repo" type="hidden" name="repos" value="' . $this->getPurifier()->purify($params['repos']) . '" />';
         $form           .= '<input id="choose_personal" type="hidden" name="choose_destination" value="' . $this->getPurifier()->purify($params['scope']) . '" />';

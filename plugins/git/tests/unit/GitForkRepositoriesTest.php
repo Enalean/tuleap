@@ -29,10 +29,8 @@ use GitRepository;
 use GitRepositoryFactory;
 use PFUser;
 use ProjectManager;
-use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -41,6 +39,8 @@ final class GitForkRepositoriesTest extends TestCase
 {
     use GlobalResponseMock;
     use GlobalLanguageMock;
+
+    private const int PROJECT_ID = 101;
 
     #[\Override]
     protected function setUp(): void
@@ -54,34 +54,9 @@ final class GitForkRepositoriesTest extends TestCase
         unset($GLOBALS['HTML'], $_SESSION);
     }
 
-    public function testRendersForkRepositoriesView(): void
-    {
-        $request = HTTPRequestBuilder::get()->withParams(['choose_destination' => 'personal', 'repos' => '10'])->build();
-
-        $git = $this->createPartialMock(Git::class, ['addView']);
-        $git->setRequest($request);
-        $git->expects($this->once())->method('addView')->with('forkRepositories');
-
-        $factory = $this->createMock(GitRepositoryFactory::class);
-        $factory->method('getRepositoryById')->willReturn(GitRepositoryTestBuilder::aProjectRepository()->build());
-        $git->setFactory($factory);
-
-        $user = $this->createMock(PFUser::class);
-        $user->method('getId');
-        $user->method('isMember')->willReturn(true);
-        $user->method('getUserName')->willReturn('testman');
-        $git->user = $user;
-
-        $project_manager = $this->createMock(ProjectManager::class);
-        $project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
-        $git->setProjectManager($project_manager);
-
-        $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
-    }
-
     public function testExecutesForkRepositoriesActionWithAListOfRepos(): void
     {
-        $groupId = 101;
+        $groupId = self::PROJECT_ID;
         $repo    = new GitRepository();
         $repos   = [$repo];
         $user    = new PFUser();
@@ -109,7 +84,7 @@ final class GitForkRepositoriesTest extends TestCase
             }
             if ($matcher->numberOfInvocations() === 2) {
                 self::assertSame('fork', $parameters[0]);
-                self::assertSame([$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions], $parameters[1]);
+                self::assertSame([$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/projectname/', $forkPermissions], $parameters[1]);
             }
         });
         $request = new Codendi_Request([
@@ -123,7 +98,10 @@ final class GitForkRepositoriesTest extends TestCase
 
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks(): void
     {
-        $git       = $this->createPartialMock(Git::class, ['checkSynchronizerToken']);
+        $git     = $this->createPartialMock(Git::class, ['checkSynchronizerToken']);
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withUnixName('projectname')->build();
+        $git->setProject($project);
+
         $exception = new Exception();
         $git->method('checkSynchronizerToken')->willThrowException($exception);
         $this->expectExceptionObject($exception);

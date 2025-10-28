@@ -82,12 +82,7 @@ class GitRepositoryListPresenter
             ]
         );
 
-        $this->repositories_fork_url = GIT_BASE_URL . '/?' . http_build_query(
-            [
-                'group_id' => $project->getID(),
-                'action'   => 'fork_repositories',
-            ]
-        );
+        $this->repositories_fork_url = '/projects/' . $project->getUnixNameLowerCase() . '/fork-repositories/';
 
         $this->repositories_list_url = GIT_BASE_URL . '/' . urlencode($project->getUnixNameLowerCase()) . '/';
         $this->project_id            = $project->getID();
