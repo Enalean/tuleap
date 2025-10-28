@@ -961,6 +961,9 @@ msgstr "Personalizar a página inicial"
 msgid "DELETE FAILED!"
 msgstr "EXCLUSÃO FALHOU!"
 
+msgid "Dark mode"
+msgstr ""
+
 msgid "Dashboard creation failed."
 msgstr "Falha na criação do painel."
 
@@ -1730,6 +1733,9 @@ msgstr "Acordos de Licença"
 
 msgid "License Approval:"
 msgstr "Aprovação da Licença:"
+
+msgid "Light mode"
+msgstr ""
 
 msgid "Link"
 msgstr "Link"
@@ -3059,6 +3065,9 @@ msgstr "Gestão sincronizada dos membros do projeto"
 
 msgid "System"
 msgstr "Sistema"
+
+msgid "System default mode"
+msgstr ""
 
 msgid "System events"
 msgstr "Eventos do sistema"

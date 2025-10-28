@@ -936,6 +936,9 @@ msgstr "홈페이지 사용자 정의"
 msgid "DELETE FAILED!"
 msgstr "삭제 실패!"
 
+msgid "Dark mode"
+msgstr ""
+
 msgid "Dashboard creation failed."
 msgstr "대시보드 생성에 실패했습니다."
 
@@ -1690,6 +1693,9 @@ msgstr "라이선스 계약"
 
 msgid "License Approval:"
 msgstr "라이선스 승인:"
+
+msgid "Light mode"
+msgstr ""
 
 msgid "Link"
 msgstr "링크"
@@ -2997,6 +3003,9 @@ msgstr "동기화된 프로젝트 멤버십 관리"
 
 msgid "System"
 msgstr "시스템"
+
+msgid "System default mode"
+msgstr ""
 
 msgid "System events"
 msgstr "시스템 이벤트"

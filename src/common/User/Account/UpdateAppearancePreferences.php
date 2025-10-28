@@ -36,6 +36,7 @@ use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\Appearance\FaviconVariant;
+use Tuleap\User\Account\Appearance\DarkModeValue;
 use UserHelper;
 use UserManager;
 
@@ -92,6 +93,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $something_has_been_updated = $this->setNewColor($request, $layout, $user);
         $something_has_been_updated = $this->setFaviconVariant($request, $layout, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewDisplayDensity($request, $user) || $something_has_been_updated;
+        $something_has_been_updated = $this->setNewDarkMode($request, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewAccessibilityMode($request, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewUsernameDisplay($request, $layout, $user) || $something_has_been_updated;
         $something_has_been_updated = $this->setNewRelativeDatesDisplay($request, $layout, $user) || $something_has_been_updated;
@@ -171,6 +173,21 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         }
 
         $user->setPreference(DateHelper::PREFERENCE_NAME, $new_relative_dates_display);
+
+        return true;
+    }
+
+    private function setNewDarkMode(HTTPRequest $request, PFUser $user): bool
+    {
+        $current_mode = DarkModeValue::fromUser($user);
+
+        $new_mode = DarkModeValue::tryFrom((string) $request->get('display_dark_mode')) ?? DarkModeValue::default();
+
+        if ($current_mode === $new_mode) {
+            return false;
+        }
+
+        $user->setPreference(DarkMode::PREFERENCE_DARK_MODE, $new_mode->value);
 
         return true;
     }

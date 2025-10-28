@@ -52,6 +52,7 @@ use Tuleap\Request\RequestInstrumentation;
 use Tuleap\ServerHostname;
 use Tuleap\System\ServiceControl;
 use Tuleap\SystemEvent\Massmail;
+use Tuleap\User\Account\DarkMode;
 use Tuleap\User\Account\Appearance\FaviconVariant;
 use Tuleap\User\Password\PasswordExpirationChecker;
 use Tuleap\User\UserSuspensionManager;
@@ -101,6 +102,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         ClientFactory::class,
         PasswordExpirationChecker::class,
         FaviconVariant::class,
+        DarkMode::class,
     ];
 
     /**

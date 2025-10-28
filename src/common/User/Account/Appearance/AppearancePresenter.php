@@ -54,6 +54,36 @@ final class AppearancePresenter
      * @var bool
      * @psalm-readonly
      */
+    public $is_system_mode;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_light_mode;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_dark_mode;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $system_value;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $light_value;
+    /**
+     * @var false|string
+     * @psalm-readonly
+     */
+    public $dark_value;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
     public $is_condensed;
     /**
      * @var string
@@ -85,6 +115,11 @@ final class AppearancePresenter
      * @psalm-readonly
      */
     public $is_realname;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $can_user_use_dark_mode;
     /**
      * @var int
      * @psalm-readonly
@@ -127,26 +162,40 @@ final class AppearancePresenter
         AccountTabPresenterCollection $tabs,
         array $languages,
         array $colors,
+        bool $is_system_mode,
+        bool $is_light_mode,
+        bool $is_dark_mode,
         bool $is_condensed,
         bool $is_accessibility_enabled,
         bool $is_realname_login,
         bool $is_login_realname,
         bool $is_login,
         bool $is_realname,
+        bool $can_user_use_dark_mode,
         string $relative_dates_display,
         public readonly bool $allow_favicon_variant,
         public readonly bool $use_favicon_variant,
     ) {
-        $this->csrf_token               = $csrf_token;
-        $this->tabs                     = $tabs;
-        $this->languages                = $languages;
-        $this->json_encoded_colors      = json_encode($colors);
+        $this->csrf_token          = $csrf_token;
+        $this->tabs                = $tabs;
+        $this->languages           = $languages;
+        $this->json_encoded_colors = json_encode($colors);
+
+        $this->is_system_mode = $is_system_mode;
+        $this->is_light_mode  = $is_light_mode;
+        $this->is_dark_mode   = $is_dark_mode;
+
+        $this->system_value = DarkModeValue::System->value;
+        $this->dark_value   = DarkModeValue::Dark->value;
+        $this->light_value  = DarkModeValue::Light->value;
+
         $this->is_condensed             = $is_condensed;
         $this->is_accessibility_enabled = $is_accessibility_enabled;
         $this->is_realname_login        = $is_realname_login;
         $this->is_login_realname        = $is_login_realname;
         $this->is_login                 = $is_login;
         $this->is_realname              = $is_realname;
+        $this->can_user_use_dark_mode   = $can_user_use_dark_mode;
 
         $this->username_display_value_realname_login = \UserHelper::PREFERENCES_NAME_AND_LOGIN;
         $this->username_display_value_login_realname = \UserHelper::PREFERENCES_LOGIN_AND_NAME;
