@@ -178,3 +178,46 @@ See [OWASP Top 10 2021 - Cryptographic failures](https://owasp.org/Top10/A02_202
   - [`hash()`](https://www.php.net/manual/en/function.hash.php) with SHA-256, SHA-384, SHA-512, SHA-512/256
   - [`hash_hmac()`](https://www.php.net/manual/en/function.hash-hmac.php) with SHA-256, SHA-384, SHA-512, SHA-512/256
   - [`sodium_*`](https://www.php.net/manual/en/book.sodium.php) functions
+
+## Artificial Intelligence (AI) / Large-Language Model (LLM) based features
+
+### When?
+
+Issues can be encountered when Tuleap features interacts with AI/LLM services.
+
+### What is this?
+
+See [OWASP GenAI Security Project](https://genai.owasp.org/) and [OWASP Top 10 for LLMs](https://genai.owasp.org/llm-top-10/).
+
+### Mitigations
+
+#### Legal Considerations
+
+The use of AI/LLM features may be subject to specific legal requirements, such as the European AI Act, and may also
+require special attention due to privacy laws like the General Data Protection Regulation (GDPR).
+
+To help administrators address these challenges, AI/LLM features in Tuleap must:
+* Not be essential to core Tuleap functionality. Tuleap should operate without depending on an AI/LLM service.
+* Allow restriction to specific areas (e.g. particular projects) or services within Tuleap.
+* Information shared with AI/LLM services must respect
+  [Tuleap Permissions model]((https://docs.tuleap.org/administration-guide/users-management/security/site-access.html)
+  and the principle of least privilege.
+
+#### Prompt Injection and Moderation
+
+Each feature involving an AI/LLM service should account for the risks of prompt injection attacks. Consider:
+* Using guardrailing features provided by the service.
+* Implementing self-reflection approaches to moderate content.
+
+#### Responses Handling
+
+* Treat responses from AI/LLM services as untrusted, applying the same validation and sanitization processes used for
+  human input.
+* Require human confirmation before applying any response that alters the application’s state.
+
+#### Unbounded consumption / Denial-of-Wallet
+
+* Restrict interactions with AI/LLM services to authenticated users.
+* Log all requests and responses.
+* Provide metrics to identify excessive usage by individual users.
+* Consider implementing rate limits for these features.
