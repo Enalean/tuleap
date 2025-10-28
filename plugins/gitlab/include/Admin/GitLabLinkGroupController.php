@@ -26,10 +26,9 @@ use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
 use Project;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
-use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Git\GlobalAdmin\GlobalAdminTabsRenderer;
 use Tuleap\Gitlab\Group\CountIntegratedRepositories;
 use Tuleap\Gitlab\Group\GitlabServerURIDeducer;
 use Tuleap\Gitlab\Group\RetrieveGroupLinkedToProject;
@@ -42,15 +41,15 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-final class GitLabLinkGroupController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
+final readonly class GitLabLinkGroupController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
     public function __construct(
         private ProjectByUnixNameFactory $project_manager,
-        private EventDispatcherInterface $event_manager,
         private JavascriptAssetGeneric $wizard_assets,
         private JavascriptAssetGeneric $linked_group_assets,
         private HeaderRenderer $header_renderer,
         private GitPermissionsManager $git_permissions_manager,
+        private GlobalAdminTabsRenderer $admin_tabs_renderer,
         private TemplateRenderer $renderer,
         private RetrieveGroupLinkedToProject $group_link_retriever,
         private CountIntegratedRepositories $repositories_counter,
@@ -78,12 +77,9 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
 
         $group_link = $this->group_link_retriever->retrieveGroupLinkedToProject($project);
 
-        $panes_presenter = $this->getPanesPresenter($project);
-
         if ($group_link) {
             $number_of_repositories = $this->repositories_counter->countIntegratedRepositories($group_link);
             $presenter              = new LinkedGroupPresenter(
-                $panes_presenter,
                 $project,
                 $group_link,
                 $this->server_uri_deducer->deduceServerURI($group_link),
@@ -92,24 +88,27 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
 
             $layout->addJavascriptAsset($this->linked_group_assets);
             $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);
+            $this->admin_tabs_renderer->renderTabs($project, GitLabLinkGroupTabPresenter::PANE_NAME);
             $this->renderer->renderToPage('linked-group-information', $presenter);
-        } else {
-            $is_a_group_has_been_unlinked = $request->get('unlink_group');
-            if ($is_a_group_has_been_unlinked === '1') {
-                $layout->addFeedback(
-                    \Feedback::SUCCESS,
-                    dgettext('tuleap-gitlab', 'The GitLab group has been successfully unlinked.')
-                );
-            }
+            $layout->footer([]);
+            return;
+        }
 
-            $layout->addJavascriptAsset($this->wizard_assets);
-            $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);
-            $this->renderer->renderToPage(
-                'link-group-wizard',
-                new LinkGroupWizardPresenter($panes_presenter, $project)
+        $has_group_been_unlinked = $request->get('unlink_group');
+        if ($has_group_been_unlinked === '1') {
+            $layout->addFeedback(
+                \Feedback::SUCCESS,
+                dgettext('tuleap-gitlab', 'The GitLab group has been successfully unlinked.')
             );
         }
 
+        $layout->addJavascriptAsset($this->wizard_assets);
+        $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);
+        $this->admin_tabs_renderer->renderTabs($project, GitLabLinkGroupTabPresenter::PANE_NAME);
+        $this->renderer->renderToPage(
+            'link-group-wizard',
+            new LinkGroupWizardPresenter($project)
+        );
         $layout->footer([]);
     }
 
@@ -125,16 +124,5 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
         }
 
         return $project;
-    }
-
-    private function getPanesPresenter(Project $project): GitLabLinkGroupPanePresenter
-    {
-        $event = new GitAdminGetExternalPanePresenters($project, GitLabLinkGroupTabPresenter::PANE_NAME);
-        $this->event_manager->dispatch($event);
-
-        return new GitLabLinkGroupPanePresenter(
-            $project,
-            $event->getExternalPanePresenters(),
-        );
     }
 }

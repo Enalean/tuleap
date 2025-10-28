@@ -33,7 +33,6 @@ final class AdministrationPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\Override]
     protected function setUp(): void
     {
-        parent::setUp();
         $this->project = ProjectTestBuilder::aProject()->withUnixName('test')->build();
     }
 
@@ -41,23 +40,23 @@ final class AdministrationPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pane = AdministrationPaneBuilder::buildPane($this->project);
 
-        self::assertEquals('Jenkins', $pane->getPaneName());
+        self::assertSame('Jenkins', $pane->pane_name);
         self::assertStringContainsString(
             '/test/administration/jenkins',
-            $pane->getUrl()
+            $pane->uri
         );
-        self::assertFalse($pane->isActive());
+        self::assertFalse($pane->is_active);
     }
 
     public function testItBuildsAnActivePane(): void
     {
         $pane = AdministrationPaneBuilder::buildActivePane($this->project);
 
-        self::assertEquals('Jenkins', $pane->getPaneName());
+        self::assertSame('Jenkins', $pane->pane_name);
         self::assertStringContainsString(
             '/test/administration/jenkins',
-            $pane->getUrl()
+            $pane->uri
         );
-        self::assertTrue($pane->isActive());
+        self::assertTrue($pane->is_active);
     }
 }

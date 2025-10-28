@@ -25,6 +25,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
+use Tuleap\Git\GlobalAdmin\GlobalAdminTabsRenderer;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Gitlab\Admin\GitLabLinkGroupController;
@@ -37,6 +38,7 @@ use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
+use Tuleap\Gitlab\Group\GitlabServerURIDeducer;
 use Tuleap\Gitlab\Group\GroupLinkDAO;
 use Tuleap\Gitlab\Group\GroupLinkRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
@@ -976,9 +978,9 @@ class gitlabPlugin extends Plugin
 
         $fine_grained_dao = new FineGrainedDao();
 
+        $renderer_factory = TemplateRendererFactory::build();
         return new GitLabLinkGroupController(
             ProjectManager::instance(),
-            EventManager::instance(),
             new JavascriptViteAsset(
                 new IncludeViteAssets(
                     __DIR__ . '/../scripts/group-link-wizard/frontend-assets',
@@ -987,7 +989,10 @@ class gitlabPlugin extends Plugin
                 'src/index.ts'
             ),
             new JavascriptViteAsset(
-                new IncludeViteAssets(__DIR__ . '/../scripts/linked-group/frontend-assets', '/assets/gitlab/linked-group'),
+                new IncludeViteAssets(
+                    __DIR__ . '/../scripts/linked-group/frontend-assets',
+                    '/assets/gitlab/linked-group'
+                ),
                 'src/main.ts'
             ),
             $git_plugin->getHeaderRenderer(),
@@ -999,10 +1004,14 @@ class gitlabPlugin extends Plugin
                 $fine_grained_dao,
                 new FineGrainedRetriever($fine_grained_dao)
             ),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
+            new GlobalAdminTabsRenderer(
+                $renderer_factory->getRenderer(__DIR__ . '/../../git/include/GlobalAdmin'),
+                EventManager::instance(),
+            ),
+            $renderer_factory->getRenderer(__DIR__ . '/../templates/admin'),
             new GroupLinkDAO(),
             new GroupLinkRepositoryIntegrationDAO(),
-            new \Tuleap\Gitlab\Group\GitlabServerURIDeducer(HTTPFactoryBuilder::URIFactory())
+            new GitlabServerURIDeducer(HTTPFactoryBuilder::URIFactory())
         );
     }
 }

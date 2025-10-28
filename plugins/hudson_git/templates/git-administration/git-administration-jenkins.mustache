@@ -12,8 +12,8 @@
             <a href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_template_settings }}</a>
         </li>
         {{# external_pane_presenters }}
-            <li {{# isActive }}class="active"{{/ isActive }}>
-                <a href="{{ getUrl }}">{{ getPaneName }}</a>
+            <li {{# is_active }}class="active"{{/ is_active }}>
+                <a href="{{ uri }}">{{ pane_name }}</a>
             </li>
         {{/ external_pane_presenters }}
     </ul>

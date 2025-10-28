@@ -25,15 +25,16 @@ namespace Tuleap\Gitlab\Admin;
 /**
  * @psalm-immutable
  */
-final class LinkGroupWizardPresenter
+final readonly class LinkGroupWizardPresenter
 {
+    public int $project_id;
     public string $current_project_name;
     public string $current_project_unix_name;
 
     public function __construct(
-        public GitLabLinkGroupPanePresenter $administration_pane,
         \Project $project,
     ) {
+        $this->project_id                = (int) $project->getId();
         $this->current_project_name      = $project->getPublicName();
         $this->current_project_unix_name = $project->getUnixNameLowerCase();
     }

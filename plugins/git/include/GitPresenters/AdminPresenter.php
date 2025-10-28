@@ -18,8 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+use Tuleap\Git\GlobalAdmin\AdminExternalPanePresenter;
 
+/**
+ * @deprecated Use GlobalAdminTabsPresenter,
+ * @see \Tuleap\Git\GlobalAdmin\GlobalAdminTabsPresenter
+ */
 abstract class GitPresenters_AdminPresenter
 {
     public $project_id;

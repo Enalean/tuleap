@@ -17,9 +17,9 @@ dependencies:
   '@tuleap/plugin-git-gitlab-api-querier':
     specifier: workspace:*
     version: link:../../../git/scripts/lib/gitlab-api-querier
-  '@tuleap/plugin-gitlab-administration-theme':
-    specifier: workspace:*
-    version: link:../lib/administration-theme
+  '@tuleap/plugin-git-global-admin-styles':
+    specifier: workspace:^
+    version: link:../../../git/scripts/lib/global-admin-styles
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal

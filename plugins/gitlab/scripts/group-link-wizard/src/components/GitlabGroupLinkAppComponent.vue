@@ -26,5 +26,5 @@
 <script setup lang="ts"></script>
 
 <style lang="scss">
-@use "pkg:@tuleap/plugin-gitlab-administration-theme";
+@use "pkg:@tuleap/plugin-git-global-admin-styles";
 </style>

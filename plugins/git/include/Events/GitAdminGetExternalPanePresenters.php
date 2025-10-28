@@ -22,7 +22,7 @@ namespace Tuleap\Git\Events;
 
 use Project;
 use Tuleap\Event\Dispatchable;
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+use Tuleap\Git\GlobalAdmin\AdminExternalPanePresenter;
 
 class GitAdminGetExternalPanePresenters implements Dispatchable
 {

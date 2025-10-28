@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Admin;
-
-use GitPresenters_AdminPresenter;
+namespace Tuleap\Git\GlobalAdmin;
 
 /**
  * @psalm-immutable
  */
-final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
+final readonly class GlobalAdminTabsPresenter
 {
+    /**
+     * @param AdminExternalPanePresenter[] $external_pane_presenters
+     */
     public function __construct(
-        \Project $project,
-        array $external_pane_presenters,
+        public int $project_id,
+        public array $external_pane_presenters,
     ) {
-        parent::__construct((int) $project->getID(), $external_pane_presenters);
-    }
-
-    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    #[\Override]
-    public function form_action(): string
-    {
-        return '';
     }
 }
