@@ -29,12 +29,13 @@ import * as get_office_file from "../../../../helpers/office/get-empty-office-fi
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { IS_STATUS_PROPERTY_USED, PROJECT, USER_LOCALE } from "../../../../configuration-keys";
 import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
+import { PROJECT_USER_GROUPS } from "../../../../injection-keys";
+import { ref } from "vue";
 
 vi.useFakeTimers();
 
 describe("NewItemModal", () => {
-    let factory: () => VueWrapper<NewItemModal>;
-    const load_projects_ugroups = vi.fn();
+    let factory: () => VueWrapper<InstanceType<typeof NewItemModal>>;
 
     const current_folder = {
         id: 42,
@@ -78,20 +79,11 @@ describe("NewItemModal", () => {
     };
 
     beforeEach(() => {
-        factory = (): VueWrapper<NewItemModal> => {
+        factory = (): VueWrapper<InstanceType<typeof NewItemModal>> => {
             return shallowMount(NewItemModal, {
                 global: {
                     ...getGlobalTestOptions({
                         modules: {
-                            permissions: {
-                                state: {
-                                    project_ugroups: null,
-                                },
-                                namespaced: true,
-                                actions: {
-                                    loadProjectUserGroupsIfNeeded: load_projects_ugroups,
-                                },
-                            },
                             configuration: {
                                 state: {
                                     is_obsolescence_date_property_used: true,
@@ -107,6 +99,7 @@ describe("NewItemModal", () => {
                         [PROJECT.valueOf()]: new ProjectBuilder(102).build(),
                         [IS_STATUS_PROPERTY_USED.valueOf()]: true,
                         [USER_LOCALE.valueOf()]: DEFAULT_LOCALE,
+                        [PROJECT_USER_GROUPS.valueOf()]: ref(null),
                     },
                 },
             });

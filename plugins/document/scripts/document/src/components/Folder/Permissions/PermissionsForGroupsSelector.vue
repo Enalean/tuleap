@@ -71,7 +71,7 @@ import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
 import type { Permissions, UserGroup } from "../../../type";
 
 defineProps<{
-    project_ugroups: Array<UserGroup>;
+    project_ugroups: ReadonlyArray<UserGroup>;
     value: Permissions;
 }>();
 </script>

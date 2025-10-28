@@ -43,7 +43,7 @@
                 v-if="item.permissions_for_groups"
                 v-model="item.permissions_for_groups"
                 v-bind:value="item.permissions_for_groups"
-                v-bind:project_ugroups="project_ugroups"
+                v-bind:project_ugroups="project_user_groups"
             />
         </div>
         <modal-footer
@@ -66,7 +66,6 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import FolderGlobalPropertiesForCreate from "./PropertiesForCreate/FolderGlobalPropertiesForCreate.vue";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
-import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
 import {
     transformCustomPropertiesForItemCreation,
     transformStatusPropertyForItemCreation,
@@ -78,9 +77,10 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
 import type { Item, RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
-import type { PermissionsState } from "../../../../store/permissions/permissions-default-state";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../configuration-keys";
+import { PROJECT_USER_GROUPS } from "../../../../injection-keys";
+import { loadProjectUserGroups } from "../../../../helpers/permissions/ugroups";
 
 const $store = useStore();
 
@@ -95,12 +95,9 @@ const { current_folder } = useState<Pick<RootState, "current_folder">>(["current
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",
 ]);
-const { project_ugroups } = useNamespacedState<Pick<PermissionsState, "project_ugroups">>(
-    "permissions",
-    ["project_ugroups"],
-);
 const project = strictInject(PROJECT);
 const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
+const project_user_groups = strictInject(PROJECT_USER_GROUPS);
 
 onMounted(() => {
     modal = createModal(form.value);
@@ -146,11 +143,15 @@ async function show(event: { detail: { parent: Item } }): Promise<void> {
     );
     is_displayed.value = true;
     modal?.show();
-    try {
-        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project.id);
-    } catch (err) {
-        await handleErrors($store, err);
-        modal?.hide();
+    if (project_user_groups.value === null) {
+        await loadProjectUserGroups($store, project.id).match(
+            (user_groups) => {
+                project_user_groups.value = user_groups;
+            },
+            () => {
+                modal?.hide();
+            },
+        );
     }
 }
 

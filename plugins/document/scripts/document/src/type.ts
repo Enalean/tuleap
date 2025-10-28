@@ -18,7 +18,6 @@
  */
 
 import type { ErrorState } from "./store/error/module";
-import type { PermissionsState } from "./store/permissions/permissions-default-state";
 import type { Upload } from "tus-js-client";
 import type { RestUser } from "./api/rest-querier";
 import {
@@ -52,7 +51,6 @@ export interface State {
 
 export interface RootState extends State {
     error: ErrorState;
-    permissions: PermissionsState;
 }
 
 export type Direction = "BOTTOM" | "TOP" | "NEXT" | "PREVIOUS";

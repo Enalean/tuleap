@@ -32,7 +32,10 @@
         />
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body">
-            <div v-if="project_ugroups === null" class="document-permissions-modal-loading-state">
+            <div
+                v-if="project_user_groups === null"
+                class="document-permissions-modal-loading-state"
+            >
                 <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
             <div
@@ -40,7 +43,7 @@
                 class="document-permissions-update-container"
             >
                 <permissions-for-groups-selector
-                    v-bind:project_ugroups="project_ugroups ? project_ugroups : []"
+                    v-bind:project_ugroups="project_user_groups ?? []"
                     v-model="updated_permissions"
                     v-bind:value="updated_permissions"
                 />
@@ -67,7 +70,6 @@ import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import PermissionsForGroupsSelector from "./PermissionsForGroupsSelector.vue";
-import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
 import type {
     UpdateApplyPermissionsOnChildren,
@@ -79,11 +81,12 @@ import type { Item } from "../../../type";
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useNamespacedState, useStore } from "vuex-composition-helpers";
 import type { ErrorState } from "../../../store/error/module";
-import type { PermissionsState } from "../../../store/permissions/permissions-default-state";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PROJECT } from "../../../configuration-keys";
 import { updatePermissions } from "../../../helpers/permissions/permissions";
+import { loadProjectUserGroups } from "../../../helpers/permissions/ugroups";
+import { PROJECT_USER_GROUPS } from "../../../injection-keys";
 
 const { $gettext } = useGettext();
 const $store = useStore();
@@ -106,14 +109,11 @@ const project = strictInject(PROJECT);
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",
 ]);
-const { project_ugroups } = useNamespacedState<Pick<PermissionsState, "project_ugroups">>(
-    "permissions",
-    ["project_ugroups"],
-);
+const project_user_groups = strictInject(PROJECT_USER_GROUPS);
 
 const modal_title = computed(() => sprintf($gettext('Edit "%s" permissions'), props.item.title));
 const can_be_submitted = computed(
-    () => project_ugroups.value !== null && is_submitting_new_permissions.value === false,
+    () => project_user_groups.value !== null && is_submitting_new_permissions.value === false,
 );
 
 watch(() => props.item, setPermissionsToUpdateFromItem);
@@ -151,11 +151,15 @@ function setPermissionsToUpdateFromItem(): void {
 
 async function show(): Promise<void> {
     modal?.show();
-    try {
-        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project.id);
-    } catch (err) {
-        await handleErrors($store, err);
-        modal?.hide();
+    if (project_user_groups.value === null) {
+        await loadProjectUserGroups($store, project.id).match(
+            (user_groups) => {
+                project_user_groups.value = user_groups;
+            },
+            () => {
+                modal?.hide();
+            },
+        );
     }
 }
 

@@ -23,6 +23,7 @@ import type {
     NewItemAlternativeArray,
     OtherItemTypeCollection,
     Property,
+    UserGroup,
 } from "./type";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
@@ -39,3 +40,6 @@ export const OTHER_ITEM_TYPES: StrictInjectionKey<OtherItemTypeCollection> =
 
 export const PROJECT_PROPERTIES: StrictInjectionKey<Ref<Property[] | null>> =
     Symbol("project-properties");
+
+export const PROJECT_USER_GROUPS: StrictInjectionKey<Ref<ReadonlyArray<UserGroup> | null>> =
+    Symbol("project-user-groups");

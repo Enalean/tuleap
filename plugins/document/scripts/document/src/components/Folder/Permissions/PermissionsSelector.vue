@@ -48,9 +48,9 @@ import { ref, watch } from "vue";
 
 const props = defineProps<{
     label: string;
-    project_ugroups: Array<UserGroup>;
+    project_ugroups: ReadonlyArray<UserGroup>;
     selected_ugroups: Array<Permission>;
-    identifier: CAN_READ | CAN_WRITE | CAN_MANAGE;
+    identifier: typeof CAN_READ | typeof CAN_WRITE | typeof CAN_MANAGE;
 }>();
 
 function getSelectedUGroupsIDs(selected_ugroups: Array<Permission>): string[] {

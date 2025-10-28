@@ -23,37 +23,34 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PermissionsUpdateModal from "./PermissionsUpdateModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
-import * as handle_errors from "../../../store/actions-helpers/handle-errors";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
 import { PROJECT } from "../../../configuration-keys";
 import { ProjectBuilder } from "../../../../tests/builders/ProjectBuilder";
 import * as permissions from "../../../helpers/permissions/permissions";
+import { PROJECT_USER_GROUPS } from "../../../injection-keys";
+import * as user_group_helpers from "../../../helpers/permissions/ugroups";
+import { okAsync } from "neverthrow";
+import type { UserGroup } from "../../../type";
+import { ref } from "vue";
 
 vi.useFakeTimers();
 
 describe("PermissionsUpdateModal", () => {
-    let load_project_ugroups = vi.fn().mockImplementation(() => {
-        return { id: "102_3", label: "Project members" };
-    });
+    const load_project_ugroups = vi
+        .spyOn(user_group_helpers, "loadProjectUserGroups")
+        .mockReturnValue(okAsync([{ id: "102_3", label: "Project members" }]));
     let update_permissions: MockInstance;
     const factory = (
         props = {},
-        ugroups = null,
+        ugroups: ReadonlyArray<UserGroup> | null = null,
     ): VueWrapper<InstanceType<typeof PermissionsUpdateModal>> => {
         return shallowMount(PermissionsUpdateModal, {
             props: { ...props },
             global: {
                 ...getGlobalTestOptions({
                     modules: {
-                        permissions: {
-                            namespaced: true,
-                            state: { project_ugroups: ugroups },
-                            actions: {
-                                loadProjectUserGroupsIfNeeded: load_project_ugroups,
-                            },
-                        },
                         error: {
                             namespaced: true,
                             mutations: {
@@ -64,6 +61,7 @@ describe("PermissionsUpdateModal", () => {
                 }),
                 provide: {
                     [PROJECT.valueOf()]: new ProjectBuilder(1).build(),
+                    [PROJECT_USER_GROUPS.valueOf()]: ref(ugroups),
                 },
             },
         });
@@ -105,7 +103,7 @@ describe("PermissionsUpdateModal", () => {
         wrapper.vm.reset();
         emitter.emit("show-update-permissions-modal");
 
-        expect(load_project_ugroups).toHaveBeenCalledTimes(2);
+        expect(load_project_ugroups).not.toHaveBeenCalled();
     });
 
     it("Set a loading a state by default", () => {
@@ -137,28 +135,6 @@ describe("PermissionsUpdateModal", () => {
             can_manage: wrapper.vm.updated_permissions.can_manage,
         };
         expect(updated_permissions_per_groups).toEqual(item_to_update.permissions_for_groups);
-    });
-
-    it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
-        const handleErrors = vi.spyOn(handle_errors, "handleErrors").mockImplementation(() => {});
-
-        load_project_ugroups = vi.fn().mockImplementation(() => {
-            return Promise.reject({});
-        });
-
-        const item_to_update = {
-            id: 104,
-            title: "My item",
-            permissions_for_groups: {
-                can_read: [],
-                can_write: [],
-                can_manage: [],
-            },
-        };
-        factory({ item: item_to_update });
-        await vi.runOnlyPendingTimersAsync();
-
-        expect(handleErrors).toHaveBeenCalledTimes(1);
     });
 
     it("Change permissions to update when the bound item is updated", async () => {

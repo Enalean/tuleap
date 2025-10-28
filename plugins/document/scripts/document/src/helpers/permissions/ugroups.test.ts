@@ -19,8 +19,10 @@
 
 import { describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/rest-querier";
-import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "./ugroups";
-import type { UserGroup } from "../../type";
+import { loadProjectUserGroups } from "./ugroups";
+import type { RootState, UserGroup } from "../../type";
+import { okAsync } from "neverthrow";
+import type { ActionContext } from "vuex";
 
 describe("User groups", () => {
     it("filters special service user groups from the list", async () => {
@@ -28,22 +30,34 @@ describe("User groups", () => {
 
         const project_members_ugroup: UserGroup = {
             id: "102_3",
-        } as UserGroup;
+            label: "Project members",
+        };
         const project_special_service_ugroup: UserGroup = {
-            id: "102_17",
-        } as UserGroup;
+            id: "102_15",
+            label: "Tracker admin",
+        };
         const project_static_ugroup: UserGroup = {
             id: "130",
-        } as UserGroup;
+            label: "My group",
+        };
 
-        getProjectUserGroupsSpy.mockResolvedValue([
+        getProjectUserGroupsSpy.mockReturnValue(
+            okAsync([
+                project_members_ugroup,
+                project_special_service_ugroup,
+                project_static_ugroup,
+            ]),
+        );
+
+        const filtered_ugroups = await loadProjectUserGroups(
+            {} as ActionContext<RootState, RootState>,
+            102,
+        );
+
+        expect(filtered_ugroups.isOk()).toBe(true);
+        expect(filtered_ugroups.unwrapOr(null)).toEqual([
             project_members_ugroup,
-            project_special_service_ugroup,
             project_static_ugroup,
         ]);
-
-        const filtered_ugroups = await getProjectUserGroupsWithoutServiceSpecialUGroups(102);
-
-        expect(filtered_ugroups).toEqual([project_members_ugroup, project_static_ugroup]);
     });
 });
