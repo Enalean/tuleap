@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fontsource-utils/scss':
+    specifier: ^0.2.2
+    version: 0.2.2
   '@fontsource-variable/public-sans':
     specifier: ^5.2.7
     version: 5.2.7
@@ -39,6 +42,10 @@ devDependencies:
     version: 3.5.5
 
 packages:
+
+  /@fontsource-utils/scss@0.2.2:
+    resolution: {integrity: sha512-by8j2nJVjXWmS5Aqzg8r8+ppwRSCK8HvYwPyuHzvigJ+4AbLXHtdb1HaVHaBDb+ObZ586lAdzvEDWFoAYQO+GQ==}
+    dev: false
 
   /@fontsource-variable/public-sans@5.2.7:
     resolution: {integrity: sha512-4mvade2J3slKkvwRkS+p8T3szet/0vhWoSnuUJTVU81Uo2pRpSZY/Y8bSLRqpSwzIPxjVmRJ53oq6JKP/l/PSg==}

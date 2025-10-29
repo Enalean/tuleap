@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fontsource-utils/scss':
+    specifier: ^0.2.2
+    version: 0.2.2
+  '@fontsource-variable/public-sans':
+    specifier: ^5.2.7
+    version: 5.2.7
   '@fortawesome/fontawesome-free':
     specifier: ^6.5.1
     version: 6.5.1
@@ -40,6 +46,14 @@ dependencies:
     version: link:../../../lib/frontend/tlp-swatch-colors
 
 packages:
+
+  /@fontsource-utils/scss@0.2.2:
+    resolution: {integrity: sha512-by8j2nJVjXWmS5Aqzg8r8+ppwRSCK8HvYwPyuHzvigJ+4AbLXHtdb1HaVHaBDb+ObZ586lAdzvEDWFoAYQO+GQ==}
+    dev: false
+
+  /@fontsource-variable/public-sans@5.2.7:
+    resolution: {integrity: sha512-4mvade2J3slKkvwRkS+p8T3szet/0vhWoSnuUJTVU81Uo2pRpSZY/Y8bSLRqpSwzIPxjVmRJ53oq6JKP/l/PSg==}
+    dev: false
 
   /@fortawesome/fontawesome-free@6.5.1:
     resolution: {integrity: sha512-CNy5vSwN3fsUStPRLX7fUYojyuzoEMSXPl7zSLJ8TgtRfjv24LOnOWKT2zYwaHZCJGkdyRnTmstR0P+Ah503Gw==}
