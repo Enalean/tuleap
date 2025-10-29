@@ -25,10 +25,11 @@ namespace Tuleap\SeatManagement;
 use DateTimeImmutable;
 use Feedback;
 use PFUser;
+use Psr\Clock\ClockInterface;
 
 final readonly class FeedbackBuilder
 {
-    public function __construct(private BuildLicense $license_builder, private PFUser $current_user)
+    public function __construct(private BuildLicense $license_builder, private PFUser $current_user, private ClockInterface $clock)
     {
     }
 
@@ -46,10 +47,8 @@ final readonly class FeedbackBuilder
     private function buildForSuperUser(Feedback $feedback, License $license): void
     {
         $license->expiration_date->apply(function (DateTimeImmutable $expiration_date) use ($feedback, $license) {
-            $today = new DateTimeImmutable('now');
-
             if ($this->isOneMonthBeforeExpiration($expiration_date)) {
-                $nb_days_before_expiration = $today->diff($expiration_date)->days;
+                $nb_days_before_expiration = $this->clock->now()->diff($expiration_date)->days;
 
                 $feedback->log(Feedback::WARN, sprintf(
                     ngettext(
@@ -62,7 +61,7 @@ final readonly class FeedbackBuilder
                 ));
             }
             if ($this->isAtExpirationDate($expiration_date)) {
-                $nb_days_before_expiration_plus_one_month = $expiration_date->modify('+1 month')->diff($today)->days;
+                $nb_days_before_expiration_plus_one_month = $expiration_date->modify('+1 month')->diff($this->clock->now())->days;
 
                 $feedback->log(Feedback::WARN, sprintf(
                     ngettext(
@@ -97,7 +96,7 @@ final readonly class FeedbackBuilder
 
     private function isOneMonthBeforeExpiration(DateTimeImmutable $expiration_date): bool
     {
-        $today                       = new DateTimeImmutable('now');
+        $today                       = $this->clock->now();
         $one_month_before_expiration = $expiration_date->modify('-1 month');
 
         return $today >= $one_month_before_expiration && $today < $expiration_date;
@@ -105,7 +104,7 @@ final readonly class FeedbackBuilder
 
     private function isAtExpirationDate(DateTimeImmutable $expiration_date): bool
     {
-        $today                      = new DateTimeImmutable('now');
+        $today                      = $this->clock->now();
         $one_month_after_expiration = $expiration_date->modify('+1 month');
 
         return $today >= $expiration_date && $today < $one_month_after_expiration;

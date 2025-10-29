@@ -21,6 +21,7 @@ namespace Tuleap\Theme\BurningParrot;
 use Event;
 use EventManager;
 use HTTPRequest;
+use Lcobucci\Clock\SystemClock;
 use Project;
 use TemplateRendererFactory;
 use ThemeVariant;
@@ -129,7 +130,7 @@ class BurningParrotTheme extends BaseLayout
         $this->theme_variant_color = (new ThemeVariant())->getVariantColorForUser($this->current_user->user);
         $this->theme_variation     = new ThemeVariation($this->theme_variant_color, $this->current_user->user);
 
-        $this->feedback_builder = new FeedbackBuilder($license_builder, $this->current_user->user);
+        $this->feedback_builder = new FeedbackBuilder($license_builder, $this->current_user->user, SystemClock::fromSystemTimezone());
 
         $this->includeFooterJavascriptFile((new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'))->getFileURL());
         $this->includeFooterJavascriptFile(

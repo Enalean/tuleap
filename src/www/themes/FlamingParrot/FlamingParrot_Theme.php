@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Lcobucci\Clock\SystemClock;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\BrowserDetection\DetectedBrowser;
@@ -107,7 +108,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
-        $this->feedback_builder      = new FeedbackBuilder($license_builder, UserManager::instance()->getCurrentUser());
+        $this->feedback_builder      = new FeedbackBuilder($license_builder, UserManager::instance()->getCurrentUser(), SystemClock::fromSystemTimezone());
     }
 
     private function render($template_name, $presenter)
