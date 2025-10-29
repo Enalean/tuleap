@@ -24,6 +24,7 @@
 
 namespace Tuleap\SVN\Admin;
 
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\SVN\Repository;
 
 class ImmutableTagPresenter extends BaseAdminPresenter
@@ -53,6 +54,7 @@ class ImmutableTagPresenter extends BaseAdminPresenter
 
     public function __construct(
         Repository $repository,
+        public readonly CSRFSynchronizerTokenPresenter $csrf_token,
         ImmutableTag $immutable_tags,
         array $existing_tree,
         $title,

@@ -24,10 +24,14 @@
 
 namespace Tuleap\SVN\Admin;
 
+use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use System_Command_CommandException;
+use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\SVN\Commit\Svnlook;
+use Tuleap\SVN\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\ServiceSvn;
 use Valid_String;
@@ -70,6 +74,7 @@ class ImmutableTagController
             'admin/immutable_tag',
             new ImmutableTagPresenter(
                 $repository,
+                CSRFSynchronizerTokenPresenter::fromToken($this->getToken($repository)),
                 $this->immutable_tag_factory->getByRepositoryId($repository),
                 $existing_tree,
                 $title
@@ -82,6 +87,8 @@ class ImmutableTagController
     public function saveImmutableTag(ServiceSvn $service, HTTPRequest $request)
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
+
+        $this->getToken($repository)->check();
 
         $request->valid(new Valid_String('post_changes'));
         $request->valid(new Valid_String('SUBMIT'));
@@ -108,5 +115,14 @@ class ImmutableTagController
 
             $this->displayImmutableTag($service, $request);
         }
+    }
+
+    private function getToken(Repository $repository): CSRFSynchronizerTokenInterface
+    {
+        return new CSRFSynchronizerToken(SVN_BASE_URL . '/?' . http_build_query([
+            'group_id' => $repository->getProject()->getId(),
+            'action' => 'display-immutable-tag',
+            'repo_id' => $repository->getId(),
+        ]));
     }
 }
