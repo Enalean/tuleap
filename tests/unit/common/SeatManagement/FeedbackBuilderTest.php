@@ -24,6 +24,7 @@ namespace Tuleap\SeatManagement;
 
 use DateTimeImmutable;
 use Feedback;
+use Lcobucci\Clock\FrozenClock;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Ramsey\Uuid\Uuid;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -49,6 +50,7 @@ final class FeedbackBuilderTest extends TestCase
                 null,
             ))),
             UserTestBuilder::anActiveUser()->withSiteAdministrator()->build(),
+            new FrozenClock(new DateTimeImmutable('now')),
         )->build($feedback);
 
         self::assertEmpty($feedback->logs);
@@ -66,10 +68,11 @@ final class FeedbackBuilderTest extends TestCase
                 new DateTimeImmutable(),
                 Uuid::uuid4(),
                 [],
-                new DateTimeImmutable('+2 days')->modify('+1 hour'),
+                new DateTimeImmutable('2025-10-22'),
                 null,
             ))),
             UserTestBuilder::anActiveUser()->build(),
+            new FrozenClock(new DateTimeImmutable('2025-10-20')),
         )->build($feedback);
 
         self::assertEmpty($feedback->logs);
@@ -87,10 +90,11 @@ final class FeedbackBuilderTest extends TestCase
                 new DateTimeImmutable(),
                 Uuid::uuid4(),
                 [],
-                new DateTimeImmutable('+2 days')->modify('+1 hour'),
+                new DateTimeImmutable('2025-10-22'),
                 null,
             ))),
             UserTestBuilder::anActiveUser()->withSiteAdministrator()->build(),
+            new FrozenClock(new DateTimeImmutable('2025-10-20')),
         )->build($feedback);
 
         self::assertSame([[
@@ -113,10 +117,11 @@ final class FeedbackBuilderTest extends TestCase
                 new DateTimeImmutable(),
                 Uuid::uuid4(),
                 [],
-                new DateTimeImmutable('+2 days')->modify('+1 hour'),
+                new DateTimeImmutable('2025-10-22'),
                 null,
             ))),
             UserTestBuilder::anAnonymousUser()->build(),
+            new FrozenClock(new DateTimeImmutable('2025-10-20')),
         )->build($feedback);
 
         self::assertEmpty($feedback->logs);
@@ -134,10 +139,11 @@ final class FeedbackBuilderTest extends TestCase
                 new DateTimeImmutable(),
                 Uuid::uuid4(),
                 [],
-                new DateTimeImmutable('-2 days'),
+                new DateTimeImmutable('2025-10-18'),
                 null,
             ))),
             UserTestBuilder::anActiveUser()->build(),
+            new FrozenClock(new DateTimeImmutable('2025-10-20')),
         )->build($feedback);
 
         self::assertSame([[
@@ -160,10 +166,11 @@ final class FeedbackBuilderTest extends TestCase
                 new DateTimeImmutable(),
                 Uuid::uuid4(),
                 [],
-                new DateTimeImmutable('-1 month')->modify('+2 day')->modify('+1 hour'),
+                new DateTimeImmutable('2025-09-22'),
                 null,
             ))),
             UserTestBuilder::anActiveUser()->withSiteAdministrator()->build(),
+            new FrozenClock(new DateTimeImmutable('2025-10-20')),
         )->build($feedback);
 
         self::assertSame([[
@@ -186,10 +193,11 @@ final class FeedbackBuilderTest extends TestCase
                 new DateTimeImmutable(),
                 Uuid::uuid4(),
                 [],
-                new DateTimeImmutable('-1 month')->modify('+2 day')->modify('+1 hour'),
+                new DateTimeImmutable('2025-09-30'),
                 null,
             ))),
             UserTestBuilder::anAnonymousUser()->build(),
+            new FrozenClock(new DateTimeImmutable('2025-10-20')),
         )->build($feedback);
 
         self::assertEmpty($feedback->logs);
