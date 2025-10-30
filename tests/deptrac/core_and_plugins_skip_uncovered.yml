@@ -187,6 +187,8 @@ deptrac:
     AiCrossTracker:
       - Core
       - Ai
+      - Tracker
+      - CrossTracker
     AgileDashboard:
       - Core
       - Cardwall
