@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Admin;
 
 use Project;
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+use Tuleap\Git\GlobalAdmin\AdminExternalPanePresenter;
 
 final class GitLabLinkGroupTabPresenter
 {
@@ -43,7 +43,7 @@ final class GitLabLinkGroupTabPresenter
     {
         return new AdminExternalPanePresenter(
             dgettext('tuleap-gitlab', 'GitLab Group Link'),
-            GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/gitlab/',
+            '/plugins/git/' . urlencode($project->getUnixName()) . '/administration/gitlab/',
             $is_active
         );
     }

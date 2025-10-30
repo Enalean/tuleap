@@ -18,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Gitlab\Admin;
 
 use Feedback;
 use GitPermissionsManager;
 use GitPlugin;
-use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Git\GlobalAdmin\GlobalAdminTabsRenderer;
 use Tuleap\Gitlab\Group\GitlabServerURIDeducer;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\CountIntegratedRepositoriesStub;
@@ -53,14 +56,8 @@ final class GitLabLinkGroupControllerTest extends TestCase
     private const int PROJECT_ID           = 150;
     private const string PROJECT_UNIX_NAME = 'tuleap-gitlab';
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&HeaderRenderer
-     */
-    private $header_renderer;
-    /**
-     * @var GitPermissionsManager&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $git_permission_manager;
+    private MockObject&HeaderRenderer $header_renderer;
+    private Stub&GitPermissionsManager $git_permission_manager;
     private TemplateRendererStub $template_renderer;
 
     private \Project $project;
@@ -91,26 +88,13 @@ final class GitLabLinkGroupControllerTest extends TestCase
 
     private function process(): void
     {
-        $gitlab_tab  = GitLabLinkGroupTabPresenter::withActiveState($this->project);
-        $another_tab = new AdminExternalPanePresenter('Another pane', 'url/to/another/pane', false);
-
-        $external_tabs    = [$gitlab_tab, $another_tab];
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            static function (GitAdminGetExternalPanePresenters $event) use ($external_tabs) {
-                foreach ($external_tabs as $tab) {
-                    $event->addExternalPanePresenter($tab);
-                }
-                return $event;
-            }
-        );
-
         $controller = new GitLabLinkGroupController(
             $this->project_factory,
-            $event_dispatcher,
             JavascriptAssetGenericBuilder::build(),
             JavascriptAssetGenericBuilder::build(),
             $this->header_renderer,
             $this->git_permission_manager,
+            new GlobalAdminTabsRenderer(new TemplateRendererStub(), EventDispatcherStub::withIdentityCallback()),
             $this->template_renderer,
             $this->group_retriever,
             CountIntegratedRepositoriesStub::withCount(4),
@@ -190,7 +174,7 @@ final class GitLabLinkGroupControllerTest extends TestCase
 
         $this->process();
 
-        self::assertEquals(
+        self::assertSame(
             [
                 [
                     'level'   => Feedback::SUCCESS,

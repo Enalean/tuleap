@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+use Tuleap\Git\GlobalAdmin\AdminExternalPanePresenter;
 
 class AdministrationPaneBuilder
 {

@@ -20,24 +20,24 @@
 @use "pkg:@tuleap/project-background";
 @use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
-.gitlab-administration-header {
+.git-administration-header {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing)
         var(--tlp-medium-spacing);
 }
 
-.gitlab-administration-title {
+.git-administration-title {
     margin: 0;
 }
 
 .project-with-background {
-    .gitlab-administration-title {
+    .git-administration-title {
         @include project-background.title-header-typography;
     }
 }
 
 body {
     @include project-background.apply-background(
-        ".gitlab-administration-header",
+        ".git-administration-header",
         global-variables.$sidebar-expanded-width,
         global-variables.$sidebar-collapsed-width
     );

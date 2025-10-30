@@ -1,0 +1,15 @@
+<div class="git-administration-header">
+    <h1 class="git-administration-title" data-test="git-administration-page">
+        {{# dgettext }}tuleap-git | Git Administration{{/ dgettext }}
+    </h1>
+</div>
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        <a class="tlp-tab" href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{# dgettext }}tuleap-git | Gerrit Templates{{/ dgettext }}</a>
+        <a class="tlp-tab" href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{# dgettext }}tuleap-git | Git administrators{{/ dgettext }}</a>
+        <a class="tlp-tab" href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{# dgettext }}tuleap-git | Git settings template{{/ dgettext }}</a>
+        {{# external_pane_presenters }}
+            <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ uri }}">{{ pane_name }}</a>
+        {{/ external_pane_presenters }}
+    </nav>
+</div>

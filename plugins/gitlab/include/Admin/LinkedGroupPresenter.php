@@ -46,7 +46,6 @@ final class LinkedGroupPresenter
     public int $gitlab_group_id;
 
     public function __construct(
-        public GitLabLinkGroupPanePresenter $administration_pane,
         \Project $project,
         GroupLink $group_link,
         UriInterface $gitlab_url,
