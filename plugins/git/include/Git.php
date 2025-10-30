@@ -19,9 +19,9 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
-use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
@@ -41,24 +41,15 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
+use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
-/**
- * Git
- */
 class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const string GIT_PLUGIN_NAME = 'git';
-    /**
-     * @var DescriptionUpdater
-     */
-    private $description_updater;
-    private DefaultBranchUpdater $default_branch_updater;
-
     public const string PERM_READ  = 'PLUGIN_GIT_READ';
     public const string PERM_WRITE = 'PLUGIN_GIT_WRITE';
     public const string PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
@@ -82,42 +73,6 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public const string DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
 
-    /**
-     * @var RegexpFineGrainedRetriever
-     */
-    private $regexp_retriever;
-
-    /**
-     * @var RegexpFineGrainedEnabler
-     */
-    private $regexp_enabler;
-    /**
-     * @var RegexpFineGrainedDisabler
-     */
-    private $regexp_disabler;
-    /**
-     * @var RegexpPermissionFilter
-     */
-    private $regexp_filter;
-
-    /**
-     * @var UsersToNotifyDao
-     */
-    private $users_to_notify_dao;
-    /**
-     * @var UgroupsToNotifyDao
-     */
-    private $ugroups_to_notify_dao;
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var Git_Driver_Gerrit_Template_TemplateFactory
-     */
-    private $template_factory;
-    private VerifyArtifactClosureIsAllowed $closure_verifier;
-    private ConfigureAllowArtifactClosure $configure_artifact_closure;
     private string $action;
 
     /**
@@ -139,194 +94,63 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
     }
 
     /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var int
      */
     protected $groupId;
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    protected $factory;
-
-    /**
-     * @var UserManager
-     */
-    private $userManager;
-
-    /**
-     * @var ProjectManager
-     */
-    private $projectManager;
-
-    /**
-     * @var GitPlugin
-     */
-    private $plugin;
-
-    /**
-     * @var Git_RemoteServer_GerritServerFactory
-     */
-    private $gerrit_server_factory;
-
-    /** @var Git_Driver_Gerrit_GerritDriverFactory */
-    private $driver_factory;
-
-    /** @var GitRepositoryManager */
-    private $repository_manager;
-
-    /** @var Git_SystemEventManager */
-    private $git_system_event_manager;
-
-    /** @var Git_Driver_Gerrit_UserAccountManager */
-    private $gerrit_usermanager;
-
-    /** @var Git_Driver_Gerrit_ProjectCreator */
-    private $project_creator;
-
-    /** @var GitPermissionsManager */
-    private $permissions_manager;
-
-    /** @var Git_GitRepositoryUrlManager */
-    private $url_manager;
-
-    /** @var Project */
-    private $project;
-
-    /**
-     * @var Git_Driver_Gerrit_ProjectCreatorStatus
-     */
-    private $project_creator_status;
-
-    /**
-     * @var GerritCanMigrateChecker
-     */
-    private $gerrit_can_migrate_checker;
-
-    /**
-     * @var FineGrainedUpdater
-     */
-    private $fine_grained_updater;
-
-    /**
-     * @var FineGrainedRetriever
-     */
-    private $fine_grained_retriever;
-
-    /**
-     * @var FineGrainedPermissionFactory
-     */
-    private $fine_grained_permission_factory;
-
-    /**
-     * @var FineGrainedPermissionSaver
-     */
-    private $fine_grained_permission_saver;
-
-    /**
-     * @var DefaultFineGrainedPermissionFactory
-     */
-    private $default_fine_grained_permission_factory;
-
-    /**
-     * @var FineGrainedPermissionDestructor
-     */
-    private $fine_grained_permission_destructor;
-
-    /**
-     * @var FineGrainedRepresentationBuilder
-     */
-    private $fine_grained_builder;
-
-    /**
-     * @var HistoryValueFormatter
-     */
-    private $history_value_formatter;
-
-    /**
-     * @var PermissionChangesDetector
-     */
-    private $permission_changes_detector;
-
-    /**
-     * @var TemplatePermissionsUpdater
-     */
-    private $template_permission_updater;
-
-    /**
-     * @var ProjectHistoryDao
-     */
-    private $history_dao;
-
-    /**
-     * @var HeaderRenderer
-     */
-    private $header_renderer;
+    private GitRepositoryFactory $factory;
+    private UserManager $userManager;
+    private ProjectManager $projectManager;
+    private GitPermissionsManager $permissions_manager;
+    private Project $project;
 
     public function __construct(
-        GitPlugin $plugin,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        GitRepositoryManager $repository_manager,
-        Git_SystemEventManager $system_event_manager,
-        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        private readonly GitPlugin $plugin,
+        private readonly Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        private readonly Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        private readonly GitRepositoryManager $repository_manager,
+        private readonly Git_SystemEventManager $git_system_event_manager,
+        private readonly Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         GitRepositoryFactory $git_repository_factory,
         UserManager $user_manager,
         ProjectManager $project_manager,
         HTTPRequest $request,
-        Git_Driver_Gerrit_ProjectCreator $project_creator,
-        Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
+        private readonly Git_Driver_Gerrit_ProjectCreator $project_creator,
+        private readonly Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
         GitPermissionsManager $permissions_manager,
-        Git_GitRepositoryUrlManager $url_manager,
-        \Psr\Log\LoggerInterface $logger,
-        Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
-        GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        FineGrainedUpdater $fine_grained_updater,
-        FineGrainedPermissionFactory $fine_grained_permission_factory,
-        FineGrainedRetriever $fine_grained_retriever,
-        FineGrainedPermissionSaver $fine_grained_permission_saver,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
-        FineGrainedPermissionDestructor $fine_grained_permission_destructor,
-        FineGrainedRepresentationBuilder $fine_grained_builder,
-        HistoryValueFormatter $history_value_formatter,
-        PermissionChangesDetector $permission_changes_detector,
-        TemplatePermissionsUpdater $template_permission_updater,
-        ProjectHistoryDao $history_dao,
-        DefaultBranchUpdater $default_branch_updater,
-        DescriptionUpdater $description_updater,
-        RegexpFineGrainedRetriever $regexp_retriever,
-        RegexpFineGrainedEnabler $regexp_enabler,
-        RegexpFineGrainedDisabler $regexp_disabler,
-        RegexpPermissionFilter $regexp_filter,
-        UsersToNotifyDao $users_to_notify_dao,
-        UgroupsToNotifyDao $ugroups_to_notify_dao,
-        UGroupManager $ugroup_manager,
-        HeaderRenderer $header_renderer,
-        VerifyArtifactClosureIsAllowed $closure_verifier,
-        ConfigureAllowArtifactClosure $configure_artifact_closure,
+        private readonly Git_GitRepositoryUrlManager $url_manager,
+        private readonly LoggerInterface $logger,
+        private readonly Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
+        private readonly GerritCanMigrateChecker $gerrit_can_migrate_checker,
+        private readonly FineGrainedUpdater $fine_grained_updater,
+        private readonly FineGrainedPermissionFactory $fine_grained_permission_factory,
+        private readonly FineGrainedRetriever $fine_grained_retriever,
+        private readonly FineGrainedPermissionSaver $fine_grained_permission_saver,
+        private readonly DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
+        private readonly FineGrainedPermissionDestructor $fine_grained_permission_destructor,
+        private readonly FineGrainedRepresentationBuilder $fine_grained_builder,
+        private readonly HistoryValueFormatter $history_value_formatter,
+        private readonly PermissionChangesDetector $permission_changes_detector,
+        private readonly TemplatePermissionsUpdater $template_permission_updater,
+        private readonly ProjectHistoryDao $history_dao,
+        private readonly DefaultBranchUpdater $default_branch_updater,
+        private readonly DescriptionUpdater $description_updater,
+        private readonly RegexpFineGrainedRetriever $regexp_retriever,
+        private readonly RegexpFineGrainedEnabler $regexp_enabler,
+        private readonly RegexpFineGrainedDisabler $regexp_disabler,
+        private readonly RegexpPermissionFilter $regexp_filter,
+        private readonly UsersToNotifyDao $users_to_notify_dao,
+        private readonly UgroupsToNotifyDao $ugroups_to_notify_dao,
+        private readonly UGroupManager $ugroup_manager,
+        private readonly HeaderRenderer $header_renderer,
+        private readonly VerifyArtifactClosureIsAllowed $closure_verifier,
+        private readonly ConfigureAllowArtifactClosure $configure_artifact_closure,
     ) {
         parent::__construct($user_manager, $request);
 
-        $this->userManager                = $user_manager;
-        $this->projectManager             = $project_manager;
-        $this->factory                    = $git_repository_factory;
-        $this->gerrit_server_factory      = $gerrit_server_factory;
-        $this->driver_factory             = $driver_factory;
-        $this->repository_manager         = $repository_manager;
-        $this->git_system_event_manager   = $system_event_manager;
-        $this->gerrit_usermanager         = $gerrit_usermanager;
-        $this->project_creator            = $project_creator;
-        $this->template_factory           = $template_factory;
-        $this->permissions_manager        = $permissions_manager;
-        $this->plugin                     = $plugin;
-        $this->url_manager                = $url_manager;
-        $this->logger                     = $logger;
-        $this->project_creator_status     = $project_creator_status;
-        $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
+        $this->userManager         = $user_manager;
+        $this->projectManager      = $project_manager;
+        $this->factory             = $git_repository_factory;
+        $this->permissions_manager = $permissions_manager;
 
         $valid = new Valid_GroupId('group_id');
         $valid->required();
@@ -345,31 +169,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $this->project = $this->projectManager->getProject($this->groupId);
 
-        $this->permittedActions                = [];
-        $this->fine_grained_updater            = $fine_grained_updater;
-        $this->fine_grained_permission_factory = $fine_grained_permission_factory;
-        $this->fine_grained_retriever          = $fine_grained_retriever;
-        $this->fine_grained_permission_saver   = $fine_grained_permission_saver;
-
-        $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
-        $this->fine_grained_permission_destructor      = $fine_grained_permission_destructor;
-        $this->fine_grained_builder                    = $fine_grained_builder;
-        $this->history_value_formatter                 = $history_value_formatter;
-        $this->permission_changes_detector             = $permission_changes_detector;
-        $this->template_permission_updater             = $template_permission_updater;
-        $this->history_dao                             = $history_dao;
-        $this->default_branch_updater                  = $default_branch_updater;
-        $this->description_updater                     = $description_updater;
-        $this->regexp_retriever                        = $regexp_retriever;
-        $this->regexp_enabler                          = $regexp_enabler;
-        $this->regexp_disabler                         = $regexp_disabler;
-        $this->regexp_filter                           = $regexp_filter;
-        $this->users_to_notify_dao                     = $users_to_notify_dao;
-        $this->ugroups_to_notify_dao                   = $ugroups_to_notify_dao;
-        $this->ugroup_manager                          = $ugroup_manager;
-        $this->header_renderer                         = $header_renderer;
-        $this->closure_verifier                        = $closure_verifier;
-        $this->configure_artifact_closure              = $configure_artifact_closure;
+        $this->permittedActions = [];
     }
 
     #[\Override]

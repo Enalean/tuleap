@@ -31,9 +31,6 @@ use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowe
 
 include_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
 
-/**
- * GitViews
- */
 class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private Project $project;
@@ -42,20 +39,20 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function __construct(
         $controller,
-        private GitPermissionsManager $git_permissions_manager,
-        private FineGrainedPermissionFactory $fine_grained_permission_factory,
-        private FineGrainedRetriever $fine_grained_retriever,
-        private DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
-        private FineGrainedRepresentationBuilder $fine_grained_builder,
-        private RegexpFineGrainedRetriever $regexp_retriever,
-        private Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        private HeaderRenderer $header_renderer,
-        private ProjectManager $project_manager,
-        private VerifyArtifactClosureIsAllowed $closure_verifier,
+        private readonly GitPermissionsManager $git_permissions_manager,
+        private readonly FineGrainedPermissionFactory $fine_grained_permission_factory,
+        private readonly FineGrainedRetriever $fine_grained_retriever,
+        private readonly DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
+        private readonly FineGrainedRepresentationBuilder $fine_grained_builder,
+        private readonly RegexpFineGrainedRetriever $regexp_retriever,
+        private readonly Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        private readonly HeaderRenderer $header_renderer,
+        private readonly ProjectManager $project_manager,
+        private readonly VerifyArtifactClosureIsAllowed $closure_verifier,
     ) {
         parent::__construct($controller);
         $this->groupId        = (int) $this->request->get('group_id');
-        $this->project        = ProjectManager::instance()->getProject($this->groupId);
+        $this->project        = $this->project_manager->getProject($this->groupId);
         $this->projectName    = $this->project->getUnixName();
         $this->userName       = $this->user->getUserName();
         $this->ugroup_manager = new UGroupManager();
