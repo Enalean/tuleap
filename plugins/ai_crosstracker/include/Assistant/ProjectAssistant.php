@@ -30,7 +30,6 @@ use Tuleap\AI\Mistral\Completion;
 use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\Model;
 use Tuleap\AI\Mistral\Role;
-use Tuleap\AI\Mistral\StringContent;
 use Tuleap\AI\Mistral\TextChunk;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
 
@@ -41,10 +40,11 @@ final readonly class ProjectAssistant implements Assistant
     }
 
     /**
+     * @param Message[] $messages
      * @throws RestException
      */
     #[Override]
-    public function getCompletion(\PFUser $user): Completion
+    public function getCompletion(\PFUser $user, array $messages): Completion
     {
         $project = \ProjectManager::instance()->getProjectById($this->widget->getProjectId());
 
@@ -117,10 +117,7 @@ final readonly class ProjectAssistant implements Assistant
                     new TextChunk('### Available trackers' . PHP_EOL . $json_encoded_trackers),
                 ),
             ),
-            new Message(
-                Role::USER,
-                new StringContent('je veux toutes les exigences ouvertes non couvertes par des tests')
-            ),
+            ... $messages
         );
     }
 }

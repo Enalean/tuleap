@@ -21,15 +21,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AICrossTracker\Assistant;
+namespace Tuleap\AICrossTracker\REST\v1;
 
-use Tuleap\AI\Mistral\Completion;
 use Tuleap\AI\Mistral\Message;
+use Tuleap\AI\Mistral\Role;
+use Tuleap\AI\Mistral\StringContent;
 
-interface Assistant
+/**
+ * @psalm-immutable
+ */
+final class MessageRepresentation
 {
     /**
-     * @param Message[] $messages
+     * @var string Role of the message {@required true}
      */
-    public function getCompletion(\PFUser $user, array $messages): Completion;
+    public string $role;
+    /**
+     * @var string Content of the message {@required true}
+     */
+    public string $content;
+
+    public function toMistralMessage(): Message
+    {
+        return new Message(Role::from($this->role), new StringContent($this->content));
+    }
 }

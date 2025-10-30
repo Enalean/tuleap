@@ -26,6 +26,7 @@ namespace Tuleap\AICrossTracker\REST\v1;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\AI\Mistral\CompletionResponse;
+use Tuleap\AI\Mistral\Message;
 use Tuleap\AI\Mistral\MistralConnectorLive;
 use Tuleap\AICrossTracker\Assistant\ProjectAssistant;
 use Tuleap\AICrossTracker\Assistant\UserAssistant;
@@ -60,10 +61,13 @@ final class TQLAssistantResource extends AuthenticatedResource
      * @url    POST {id}/helper
      * @access hybrid
      *
+     * @param int $id Widget Id {@from body}
+     * @param array $messages {@from body} {@type \Tuleap\AICrossTracker\REST\v1\MessageRepresentation}
+     *
      * @status 200
      * @throws RestException
      */
-    public function post(int $id): HelperRepresentation
+    public function post(int $id, array $messages): HelperRepresentation
     {
         $this->checkAccess();
 
@@ -77,14 +81,16 @@ final class TQLAssistantResource extends AuthenticatedResource
 
             $cross_tracker_retriever = new CrossTrackerWidgetRetriever($this->getWidgetDao());
             return $cross_tracker_retriever->retrieveWidgetById($id)->match(
-                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user): HelperRepresentation {
+                function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($current_user, $messages): HelperRepresentation {
                     $assistant = match ($widget::class) {
                         ProjectCrossTrackerWidget::class => new ProjectAssistant($widget),
                         UserCrossTrackerWidget::class => new UserAssistant(),
                     };
 
+                    $user_messages = array_map(static fn (MessageRepresentation $message): Message => $message->toMistralMessage(), $messages);
+
                     $mistral_connector = new MistralConnectorLive(HttpClientFactory::createClientWithCustomTimeout(30));
-                    return $mistral_connector->sendCompletion($assistant->getCompletion($current_user))->match(
+                    return $mistral_connector->sendCompletion($assistant->getCompletion($current_user, $user_messages))->match(
                         static fn (CompletionResponse $response) => new HelperRepresentation((string) $response->choices[0]->message->content),
                         static fn (Fault $fault) => throw new RestException(400, (string) $fault)
                     );
