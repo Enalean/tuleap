@@ -32,6 +32,7 @@ use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 use Tuleap\TimezoneRetriever;
+use Tuleap\User\Account\Appearance\DarkModeValue;
 use Tuleap\User\Account\Appearance\FaviconVariant;
 use Tuleap\User\SwitchToPresenter;
 
@@ -189,6 +190,7 @@ class HeaderPresenter
      * @psalm-readonly
      */
     public $is_a_broken_browser;
+    public string $user_dark_mode;
     public string $favicon_variant;
 
     public function __construct(
@@ -253,6 +255,8 @@ class HeaderPresenter
             );
         }
         $this->is_a_broken_browser = $is_a_broken_browser;
+
+        $this->user_dark_mode = DarkModeValue::fromUser($user)->value;
 
         $this->favicon_variant = FaviconVariant::shouldDisplayFaviconVariant($user)
             ? $color->getName()

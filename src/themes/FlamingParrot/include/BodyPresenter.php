@@ -20,6 +20,7 @@
 
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
+use Tuleap\User\Account\Appearance\DarkModeValue;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class FlamingParrot_BodyPresenter
@@ -71,6 +72,7 @@ class FlamingParrot_BodyPresenter
      * @psalm-readonly
      */
     public $platform_banner_importance;
+    public string $user_dark_mode;
 
     public function __construct(
         PFUser $user,
@@ -99,5 +101,7 @@ class FlamingParrot_BodyPresenter
                 Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE,
             );
         }
+
+        $this->user_dark_mode = DarkModeValue::fromUser($user)->value;
     }
 }
