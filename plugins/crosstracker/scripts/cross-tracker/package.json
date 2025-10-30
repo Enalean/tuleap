@@ -20,6 +20,9 @@
     "@tuleap/tooltip": "workspace:^",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
+    "dompurify": "^3.2.4",
+    "lit-html": "^2.8.0",
+    "marked": "^4.0.10",
     "mitt": "^3.0.0",
     "neverthrow": "6.0.0",
     "uuid": "^8.3.2",
@@ -34,6 +37,7 @@
     "@tuleap/core-rest-api-types": "workspace:^",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
+    "@types/marked": "^3.0.2",
     "@vitejs/plugin-vue": "4.2.3",
     "@vue/test-utils": "^2.4.6",
     "@types/uuid": "^9.0.8"

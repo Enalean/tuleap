@@ -19,6 +19,9 @@ msgstr "Aperçu de la requête \"%{title}\""
 msgid "%{from} – %{to} of %{total}"
 msgstr "%{from} – %{to} sur %{total}"
 
+msgid "Ai query assistant"
+msgstr "Assistant de requête IA"
+
 msgid "All artifacts created in the last 10 days"
 msgstr "Tous les artifacts créés ces 10 derniers jours"
 
@@ -70,6 +73,9 @@ msgstr "Supprimer"
 
 msgid "Delete the query"
 msgstr "Supprimer la requête"
+
+msgid "Describe what you are looking for..."
+msgstr "Qu'est ce que vous recherchez ?"
 
 msgid "Description"
 msgstr "Description"
@@ -233,6 +239,9 @@ msgstr "Cette action ne peut être annulée."
 
 msgid "Title"
 msgstr "Titre"
+
+msgid "Toggle Tuleap AI Assistant"
+msgstr "Activer/désactiver l'Assistant IA de Tuleap"
 
 msgid "Tracker"
 msgstr "Tracker"

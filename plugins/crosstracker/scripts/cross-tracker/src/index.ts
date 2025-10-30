@@ -42,6 +42,8 @@ import {
     DASHBOARD_ID,
     TABLE_DATA_STORE,
     TABLE_DATA_ORCHESTRATOR,
+    MOUNT_POINT,
+    EXTERNAL_PLUGINS,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -115,7 +117,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             artifacts_links_retriever,
             table_data_store,
         );
-
         createApp(CrossTrackerWidget)
             /** @ts-expect-error vue3-gettext-init is tested with Vue 3.4, but here we use Vue 3.5 */
             .use(gettext_plugin)
@@ -138,6 +139,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(WIDGET_TITLE_UPDATER, widget_title_updater)
             .provide(ARROW_REDRAW_TRIGGERER, arrow_redraw_triggerer)
             .provide(WIDGET_CONTAINER, widget_element)
+            .provide(MOUNT_POINT, vue_mount_point)
+            .provide(EXTERNAL_PLUGINS, widget_data.external_plugins)
             .mount(vue_mount_point);
     }
 });

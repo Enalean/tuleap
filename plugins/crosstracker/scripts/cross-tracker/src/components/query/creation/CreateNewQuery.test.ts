@@ -24,7 +24,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import CreateNewQuery from "./CreateNewQuery.vue";
 import QuerySuggested from "../QuerySuggested.vue";
 import TitleInput from "../TitleInput.vue";
-import { EMITTER, NEW_QUERY_CREATOR, WIDGET_ID } from "../../../injection-symbols";
+import {
+    EMITTER,
+    EXTERNAL_PLUGINS,
+    NEW_QUERY_CREATOR,
+    WIDGET_ID,
+} from "../../../injection-symbols";
 import { Fault } from "@tuleap/fault";
 import type {
     CreatedQueryEvent,
@@ -101,6 +106,7 @@ describe("CreateNewQuery", () => {
                     [EMITTER.valueOf()]: emitter,
                     [NEW_QUERY_CREATOR.valueOf()]: true,
                     [NEW_QUERY_CREATOR.valueOf()]: new_query_creator,
+                    [EXTERNAL_PLUGINS.valueOf()]: [],
                 },
             },
         });

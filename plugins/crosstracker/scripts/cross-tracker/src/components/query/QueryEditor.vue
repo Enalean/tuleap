@@ -125,7 +125,7 @@ function insertSelectedField(event: Event): void {
 function updateEditor(query: string): void {
     code_mirror_instance.apply((editor) => {
         editor.dispatch({
-            changes: { from: 0, to: editor.state.doc.length, insert: query },
+            changes: { from: 0, to: editor.state.doc.length, insert: query.trimEnd() }, // if there ORDER BY is used and there is a new line in the tql query, an error occurs (maybe the parser should be fixed directly)
         });
     });
 }
