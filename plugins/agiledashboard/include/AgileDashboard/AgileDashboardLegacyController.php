@@ -37,9 +37,9 @@ use Tuleap\Request\DispatchableWithThemeSelection;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class AgileDashboardLegacyController implements DispatchableWithRequest, DispatchableWithThemeSelection
+final readonly class AgileDashboardLegacyController implements DispatchableWithRequest, DispatchableWithThemeSelection
 {
-    public function __construct(private readonly AgileDashboardRouterBuilder $router_builder)
+    public function __construct(private AgileDashboardRouterBuilder $router_builder)
     {
     }
 
@@ -93,9 +93,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
 
     public static function isScrumAdminURL(HTTPRequest $request): bool
     {
-        return $request->get('action') === 'import-form'
-            || $request->get('action') === 'admin'
-            && $request->get('pane') !== 'charts';
+        return $request->get('action') === 'import-form' || $request->get('action') === 'admin';
     }
 
     private function includeAssets(HTTPRequest $request, BaseLayout $layout): void

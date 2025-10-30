@@ -142,6 +142,16 @@ class AdminController extends BaseController
     public function adminCharts(\Closure $displayHeader, \Closure $displayFooter): void
     {
         $this->checkScrumAccessIsNotBlocked();
+        $this->layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../scripts/administration/frontend-assets',
+                    '/assets/agiledashboard/administration'
+                ),
+                'src/main.ts'
+            )
+        );
+
         $title = dgettext('tuleap-agiledashboard', 'Charts configuration');
         $displayHeader(
             $title,
