@@ -81,6 +81,9 @@
                 </div>
             </div>
 
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <button type="submit" name="submit" class="btn btn-primary"><i class="far fa-save"></i> {{# dgettext }}tuleap-svn | Save configuration{{/ dgettext }}</button>
         </form>
     </div>

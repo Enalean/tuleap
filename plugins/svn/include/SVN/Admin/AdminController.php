@@ -97,7 +97,7 @@ class AdminController
         $this->repository_deleter        = $repository_deleter;
     }
 
-    private function generateToken(Project $project, Repository $repository)
+    private function generateToken(Project $project, Repository $repository): CSRFSynchronizerToken
     {
         return new CSRFSynchronizerToken(SVN_BASE_URL . '/?group_id=' . $project->getid() . '&repo_id=' . $repository->getId() . '&action=display-mail-notification');
     }
@@ -130,7 +130,7 @@ class AdminController
         );
     }
 
-    public function saveMailHeader(HTTPRequest $request)
+    public function saveMailHeader(HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -160,7 +160,7 @@ class AdminController
         ));
     }
 
-    public function saveMailingList(HTTPRequest $request)
+    public function saveMailingList(HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -180,7 +180,7 @@ class AdminController
         }
     }
 
-    public function createMailingList(HTTPRequest $request, Repository $repository, $notification_to_add)
+    private function createMailingList(HTTPRequest $request, Repository $repository, $notification_to_add): void
     {
         $form_path       = $notification_to_add['path'];
         $valid_path      = new Valid_String($form_path);
@@ -246,7 +246,7 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    public function updateMailingList(HTTPRequest $request, Repository $repository, $notification_to_update)
+    private function updateMailingList(HTTPRequest $request, Repository $repository, $notification_to_update): void
     {
         $notification_ids = array_keys($notification_to_update);
         $notification_id  = $notification_ids[0];
@@ -330,7 +330,7 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    public function deleteMailingList(HTTPRequest $request)
+    public function deleteMailingList(HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -365,9 +365,13 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request)
+    public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request): void
     {
-        $repository  = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
+
+        $token = $this->generateToken($request->getProject(), $repository);
+        $token->check();
+
         $hook_config = [
             HookConfig::MANDATORY_REFERENCE => (bool) $request->get('pre_commit_must_contain_reference'),
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool) $request->get('allow_commit_message_changes'),
@@ -377,7 +381,7 @@ class AdminController
         $this->displayHooksConfig($service, $request);
     }
 
-    public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request)
+    public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request): void
     {
         $repository  = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         $hook_config = $this->hook_config_retriever->getHookConfig($repository);
@@ -402,7 +406,7 @@ class AdminController
         );
     }
 
-    public function displayRepositoryDelete(ServiceSvn $service, HTTPRequest $request)
+    public function displayRepositoryDelete(ServiceSvn $service, HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         if (! $repository->canBeDeleted()) {
@@ -427,7 +431,7 @@ class AdminController
         );
     }
 
-    public function deleteRepository(HTTPRequest $request)
+    public function deleteRepository(HTTPRequest $request): void
     {
         $project       = $request->getProject();
         $project_id    = $project->getID();
@@ -436,7 +440,7 @@ class AdminController
         if ($project_id === null || $repository_id === null || $repository_id === false || $project_id === false) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'actions_params_error');
 
-            return false;
+            return;
         }
 
         $repository = $this->repository_manager->getByIdAndProject($repository_id, $project);
@@ -462,7 +466,7 @@ class AdminController
             } else {
                 $this->redirect($project_id);
 
-                return false;
+                return;
             }
         } else {
             $GLOBALS['Response']->addFeedback(
@@ -473,25 +477,25 @@ class AdminController
         $this->redirect($project_id);
     }
 
-    private function generateTokenDeletion(Project $project, Repository $repository)
+    private function generateTokenDeletion(Project $project, Repository $repository): CSRFSynchronizerToken
     {
         return new CSRFSynchronizerToken(SVN_BASE_URL . '/?' . http_build_query(
             [
                 'group_id' => $project->getID(),
                 'repo_id' => $repository->getId(),
-                'action' => 'delete-repository',
+                'action' => 'display-repository-delete',
             ]
         ));
     }
 
-    private function redirect($project_id)
+    private function redirect($project_id): void
     {
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
             ['group_id' => $project_id]
         ));
     }
 
-    private function redirectOnDisplayNotification(HTTPRequest $request)
+    private function redirectOnDisplayNotification(HTTPRequest $request): void
     {
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
             [
@@ -502,10 +506,7 @@ class AdminController
         ));
     }
 
-    /**
-     * @return RequestFromAutocompleter
-     */
-    private function getAutocompleter(Project $project, InvalidEntryInAutocompleterCollection $invalid_entries, $emails)
+    private function getAutocompleter(Project $project, InvalidEntryInAutocompleterCollection $invalid_entries, $emails): RequestFromAutocompleter
     {
         $autocompleter = new RequestFromAutocompleter(
             $invalid_entries,
@@ -519,7 +520,7 @@ class AdminController
         return $autocompleter;
     }
 
-    private function addFeedbackUsersNotAdded($users_not_added)
+    private function addFeedbackUsersNotAdded($users_not_added): void
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
@@ -535,7 +536,7 @@ class AdminController
         );
     }
 
-    private function addFeedbackUgroupsNotAdded($ugroups_not_added)
+    private function addFeedbackUgroupsNotAdded($ugroups_not_added): void
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
@@ -551,7 +552,7 @@ class AdminController
         );
     }
 
-    private function addFeedbackPathError()
+    private function addFeedbackPathError(): void
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
