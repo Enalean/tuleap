@@ -1,90 +1,62 @@
-<div class="tabbable" id="svn-administration">
-    {{> admin/section_presenter}}
+{{> admin/section_presenter_burning_parrot }}
 
-    <div class="tab-content" id="immutable-tags">
-        <form action="/plugins/svn/?group_id={{ project_id }}&action=save-immutable-tag&repo_id={{ repository_id }}" method="post">
-            <input type="hidden" name="group_id" value="{{ project_id }}">
-            <input type="hidden" name="func" value="immutable_tags">
-            <input type="hidden" name="post_changes" value="y">
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa-solid fa-tags tlp-pane-title-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-svn | Immutable tags configuration{{/ dgettext }}
+                </h1>
+            </div>
+            <form action="/plugins/svn/?group_id={{ project_id }}&action=save-immutable-tag&repo_id={{ repository_id }}" method="post" class="tlp-pane-section">
+                <input type="hidden" name="group_id" value="{{ project_id }}">
+                <input type="hidden" name="func" value="immutable_tags">
+                <input type="hidden" name="post_changes" value="y">
 
-            <h3>{{# dgettext }}tuleap-svn | Immutable tags configuration{{/ dgettext }}</h3>
-            <p class="immutable-tags-comment">{{# dgettext }}tuleap-svn | Specify folders where immutable tags will be located. You can specify a whitelist of folders where you will be able to do modifications.{{/ dgettext }}</p>
-            <div class="alert alert-warning" id="immutable-tag-to-big-warning" hidden>{{# dgettext }}tuleap-svn | The list of immutable tags paths is too big.{{/ dgettext }}</div>
-            <div class="alert alert-warning" id="whitelist-tag-to-big-warning" hidden>{{# dgettext }}tuleap-svn | The list of global whitelist is too big.{{/ dgettext }}</div>
-            <div class="row-fluid immutable-tags-configuration">
-                <div class="immutable-tags-path span6">
-                    <div class="form-group">
-                        <label for="immutable-tags-path">{{# dgettext }}tuleap-svn | Immutable tags paths{{/ dgettext }}</label>
+                <p>{{# dgettext }}tuleap-svn | Specify folders where immutable tags will be located. You can specify a whitelist of folders where you will be able to do modifications.{{/ dgettext }}</p>
+                <div class="tlp-alert-warning" id="immutable-tag-to-big-warning" hidden>{{# dgettext }}tuleap-svn | The list of immutable tags paths is too big.{{/ dgettext }}</div>
+                <div class="tlp-alert-warning" id="whitelist-tag-to-big-warning" hidden>{{# dgettext }}tuleap-svn | The list of global whitelist is too big.{{/ dgettext }}</div>
+                <div class="immutable-tags-configuration">
+                    <div class="tlp-form-element">
+                        <label for="immutable-tags-path" class="tlp-label">
+                            {{# dgettext }}tuleap-svn | Immutable tags paths{{/ dgettext }}
+                        </label>
                         <textarea
                             rows="5"
                             name="immutable-tags-path"
                             id="immutable-tags-path"
                             placeholder="/tags"
                             maxlength="65535"
+                            class="tlp-textarea"
                         >{{ immutable_tags_path }}</textarea>
                     </div>
-                </div>
-                <div class="immutable-tags-whitelist span6">
-                    <div class="form-group">
-                        <label for="immutable-tags-whitelist">{{# dgettext }}tuleap-svn | Global whitelist{{/ dgettext }}</label>
+                    <div class="tlp-form-element">
+                        <label for="immutable-tags-whitelist" class="tlp-label">
+                            {{# dgettext }}tuleap-svn | Global whitelist{{/ dgettext }}
+                        </label>
                         <textarea
                             rows="5"
                             name="immutable-tags-whitelist"
                             id="immutable-tags-whitelist"
                             placeholder="/tags/moduleX"
                             maxlength="65535"
+                            class="tlp-textarea"
                         >{{ immutable_tags_whitelist }}</textarea>
                     </div>
                 </div>
-            </div>
 
-            <h3>{{# dgettext }}tuleap-svn | Preview of your configuration{{/ dgettext }}</h3>
+                <div class="tlp-pane-section-submit">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
 
-            {{# exceeds_max_number_of_folders }}
-            <div class="row-fluid">
-                <div class="span12">
-                    <div class="alert alert-warning">{{# dgettext }}tuleap-svn | Your repository contains too many folders (more than %s), for performance reasons, we cannot display the preview of your configuration.| {{ max_number_of_folders }}{{/ dgettext }}</div>
+                    <button type="submit" name="submit" class="tlp-button-primary">
+                        <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-svn | Save configuration{{/ dgettext }}
+                    </button>
                 </div>
-            </div>
-            {{/ exceeds_max_number_of_folders }}
-
-            <div {{# exceeds_max_number_of_folders }}class="exceeds_max_number_of_folders"{{/ exceeds_max_number_of_folders }}>
-                <p class="immutable-tags-comment">{{# dgettext }}tuleap-svn | Here is a preview of what your configuration does. Click on highlighted folders to get more information.{{/ dgettext }}</p>
-
-                <div class="row-fluid">
-                    <div class="span6 immutable-tags-structure">
-                        <h4>{{# dgettext }}tuleap-svn | Repository tree structure{{/ dgettext }}</h4>
-                        <pre class="well"
-                            id="immutable-tags-tree"
-                            data-existing-tree="{{ existing_tree }}"
-                            data-empty-state-text="{{# dgettext }}tuleap-svn | Your SVN repository is not impacted by immutable tags because the configuration is empty or does not match the current repository layout{{/ dgettext }}"
-                        ><span id="loading">{{# dgettext }}tuleap-svn | Loading...{{/ dgettext }}</span></pre>
-                    </div>
-
-                    <div class="span6 immutable-tags-examples empty">
-                        <h4 class="impacted-svn">
-                            <span>{{# dgettext }}tuleap-svn | Example of impacted svn operations in{{/ dgettext }} <span class="label" id="tag-name-example"></span></span>
-                            <span class="empty-state">{{# dgettext }}tuleap-svn | Example of impacted svn operations{{/ dgettext }}</span>
-                        </h4>
-
-                        <div id="immutable-tags-console" class="well">
-                            <div class="empty-state"><i class="far fa-hand-point-left"></i> {{# dgettext }}tuleap-svn | Please select tag on the left{{/ dgettext }}</div>
-                            <div class="text-success add-command">$ svn cp ^/{{# dgettext }}tuleap-svn|some/path{{/ dgettext }} ^<span class="tag-path-example">/tags</span>/{{# dgettext }}tuleap-svn|my-tag{{/ dgettext }} <i class="fa fa-check"></i></div>
-                            <div class="text-danger update-command">$ svn cp ^/{{# dgettext }}tuleap-svn|some/path{{/ dgettext }}/README ^<span class="tag-path-example">/tags</span>/{{# dgettext }}tuleap-svn|my-tag{{/ dgettext }}/README <i class="fa fa-times"></i></div>
-                            <br>
-                            <div>// {{# dgettext }}tuleap-svn|SVN status style{{/ dgettext }}</div>
-                            <div class="text-success add-command">A <span class="tag-path-example">/tags</span>/{{# dgettext }}tuleap-svn|my-tag{{/ dgettext }} <i class="fa fa-check"></i></div>
-                            <div class="text-danger update-command">U <span class="tag-path-example">/tags</span>/{{# dgettext }}tuleap-svn|my-tag{{/ dgettext }} <i class="fa fa-times"></i></div>
-                            <div class="text-danger update-command">D <span class="tag-path-example">/tags</span>/{{# dgettext }}tuleap-svn|my-tag{{/ dgettext }} <i class="fa fa-times"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-            <button type="submit" name="submit" class="btn btn-primary"><i class="far fa-save"></i> {{# dgettext }}tuleap-svn | Save configuration{{/ dgettext }}</button>
-        </form>
-    </div>
+            </form>
+        </div>
+    </section>
 </div>

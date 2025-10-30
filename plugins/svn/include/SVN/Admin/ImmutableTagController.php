@@ -29,6 +29,8 @@ use Feedback;
 use HTTPRequest;
 use System_Command_CommandException;
 use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Repository;
@@ -56,7 +58,7 @@ class ImmutableTagController
         $this->immutable_tag_factory = $immutable_tag_factory;
     }
 
-    public function displayImmutableTag(ServiceSvn $service, HTTPRequest $request)
+    public function displayImmutableTag(ServiceSvn $service, HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -67,6 +69,14 @@ class ImmutableTagController
         } catch (System_Command_CommandException $ex) {
             $existing_tree = ImmutableTagPresenter::$SO_MUCH_FOLDERS;
         }
+
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../scripts/admin/frontend-assets',
+                '/assets/svn/admin',
+            ),
+            'src/admin.ts',
+        ));
 
         $service->renderInPageRepositoryAdministration(
             $request,
@@ -113,16 +123,21 @@ class ImmutableTagController
                 );
             }
 
-            $this->displayImmutableTag($service, $request);
+            $GLOBALS['Response']->redirect($this->getUrl($repository));
         }
+    }
+
+    private function getUrl(Repository $repository): string
+    {
+        return SVN_BASE_URL . '/?' . http_build_query([
+            'group_id' => $repository->getProject()->getId(),
+            'action' => 'display-immutable-tag',
+            'repo_id' => $repository->getId(),
+        ]);
     }
 
     private function getToken(Repository $repository): CSRFSynchronizerTokenInterface
     {
-        return new CSRFSynchronizerToken(SVN_BASE_URL . '/?' . http_build_query([
-            'group_id' => $repository->getProject()->getId(),
-            'action' => 'display-immutable-tag',
-            'repo_id' => $repository->getId(),
-        ]));
+        return new CSRFSynchronizerToken($this->getUrl($repository));
     }
 }
