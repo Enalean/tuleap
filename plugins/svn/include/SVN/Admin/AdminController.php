@@ -26,6 +26,8 @@ use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Project;
 use Rule_Email;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\SVN\Notifications\CannotAddUgroupsNotificationException;
 use Tuleap\SVN\Notifications\CannotAddUsersNotificationException;
 use Tuleap\SVN\Notifications\NotificationListBuilder;
@@ -415,6 +417,14 @@ class AdminController
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
         $token = $this->generateTokenDeletion($request->getProject(), $repository);
+
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../scripts/admin/frontend-assets',
+                '/assets/svn/admin',
+            ),
+            'src/admin.ts',
+        ));
 
         $service->renderInPageRepositoryAdministration(
             $request,

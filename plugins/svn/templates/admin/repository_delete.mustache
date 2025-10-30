@@ -1,23 +1,42 @@
-<div class="tabbable" id="svn-administration">
-    {{> admin/section_presenter }}
+{{> admin/section_presenter_burning_parrot }}
 
-    <div class="tab-content">
-        <h3>{{ subtitle }}</h3>
-        <p>{{ comment }} <b>{{ repository_name }}</b>. {{ comment_undone }}</p>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+         <div class="tlp-pane-container">
+             <div class="tlp-pane-header">
+                 <h1 class="tlp-pane-title">
+                     <i class="fa-regular fa-trash-alt tlp-pane-title-icon" aria-hidden="true"></i>
+                     {{ subtitle }}
+                 </h1>
+             </div>
+             <section class="tlp-pane-section">
+                 <p>{{ comment }} <b>{{ repository_name }}</b>. {{ comment_undone }}</p>
 
-        {{^ is_created }}<p class="alert alert-warning">{{ cannot_delete }}</p>{{/ is_created }}
-        <button type="button"
-                class="btn btn-danger"
-                data-toggle="modal"
-                data-target="#modal-repository-delete"
-                data-test="svn-delete-repository"
-                {{^ is_created }}disabled{{/ is_created }}
-        >
-            <i class="far fa-trash-alt"></i> {{ button }}
-        </button>
-    </div>
+                 {{^ is_created }}<div class="tlp-alert-warning">{{ cannot_delete }}</div>{{/ is_created }}
+
+                 <div class="tlp-pane-section-submit">
+                     <button type="button"
+                             class="tlp-button-danger svn-admin-trigger-modal"
+                             data-target-modal-id="modal-repository-delete"
+                             data-test="svn-delete-repository"
+                             {{^ is_created }}disabled{{/ is_created }}
+                     >
+                         <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                         {{ button }}
+                     </button>
+
+
+                     <div id="modal-repository-delete"
+                          class="tlp-modal tlp-modal-danger"
+                          role="dialog"
+                          aria-labelledby="modal-repository-delete-title"
+                          aria-hidden="true"
+                     >
+                         {{> admin/modal_repository_delete }}
+                     </div>
+                 </div>
+             </section>
+         </div>
+    </section>
 </div>
 
-<div id="modal-repository-delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-repository-delete-title" aria-hidden="true">
-    {{> admin/modal_repository_delete }}
-</div>

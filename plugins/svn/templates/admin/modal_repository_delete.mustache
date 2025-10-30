@@ -1,23 +1,26 @@
-<div class="modal-header modal-header-error">
-    <a role="button" class="close" data-dismiss="modal">
-        <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-    </a>
-    <h3 id="modal-repository-delete-title">{{ modal_title }}</h3>
+<div class="tlp-modal-header">
+    <h1 class="tlp-modal-title" id="modal-repository-delete-title">{{ modal_title }}</h1>
+    <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+        <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+    </button>
 </div>
 
-<div class="modal-body">
+<div class="tlp-modal-body">
     <p>{{ modal_content }}</p>
 </div>
 
-<div class="modal-footer">
+<div class="tlp-modal-footer">
     <form action="/plugins/svn/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=delete-repository" method="post">
         {{{ token }}}
-        <input type="hidden" name="repo_id" value="{{ repository_id }}" />
-        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">
+        <button type="button"
+                data-dismiss="modal"
+                class="tlp-button-danger tlp-button-outline tlp-modal-action"
+        >
             {{ modal_button_cancel }}
         </button>
-        <button type="submit" class="btn btn-danger" data-test="confirm-svn-repo-delete">
-            <i class="far fa-trash-alt"></i> {{ modal_button_delete }}
+        <button type="submit" class="tlp-button-danger tlp-modal-action" data-test="confirm-svn-repo-delete">
+            <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+            {{ modal_button_delete }}
         </button>
     </form>
 </div>

@@ -1164,7 +1164,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     #[ListeningToEventClass]
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
     {
-        if ($this->isInSvnHomepage()) {
+        if ($this->isInSvn()) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
@@ -1174,7 +1174,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         if (
             strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0
-            || $this->isInSvnHomepage()
+            || $this->isInSvn()
         ) {
             $assets = $this->getIncludeAssets();
 
@@ -1182,18 +1182,21 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
-    private function isInSvnHomepage(): bool
+    private function isInSvn(): bool
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) !== 0) {
+        if (! str_starts_with($_SERVER['REQUEST_URI'], $this->getPluginPath())) {
             return false;
         }
 
-        parse_str($_SERVER['QUERY_STRING'], $output);
-        if (count($output) !== 1) {
-            return false;
-        }
+        parse_str($_SERVER['QUERY_STRING'], $query);
+        $params = array_keys($query);
+        sort($params);
 
-        return array_keys($output) === ['group_id'];
+        return $params === ['group_id']
+            || (
+                $params === ['action', 'group_id', 'repo_id']
+                && in_array($query['action'], ['display-repository-delete'], true)
+            );
     }
 
     #[ListeningToEventClass]
