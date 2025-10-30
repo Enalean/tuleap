@@ -8,15 +8,18 @@ dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:*
     version: link:../../../../src/themes/BurningParrot
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
   '@tuleap/plugin-cardwall-column-colors':
     specifier: workspace:^
     version: link:../../../cardwall/scripts/lib/column-colors
-  '@tuleap/plugin-tracker-color-picker':
-    specifier: workspace:^
-    version: link:../../../tracker/scripts/lib/colorpicker
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../../../lib/frontend/project-background
+  '@tuleap/tlp-color-picker':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-color-picker
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal

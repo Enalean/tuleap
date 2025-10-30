@@ -27,10 +27,6 @@
         }
     },
     "gettext-vue3": {
-        "colorpicker": {
-            "src": "scripts/lib/colorpicker/src",
-            "po": "scripts/lib/colorpicker/po"
-        },
         "move-artifact-action": {
             "src": "scripts/move-artifact-action/src",
             "po": "scripts/move-artifact-action/po"

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,4 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@use "pkg:@tuleap/tlp-color-picker";
+
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import vue from "@vitejs/plugin-vue";
+
+export default vite.defineLibConfig({
+    plugins: [vue(), POGettextPlugin.vite(), viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "TlpColorPicker",
+        },
+        rollupOptions: {
+            external: ["vue", "vue3-gettext"],
+        },
+    },
+});

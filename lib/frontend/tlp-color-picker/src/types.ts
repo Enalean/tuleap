@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default [
-    ["inca-silver", "chrome-silver", "firemist-silver"],
-    ["red-wine", "fiesta-red", "coral-pink"],
-    ["teddy-brown", "clockwork-orange", "graffiti-yellow"],
-    ["army-green", "neon-green", "acid-green"],
-    ["sherwood-green", "ocean-turquoise", "surf-green"],
-    ["deep-blue", "lake-placid-blue", "daphne-blue"],
-    ["plum-crazy", "ultra-violet", "lilac-purple"],
-    ["panther-pink", "peggy-pink", "flamingo-pink"],
-];
+export type ColorPickerOptions = {
+    readonly input_name: string;
+    readonly input_id: string;
+    readonly current_color: string;
+    readonly is_unsupported_color: boolean;
+};

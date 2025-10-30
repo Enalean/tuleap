@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "pkg:@tuleap/plugin-tracker-color-picker";
-@use "pkg:@tuleap/plugin-cardwall-column-colors";
+@use "pkg:@tuleap/tlp-color-picker";
 
 .planning-admin-color-picker {
     display: flex;
@@ -33,7 +32,7 @@
     font-weight: normal;
 }
 
-.colorpicker-circular-color {
+.color-picker-circular-color {
     font-size: 12.6px;
 }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,81 +20,27 @@
 @use "sass:color";
 @use "sass:map";
 @use "pkg:@tuleap/tlp-swatch-colors";
-@use "pkg:@tuleap/plugin-tracker-static-list-colors";
+@use "pkg:@tuleap/tlp-popovers";
 
-.tracker-colorpicker {
+.color-picker-popover {
+    width: unset;
+}
+
+.color-picker-preview-button {
     cursor: pointer;
 }
 
 .old-color-picker-preview {
+    box-sizing: content-box;
     width: 16px;
     height: 16px;
     border: 0;
     vertical-align: middle;
 }
 
-.colorpicker-row {
-    line-height: 0;
-    text-align: center;
-
-    > .colorpicker-circular-color:first-child {
-        margin: 12px 12px 14px 0;
-    }
-
-    > .colorpicker-circular-color:last-child {
-        margin: 12px 0 14px 12px;
-    }
-}
-
-.colorpicker-row-no-color {
-    display: flex;
-    align-items: center;
-    padding: 0 0 0 12px;
-
-    > .colorpicker-circular-no-color {
-        margin-bottom: 12px;
-        border: 3px solid #d8d8d8;
-        background: linear-gradient(135deg, #ffffff 44%, #d8d8d8 45%, #d8d8d8 55%, #ffffff 56%);
-
-        &.colorpicker-no-color-selected {
-            background: linear-gradient(135deg, #ffffff 50%, #ffffff 50%);
-            color: #d8d8d8;
-        }
-    }
-
-    > .colorpicker-row-no-color-label {
-        display: inline-block;
-        position: relative;
-        top: 1px;
-        color: #787878;
-        font-size: 12px;
-        cursor: pointer;
-
-        &:hover {
-            color: color.adjust(#787878, $lightness: - 20%);
-        }
-    }
-}
-
-.colorpicker-circular-color {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    margin: 12px 12px 14px;
-    border-radius: 50%;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
-.colorpicker-circular-color::before {
-    display: inline-block;
-    position: relative;
-    top: 1px;
-}
-
 .color-picker-preview {
     display: inline-block;
+    box-sizing: content-box;
     width: 16px;
     height: 16px;
     margin: 0;
@@ -102,15 +48,58 @@
     vertical-align: middle;
 }
 
-@each $color-name, $colors in tlp-swatch-colors.$color-map {
-    .colorpicker-circular-color-#{$color-name} {
-        border: 3px solid map.get($colors, "primary");
-        background-color: map.get($colors, "secondary");
-        color: map.get($colors, "primary");
-    }
+.color-picker-circular-color {
+    display: inline-block;
+    box-sizing: content-box;
+    width: 16px;
+    height: 16px;
+    margin: 12px 12px 14px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
 
+.color-picker-circular-color::before {
+    display: inline-block;
+    position: relative;
+    top: 1px;
+}
+
+.color-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+}
+
+.color-picker-row-no-color {
+    display: flex;
+    grid-column: span 3;
+    align-items: center;
+    padding: 0 0 0 12px;
+    cursor: pointer;
+
+    > .color-picker-circular-no-color {
+        margin-bottom: 12px;
+        border: 3px solid #d8d8d8;
+        background: linear-gradient(135deg, #ffffff 44%, #d8d8d8 45%, #d8d8d8 55%, #ffffff 56%);
+
+        &.color-picker-no-color-selected {
+            background: linear-gradient(135deg, #ffffff 50%, #ffffff 50%);
+            color: #d8d8d8;
+        }
+    }
+}
+
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .color-picker-preview-#{$color-name} {
         border: 0;
         background-color: map.get($colors, "primary");
+    }
+
+    .color-picker-circular-color-#{$color-name} {
+        border: 3px solid map.get($colors, "primary");
+        background-color: map.get($colors, "secondary");
+        color: map.get($colors, "primary");
     }
 }
