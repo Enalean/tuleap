@@ -23,7 +23,7 @@ If we consider the following markup:
 
 In HTML
 
-<img src="/img/html-node.png" style="max-height: 95%"/>
+<img src="/img/prosemirror-architecture/html-node.png" style="max-height: 95%"/>
 
 The content is represented as a tree.
 
@@ -31,7 +31,7 @@ The content is represented as a tree.
 
 In ProseMirror
 
-<img src="/img/prose-mirror-node.png" style="max-height: 95%"/>
+<img src="/img/prosemirror-architecture/prose-mirror-node.png" style="max-height: 95%"/>
 
 The content is modeled as a flat sequence.
 
@@ -43,7 +43,7 @@ layout: default
 
 A ProseMirror `Node` is **readonly**. It allows to access its content, attributes, type and marks:
 
-<img src="/img/node-instance.png" class="mx-auto"/>
+<img src="/img/prosemirror-architecture/node-instance.png" class="mx-auto"/>
 
 Where the content is available as a `Fragment`
 

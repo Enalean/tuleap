@@ -19,7 +19,7 @@ When a cross-reference `art #123` is found, we need to query the backend to:
 
 Then wrap `art #123` into something looking like a link.
 
-<img src="/img/cross-reference.png" class="mx-auto"/>
+<img src="/img/prosemirror-architecture/cross-reference.png" class="mx-auto"/>
 
 ---
 
@@ -27,7 +27,7 @@ Then wrap `art #123` into something looking like a link.
 
 If we wait for the backend to answer before dispatching a transaction, then we might end up with a `Mismatched transaction` error.
 
-<img src="/img/range-error.png" class="mx-auto"/>
+<img src="/img/prosemirror-architecture/range-error.png" class="mx-auto"/>
 
 A `Mismatched transaction` error means that a transaction has been dispatched from a state that does not belong to the current view's state.
 
