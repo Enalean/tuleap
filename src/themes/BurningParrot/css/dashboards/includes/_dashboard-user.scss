@@ -12,6 +12,10 @@ $dashboard-header-background: var(--tlp-dark-color-lighter-05);
         .logo-svg-fill-default-text-color {
             fill: var(--tlp-white-color);
         }
+
+        .logo-svg-fill-default-text-color-invert {
+            fill: var(--tlp-dark-color);
+        }
     }
 
     .full-width + #main-container > main[role="main"]:not(.tlp-framed) > #feedback:not(:empty) {
