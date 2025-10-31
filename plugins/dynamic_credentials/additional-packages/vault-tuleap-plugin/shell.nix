@@ -4,6 +4,6 @@
 
 pkgs.mkShellNoCC {
   buildInputs = [
-    pkgs.go
+    pkgs.go_latest
   ];
 }

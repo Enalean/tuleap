@@ -2,7 +2,7 @@
   pkgs ? (import ../nix/pinned-nixpkgs.nix) { },
 }:
 
-pkgs.buildGoModule {
+pkgs.buildGoLatestModule {
   name = "pre-receive-tuleap-git-repo-validation";
   src = ./src;
 

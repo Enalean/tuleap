@@ -1,6 +1,6 @@
 module gerrit.tuleap.net/vault-tuleap-plugin
 
-go 1.25.1
+go 1.25.3
 
 require (
 	github.com/hashicorp/go-uuid v1.0.3

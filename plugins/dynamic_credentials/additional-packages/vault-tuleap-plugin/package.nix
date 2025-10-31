@@ -2,7 +2,7 @@
   pkgs ? (import ../../../../tools/utils/nix/pinned-nixpkgs.nix) { },
 }:
 
-pkgs.buildGoModule {
+pkgs.buildGoLatestModule {
   name = "vault-tuleap-plugin";
 
   src = ./.;
