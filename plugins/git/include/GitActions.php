@@ -19,6 +19,7 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\LegacyConfigInc;
@@ -42,179 +43,37 @@ use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
  */
 class GitActions extends PluginActions // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    /**
-     * @var PermissionChangesDetector
-     */
-    private $permission_changes_detector;
-
-    /**
-     * @var HistoryValueFormatter
-     */
-    private $history_value_formatter;
-
-    /**
-     * @var FineGrainedRetriever
-     */
-    private $fine_grained_retriever;
-
-    /**
-     * @var FineGrainedPermissionSaver
-     */
-    private $fine_grained_permission_saver;
-
-    /**
-     * @var FineGrainedUpdater
-     */
-    private $fine_grained_updater;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Git_SystemEventManager
-     */
-    protected $git_system_event_manager;
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $factory;
-
-    /**
-     * @var GitRepositoryManager
-     */
-    private $manager;
-
-    /**
-     * @var Git_RemoteServer_GerritServerFactory
-     */
-    private $gerrit_server_factory;
-
-    /** @var Git_Driver_Gerrit_GerritDriverFactory */
-    private $driver_factory;
-
-    /** @var Git_Driver_Gerrit_UserAccountManager */
-    private $gerrit_usermanager;
-
-    /** @var Git_Driver_Gerrit_ProjectCreator */
-    private $project_creator;
-
-    /** @var Git_Driver_Gerrit_Template_TemplateFactory */
-    private $template_factory;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var GitPermissionsManager */
-    private $git_permissions_manager;
-
-    /** @var Git_GitRepositoryUrlManager */
-    private $url_manager;
-
-    /** @var ProjectHistoryDao*/
-    private $history_dao;
-
-    /** @var MigrationHandler*/
-    private $migration_handler;
-
-    /**
-     * @var GerritCanMigrateChecker
-     */
-    private $gerrit_can_migrate_checker;
-
-    /**
-     * @var RegexpFineGrainedEnabler
-     */
-    private $regexp_enabler;
-
-    /**
-     * @var RegexpFineGrainedDisabler
-     */
-    private $regexp_disabler;
-
-    /**
-     * @var \Tuleap\Git\Permissions\RegexpPermissionFilter
-     */
-    private $permission_filter;
-
-    /**
-     * @var RegexpFineGrainedRetriever
-     */
-    private $regexp_retriever;
-
-    /**
-     * @var UsersToNotifyDao
-     */
-    private $users_to_notify_dao;
-    /**
-     * @var UgroupsToNotifyDao
-     */
-    private $ugroups_to_notify_dao;
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-
     public function __construct(
         Git $controller,
-        Git_SystemEventManager $system_event_manager,
-        GitRepositoryFactory $factory,
-        GitRepositoryManager $manager,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
-        Git_Driver_Gerrit_ProjectCreator $project_creator,
-        Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
-        ProjectManager $project_manager,
-        GitPermissionsManager $git_permissions_manager,
-        Git_GitRepositoryUrlManager $url_manager,
-        \Psr\Log\LoggerInterface $logger,
-        ProjectHistoryDao $history_dao,
-        MigrationHandler $migration_handler,
-        GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        FineGrainedUpdater $fine_grained_updater,
-        FineGrainedPermissionSaver $fine_grained_permission_saver,
-        FineGrainedRetriever $fine_grained_retriever,
-        HistoryValueFormatter $history_value_formatter,
-        PermissionChangesDetector $permission_changes_detector,
-        RegexpFineGrainedEnabler $regexp_enabler,
-        RegexpFineGrainedDisabler $regexp_disabler,
-        RegexpPermissionFilter $permission_filter,
-        RegexpFineGrainedRetriever $regexp_retriever,
-        UsersToNotifyDao $users_to_notify_dao,
-        UgroupsToNotifyDao $ugroups_to_notify_dao,
-        UGroupManager $ugroup_manager,
+        private readonly Git_SystemEventManager $git_system_event_manager,
+        private readonly GitRepositoryFactory $factory,
+        private readonly GitRepositoryManager $manager,
+        private readonly Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        private readonly Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        private readonly Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        private readonly Git_Driver_Gerrit_ProjectCreator $project_creator,
+        private readonly Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
+        private readonly ProjectManager $project_manager,
+        private readonly GitPermissionsManager $git_permissions_manager,
+        private readonly Git_GitRepositoryUrlManager $url_manager,
+        private readonly LoggerInterface $logger,
+        private readonly ProjectHistoryDao $history_dao,
+        private readonly MigrationHandler $migration_handler,
+        private readonly GerritCanMigrateChecker $gerrit_can_migrate_checker,
+        private readonly FineGrainedUpdater $fine_grained_updater,
+        private readonly FineGrainedPermissionSaver $fine_grained_permission_saver,
+        private readonly FineGrainedRetriever $fine_grained_retriever,
+        private readonly HistoryValueFormatter $history_value_formatter,
+        private readonly PermissionChangesDetector $permission_changes_detector,
+        private readonly RegexpFineGrainedEnabler $regexp_enabler,
+        private readonly RegexpFineGrainedDisabler $regexp_disabler,
+        private readonly RegexpPermissionFilter $permission_filter,
+        private readonly RegexpFineGrainedRetriever $regexp_retriever,
+        private readonly UsersToNotifyDao $users_to_notify_dao,
+        private readonly UgroupsToNotifyDao $ugroups_to_notify_dao,
+        private readonly UGroupManager $ugroup_manager,
     ) {
         parent::__construct($controller);
-        $this->git_system_event_manager      = $system_event_manager;
-        $this->factory                       = $factory;
-        $this->manager                       = $manager;
-        $this->gerrit_server_factory         = $gerrit_server_factory;
-        $this->driver_factory                = $driver_factory;
-        $this->gerrit_usermanager            = $gerrit_usermanager;
-        $this->project_creator               = $project_creator;
-        $this->template_factory              = $template_factory;
-        $this->project_manager               = $project_manager;
-        $this->git_permissions_manager       = $git_permissions_manager;
-        $this->url_manager                   = $url_manager;
-        $this->logger                        = $logger;
-        $this->history_dao                   = $history_dao;
-        $this->migration_handler             = $migration_handler;
-        $this->gerrit_can_migrate_checker    = $gerrit_can_migrate_checker;
-        $this->fine_grained_updater          = $fine_grained_updater;
-        $this->fine_grained_permission_saver = $fine_grained_permission_saver;
-        $this->fine_grained_retriever        = $fine_grained_retriever;
-        $this->history_value_formatter       = $history_value_formatter;
-        $this->permission_changes_detector   = $permission_changes_detector;
-        $this->regexp_enabler                = $regexp_enabler;
-        $this->regexp_disabler               = $regexp_disabler;
-        $this->permission_filter             = $permission_filter;
-        $this->regexp_retriever              = $regexp_retriever;
-        $this->users_to_notify_dao           = $users_to_notify_dao;
-        $this->ugroups_to_notify_dao         = $ugroups_to_notify_dao;
-        $this->ugroup_manager                = $ugroup_manager;
     }
 
     public function deleteRepository($projectId, $repositoryId)
