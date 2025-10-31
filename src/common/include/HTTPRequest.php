@@ -103,24 +103,6 @@ class HTTPRequest extends Codendi_Request
     }
 
     /**
-     * Get the value of $variable in $array. If magic_quotes are enabled, the
-     * value is escaped.
-     *
-     * @access private
-     * @param string $variable Name of the parameter to get.
-     * @param array $array Name of the parameter to get.
-     */
-    #[\Override]
-    public function _get($variable, $array)
-    {
-        if ($this->_exist($variable, $array)) {
-            return $array[$variable];
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * @deprecated
      */
     public function getServerUrl(): string

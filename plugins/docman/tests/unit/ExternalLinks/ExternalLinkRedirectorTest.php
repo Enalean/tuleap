@@ -93,8 +93,8 @@ final class ExternalLinkRedirectorTest extends TestCase
 
         $this->request->method('exist')->willReturnCallback(static fn(string $variable) => match ($variable) {
             'action'   => false,
-            'group_id' => 102,
-            'id'       => $folder_id,
+            'group_id' => true,
+            'id'       => true,
         });
         $this->request->method('get')->with('id')->willReturn($folder_id);
 
@@ -112,8 +112,8 @@ final class ExternalLinkRedirectorTest extends TestCase
 
         $this->request->method('exist')->willReturnCallback(static fn(string $variable) => match ($variable) {
             'action'   => false,
-            'group_id' => 102,
-            'id'       => $root_folder_id,
+            'group_id' => true,
+            'id'       => true,
         });
         $this->request->method('get')->with('id')->willReturn($root_folder_id);
 

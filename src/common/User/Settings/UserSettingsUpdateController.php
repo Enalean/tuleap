@@ -41,7 +41,7 @@ final class UserSettingsUpdateController implements DispatchableWithRequest
 
 
         $user_approval = $request->getToggleVariable('users_must_be_approved');
-        $this->config_dao->save(\UserManager::CONFIG_USER_APPROVAL, $user_approval);
+        $this->config_dao->save(\UserManager::CONFIG_USER_APPROVAL, (string) $user_approval);
 
         $layout->addFeedback(\Feedback::INFO, _('User approval settings have been saved'));
         $layout->redirect($request_uri);
