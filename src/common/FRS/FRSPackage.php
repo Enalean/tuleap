@@ -19,12 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- * FRSPackage.php - File Release System Package class
- *
- */
-class FRSPackage
+class FRSPackage // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const string PERM_READ = 'PACKAGE_READ';
 
@@ -139,32 +134,26 @@ class FRSPackage
 
     /**
      * Determines if the package is active or not
-     * @return bool true if the package is active, false otherwise
      */
-    public function isActive()
+    public function isActive(): bool
     {
-        $frsrf = new FRSPackageFactory();
-        return $this->getStatusID() == $frsrf->STATUS_ACTIVE;
+        return (int) $this->getStatusID() === self::STATUS_ACTIVE;
     }
 
     /**
      * Determines if the package is hidden or not
-     * @return bool true if the package is hidden, false otherwise
      */
-    public function isHidden()
+    public function isHidden(): bool
     {
-        $frsrf = new FRSPackageFactory();
-        return $this->getStatusID() == $frsrf->STATUS_HIDDEN;
+        return (int) $this->getStatusID() == self::STATUS_HIDDEN;
     }
 
     /**
      * Determines if the package is deleted or not
-     * @return bool true if the package is deleted, false otherwise
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
-        $frsrf = new FRSPackageFactory();
-        return $this->getStatusID() == $frsrf->STATUS_DELETED;
+        return (int) $this->getStatusID() == self::STATUS_DELETED;
     }
 
     private function initFromArray(array $array): void

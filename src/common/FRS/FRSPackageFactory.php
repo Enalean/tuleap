@@ -28,10 +28,6 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class FRSPackageFactory
 {
-    // Kept for legacy
-    public $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
-    public $STATUS_DELETED = FRSPackage::STATUS_DELETED;
-    public $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
     private static ?self $instance;
 
     public static function instance()
@@ -296,7 +292,7 @@ class FRSPackageFactory
         $_id     = (int) $package_id;
         $package = $this->getFRSPackageFromDb($_id);
         $dao     = $this->_getFRSPackageDao();
-        if ($dao->delete($_id, $this->STATUS_DELETED)) {
+        if ($dao->delete($_id, FRSPackage::STATUS_DELETED)) {
             $this->getEventManager()->processEvent(
                 'frs_delete_package',
                 ['group_id' => $package->getGroupID(),
@@ -493,7 +489,7 @@ class FRSPackageFactory
     public function _getFRSPackageDao()
     {
         if (! $this->dao) {
-            $this->dao = new FRSPackageDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
+            $this->dao = new FRSPackageDao(CodendiDataAccess::instance(), FRSPackage::STATUS_DELETED);
         }
         return $this->dao;
     }

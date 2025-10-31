@@ -1,10 +1,15 @@
-<tr>
-    <th>{{# gettext }}License Approval: {{/ gettext }}</th>
-    <td>
-        <select name="package[approve_license]">
-            {{# . }}
-                <option value="{{ value }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
-            {{/ . }}
-        </select>
-    </td>
-</tr>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="approve_license">
+        {{# gettext }}License Approval{{/ gettext }}
+    </label>
+    <select class="tlp-select tlp-select-adjusted"
+            name="package[approve_license]"
+            id="approve_license"
+    >
+        {{# . }}
+            <option value="{{ value }}" {{# is_selected }}selected{{/ is_selected }}>
+                {{ label }}
+            </option>
+        {{/ . }}
+    </select>
+</div>

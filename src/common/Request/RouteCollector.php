@@ -90,6 +90,7 @@ use Tuleap\FRS\LicenseAgreement\Admin\EditLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\ListLicenseAgreementsController;
 use Tuleap\FRS\LicenseAgreement\Admin\SaveLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SetDefaultLicenseAgreementController;
+use Tuleap\FRS\ShowPackageController as ShowPackageControllerAlias;
 use Tuleap\HelpDropdown\HelpMenuOpenedController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
@@ -799,6 +800,11 @@ class RouteCollector
     public static function getFileDownloadAgreementAdminAdd(): DispatchableWithRequest
     {
         return AddLicenseAgreementController::buildSelf();
+    }
+
+    public static function getShowPackageController(): DispatchableWithRequest
+    {
+        return ShowPackageControllerAlias::buildSelf();
     }
 
     public static function getFileDownloadAgreementAdminEdit(): DispatchableWithRequest
@@ -1681,6 +1687,7 @@ class RouteCollector
             $r->get('/{project_id:\d+}/admin/license-agreements/{id:\d+}', [self::class, 'getFileDownloadAgreementAdminEdit']);
             $r->post('/{project_id:\d+}/admin/license-agreements/save', [self::class, 'getFileDownloadAgreementAdminSave']);
             $r->post('/{project_id:\d+}/admin/license-agreements/set-default', [self::class, 'getFileDownloadAgreementAdminSetDefault']);
+            $r->get('/{project_id:\d+}/package/{package_id:\d+}', [self::class, 'getShowPackageController']);
         });
 
         $r->get('/export/rss_sfprojects.php', [self::class, 'getRssLatestProjects']);

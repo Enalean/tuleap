@@ -1,0 +1,26 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/frs",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/core-rest-api-types": "workspace:^",
+    "@tuleap/lazybox": "workspace:^",
+    "@tuleap/lazybox-users-autocomplete": "workspace:^",
+    "@tuleap/locale": "workspace:^",
+    "@tuleap/tlp-date-picker": "workspace:^",
+    "@tuleap/tlp-fetch": "workspace:^",
+    "@tuleap/tlp-modal": "workspace:^",
+    "dompurify": "^3.2.4"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

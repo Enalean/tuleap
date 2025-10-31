@@ -132,18 +132,7 @@ class BurningParrotCompatiblePageDetector
             return false;
         }
 
-        $query_string = [];
-        if (isset($_SERVER['QUERY_STRING'])) {
-            parse_str($_SERVER['QUERY_STRING'], $query_string);
-        }
-
-        return strpos($_SERVER['REQUEST_URI'], '/file/admin/manageprocessors.php') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/file/admin/editproc.php') === 0
-            || (
-                strpos($_SERVER['REQUEST_URI'], '/file/admin/') === 0 &&
-                isset($query_string['action']) &&
-                $query_string['action'] === 'edit-permissions'
-            );
+        return strpos($_SERVER['REQUEST_URI'], '/file/') === 0;
     }
 
     private function isInBurningParrotCompatiblePage()

@@ -16,7 +16,7 @@ msgstr ""
 msgid "Artifact #%1$s does not exist."
 msgstr ""
 
-msgid "Artifact id:"
+msgid "Artifact id"
 msgstr ""
 
 msgid "Artifact linked to a Files release cannot be moved"

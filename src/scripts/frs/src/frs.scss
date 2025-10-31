@@ -1,0 +1,134 @@
+/**
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "pkg:@tuleap/tlp-date-picker";
+@use "pkg:@tuleap/lazybox";
+@use "pkg:@tuleap/lazybox-users-autocomplete";
+
+.tlp-table.frs-monitor-users-table:last-child {
+    // tlp-table in a pane is too greedy:
+    // it says it should have a negative bottom margin when it is the last child
+    // however the current table is included in a form and might be the last child of it
+    // but the form itself is not the last child of the pane, so we need to cancel the
+    // negative bottom margin.
+    margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
+}
+
+.frs-monitor-user-column {
+    width: 100%;
+}
+
+.frs-monitor-users-delete-button {
+    margin: 0 0 var(--tlp-x-large-spacing);
+}
+
+.tlp-table.frs-release-links-table {
+    margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
+}
+
+.frs-release-staging-area-select-hidden,
+.frs-release-notes-hidden,
+.frs-release-add-link-table-hidden {
+    display: none;
+}
+
+.frs-release-links-table-link {
+    width: 100%;
+}
+
+.frs-release-notes-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--tlp-x-large-spacing);
+}
+
+.frs-release-file-owner-input {
+    width: auto;
+}
+
+.frs-release-file-comment {
+    padding: 0 0 0 var(--tlp-x-large-spacing);
+    color: var(--tlp-dimmed-color);
+    font-size: 0.75rem;
+}
+
+.frs-release-file-name-column {
+    position: sticky;
+    left: 0;
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.frs-release-files-container-is-scrolling .frs-release-file-name-column {
+    border-right: 1px solid var(--tlp-neutral-light-color);
+}
+
+.frs-release-files-container {
+    margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
+
+    > .frs-release-files-table:last-child {
+        margin: 0;
+    }
+
+    &:has(> .frs-release-files-table > .frs-release-files-table-tbody-files > tr) {
+        overflow: hidden;
+        overflow-x: auto;
+    }
+}
+
+.frs-release-file-row:has(> td > .frs-release-file-delete-checkbox:checked) {
+    text-decoration-line: line-through;
+
+    > td {
+        background: var(--tlp-danger-color-transparent-85);
+    }
+}
+
+.frs-release-files-table-tbody-files:has(> .frs-release-file-row)
+    + .frs-release-files-table-tbody-empty {
+    display: none;
+}
+
+.frs-release-files-table-tbody-files:has(
+        > .frs-release-file-row > td > .frs-release-file-delete-button
+    )
+    > .frs-release-file-row
+    > td
+    > .frs-release-file-delete-checkbox {
+    margin-left: 10px;
+}
+
+.frs-release-file-delete-button.tlp-button-outline {
+    transition: color ease-in-out 150ms;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--tlp-dimmed-color);
+
+    &:hover,
+    &:focus {
+        background: transparent;
+        color: var(--tlp-main-color);
+    }
+}
+
+.frs-release-feedback:empty {
+    display: none;
+}

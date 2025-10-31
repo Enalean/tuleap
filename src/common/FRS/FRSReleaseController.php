@@ -27,31 +27,13 @@ use FRSRelease;
 use FRSReleaseFactory;
 use HTTPRequest;
 use Project;
-use ProjectUGroup;
-use TemplateRendererFactory;
-use User_ForgeUserGroupFactory;
-use User_UGroup;
 
-class FRSReleaseController
+readonly class FRSReleaseController
 {
-    /** @var FRSReleaseFactory */
-    private $release_factory;
-
-    /** @var User_ForgeUserGroupFactory  */
-    private $ugroup_factory;
-    /**
-     * @var \Codendi_HTMLPurifier
-     */
-    private $purifier;
-
     public function __construct(
-        FRSReleaseFactory $release_factory,
-        User_ForgeUserGroupFactory $ugroup_factory,
-        \Codendi_HTMLPurifier $purifier,
+        private FRSReleaseFactory $release_factory,
+        private \Codendi_HTMLPurifier $purifier,
     ) {
-        $this->release_factory = $release_factory;
-        $this->ugroup_factory  = $ugroup_factory;
-        $this->purifier        = $purifier;
     }
 
     public function delete(Project $project, FRSRelease $release)
@@ -60,8 +42,8 @@ class FRSReleaseController
             throw new FRSDeleteReleaseNotYoursException();
         }
 
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_del'));
-        $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
+        $GLOBALS['Response']->addFeedback(\Feedback::SUCCESS, $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_del'));
+        $GLOBALS['Response']->redirect('/file/' . urlencode($project->getGroupId() . '/package/' . $release->getPackageID()));
     }
 
     public function add(Project $project, $package_id)
@@ -71,9 +53,10 @@ class FRSReleaseController
         $release->setStatusID($this->release_factory->STATUS_ACTIVE);
         $release->setReleaseDate(time());
 
-        $title = $GLOBALS['Language']->getText('file_admin_editreleases', 'create_new_release');
-        $url   = '?func=create&amp;postExpected=&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;package_id=' . $this->purifier->purify(urlencode($package_id));
-        frs_display_release_form($is_update = false, $release, $project->getGroupId(), $title, $url);
+        $title    = $release->getPackage()->getName();
+        $subtitle = _('Create a new release');
+        $url      = '?func=create&amp;postExpected=&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;package_id=' . $this->purifier->purify(urlencode($package_id));
+        frs_display_release_form($is_update = false, $release, $project->getGroupId(), $title, $subtitle, $url);
     }
 
     public function create(HTTPRequest $request, Project $project, FRSPackage $package)
@@ -98,6 +81,7 @@ class FRSReleaseController
             $is_update = true,
             $release,
             $project->getGroupId(),
+            $release->getName(),
             $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release'),
             '?func=update&amp;postExpected=&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;package_id=' . $this->purifier->purify(urlencode($release->getPackageID())) . '&amp;id=' . $this->purifier->purify(urlencode((string) $release->getReleaseID()))
         );
@@ -112,67 +96,5 @@ class FRSReleaseController
             $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release'),
             '?func=update&amp;postExpected=&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;package_id=' . $this->purifier->purify(urlencode($release->getPackageID())) . '&amp;id=' . $this->purifier->purify(urlencode((string) $release->getReleaseID()))
         );
-    }
-
-    public function displayUserGroups(Project $project, $permission_type, $release_id = null)
-    {
-        $renderer            = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $all_project_ugroups = $this->ugroup_factory->getAllForProject($project);
-        $ugroups             = $this->getFrsUGroupsByPermission($permission_type, $all_project_ugroups, $release_id);
-
-        $presenter = new FRSReleasePermissionPresenter(
-            $project,
-            $ugroups,
-            $permission_type
-        );
-
-        $renderer->renderToPage('permissions-presenter', $presenter);
-    }
-
-    private function getFrsUGroupsByPermission($permission_type, array $project_ugroups, $release_id = null)
-    {
-        $options = [];
-        foreach ($project_ugroups as $project_ugroup) {
-            if ($this->isUgroupHidden($project_ugroup)) {
-                continue;
-            }
-
-            $release_ugroups = $this->getAllUserGroups($permission_type, $release_id);
-
-            $options[] = [
-                'id'       => $project_ugroup->getId(),
-                'name'     => $project_ugroup->getName(),
-                'selected' => $this->isUgroupSelected($project_ugroup, $release_ugroups),
-            ];
-        }
-
-        return $options;
-    }
-
-    private function isUgroupHidden(User_UGroup $project_ugroup)
-    {
-        return $project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
-    }
-
-    private function getAllUserGroups($permission_type, $release_id)
-    {
-        $ugroups = [];
-
-        $release_ugroups = permission_db_authorized_ugroups($permission_type, $release_id);
-        while ($ugroup = db_fetch_array($release_ugroups)) {
-            $ugroups[] = $ugroup['ugroup_id'];
-        }
-
-        return $ugroups;
-    }
-
-    private function isUgroupSelected(User_UGroup $user_group, array $release_ugroups)
-    {
-        return in_array($user_group->getId(), $release_ugroups);
-    }
-
-    private function getTemplateDir()
-    {
-        return __DIR__ . '/../../templates/frs';
     }
 }

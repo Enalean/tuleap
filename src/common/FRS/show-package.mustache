@@ -1,0 +1,132 @@
+<h1 class="project-administration-title">{{# package }}{{ name }}{{/ package }}</h1>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa-solid fa-list tlp-pane-title-icon" aria-hidden="true"></i>
+                    {{# gettext }}Package details{{/ gettext }}
+                </h1>
+            </div>
+            <div class="tlp-pane-section">
+                {{# package }}
+                    {{# is_hidden }}
+                        <div class="tlp-alert-warning">
+                            {{# gettext }}This package is hidden{{/ gettext }}
+                        </div>
+                    {{/ is_hidden }}
+                    <div class="tlp-table-actions">
+                        {{# can_admin }}
+                            <a href="{{ add_release_url }}"
+                               class="tlp-button-primary tlp-table-actions-element"
+                               data-test="create-release"
+                            >
+                                <i class="tlp-button-icon fa-solid fa-plus" aria-hidden="true"></i>
+                                {{# gettext }}Create new release{{/ gettext }}
+                            </a>
+                        {{/ can_admin }}
+
+                        <a class="tlp-button-primary tlp-button-outline tlp-table-actions-element"
+                           href="{{ monitor_url }}"
+                        >
+                            {{# is_monitoring }}
+                                <i class="tlp-button-icon fa-solid fa-bell-slash" aria-hidden="true"></i>
+                                {{# gettext }}Stop monitoring{{/ gettext }}
+                            {{/ is_monitoring }}
+                            {{^ is_monitoring }}
+                                <i class="tlp-button-icon fa-solid fa-bell" aria-hidden="true"></i>
+                                {{# gettext }}Monitor{{/ gettext }}
+                            {{/ is_monitoring }}
+                        </a>
+
+                        {{# can_admin }}
+                            <a class="tlp-button-primary tlp-button-outline tlp-table-actions-element"
+                               href="{{ edit_url }}"
+                               data-test="update-package"
+                            >
+                                <i class="tlp-button-icon fa-solid fa-pencil" aria-hidden="true"></i>
+                                {{# gettext }}Edit package{{/ gettext }}
+                            </a>
+
+                            {{> delete-package-modal }}
+                            <button type="button"
+                                class="tlp-button-danger tlp-button-outline tlp-table-actions-element frs-modal-trigger-button"
+                                data-target-modal-id="frs-delete-package-{{ id }}"
+                                data-test="remove-package"
+                                {{# has_releases }}
+                                    disabled
+                                    title="{{# gettext }}You cannot delete a package that still contains releases{{/ gettext }}"
+                                {{/ has_releases }}
+                            >
+                                <i class="tlp-button-icon fa-regular fa-trash-alt" aria-hidden="true"></i>
+                                {{# gettext }}Delete{{/ gettext }}
+                            </button>
+                        {{/ can_admin }}
+                    </div>
+                {{/ package }}
+                <table class="tlp-table" data-test="releases-list">
+                    <thead>
+                    <tr>
+                        <th>{{# gettext }}Release{{/ gettext }}</th>
+                        <th>{{# gettext }}Date{{/ gettext }}</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    {{^ has_releases }}
+                    <tbody>
+                    <tr>
+                        <td colspan="3" class="tlp-table-cell-empty">
+                            {{# gettext }}There isn't any release yet{{/ gettext }}
+                        </td>
+                    </tr>
+                    {{/ has_releases }}
+                    {{# has_releases }}
+                        <tbody>
+                        {{# releases }}
+                            <tr>
+                                <td>
+                                    <a href="{{ show_url }}" {{# is_hidden }}class="tlp-text-muted"{{/ is_hidden }} data-test="release-name">{{ name }}</a>
+                                    {{# is_hidden }}
+                                        <span class="tlp-badge-secondary tlp-badge-outline" title="{{# gettext }}This release is hidden{{/ gettext }}">
+                                            <i class="tlp-badge-icon fa-solid fa-eye-slash" aria-hidden="true"></i>
+                                            {{# gettext }}hidden{{/ gettext }}
+                                        </span>
+                                    {{/ is_hidden }}
+                                </td>
+                                <td>
+                                    {{# date }}
+                                        {{> tlp_relative_date }}
+                                    {{/ date }}
+                                </td>
+                                <td class="tlp-table-cell-actions">
+                                    {{# can_admin }}
+                                        <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                           href="{{ edit_url }}"
+                                           data-test="edit-release"
+                                        >
+                                            <i class="tlp-button-icon fa-solid fa-pencil" aria-hidden="true"></i>
+                                            {{# gettext }}Edit{{/ gettext }}
+                                        </a>
+                                    {{/ can_admin }}
+
+                                    {{# can_admin }}
+                                        {{> delete-release-modal }}
+                                        <button type="button"
+                                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline frs-modal-trigger-button"
+                                            data-target-modal-id="frs-delete-release-{{ id }}"
+                                            data-test="release-delete-button"
+                                        >
+                                            <i class="tlp-button-icon fa-regular fa-trash-alt" aria-hidden="true"></i>
+                                            {{# gettext }}Delete{{/ gettext }}
+                                        </button>
+                                    {{/ can_admin }}
+                                </td>
+                            </tr>
+                        {{/ releases }}
+                        </tbody>
+                    {{/ has_releases }}
+                </table>
+            </div>
+        </div>
+    </section>
+</div>

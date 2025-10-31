@@ -24,9 +24,6 @@ use Tuleap\FRS\FRSReleaseRouter;
 
 require_once __DIR__ . '/../../include/pre.php';
 
-$GLOBALS['HTML']->includeCalendarScripts();
-$GLOBALS['HTML']->includeFooterJavascriptFile('../scripts/frs.js');
-
 $request         = HTTPRequest::instance();
 $project_manager = ProjectManager::instance();
 
@@ -47,8 +44,7 @@ $files_factory   = new FRSFileFactory();
 $router = new FRSReleaseRouter(
     new FRSReleaseController(
         $release_factory,
-        new User_ForgeUserGroupFactory(new UserGroupDao()),
-        Codendi_HTMLPurifier::instance()
+        Codendi_HTMLPurifier::instance(),
     ),
     $release_factory,
     $package_factory

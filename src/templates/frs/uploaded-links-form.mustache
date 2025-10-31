@@ -1,37 +1,38 @@
-<fieldset>
-    <legend>{{ uploaded_links_label }}</legend>
+<h2>{{ uploaded_links_label }}</h2>
 
-    {{# has_existing_links }}
-        <table class="frs-uploaded-link-update" id="frs-uploaded-link-update">
-            <thead>
-            <tr class="boxtable">
-                <td>{{ delete_label }}</td>
-                <td>{{ link_label }}</td>
-            </tr>
-            </thead>
-            <tbody id="files_body">
-            {{# existing_links }}
-                <tr>
-                    <td><input name="release_links_to_delete[]" value="{{ link_id }}" type="checkbox"></td>
-                    <td><a href="{{ link }}">{{ displayed_link }}</a> </td>
-                </tr>
-            {{/ existing_links }}
-            </tbody>
-        </table>
-    {{/ has_existing_links }}
-
-    <table class="frs-uploaded-link-creation" id="frs-uploaded-link-creation">
+{{# has_existing_links }}
+    <table class="tlp-table frs-release-links-table">
         <thead>
-        <tr class="boxtable">
-            <td>{{ name_label }}</td>
-            <td>{{ link_label }}</td>
+        <tr>
+            <th>{{ delete_label }}</th>
+            <th class="frs-release-links-table-link">{{ link_label }}</th>
         </tr>
         </thead>
-        <tbody id="files_body">
-
+        <tbody>
+        {{# existing_links }}
+            <tr>
+                <td><input name="release_links_to_delete[]" value="{{ link_id }}" type="checkbox"></td>
+                <td><a href="{{ link }}">{{ displayed_link }}</a> </td>
+            </tr>
+        {{/ existing_links }}
         </tbody>
     </table>
-    <p>
-        <a href="#" onclick="add_new_link(event)">{{ add_link_label }}</a>
-    </p>
-</fieldset>
+{{/ has_existing_links }}
+
+<table class="tlp-table frs-release-links-table frs-release-add-link-table-hidden" id="frs-release-add-link-table">
+    <thead>
+    <tr>
+        <th>{{ name_label }}</th>
+        <th class="frs-release-links-table-link">{{ link_label }}</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+<p>
+    <button type="button"
+            class="tlp-button-primary tlp-button-outline"
+            id="frs-release-add-link-table-button"
+    >{{ add_link_label }}</button>
+</p>

@@ -87,7 +87,7 @@ class FRSPackageController
                 throw new FRSDeletePackageNotYoursException();
             }
 
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_del'));
+            $GLOBALS['Response']->addFeedback(\Feedback::SUCCESS, $GLOBALS['Language']->getText('file_admin_editpackages', 'p_del'));
         }
     }
 
@@ -101,7 +101,7 @@ class FRSPackageController
     public function create(HTTPRequest $request, Project $project, array $existing_packages)
     {
         if (! $request->exist('submit')) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'create_canceled'));
+            $GLOBALS['Response']->addFeedback(\Feedback::INFO, $GLOBALS['Language']->getText('file_admin_editpackages', 'create_canceled'));
             $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
         } else {
             $package_data             = $request->get('package');
@@ -111,12 +111,12 @@ class FRSPackageController
             $url = '?func=create&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId()));
             if (isset($package_data['name']) && isset($package_data['rank']) && isset($package_data['status_id'])) {
                 if ($this->package_factory->isPackageNameExist($package_data['name'], $project->getGroupId())) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name_exists'));
+                    $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name_exists'));
                     $package = new FRSPackage($package_data);
                     frs_display_package_form($package, $title, $url, $existing_packages);
                 } else {
                     $this->package_factory->create((array) $package_data);
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_added'));
+                    $GLOBALS['Response']->addFeedback(\Feedback::SUCCESS, $GLOBALS['Language']->getText('file_admin_editpackages', 'p_added'));
                     $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
                 }
             }
@@ -132,7 +132,7 @@ class FRSPackageController
     public function update(HTTPRequest $request, FRSPackage $package, Project $project, PFUser $user)
     {
         if (! $request->exist('submit')) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'update_canceled'));
+            $GLOBALS['Response']->addFeedback(\Feedback::INFO, $GLOBALS['Language']->getText('file_admin_editpackages', 'update_canceled'));
             $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
         }
 
@@ -144,10 +144,10 @@ class FRSPackageController
             throw new FRSPackageNameAlreadyExistsException();
         }
 
-        if ($package_data['status_id'] == $this->package_factory->STATUS_HIDDEN) {
+        if ($package_data['status_id'] == FRSPackage::STATUS_HIDDEN) {
             if ($this->release_factory->isActiveReleases($package->getPackageID())) {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_admin_editpackages', 'cannot_hide'));
-                $package_data['status_id'] = $this->package_factory->STATUS_ACTIVE;
+                $GLOBALS['Response']->addFeedback(\Feedback::WARN, $GLOBALS['Language']->getText('file_admin_editpackages', 'cannot_hide'));
+                $package_data['status_id'] = FRSPackage::STATUS_ACTIVE;
             }
         }
         $package->setName($package_data['name']);
@@ -163,7 +163,7 @@ class FRSPackageController
         $override_collection = $this->permission_manager->savePermissions($project, $package->getPackageID(), FRSPackage::PERM_READ, $ugroups);
         $override_collection->emitFeedback('');
 
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_updated', $package->getName()));
+        $GLOBALS['Response']->addFeedback(\Feedback::SUCCESS, $GLOBALS['Language']->getText('file_admin_editpackages', 'p_updated', $package->getName()));
         $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
     }
 
