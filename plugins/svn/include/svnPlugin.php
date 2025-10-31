@@ -1195,7 +1195,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return $params === ['group_id']
             || (
                 $params === ['action', 'group_id', 'repo_id']
-                && in_array($query['action'], ['display-repository-delete'], true)
+                && in_array($query['action'], ['display-repository-delete', 'hooks-config'], true)
             );
     }
 

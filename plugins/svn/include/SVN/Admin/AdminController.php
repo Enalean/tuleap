@@ -380,7 +380,13 @@ class AdminController
         ];
         $this->hook_config_updator->updateHookConfig($repository, $hook_config);
 
-        $this->displayHooksConfig($service, $request);
+        $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
+            [
+                'group_id' => $request->getProject()->getid(),
+                'repo_id' => $request->get('repo_id'),
+                'action' => 'hooks-config',
+            ]
+        ));
     }
 
     public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request): void
