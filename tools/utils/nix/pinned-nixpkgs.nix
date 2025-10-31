@@ -24,6 +24,19 @@ let
       });
     }
   );
+  # Overlay to move to Go 1.25.3, to be removed after the next pin upgrade
+  nixpkgs2505 =
+    (import (fetchTarball {
+      url = "https://github.com/NixOS/nixpkgs/archive/daf6dc47aa4b44791372d6139ab7b25269184d55.tar.gz";
+      sha256 = "0ddhdypgkg4cs5zy7y5wjl62y8nrfx7xh6b95l4rkbpnl2xzn5f3";
+    }))
+      { };
+  overlayGo1253 = (
+    final: prev: {
+      go_latest = nixpkgs2505.go_1_25;
+      buildGoLatestModule = nixpkgs2505.buildGo125Module;
+    }
+  );
   nixpkgsJson = builtins.fromJSON (builtins.readFile ./nixpkgs-pin.json);
   pinnedNixpkgs =
     import
@@ -35,6 +48,7 @@ let
         overlays = [
           oxalicaRustOverlay
           overlayCreateRepoFix
+          overlayGo1253
         ];
       };
 in

@@ -4,6 +4,6 @@
 
 pkgs.mkShell {
   buildInputs = [
-    pkgs.go_1_24
+    pkgs.go_latest
   ];
 }

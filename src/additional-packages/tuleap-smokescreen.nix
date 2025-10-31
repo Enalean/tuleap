@@ -4,7 +4,7 @@
 }:
 
 let
-  tuleapSmokescreenBin = pkgs.buildGoModule {
+  tuleapSmokescreenBin = pkgs.buildGoLatestModule {
     name = "tuleap-smokescreen-bin";
 
     src = ./tuleap-smokescreen;

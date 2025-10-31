@@ -4,7 +4,7 @@
 }:
 
 let
-  tuleapMercureBin = pkgs.buildGoModule {
+  tuleapMercureBin = pkgs.buildGoLatestModule {
     name = "tuleap-mercure-bin";
 
     src = ./tuleap-mercure;
