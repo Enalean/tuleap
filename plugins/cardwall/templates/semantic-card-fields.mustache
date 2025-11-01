@@ -1,59 +1,68 @@
 {{# fields_presenter }}
-    <h3> {{# dgettext }} tuleap-cardwall | Fields {{/ dgettext }}</h3>
-
     {{^ has_field }}
         {{# dgettext }} tuleap-cardwall | There aren't any fields added to cards yet.{{/ dgettext }}
     {{/ has_field }}
 
     {{# has_field }}
-        {{# dgettext }} tuleap-cardwall | The following fields are added to the cards{{/ dgettext }}
-    {{/ has_field }}
+        <p>{{# dgettext }} tuleap-cardwall | The following fields are added to the cards:{{/ dgettext }}</p>
 
-    <blockquote>
-        <table>
+        <table class="tlp-table">
+            <thead>
+                <tr>
+                    <th>{{# dgettext }} tuleap-cardwall | Field{{/ dgettext }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
             {{# card_fields }}
                 <tr>
                     <td> {{ name }} </td>
-                    <td>
-                        <form method="post" id="tracker-semantic-removal-action" action="{{ semantic_url }}">
+                    <td class="tlp-table-cell-actions">
+                        <form method="post" action="{{ semantic_url }}">
                             {{# csrf_token }}
                                 {{> csrf_token_input }}
                             {{/ csrf_token }}
                             <input type="hidden" name="remove" value="{{ id }}">
-                            <button type="submit" class="btn btn-link">
-                                <img
-                                        src="/themes/FlamingParrot/images/ic/cross.png"
-                                        alt="{{# dgettext }} tuleap-cardwall | The following fields are added to the cards{{/ dgettext }}"
-                                        border="0"/>
+                            <button type="submit" class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button">
+                                <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                                {{# dgettext }} tuleap-cardwall | Remove{{/ dgettext }}
                             </button>
                         </form>
                     </td>
                 </tr>
             {{/ card_fields }}
+            </tbody>
         </table>
-    </blockquote>
+    {{/ has_field }}
 
-    {{^ has_at_least_one_field_selectabe_for_card }}
-        <em>{{# dgettext }} tuleap-cardwall | There is no more field that can be added to the cards.{{/ dgettext }}</em>
-    {{/has_at_least_one_field_selectabe_for_card}}
+    <div class="tlp-pane-section-submit semantic-card-add-section">
+        {{^ has_at_least_one_field_selectabe_for_card }}
+            <p class="tlp-text-muted">{{# dgettext }} tuleap-cardwall | There is no more field that can be added to the cards.{{/ dgettext }}</p>
+        {{/has_at_least_one_field_selectabe_for_card}}
 
-    {{# has_at_least_one_field_selectabe_for_card }}
+        {{# has_at_least_one_field_selectabe_for_card }}
 
-        <form action="{{ semantic_url }}" method="POST">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-            <p> {{# dgettext }} tuleap-cardwall | Add a field to the cards{{/ dgettext }}
-                <select name="field">
-                    {{# possible_fields }}
-                        {{{ . }}}
-                    {{/ possible_fields }}
-                </select>
-                <input type="submit"
-                       class="btn btn-primary btn-submit-semantic-card"
-                       name="add"
-                       value="{{# dgettext }} tuleap-cardwall | Submit{{/ dgettext }}"/>
-            </p>
-        </form>
-    {{/has_at_least_one_field_selectabe_for_card}}
+            <form action="{{ semantic_url }}" method="POST">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+
+                <div class="tlp-form-element tlp-form-element-append">
+                    <select name="field" class="tlp-select tlp-select-adjusted">
+                        {{# possible_fields }}
+                            {{{ . }}}
+                        {{/ possible_fields }}
+                    </select>
+                    <button type="submit"
+                           class="tlp-append tlp-button-primary"
+                           name="add"
+                           value="1"
+                    >
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }} tuleap-cardwall | Add a field to the cards{{/ dgettext }}
+                    </button>
+                </div>
+            </form>
+        {{/has_at_least_one_field_selectabe_for_card}}
+    </div>
 {{/ fields_presenter }}

@@ -1,0 +1,129 @@
+/**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.semantic-card-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--tlp-medium-spacing);
+}
+
+.semantic-card-add-section {
+    justify-content: left;
+}
+
+.semantic-card-preview-pane {
+    height: fit-content;
+}
+
+.card-preview {
+    display: flex;
+    position: relative;
+    width: 360px;
+    margin: 0 0 10px;
+    overflow: hidden;
+    border: 1px solid #e3e5ed;
+    border-radius: var(--tlp-medium-radius);
+    background: #ffffff;
+}
+
+.card-preview-content-fields {
+    width: 100%;
+}
+
+.card-preview-type {
+    flex: 0 0 auto;
+    width: 4px;
+    border-top-left-radius: var(--tlp-medium-radius);
+    border-bottom-left-radius: var(--tlp-medium-radius);
+    background: #5d5d5d;
+}
+
+.card-preview-content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.card-preview-blindness {
+    position: absolute;
+    top: 40px;
+    right: 6px;
+    flex: 0 0 auto;
+    align-self: stretch;
+    width: 20px;
+    height: 100%;
+}
+
+.card-preview-id {
+    display: block;
+    flex: 0 0 auto;
+    padding: 10px;
+    color: #747474;
+    font-size: 12px;
+}
+
+.card-preview-fa-clock-o {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #747474;
+    font-size: 12px;
+}
+
+.card-preview-title {
+    display: block;
+    flex: 1 1 auto;
+    margin: 0 0 30px;
+    padding: 10px 10px 10px 0;
+    font-size: 16px;
+    line-height: 18px;
+    text-align: center;
+    word-break: break-all;
+
+    &.card-preview-title-accessibility {
+        margin: 0 20px 30px;
+    }
+}
+
+.card-content-fields {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.card-preview-fields {
+    padding: 0 40px 0 10px;
+    font-size: 12px;
+
+    > .card-preview-field-label {
+        display: inline-block;
+        margin: 0 3px 5px 0;
+        color: #747474;
+    }
+
+    > .card-preview-field-value {
+        display: inline-block;
+        margin: 0 10px 5px 0;
+    }
+}
+
+.card-preview-info {
+    margin: 0 0 20px;
+}

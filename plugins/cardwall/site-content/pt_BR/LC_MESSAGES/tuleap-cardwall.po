@@ -51,13 +51,13 @@ msgstr ""
 msgid "Card design is the same as Kanban."
 msgstr ""
 
+msgid "Card fields"
+msgstr ""
+
 msgid "Cards"
 msgstr ""
 
 msgid "Cardwall disabled"
-msgstr ""
-
-msgid "Choose a field to define card background color"
 msgstr ""
 
 msgid "Choose a field..."
@@ -92,10 +92,13 @@ msgstr ""
 msgid "Expand cards"
 msgstr ""
 
+msgid "Field"
+msgstr ""
+
 msgid "Field not found"
 msgstr ""
 
-msgid "Fields"
+msgid "Field to define card background color"
 msgstr ""
 
 msgid "Fullscreen"
@@ -186,6 +189,9 @@ msgstr ""
 msgid "Provided value %1$s is not valid. Skipping mapping value."
 msgstr ""
 
+msgid "Remove"
+msgstr ""
+
 msgid "Remove background color"
 msgstr ""
 
@@ -214,9 +220,6 @@ msgstr ""
 
 #, php-format
 msgid "The field used to determine background color is now %s"
-msgstr ""
-
-msgid "The following fields are added to the cards"
 msgstr ""
 
 msgid "The following fields are added to the cards:"
@@ -268,12 +271,6 @@ msgstr ""
 
 msgid "details"
 msgstr ""
-
-msgid "go back to semantic overview"
-msgstr ""
-
-msgid "or"
-msgstr "ou"
 
 msgid "point remaining"
 msgstr ""

@@ -1,13 +1,46 @@
-<div class="semantic-card-administration-form">
-    <div class="semantic-card-administration">
-        {{> semantic-card-fields }}
+<div class="tlp-framed">
+    <p>
+        <a href="{{ back_url }}" class="back-to-semantics">
+            <i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-agiledashboard | Back to semantics {{/ dgettext }}
+        </a>
+    </p>
+    <div class="semantic-card-preview">
+        <div>
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">{{# dgettext }} tuleap-cardwall | Card fields {{/ dgettext }}</h1>
+                    </div>
+                    <div class="tlp-pane-section">
+                        {{> semantic-card-fields }}
+                    </div>
+                </div>
+            </section>
 
-        {{> semantic-card-background-selector }}
-    </div>
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">{{# dgettext }} tuleap-cardwall | Background color {{/ dgettext }}</h1>
+                    </div>
+                <div class="tlp-pane-section">
+                    {{> semantic-card-background-selector }}
+                </div>
+            </div>
+        </div>
 
-    <div class="semantic-card-administration-preview">
-        {{> semantic-card-preview }}
+        <section class="tlp-pane semantic-card-preview-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        {{# dgettext }} tuleap-cardwall | Preview of the card {{/ dgettext }}
+                    </h1>
+                </div>
+
+                <div class="tlp-pane-section">
+                    {{> semantic-card-preview }}
+                </div>
+            </div>
+        </section>
     </div>
 </div>
-
-<p><a href="{{ back_url }}">&laquo; {{# dgettext }} tuleap-cardwall | go back to semantic overview {{/ dgettext }}</a></p>

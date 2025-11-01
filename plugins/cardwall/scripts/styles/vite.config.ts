@@ -30,6 +30,10 @@ export default vite.defineAppConfig(
             rollupOptions: {
                 input: {
                     "style-fp": path.resolve(__dirname, "themes/FlamingParrot/style.scss"),
+                    "card-preview": path.resolve(
+                        __dirname,
+                        "themes/BurningParrot/card-preview.scss",
+                    ),
                 },
             },
         },
