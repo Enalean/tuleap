@@ -233,8 +233,6 @@ file_file_utils	frs_admins_submit_button	Save access controls
 file_file_utils	updated_permissions	Permissions updated
 file_file_utils	write_title	Administrators
 file_file_utils	no_data_selected	No data selected.
-file_file_utils	toolbar_admin	Admin
-file_file_utils	toolbar_help	Help
 file_file_utils	error_data_incorrect	Data seem incorrect.
 #
 #-----------------------------------------------

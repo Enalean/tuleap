@@ -26,6 +26,7 @@ require_once __DIR__ . '/../file_utils.php';
 
 use Tuleap\FRS\ToolbarPresenter;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 $request = HTTPRequest::instance();
 
@@ -140,7 +141,7 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
 $sql    = 'SELECT * FROM frs_processor WHERE group_id=' . db_ei($group_id) . ' OR group_id=100 ORDER BY `rank`';
 $result = db_query($sql);
 
-$service->displayFRSHeader($project, _('Files Administration'));
+$service->displayFRSHeader($project, _('Files Administration'), new BreadCrumbCollection());
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
 ?>

@@ -28,6 +28,9 @@ use Tuleap\FRS\UploadedLinkPresentersBuilder;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\FRS\UploadedLinksTablePresenter;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 
@@ -73,7 +76,11 @@ if (! ($service instanceof ServiceFile)) {
         )
     );
 }
-$service->displayFRSHeader($project, $release->getName());
+$breadcrumbs = new BreadCrumbCollection();
+$breadcrumbs->addBreadCrumb(new BreadCrumb(
+    new BreadCrumbLink($release->getPackage()->getName(), '/file/' . $release->getGroupID() . '/package/' . $release->getPackageID()),
+));
+$service->displayFRSHeader($project, $release->getName(), $breadcrumbs);
 
 $hp = Codendi_HTMLPurifier::instance();
 

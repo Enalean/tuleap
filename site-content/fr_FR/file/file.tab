@@ -226,8 +226,6 @@ file_file_utils	frs_admins_submit_button	Sauvegarder les droits d'accès
 file_file_utils	updated_permissions	Les permissions ont été mises à jour
 file_file_utils	write_title	Administrateurs
 file_file_utils	no_data_selected	Aucune donnée selectionnée.
-file_file_utils	toolbar_admin	Admin
-file_file_utils	toolbar_help	Aide
 file_file_utils	error_data_incorrect	Les données semblent incorrectes.
 #
 #-----------------------------------------------

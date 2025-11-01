@@ -61,8 +61,10 @@ class LicenseAgreementControllersHelperTest extends TestCase
     {
         $this->current_user = new PFUser(['language_id' => 'en_US']);
 
-        $this->service_file = $this->createConfiguredMock(ServiceFile::class, ['displayFRSHeader' => 'foo']);
-        $this->project      = $this->createConfiguredMock(Project::class, ['isError' => false, 'getID' => '101']);
+        $this->service_file = $this->createMock(\ServiceFile::class);
+        $this->service_file->method('displayFRSHeader');
+
+        $this->project = $this->createConfiguredMock(Project::class, ['isError' => false, 'getID' => '101']);
 
         $this->renderer_factory = $this->createMock(TemplateRendererFactory::class);
 

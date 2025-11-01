@@ -176,14 +176,13 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         return $packages;
     }
 
-    public function displayFRSHeader(Project $project, $title)
+    public function displayFRSHeader(Project $project, string $title, BreadCrumbCollection $breadcrumbs): void
     {
         $frs_breadcrumb = new BreadCrumb(
             new BreadCrumbLink($this->getInternationalizedName(), $this->getUrl()),
         );
 
-        $breadcrumbs = new BreadCrumbCollection();
-        $breadcrumbs->addBreadCrumb($frs_breadcrumb);
+        $breadcrumbs->addFirst($frs_breadcrumb);
 
         $user = UserManager::instance()->getCurrentUser();
         if ($this->getFrsPermissionManager()->isAdmin($project, $user)) {

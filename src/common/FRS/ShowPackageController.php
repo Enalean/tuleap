@@ -31,6 +31,7 @@ use Project;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -111,7 +112,7 @@ final readonly class ShowPackageController implements DispatchableWithBurningPar
         ));
         $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
 
-        $this->getFileService($project)->displayFRSHeader($project, $presenter->name);
+        $this->getFileService($project)->displayFRSHeader($project, $presenter->name, new BreadCrumbCollection());
         $this->renderer_factory
             ->getRenderer(__DIR__)
             ->renderToPage(

@@ -24,6 +24,7 @@ namespace Tuleap\FRS;
 use TemplateRendererFactory;
 use Project;
 use Service;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use User_UGroup;
 use Feedback;
 use PFUser;
@@ -145,7 +146,7 @@ class PermissionController extends BaseFrsPresenter
         $toolbar_presenter->setPermissionIsActive();
         $toolbar_presenter->displaySectionNavigation();
 
-        $service->displayFRSHeader($project, $title);
+        $service->displayFRSHeader($project, $title, new BreadCrumbCollection());
         $renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
     }
 

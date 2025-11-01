@@ -1,55 +1,45 @@
-<div class="frs-release-block">
-    <h4 class="frs-package-name">
-        <i class="fa fa-archive" aria-hidden="true"></i>
-        <a ng-href="/file/?group_id={{ $ctrl.project_id }}">
-            <span>{{ $ctrl.translated_package_name }}</span>
+<h1 class="project-administration-title">{{ $ctrl.release.name }}</h1>
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        <a
+            class="tlp-tab"
+            ui-sref="files"
+            ui-sref-active="tlp-tab-active"
+            role="link"
+            translate
+        >
+            Release Note &amp; Files
         </a>
-    </h4>
-    <h1>
-        <i class="fas fa-level-up-alt fa-rotate-90 frs-release-icon" aria-hidden="true"></i>
-        <span>{{ $ctrl.release.name }}</span>
-    </h1>
+        <a
+            class="tlp-tab"
+            ng-if="! $ctrl.error_no_release_artifact"
+            ui-sref="linked-artifacts"
+            ui-sref-active="tlp-tab-active"
+            role="link"
+            translate
+            data-test="linked-artifacts"
+        >
+            Linked Artifacts
+        </a>
+        <a
+            ng-if="$ctrl.milestone"
+            class="tlp-tab"
+            ng-href="/plugins/agiledashboard/?group_id={{ $ctrl.milestone.project.id }}&planning_id={{ $ctrl.milestone.planning.id }}&action=show&aid={{ $ctrl.milestone.id }}"
+        >
+            <span translate>Milestone</span>
+            <i class="tlp-tab-icon fas fa-external-link-alt"></i>
+        </a>
+        <a
+            ng-href="/plugins/tracker/?aid={{ $ctrl.release.artifact.id }}"
+            ng-if="! $ctrl.error_no_release_artifact"
+            class="tlp-tab"
+        >
+            <span translate>Artifact</span>
+            <i class="tlp-tab-icon fas fa-external-link-alt"></i>
+        </a>
+    </nav>
 </div>
 
-<nav class="tlp-tabs">
-    <a
-        class="tlp-tab"
-        ui-sref="files"
-        ui-sref-active="tlp-tab-active"
-        role="link"
-        translate
-    >
-        Release Note &amp; Files
-    </a>
-    <a
-        class="tlp-tab"
-        ng-if="! $ctrl.error_no_release_artifact"
-        ui-sref="linked-artifacts"
-        ui-sref-active="tlp-tab-active"
-        role="link"
-        translate
-        data-test="linked-artifacts"
-    >
-        Linked Artifacts
-    </a>
-    <a
-        ng-if="$ctrl.milestone"
-        class="tlp-tab"
-        ng-href="/plugins/agiledashboard/?group_id={{ $ctrl.milestone.project.id }}&planning_id={{ $ctrl.milestone.planning.id }}&action=show&aid={{ $ctrl.milestone.id }}"
-    >
-        <span translate>Milestone</span>
-        <i class="tlp-tab-icon fas fa-external-link-alt"></i>
-    </a>
-    <a
-        ng-href="/plugins/tracker/?aid={{ $ctrl.release.artifact.id }}"
-        ng-if="! $ctrl.error_no_release_artifact"
-        class="tlp-tab"
-    >
-        <span translate>Artifact</span>
-        <i class="tlp-tab-icon fas fa-external-link-alt"></i>
-    </a>
-</nav>
-
-<div class="tlp-framed-horizontally">
+<div class="tlp-framed">
     <ui-view></ui-view>
 </div>

@@ -43,10 +43,6 @@ msgstr "Version"
 msgid "File release system"
 msgstr "Gestionnaire de livrable"
 
-#, php-format
-msgid "Release %s - Release Notes"
-msgstr "Version %s - Notes"
-
 msgid "Release not found."
 msgstr "La version n'existe pas."
 
