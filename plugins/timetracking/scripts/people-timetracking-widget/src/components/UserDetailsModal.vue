@@ -93,7 +93,6 @@
         </div>
         <div class="tlp-modal-footer">
             <button
-                id="button-close"
                 type="button"
                 data-dismiss="modal"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"

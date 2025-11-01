@@ -74,7 +74,6 @@
         </div>
         <div class="tlp-modal-footer">
             <button
-                id="button-close"
                 type="button"
                 data-dismiss="modal"
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
