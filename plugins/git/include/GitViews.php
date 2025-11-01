@@ -72,10 +72,9 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
     /**
      * REPOSITORY MANAGEMENT VIEW
      */
-    public function repoManagement()
+    public function repoManagement(GitRepository $repository, bool $is_burning_parrot)
     {
-        $params     = $this->getData();
-        $repository = $params['repository'];
+        $params = $this->getData();
 
         $this->header_renderer->renderRepositorySettingsHeader(
             $this->request,
@@ -84,7 +83,7 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
             $repository
         );
 
-        echo '<h1 class="almost-tlp-title administration-title">' . Codendi_HTMLPurifier::instance()->purify($repository->getName()) . ' - ' . $GLOBALS['Language']->getText('global', 'Settings') . '</h1>';
+        echo '<h1 class="project-administration-title">' . Codendi_HTMLPurifier::instance()->purify($repository->getName()) . ' - ' . $GLOBALS['Language']->getText('global', 'Settings') . '</h1>';
         $repo_management_view = new GitViews_RepoManagement(
             $repository,
             $this->controller->getRequest(),
@@ -102,7 +101,11 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->project_manager,
             $this->closure_verifier,
         );
-        $repo_management_view->display();
+        if ($is_burning_parrot) {
+            $repo_management_view->display();
+        } else {
+            $repo_management_view->displayFlamingParrot();
+        }
 
         $this->footer();
     }

@@ -341,11 +341,11 @@ msgstr ""
 msgid "Date"
 msgstr "Date"
 
+msgid "Default branch"
+msgstr "Branche par défaut"
+
 msgid "Default branch successfully updated"
 msgstr "La branche par défaut a été mise à jour"
-
-msgid "Default branch:"
-msgstr "Branche par défaut : "
 
 msgid "Default permissions"
 msgstr "Permissions par défaut"
@@ -1324,6 +1324,9 @@ msgstr ""
 
 msgid "Time"
 msgstr "Date"
+
+msgid "Token"
+msgstr "Jeton"
 
 msgid "Token for Continuous Integration"
 msgstr "Jeton pour les outils d'intégration continues"

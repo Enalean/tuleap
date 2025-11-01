@@ -133,32 +133,6 @@ fieldset.gerrit_disconnect {
     width: 80px;
 }
 
-#editor_textarea {
-    width: 100%;
-    height: 450px;
-    padding-right: 0;
-    padding-left: 0;
-    border-right: 0;
-    border-left: 0;
-    resize: none;
-}
-
-#description_commit {
-    resize: none;
-}
-
-#cancel {
-    margin-right: 5px;
-}
-
-#commit_form {
-    padding-left: 5px;
-}
-
-.reserved-hostname-help {
-    font-size: 0.8em;
-}
-
 /* stylelint-enable */
 
 .git-admin-tabs {

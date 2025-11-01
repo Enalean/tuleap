@@ -1,23 +1,33 @@
-<h2>{{# dgettext }}tuleap-pullrequest | Pull requests{{/ dgettext }}</h2>
-<form method="POST" action="/plugins/pullrequest/repository-settings">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <input type="hidden" name="group_id" value="{{ project_id }}" />
-    <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }}tuleap-pullrequest | Pull requests{{/ dgettext }}</h1>
+        </div>
+        <form method="POST" action="/plugins/pullrequest/repository-settings" class="tlp-pane-section">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <input type="hidden" name="group_id" value="{{ project_id }}" />
+            <input type="hidden" name="repository_id" value="{{ repository_id }}" />
 
-    <h3>{{# dgettext }}tuleap-pullrequest | Merge{{/ dgettext }}</h3>
+            <div class="tlp-form-element">
+                <label class="tlp-label">{{# dgettext }}tuleap-pullrequest | Merge{{/ dgettext }}</label>
 
-    <label class="radio">
-        <input type="radio" name="is_merge_commit_allowed" value="1" {{# is_merge_commit_allowed }}checked{{/ is_merge_commit_allowed }}>
-        {{# dgettext }}tuleap-pullrequest | Default (Will fast-forward when possible, fallback to merge when not possible){{/ dgettext }}
-    </label>
-    <label class="radio">
-        <input type="radio" name="is_merge_commit_allowed" value="0" {{^ is_merge_commit_allowed }}checked{{/ is_merge_commit_allowed }}>
-        {{# dgettext }}tuleap-pullrequest | Fast-forward only{{/ dgettext }}
-    </label>
+                <label class="tlp-label tlp-radio">
+                    <input type="radio" name="is_merge_commit_allowed" value="1" {{# is_merge_commit_allowed }}checked{{/ is_merge_commit_allowed }}>
+                    {{# dgettext }}tuleap-pullrequest | Default (Will fast-forward when possible, fallback to merge when not possible){{/ dgettext }}
+                </label>
+                <label class="tlp-label tlp-radio">
+                    <input type="radio" name="is_merge_commit_allowed" value="0" {{^ is_merge_commit_allowed }}checked{{/ is_merge_commit_allowed }}>
+                    {{# dgettext }}tuleap-pullrequest | Fast-forward only{{/ dgettext }}
+                </label>
+            </div>
 
-    <button type="submit" class="btn btn-primary">
-        {{# gettext }}Save modifications{{/gettext}}
-    </button>
-</form>
+            <div class="tlp-pane-section-submit">
+                <button type="submit" class="tlp-button-primary">
+                    {{# gettext }}Save modifications{{/gettext}}
+                </button>
+            </div>
+        </form>
+    </div>
+</section>

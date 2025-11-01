@@ -46,11 +46,13 @@ class Delete extends Pane
     #[\Override]
     public function getContent()
     {
-        $html  = '';
-        $html .= '<h2>' . dgettext('tuleap-git', 'Delete this repository') . '</h2>';
-
-        $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=' . $this->repository->getProjectId() . '">';
-        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';
+        $html = '<section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">' . dgettext('tuleap-git', 'Delete this repository') . '</h1>
+                </div>
+                <form class="tlp-pane-section" method="POST" action="/plugins/git/?group_id=' . $this->repository->getProjectId() . '">
+                    <input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';
 
         if (! $this->repository->isMigratedToGerrit()) {
             if ($this->request->get('confirm_deletion')) {
@@ -61,7 +63,11 @@ class Delete extends Pane
         } else {
             $html .= $this->fetchGerritMigtatedInfo();
         }
-        $html .= '</form>';
+
+        $html .= '</form>
+            </div>
+        </section>';
+
         return $html;
     }
 
@@ -72,30 +78,30 @@ class Delete extends Pane
         $html    .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
         $disabled = '';
         if (! $this->repository->canBeDeleted()) {
-            $html    .= '<p>' . 'You cannot delete' . '</p>';
+            $html    .= '<div class="tlp-alert-danger">' . 'You cannot delete' . '</div>';
             $disabled = 'readonly="readonly" disabled="disabled"';
         }
-        $html .= '<input type="submit" class="btn btn-danger" name="confirm_deletion" value="' . dgettext('tuleap-git', 'Delete this repository') . '" ' . $disabled . 'data-test="confirm-repository-deletion-button"/>';
+        $html .= '<input type="submit" class="tlp-button-danger" name="confirm_deletion" value="' . dgettext('tuleap-git', 'Delete this repository') . '" ' . $disabled . 'data-test="confirm-repository-deletion-button"/>';
         return $html;
     }
 
     private function fetchConfirmDeletionButton()
     {
         $html    = '';
-        $html   .= '<div class="alert alert-block">';
+        $html   .= '<div class="tlp-alert-warning">';
         $html   .= '<h4>' . $GLOBALS['Language']->getText('global', 'warning') . '</h4>';
         $html   .= '<p>' . sprintf(dgettext('tuleap-git', 'You are about to permanently delete the repository <strong>%1$s</strong>. This operation <strong>cannot</strong> be undone. Do you confirm the deletion?'), $this->repository->getFullName()) . '</p>';
         $html   .= '<p>';
         $html   .= '<input type="hidden" id="action" name="action" value="del" />';
         $html   .= $this->csrf_token()->fetchHTMLInput();
-        $html   .= '<input type="submit" class="btn btn-danger" id="submit" name="submit" value="' . dgettext('tuleap-git', 'Yes') . '"data-test="deletion-confirmation-button"/> ';
+        $html   .= '<input type="submit" class="tlp-button-danger" id="submit" name="submit" value="' . dgettext('tuleap-git', 'Yes') . '"data-test="deletion-confirmation-button"/> ';
         $onclick = 'onclick="window.location=\'/plugins/git/?' . http_build_query([
             'action'   => 'repo_management',
             'pane'     => $this->getIdentifier(),
             'group_id' => $this->repository->getProjectId(),
             'repo_id'  => $this->repository->getId(),
         ]) . '\'"';
-        $html   .= '<input type="button" class="btn" value="' . dgettext('tuleap-git', 'No') . '" ' . $onclick . '/>';
+        $html   .= '<input type="button" class="tlp-button-danger tlp-button-outline" value="' . dgettext('tuleap-git', 'No') . '" ' . $onclick . '/>';
         $html   .= '</p>';
         $html   .= '</div>';
         return $html;
@@ -103,7 +109,7 @@ class Delete extends Pane
 
     private function fetchGerritMigtatedInfo()
     {
-        $html = '<div class="alert alert-info">' . dgettext('tuleap-git', 'The repository cannot be deleted until it is disconnected from Gerrit') . '</div>';
+        $html = '<div class="tlp-alert-info">' . dgettext('tuleap-git', 'The repository cannot be deleted until it is disconnected from Gerrit') . '</div>';
 
         return $html;
     }
