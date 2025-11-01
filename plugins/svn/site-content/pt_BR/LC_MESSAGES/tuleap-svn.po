@@ -353,7 +353,7 @@ msgstr ""
 msgid "Save the subject"
 msgstr ""
 
-msgid "Saved versions:"
+msgid "Saved versions"
 msgstr ""
 
 msgid "Select a version"
@@ -560,11 +560,11 @@ msgid ""
 msgstr ""
 
 #, php-format
-msgid "You are using a previous version (#%1$s):"
+msgid "You are using a previous version (#%1$s)"
 msgstr ""
 
 #, php-format
-msgid "You are using the last version (#%1$s):"
+msgid "You are using the last version (#%1$s)"
 msgstr ""
 
 msgid "You can not browse the repository without being logged."

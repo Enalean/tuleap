@@ -82,15 +82,15 @@ class AccessControlPresenter extends BaseAdminPresenter
         $this->button_new_version_label = dgettext('tuleap-svn', 'Save a new version');
         $this->select_version           = dgettext('tuleap-svn', 'Select a version');
         $this->saved_on                 = dgettext('tuleap-svn', 'saved on');
-        $this->saved_versions           = dgettext('tuleap-svn', 'Saved versions:');
+        $this->saved_versions           = dgettext('tuleap-svn', 'Saved versions');
         $this->empty_version            = dgettext('tuleap-svn', 'This version is empty');
 
         $this->sections = new SectionsPresenter($repository);
 
-        $this->current_version_title = sprintf(dgettext('tuleap-svn', 'You are using the last version (#%1$s):'), $current_version_number);
+        $this->current_version_title = sprintf(dgettext('tuleap-svn', 'You are using the last version (#%1$s)'), $current_version_number);
 
         if ($current_version_number !== $last_version_number) {
-            $this->current_version_title = sprintf(dgettext('tuleap-svn', 'You are using a previous version (#%1$s):'), $current_version_number);
+            $this->current_version_title = sprintf(dgettext('tuleap-svn', 'You are using a previous version (#%1$s)'), $current_version_number);
         }
     }
 }
