@@ -59,6 +59,10 @@ header.pinned .logo-svg-link {
     fill: var(--tlp-dark-color);
 }
 
+.logo-svg-fill-default-text-color-invert {
+    fill: var(--tlp-white-color);
+}
+
 .sidebar > .logo-svg-link {
     width: global-variables.$sidebar-expanded-width;
     height: 80px;
@@ -74,8 +78,14 @@ header.pinned .logo-svg-link {
 
 .sidebar,
 .in-project-without-sidebar > .header-container {
-    > .logo-svg-link .logo-svg-fill-default-text-color {
-        fill: var(--tlp-white-color);
+    > .logo-svg-link {
+        .logo-svg-fill-default-text-color {
+            fill: var(--tlp-white-color);
+        }
+
+        .logo-svg-fill-default-text-color-invert {
+            fill: var(--tlp-dark-color);
+        }
     }
 }
 
