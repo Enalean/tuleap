@@ -1,67 +1,78 @@
-<h2 class="almost-tlp-title">{{# dgettext }} tuleap-timetracking | Time tracking {{/ dgettext }}</h2>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }} tuleap-timetracking | Time tracking {{/ dgettext }}</h1>
+            </div>
 
-<form action="{{ form_url }}" id="timetracking-admin-form" data-test="timetracking-admin-form" method="POST">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
+            <form action="{{ form_url }}" data-test="timetracking-admin-form" class="tlp-pane-section" method="POST">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
 
-    <div id="timetracking-admin-enable">
-        <label class="checkbox" for="enable_timetracking">
-            <input type="checkbox"
-                   id="enable_timetracking"
-                   name="enable_timetracking"
-                   data-test="enable-timetracking"
-                {{# is_timetracking_enabled }} checked="checked" {{/ is_timetracking_enabled }}
-            /> {{# dgettext }} tuleap-timetracking | Enable time tracking for this tracker {{/ dgettext }}
-        </label>
-    </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox" for="enable_timetracking">
+                        <input type="checkbox"
+                               id="enable_timetracking"
+                               name="enable_timetracking"
+                               data-test="enable-timetracking"
+                            {{# is_timetracking_enabled }} checked="checked" {{/ is_timetracking_enabled }}
+                        /> {{# dgettext }} tuleap-timetracking | Enable time tracking for this tracker {{/ dgettext }}
+                    </label>
+                </div>
 
-    {{# is_timetracking_enabled }}
-        <h3>{{# dgettext }} tuleap-timetracking | Permissions {{/ dgettext }}</h3>
+                {{# is_timetracking_enabled }}
+                    <p>
+                        {{# dgettext }} tuleap-timetracking | Select user groups that will be able to add time and read all times in this tracker, in addition of site administrators, project administrators and tracker administrators. {{/ dgettext }}
+                    </p>
 
-        <p>
-            {{# dgettext }} tuleap-timetracking | Select user groups that will be able to add time and read all times in this tracker, in addition of site administrators, project administrators and tracker administrators. {{/ dgettext }}
-        </p>
-
-        <table class="table" id="timetracking-admin-rights">
-            <thead>
-                <tr>
-                    <th>{{# dgettext }} tuleap-timetracking | Read all tracker times {{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-timetracking | Add times {{/ dgettext }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <select
-                                title="{{# dgettext }} tuleap-timetracking | Read {{/ dgettext }}"
+                    <div class="timetracking-admin-permissions">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="timetracking-readers">
+                                {{# dgettext }} tuleap-timetracking | Read all tracker times {{/ dgettext }}
+                            </label>
+                            <select
                                 multiple="multiple"
                                 name="read_ugroups[]"
                                 size="8"
                                 data-test="timetracking-readers"
-                        >
-                            {{# read_ugroups }}
-                                <option value="{{ value }}" {{# selected }} selected {{/ selected }}>{{ label }}</option>
-                            {{/ read_ugroups }}
-                        </select>
-                    </td>
-                    <td>
-                        <select
+                                id="timetracking-readers"
+                                class="tlp-select tlp-select-adjusted"
+                            >
+                                {{# read_ugroups }}
+                                    <option value="{{ value }}" {{# selected }} selected {{/ selected }}>{{ label }}</option>
+                                {{/ read_ugroups }}
+                            </select>
+                        </div>
+
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="timetracking-writers">
+                                {{# dgettext }} tuleap-timetracking | Add times {{/ dgettext }}
+                            </label>
+                            <select
                                 title="{{# dgettext }} tuleap-timetracking | Write {{/ dgettext }}"
                                 multiple="multiple"
                                 name="write_ugroups[]"
                                 size="8"
                                 data-test="timetracking-writers"
-                        >
-                            {{# write_ugroups }}
-                                <option value="{{ value }}" {{# selected }} selected {{/ selected }}>{{ label }}</option>
-                            {{/ write_ugroups }}
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    {{/ is_timetracking_enabled }}
+                                id="timetracking-writers"
+                                class="tlp-select tlp-select-adjusted"
+                            >
+                                {{# write_ugroups }}
+                                    <option value="{{ value }}" {{# selected }} selected {{/ selected }}>{{ label }}</option>
+                                {{/ write_ugroups }}
+                            </select>
+                        </div>
+                    </div>
+                {{/ is_timetracking_enabled }}
 
-    <button type="submit" class="btn btn-primary" data-test="timetracking-save-configuration"><i class="far fa-save"></i> {{# dgettext }} tuleap-timetracking | Save modifications {{/ dgettext }}</button>
-</form>
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary" data-test="timetracking-save-configuration">
+                        <i class="fa-solid fa-save tlp-button-icon"></i>
+                        {{# dgettext }} tuleap-timetracking | Save modifications {{/ dgettext }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>

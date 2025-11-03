@@ -68,9 +68,6 @@ msgstr "Aucun temps n'a été enregistré"
 msgid "People timetracking"
 msgstr "Suivi du temps passé par les collaborateurs"
 
-msgid "Permissions"
-msgstr "Permissions"
-
 msgid "Permissions successfully saved."
 msgstr "Les permissions ont été enregistrées avec succès."
 

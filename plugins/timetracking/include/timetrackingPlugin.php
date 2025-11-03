@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
@@ -317,6 +318,29 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // phpcs:ignore
         if ($get_widget_event->getName() === PeopleTimetrackingWidget::NAME) {
             $get_widget_event->setWidget(new PeopleTimetrackingWidget(new \Tuleap\Timetracking\Widget\People\PeopleDao()));
         }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
+    {
+        if ($this->isInTimetrackingAdministration()) {
+            $event->setIsInBurningParrotCompatiblePage();
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventName(\trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE)]
+    public function trackerEventIncludeCssFile(array $params): void
+    {
+        if ($this->isInTimetrackingAdministration()) {
+            $params['include_tracker_css_file'] = true;
+        }
+    }
+
+    private function isInTimetrackingAdministration(): bool
+    {
+        return isset($_SERVER['REQUEST_URI'])
+            && str_starts_with($_SERVER['REQUEST_URI'], $this->getPluginPath())
+            && HTTPRequest::instance()->get('action') === 'admin-timetracking';
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

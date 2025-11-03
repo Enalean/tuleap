@@ -118,7 +118,7 @@ class AdminController
                 'themes/style.scss'
             )
         );
-        $tracker->displayAdminItemHeader(
+        $tracker->displayAdminItemHeaderBurningParrot(
             $this->tracker_manager,
             'timetracking',
             dgettext('tuleap-timetracking', 'Time tracking')
@@ -191,7 +191,7 @@ class AdminController
         );
 
         $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
+            Feedback::SUCCESS,
             dgettext('tuleap-timetracking', 'Time tracking is enabled for tracker.')
         );
     }
@@ -207,7 +207,7 @@ class AdminController
         );
 
         $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
+            Feedback::SUCCESS,
             dgettext('tuleap-timetracking', 'Time tracking is disabled for tracker.')
         );
     }
@@ -240,7 +240,7 @@ class AdminController
         );
 
         $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
+            Feedback::SUCCESS,
             dgettext('tuleap-timetracking', 'Permissions successfully saved.')
         );
     }

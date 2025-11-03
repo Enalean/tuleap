@@ -38,16 +38,9 @@
     vertical-align: middle;
 }
 
-#timetracking-admin-form {
-    padding: 20px 0 0;
-}
-
-#timetracking-admin-rights {
-    width: inherit;
-}
-
-#timetracking-admin-enable {
-    margin: 0 0 20px;
+.timetracking-admin-permissions {
+    display: flex;
+    gap: var(--tlp-large-spacing);
 }
 
 .total-timetracking-row {
@@ -71,22 +64,4 @@
     height: 22px;
     margin: 0 2px 0 0;
     vertical-align: middle;
-}
-
-.tracker-administration {
-    background: var(--tlp-background-color);
-
-    .main {
-        #feedback > ul {
-            margin: 0 20px 20px;
-        }
-    }
-}
-
-.tracker-administration .content {
-    padding: 0;
-}
-
-.tracker-administration-content {
-    margin: 20px;
 }
