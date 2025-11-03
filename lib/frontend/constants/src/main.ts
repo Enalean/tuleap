@@ -62,21 +62,7 @@ export type EmphasisColorName = "primary" | "secondary";
 export type UserInterfaceEmphasisColorName = UserInterfaceColorName | EmphasisColorName;
 export type ColorVariant = ColorName | UserInterfaceEmphasisColorName;
 
-export const USER_INTERFACE_COLORS: ReadonlyArray<UserInterfaceColorName> = [
-    "info",
-    "success",
-    "warning",
-    "danger",
-];
-
-export const USER_INTERFACE_EMPHASIS_COLORS: ReadonlyArray<UserInterfaceEmphasisColorName> = [
-    "primary",
-    "secondary",
-    ...USER_INTERFACE_COLORS,
-];
-
-export const COLOR_VARIANTS: ReadonlyArray<ColorVariant> = [
-    ...USER_INTERFACE_EMPHASIS_COLORS,
+export const COLOR_NAMES: ReadonlyArray<ColorName> = [
     "inca-silver",
     "chrome-silver",
     "firemist-silver",
@@ -101,6 +87,24 @@ export const COLOR_VARIANTS: ReadonlyArray<ColorVariant> = [
     "panther-pink",
     "peggy-pink",
     "flamingo-pink",
+];
+
+export const USER_INTERFACE_COLORS: ReadonlyArray<UserInterfaceColorName> = [
+    "info",
+    "success",
+    "warning",
+    "danger",
+];
+
+export const USER_INTERFACE_EMPHASIS_COLORS: ReadonlyArray<UserInterfaceEmphasisColorName> = [
+    "primary",
+    "secondary",
+    ...USER_INTERFACE_COLORS,
+];
+
+export const COLOR_VARIANTS: ReadonlyArray<ColorVariant> = [
+    ...USER_INTERFACE_EMPHASIS_COLORS,
+    ...COLOR_NAMES,
 ];
 
 export type UserHistoryEntryType = "artifact" | "kanban";

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2025-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -19,27 +19,37 @@
 
 <template>
     <i
-        v-bind:title="$gettext('This color is no longer supported, please select another one')"
-        class="fa-solid fa-triangle-exclamation text-error"
         v-if="is_unsupported_color && is_hexa_color"
+        class="fa-solid fa-triangle-exclamation text-error"
+        v-bind:title="$gettext('This color is no longer supported, please select another one')"
+        data-test="preview-unsupported-color"
     ></i>
-    <img class="old-color-picker-preview" v-bind:src="src" v-else-if="is_no_color" />
+    <img
+        v-else-if="is_no_color"
+        class="old-color-picker-preview"
+        v-bind:src="transparent_layer"
+        data-test="preview-no-color"
+    />
     <span
         v-else
         class="color-picker-preview"
-        v-bind:class="'colorpicker-preview-' + color"
+        v-bind:class="color_picker_class"
         v-bind:title="color"
+        data-test="preview-color"
     ></span>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { NO_COLOR } from "./colors";
+import transparent_layer from "../assets/layer-transparent.png";
 
-const props = defineProps<{ color: string; is_unsupported_color: boolean }>();
-const is_hexa_color = computed((): boolean => props.color.includes("#"));
-const src = "/themes/FlamingParrot/images/ic/layer-transparent.png";
+const props = defineProps<{
+    color: string;
+    is_unsupported_color: boolean;
+}>();
 
-const is_no_color = computed((): boolean => {
-    return props.color.length === 0;
-});
+const is_hexa_color = computed(() => props.color.includes("#"));
+const is_no_color = computed(() => props.color === NO_COLOR);
+const color_picker_class = computed(() => `color-picker-preview-${props.color}`);
 </script>

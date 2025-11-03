@@ -20,7 +20,8 @@
 
 /* global codendi:readonly ProtoMultiSelect:readonly $:readonly $$:readonly Ajax:readonly Effect:readonly */
 
-import { createColorPicker } from "@tuleap/plugin-tracker-color-picker";
+import { createColorPicker } from "@tuleap/tlp-color-picker";
+import { getAttributeOrThrow } from "@tuleap/dom";
 
 document.observe("dom:loaded", function () {
     initColorPicker();
@@ -44,7 +45,14 @@ document.observe("dom:loaded", function () {
     function initColorPicker() {
         $$(".tracker-admin-one-list-field").each(function (selected_element) {
             selected_element.select(".vue-colorpicker-mount-point").each(function (element) {
-                createColorPicker(element);
+                createColorPicker(element, {
+                    input_name: getAttributeOrThrow(element, "data-input-name"),
+                    input_id: getAttributeOrThrow(element, "data-input-id"),
+                    current_color: getAttributeOrThrow(element, "data-current-color"),
+                    is_unsupported_color: Boolean(
+                        getAttributeOrThrow(element, "data-is-unsupported-color"),
+                    ),
+                });
             });
         });
     }
@@ -246,7 +254,17 @@ document.observe("dom:loaded", function () {
                         selected_element
                             .select(".vue-colorpicker-mount-point")
                             .each(function (element) {
-                                createColorPicker(element);
+                                createColorPicker(element, {
+                                    input_name: getAttributeOrThrow(element, "data-input-name"),
+                                    input_id: getAttributeOrThrow(element, "data-input-id"),
+                                    current_color: getAttributeOrThrow(
+                                        element,
+                                        "data-current-color",
+                                    ),
+                                    is_unsupported_color: Boolean(
+                                        getAttributeOrThrow(element, "data-is-unsupported-color"),
+                                    ),
+                                });
                             });
 
                         //Richtext editor

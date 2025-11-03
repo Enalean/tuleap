@@ -21,6 +21,7 @@
     "@tuleap/svg-arrow-path": "workspace:^",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
+    "@tuleap/tlp-color-picker": "workspace:*",
     "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:^",
     "@tuleap/tlp-modal": "workspace:^",

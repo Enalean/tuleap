@@ -1,0 +1,39 @@
+import { Meta, Controls, Canvas } from "@storybook/addon-docs/blocks";
+import * as ColorPickerStories from "./tlp-color-picker.stories";
+
+<Meta of={ColorPickerStories}/>
+
+# ColorPicker
+
+Component allowing user to select a [tlp color](?path=/docs/tlp-visual-assets-colors--docs#business-colors).
+
+The selected value is available in a hidden input named along given options.
+
+<Canvas withToolbar={true} of={ColorPickerStories.ColorPicker}></Canvas>
+
+<Controls of={ColorPickerStories.ColorPicker}></Controls>
+
+```typescript
+import { createColorPicker } from "@tuleap/tlp-color-picker";
+
+const mount_point = document.querySelector("#mount-point");
+
+createColorPicker(mount_point, {
+    input_name: "color_name",
+    input_id: "color_name",
+    current_color: "clockwork-orange",
+    is_unsupported_color: false,
+});
+```
+
+```scss
+@use "pkg:@tuleap/tlp-color-picker";
+```
+
+## Legacy color (non-tlp)
+
+For items still using legacy color system (hexa colors)
+
+<Canvas withToolbar={true} of={ColorPickerStories.LegacyColor}></Canvas>
+
+<Controls of={ColorPickerStories.LegacyColor}></Controls>

@@ -78,6 +78,10 @@
         "switch-to": {
             "src": "src/scripts/switch-to/src",
             "po": "src/scripts/switch-to/po"
+        },
+        "tlp-color-picker": {
+            "src": "lib/frontend/tlp-color-picker/src",
+            "po": "lib/frontend/tlp-color-picker/po"
         }
     }
 }
