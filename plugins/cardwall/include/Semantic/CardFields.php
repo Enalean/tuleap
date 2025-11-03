@@ -32,6 +32,8 @@ use Tuleap\Cardwall\Semantic\CardsPreviewBuilder;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
 use Tuleap\Cardwall\Semantic\SingleCardPreviewDetailsBuilder;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
@@ -182,7 +184,19 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
         Codendi_Request $request,
         PFUser $current_user,
     ) {
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
+        $GLOBALS['HTML']->addCssAsset(CssViteAsset::fromFileName(
+            new IncludeViteAssets(
+                __DIR__ . '/../../scripts/styles/frontend-assets',
+                '/assets/cardwall/styles'
+            ),
+            'themes/BurningParrot/card-preview.scss',
+        ));
+
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
+        );
 
         $fields_presenter = $this->field_builder->build(
             $this->getFields(),
@@ -255,15 +269,19 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
         if ($request->get('add') && (int) $request->get('field')) {
             $this->getCSRFToken()->check();
             $this->addField($request->get('field'));
+            $GLOBALS['Response']->redirect($this->getUrl());
         } elseif ((int) $request->get('remove')) {
             $this->getCSRFToken()->check();
             $this->removeField($request->get('remove'));
+            $GLOBALS['Response']->redirect($this->getUrl());
         } elseif ($request->get('unset-background-color-semantic')) {
             $this->getCSRFToken()->check();
             $this->background_field_saver->unsetBackgroundColorSemantic($this->tracker);
+            $GLOBALS['Response']->redirect($this->getUrl());
         } elseif ($request->get('choose-color-field')) {
             $this->getCSRFToken()->check();
             $this->background_field_saver->chooseBackgroundColorField($this->tracker, $request->get('choose-color-field'));
+            $GLOBALS['Response']->redirect($this->getUrl());
         }
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }

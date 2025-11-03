@@ -56,7 +56,7 @@ class BackgroundColorFieldSaver
         $this->dao->save($tracker->getId(), $field_id);
 
         $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
+            Feedback::SUCCESS,
             sprintf(
                 dgettext('tuleap-cardwall', 'The field used to determine background color is now %s'),
                 $field->getLabel()
@@ -69,7 +69,7 @@ class BackgroundColorFieldSaver
         $this->dao->unsetBackgroundColorSemantic($tracker->getId());
 
         $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
+            Feedback::SUCCESS,
             dgettext('tuleap-cardwall', 'The field used to determine background color has been removed with success.')
         );
     }

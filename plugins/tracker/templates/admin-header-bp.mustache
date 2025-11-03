@@ -1,13 +1,13 @@
 <h1 class="tlp-framed-horizontally tracker-administration-title">{{# dgettext }}tuleap-tracker | %s administration | {{ tracker_name }}{{/ dgettext }}</h1>
 <div class="main-project-tabs">
     <nav class="tlp-tabs">
-        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements" class="tlp-tab">
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements" class="tlp-tab {{# is_fields_tab_active }}tlp-tab-active{{/ is_fields_tab_active }}">
             {{# dgettext }}tuleap-tracker | Fields{{/ dgettext }}
         </a>
-        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-semantic" class="tlp-tab">
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-semantic" class="tlp-tab {{# is_semantics_tab_active }}tlp-tab-active{{/ is_semantics_tab_active }}">
             {{# dgettext }}tuleap-tracker | Semantics{{/ dgettext }}
         </a>
-        <div class="tlp-tab">{{# dgettext }}tuleap-tracker | Permissions{{/ dgettext }} <i class="fa fa-caret-down"></i>
+        <div class="tlp-tab {{# is_permissions_tab_active }}tlp-tab-active{{/ is_permissions_tab_active }}">{{# dgettext }}tuleap-tracker | Permissions{{/ dgettext }} <i class="fa fa-caret-down"></i>
             <nav class="tlp-tab-menu">
                 <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker" class="tlp-tab-menu-item">
                     {{# dgettext }}tuleap-tracker | Tracker permissions{{/ dgettext }}
@@ -28,7 +28,7 @@
                 {{/ workflow_menu }}
             </nav>
         </div>
-        <a href="/plugins/tracker/notifications/{{ tracker_id }}/" class="tlp-tab">
+        <a href="/plugins/tracker/notifications/{{ tracker_id }}/" class="tlp-tab {{# is_notification_tab_active }}tlp-tab-active{{/ is_notification_tab_active }}">
             {{# dgettext }}tuleap-tracker | Notifications{{/ dgettext }}
         </a>
         <div class="tlp-tab"><i class="fa fa-bars"></i> <i class="fa fa-caret-down"></i>
