@@ -46,13 +46,11 @@ describe("FRS plugin", () => {
                     cy.intercept({
                         url: /file\/admin\/frsajax\.php/,
                     }).as("createRelease");
-                    cy.get(`[data-test=toggle-package]`).first().click();
+                    cy.get("[data-test=package-name]").first().click();
                     cy.get("[data-test=create-release]").first().click();
                     cy.get("[data-test=release-name]").type("My release name" + now);
                     cy.get("[data-test=release-artifact-id]").type(this.release_id);
                     cy.get("[data-test=release-note]").type("My awesome RN" + now);
-                    const file_input_value = "-2";
-                    cy.get("[data-test=file-selector]").select(file_input_value);
                     cy.get("[data-test=file-input]").selectFile(
                         "cypress/fixtures/release-file.txt",
                     );
@@ -64,8 +62,8 @@ describe("FRS plugin", () => {
                     cy.visitProjectService("frs-plugin", "Files");
 
                     cy.visit(`/file/showfiles.php?group_id=${frs_project_id}`);
-                    cy.get(`[data-test=toggle-package]`).first().click();
-                    cy.get(`[data-test=release-note-access]`).first().click();
+                    cy.get("[data-test=package-name]").first().click();
+                    cy.get(`[data-test=release-name]`).first().click();
                     cy.get("[data-test=release-note]").contains("My awesome RN" + now);
                     cy.get("[data-test=release-files]").contains("release-file.txt");
                     cy.get("[data-test=release-files]").contains(
