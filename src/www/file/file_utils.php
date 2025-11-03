@@ -642,7 +642,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
             <label class="tlp-label" for="frs-release-upload-file-input">
                 ' . $hp->purify(_('Upload new file')) . '
             </label>';
-        echo '<span class="frs-release-upload-file-input-container"><input type="file" name="file[]" id="frs-release-upload-file-input"></span>';
+        echo '<span class="frs-release-upload-file-input-container"><input type="file" name="file[]" id="frs-release-upload-file-input" data-test="file-input"></span>';
         echo '<p class="tlp-text-info">' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_msg', formatByteToMb(ForgeConfig::get('sys_max_size_upload')))) . '</p>';
         echo '</div>';
 
