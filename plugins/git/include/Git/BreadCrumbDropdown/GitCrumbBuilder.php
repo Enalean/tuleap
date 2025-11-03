@@ -95,12 +95,7 @@ class GitCrumbBuilder
 
     private function addForkRepositoriesLink(Project $project, BreadCrumbLinkCollection $links)
     {
-        $fork_repositories_url = $this->plugin_path . '/?' . http_build_query(
-            [
-                'group_id' => $project->getID(),
-                'action'   => 'fork_repositories',
-            ]
-        );
+        $fork_repositories_url = '/projects/' . $project->getUnixNameLowerCase() . '/fork-repositories/';
         $links->add(
             new BreadCrumbLink(
                 dgettext('tuleap-git', 'Fork repositories'),

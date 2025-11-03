@@ -1,0 +1,133 @@
+<h1 class="project-administration-title">{{# dgettext }} tuleap-git | Git repositories {{/ dgettext }}</h1>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fas fa-code-branch" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-git | Fork repositories{{/ dgettext }}</h1>
+            </div>
+            <div class="tlp-pane-section">
+                {{# is_user_project_member_of_current_project }}
+                    <p>
+                        {{# dgettext }}
+                            tuleap-git |
+                            You can create personal forks of any reference repositories. By default, forks will end up into your personal area of this project.
+                        {{/dgettext}}
+                    </p>
+                {{/is_user_project_member_of_current_project}}
+                <p>
+                    {{# dgettext}}
+                        tuleap-git |
+                        You might choose to fork into another project. In this case, fork creates new "References" in the target project.
+                    {{/dgettext}}
+                    <br>
+                    {{# dgettext}}
+                        tuleap-git |
+                        You need to be administrator of the target project to do so and Git service must be activated.
+                    {{/dgettext}}
+                </p>
+                {{# has_forkable_repositories }}
+                    <form action="{{ post_url }}" method="POST" id="fork-repositories-form">
+                        <input type="hidden" name="group_id" value="{{ project_id }}" />
+                        <input type="hidden" name="action" value="fork_repositories_permissions" />
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/csrf_token}}
+                        <div class="git-fork-repository-form-content">
+                            <div class="git-fork-repository-form-content-column">
+                                <div class="tlp-form-element">
+                                    <label class="tlp-label" for="forkable-repositories">
+                                        {{# dgettext }} tuleap-git | Select repositories to fork {{/ dgettext }}
+                                    </label>
+                                    <select multiple size="7" id="forkable-repositories" name="repos[]" data-test="fork-reporitory-selectbox" class="tlp-select">
+                                        {{#forkable_repositories}}
+                                            <option value="{{ id }}">{{ name }}</option>'
+                                        {{/forkable_repositories}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="git-fork-repository-form-content-column">
+                                <div class="tlp-form-element">
+                                    <label class="tlp-label">
+                                        {{# dgettext }} tuleap-git | Choose a destination project {{/ dgettext }}
+                                    </label>
+                                    <label class="tlp-label tlp-radio" for="personal-fork">
+                                        <input
+                                            id="personal-fork"
+                                            type="radio"
+                                            name="choose_destination"
+                                            value="personal"
+                                            {{^ has_user_projects }}checked{{/ has_user_projects }}
+                                            {{# is_user_project_member_of_current_project }}checked{{/ is_user_project_member_of_current_project }}
+                                            {{^ is_user_project_member_of_current_project }}disabled{{/ is_user_project_member_of_current_project }}
+                                            data-test="in-this-project"
+                                        />
+                                        {{# dgettext }} tuleap-git | Create personal repositories in this project {{/ dgettext }}
+                                    </label>
+                                    {{# has_user_projects }}
+                                        <label class="tlp-label tlp-radio" for="project-fork">
+                                            <input
+                                                id="project-fork"
+                                                type="radio"
+                                                name="choose_destination"
+                                                value="project"
+                                                {{^ is_user_project_member_of_current_project }}checked{{/ is_user_project_member_of_current_project }}
+                                                data-test="in-this-project"
+                                            />
+                                            {{# dgettext }} tuleap-git | Copy to another project {{/ dgettext }}
+                                        </label>
+                                        <select
+                                            id="fork-destination"
+                                            class="tlp-select"
+                                            name="to_project"
+                                            data-test="fork-destination-project"
+                                            {{# is_user_project_member_of_current_project }}disabled{{/ is_user_project_member_of_current_project }}
+                                        >
+                                            {{# user_projects }}
+                                                <option value="{{ id }}" data-unix-name="{{ unix_name }}" title="{{ unix_name }}">{{ public_name }}</option>
+                                            {{/ user_projects }}
+                                        </select>
+                                    {{/ has_user_projects }}
+                                </div>
+                            </div>
+                            <div class="git-fork-repository-form-content-column">
+                                <div class="tlp-form-element">
+                                    <label class="tlp-label" for="fork-repositories-path">
+                                        {{# dgettext }} tuleap-git | Choose the path for the forks {{/ dgettext }}
+                                    </label>
+                                    <input
+                                        class="tlp-input"
+                                        type="text"
+                                        placeholder="{{# dgettext }} tuleap-git | Enter a path or leave it blank {{/ dgettext }}"
+                                        data-test="fork-repository-path"
+                                        id="fork-repositories-path"
+                                        name="path"
+                                        {{^ is_user_project_member_of_current_project }}
+                                            {{# has_user_projects }}disabled{{/ has_user_projects }}
+                                        {{/ is_user_project_member_of_current_project }}
+                                    />
+                                </div>
+                            </div>
+                            <div class="git-fork-repository-form-content-column">
+                                <label class="tlp-label" for="fork-path-preview">
+                                    {{# dgettext }} tuleap-git | Preview {{/ dgettext }}
+                                </label>
+                                <div id="fork-path-preview" class="tlp-text-muted" data-user-name="{{ user_name }}">
+                                </div>
+                                <button type="submit" class="tlp-button-primary" data-test="create-fork-button" id="submit-fork-repositories-form" disabled>
+                                    {{# dgettext }} tuleap-git | Fork repositories {{/ dgettext }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                {{/has_forkable_repositories}}
+                {{^ has_forkable_repositories }}
+                    <div class="tlp-alert-warning">
+                        {{# dgettext }} tuleap-git | There aren't any forkable repositories in this project. {{/ dgettext }}
+                    </div>
+                {{/ has_forkable_repositories }}
+            </div>
+        </div>
+    </section>
+</div>

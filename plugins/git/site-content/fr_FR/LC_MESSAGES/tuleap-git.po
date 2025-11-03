@@ -33,24 +33,6 @@ msgid_plural "%s commits pushed on %s"
 msgstr[0] "%s commit poussé sur %s"
 msgstr[1] "%s commits poussés sur %s"
 
-msgid ""
-"<p>You can create personal forks of any reference repositories. By default "
-"forks will end up into your personal area of this project.</p></p>"
-msgstr ""
-"<p>Vous pouvez créer des forks personnels à partir de différents dépôts "
-"parents. Par défaut, ces forks seront placés dans votre espace personnel du "
-"projet (cf. colonne \"aperçu\").</p>"
-
-msgid ""
-"<p>You might choose to fork into another project. In this case, fork creates "
-"new \"References\" in the target project.<br />You need to be administrator "
-"of the target project to do so and Git service must be activated.</p>"
-msgstr ""
-"<p>Vous avez la possibilité de créer ces forks dans un autre projet. Dans ce "
-"cas, ils deviendront des dépôts de référence dans le project de destination."
-"<br/>Dans ce cas, vous devez être administrateur du projet de destination et "
-"le service Git doit être actif.</p>"
-
 msgid "A Gerrit project with that name already exists on that server"
 msgstr "Un projet Gerrit du même nom existe déjà sur ce serveur"
 
@@ -858,6 +840,9 @@ msgstr ""
 msgid "Plugin which provides Git support for Tuleap"
 msgstr "Plugin qui implémente le support de Git"
 
+msgid "Preview"
+msgstr "Aperçu"
+
 msgid "Project"
 msgstr "Projet"
 
@@ -1209,6 +1194,9 @@ msgstr "Aucun projet ne correspond au filtre"
 msgid "There are open changes for this project."
 msgstr "Il y'a des revues ouvertes concernant ce projet."
 
+msgid "There aren't any forkable repositories in this project."
+msgstr "Il n'y a aucun dépôt dans ce project que vous pouvez forker."
+
 #, php-format
 msgid ""
 "There is an event in queue for a repository creation (%1$s), it will be "
@@ -1504,6 +1492,14 @@ msgstr ""
 "Vous utilisez une version de Gerrit qui n'est pas supportée, veuillez "
 "contacter les administrateurs du site."
 
+msgid ""
+"You can create personal forks of any reference repositories. By default, "
+"forks will end up into your personal area of this project."
+msgstr ""
+"Vous pouvez créer des forks personnels à partir de différents dépôts "
+"parents. Par défaut, ces forks seront placés dans votre espace personnel du "
+"projet (cf. colonne \"aperçu\")."
+
 msgid "You can define several generic webhooks."
 msgstr "Vous pouvez définir plusieurs webhooks génériques."
 
@@ -1538,6 +1534,20 @@ msgstr "Vous n'avez pas la permission de voir les groupes utilisateur."
 msgid "You may need to log into Gerrit first."
 msgstr ""
 "Vous aurez probablement besoin de vous connecter à Gerrit au préalable."
+
+msgid ""
+"You might choose to fork into another project. In this case, fork creates "
+"new \"References\" in the target project."
+msgstr ""
+"Vous avez la possibilité de créer ces forks dans un autre projet. Dans ce "
+"cas, ils deviendront des dépôts de référence dans le project de destination."
+
+msgid ""
+"You need to be administrator of the target project to do so and Git service "
+"must be activated."
+msgstr ""
+"Vous devez être administrateur du projet de destination et le service Git "
+"doit être actif."
 
 #, php-format
 msgid ""

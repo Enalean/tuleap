@@ -28,15 +28,19 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class GitRepositoryTestBuilder
 {
-    private int $id           = 809;
-    private string $namespace = '';
-    private string $name      = 'unfederal_dictation';
     private \Project $project;
-    private ?int $migrated_to_gerrit = null;
-    private string $backend_type     = GitDao::BACKEND_GITOLITE;
     private ?\GitRepository $parent_repository;
     private ?Git_Backend_Interface $backend = null;
-    private string $path                    = 'path/to/repo';
+
+    private int $id                  = 809;
+    private ?int $migrated_to_gerrit = null;
+
+    private string $namespace     = '';
+    private string $name          = 'unfederal_dictation';
+    private string $backend_type  = GitDao::BACKEND_GITOLITE;
+    private string $path          = 'path/to/repo';
+    private string $deletion_date = '0000-00-00 00:00:00';
+    private string $scope         = \GitRepository::REPO_SCOPE_PROJECT;
 
     private function __construct(?\GitRepository $parent_repository)
     {
@@ -90,6 +94,22 @@ final class GitRepositoryTestBuilder
         return $this;
     }
 
+    public function withDeletionDate(string $deletion_date): self
+    {
+        $this->deletion_date = $deletion_date;
+        return $this;
+    }
+
+    /**
+     * @psalm-param \GitRepository::REPO_SCOPE_PROJECT|\GitRepository::REPO_SCOPE_INDIVIDUAL $scope
+     * @return $this
+     */
+    public function withScope(string $scope): self
+    {
+        $this->scope = $scope;
+        return $this;
+    }
+
     public function build(): \GitRepository
     {
         $repository = new \GitRepository();
@@ -100,6 +120,8 @@ final class GitRepositoryTestBuilder
         $repository->setRemoteServerId($this->migrated_to_gerrit);
         $repository->setBackendType($this->backend_type);
         $repository->setPath($this->path);
+        $repository->setDeletionDate($this->deletion_date);
+        $repository->setScope($this->scope);
 
         if ($this->parent_repository) {
             $repository->setParent($this->parent_repository);

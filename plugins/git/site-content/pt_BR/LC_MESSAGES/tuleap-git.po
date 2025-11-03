@@ -27,17 +27,6 @@ msgid_plural "%s commits pushed on %s"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid ""
-"<p>You can create personal forks of any reference repositories. By default "
-"forks will end up into your personal area of this project.</p></p>"
-msgstr ""
-
-msgid ""
-"<p>You might choose to fork into another project. In this case, fork creates "
-"new \"References\" in the target project.<br />You need to be administrator "
-"of the target project to do so and Git service must be activated.</p>"
-msgstr ""
-
 msgid "A Gerrit project with that name already exists on that server"
 msgstr ""
 
@@ -781,6 +770,9 @@ msgstr ""
 msgid "Plugin which provides Git support for Tuleap"
 msgstr ""
 
+msgid "Preview"
+msgstr ""
+
 msgid "Project"
 msgstr "Projeto"
 
@@ -1097,6 +1089,9 @@ msgstr ""
 msgid "There are open changes for this project."
 msgstr ""
 
+msgid "There aren't any forkable repositories in this project."
+msgstr ""
+
 #, php-format
 msgid ""
 "There is an event in queue for a repository creation (%1$s), it will be "
@@ -1337,6 +1332,11 @@ msgid ""
 "site administrators."
 msgstr ""
 
+msgid ""
+"You can create personal forks of any reference repositories. By default, "
+"forks will end up into your personal area of this project."
+msgstr ""
+
 msgid "You can define several generic webhooks."
 msgstr ""
 
@@ -1361,6 +1361,16 @@ msgid "You don't have permissions to see user groups."
 msgstr "Você não tem permissão para visualizar os grupos de usuários."
 
 msgid "You may need to log into Gerrit first."
+msgstr ""
+
+msgid ""
+"You might choose to fork into another project. In this case, fork creates "
+"new \"References\" in the target project."
+msgstr ""
+
+msgid ""
+"You need to be administrator of the target project to do so and Git service "
+"must be activated."
 msgstr ""
 
 #, php-format

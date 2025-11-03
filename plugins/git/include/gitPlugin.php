@@ -58,6 +58,8 @@ use Tuleap\Git\DefaultSettings\DefaultSettingsRouter;
 use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
+use Tuleap\Git\ForkRepositories\ForkRepositoriesController;
+use Tuleap\Git\ForkRepositories\ForkRepositoriesPresenterBuilder;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\GitGodObjectWrapper;
@@ -173,6 +175,8 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Plugin\ListeningToEventClass;
@@ -2624,6 +2628,31 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', $this->getRouteHandler('routeGetPostRepositoryView'));
             $r->addRoute(['GET', 'POST'], '/{path:.*}', $this->getRouteHandler('routeGetPostLegacyController'));
         });
+
+        $event->getRouteCollector()->addGroup('/projects', function (FastRoute\RouteCollector $r) {
+            $r->get('/{project_name}/fork-repositories[/]', $this->getRouteHandler('routeForkRepositories'));
+        });
+    }
+
+    public function routeForkRepositories(): ForkRepositoriesController
+    {
+        $project_manager = ProjectManager::instance();
+        return new ForkRepositoriesController(
+            $project_manager,
+            $this->getHeaderRenderer(),
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../scripts/fork-repositories/frontend-assets', '/assets/git/fork-repositories'),
+                'src/main.ts'
+            ),
+            new ForkRepositoriesPresenterBuilder(
+                $project_manager,
+                new GitRepositoryFactory(
+                    new GitDao(),
+                    $project_manager,
+                ),
+            ),
+            TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates')
+        );
     }
 
     /**

@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\RetrieveAllGitRepositories;
 use Tuleap\Git\RetrieveGitRepository;
 
-class GitRepositoryFactory implements RetrieveGitRepository
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class GitRepositoryFactory implements RetrieveGitRepository, RetrieveAllGitRepositories
 {
     /**
      * @var GitDao
@@ -84,13 +86,8 @@ class GitRepositoryFactory implements RetrieveGitRepository
         return $repository;
     }
 
-    /**
-     * Return all git repositories of a project (gitolite, personal forks)
-     *
-     *
-     * @return GitRepository[]
-     */
-    public function getAllRepositories(Project $project)
+    #[\Override]
+    public function getAllRepositories(Project $project): array
     {
         $repositories    = [];
         $repository_list = $this->dao->getProjectRepositoryList($project->getID(), false);

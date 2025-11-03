@@ -31,6 +31,7 @@ use SystemEventManager;
 use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
@@ -106,11 +107,13 @@ final class GitTest extends TestCase
 
     public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember(): void
     {
-        $git             = $this->createPartialMock(Git::class, ['_doDispatchForkRepositories']);
+        $git             = $this->createPartialMock(Git::class, ['_doDispatchForkRepositories', 'redirect']);
         $request         = new HTTPRequest();
         $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
+        $git->setProject(ProjectTestBuilder::aProject()->withUnixName('project-unix-name')->build());
         $git->expects($this->never())->method('_doDispatchForkRepositories');
+        $git->expects($this->once())->method('redirect')->with('/projects/project-unix-name/fork-repositories/');
 
         $factory = $this->createMock(GitRepositoryFactory::class);
         $git->setFactory($factory);

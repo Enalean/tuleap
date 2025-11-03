@@ -156,78 +156,6 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
         }
     }
 
-    protected function forkRepositories()
-    {
-        $params = $this->getData();
-
-        echo '<h1 class="almost-tlp-title administration-title">' . dgettext('tuleap-git', 'Fork repositories') . '</h1>';
-        echo '<div class="git-fork-creation-content">';
-        if ($this->user->isMember($this->groupId)) {
-            echo dgettext('tuleap-git', '<p>You can create personal forks of any reference repositories. By default forks will end up into your personal area of this project.</p></p>');
-        }
-        echo dgettext('tuleap-git', '<p>You might choose to fork into another project. In this case, fork creates new "References" in the target project.<br />You need to be administrator of the target project to do so and Git service must be activated.</p>');
-        if (! empty($params['repository_list'])) {
-            echo '<form action="" method="POST">';
-            echo '<input type="hidden" name="group_id" value="' . (int) $this->groupId . '" />';
-            echo '<input type="hidden" name="action" value="fork_repositories_permissions" />';
-            $token = new CSRFSynchronizerToken('/plugins/git/?group_id=' . (int) $this->groupId . '&action=fork_repositories');
-            echo $token->fetchHTMLInput();
-
-            echo '<table id="fork_repositories" cellspacing="0">';
-            echo '<thead>';
-            echo '<tr valign="top">';
-            echo '<td class="first">';
-            echo '<label style="font-weight: bold;">' . dgettext('tuleap-git', 'Select repositories to fork') . '</label>';
-            echo '</td>';
-            echo '<td>';
-            echo '<label style="font-weight: bold;">' . dgettext('tuleap-git', 'Choose a destination project') . '</label>';
-            echo '</td>';
-            echo '<td>';
-            echo '<label style="font-weight: bold;">' . dgettext('tuleap-git', 'Choose the path for the forks') . '</label>';
-            echo '</td>';
-            echo '<td class="last">&nbsp;</td>';
-            echo '</tr>';
-            echo '</thead>';
-
-            echo '<tbody><tr valign="top">';
-            echo '<td class="first">';
-            $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
-            echo $strategy->fetch($params['repository_list'], $this->user);
-            echo '</td>';
-
-            echo '<td>';
-            $options = ' disabled="true" ';
-            if ($this->user->isMember($this->groupId)) {
-                $options = ' checked="true" ';
-            }
-            echo '<div>
-                <input id="choose_personal" type="radio" name="choose_destination" value="' . Git::SCOPE_PERSONAL . '" ' . $options . ' data-test="in-this-project"/>
-                <label class="radio" for="choose_personal">' . dgettext('tuleap-git', 'Create personal repositories in this project') . '</label>
-            </div>';
-
-            echo $this->fetchCopyToAnotherProject();
-
-            echo '</td>';
-
-            $purifier = Codendi_HTMLPurifier::instance();
-
-            echo '<td>';
-            $placeholder = dgettext('tuleap-git', 'Enter a path or leave it blank');
-            echo '<input type="text" title="' . $placeholder . '" placeholder="' . $placeholder . '" data-test="fork-repository-path" id="fork_repositories_path" name="path" />';
-            echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $purifier->purify($this->user->getUserName()) . '" />';
-            echo '</td>';
-
-            echo '<td class="last">';
-            echo '<input type="submit" class="btn btn-primary" value="' . dgettext('tuleap-git', 'Fork repositories') . '" data-test="create-fork-button" />';
-            echo '</td>';
-
-            echo '</tr></tbody></table>';
-
-            echo '</form>';
-        }
-        echo '</div>';
-    }
-
     protected function adminGitAdminsView()
     {
         $event = new GitAdminGetExternalPanePresenters($this->project);
@@ -324,28 +252,6 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
     private function getGitRepositoryFactory()
     {
         return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
-    }
-
-    private function fetchCopyToAnotherProject()
-    {
-        $html               = '';
-        $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
-        if ($userProjectOptions) {
-            $options = ' checked="true" ';
-            if ($this->user->isMember($this->groupId)) {
-                $options = '';
-            }
-            $html .= '<div>
-            <label class="radio">
-                <input id="choose_project" type="radio" name="choose_destination" value="project" ' . $options . ' />
-                ' . dgettext('tuleap-git', 'Copy to another project') . '</label>
-            </div>';
-
-            $html .= '<select name="to_project" id="fork_destination" data-test="fork-destination-project">';
-            $html .= $userProjectOptions;
-            $html .= '</select>';
-        }
-        return $html;
     }
 
     public function getUserProjectsAsOptions(PFUser $user, ProjectManager $manager, $currentProjectId)

@@ -27,10 +27,6 @@ body.git-administration .main .content {
     padding: 0 12px;
 }
 
-.git-fork-creation-content {
-    padding: 12px 12px 0;
-}
-
 .help {
     width: auto;
     margin: 0.5em;
@@ -66,27 +62,6 @@ textarea.text {
 
 tr.boxitemalt > td {
     font-weight: bold;
-}
-
-#fork_repositories {
-    border-collapse: collapse;
-}
-
-#fork_repositories td {
-    padding-right: 1em;
-    padding-left: 1em;
-    border-right: 1px solid #cccccc;
-    border-left: 1px solid #cccccc;
-}
-
-#fork_repositories td.first {
-    padding-left: 0;
-    border-left: 0;
-}
-
-#fork_repositories td.last {
-    padding-right: 0;
-    border-right: 0;
 }
 
 .git_repomanagement label {

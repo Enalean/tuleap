@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Git_GitRepositoryUrlManager
 {
     /** @var GitPlugin  */
@@ -51,12 +51,7 @@ class Git_GitRepositoryUrlManager
 
     public function getForkUrl(GitRepository $repository)
     {
-        return GIT_BASE_URL . '/?' . http_build_query(
-            [
-                'group_id' => $repository->getProject()->getID(),
-                'action'   => 'fork_repositories',
-            ]
-        );
+        return \Tuleap\Git\ForkRepositories\ForkRepositoriesPOSTUrlBuilder::buildForksAndDestinationSelectionURL($repository->getProject());
     }
 
     public function getCommitURL(GitRepository $repository, string $commit_reference): string
