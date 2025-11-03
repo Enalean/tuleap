@@ -19,6 +19,7 @@
 
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { createColorPicker } from "@tuleap/tlp-color-picker";
+import { createListPicker } from "@tuleap/list-picker";
 import "../themes/colorpicker.scss";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -36,5 +37,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 getAttributeOrThrow(element, "data-is-unsupported-color"),
             ),
         });
+    }
+
+    const tracker_picker = document.querySelector<HTMLSelectElement>("#backlog_tracker_ids");
+    if (tracker_picker !== null) {
+        createListPicker(tracker_picker, {
+            is_filterable: true,
+        });
+    }
+
+    const user_group_picker = document.getElementById(
+        "planning[PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE]",
+    );
+    if (user_group_picker instanceof HTMLSelectElement) {
+        createListPicker(user_group_picker, {
+            is_filterable: true,
+        });
+    }
+
+    for (const element of document.querySelectorAll(".mapping-value-selector")) {
+        if (!(element instanceof HTMLSelectElement)) {
+            continue;
+        }
+
+        createListPicker(element, {});
     }
 });

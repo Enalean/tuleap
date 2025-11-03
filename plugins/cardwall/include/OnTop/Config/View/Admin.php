@@ -22,31 +22,29 @@
 /**
  * Display the admin of the Cardwall
  */
-class Cardwall_OnTop_Config_View_Admin
+final readonly class Cardwall_OnTop_Config_View_Admin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public function displayAdminOnTop(Cardwall_OnTop_Config $config)
+    public function displayAdminOnTop(Cardwall_OnTop_Config $config): string
     {
         return $this->generateAdminForm($config);
     }
 
-    private function generateAdminForm($config)
+    private function generateAdminForm(Cardwall_OnTop_Config $config): string
     {
         $column_definition_view = new Cardwall_OnTop_Config_View_ColumnDefinition($config);
         $checked                = $config->isEnabled() ? 'checked="checked"' : '';
 
-        $html  = '<p>';
+        $html  = '<div class="tlp-form-element">';
         $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
-        $html .= '<label class="checkbox">';
+        $html .= '<label class="tlp-label tlp-checkbox">';
         $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" ' . $checked . '/> ';
         $html .= dgettext('tuleap-cardwall', 'Enable cardwall on top of this planning');
         $html .= '</label>';
-        $html .= '</p>';
+        $html .= '</div>';
         $html .= '<input type="hidden" name="update_cardwall" value="1" />';
 
         if ($checked) {
-            $html .= '<blockquote>';
             $html .= $column_definition_view->fetchColumnDefinition();
-            $html .= '</blockquote>';
         }
 
         return $html;

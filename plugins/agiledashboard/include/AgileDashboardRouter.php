@@ -281,6 +281,8 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
 
     protected function buildPlanningController(Codendi_Request $request): Planning_Controller
     {
+        $layout = $GLOBALS['Response'];
+        assert($layout instanceof \Tuleap\Layout\BaseLayout);
         return new Planning_Controller(
             $request,
             $this->planning_factory,
@@ -301,7 +303,8 @@ class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
             $this->project_history_dao,
-            $this->tracker_factory
+            $this->tracker_factory,
+            $layout,
         );
     }
 

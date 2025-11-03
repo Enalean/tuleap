@@ -18,6 +18,8 @@
  */
 
 @use "pkg:@tuleap/tlp-color-picker";
+@use "pkg:@tuleap/plugin-cardwall-column-colors";
+@use "main";
 
 .planning-admin-color-picker {
     display: flex;

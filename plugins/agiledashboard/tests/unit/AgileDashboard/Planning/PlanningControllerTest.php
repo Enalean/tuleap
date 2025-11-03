@@ -46,7 +46,9 @@ use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -111,7 +113,8 @@ final class PlanningControllerTest extends TestCase
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
             $this->project_history_dao,
-            $this->tracker_factory
+            $this->tracker_factory,
+            new TestLayout(new LayoutInspector()),
         );
     }
 
