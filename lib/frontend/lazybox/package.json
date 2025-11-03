@@ -8,6 +8,7 @@
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "sass": "./dist/lazybox.css",
       "import": "./dist/lazybox.js",
       "require": "./dist/lazybox.umd.cjs"

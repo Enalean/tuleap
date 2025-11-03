@@ -8,7 +8,7 @@
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/type.d.ts",
+      "types": "./dist/main.d.ts",
       "import": "./dist/plugin-graphs.js",
       "require": "./dist/plugin-graphs.umd.cjs"
     }
