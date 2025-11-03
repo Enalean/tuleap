@@ -56,7 +56,6 @@
                 }}
             </p>
             <button
-                id="button-close"
                 type="button"
                 data-dismiss="modal"
                 data-test="modal-cancel-button"

@@ -187,7 +187,7 @@ function getTemplate(args: ModalProps): TemplateResult {
       </button>
       <button type="button" class="tlp-button-${args.user_interface_color} tlp-button-large tlp-modal-action">Action</button>
     ` : html`
-      <button id="button-close" type="button" class="tlp-button-${args.user_interface_color} tlp-button-outline tlp-modal-action" data-dismiss="modal">
+      <button type="button" class="tlp-button-${args.user_interface_color} tlp-button-outline tlp-modal-action" data-dismiss="modal">
           Cancel
       </button>
       <button type="button" class="tlp-button-${args.user_interface_color} tlp-modal-action">Action</button>`}
