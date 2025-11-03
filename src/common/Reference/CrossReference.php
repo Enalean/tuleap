@@ -25,8 +25,8 @@ require_once __DIR__ . '/../../www/include/utils.php';
 
 class CrossReference
 {
-    private $sourceUrl              = '';
-    private $targetUrl              = '';
+    public $sourceUrl               = '';
+    public $targetUrl               = '';
     public string $sourceKey        = '';
     public string $insertSourceType = '';
     public string $targetKey        = '';

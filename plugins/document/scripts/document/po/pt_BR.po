@@ -79,6 +79,9 @@ msgstr ""
 msgid "An error occurred while loading logs"
 msgstr ""
 
+msgid "An error occurred while loading references"
+msgstr ""
+
 msgid "An error occurred while searching for results."
 msgstr ""
 
@@ -558,6 +561,18 @@ msgid "Reader"
 msgstr ""
 
 msgid "Recursion option"
+msgstr ""
+
+msgid "Referenced by document"
+msgstr ""
+
+msgid "References"
+msgstr ""
+
+msgid "References list is empty"
+msgstr ""
+
+msgid "Referencing document"
 msgstr ""
 
 msgid "Rejected"

@@ -35,6 +35,12 @@
             >
                 {{ $gettext("Logs") }}
             </router-link>
+            <router-link
+                class="tlp-tab"
+                v-bind:to="{ name: 'references', params: { item_id: item.id } }"
+            >
+                {{ $gettext("References") }}
+            </router-link>
         </nav>
         <div class="tlp-framed-horizontally">
             <div

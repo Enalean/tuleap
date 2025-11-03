@@ -621,6 +621,11 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                     $project      = ProjectManager::instance()->getProject((int) $item->getGroupId());
                     $redirect_url = '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/versions/' . urlencode($item->getId());
                     $GLOBALS['Response']->redirect($redirect_url);
+                } else if ($section === 'references') {
+                    $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing the references via the old interface is not supported.'));
+                    $project      = ProjectManager::instance()->getProject((int) $item->getGroupId());
+                    $redirect_url = '/plugins/document/' . urlencode($project->getUnixNameLowerCase()) . '/references/' . urlencode($item->getId());
+                    $GLOBALS['Response']->redirect($redirect_url);
                 }
                 $this->view = ucfirst($view);
                 break;

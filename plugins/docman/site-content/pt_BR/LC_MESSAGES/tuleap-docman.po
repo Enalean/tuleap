@@ -1526,9 +1526,6 @@ msgid ""
 "<strong>permissions apply</strong>)."
 msgstr ""
 
-msgid "References"
-msgstr "Referências"
-
 msgid "Rejected"
 msgstr ""
 
@@ -2513,6 +2510,11 @@ msgstr ""
 msgid ""
 "Your link is not anymore valid: accessing the history via the old interface "
 "is not supported."
+msgstr ""
+
+msgid ""
+"Your link is not anymore valid: accessing the references via the old "
+"interface is not supported."
 msgstr ""
 
 msgid ""

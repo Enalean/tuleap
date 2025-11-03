@@ -92,4 +92,13 @@ final class CrossReferenceNaturePresenter
         );
         return $cross_references_nature;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'label'    => $this->label,
+            'icon'     => $this->icon,
+            'sections' => array_map(static fn(CrossReferenceSectionPresenter $presenter) => $presenter->toArray(), $this->sections),
+        ];
+    }
 }

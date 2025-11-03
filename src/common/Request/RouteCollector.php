@@ -31,6 +31,8 @@ use EventManager;
 use FastRoute;
 use ForgeConfig;
 use FRSFileFactory;
+use FRSPackageFactory;
+use FRSReleaseFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use ProjectHistoryDao;
@@ -185,6 +187,14 @@ use Tuleap\Project\Service\ServicesPresenterBuilder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Queue\EnqueueTask;
+use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
+use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
+use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
+use Tuleap\Reference\ByNature\Wiki\WikiPageFromReferenceValueRetriever;
+use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
+use Tuleap\Reference\CrossReferencePresenterFactory;
+use Tuleap\Reference\CrossReferencesDao;
+use Tuleap\Reference\CrossReferencesRetrieverController;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -1540,6 +1550,35 @@ class RouteCollector
         );
     }
 
+    public static function getCrossReferencesRetrieverController(): DispatchablePSR15Compatible
+    {
+        $event_manager   = EventManager::instance();
+        $project_manager = ProjectManager::instance();
+        return new CrossReferencesRetrieverController(
+            new CrossReferenceByDirectionPresenterBuilder(
+                $event_manager,
+                ReferenceManager::instance(),
+                new CrossReferencePresenterFactory(new CrossReferencesDao()),
+                $project_manager,
+                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_manager),
+                new CrossReferenceByNatureInCoreOrganizer(
+                    new CrossReferenceWikiOrganizer(
+                        $project_manager,
+                        new WikiPageFromReferenceValueRetriever(),
+                    ),
+                    new CrossReferenceFRSOrganizer(
+                        new FRSPackageFactory(),
+                        new FRSReleaseFactory(),
+                        new FRSFileFactory(),
+                    ),
+                ),
+            ),
+            \UserManager::instance(),
+            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            new SapiEmitter(),
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r): void
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -1700,6 +1739,7 @@ class RouteCollector
             $r->get('/from-archive-creation/{project_id:\d+}', [self::class, 'getProjectRegistrationController']);
             $r->get('/approval', [self::class, 'getProjectRegistrationController']);
             $r->post('/{project_id:\d+}/interpret-commonmark', [self::class, 'getInterpretedCommonmark']);
+            $r->get('/{project_id:\d+}/cross-references/{item_id:\d+}', [self::class, 'getCrossReferencesRetrieverController']);
         });
 
         $r->addGroup(

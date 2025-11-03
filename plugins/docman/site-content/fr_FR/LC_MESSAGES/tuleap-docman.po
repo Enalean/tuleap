@@ -1748,9 +1748,6 @@ msgstr ""
 "Se réfère à un id de document disponible dans le gestionnaire de document "
 "(Attention : <strong>les permissions s'appliquent</strong>)."
 
-msgid "References"
-msgstr "Références"
-
 msgid "Rejected"
 msgstr "Rejeté"
 
@@ -2908,6 +2905,13 @@ msgid ""
 "is not supported."
 msgstr ""
 "Votre lien n'est plus valide : accéder à l'historique via l'ancienne "
+"interface n'est pas supporté."
+
+msgid ""
+"Your link is not anymore valid: accessing the references via the old "
+"interface is not supported."
+msgstr ""
+"Votre lien n'est plus valide : accéder aux références via l'ancienne "
 "interface n'est pas supporté."
 
 msgid ""
