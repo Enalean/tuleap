@@ -3,6 +3,7 @@
     "compilerOptions": {
         "lib": ["ES2023", "DOM"],
         "exactOptionalPropertyTypes": false,
+        "moduleResolution": "bundler"
     },
     "include": [".storybook/**/*", "stories/**/*"],
 }

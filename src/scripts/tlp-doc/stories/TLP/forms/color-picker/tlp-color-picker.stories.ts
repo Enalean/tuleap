@@ -19,7 +19,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
-import "./ColorPickerWrapper";
+import "./ColorPickerWrapper.ts";
 import "./color-picker.scss";
 import { COLOR_NAMES } from "@tuleap/core-constants";
 

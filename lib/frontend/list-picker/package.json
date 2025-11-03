@@ -8,6 +8,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "sass": "./dist/list-picker.css",
       "import": "./dist/list-picker.js",
       "require": "./dist/list-picker.umd.cjs"

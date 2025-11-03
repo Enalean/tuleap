@@ -19,7 +19,7 @@
 
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html, type TemplateResult } from "lit";
-import "./DropdownWrapper";
+import "./DropdownWrapper.ts";
 import "./dropdown.scss";
 
 type DropdownProps = {

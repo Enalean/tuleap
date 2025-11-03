@@ -5,9 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "sass": "./dist/pie-chart.css",
       "import": "./dist/pie-chart.js",
       "require": "./dist/pie-chart.umd.cjs"

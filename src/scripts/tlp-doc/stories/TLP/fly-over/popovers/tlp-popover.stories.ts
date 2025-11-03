@@ -21,7 +21,7 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
 import { USER_INTERFACE_COLORS, type UserInterfaceColorName } from "@tuleap/core-constants";
 import { html } from "lit";
-import "./PopoverWrapper";
+import "./PopoverWrapper.ts";
 import "./popover.scss";
 
 type PositionRelativeToAnchor = "top" | "bottom" | "left" | "right";

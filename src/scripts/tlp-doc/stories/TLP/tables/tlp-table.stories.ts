@@ -20,7 +20,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
-import "./TableWrapper";
+import "./TableWrapper.ts";
 
 type TableProps = {
     empty_state: boolean;

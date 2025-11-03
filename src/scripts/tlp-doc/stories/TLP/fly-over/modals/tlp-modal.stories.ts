@@ -20,7 +20,7 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
-import "./ModalWrapper.js";
+import "./ModalWrapper.ts";
 import "./modal.scss";
 import { USER_INTERFACE_COLORS, type UserInterfaceColorName } from "@tuleap/core-constants";
 
