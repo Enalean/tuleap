@@ -512,7 +512,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0 ||
             $this->isInTrackersHomepage() ||
             $this->isInDashboard() ||
-            $this->isAConvertedSemanticPage()
+            $this->isAConvertedSemanticPage() ||
+            $this->isInTrackerAdmin()
         ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
@@ -557,6 +558,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         parse_str($_SERVER['QUERY_STRING'], $output);
 
         return array_keys($output) === ['group_id'];
+    }
+
+    private function isInTrackerAdmin(): bool
+    {
+        return HTTPRequest::instance()->get('func') === 'admin-canned';
     }
 
     #[ListeningToEventName('cssfile')]

@@ -1096,9 +1096,6 @@ msgstr ""
 msgid "Delete permanently the field"
 msgstr ""
 
-msgid "Delete the canned response"
-msgstr ""
-
 msgid "Delete the reference?"
 msgstr ""
 
@@ -1332,9 +1329,6 @@ msgid "Error with the field '%s'. The user '%s' does not exist."
 msgstr ""
 
 msgid "Example: (field_1 = 'value' OR field_2 = 'value') AND field_3 = 'value'"
-msgstr ""
-
-msgid "Existing Responses:"
 msgstr ""
 
 msgid "Existing triggers"
@@ -1876,7 +1870,7 @@ msgid ""
 "from the user interface on a 24 hours sliding window."
 msgstr ""
 
-msgid "Message Body:"
+msgid "Message Body"
 msgstr ""
 
 msgid "Migrate a Tracker v3 content for test"
