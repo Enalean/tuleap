@@ -89,7 +89,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
         $this->request = new HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
-        $this->service_file = $this->createConfiguredMock(ServiceFile::class, ['displayFRSHeader' => 'foo']);
+        $this->service_file = $this->createMock(\ServiceFile::class);
         $this->project      = $this->createConfiguredMock(Project::class, ['getID' => '101']);
         $this->project->method('getService')->with(\Service::FILE)->willReturn($this->service_file);
         $this->project_retriever = $this->createMock(ProjectRetriever::class);

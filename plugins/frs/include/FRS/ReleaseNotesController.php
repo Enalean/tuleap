@@ -27,8 +27,6 @@ use FRSPackageFactory;
 use FRSReleaseFactory;
 use HTTPRequest;
 use PermissionsManager;
-use PFUser;
-use Project;
 use Service;
 use TemplateRenderer;
 use TemplateRendererFactory;
@@ -39,8 +37,10 @@ use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\REST\v1\ReleasePermissionsForGroupsBuilder;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\ContentInterpretor;
@@ -65,7 +65,6 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
         private Retriever $link_retriever,
         private UploadedLinksRetriever $uploaded_links_retriever,
         private PackagePermissionManager $package_permission_manager,
-        private FRSPermissionManager $permission_manager,
         private ContentInterpretor $interpreter,
         private TemplateRenderer $renderer,
         private IncludeAssets $assets,
@@ -88,7 +87,6 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
             new Retriever(new Dao()),
             new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance()),
             new PackagePermissionManager(FRSPackageFactory::instance()),
-            $frs_permission_manager,
             CommonMarkInterpreter::build(
                 Codendi_HTMLPurifier::instance()
             ),
@@ -141,32 +139,25 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('tuleap-frs.js'));
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'frs-style'));
 
-        $translated_title = sprintf(dgettext('tuleap-frs', 'Release %s - Release Notes'), $release->getName());
-        $project          = $release->getProject();
-        $this->buildLegacyToolbar($project, $user, $layout);
-        $layout->header(
-            HeaderConfigurationBuilder::get($translated_title)
-                ->inProject($project, Service::FILE)
-                ->build()
-        );
-        $this->renderer->renderToPage($presenter->getTemplateName(), $presenter);
-        $layout->footer([]);
-    }
+        $project = $release->getProject();
+        $service = $project->getService(Service::FILE);
 
-    private function buildLegacyToolbar(Project $project, PFUser $user, BaseLayout $layout): void
-    {
-        if ($this->permission_manager->isAdmin($project, $user)) {
-            $admin_title        = $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin');
-            $admin_url          = '/file/admin/?' . http_build_query(
-                ['group_id' => $project->getID(), 'action' => 'edit-permissions']
+        if (! ($service instanceof \ServiceFile)) {
+            exit_error(
+                $GLOBALS['Language']->getText(
+                    'project_service',
+                    'service_not_used',
+                    $GLOBALS['Language']->getText('project_admin_editservice', 'service_file_lbl_key')
+                )
             );
-            $admin_toolbar_item = '<a href="' . $admin_url . '">' . $admin_title . '</a>';
-            $layout->addToolbarItem($admin_toolbar_item);
         }
-        $purifier          = \Codendi_HTMLPurifier::instance();
-        $help_title        = $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help');
-        $help_url          = '/doc/' . urlencode($user->getShortLocale()) . '/user-guide/documents-and-files/frs.html';
-        $help_toolbar_item = '<a data-help-window href="' . $purifier->purify($help_url) . '">' . $purifier->purify($help_title) . '</a>';
-        $layout->addToolbarItem($help_toolbar_item);
+
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb(new BreadCrumb(
+            new BreadCrumbLink($release->getPackage()->getName(), '/file/' . urlencode((string) $release->getProject()->getID()) . '/package/' . urlencode((string) $release->getPackage()->getPackageID())),
+        ));
+        $service->displayFRSHeader($project, $release->getName(), $breadcrumbs);
+        $this->renderer->renderToPage($presenter->getTemplateName(), $presenter);
+        $service->displayFooter();
     }
 }

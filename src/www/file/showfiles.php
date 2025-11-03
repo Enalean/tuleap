@@ -27,6 +27,7 @@ use Tuleap\FRS\ListPackagesPresenter;
 use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\PackagePresenter;
 use Tuleap\FRS\ReleasePermissionManager;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 
@@ -166,7 +167,7 @@ $params =  [
         $hp->purify($project_manager->getProject($group_id)->getPublicName())
     ), 'pv' => $pv,
 ];
-$service->displayFRSHeader($project, $params['title']);
+$service->displayFRSHeader($project, $params['title'], new BreadCrumbCollection());
 
 TemplateRendererFactory::build()
     ->getRenderer(__DIR__ . '/../../common/FRS/')

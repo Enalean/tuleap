@@ -28,6 +28,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\ToolbarPresenter;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
@@ -63,7 +64,7 @@ class LicenseAgreementControllersHelper
         $toolbar_presenter->setLicenseAgreementIsActive();
         $toolbar_presenter->displaySectionNavigation();
 
-        $this->getFileService($project)->displayFRSHeader($project, _('Files Administration'));
+        $this->getFileService($project)->displayFRSHeader($project, _('Files Administration'), new BreadCrumbCollection());
         $header_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/frs');
         $header_renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
     }

@@ -32,10 +32,6 @@ msgstr ""
 msgid "File release system"
 msgstr ""
 
-#, php-format
-msgid "Release %s - Release Notes"
-msgstr ""
-
 msgid "Release not found."
 msgstr ""
 

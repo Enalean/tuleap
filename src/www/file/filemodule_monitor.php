@@ -21,6 +21,7 @@
 
 use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/file_utils.php';
@@ -54,12 +55,9 @@ if ($request->valid($vFilemodule_id)) {
 
         file_utils_header(
             [
-                'title' => $GLOBALS['Language']->getText(
-                    'file_showfiles',
-                    'file_p_for',
-                    $pm->getProject($group_id)->getPublicName()
-                ),
-            ]
+                'title' => $package->getName(),
+            ],
+            new BreadCrumbCollection()
         );
         echo $fmmf->getMonitoringHTML($current_user, $group_id, $package, $um, $userHelper);
         file_utils_footer([]);

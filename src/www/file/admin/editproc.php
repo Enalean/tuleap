@@ -27,6 +27,7 @@ require_once __DIR__ . '/../file_utils.php';
 
 use Tuleap\FRS\ToolbarPresenter;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -73,7 +74,7 @@ $presenter = new ToolbarPresenter($project);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 
-$service->displayFRSHeader($project, _('Files Administration'));
+$service->displayFRSHeader($project, _('Files Administration'), new BreadCrumbCollection());
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
 $sql    = 'SELECT name, `rank` FROM frs_processor WHERE group_id=' . db_ei($group_id) . ' AND processor_id=' . db_ei($proc_id);

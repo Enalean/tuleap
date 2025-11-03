@@ -30,10 +30,13 @@ use Tuleap\FRS\UploadedLinksRequestFormatter;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\FRS\UploadedLinkUpdateTablePresenter;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 
-function file_utils_header($params)
+function file_utils_header(array $params, BreadCrumbCollection $breadcrumbs): void
 {
     global $group_id;
 
@@ -52,7 +55,7 @@ function file_utils_header($params)
         $service = $project->getService(Service::FILE);
         if ($service !== null) {
             assert($service instanceof ServiceFile);
-            $service->displayFRSHeader($project, $params['title']);
+            $service->displayFRSHeader($project, $params['title'], $breadcrumbs);
         }
     }
 
@@ -280,7 +283,7 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
         ),
     );
 
-    file_utils_header(['title' => $title]);
+    file_utils_header(['title' => $title], new BreadCrumbCollection());
     echo <<<EOS
     <section class="tlp-pane">
         <div class="tlp-pane-container">
@@ -399,9 +402,16 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
         }
     }
 
-    file_utils_header([
-        'title' => $title,
-    ]);
+    $breadcrumbs = new BreadCrumbCollection();
+    $breadcrumbs->addBreadCrumb(new BreadCrumb(
+        new BreadCrumbLink($release->getPackage()->getName(), '/file/' . $release->getGroupID() . '/package/' . $release->getPackageID()),
+    ));
+    file_utils_header(
+        [
+            'title' => $title,
+        ],
+        $breadcrumbs,
+    );
 
     echo '<form class="tlp-pane"
         enctype="multipart/form-data"

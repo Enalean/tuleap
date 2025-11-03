@@ -27,7 +27,6 @@ use FRSReleaseFactory;
 use HTTPRequest;
 use PHPUnit\Framework\MockObject\Stub;
 use TemplateRenderer;
-use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\Link\Retriever;
@@ -74,10 +73,6 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $uploaded_links_retriever;
     /**
-     * @var FRSPermissionManager&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $permission_manager;
-    /**
      * @var TemplateRenderer&\PHPUnit\Framework\MockObject\MockObject
      */
     private $renderer;
@@ -95,7 +90,6 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_for_groups_builder = $this->createMock(ReleasePermissionsForGroupsBuilder::class);
         $this->link_retriever                 = $this->createMock(Retriever::class);
         $this->uploaded_links_retriever       = $this->createMock(UploadedLinksRetriever::class);
-        $this->permission_manager             = $this->createMock(FRSPermissionManager::class);
         $this->package_permission_manager     = $this->createStub(PackagePermissionManager::class);
         $this->renderer                       = $this->createMock(TemplateRenderer::class);
         $this->script_assets                  = $this->createMock(IncludeAssets::class);
@@ -126,7 +120,6 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->link_retriever,
             $this->uploaded_links_retriever,
             $this->package_permission_manager,
-            $this->permission_manager,
             $content_interpreter,
             $this->renderer,
             $this->script_assets,
@@ -178,7 +171,14 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = UserTestBuilder::aUser()->build();
         $request      = $this->createMock(HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($current_user);
-        $project = ProjectTestBuilder::aProject()->build();
+
+        $service_file = $this->createMock(\ServiceFile::class);
+        $service_file->method('getShortName')->willReturn(\Service::FILE);
+        $service_file->expects($this->once())->method('displayFRSHeader');
+        $service_file->expects($this->once())->method('displayFooter');
+
+        $project = ProjectTestBuilder::aProject()->withServices($service_file)->build();
+
         $package = $this->createMock(\FRSPackage::class);
         $package->method('getPackageID')->willReturn(12);
         $package->method('getName')->willReturn('package01');
@@ -223,21 +223,9 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $layout->expects($this->once())
             ->method('addCssAsset')
             ->with(self::isInstanceOf(CssAsset::class));
-        // toolbar
-        $this->permission_manager->expects($this->once())
-            ->method('isAdmin')
-            ->with($project, $current_user)
-            ->willReturn(true);
-        $layout->expects($this->exactly(2))
-            ->method('addToolbarItem');
-        // layout
-        $layout->expects($this->once())->method('header');
         $this->renderer->expects($this->once())
             ->method('renderToPage')
             ->with('release', self::isInstanceOf(ReleasePresenter::class));
-        $layout->expects($this->once())
-            ->method('footer')
-            ->with([]);
 
         $this->release_notes_controller->process($request, $layout, $variables);
     }
