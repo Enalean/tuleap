@@ -135,6 +135,16 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
         $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
 
+        $this->layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../scripts/administration/frontend-assets',
+                    '/assets/agiledashboard/administration'
+                ),
+                'src/creation.ts'
+            )
+        );
+
         $title = dgettext('tuleap-agiledashboard', 'New Planning');
 
         $displayHeader(

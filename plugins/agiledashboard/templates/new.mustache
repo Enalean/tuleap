@@ -1,31 +1,72 @@
-<h2>{{adminTitle}}</h2>
-<div class="agiledashboard">
-    <h3>{{createPlanning}}</h3>
-    <form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=create">
-        {{# csrf_token }}
-            {{> csrf_token_input }}
-        {{/csrf_token}}
-        <p>
-            <label for="planning_name">{{planningNameFieldLabel}}</label>
-            <input type="text" name="planning[name]" id="planning_name" value="Sprint Planning" />
-        </p>
-        <p>
-            <label for="planning_backlog_title">{{planningBacklogTitleFieldLabel}}</label>
-            <input type="text" name="planning[backlog_title]" id="planning_backlog_title" value="Release Backlog" />
-        </p>
-        <p>
-            <label for="planning_plan_title">{{planningPlanTitleFieldLabel}}</label>
-            <input type="text" name="planning[plan_title]" id="planning_plan_title" value="Sprint Plan" />
-        </p>
-        <p>
-            <label for="">{{ planningPriorityChangePermissionFieldLabel }}</label>
-            {{{ priority_change_permission }}}
-        </p>
-        <p>
-            {{ planning_allows_assignment_intro }} {{> select-backlog }} {{ planning_allows_assignment_to }} {{> select-planning }}
-        </p>
-        <p>
-            <input type="submit" value="{{btnSubmit}}"/>
-        </p>
-    </form>
+<h1 class="agiledashboard-administration-title">
+    {{# dgettext }} tuleap-agiledashboard | Backlog administration {{/ dgettext }}
+</h1>
+
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }} tuleap-agiledashboard | Create a new planning {{/ dgettext }}
+                </h1>
+            </div>
+
+            <form method="post" action="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=create">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/csrf_token}}
+            <section class="tlp-pane-section">
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="planning_name">
+                        {{# dgettext }} tuleap-agiledashboard | Name {{/ dgettext }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input class="tlp-input" type="text" name="planning[name]" id="planning_name"
+                           value="Sprint Planning" size="30" required />
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="planning_backlog_title">
+                        {{# dgettext }} tuleap-agiledashboard | Backlog title {{/ dgettext }}
+                    </label>
+                    <input class="tlp-input" type="text" name="planning[backlog_title]" id="planning_backlog_title"
+                           value="Release Backlog" size="30" />
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="planning_plan_title">
+                        {{# dgettext }} tuleap-agiledashboard | Plan title {{/ dgettext }}
+                    </label>
+                    <input class="tlp-input" type="text" name="planning[plan_title]" id="planning_plan_title"
+                           value="Sprint Plan" size="30" />
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="planning[PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE]">
+                        {{# dgettext }} tuleap-agiledashboard | Who can prioritize items?{{/ dgettext }}
+                    </label>
+                    {{{ priority_change_permission }}}
+                </div>
+                <div class="agiledashboard-planning-setup">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="backlog_tracker_ids">
+                            {{# dgettext }} tuleap-agiledashboard | This planning allows assignment of {{/ dgettext}}
+                            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                        </label>
+                        {{> select-backlog }}
+                    </div>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="planning_tracker_id">
+                            {{# dgettext }} tuleap-agiledashboard | to {{/ dgettext}}
+                            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                        </label>
+                        {{> select-planning }}
+                    </div>
+                </div>
+            </section>
+
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                <input class="tlp-button-primary" type="submit"
+                       value="{{# dgettext }}tuleap-agiledashboard | Submit{{/ dgettext }}" />
+            </section>
+            </form>
+        </div>
+    </section>
 </div>

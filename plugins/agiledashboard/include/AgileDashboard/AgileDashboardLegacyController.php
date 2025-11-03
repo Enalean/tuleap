@@ -74,9 +74,9 @@ final readonly class AgileDashboardLegacyController implements DispatchableWithR
     public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
     {
         return $this->isInOverviewTab($request)
-            || $this->isPlanningV2URL($request)
-            || $this->isScrumAdminURL($request)
-            || $this->isPlanningAdministration($request);
+               || $this->isPlanningV2URL($request)
+               || $this->isScrumAdminURL($request)
+               || $this->isPlanningAdministration($request);
     }
 
     public static function isInOverviewTab(HTTPRequest $request): bool
@@ -88,7 +88,6 @@ final readonly class AgileDashboardLegacyController implements DispatchableWithR
     public static function isPlanningV2URL(HTTPRequest $request): bool
     {
         $pane_info_identifier = new AgileDashboardPaneInfoIdentifier();
-
         return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
     }
 
@@ -99,7 +98,7 @@ final readonly class AgileDashboardLegacyController implements DispatchableWithR
 
     public function isPlanningAdministration(HTTPRequest $request): bool
     {
-        return $request->get('action') === 'edit';
+        return $request->get('action') === 'edit' || $request->get('action') === 'new';
     }
 
     private function includeAssets(HTTPRequest $request, BaseLayout $layout): void
