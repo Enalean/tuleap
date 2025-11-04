@@ -368,9 +368,8 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $user_helper   UserHelper instance
      *
-     * @return String
      */
-    public function getMonitoringListHTML($fileModuleId, $um, $user_helper)
+    public function getMonitoringListHTML($fileModuleId, $um, $user_helper, CSRFSynchronizerToken $csrf_token): string
     {
         $user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
         $purifier                 = Codendi_HTMLPurifier::instance();
@@ -443,6 +442,7 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
             $html .= $purifier->purify(_('Remove monitoring for selected users'));
             $html .= '</button>';
         }
+        $html .= $csrf_token->fetchHTMLInput();
         $html .= '</form>';
 
         return $html;
@@ -453,9 +453,8 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      *
      * @param int $fileModuleId Id of the package
      *
-     * @return String
      */
-    public function getAddMonitoringForm($fileModuleId)
+    public function getAddMonitoringForm($fileModuleId, CSRFSynchronizerToken $csrf_token): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -466,6 +465,7 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $html .= '<label class="tlp-label" for="listeners_to_add">' . $purifier->purify(_('Add users to the monitoring list')) . '</label>';
         $html .= '</div>';
         $html .= '<p><input type="submit" class="tlp-button-primary tlp-button-outline" value="' . $purifier->purify(_('Add')) . '" /></p>';
+        $html .= $csrf_token->fetchHTMLInput();
         $html .= '</form>';
 
         return $html;
@@ -476,14 +476,13 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      *
      * @param PFUser    $currentUser  Current user
      * @param int $fileModuleId Id of the package
-     *
-     * @return String
      */
-    public function getSelfMonitoringForm($currentUser, $fileModuleId)
+    public function getSelfMonitoringForm($currentUser, $fileModuleId, CSRFSynchronizerToken $csrf_token): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
         $html                  = '<form id="filemodule_monitor_form" method="post" >';
+        $html                 .= $csrf_token->fetchHTMLInput();
         $html                 .= '<input type="hidden" name="action" value="monitor_package">';
         $html                 .= '<input type="hidden" id="filemodule_id" name="filemodule_id" value="' . $purifier->purify($fileModuleId) . '" />';
         $html                 .= '<div class="tlp-form-element">';
@@ -528,10 +527,8 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * @param int $groupId Id of the project
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
-     *
-     * @return String
      */
-    public function getMonitoringHTML($currentUser, $groupId, FRSPackage $package, $um, $userHelper)
+    public function getMonitoringHTML($currentUser, $groupId, FRSPackage $package, $um, $userHelper, CSRFSynchronizerToken $csrf_token): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -550,12 +547,12 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                         <label class="tlp-label">' . $purifier->purify(_('Package')) . '</label>
                         <p><a href="/file/' . urlencode($groupId) . '/package/' . urlencode((string) $package->getPackageID()) . '" >' . $purifier->purify(util_unconvert_htmlspecialchars($package->getName())) . '</a></p>
                     </div>';
-        $html .= $this->getSelfMonitoringForm($currentUser, $package->getPackageID());
+        $html .= $this->getSelfMonitoringForm($currentUser, $package->getPackageID(), $csrf_token);
         $html .= '</div>';
         if ($frspf->userCanAdmin($currentUser, $groupId)) {
             $html .= '<div class="tlp-pane-section">';
-            $html .= $this->getMonitoringListHTML($package->getPackageID(), $um, $userHelper);
-            $html .= $this->getAddMonitoringForm($package->getPackageID());
+            $html .= $this->getMonitoringListHTML($package->getPackageID(), $um, $userHelper, $csrf_token);
+            $html .= $this->getAddMonitoringForm($package->getPackageID(), $csrf_token);
             $html .= '</div>';
         }
         $html .= '
@@ -573,9 +570,8 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * @param int $groupId Id of the project
      * @param int $fileModuleId Id of the package
      *
-     * @return String
      */
-    public function processSelfMonitoringAction(HTTPRequest $request, $currentUser, $groupId, $fileModuleId)
+    private function processSelfMonitoringAction(HTTPRequest $request, $currentUser, $groupId, $fileModuleId): void
     {
         $anonymous     = true;
         $performAction = false;
@@ -666,9 +662,8 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
      *
-     * @return String
      */
-    public function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper)
+    private function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper): void
     {
         $frspf   = new FRSPackageFactory();
         $package = $frspf->getFRSPackageFromDb($fileModuleId);
@@ -709,11 +704,13 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * @param int $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
-     *
-     * @return String
      */
-    public function processMonitoringActions($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper)
+    public function processMonitoringActions($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper, CSRFSynchronizerToken $csrf_token): void
     {
+        if (! $request->isPost()) {
+            return;
+        }
+        $csrf_token->check();
         $this->processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId);
         $this->processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper);
     }

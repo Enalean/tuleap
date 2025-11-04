@@ -49,9 +49,11 @@ if ($request->valid($vFilemodule_id)) {
 
     $package_permission_manager = new PackagePermissionManager($package_factory);
     $package                    = $package_factory->getFRSPackageFromDb($filemodule_id);
+    $monitor_url                = '/file/filemodule_monitor.php?filemodule_id=' . urlencode((string) $filemodule_id) . '&group_id=' . urlencode((string) $group_id);
 
     if ($package && $package_permission_manager->canUserSeePackage($current_user, $package, $request->getProject())) {
-        $fmmf->processMonitoringActions($request, $current_user, $group_id, $filemodule_id, $um, $userHelper);
+        $csrf_token = new CSRFSynchronizerToken($monitor_url);
+        $fmmf->processMonitoringActions($request, $current_user, $group_id, $filemodule_id, $um, $userHelper, $csrf_token);
 
         file_utils_header(
             [
@@ -59,16 +61,16 @@ if ($request->valid($vFilemodule_id)) {
             ],
             new BreadCrumbCollection()
         );
-        echo $fmmf->getMonitoringHTML($current_user, $group_id, $package, $um, $userHelper);
+        echo $fmmf->getMonitoringHTML($current_user, $group_id, $package, $um, $userHelper, $csrf_token);
         file_utils_footer([]);
     } else {
         $GLOBALS['Response']->addFeedback(
             'error',
             $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_permission')
         );
-        $GLOBALS['Response']->redirect($request->getFromServer('REQUEST_URI'));
+        $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode((string) $group_id));
     }
 } else {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'choose_p'));
-    $GLOBALS['Response']->redirect($request->getFromServer('REQUEST_URI'));
+    $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode((string) $group_id));
 }

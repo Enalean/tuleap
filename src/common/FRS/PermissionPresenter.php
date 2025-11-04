@@ -35,7 +35,7 @@ class PermissionPresenter extends BaseFrsPresenter
     public $frs_admins_submit_button;
     public $frs_admins_form_action;
 
-    public function __construct(Project $project, array $ugroups_admin, array $ugroups_reader)
+    public function __construct(Project $project, array $ugroups_admin, array $ugroups_reader, public readonly \CSRFSynchronizerToken $csrf_token)
     {
         $this->administrators_title     = $GLOBALS['Language']->getText('file_file_utils', 'administrators_title');
         $this->administrator_info       = $GLOBALS['Language']->getText('file_file_utils', 'administrator_info');

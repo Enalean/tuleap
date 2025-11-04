@@ -153,7 +153,7 @@ function frs_show_release_popup2($group_id, $name = 'release_id', $checked_val =
     }
 }
 
-function file_utils_show_processors($result)
+function file_utils_show_processors($result, CSRFSynchronizerToken $csrf_token): void
 {
     global $group_id,$Language;
     $hp   = Codendi_HTMLPurifier::instance();
@@ -191,13 +191,19 @@ function file_utils_show_processors($result)
                     <i class="tlp-button-icon fa-solid fa-pencil" aria-hidden="true"></i>
                     ' . _('Edit') . '
                 </a>
-                <a href="/file/admin/manageprocessors.php?mode=delete&group_id=' . urlencode((string) $group_id) . '&proc_id=' . urlencode((string) $proc_id) . '"
-                    class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small"
-                    onClick="return confirm(\'' . $Language->getText('file_file_utils', 'del_proc') . '\')"
-                >
-                    <i class="tlp-button-icon fa-regular fa-trash-alt" aria-hidden="true"></i>
-                    ' . _('Delete') . '
-                </a>
+                <form method="post" onsubmit="return confirm(\'' . $Language->getText('file_file_utils', 'del_proc') . '\')" style="display: inline;">
+                    ' . $csrf_token->fetchHTMLInput() . '
+                    <input type="hidden" name="mode" value="delete">
+                    <input type="hidden" name="group_id" value="' . $hp->purify((string) $group_id) . '">
+                    <input type="hidden" name="proc_id" value="' . $hp->purify((string) $proc_id) . '">
+                    <button
+                        type="submit"
+                        class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small"
+                    >
+                         <i class="tlp-button-icon fa-regular fa-trash-alt" aria-hidden="true"></i>
+                         ' . _('Delete') . '
+                    </button>
+                </form>
             </td>';
         }
 
@@ -271,7 +277,7 @@ function file_utils_delete_proc($pid)
     }
 }
 
-function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
+function frs_display_package_form(FRSPackage $package, $title, $url, $siblings): void
 {
     $hp                        = Codendi_HTMLPurifier::instance();
     $project                   = ProjectManager::instance()->getProject($package->getGroupID());
@@ -282,6 +288,8 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
             new LicenseAgreementDao(),
         ),
     );
+
+    $csrf_token = new CSRFSynchronizerToken('/file/?group_id=' . urlencode((string) $project->getID()));
 
     file_utils_header(['title' => $title], new BreadCrumbCollection());
     echo <<<EOS
@@ -296,6 +304,7 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
     EOS;
     echo '
     <form action="' . $url . '" method="post" class="tlp-pane-section">
+        ' . $csrf_token->fetchHTMLInput() . '
         <div class="tlp-form-element">
             <label class="tlp-label" for="package">
                 ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'p_name')) . '
@@ -402,9 +411,10 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
         }
     }
 
-    $breadcrumbs = new BreadCrumbCollection();
+    $breadcrumbs  = new BreadCrumbCollection();
+    $package_link = '/file/' . urlencode((string) $release->getGroupID()) . '/package/' . urlencode((string) $release->getPackageID());
     $breadcrumbs->addBreadCrumb(new BreadCrumb(
-        new BreadCrumbLink($release->getPackage()->getName(), '/file/' . $release->getGroupID() . '/package/' . $release->getPackageID()),
+        new BreadCrumbLink($release->getPackage()->getName(), $package_link),
     ));
     file_utils_header(
         [
@@ -412,6 +422,8 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
         ],
         $breadcrumbs,
     );
+
+    $csrf_token = new CSRFSynchronizerToken($package_link);
 
     echo '<form class="tlp-pane"
         enctype="multipart/form-data"
@@ -422,6 +434,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
         data-size-error="' . $hp->purify(_('You exceed the max file size')) . '"
         data-project-id="' . $hp->purify($group_id) . '"
     >
+        ' . $csrf_token->fetchHTMLInput() . '
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
@@ -803,7 +816,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
     file_utils_footer([]);
 }
 
-function frs_process_release_form($is_update, $request, $group_id, $title, $url)
+function frs_process_release_form($is_update, HTTPRequest $request, $group_id, $title, $url): void
 {
     global $package_factory, $release_factory, $files_factory;
 
@@ -826,9 +839,16 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $release['package_id'] = $res['package_id'];
     } else {
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_update_failed'));
-        $GLOBALS['Response']->redirect('/file/showfiles.php?group_id=' . $group_id);
+        $GLOBALS['Response']->redirect('/file/showfiles.php?group_id=' . urlencode((string) $project->getID()));
         exit;
     }
+
+    $package_link = '/file/' . urlencode((string) $project->getID()) . '/package/' . urlencode((string) $res['package_id']);
+
+    if (! $request->isPost()) {
+        $GLOBALS['Response']->redirect($package_link);
+    }
+    (new CSRFSynchronizerToken($package_link))->check();
 
     $um   = UserManager::instance();
     $user = $um->getCurrentUser();
@@ -1348,7 +1368,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 
     if (count($error) === 0 && isset($info_success)) {
         $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $info_success);
-        $GLOBALS['Response']->redirect('/file/' . urlencode((string) $group_id) . '/package/' . urlencode((string) $release['package_id']));
+        $GLOBALS['Response']->redirect($package_link);
     } else {
         foreach ($error as $error_message) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $error_message);

@@ -36,14 +36,18 @@ readonly class FRSReleaseController
     ) {
     }
 
-    public function delete(Project $project, FRSRelease $release)
+    public function delete(Project $project, FRSRelease $release): never
     {
+        $package_link = '/file/' . urlencode((string) $project->getID()) . '/package/' . urlencode((string) $release->getPackageID());
+        (new \CSRFSynchronizerToken($package_link))->check();
+
         if (! $this->release_factory->delete_release($project->getGroupId(), $release->getReleaseID())) {
             throw new FRSDeleteReleaseNotYoursException();
         }
 
         $GLOBALS['Response']->addFeedback(\Feedback::SUCCESS, $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_del'));
-        $GLOBALS['Response']->redirect('/file/' . urlencode($project->getGroupId() . '/package/' . $release->getPackageID()));
+        $GLOBALS['Response']->redirect($package_link);
+        exit;
     }
 
     public function add(Project $project, $package_id)

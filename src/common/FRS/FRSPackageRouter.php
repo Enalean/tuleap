@@ -64,6 +64,10 @@ class FRSPackageRouter
 
         switch ($request->get('func')) {
             case 'delete':
+                if (! $request->isPost()) {
+                    $this->redirectToFRSHome($project);
+                }
+                $this->getCSRFToken($project)->check();
                 try {
                     $this->package_controller->delete($request, $package, $project);
                 } catch (FRSPackageHasReleaseException $e) {
@@ -71,26 +75,33 @@ class FRSPackageRouter
                 } catch (FRSDeletePackageNotYoursException $e) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_yours'));
                 }
-                $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
-                break;
-            case 'add':
-                $this->package_controller->displayCreationForm($project, $existing_packages);
-                break;
+                $this->redirectToFRSHome($project);
+                // Redirect never returns
             case 'create':
+                if (! $request->isPost()) {
+                    $this->redirectToFRSHome($project);
+                }
+                $this->getCSRFToken($project)->check();
                 $this->package_controller->create($request, $project, $existing_packages);
                 break;
             case 'edit':
                 $this->package_controller->edit($project, $package, $existing_packages);
                 break;
             case 'update':
+                if (! $request->isPost()) {
+                    $this->redirectToFRSHome($project);
+                }
+                $this->getCSRFToken($project)->check();
                 try {
                     $this->package_controller->update($request, $package, $project, $user);
                 } catch (FRSPackageNameAlreadyExistsException $e) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name_exists'));
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages', 'update_canceled'));
-                    $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
+                    $this->redirectToFRSHome($project);
                 }
                 break;
+            case 'add':
+                // Default case
             default:
                 $this->package_controller->displayCreationForm($project, $existing_packages);
                 break;
@@ -108,7 +119,7 @@ class FRSPackageRouter
         $package    = $this->package_factory->getFRSPackageFromDb($package_id);
         if (! $package) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_exists'));
-            $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
+            $this->redirectToFRSHome($project);
         }
         if (! $this->permission_manager->isAdmin($project, $user)) {
             exit_permission_denied();
@@ -130,5 +141,21 @@ class FRSPackageRouter
         }
 
         return $existing_packages;
+    }
+
+    private function redirectToFRSHome(Project $project): never
+    {
+        $GLOBALS['Response']->redirect($this->FRSHomeURL($project));
+        exit;
+    }
+
+    private function getCSRFToken(Project $project): \CSRFSynchronizerToken
+    {
+        return new \CSRFSynchronizerToken($this->FRSHomeURL($project));
+    }
+
+    private function FRSHomeURL(Project $project): string
+    {
+        return '/file/?group_id=' . urlencode((string) $project->getID());
     }
 }

@@ -41,6 +41,7 @@ final readonly class ListPackagesPresenter
         public array $packages,
         public ProjectStatsPresenter $stats,
         public bool $can_admin,
+        public \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->has_packages         = count($packages) > 0;
         $this->should_display_stats = $stats->size > 0;

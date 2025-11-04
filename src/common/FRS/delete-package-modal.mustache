@@ -5,6 +5,9 @@
       class="tlp-modal tlp-modal-danger"
       action="{{ delete_url }}"
 >
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token}}
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="frs-delete-package-{{ id }}-title">
             {{# gettext }}Package deletion{{/ gettext }}

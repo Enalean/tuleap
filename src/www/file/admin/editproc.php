@@ -103,10 +103,14 @@ if (db_numrows($result) < 1) {
 
 $purifier = Codendi_HTMLPurifier::instance();
 
+$management_page_url = '/file/admin/manageprocessors.php?group_id=' . urlencode((string) $project->getID());
+$csrf_token          = new CSRFSynchronizerToken($management_page_url);
+
 $return = '
-<form action="/file/admin/manageprocessors.php?group_id=' . $purifier->purify(urlencode($group_id)) . '" method="post" class="tlp-pane-section">
+<form action="' . $purifier->purify($management_page_url) . '" method="post" class="tlp-pane-section">
     <input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">
     <input type="hidden" name="proc_id" value="' . $purifier->purify($proc_id) . '">
+    ' . $csrf_token->fetchHTMLInput() . '
 
     <div class="tlp-form-element">
         <label class="tlp-label" for="processname">
