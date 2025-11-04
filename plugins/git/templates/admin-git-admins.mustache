@@ -1,45 +1,48 @@
-<h1 class="almost-tlp-title administration-title" data-test="git-administration-page">{{ git_admin }}</h1>
+<h1 class="project-administration-title" data-test="git-administration-page">{{ git_admin }}</h1>
 
 <div class="main-project-tabs">
-    <ul class="nav nav-tabs git-admin-tabs">
-        <li>
-            <a href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{ tab_gerrit_templates }}</a>
-        </li>
-        <li class="active">
-            <a href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{ tab_git_admins }}</a>
-        </li>
-        <li>
-            <a href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_template_settings }}</a>
-        </li>
+    <nav class="tlp-tabs">
+        <a class="tlp-tab" href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}
+        ">{{ tab_gerrit_templates }}</a>
+        <a class="tlp-tab tlp-tab-active" href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}
+        ">{{ tab_git_admins }}</a>
+        <a class="tlp-tab" href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}
+        ">{{ tab_template_settings }}</a>
         {{# external_pane_presenters }}
-            <li>
-                <a href="{{ uri }}">{{ pane_name }}</a>
-            </li>
+            <a class="tlp-tab" href="{{ uri }}">{{ pane_name }}</a>
         {{/ external_pane_presenters }}
-    </ul>
+    </nav>
 </div>
-
-<div class="git-administration-content">
-    <h2>{{ git_admins_section }}</h2>
-    <div class="">
-        <div>
-            <p> {{ git_admins_description }} </p>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{ git_admins_section }}</h1>
         </div>
-        <form method="POST" action="{{ form_action }}">
-            {{# csrf_token }}
-                {{> csrf_token_input }}
-            {{/ csrf_token }}
-            <input type="hidden" value="{{ project_id }}" name="group_id"/>
-            <input type="hidden" name="git_admins[]" value="4"/>
-
-            <select data-test="git-admins-select" id="{{ git_admins_selectbox_id }}" size="8" multiple name="{{ git_admins_selectbox_name }}">
-                {{# git_admins_options }}
-                    <option value="{{ value }}" {{# selected }} selected="selected" {{/ selected }}> {{ label }} </option>
-                {{/ git_admins_options }}
-            </select>
-            <p>
-                <input class="btn btn-primary" data-test="update-git-administrators" type="submit" value="{{ git_admins_submit_button }}" name="submit"/>
-            </p>
-        </form>
+            <section class="tlp-pane-section">
+                        <p> {{ git_admins_description }} </p>
+                    <form method="POST" action="{{ form_action }}">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                        <input type="hidden" value="{{ project_id }}" name="group_id"/>
+                        <input type="hidden" name="git_admins[]" value="4"/>
+                        <div class="tlp-form-element">
+                            <select class="tlp-select tlp-select-adjusted" data-test="git-admins-select"
+                                    id="{{ git_admins_selectbox_id }}" size="8" multiple
+                                    name="{{ git_admins_selectbox_name }}">
+                                {{# git_admins_options }}
+                                    <option value="{{ value }}" {{# selected }}
+                                            selected="selected" {{/ selected }}> {{ label }} </option>
+                                {{/ git_admins_options }}
+                            </select>
+                        </div>
+                        <div class="tlp-pane-section-submit">
+                            <input class="tlp-button-primary" data-test="update-git-administrators" type="submit"
+                                   value="{{ git_admins_submit_button }}" name="submit"/>
+                        </div>
+                    </form>
+            </section>
     </div>
+    </section>
 </div>
