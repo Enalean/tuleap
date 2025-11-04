@@ -49,25 +49,11 @@
 }
 
 %background-action {
-    background-color: var(--tlp-dark-color);
-    // stylelint-disable-next-line function-linear-gradient-no-nonstandard-direction
-    background-image: linear-gradient(
-        0,
-        var(--tlp-sidebar-action-background),
-        var(--tlp-sidebar-action-background)
-    );
-    background-blend-mode: overlay;
+    background-color: var(--tlp-sidebar-action-background);
 }
 
 %background-action-hover {
-    background-color: var(--tlp-dark-color);
-    // stylelint-disable-next-line function-linear-gradient-no-nonstandard-direction
-    background-image: linear-gradient(
-        0,
-        var(--tlp-sidebar-action-background-hover),
-        var(--tlp-sidebar-action-background-hover)
-    );
-    background-blend-mode: overlay;
+    background-color: var(--tlp-sidebar-action-background-hover);
 }
 
 .project-sidebar-header {
