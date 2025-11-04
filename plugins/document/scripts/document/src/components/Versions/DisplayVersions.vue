@@ -20,28 +20,7 @@
 
 <template>
     <section v-if="item">
-        <div class="document-header tlp-framed-horizontally">
-            <document-title-lock-info v-bind:item="item" v-bind:is-displaying-in-header="true" />
-
-            <h1 class="document-header-title">
-                {{ item.title }}
-            </h1>
-        </div>
-        <nav class="tlp-tabs">
-            <span class="tlp-tab tlp-tab-active">{{ $gettext("Versions") }}</span>
-            <router-link
-                class="tlp-tab"
-                v-bind:to="{ name: 'history', params: { item_id: item.id } }"
-            >
-                {{ $gettext("Logs") }}
-            </router-link>
-            <router-link
-                class="tlp-tab"
-                v-bind:to="{ name: 'references', params: { item_id: item.id } }"
-            >
-                {{ $gettext("References") }}
-            </router-link>
-        </nav>
+        <document-details-tabs v-bind:item="item" v-bind:active_tab="VersionsTab" />
         <div class="tlp-framed-horizontally">
             <div
                 class="tlp-alert-success"
@@ -59,7 +38,6 @@
 </template>
 
 <script setup lang="ts">
-import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import { useActions } from "vuex-composition-helpers";
 import { onBeforeMount, provide, ref } from "vue";
 import type { Item } from "../../type";
@@ -68,6 +46,8 @@ import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
 import { FEEDBACK } from "../../injection-keys";
 import type { RootActionsRetrieve } from "../../store/actions-retrieve";
 import { useGettext } from "vue3-gettext";
+import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
+import { VersionsTab } from "../../helpers/details-tabs";
 
 const { $gettext } = useGettext();
 

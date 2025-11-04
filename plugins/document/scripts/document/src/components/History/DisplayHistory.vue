@@ -20,30 +20,7 @@
 
 <template>
     <section v-if="item">
-        <div class="document-header tlp-framed-horizontally">
-            <document-title-lock-info v-bind:item="item" v-bind:is-displaying-in-header="true" />
-
-            <h1 class="document-header-title">
-                {{ item.title }}
-            </h1>
-        </div>
-        <nav class="tlp-tabs">
-            <router-link
-                class="tlp-tab"
-                v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
-                v-if="item_has_versions"
-                data-test="versions-link"
-            >
-                {{ $gettext("Versions") }}
-            </router-link>
-            <span class="tlp-tab tlp-tab-active">{{ $gettext("Logs") }}</span>
-            <router-link
-                class="tlp-tab"
-                v-bind:to="{ name: 'references', params: { item_id: item.id } }"
-            >
-                {{ $gettext("References") }}
-            </router-link>
-        </nav>
+        <document-details-tabs v-bind:item="item" v-bind:active_tab="LogsTab" />
         <div class="tlp-framed-horizontally">
             <history-logs v-bind:item="item" />
         </div>
@@ -51,15 +28,13 @@
 </template>
 
 <script setup lang="ts">
-import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import { useActions } from "vuex-composition-helpers";
-import { computed, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryLogs from "./HistoryLogs.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
-import { useGettext } from "vue3-gettext";
-
-const { $gettext } = useGettext();
+import DocumentDetailsTabs from "../Folder/DocumentDetailsTabs.vue";
+import { LogsTab } from "../../helpers/details-tabs";
 
 const props = defineProps<{ item_id: number }>();
 
@@ -75,10 +50,4 @@ onBeforeMount(async () => {
             isFile(item.value) || isLink(item.value) || isEmbedded(item.value);
     }
 });
-
-const item_has_versions = computed((): boolean => {
-    return item_type_has_versions.value;
-});
-
-defineExpose({ item_has_versions });
 </script>

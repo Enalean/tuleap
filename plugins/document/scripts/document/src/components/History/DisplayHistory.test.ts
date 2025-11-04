@@ -20,17 +20,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import DisplayHistory from "./DisplayHistory.vue";
-import {
-    TYPE_EMBEDDED,
-    TYPE_EMPTY,
-    TYPE_FILE,
-    TYPE_FOLDER,
-    TYPE_LINK,
-    TYPE_WIKI,
-} from "../../constants";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
-
 import * as router from "vue-router";
 import type { Item } from "../../type";
 import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
@@ -71,40 +62,4 @@ describe("DisplayHistory", () => {
 
         expect(wrapper.html()).toContain("history-logs-stub");
     });
-
-    it.each([
-        [TYPE_FOLDER, false],
-        [TYPE_FILE, true],
-        [TYPE_LINK, true],
-        [TYPE_EMBEDDED, true],
-        [TYPE_WIKI, false],
-        [TYPE_EMPTY, false],
-    ])(
-        `should display a Versions link for %s: %s`,
-        async (type, should_versions_link_be_displayed) => {
-            const load_document = vi.fn();
-            load_document.mockReturnValue({ id: 10, type } as Item);
-            const wrapper = shallowMount(DisplayHistory, {
-                props: { item_id: 10 },
-                global: {
-                    ...getGlobalTestOptions({
-                        actions: {
-                            loadDocumentWithAscendentHierarchy: load_document,
-                        },
-                    }),
-                    stubs: {
-                        RouterLink: RouterLinkStub,
-                    },
-                    provide: {
-                        [SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS.valueOf()]: true,
-                    },
-                },
-            });
-
-            // wait for loadDocumentWithAscendentHierarchy() to be called
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(wrapper.vm.item_has_versions).toBe(should_versions_link_be_displayed);
-        },
-    );
 });
