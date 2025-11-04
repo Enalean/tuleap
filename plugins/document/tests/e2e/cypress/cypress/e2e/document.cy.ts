@@ -385,6 +385,55 @@ describe("Document new UI", () => {
                     });
             });
         });
+
+        context("Drag&Drop", () => {
+            beforeEach(() => {
+                cy.siteAdministratorSession();
+                cy.visit("/admin/document/history-enforcement");
+                cy.get("[data-test=toggle-changelog-modal]").then((el) => {
+                    if (el.is(":not(:checked)")) {
+                        // eslint-disable-next-line cypress/no-force
+                        cy.get("[data-test=toggle-changelog-modal]").click({ force: true });
+                    }
+                });
+            });
+
+            it("can create a new version by dropping file on existing document", () => {
+                cy.projectMemberSession();
+                cy.visitProjectService(`document-project-${now}`, "Documents");
+                cy.get("[data-test=document-empty-state]");
+
+                cy.log("Upload first version of file");
+                cy.intercept("PATCH", "*/docman/file/*").as("uploadFile");
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get(".document-main").selectFile("./_fixtures/aa.txt", { action: "drag-drop" });
+                cy.wait("@uploadFile");
+                cy.get("[data-test=document-folder-content-row]").should("have.length", 1);
+
+                cy.log("Upload a new version");
+                cy.intercept("PATCH", "*/docman/version/*").as("uploadVersion");
+                cy.get("[data-test=document-folder-content-row]").selectFile("./_fixtures/bb.txt", {
+                    action: "drag-drop",
+                });
+                cy.get("[data-test=modal-title]").should("contain.text", "New version for");
+                cy.get("[data-test=document-update-version-title]").type("My new version");
+                cy.get("[data-test=document-update-changelog]").type("This is my new version");
+                cy.get("[data-test=document-modal-submit-button-create-version-changelog]").click();
+                cy.wait("@uploadVersion");
+                cy.get("[data-test=file-upload-modal-close-button]").click();
+
+                cy.log("Check new version exists");
+                cy.get("[data-test=document-folder-content-row]").should("be.visible");
+                // eslint-disable-next-line cypress/no-force
+                cy.get("[data-test=document-drop-down-button]").eq(1).click({ force: true });
+                cy.get("[data-test=document-versions]").click();
+                cy.get("[data-test=version-number]").should("have.length", 2);
+                cy.get("[data-test=version-name]").eq(0).should("contain.text", "My new version");
+                cy.get("[data-test=version-changelog]")
+                    .eq(0)
+                    .should("contain.text", "This is my new version");
+            });
+        });
     });
 
     context("Writers", function () {
