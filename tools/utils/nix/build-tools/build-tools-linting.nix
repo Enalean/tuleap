@@ -40,4 +40,6 @@ treefmt-nix.mkWrapper pkgs {
       "*.vue"
     ];
   };
+  programs.actionlint.enable = true;
+  programs.zizmor.enable = true;
 }
