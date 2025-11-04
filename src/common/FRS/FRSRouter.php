@@ -51,10 +51,10 @@ class FRSRouter
         $action = $request->get('action');
 
         switch ($action) {
-            case 'edit-permissions':
-                $this->useDefaultRoute($project, $user);
-                break;
             case 'admin-frs-admins':
+                if (! $request->isPost()) {
+                    $this->redirectToDefaultRoute($project);
+                }
                 $admin_ugroups_ids  = $request->get('permission_frs_admins');
                 $reader_ugroups_ids = $request->get('permission_frs_readers');
                 if (! $admin_ugroups_ids) {
@@ -67,30 +67,43 @@ class FRSRouter
                 if (! is_array($admin_ugroups_ids) || ! is_array($reader_ugroups_ids)) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_file_utils', 'error_data_incorrect'));
                     $this->redirectToDefaultRoute($project);
-                    return;
                 }
 
+                $this->getCSRFToken($project)->check();
                 $this->permission_controller->updatePermissions($project, $user, $admin_ugroups_ids, $reader_ugroups_ids);
                 $this->redirectToDefaultRoute($project);
-                break;
+                // Redirect never returns
+            case 'edit-permissions':
+                // Default case
             default:
                 $this->useDefaultRoute($project, $user);
                 break;
         }
     }
 
-    private function redirectToDefaultRoute(Project $project)
+    private function redirectToDefaultRoute(Project $project): never
     {
-        $GLOBALS['Response']->redirect('/file/admin/?' . http_build_query(
+        $GLOBALS['Response']->redirect($this->defaultURL($project));
+        exit;
+    }
+
+    private function getCSRFToken(Project $project): \CSRFSynchronizerToken
+    {
+        return new \CSRFSynchronizerToken($this->defaultURL($project));
+    }
+
+    private function defaultURL(Project $project): string
+    {
+        return '/file/admin/?' . http_build_query(
             [
-                'group_id' => $project->getId(),
+                'group_id' => (string) $project->getId(),
                 'action'   => 'edit-permissions',
             ]
-        ));
+        );
     }
 
     private function useDefaultRoute(Project $project, PFUser $user)
     {
-        $this->permission_controller->displayPermissions($project, $user);
+        $this->permission_controller->displayPermissions($project, $user, $this->getCSRFToken($project));
     }
 }

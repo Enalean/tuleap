@@ -40,6 +40,7 @@ final readonly class ShowPackagePresenter
         public PackagePresenter $package,
         public array $releases,
         public bool $can_admin,
+        public \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->has_releases = count($this->releases) > 0;
 

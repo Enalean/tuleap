@@ -121,7 +121,8 @@ final readonly class ShowPackageController implements DispatchableWithBurningPar
                     $project,
                     $presenter,
                     $releases,
-                    $this->permission_manager->isAdmin($project, $user)
+                    $this->permission_manager->isAdmin($project, $user),
+                    new \CSRFSynchronizerToken('/file/?group_id=' . urlencode((string) $project->getID())),
                 )
             );
         $layout->footer([]);

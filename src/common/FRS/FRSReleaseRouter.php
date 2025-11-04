@@ -60,18 +60,24 @@ class FRSReleaseRouter
 
         $package_id = $request->get('package_id');
         $package    = $this->package_factory->getFRSPackageFromDb($package_id, $project->getGroupId());
+
+        $frs_home_url = '/file/?group_id=' . urlencode((string) $project->getID());
+
         if (! $package) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_exists'));
-            $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
+            $GLOBALS['Response']->redirect($frs_home_url);
         }
 
         switch ($request->get('func')) {
             case 'delete':
+                if (! $request->isPost()) {
+                    $GLOBALS['Response']->redirect($frs_home_url);
+                }
                 try {
                     $this->release_controller->delete($project, $release);
                 } catch (FRSDeleteReleaseNotYoursException $e) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_not_yours'));
-                    $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
+                    $GLOBALS['Response']->redirect($frs_home_url);
                 }
                 break;
             case 'add':
@@ -80,12 +86,10 @@ class FRSReleaseRouter
             case 'create':
                 $this->release_controller->create($request, $project, $package);
                 break;
-            case 'edit':
-                $this->release_controller->displayForm($project, $release);
-                break;
             case 'update':
                 $this->release_controller->update($request, $project, $release);
                 break;
+            case 'edit':
             default:
                 $this->release_controller->displayForm($project, $release);
                 break;

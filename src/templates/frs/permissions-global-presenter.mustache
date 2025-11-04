@@ -8,6 +8,9 @@
                 </h1>
             </div>
             <form method="POST" action="{{ frs_admins_form_action }}" class="tlp-pane-section">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token}}
                 <input type="hidden" value="{{ project_id }}" name="group_id"/>
 
                 <p>{{ administrator_info }}</p>

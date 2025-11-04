@@ -41,6 +41,7 @@ final readonly class ShowPackageReleasePresenter
         public string $show_url,
         public string $edit_url,
         public string $delete_url,
+        public \CSRFSynchronizerToken $csrf_token,
     ) {
     }
 
@@ -78,6 +79,7 @@ final readonly class ShowPackageReleasePresenter
             $show_url,
             $edit_url,
             $delete_url,
+            new \CSRFSynchronizerToken('/file/' . urlencode((string) $release->getGroupID()) . '/package/' . urlencode((string) $release->getPackageID()))
         );
     }
 }

@@ -176,5 +176,6 @@ TemplateRendererFactory::build()
         $presenters,
         $stats_presenter,
         $permission_manager->isAdmin($project, $user),
+        new CSRFSynchronizerToken('/file/?group_id=' . urlencode((string) $project->getID()))
     ));
 file_utils_footer($params);
