@@ -291,10 +291,10 @@ msgstr ""
 msgid "Date"
 msgstr "Data"
 
-msgid "Default branch successfully updated"
+msgid "Default branch"
 msgstr ""
 
-msgid "Default branch:"
+msgid "Default branch successfully updated"
 msgstr ""
 
 msgid "Default permissions"
@@ -1174,6 +1174,9 @@ msgid ""
 msgstr ""
 
 msgid "Time"
+msgstr ""
+
+msgid "Token"
 msgstr ""
 
 msgid "Token for Continuous Integration"

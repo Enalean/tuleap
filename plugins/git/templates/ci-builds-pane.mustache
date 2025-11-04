@@ -1,36 +1,43 @@
-<h3>{{# dgettext }} tuleap-git | Token for Continuous Integration {{/ dgettext }}</h3>
-<div class="alert alert-info">
-    {{# dgettext }} tuleap-git | This token is used to authenticate CIs like Jenkins when calling the build status update APIs {{/ dgettext }}
-    <br/>
-    <br/>
-    {{# ci_token }}
-        <code>{{ ci_token }}</code>
-    {{/ ci_token }}
-    {{^ ci_token }}
-        {{# dgettext }} tuleap-git | No CI Token {{/ dgettext }}
-    {{/ ci_token }}
-</div>
-<form id="repoAction" name="repoAction" method="POST" action="{{ form_action_url }}">
+<form method="POST" action="{{ form_action_url }}" class="tlp-pane-container">
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
     <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
-    <input type="hidden" id="action" name="action" value="generate-ci-token" />
-    <button type="submit" class="btn btn-danger">
-        {{# dgettext }} tuleap-git | Reset token {{/ dgettext }}
-    </button>
-</form>
 
-<form method="POST" action="{{ form_action_url }}">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }} tuleap-git | Token for Continuous Integration {{/ dgettext }}</h1>
+            </div>
+
+            <div class="tlp-pane-section">
+                <p>
+                    {{# dgettext }} tuleap-git | This token is used to authenticate CIs like Jenkins when calling the build status update APIs {{/ dgettext }}
+                </p>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="token">
+                        {{# dgettext }} tuleap-git | Token {{/ dgettext }}
+                    </label>
+                    <div class="tlp-form-element tlp-form-element-append">
+                        <input
+                            type="text"
+                            class="tlp-input"
+                            id="token"
+                            readonly
+                            disabled
+                            placeholder="{{# dgettext }} tuleap-git | No CI Token {{/ dgettext }}"
+                            value="{{# ci_token }}{{ . }}{{/ ci_token }}"
+                        >
+                        <button type="submit" name="action" value="generate-ci-token" class="tlp-button-danger tlp-button-outline tlp-append">
+                            <i class="fa-solid fa-arrows-rotate tlp-button-icon" aria-hidden="true"></i>
+                            {{# dgettext }} tuleap-git | Reset token {{/ dgettext }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     {{> set-build-status-permissions }}
-
-    <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
-    <input type="hidden" id="action" name="action" value="set-build_status-permissions" />
-    <button type="submit" class="btn btn-primary">
-        {{# dgettext }} tuleap-git | Save permissions {{/ dgettext }}
-    </button>
 </form>

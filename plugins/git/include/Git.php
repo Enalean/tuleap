@@ -495,9 +495,13 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     $this->redirectNoRepositoryError();
                     return false;
                 }
-                $this->addAction('repoManagement', [$repository]);
+                $params = [
+                    $repository,
+                    in_array($this->request->get('pane'), GitViews_RepoManagement::BURNING_PARROT_COMPATIBLE_PANES, true),
+                ];
+                $this->addAction('repoManagement', $params);
                 $this->setDefaultPageRendering(false);
-                $this->addView('repoManagement');
+                $this->addView('repoManagement', $params);
                 break;
             case 'mail':
                 $this->defaultCSRFChecks($repository, 'mail');

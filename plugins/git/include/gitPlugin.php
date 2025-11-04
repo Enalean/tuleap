@@ -31,6 +31,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
@@ -2747,6 +2748,16 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 )
             )
         );
+    }
+
+    #[ListeningToEventClass]
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
+    {
+        $request = HTTPRequest::instance();
+
+        if ($request->get('action') === 'repo_management' && in_array($request->get('pane'), GitViews_RepoManagement::BURNING_PARROT_COMPATIBLE_PANES, true)) {
+            $event->setIsInBurningParrotCompatiblePage();
+        }
     }
 
     public function statisticsCollectionCollector(StatisticsCollectionCollector $collector)
