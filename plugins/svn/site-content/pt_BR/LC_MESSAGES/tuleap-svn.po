@@ -150,12 +150,6 @@ msgstr ""
 msgid "Error during new revision file creation"
 msgstr ""
 
-msgid "Example of impacted svn operations"
-msgstr ""
-
-msgid "Example of impacted svn operations in"
-msgstr ""
-
 msgid "Force every commit to include a reference."
 msgstr ""
 
@@ -181,11 +175,6 @@ msgid "Header update failed."
 msgstr ""
 
 msgid "Header updated successfully"
-msgstr ""
-
-msgid ""
-"Here is a preview of what your configuration does. Click on highlighted "
-"folders to get more information."
 msgstr ""
 
 msgid ""
@@ -217,9 +206,6 @@ msgid ""
 msgstr ""
 
 msgid "Last commit"
-msgstr ""
-
-msgid "Loading..."
 msgstr ""
 
 msgid "Mail to specific recipients or mailing lists (comma separated)"
@@ -279,12 +265,6 @@ msgstr ""
 msgid "Permission"
 msgstr "Permissão"
 
-msgid "Please select tag on the left"
-msgstr ""
-
-msgid "Preview of your configuration"
-msgstr ""
-
 msgid "Project SVN repositories"
 msgstr ""
 
@@ -317,9 +297,6 @@ msgstr ""
 msgid "Repository not found."
 msgstr ""
 
-msgid "Repository tree structure"
-msgstr ""
-
 msgid "Rules on commit"
 msgstr ""
 
@@ -350,9 +327,6 @@ msgstr ""
 
 #, php-format
 msgid "SVN service is not activated in project %s"
-msgstr ""
-
-msgid "SVN status style"
 msgstr ""
 
 msgid "SVN with multiple repositories"
@@ -602,16 +576,6 @@ msgstr ""
 msgid "You don't have permissions to see user groups."
 msgstr "Você não tem permissão para visualizar os grupos de usuários."
 
-msgid ""
-"Your SVN repository is not impacted by immutable tags because the "
-"configuration is empty or does not match the current repository layout"
-msgstr ""
-
-msgid ""
-"Your repository contains too many folders (more than %s), for performance "
-"reasons, we cannot display the preview of your configuration."
-msgstr ""
-
 msgid "Your settings could not be saved."
 msgstr ""
 
@@ -629,13 +593,7 @@ msgstr ""
 msgid "my-new-repository"
 msgstr ""
 
-msgid "my-tag"
-msgstr ""
-
 msgid "saved on"
-msgstr ""
-
-msgid "some/path"
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"

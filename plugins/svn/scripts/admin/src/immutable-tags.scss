@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
-import "./immutable-tags.scss";
-
-document.addEventListener("DOMContentLoaded", () => {
-    openAllTargetModalsOnClick(document, ".svn-admin-trigger-modal");
-});
+.immutable-tags-configuration {
+    display: grid;
+    gap: var(--tlp-medium-spacing);
+    grid-template-columns: 1fr 1fr;
+}
