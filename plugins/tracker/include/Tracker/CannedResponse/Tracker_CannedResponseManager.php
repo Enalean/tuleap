@@ -22,7 +22,7 @@
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_CannedResponseManager
+class Tracker_CannedResponseManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var Tracker
@@ -75,26 +75,47 @@ class Tracker_CannedResponseManager
         $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Canned responses');
 
-        $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned', $title);
+        $this->tracker->displayAdminItemHeaderBurningParrot($tracker_manager, 'editcanned', $title);
 
-        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
+        echo '<div class="tlp-framed">';
 
         //Display existing responses
-        $responses = Tracker_CannedResponseFactory::instance()->getCannedResponses($this->tracker);
-        if (count($responses)) {
-            echo '<h3>' . dgettext('tuleap-tracker', 'Existing Responses:') . '</h3>';
+        echo '<section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        ' . $hp->purify($title) . '
+                    </h1>
+                </div>
+                <div class="tlp-pane-section">';
 
-            echo '<table cellspacing="0" cellpadding="4" border="0">';
+        echo '<p>';
+        echo dgettext('tuleap-tracker', 'Creating canned responses can save a lot of time if you frequently give the same answers to your users.');
+        echo '<p>';
+
+        echo '<div class="tlp-table-actions">
+            <button type="button" class="tlp-table-actions-element tlp-button-primary" data-target-modal-id="add-canned-response-modal" id="add-canned-response-modal-trigger">
+                <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                ' . $hp->purify(dgettext('tuleap-tracker', 'Create a new response')) . '
+            </button>
+        </div>';
+
+        $responses = Tracker_CannedResponseFactory::instance()->getCannedResponses($this->tracker);
+        echo '<table class="tlp-table">
+            <thead>
+                <tr>
+                    <th class="tracker-admin-canned-response-column">' . $hp->purify(_('Canned response')) . '</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>';
+        if (count($responses) > 0) {
             $i = 0;
             foreach ($responses as $response) {
-                echo '<tr class="' . util_get_alt_row_color($i++) . '" valign="top">';
+                echo '<tr>';
                 //title
-                echo '<td><a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
-                    'tracker' => (int) $this->tracker->id,
-                    'func'    => 'admin-canned',
-                    'edit'    => (int) $response->id,
-                ]) . '">';
-                echo '<strong>' . $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) . '</strong></a>';
+                echo '<td>';
+                echo '<strong>' . $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) . '</strong>';
                 //excerpt
                 echo '<pre>' . $hp->purify(mb_substr($response->body, 0, 160), CODENDI_PURIFIER_CONVERT_HTML);
                 echo mb_strlen($response->body) > 160 ? '<b>...</b>' : '';
@@ -102,40 +123,83 @@ class Tracker_CannedResponseManager
 
                 echo '</td>';
 
-                //delete
-                echo '<td>';
+                echo '<td class="tlp-table-cell-actions">';
                 $confirmation_message = sprintf(dgettext('tuleap-tracker', 'Delete this Canned Response: %1$s?'), $response->title);
                 echo '<form class="delete-canned-response" method="post" href="' . $this->getURLAdmin() . '" data-confirmation-message="' . $hp->purify($confirmation_message) . '">';
                 echo '<input type="hidden" name="delete" value="' . $hp->purify($response->id) . '"/>';
                 echo $this->getCSRFTokenAdmin()->fetchHTMLInput();
-                echo '<button class="btn-link" type="submit">';
-                echo $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => dgettext('tuleap-tracker', 'Delete the canned response')]);
+
+                echo '<a class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button" href="' . TRACKER_BASE_URL . '/?' . http_build_query([
+                    'tracker' => (int) $this->tracker->id,
+                    'func'    => 'admin-canned',
+                    'edit'    => (int) $response->id,
+                ]) . '">';
+                echo '<i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>';
+                echo $hp->purify(_('Edit'));
+                echo '</a>';
+
+                echo '<button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small" type="submit">';
+                echo '<i class="fa-solid fa-trash-alt tlp-button-icon" aria-hidden="true"></i>';
+                echo $hp->purify(_('Delete'));
                 echo '</button>';
+
                 echo '</form></td></tr>';
             }
-            echo '</table>';
         } else {
-            echo '<h3>' . dgettext('tuleap-tracker', 'No canned responses set up yet for this tracker') . '</h3>';
+            echo '<tr><td colspan="2" class="tlp-table-cell-empty">' . dgettext('tuleap-tracker', 'No canned responses set up yet for this tracker') . '</td></tr>';
         }
+        echo '        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>';
 
         //Display creation form
-        echo '<h3>' . dgettext('tuleap-tracker', 'Create a new response') . '</h3>';
-        echo '<p>';
-        echo dgettext('tuleap-tracker', 'Creating canned responses can save a lot of time if you frequently give the same answers to your users.');
-        echo '<p>';
-        echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query([
+        $url = TRACKER_BASE_URL . '/?' . http_build_query([
             'tracker' => (int) $this->tracker->id,
             'func'    => 'admin-canned',
-        ]) . '" method="POST">';
+        ]);
+        echo '<form action="' . $url . '"
+            method="POST"
+            class="tlp-modal"
+            id="add-canned-response-modal"
+            role="dialog"
+            aria-labelledby="add-canned-response-modal-title"
+        >
+            <div class="tlp-modal-header">
+                <h1 class="tlp-modal-title" id="add-canned-response-modal-title">
+                    ' . $hp->purify(dgettext('tuleap-tracker', 'Create a new response')) . '
+                </h1>
+            </div>
+            <div class="tlp-modal-body">';
         echo $this->getCSRFTokenAdmin()->fetchHTMLInput();
-        echo '<b>' . dgettext('tuleap-tracker', 'Title') . ':</b><br />';
-        echo '<input type="text" name="title" value="" size="50">';
-        echo '<p>';
-        echo '<b>' . dgettext('tuleap-tracker', 'Message Body:') . '</b><br />';
-        echo '<textarea name="body" rows="20" cols="65" wrap="hard"></textarea>';
-        echo '<p>';
-        echo '<input type="submit" name="create" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+
+        echo '<div class="tlp-form-element">';
+        echo '<label class="tlp-label" for="title">
+            ' . dgettext('tuleap-tracker', 'Title') . '
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+        </label>';
+        echo '<input type="text" name="title" id="title" class="tlp-input" required value="">';
+        echo '</div>';
+
+        echo '<div class="tlp-form-element">';
+        echo '<label class="tlp-label" for="body">
+            ' . dgettext('tuleap-tracker', 'Message Body') . '
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+        </label>';
+        echo '<textarea name="body" id="body" class="tlp-textarea" rows="20" required wrap="hard"></textarea>';
+        echo '</div>';
+
+        echo '</div>';
+        echo '<div class="tlp-modal-footer">';
+        echo '<button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">';
+        echo $hp->purify(_('Delete'));
+        echo '</button>';
+        echo '<input type="submit" class="tlp-button-primary tlp-modal-action" name="create" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        echo '</div>';
         echo '</form>';
+
+        echo '</div>';
 
         $this->tracker->displayFooter($tracker_manager);
     }
@@ -145,34 +209,59 @@ class Tracker_CannedResponseManager
         if ($response = Tracker_CannedResponseFactory::instance()->getCannedResponse($this->tracker, (int) $request->get('edit'))) {
             $hp    = Codendi_HTMLPurifier::instance();
             $title = dgettext('tuleap-tracker', 'Modify Canned Response');
-            $this->tracker->displayAdminItemHeader(
+            $this->tracker->displayAdminItemHeaderBurningParrot(
                 $tracker_manager,
                 'editcanned',
                 $title
             );
-            //Display creation form
-            echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
-            echo '<p>';
-            echo dgettext('tuleap-tracker', 'Creating canned responses can save a lot of time if you frequently give the same answers to your users.');
-            echo '<p>';
+            echo '<div class="tlp-framed">';
+
+
+            echo '<section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        ' . $hp->purify($title) . '
+                    </h1>
+                </div>
+                <div class="tlp-pane-section">';
+            echo '<p><a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
+                'tracker' => (int) $this->tracker->id,
+                'func'    => 'admin-canned',
+            ]) . '">&laquo; Go back to canned responses</a></p>';
+
             echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker' => (int) $this->tracker->id,
                 'func'    => 'admin-canned',
                 'update'  => (int) $response->id,
             ]) . '" method="POST">';
             echo $this->getCSRFTokenAdmin()->fetchHTMLInput();
-            echo '<b>' . dgettext('tuleap-tracker', 'Title') . ':</b><br />';
-            echo '<input type="text" name="title" value="' . $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) . '" size="50">';
-            echo '<p>';
-            echo '<b>' . dgettext('tuleap-tracker', 'Message Body:') . '</b><br />';
-            echo '<textarea name="body" rows="20" cols="65" wrap="hard">' . $hp->purify($response->body, CODENDI_PURIFIER_CONVERT_HTML) . '</textarea>';
-            echo '<p>';
-            echo '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+
+            echo '<div class="tlp-form-element">';
+            echo '<label class="tlp-label" for="title">
+                ' . dgettext('tuleap-tracker', 'Title') . '
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+            </label>';
+            echo '<input type="text" name="title" id="title" class="tlp-input" required value="' . $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) . '" size="50">';
+            echo '</div>';
+
+            echo '<div class="tlp-form-element">';
+            echo '<label class="tlp-label" for="body">
+                ' . dgettext('tuleap-tracker', 'Message Body') . '
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+            </label>';
+            echo '<textarea name="body" id="body" class="tlp-textarea" rows="20" required wrap="hard">' . $hp->purify($response->body, CODENDI_PURIFIER_CONVERT_HTML) . '</textarea>';
+            echo '</div>';
+
+            echo '<div class="tlp-pane-section-submit">';
+            echo '<input type="submit" class="tlp-button-primary"  value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+            echo '</div>';
             echo '</form>';
-            echo '<p><a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
-                'tracker' => (int) $this->tracker->id,
-                'func'    => 'admin-canned',
-            ]) . '">&laquo; Go back to canned responses</a></p>';
+            echo '</div>
+                </div>
+            </section>';
+
+            echo '</div>';
             $this->tracker->displayFooter($tracker_manager);
             exit;
         }

@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
+
 document.addEventListener("DOMContentLoaded", () => {
+    openTargetModalIdOnClick(document, "add-canned-response-modal-trigger");
+
     const forms = document.querySelectorAll("form.delete-canned-response");
 
     forms.forEach((form: Element): void => {

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -1253,9 +1253,6 @@ msgstr "Suppression annulée"
 msgid "Delete permanently the field"
 msgstr "Supprimer définitivement le champ"
 
-msgid "Delete the canned response"
-msgstr "Supprimer la réponse type"
-
 msgid "Delete the reference?"
 msgstr "Supprimer la référence ?"
 
@@ -1509,9 +1506,6 @@ msgstr "Error sur le champ '%s'. L'utilisateur '%s' n'existe pas."
 msgid "Example: (field_1 = 'value' OR field_2 = 'value') AND field_3 = 'value'"
 msgstr ""
 "Exemple : (champ_1 = 'valeur' OR champ_2 = 'valeur') AND champ_3 = 'valeur'"
-
-msgid "Existing Responses:"
-msgstr "Réponses existantes&nbsp;:"
 
 msgid "Existing triggers"
 msgstr "Déclencheurs existants"
@@ -2115,8 +2109,8 @@ msgstr ""
 "déplacer depuis l'API REST ou l'interface utilisateur sur une période de 24 "
 "heures."
 
-msgid "Message Body:"
-msgstr "Message&nbsp;:"
+msgid "Message Body"
+msgstr "Message"
 
 msgid "Migrate a Tracker v3 content for test"
 msgstr "Tester la migration de contenu d'un tracker v3"
