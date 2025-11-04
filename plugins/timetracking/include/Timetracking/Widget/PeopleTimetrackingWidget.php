@@ -51,7 +51,7 @@ class PeopleTimetrackingWidget extends Widget
     #[\Override]
     public function getTitle(): string
     {
-        return dgettext('tuleap-timetracking', 'People timetracking');
+        return dgettext('tuleap-timetracking', 'People Timetracking');
     }
 
     #[\Override]
