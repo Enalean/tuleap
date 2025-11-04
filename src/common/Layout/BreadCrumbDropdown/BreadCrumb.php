@@ -41,9 +41,10 @@ class BreadCrumb implements PresentableBreadCrumb
         return $this->sub_items;
     }
 
-    public function setSubItems(BreadCrumbSubItems $sub_items): void
+    public function setSubItems(BreadCrumbSubItems $sub_items): self
     {
         $this->sub_items = $sub_items;
+        return $this;
     }
 
     public function setAdditionalClassname(string $classname): void

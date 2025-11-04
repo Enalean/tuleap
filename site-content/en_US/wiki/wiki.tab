@@ -14,12 +14,11 @@
 #
 wiki_views_wikiserviceviews	wiki_title	Wiki for $1
 wiki_views_wikiserviceviews	wiki_page_title	$1 on $2
-wiki_views_wikiserviceviews	wiki_subtit_docu	<h3>$1Wiki Documents</h3>
-wiki_views_wikiserviceviews	wiki_subtit_pages	<h3>$1Wiki Pages</h3>
-wiki_views_wikiserviceviews	wiki_subtit_empty	<h3>$1Empty Wiki Pages</h3>
-wiki_views_wikiserviceviews	wiki_subtit_create	<h3>$1Create a new Wiki Page</h3>
+wiki_views_wikiserviceviews	wiki_subtit_pages	Wiki Pages
+wiki_views_wikiserviceviews	wiki_subtit_empty	Empty Wiki Pages
+wiki_views_wikiserviceviews	wiki_subtit_create	Create a new Wiki Page
 wiki_views_wikiserviceviews	wikientries	<li>$1<p><em>Description:&nbsp;</em>$2</p></li>
-wiki_views_wikiserviceviews	pagename	Page Name:
+wiki_views_wikiserviceviews	pagename	Page Name
 wiki_views_wikiserviceviews	menuadmin	Admin
 wiki_views_wikiserviceviews	menupages	Pages
 wiki_views_wikiserviceviews	menudocuments	Documents
@@ -39,8 +38,8 @@ wiki_views_wikiserviceviews	wiki_language	Wiki Language:
 #
 wiki_views_wikiviews	title_error	Exiting with Error
 wiki_views_wikiviews	not_activate	<H2><span class="feedback">Wiki Service not activated</span></H2><p>The Wiki Service of $1 project  require an activation by a Project admin or a Wiki admin.</p>
-wiki_views_wikiviews	set_perm_title	<h3>Set Wiki Page permissions</h3>
-wiki_views_wikiviews	empty_page	<h2><span class="feedback">Page doesn't exist</span></h2><p>You can set permissions only on existing pages. You have to create the page in Wiki engine before setting permissions.</p><p>To create a page, you simply have to edit it.</p><p><strong>Note:</strong> A page that contain only "Describe PageName? here" is empty from Wiki engine point of view.</p>
+wiki_views_wikiviews	set_perm_title	Set Wiki Page permissions
+wiki_views_wikiviews	empty_page	<div class="tlp-alert-danger">Page doesn't exist</div><p>You can set permissions only on existing pages. You have to create the page in Wiki engine before setting permissions.</p><p>To create a page, you simply have to edit it.</p><p><strong>Note:</strong> A page that contain only "Describe PageName? here" is empty from Wiki engine point of view.</p>
 wiki_views_wikiviews	not_empty_page	<p>You can set specific permissions on <strong>$1</strong> Wiki Page. These <strong>permissions only apply to this page</strong>.</p><p>By default, Wiki pages have no specific permissions: access to all Wiki Pages is granted to any registered user.</p><p><strong>Remember:</strong> Access to a page imply that <strong>every members</strong> of <strong>each</strong> following <strong>selected groups</strong> can <strong>read</strong> and <strong>write</strong> the corresponding page.</p><p>Select user groups who are granted access to this Wiki:<p>
 #
 #-----------------------------------------------
@@ -103,18 +102,18 @@ wiki_wikiservice	acces_denied_page	You are not authorized to access this Wiki Pa
 # Script: SF/common/wiki/views/WikiServiceAdminViews.class.php
 #
 wiki_views_wkserviews	title	Wiki Administration for $1
-wiki_views_wkserviews	entry_em	<em>Displayed in wiki service default page (e.g. Development documentations)</em>
-wiki_views_wkserviews	entry_name	Entry name:
-wiki_views_wkserviews	wikipage	WikiPage:
-wiki_views_wkserviews	givename	Or give a page name:
-wiki_views_wkserviews	wikipage_em	<em>Select a <a href="$1&view=wikiPages">Project Wiki Page</a> or enter another WikiPage name (if the page doesn't exist, it will be created).</em>
-wiki_views_wkserviews	description	Description:
-wiki_views_wkserviews	description_em	<em>Description of the Wiki document</em>
-wiki_views_wkserviews	rank_screen	Rank on screen:
-wiki_views_wkserviews	rank_screen_em	<em>Documents are displayed with this reference</em>
+wiki_views_wkserviews	entry_em	Displayed in wiki service default page (e.g. Development documentations)
+wiki_views_wkserviews	entry_name	Entry name
+wiki_views_wkserviews	wikipage	WikiPage
+wiki_views_wkserviews	givename	Or give a page name
+wiki_views_wkserviews	wikipage_em	Select a <a href="$1&view=wikiPages">Project Wiki Page</a> or enter another WikiPage name (if the page doesn't exist, it will be created).
+wiki_views_wkserviews	description	Description
+wiki_views_wkserviews	description_em	Description of the Wiki document
+wiki_views_wkserviews	rank_screen	Rank on screen
+wiki_views_wkserviews	rank_screen_em	Documents are displayed with this reference
 wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Manage Wiki Documents</h2>
-wiki_views_wkserviews	wikidocs_create	<h3>$1Create a new Wiki Document</h3>
-wiki_views_wkserviews	wikidocs_docs	<h3>$1Wiki Documents</h3>
+wiki_views_wkserviews	wikidocs_create	Create a new Wiki Document
+wiki_views_wkserviews	wikidocs_docs	Wiki Documents
 wiki_views_wkserviews	back_admin	Back to admin panel
 wiki_views_wkserviews	createwikidoc	<p>You can add a new link to a Wiki Page with the following form. It will add a new entry in the list of Wiki Documents displayed in Wiki service page (<a href="$1">View</a> link in the tool bar).</p>
 wiki_views_wkserviews	act_create	Create
@@ -124,16 +123,15 @@ wiki_views_wkserviews	define_perms	Define Permissions
 wiki_views_wkserviews	edit_perms	Edit Permissions
 wiki_views_wkserviews	deletedoc	delete $1 document
 wiki_views_wkserviews	updatedoc	<h2>Wiki '$1' - Update Wiki Document</h2>
-wiki_views_wkserviews	wkpage_title	<h2>Wiki '$1' - Manage Wiki Pages</h2>
-wiki_views_wkserviews	wkpage_project	<h3>$1Project pages</h3>
+wiki_views_wkserviews	wkpage_project	Project pages
 wiki_views_wkserviews	wkpage_pj_all	<p>The table bellow lists all pages you wrote.</p>
-wiki_views_wkserviews	wkpage_empty	<h3>$1Empty pages</h3>
+wiki_views_wkserviews	wkpage_empty	Empty pages
 wiki_views_wkserviews	wkpage_emp_all	<p>The table bellow lists all pages you created but still empty.</p>
-wiki_views_wkserviews	wkpage_admin	<h3>$1Admin pages</h3>
+wiki_views_wkserviews	wkpage_admin	Admin pages
 wiki_views_wkserviews	wkpage_adm_all	<p>The table bellow lists all administration pages. You can use these pages for management purpose. <strong>Please use it carefully</strong>. In case of doubt, backup your wiki before deleting/renaming/replacing a page.</p>
-wiki_views_wkserviews	wkpage_intern	<h3>$1Internal pages</h3>
+wiki_views_wkserviews	wkpage_intern	Internal pages
 wiki_views_wkserviews	wkpage_int_all	<p>Following pages are for wiki engine <strong>internal reserved use</strong>. Please use it carefully. You should <strong>not use or modify these pages</strong> if don't know well PhpWiki. In case of doubt, do not touch these pages.</p>
-wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Wiki Permissions</h2><p>You can set specific permissions on $2. These permissions apply to <strong>whole wiki service</strong>.</p><p>By default, Wiki have no specific permissions: access (both <strong>read</strong> and <strong>write</strong>) to all Wiki Pages is granted to any registered user.</p><p>Select user groups who are granted access to this Wiki:<p>
+wiki_views_wkserviews	wikiperm	<p>You can set specific permissions on $2. These permissions apply to <strong>whole wiki service</strong>.</p><p>By default, Wiki have no specific permissions: access (both <strong>read</strong> and <strong>write</strong>) to all Wiki Pages is granted to any registered user.</p><p>Select user groups who are granted access to this Wiki:<p>
 wiki_views_wkserviews	attachment_name	Name
 wiki_views_wkserviews	attachment_revisions	Revisions
 wiki_views_wkserviews	attachment_permissions	Permissions

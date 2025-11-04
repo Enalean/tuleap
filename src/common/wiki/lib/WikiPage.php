@@ -467,7 +467,7 @@ class WikiPage
     /**
      * @return string[] List of pagename
      */
-    public static function getAllUserPages()
+    public static function getAllUserPages(): array
     {
         $allPages = [];
         $dao      = new WikiPageDao();

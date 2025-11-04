@@ -177,7 +177,7 @@ function html_build_select_box_from_array($vals, $select_name, $checked_val = 'x
 
     $purifier = Codendi_HTMLPurifier::instance();
     $return   = '
-		<SELECT NAME="' . $purifier->purify($select_name) . '" id="' . $purifier->purify($select_name) . '">';
+		<SELECT NAME="' . $purifier->purify($select_name) . '" id="' . $purifier->purify($select_name) . '" class="tlp-select tlp-select-adjusted">';
 
     foreach ($vals as $value => $label) {
         if ($samevals) {

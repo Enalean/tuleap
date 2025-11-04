@@ -21,6 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\PHPWiki\WikiPage;
 
 function exit_wiki_empty()
@@ -89,18 +94,16 @@ function hide_url($svc, $db_item_id, $defaultHide = false, $hide = null)
 function wiki_display_header()
 {
     $GLOBALS['wiki_view']->header();
+    echo '<div class="tlp-card" data-test="main-content">';
 }
 
 function wiki_display_footer()
 {
+    echo '</div>';
     $GLOBALS['wiki_view']->footer();
 }
 
-/**
- * Common functions for WikiServiceViews and WikiServiceAdminViews
- *
- */
-class WikiViews extends Views
+abstract class WikiViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public int $gid;
     public string $wikiname;
@@ -108,10 +111,7 @@ class WikiViews extends Views
     public string $wikiAdminLink;
     protected string $title;
 
-  /**
-   * WikiView - Constructor
-   */
-    public function WikiView(&$controler, $id = 0, $view = null)
+    public function __construct(&$controler, $id = 0, $view = null)
     {
         parent::view($controler, $view);
 
@@ -129,49 +129,35 @@ class WikiViews extends Views
         $this->wikiAdminLink = '/wiki/admin/index.php?group_id=' . $this->gid;
     }
 
-  /**
-   * displayMenu - Public pure virtual
-   */
-    public function displayMenu()
+    protected function getServiceCrumb(): BreadCrumb
     {
-    }
-
-  /**
-   * header - public
-   *
-   * Display Wiki Service header
-   */
-    #[\Override]
-    public function header()
-    {
-        $this->addStylesheets();
-
-        $GLOBALS['HTML']->addBreadcrumbs([
-            [
-                'title' => _('Wiki'),
-                'url' => '/wiki/?group_id=' . $this->gid,
-            ],
-        ]);
-
-        $project = ProjectManager::instance()->getProject($this->gid);
-        site_project_header(
-            $project,
-            \Tuleap\Layout\HeaderConfigurationBuilder::get($this->title)
-                ->inProject($project, Service::WIKI)
-                ->build()
+        $service_crumb = new BreadCrumb(
+            new BreadCrumbLink(
+                _('Wiki'),
+                '/wiki/?group_id=' . $this->gid,
+            )
         );
-        $this->displayMenu();
+        if (user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
+            $sub_items = new BreadCrumbSubItems();
+            $sub_items->addSection(
+                new SubItemsUnlabelledSection(
+                    new BreadCrumbLinkCollection(
+                        [
+                            new BreadCrumbLink(
+                                $GLOBALS['Language']->getText('global', 'Administration'),
+                                $this->wikiAdminLink
+                            )->setDataAttribute('test', 'wiki-admin'),
+                        ]
+                    )
+                )
+            );
+            $service_crumb->setSubItems($sub_items);
+        }
+
+        return $service_crumb;
     }
 
-    protected function addStylesheets(): void
-    {
-        $GLOBALS['Response']->addStylesheet('/wiki/themes/Codendi/phpwiki-codendi.css');
-    }
-
-    /**
-    * pagePerms - public View
-    */
-    public function _pagePerms($postUrl = '')
+    protected function renderPerms($postUrl = ''): void
     {
         $wp       = new WikiPage($_REQUEST['id']);
         $pagename = $wp->getPagename();
@@ -183,14 +169,21 @@ class WikiViews extends Views
             'wiki_page'  => $pagename,
             'group_id' => $this->gid,
         ]);
+        echo '
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                         <h1 class="tlp-pane-title">' . $GLOBALS['Language']->getText('wiki_views_wikiviews', 'set_perm_title') . '</h1>
+                    </div>
+                    <div class="tlp-pane-section">';
+
         if ($referenced) {
             $label = '';
             $eM->processEvent('getPermsLabelForWiki', [
                 'label'  => &$label,
             ]);
-            print '<p align="center"><br><b>' . $label . '</b></p>';
+            print '<div class="tlp-alert-info">' . $label . '</div>';
         } else {
-            print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'set_perm_title');
             if (empty($pagename)) {
                 print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'empty_page');
             } else {
@@ -199,5 +192,9 @@ class WikiViews extends Views
                 permission_display_selection_form('WIKIPAGE_READ', $wp->getId(), $this->gid, $postUrl);
             }
         }
+
+        echo '</div>
+            </div>
+        </section>';
     }
 }

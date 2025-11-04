@@ -3500,6 +3500,15 @@ msgstr ""
 "Já há um evento programado para renomear este projeto. Por favor, verifique "
 "<a href=\"/admin/system_events/\">System Event Monitor</a>."
 
+msgid "There is no Wiki Document yet"
+msgstr ""
+
+msgid "There is no attachment"
+msgstr ""
+
+msgid "There is no page to display here"
+msgstr ""
+
 msgid "There is no project references"
 msgstr ""
 
@@ -4188,6 +4197,9 @@ msgstr "Disponibilidade de widgets"
 
 msgid "Wiki"
 msgstr "Wiki"
+
+msgid "Wiki Documents"
+msgstr ""
 
 msgid "Withdraw invitation"
 msgstr "Remover convite"
