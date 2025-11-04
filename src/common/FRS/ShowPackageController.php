@@ -29,7 +29,6 @@ use FRSReleaseFactory;
 use HTTPRequest;
 use Project;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
-use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeViteAssets;
@@ -86,9 +85,8 @@ final readonly class ShowPackageController implements DispatchableWithBurningPar
             throw new NotFoundException();
         }
 
-        $tlp_relative_date_presenter_builder = new TlpRelativeDatePresenterBuilder();
-        $releases                            = array_map(
-            static fn (FRSRelease $release) => ShowPackageReleasePresenter::fromRelease($release, $tlp_relative_date_presenter_builder, $user),
+        $releases = array_map(
+            static fn (FRSRelease $release) => ShowPackageReleasePresenter::fromRelease($release),
             array_values(
                 array_filter(
                     $package->getReleases(),
