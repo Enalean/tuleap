@@ -21,6 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\ConfigKeyHidden;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
@@ -105,6 +108,11 @@ function wiki_display_footer()
 
 abstract class WikiViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    #[FeatureFlagConfigKey('Feature flag to remove PhpWiki deperecation message')]
+    #[ConfigKeyInt(0)]
+    #[ConfigKeyHidden]
+    public const string FEATURE_FLAG_REMOVE_DEPRECATION_MESSAGE = 'remove_php_wiki_deprecation_message';
+
     public int $gid;
     public string $wikiname;
     public string $wikiLink;

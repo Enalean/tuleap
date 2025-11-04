@@ -2266,6 +2266,11 @@ msgstr ""
 "Personalize seu projeto adicionando uma imagem de fundo no cabeçalho, painel "
 "ou páginas de administração."
 
+msgid ""
+"PhpWiki is deprecated and will be removed in Spring 2026. Please use "
+"Mediawiki Standalone instead."
+msgstr ""
+
 msgid "Platform access control"
 msgstr "Controle de Acesso da Plataforma"
 

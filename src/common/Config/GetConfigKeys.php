@@ -103,6 +103,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider, KeyMetad
         PasswordExpirationChecker::class,
         FaviconVariant::class,
         DarkMode::class,
+        \WikiViews::class,
     ];
 
     /**

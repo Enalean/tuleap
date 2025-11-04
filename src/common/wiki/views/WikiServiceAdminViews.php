@@ -155,6 +155,9 @@ class WikiServiceAdminViews extends WikiViews // phpcs:ignore PSR1.Classes.Class
         echo '<h1 class="project-administration-title">PhpWiki Administration</h1>';
         $this->displayMenu();
         echo '<div class="tlp-framed phpwiki-service-content">';
+        if (! ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_REMOVE_DEPRECATION_MESSAGE)) {
+            echo '<div class="tlp-alert-warning">' . _('PhpWiki is deprecated and will be removed in Spring 2026. Please use Mediawiki Standalone instead.') . '</div>';
+        }
     }
 
     #[\Override]
