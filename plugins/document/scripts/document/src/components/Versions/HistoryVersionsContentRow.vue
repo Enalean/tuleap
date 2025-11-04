@@ -21,7 +21,9 @@
 <template>
     <tr>
         <td class="tlp-table-cell-numeric">
-            <a v-bind:href="version.download_href">{{ version.number }}</a>
+            <a v-bind:href="version.download_href" data-test="version-number">{{
+                version.number
+            }}</a>
         </td>
         <td>
             <document-relative-date v-bind:date="version.date" />
@@ -34,8 +36,8 @@
                 v-bind:user="coauthor"
             />
         </td>
-        <td>{{ version.name }}</td>
-        <td>{{ version.changelog }}</td>
+        <td data-test="version-name">{{ version.name }}</td>
+        <td data-test="version-changelog">{{ version.changelog }}</td>
         <td>
             <a
                 v-if="version.approval_href"

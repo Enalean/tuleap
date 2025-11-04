@@ -60,7 +60,12 @@
             </div>
         </div>
         <div class="tlp-modal-footer">
-            <button type="submit" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                data-dismiss="modal"
+                data-test="file-upload-modal-close-button"
+            >
                 {{ $gettext("Close") }}
             </button>
         </div>

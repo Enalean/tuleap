@@ -372,7 +372,7 @@ async function uploadNewFileVersion(event: DragEvent, dropzone_item: ItemFile): 
     }
 
     try {
-        if (is_changelog_proposed_after_dnd.value || approval_table !== null) {
+        if (is_changelog_proposed_after_dnd || approval_table !== null) {
             emitter.emit("show-changelog-modal", {
                 detail: {
                     updated_file: dropzone_item,

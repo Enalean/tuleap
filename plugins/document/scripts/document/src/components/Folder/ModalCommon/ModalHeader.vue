@@ -24,6 +24,7 @@
             class="tlp-modal-title"
             v-bind:id="ariaLabelledBy"
             v-bind:title="`${$gettext('Close')}`"
+            data-test="modal-title"
         >
             {{ modalTitle }}
             <slot></slot>
