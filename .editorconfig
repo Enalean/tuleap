@@ -18,7 +18,7 @@ indent_style = tab
 [{package.json,composer.json,turbo.json}]
 indent_size = 2
 
-[*.{yml,xml}]
+[*.{yml,yaml,xml}]
 indent_size = 2
 
 [*.nix]
