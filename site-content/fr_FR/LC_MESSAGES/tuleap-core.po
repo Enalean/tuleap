@@ -2311,6 +2311,13 @@ msgstr ""
 "Personnalisez votre projet en ajoutant une image de fond dans l'entête des "
 "tableaux de bord et de l'administration."
 
+msgid ""
+"PhpWiki is deprecated and will be removed in Spring 2026. Please use "
+"Mediawiki Standalone instead."
+msgstr ""
+"PhpWiki est déprécié et sera supprimé au printemps 2026. Merci d'utiliser "
+"Mediawiki autonome à la place."
+
 msgid "Platform access control"
 msgstr "Droits d'accès de la plateforme"
 
