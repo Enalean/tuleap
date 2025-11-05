@@ -61,7 +61,7 @@ final readonly class ShowPackageController implements DispatchableWithBurningPar
             FRSPermissionManager::build(),
             $package_factory,
             new PackagePermissionManager($package_factory),
-            new ReleasePermissionManager(FRSPermissionManager::build(), $release_factory),
+            new ReleasePermissionManager($release_factory),
             new FileModuleMonitorFactory(),
             \TemplateRendererFactory::build(),
         );
@@ -81,7 +81,7 @@ final readonly class ShowPackageController implements DispatchableWithBurningPar
         if (! $package) {
             throw new NotFoundException();
         }
-        if (! $this->package_permission_manager->canUserSeePackage($user, $package, $project)) {
+        if (! $this->package_permission_manager->canUserSeePackage($user, $package)) {
             throw new NotFoundException();
         }
 
@@ -90,7 +90,7 @@ final readonly class ShowPackageController implements DispatchableWithBurningPar
             array_values(
                 array_filter(
                     $package->getReleases(),
-                    fn (FRSRelease $release): bool => $this->release_permission_manager->canUserSeeRelease($user, $release, $project),
+                    fn (FRSRelease $release): bool => $this->release_permission_manager->canUserSeeRelease($user, $release),
                 ),
             ),
         );

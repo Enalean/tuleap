@@ -71,9 +71,8 @@ class CrossReferenceFRSOrganizer
         }
 
         $user_can_read_package = $this->package_factory->userCanRead(
-            $cross_reference_presenter->target_gid,
             $release->getPackageID(),
-            $by_nature_organizer->getCurrentUser()->getId()
+            (int) $by_nature_organizer->getCurrentUser()->getId()
         );
 
         if (! $user_can_read_package) {
@@ -83,9 +82,7 @@ class CrossReferenceFRSOrganizer
         }
 
         $user_can_read_release = $this->release_factory->userCanRead(
-            $cross_reference_presenter->target_gid,
-            $release->getPackageID(),
-            $release_id,
+            $release,
             $by_nature_organizer->getCurrentUser()->getId()
         );
 

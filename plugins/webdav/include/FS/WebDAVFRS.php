@@ -80,7 +80,13 @@ class WebDAVFRS implements ICollection
     public function getChild($packageName)
     {
         $packageName = $this->getUtils()->retrieveName($packageName);
-        $package     = $this->getWebDAVPackage($this->getFRSPackageFromName($packageName));
+        $frs_package = $this->getFRSPackageFromName($packageName);
+
+        if ($frs_package === null) {
+            throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
+        }
+
+        $package = $this->getWebDAVPackage($frs_package);
 
         // Check for errors
 
@@ -171,12 +177,11 @@ class WebDAVFRS implements ICollection
      *
      * @param String $packageName
      *
-     * @return FRSPackage
      */
-    public function getFRSPackageFromName($packageName)
+    public function getFRSPackageFromName($packageName): ?FRSPackage
     {
         $utils = $this->getUtils();
-        return $utils->getPackageFactory()->getFRSPackageFromDb($utils->getPackageFactory()->getPackageIdByName($packageName, $this->getGroupId()), $this->getGroupId());
+        return $utils->getPackageFactory()->getFRSPackageFromDb($utils->getPackageFactory()->getPackageIdByName($packageName, $this->getGroupId()));
     }
 
     /**

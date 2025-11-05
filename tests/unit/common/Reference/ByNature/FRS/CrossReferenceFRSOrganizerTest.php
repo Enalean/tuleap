@@ -93,12 +93,12 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
             ->willReturn($release);
         $this->release_factory
             ->method('userCanRead')
-            ->with(101, 18, 1, 115)
+            ->with($release, 115)
             ->willReturn(true);
 
         $this->package_factory
             ->method('userCanRead')
-            ->with(101, 18, 115)
+            ->with(18, 115)
             ->willReturn(false);
 
         $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
@@ -127,12 +127,12 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
             ->willReturn($release);
         $this->release_factory
             ->method('userCanRead')
-            ->with(101, 18, 1, 115)
+            ->with($release, 115)
             ->willReturn(false);
 
         $this->package_factory
             ->method('userCanRead')
-            ->with(101, 18, 115)
+            ->with(18, 115)
             ->willReturn(true);
 
         $by_nature_organizer->expects($this->once())->method('removeUnreadableCrossReference')->with($cross_reference);
@@ -229,12 +229,12 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
             ->willReturn($release);
         $this->release_factory
             ->method('userCanRead')
-            ->with(101, 18, 1, 115)
+            ->with($release, 115)
             ->willReturn(true);
 
         $this->package_factory
             ->method('userCanRead')
-            ->with(101, 18, 115)
+            ->with(18, 115)
             ->willReturn(true);
 
         $by_nature_organizer->expects($this->never())->method('removeUnreadableCrossReference');

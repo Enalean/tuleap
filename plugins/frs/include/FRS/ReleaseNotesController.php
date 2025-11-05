@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\FRS;
 
 use Codendi_HTMLPurifier;
-use FRSPackageFactory;
 use FRSReleaseFactory;
 use HTTPRequest;
 use PermissionsManager;
@@ -64,7 +63,6 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
         private ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder,
         private Retriever $link_retriever,
         private UploadedLinksRetriever $uploaded_links_retriever,
-        private PackagePermissionManager $package_permission_manager,
         private ContentInterpretor $interpreter,
         private TemplateRenderer $renderer,
         private IncludeAssets $assets,
@@ -86,7 +84,6 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
             ),
             new Retriever(new Dao()),
             new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance()),
-            new PackagePermissionManager(FRSPackageFactory::instance()),
             CommonMarkInterpreter::build(
                 Codendi_HTMLPurifier::instance()
             ),
@@ -113,7 +110,7 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
 
         if (
             $release === null || $package === null ||
-            ! $this->package_permission_manager->canUserSeePackage($user, $package, $release->getProject())
+            ! $this->release_factory->userCanRead($release, (string) $user->getId())
         ) {
             throw new NotFoundException(dgettext('tuleap-frs', 'Release not found.'));
         }

@@ -21,6 +21,8 @@
 
 namespace Tuleap\FRS;
 
+use DataAccessResult;
+use ErrorDataAccessResult;
 use FRSPackage;
 use FRSPackageDao;
 use FRSPackageFactory;
@@ -31,6 +33,8 @@ use Project;
 use ProjectManager;
 use TestHelper;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\FakeDataAccessResult;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
@@ -75,6 +79,7 @@ final class FRSPackageFactoryTest extends TestCase
             'getFRSPermissionManager',
             'getProjectManager',
             'getPermissionsManager',
+            '_getFRSPackageDao',
         ]);
         $this->user_manager           = $this->createMock(UserManager::class);
         $this->permission_manager     = $this->createMock(PermissionsManager::class);
@@ -143,11 +148,28 @@ final class FRSPackageFactoryTest extends TestCase
         self::assertEquals($PackageFactory->getFRSPackageFromDb(2), $package2);
     }
 
-    public function testAdminHasAlwaysAccess(): void
+    private function stubDBResponsesForPackages(int $package_status, int ...$package_ids): void
     {
-        $this->frs_permission_manager->method('isAdmin')->willReturn(true);
+        $dao = new class ($package_status, $this->group_id, $package_ids) extends FRSPackageDao
+        {
+            /**
+             * @param int[] $package_ids
+             */
+            public function __construct(private int $package_status, private int $project_id, private readonly array $package_ids)
+            {
+                // Do nothing on purposes
+            }
 
-        self::assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
+            #[\Override]
+            public function searchById(mixed $id, mixed $extra_flags = 0): DataAccessResult
+            {
+                if (in_array($id, $this->package_ids)) {
+                    return new FakeDataAccessResult([['package_id' => $id, 'group_id' => $this->project_id, 'status_id' => $this->package_status]]);
+                }
+                return new ErrorDataAccessResult();
+            }
+        };
+        $this->frs_package_factory->method('_getFRSPackageDao')->willReturn($dao);
     }
 
     private function userCanReadWithSpecificPerms($can_read_package): FRSPackageFactory
@@ -165,14 +187,16 @@ final class FRSPackageFactoryTest extends TestCase
 
     public function testUserCanReadWithSpecificPermsHasAccess(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
         $this->frs_package_factory = $this->userCanReadWithSpecificPerms(true);
-        self::assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
+        self::assertTrue($this->frs_package_factory->userCanRead($this->package_id, $this->user_id));
     }
 
     public function testUserCanReadWithSpecificPermsHasNoAccess(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
         $this->frs_package_factory = $this->userCanReadWithSpecificPerms(false);
-        self::assertFalse($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
+        self::assertFalse($this->frs_package_factory->userCanRead($this->package_id, $this->user_id));
     }
 
     /**
@@ -180,6 +204,7 @@ final class FRSPackageFactoryTest extends TestCase
      */
     public function testUserCanReadWhenNoPermissionsSet(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
         $this->frs_permission_manager->method('userCanRead')->willReturn(true);
         $this->frs_permission_manager->method('isAdmin');
         $this->user->expects($this->once())->method('getUgroups')->with($this->group_id, [])->willReturn([1, 2, 76]);
@@ -189,56 +214,98 @@ final class FRSPackageFactoryTest extends TestCase
         $this->permission_manager->expects($this->once())->method('userHasPermission')->with($this->package_id, 'PACKAGE_READ', [1, 2, 76])->willReturn(false);
         $this->frs_package_factory->method('getPermissionsManager')->willReturn($this->permission_manager);
 
-        self::assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
+        self::assertTrue($this->frs_package_factory->userCanRead($this->package_id, $this->user_id));
+    }
+
+    public function testHiddenPackagesAreNotReadableByNonAdminUsers(): void
+    {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_HIDDEN, $this->package_id);
+        $this->frs_permission_manager->method('isAdmin')->willReturn(false);
+        self::assertFalse($this->frs_package_factory->userCanRead($this->package_id, $this->user_id));
+    }
+
+    public function testHiddenPackagesAreReadableByAdminUsers(): void
+    {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_HIDDEN, $this->package_id);
+        $this->frs_permission_manager->method('isAdmin')->willReturn(true);
+        self::assertTrue($this->frs_package_factory->userCanRead($this->package_id, $this->user_id));
+    }
+
+    public function testDeletedPackagesCannotBeRead(): void
+    {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_DELETED, $this->package_id);
+        $this->frs_permission_manager->method('isAdmin')->willReturn(true);
+        self::assertFalse($this->frs_package_factory->userCanRead($this->package_id, $this->user_id));
     }
 
     public function testAdminCanAlwaysUpdate(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
+        $package = $this->frs_package_factory->getFRSPackageFromDb($this->package_id);
+        assert($package !== null);
         $this->frs_permission_manager->method('isAdmin')->willReturn(true);
-        self::assertTrue($this->frs_package_factory->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
+        self::assertTrue($this->frs_package_factory->userCanUpdate($package, UserTestBuilder::buildWithId($this->user_id)));
     }
 
     public function testMereMortalCannotUpdate(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
+        $package = $this->frs_package_factory->getFRSPackageFromDb($this->package_id);
+        assert($package !== null);
         $this->frs_permission_manager->method('isAdmin')->willReturn(false);
-        self::assertFalse($this->frs_package_factory->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
+        self::assertFalse($this->frs_package_factory->userCanUpdate($package, UserTestBuilder::buildWithId($this->user_id)));
     }
 
     public function testAdminCanAlwaysCreate(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
+        $package = $this->frs_package_factory->getFRSPackageFromDb($this->package_id);
+        assert($package !== null);
         $this->frs_permission_manager->method('isAdmin')->willReturn(true);
-        self::assertTrue($this->frs_package_factory->userCanCreate($this->group_id, $this->user_id));
+        self::assertTrue($this->frs_package_factory->userCanUpdate($package, UserTestBuilder::buildWithId($this->user_id)));
     }
 
     public function testMereMortalCannotCreate(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
         $this->frs_permission_manager->method('isAdmin')->willReturn(false);
-        self::assertFalse($this->frs_package_factory->userCanCreate($this->group_id, $this->user_id));
+        self::assertFalse($this->frs_package_factory->userCanCreate($this->group_id, UserTestBuilder::buildWithId($this->user_id)));
+    }
+
+    public function testNonActiveOrHiddenPackagesCannotBeUpdated(): void
+    {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_DELETED, $this->package_id);
+        $package = $this->frs_package_factory->getFRSPackageFromDb($this->package_id);
+        assert($package !== null);
+        $this->frs_permission_manager->method('isAdmin')->willReturn(true);
+        self::assertFalse($this->frs_package_factory->userCanUpdate($package, UserTestBuilder::buildWithId($this->user_id)));
     }
 
     public function testDeleteProjectPackagesFail(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
         $packageFactory = $this->createPartialMock(FRSPackageFactory::class, [
             'getFRSPackagesFromDb',
-            'delete_package',
+            'deleteWithoutPermissionsVerification',
         ]);
         $package        = $this->createMock(FRSPackage::class);
         $package->method('getPackageID');
         $packageFactory->method('getFRSPackagesFromDb')->willReturn([$package, $package, $package]);
-        $packageFactory->method('delete_package')->willReturnOnConsecutiveCalls(true, false, true);
+        $packageFactory->method('deleteWithoutPermissionsVerification')->willReturnOnConsecutiveCalls(true, false, true);
         self::assertFalse($packageFactory->deleteProjectPackages(1));
     }
 
     public function testDeleteProjectPackagesSuccess(): void
     {
+        $this->stubDBResponsesForPackages(FRSPackage::STATUS_ACTIVE, $this->package_id);
         $packageFactory = $this->createPartialMock(FRSPackageFactory::class, [
             'getFRSPackagesFromDb',
-            'delete_package',
+            'deleteWithoutPermissionsVerification',
         ]);
         $package        = $this->createMock(FRSPackage::class);
         $package->method('getPackageID');
         $packageFactory->method('getFRSPackagesFromDb')->willReturn([$package, $package, $package]);
-        $packageFactory->expects($this->exactly(3))->method('delete_package')->willReturn(true);
+        $packageFactory->expects($this->exactly(3))->method('deleteWithoutPermissionsVerification')->willReturn(true);
         self::assertTrue($packageFactory->deleteProjectPackages(1));
     }
 }

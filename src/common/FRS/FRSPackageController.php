@@ -83,7 +83,7 @@ class FRSPackageController
             if ($num_releases > 0) {
                 throw new FRSPackageHasReleaseException();
             }
-            if (! $this->package_factory->delete_package($project->getGroupId(), $package->getPackageID())) {
+            if (! $this->package_factory->delete($package, $request->getCurrentUser())) {
                 throw new FRSDeletePackageNotYoursException();
             }
 

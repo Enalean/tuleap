@@ -49,11 +49,11 @@ if ($request->valid($vFilemodule_id)) {
 
     $package_permission_manager = new PackagePermissionManager($package_factory);
     $package                    = $package_factory->getFRSPackageFromDb($filemodule_id);
-    $monitor_url                = '/file/filemodule_monitor.php?filemodule_id=' . urlencode((string) $filemodule_id) . '&group_id=' . urlencode((string) $group_id);
 
-    if ($package && $package_permission_manager->canUserSeePackage($current_user, $package, $request->getProject())) {
-        $csrf_token = new CSRFSynchronizerToken($monitor_url);
-        $fmmf->processMonitoringActions($request, $current_user, $group_id, $filemodule_id, $um, $userHelper, $csrf_token);
+    if ($package && $package_permission_manager->canUserSeePackage($current_user, $package)) {
+        $monitor_url = '/file/filemodule_monitor.php?filemodule_id=' . urlencode((string) $filemodule_id) . '&group_id=' . urlencode((string) $package->getPackageID());
+        $csrf_token  = new CSRFSynchronizerToken($monitor_url);
+        $fmmf->processMonitoringActions($request, $current_user, $package, $um, $userHelper, $csrf_token);
 
         file_utils_header(
             [
@@ -61,7 +61,7 @@ if ($request->valid($vFilemodule_id)) {
             ],
             new BreadCrumbCollection()
         );
-        echo $fmmf->getMonitoringHTML($current_user, $group_id, $package, $um, $userHelper, $csrf_token);
+        echo $fmmf->getMonitoringHTML($current_user, $package, $um, $userHelper, $csrf_token);
         file_utils_footer([]);
     } else {
         $GLOBALS['Response']->addFeedback(

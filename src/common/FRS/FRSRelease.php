@@ -341,11 +341,11 @@ class FRSRelease // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->release_files;
     }
 
-    public function userCanRead($user_id = PFUser::ANONYMOUS_USER_ID)
+    public function userCanRead($user_id = PFUser::ANONYMOUS_USER_ID): bool
     {
         $release_factory = new FRSReleaseFactory();
 
-        return $release_factory->userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
+        return $release_factory->userCanRead($this, $user_id);
     }
 
     /**

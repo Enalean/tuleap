@@ -23,7 +23,6 @@ namespace Tuleap\FRS;
 use FRSPackage;
 use FRSPackageFactory;
 use PFUser;
-use Project;
 
 readonly class PackagePermissionManager
 {
@@ -31,14 +30,8 @@ readonly class PackagePermissionManager
     {
     }
 
-    public function canUserSeePackage(PFUser $user, FRSPackage $package, Project $project): bool
+    public function canUserSeePackage(PFUser $user, FRSPackage $package): bool
     {
-        if ($package->isActive() && $this->package_factory->userCanRead($project->getID(), $package->getPackageID(), $user->getId())) {
-            return true;
-        } elseif ($package->isHidden() && $this->package_factory->userCanAdmin($user, $project->getID())) {
-            return true;
-        }
-
-        return false;
+        return $this->package_factory->userCanRead($package->getPackageID(), (int) $user->getId());
     }
 }

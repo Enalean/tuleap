@@ -148,7 +148,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             for ($f = 0; $f < $rows_files; $f++) {
                 $package_id = db_result($res_files, $f, 'package_id');
                 $release_id = db_result($res_files, $f, 'release_id');
-                if ($frspf->userCanRead($this->getGroupId(), $package_id, $user_id)) {
+                if ($frspf->userCanRead($package_id, $user_id)) {
                     if (isset($package_displayed[$package_id]) && $package_displayed[$package_id]) {
                         //if ($package_id==db_result($res_files,($f-1),'package_id')) {
                         //same package as last iteration - don't show this release

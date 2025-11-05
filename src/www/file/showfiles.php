@@ -86,7 +86,7 @@ if ($request->valid(new Valid_Pv())) {
 }
 
 $fmmf                       = new FileModuleMonitorFactory();
-$release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
+$release_permission_manager = new ReleasePermissionManager($frsrf);
 $package_permission_manager = new PackagePermissionManager($frspf);
 
 $presenters      = [];
@@ -95,11 +95,7 @@ $stats_presenter = new \Tuleap\FRS\ProjectStatsPresenter(0, 0, 0, 0);
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
 foreach ($res as $package) {
-    if (
-        $frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())
-        && $permission_manager->userCanRead($project, $user)
-        && $package_permission_manager->canUserSeePackage($user, $package, $project)
-    ) {
+    if ($frspf->userCanRead($package->getPackageID(), (int) $user->getId())) {
         $res_release = $package->getReleases();
 
         $presenters[] = PackagePresenter::fromPackage(
@@ -132,7 +128,7 @@ foreach ($res as $package) {
         $stats_presenter->releases += count($res_release);
 
         foreach ($res_release as $package_release) {
-            if (! $release_permission_manager->canUserSeeRelease($user, $package_release, $project)) {
+            if (! $release_permission_manager->canUserSeeRelease($user, $package_release)) {
                 continue;
             }
 
