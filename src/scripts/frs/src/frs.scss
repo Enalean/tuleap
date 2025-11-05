@@ -76,6 +76,10 @@
     text-overflow: ellipsis;
 }
 
+.frs-release-form-pane-container {
+    overflow: hidden;
+}
+
 .frs-release-files-container-is-scrolling .frs-release-file-name-column {
     border-right: 1px solid var(--tlp-neutral-light-color);
 }
@@ -84,6 +88,7 @@
     margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
 
     > .frs-release-files-table:last-child {
+        width: 100%;
         margin: 0;
     }
 

@@ -435,7 +435,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
         data-project-id="' . $hp->purify($group_id) . '"
     >
         ' . $csrf_token->fetchHTMLInput() . '
-        <div class="tlp-pane-container">
+        <div class="tlp-pane-container frs-release-form-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
                     <i class="fa-solid fa-pencil tlp-pane-title-icon" aria-hidden="true"></i>
@@ -568,8 +568,11 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
             ];
         }
 
+        $files              = $release->getFiles();
+        $has_files          = count($files) > 0;
+        $with_extra_columns = $is_update && $has_files;
         echo '<div class="frs-release-files-container">
-            <table class="tlp-table frs-release-files-table ' . ($is_update ? 'frs-release-files-table-update' : '') . '">
+            <table class="tlp-table frs-release-files-table ' . ($with_extra_columns ? 'frs-release-files-table-with-extra-columns' : '') . '">
                 <thead>
                     <tr>
                         <th>' . $hp->purify(_('Delete')) . '</th>
@@ -578,7 +581,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
                         <th>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'file_type')) . '</th>
                         <th>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'md5sum')) . '</th>
                         <th>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'comment')) . '</th>
-                        ' . ($is_update ? '
+                        ' . ($with_extra_columns  ? '
                             <th>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'user')) . '</th>
                             <th>' . $hp->purify(_('Release')) . '</th>
                             <th>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'release_date')) . '</th>'
@@ -594,7 +597,6 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
                     data-delete-label="' . $hp->purify(_('Delete')) . '"
                 >';
 
-        $files = $release->getFiles();
         for ($i = 0; $i < count($files); $i++) {
             $fname    = $files[$i]->getFileName();
             $list     = explode('/', $fname);
@@ -616,7 +618,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
             echo '<TD><INPUT TYPE="TEXT" NAME="release_reference_md5[]" ' . $value . ' SIZE="32" class="tlp-input tlp-input-small"></TD>';
             $comment = $files[$i]->getComment();
             echo '<TD><textarea NAME="release_comment[]" cols="20" rows="1" class="tlp-textarea tlp-textarea-small">' . $hp->purify($comment) . '</textarea></TD>';
-            if ($is_update) {
+            if ($with_extra_columns) {
                 echo '<TD><INPUT TYPE="TEXT" NAME="user" value="' . $hp->purify($userName) . '" readonly class="tlp-input tlp-input-small frs-release-file-owner-input"></TD>';
                 echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
                 echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . $hp->purify(format_date('Y-m-d', $files[$i]->getReleaseTime())) . '" SIZE="10" MAXLENGTH="10" class="tlp-input tlp-input-small"></TD>';
@@ -626,7 +628,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
         echo '</tbody>
                 <tbody class="frs-release-files-table-tbody-empty">
                     <tr>
-                        <td colspan="' . ($is_update ? 9 : 6) . '" class="tlp-table-cell-empty">
+                        <td colspan="' . ($with_extra_columns ? 9 : 6) . '" class="tlp-table-cell-empty">
                             ' . $hp->purify(_('No files are part of this release')) . '
                         </td>
                     </tr>
