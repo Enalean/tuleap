@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #, php-format
 msgid "%1$s jobs triggered"
@@ -29,9 +29,6 @@ msgstr[1] ""
 "Plusieurs serveurs Jenkins ont été définis dans le projet et seront utilisés "
 "après tout git push fait dans ce dépôt."
 
-msgid "Actions"
-msgstr "Actions"
-
 msgid "Add Jenkins hook"
 msgstr "Ajouter un hook Jenkins"
 
@@ -43,6 +40,9 @@ msgstr "Ajouter un serveur Jenkins"
 
 msgid "Add a Jenkins webhook"
 msgstr "Ajouter un webhook Jenkins"
+
+msgid "Branch source plugin"
+msgstr "Plugin Branch source"
 
 msgid "Branch source plugin:"
 msgstr "Plugin Branch source :"
@@ -69,6 +69,12 @@ msgstr "Intégration Continue pour le plugin Git"
 msgid "Continuous Integration with Hudson/Jenkins for Git plugin"
 msgstr "Intégration continue avec Hudson/Jenkins pour le plugin Git"
 
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete Jenkins server"
+msgstr "Supprimer le serveur Jenkins"
+
 msgid "Do not send commit's SHA-1 to Jenkins"
 msgstr "Ne pas envoyer le SHA-1 du commit à Jenkins"
 
@@ -83,6 +89,9 @@ msgstr "L'ID attendu du serveur Jenkins n'a pas été trouvée"
 
 msgid "Expected Jenkins server URL not found"
 msgstr "L'adresse attendue du serveur Jenkins n'a pas été trouvée"
+
+msgid "Git plugin triggered jobs"
+msgstr "Jobs déclenchés par le plugin Git"
 
 msgid "Git plugin triggered jobs:"
 msgstr "Jobs déclenchés par le plugin Git :"
@@ -166,9 +175,6 @@ msgstr "Le job et le serveur Jenkins ne sont pas dans le même projet."
 
 msgid "Push date"
 msgstr "Date du push"
-
-msgid "Remove"
-msgstr "Enlever"
 
 msgid "Repository"
 msgstr "Dépôt"

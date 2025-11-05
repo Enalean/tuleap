@@ -1,19 +1,20 @@
-<div id="modal-logs-{{ jenkins_server_id }}"
-    class="modal hide fade hook-logs-modal"
-    tabindex="-1"
+<section id="modal-logs-{{ jenkins_server_id }}"
+    class="tlp-modal"
     role="dialog"
     aria-labelledby="hook-logs-modal-title-{{ jenkins_server_id }}"
-    aria-hidden="true"
 >
-    <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal">
-            <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-        </a>
-        <h3 id="hook-logs-modal-title-{{ jenkins_server_id }}">{{# dgettext }} tuleap-hudson_git | Logs for %s | {{ jenkins_server_url }}{{/ dgettext }}</h3>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="hook-logs-modal-title-{{ jenkins_server_id }}">
+            {{# dgettext }} tuleap-hudson_git | Logs for %s | {{ jenkins_server_url }}{{/ dgettext }}
+        </h1>
+
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
     </div>
 
-    <div class="modal-body">
-        <table class="table hook-logs">
+    <div class="tlp-modal-body">
+        <table class="tlp-table">
             <thead>
                 <tr>
                     <th>{{# dgettext }} tuleap-hudson_git | Repository {{/ dgettext }}</th>
@@ -31,27 +32,28 @@
                             {{ push_date }}
                         </td>
                         <td>
-                            <div class="hook-log-triggered-jobs">
-                                <h4>{{# dgettext }} tuleap-hudson_git | Git plugin triggered jobs: {{/ dgettext }}</h4>
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{# dgettext }} tuleap-hudson_git | Git plugin triggered jobs{{/ dgettext }}</label>
                                 {{# triggered_jobs }}
-                                    <a href="{{ . }}">{{ . }}</a><br/>
+                                    <p><a href="{{ . }}">{{ . }}</a></p>
                                 {{/ triggered_jobs }}
                                 {{^ triggered_jobs }}
-                                    {{# dgettext }} tuleap-hudson_git | No triggered jobs {{/ dgettext }}
+                                    <p class="tlp-property-empty">{{# dgettext }} tuleap-hudson_git | No triggered jobs {{/ dgettext }}</p>
                                 {{/ triggered_jobs }}
                             </div>
+
                             {{# status_code }}
-                                <div class="hook-log-branch-source-status">
-                                    <h4>{{# dgettext }} tuleap-hudson_git | Branch source plugin: {{/ dgettext }}</h4>
-                                    {{ . }}
-                                </div>
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{# dgettext }} tuleap-hudson_git | Branch source plugin{{/ dgettext }}</label>
+                                <p>{{ . }}</p>
+                            </div>
                             {{/ status_code }}
                         </td>
                     </tr>
                 {{/ logs_presenters }}
                 {{^ logs_presenters }}
                     <tr>
-                        <td class="table-cell-empty" colspan="3">
+                        <td class="tlp-table-cell-empty" colspan="3">
                             {{# dgettext }} tuleap-hudson_git | No logs yet{{/ dgettext }}
                         </td>
                     </tr>
@@ -60,7 +62,9 @@
         </table>
     </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{# dgettext }} tuleap-hudson_git | Close {{/ dgettext }}</button>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }} tuleap-hudson_git | Close {{/ dgettext }}
+        </button>
     </div>
-</div>
+</section>

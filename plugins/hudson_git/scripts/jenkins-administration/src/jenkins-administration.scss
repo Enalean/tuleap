@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+.jenkins-server-test-feedback {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+    align-items: center;
+}
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+.tlp-table > tbody > tr > td {
+    // stylelint-disable selector-no-qualifying-type
+    &.hook-log-repository,
+    &.hook-log-date {
+        vertical-align: top;
+    }
+    // stylelint-enable
+}

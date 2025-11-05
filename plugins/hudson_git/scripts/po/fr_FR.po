@@ -1,2 +1,0 @@
-msgid "Wait a minute..."
-msgstr "Attendez une minute ..."

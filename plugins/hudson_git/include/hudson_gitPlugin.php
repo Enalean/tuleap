@@ -70,7 +70,6 @@ use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\REST\ResourcesInjector;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
@@ -97,23 +96,6 @@ class hudson_gitPlugin extends Plugin
             $this->addHook(XMLExportExternalContentEvent::NAME);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(GetExternalGitHomepagePluginsEvent::NAME);
-        }
-    }
-
-    #[ListeningToEventName('cssfile')]
-    public function cssFile($params): void
-    {
-        $git_plugin = PluginManager::instance()->getPluginByName('git');
-        if (! $git_plugin instanceof GitPlugin) {
-            throw new RuntimeException('Cannot instantiate Git plugin');
-        }
-
-        if (
-            strpos($_SERVER['REQUEST_URI'], '/administration/jenkins') !== false
-            && strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0
-        ) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('style.css') . '" />';
-            echo '<link rel="stylesheet" type="text/css" href="' . $git_plugin->getLegacyAssets()->getFileURL('default.css') . '" />';
         }
     }
 
@@ -255,7 +237,6 @@ class hudson_gitPlugin extends Plugin
             ),
             $git_plugin->getHeaderRenderer(),
             TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR . '/templates/git-administration'),
-            $this->getIncludeAssets(),
             EventManager::instance()
         );
     }

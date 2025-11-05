@@ -1,9 +1,0 @@
-{
-    "name": "hudson_git",
-    "gettext-ts": {
-        "git-administration": {
-            "src": "scripts/src",
-            "po": "scripts/po"
-        }
-    }
-}
