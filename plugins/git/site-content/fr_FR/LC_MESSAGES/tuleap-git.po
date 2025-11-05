@@ -195,9 +195,6 @@ msgstr ""
 "href=\"%2$s\">%2$s</a>.</li><li>Le dépot courant est maintenant un miroir de "
 "la référence sur Gerrit.</li></ul>"
 
-msgid "As personal fork"
-msgstr "En tant que fork personnel"
-
 msgid "Authorize"
 msgstr "Autoriser"
 
@@ -589,10 +586,6 @@ msgid ""
 msgstr ""
 "Pour avoir les bons droits sur Gerrit, il est parfois nécessaire de mettre à "
 "jour les groupes et les projets auxquels j'appartiens."
-
-#, php-format
-msgid "Into project <b>%1$s</b>"
-msgstr "Dans le projet <b>%1$s</b>"
 
 msgid "Invalid Project ID"
 msgstr "Projet ID Invalide"
@@ -1010,6 +1003,9 @@ msgstr "Sélectionnez les dépôts à forker"
 
 msgid "Set build status"
 msgstr "Changer les statuts de builds"
+
+msgid "Set permissions for the repository to be created"
+msgstr "Définir les permissions pour le dépôt à créer"
 
 msgid "Settings"
 msgstr "Paramètres"
@@ -1504,9 +1500,10 @@ msgstr ""
 "Vous êtes sur le point d'interdire l'accès à ce serveur Gerrit pour les "
 "projects sélectionnés. Êtes-vous sûr de vouloir faire celà ?"
 
-#, php-format
-msgid "You are going to fork repository: %1$s"
-msgstr "Vous êtes sur le point de créer un fork du dépôt: %1$s"
+msgid "You are going to fork the repository:"
+msgid_plural "You are going to fork the repositories:"
+msgstr[0] "Vous êtes sur le point de créer un fork du dépôt:"
+msgstr[1] "Vous êtes sur le point de créer un fork des dépôts:"
 
 msgid "You are not allowed to access this page"
 msgstr "Vous n'êtes pas autorisé à accéder à cette page"
@@ -1579,6 +1576,9 @@ msgstr ""
 "Votre plateforme ne semble pas autoriser les expressions régulières, les "
 "permissions %1$s n'ont pas été dupliquées."
 
+msgid "as personal fork"
+msgstr "en tant que fork personnel"
+
 msgid "close artifacts"
 msgstr "fermer les artifacts"
 
@@ -1596,6 +1596,9 @@ msgstr "vide"
 
 msgid "from template"
 msgstr "à partir d'un modèle existant"
+
+msgid "into project"
+msgstr "dans le projet"
 
 msgid "repository"
 msgstr "dépôt"

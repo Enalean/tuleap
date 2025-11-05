@@ -1,0 +1,45 @@
+<h1 class="project-administration-title">{{# dgettext }} tuleap-git | Git repositories {{/ dgettext }}</h1>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <form action="{{ post_url }}" method="POST" class="tlp-pane-container">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/csrf_token}}
+            <input id="fork_repositories_repo" type="hidden" name="repos" value="{{ repositories_ids }}" />
+            <input id="choose_personal" type="hidden" name="choose_destination" value="{{ fork_type }}"/>
+            <input id="to_project" type="hidden" name="to_project" value="{{ project_id }}"/>
+            <input id="fork_repositories_path" type="hidden" name="path" value="{{ fork_path }}"/>
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fas fa-code-branch" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-git | Fork repositories {{/ dgettext }}
+                </h1>
+            </div>
+            <div class="tlp-pane-section">
+                <p>
+                    {{# dngettext }}
+                        tuleap-git
+                        | You are going to fork the repository:
+                        | You are going to fork the repositories:
+                        | {{ nb_repositories }}
+                    {{/ dngettext }}
+                    {{# repositories_names }}"{{ . }}" {{/ repositories_names }}
+                    {{# dgettext }} tuleap-git | into project {{/ dgettext }}
+                    <b>{{ fork_destination }}</b>
+                </p>
+                <p>{{# dgettext }} tuleap-git | Set permissions for the repository to be created {{/ dgettext }}</p>
+            </div>
+            {{# access_control_presenter }}
+                {{> ../access-control }}
+            {{/ access_control_presenter }}
+
+            <div class="tlp-pane-section">
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary" data-test="create-fork-with-permissions-button">
+                        {{# dgettext }} tuleap-git | Fork repositories {{/ dgettext }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>

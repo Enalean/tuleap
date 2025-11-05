@@ -29,32 +29,42 @@ use Tuleap\Git\RetrieveGitRepository;
 
 final class RetrieveGitRepositoryStub implements RetrieveGitRepository
 {
-    private function __construct(private readonly ?GitRepository $git_repository)
+    /**
+     * @param array<int, GitRepository> $git_repositories
+     */
+    private function __construct(private readonly array $git_repositories)
     {
     }
 
     #[\Override]
     public function getRepositoryById(int $id): ?GitRepository
     {
-        return $this->git_repository;
+        return $this->git_repositories[$id] ?? null;
     }
 
     #[\Override]
     public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository
     {
-        if (! $this->git_repository) {
+        if (! isset($this->git_repositories[$id])) {
             throw new GitRepoNotFoundException();
         }
-        return $this->git_repository;
+        return $this->git_repositories[$id];
     }
 
-    public static function withGitRepository(GitRepository $git_repository): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withGitRepositories(GitRepository $first_repository, GitRepository ...$other_repositories): self
     {
-        return new self($git_repository);
+        $repositories = [];
+        foreach ([$first_repository, ...$other_repositories] as $repository) {
+            $repositories[(int) $repository->getId()] = $repository;
+        }
+        return new self($repositories);
     }
 
     public static function withoutGitRepository(): self
     {
-        return new self(null);
+        return new self([]);
     }
 }

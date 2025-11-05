@@ -19,7 +19,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GlobalAdmin\GerritTemplatesPresenter;
@@ -235,53 +234,6 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
     private function generateMassUpdateCSRF()
     {
         return new CSRFSynchronizerToken('/plugins/git/?group_id=' . (int) $this->groupId . '&action=admin-mass-update');
-    }
-
-    /**
-     * Creates form to set permissions when fork repositories is performed
-     *
-     * @return void
-     */
-    protected function forkRepositoriesPermissions()
-    {
-        $params = $this->getData();
-
-        if ($params['scope'] == 'project') {
-            $groupId = $params['group_id'];
-        } else {
-            $groupId = (int) $this->groupId;
-        }
-
-        $repositories = explode(',', $params['repos']);
-        $repository   = $this->getGitRepositoryFactory()->getRepositoryById($repositories[0]);
-        if (! empty($repository)) {
-            $forkPermissionsManager = new GitForkPermissionsManager(
-                $repository,
-                $this->getAccessRightsPresenterOptionsBuilder(),
-                $this->fine_grained_retriever,
-                $this->fine_grained_permission_factory,
-                $this->fine_grained_builder,
-                $this->default_fine_grained_permission_factory,
-                $this->git_permissions_manager,
-                $this->regexp_retriever
-            );
-
-            $userName = $this->user->getUserName();
-            echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
-        }
-    }
-
-    private function getAccessRightsPresenterOptionsBuilder()
-    {
-        $dao                = new UserGroupDao();
-        $user_group_factory = new User_ForgeUserGroupFactory($dao);
-
-        return new AccessRightsPresenterOptionsBuilder($user_group_factory, PermissionsManager::instance());
-    }
-
-    private function getGitRepositoryFactory()
-    {
-        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
 
     public function getUserProjectsAsOptions(PFUser $user, ProjectManager $manager, $currentProjectId)

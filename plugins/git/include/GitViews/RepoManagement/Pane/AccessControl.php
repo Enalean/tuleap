@@ -20,10 +20,13 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
+use Git_Driver_Gerrit_ProjectCreatorStatus;
+use Git_Driver_Gerrit_ProjectCreatorStatusDao;
 use GitRepository;
+use TemplateRendererFactory;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
-use GitForkPermissionsManager;
 use PermissionsManager;
+use Tuleap\Git\GitAccessControlPresenterBuilder;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use UserGroupDao;
 use Codendi_Request;
@@ -34,6 +37,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use GitPermissionsManager;
+use UserManager;
 
 class AccessControl extends Pane
 {
@@ -139,23 +143,31 @@ class AccessControl extends Pane
 
     /**
      * Display access control management for gitolite backend
-     *
-     * @return void
      */
-    private function accessControlGitolite()
+    private function accessControlGitolite(): string
     {
-        $forkPermissionsManager = new GitForkPermissionsManager(
-            $this->repository,
+        $access_control_presenter_builder = new GitAccessControlPresenterBuilder(
             $this->getAccessRightsPresenterOptionsBuilder(),
-            $this->fine_grained_retriever,
-            $this->fine_grained_permission_factory,
-            $this->fine_grained_builder,
             $this->default_fine_grained_factory,
+            $this->fine_grained_retriever,
+            $this->fine_grained_builder,
+            $this->fine_grained_permission_factory,
+            new Git_Driver_Gerrit_ProjectCreatorStatus(
+                new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+            ),
             $this->git_permission_manager,
             $this->regexp_retriever
         );
 
-        return $forkPermissionsManager->displayAccessControl();
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
+        return $renderer->renderToString(
+            'access-control-legacy',
+            $access_control_presenter_builder->buildForPermissionsManagement(
+                $this->repository,
+                $this->repository->getProject(),
+                UserManager::instance()->getCurrentUser()
+            ),
+        );
     }
 
     private function getAccessRightsPresenterOptionsBuilder()

@@ -22,7 +22,7 @@
 use Psr\Log\LoggerInterface;
 use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
-use Tuleap\Git\ForkRepositories\ForkRepositoriesPOSTUrlBuilder;
+use Tuleap\Git\ForkRepositories\ForkRepositoriesUrlsBuilder;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
@@ -619,39 +619,9 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $this->setDefaultPageRendering(false);
                 $this->addAction('fetchGitTemplate', [$template_id, $user, $project]);
                 break;
-            case 'fork_repositories_permissions':
-                $scope     = self::SCOPE_PERSONAL;
-                $valid_url = new Valid_UInt('repos');
-                $valid_url->required();
-                if ($this->request->validArray($valid_url)) {
-                    $repos = $this->request->get('repos');
-                }
-                $valid_url = new Valid_UInt('to_project');
-                if ($this->request->valid($valid_url)) {
-                    $toProject = $this->request->get('to_project');
-                }
-                $valid_url = new Valid_String('path');
-                $valid_url->required();
-                $path = '';
-                if ($this->request->valid($valid_url)) {
-                    $path = $this->request->get('path');
-                }
-                $valid_url = new Valid_String('choose_destination');
-                $valid_url->required();
-                if ($this->request->valid($valid_url)) {
-                    $scope = $this->request->get('choose_destination');
-                }
-                if (! empty($repos)) {
-                    $this->addAction('forkRepositoriesPermissions', [$repos, $toProject, $path, $scope]);
-                    $this->addView('forkRepositoriesPermissions');
-                } else {
-                    $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
-                    $this->redirectToForkProjectRepositories();
-                }
-                break;
             case 'do_fork_repositories':
                 try {
-                    if ($this->request->get('choose_destination') == self::SCOPE_PERSONAL) {
+                    if ($this->request->get('choose_destination') === self::SCOPE_PERSONAL) {
                         if ($this->user->isMember($this->groupId)) {
                             $this->_doDispatchForkRepositories($this->request, $user);
                         } else {
@@ -1018,7 +988,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function _doDispatchForkCrossProject($request, $user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        $this->checkSynchronizerToken(ForkRepositoriesPOSTUrlBuilder::buildForksPermissionsURL($this->groupId));
+        $this->checkSynchronizerToken(ForkRepositoriesUrlsBuilder::buildGETForksAndDestinationSelectionURL($this->project));
         $validators = [new Valid_UInt('to_project'), new Valid_String('repos'), new Valid_Array('repo_access')];
 
         foreach ($validators as $validator) {
@@ -1084,7 +1054,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function _doDispatchForkRepositories($request, $user) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $this->addAction('getProjectRepositoryList', [$this->groupId]);
-        $this->checkSynchronizerToken(ForkRepositoriesPOSTUrlBuilder::buildForksPermissionsURL($this->groupId));
+        $this->checkSynchronizerToken(ForkRepositoriesUrlsBuilder::buildGETForksAndDestinationSelectionURL($this->project));
 
         $valid = new Valid_String('path');
         $valid->required();
@@ -1159,6 +1129,6 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     protected function redirectToForkProjectRepositories(): void
     {
-        $this->redirect('/projects/' . urlencode($this->project->getUnixNameLowerCase()) . '/fork-repositories/');
+        $this->redirect(ForkRepositoriesUrlsBuilder::buildGETForksAndDestinationSelectionURL($this->project));
     }
 }

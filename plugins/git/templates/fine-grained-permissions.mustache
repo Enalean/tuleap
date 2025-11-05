@@ -1,0 +1,190 @@
+<div class="tlp-pane-section">
+    <h2>{{ fine_grained_permissions_title }}</h2>
+
+    <div>
+        <div class="tlp-form-element {{# disabled }}tlp-form-element-disabled{{/ disabled }}">
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox"
+                       name="use-fine-grained-permissions"
+                       id="use-fine-grained-permissions"
+                    {{# are_fine_grained_permissions_defined }}checked{{/ are_fine_grained_permissions_defined }}
+                    {{ disabled }}
+                /> {{ fine_grained_permissions_checkbox_label }}
+            </label>
+        </div>
+
+        {{# are_regexp_permission_activated_at_site_level }}
+            <div class="tlp-form-element access-control-activate-regexps-form-element">
+                <span>&#8627;</span>
+                <div>
+                    <label class="tlp-label tlp-checkbox">
+                        <input type="checkbox"
+                               name="use-regexp"
+                               class="use-regexp"
+                            {{# is_regexp_enabled }}checked{{/ is_regexp_enabled }}
+                        />
+                        {{ regexp_permission_label }}
+                    </label>
+                    <p class="tlp-text-warning">
+                        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                        {{ regexp_incoherence_label }}
+                    </p>
+                </div>
+            </div>
+        {{/ are_regexp_permission_activated_at_site_level }}
+    </div>
+    {{# are_fine_grained_permissions_defined }}
+        {{# is_fork }}
+            <p class="tlp-alert-warning">{{ fine_grained_permissions_fork_warning }}</p>
+        {{/ is_fork }}
+
+        <h4>{{ branches_title }}</h4>
+        <table class="tlp-table access-control-permission-table">
+            <thead>
+            <tr>
+                <th>{{ pattern_column }}</th>
+                <th>{{ label_write }}</th>
+                <th>{{ label_rw }}</th>
+                {{^ is_fork }}
+                    <th></th>
+                {{/ is_fork }}
+            </tr>
+            </thead>
+            <tbody>
+            {{^ has_branches_permissions }}
+                <tr>
+                    <td class="tlp-table-cell-empty"
+                        {{^ is_fork }}colspan="4"{{/ is_fork }}
+                        {{# is_fork }}colspan="3"{{/ is_fork }}
+                    >{{ empty }}</td>
+                </tr>
+            {{/ has_branches_permissions }}
+
+            {{# has_branches_permissions }}
+                {{# branches_permissions }}
+                    <tr>
+                        <td>{{ pattern }}</td>
+                        <td>
+                            <select class="tlp-select" multiple size="6" name="edit-branch-write[{{ id }}][]" {{ disabled }}>
+                                {{# writers }}
+                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                                {{/ writers }}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="tlp-select" multiple size="6" name="edit-branch-rewind[{{ id }}][]" {{ disabled }}>
+                                {{# rewinders }}
+                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                                {{/ rewinders }}
+                            </select>
+                        </td>
+                        {{^ is_fork }}
+                            <td class="tlp-table-cell-actions">
+                                <a href="#"
+                                   class="tlp-table-cell-actions-button tlp-button-outline tlp-button-danger tlp-button-small"
+                                   data-toggle="popover"
+                                   data-trigger="click"
+                                   data-placement="left"
+                                   data-html="true"
+                                   data-popover-id="remove-{{ id }}-popover"
+                                   data-form-action="{{ remove_form_action }}"
+                                >
+                                    <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i> {{ remove_fine_grained_permission_delete }}
+                                </a>
+                                {{> settings/popover-remove-fine-grained-permission }}
+                            </td>
+                        {{/ is_fork }}
+                    </tr>
+                {{/ branches_permissions }}
+            {{/ has_branches_permissions }}
+            </tbody>
+        </table>
+        {{^ is_fork }}
+            <button class="tlp-button-primary tlp-button-outline"
+                type="button"
+                data-type="branch"
+                data-regexp-enabled="{{ is_regexp_enabled }}">
+                {{ add_branch_permission }}
+            </button>
+        {{/ is_fork }}
+    </div>
+    <div class="tlp-pane-section">
+        <h4>{{ tags_title }}</h4>
+        <table class="tlp-table access-control-permission-table">
+            <thead>
+            <tr>
+                <th>{{ pattern_column }}</th>
+                <th>{{ label_write }}</th>
+                <th>{{ label_rw }}</th>
+                {{^ is_fork }}
+                    <th></th>
+                {{/ is_fork }}
+            </tr>
+            </thead>
+            <tbody>
+            {{^ has_tags_permissions }}
+                <tr>
+                    <td class="tlp-table-cell-empty"
+                        {{^ is_fork }}colspan="4"{{/ is_fork }}
+                        {{# is_fork }}colspan="3"{{/ is_fork }}
+                    >{{ empty }}</td>
+                </tr>
+            {{/ has_tags_permissions }}
+
+            {{# has_tags_permissions }}
+                {{# tags_permissions }}
+                    <tr>
+                        <td>{{ pattern }}</td>
+                        <td>
+                            <select class="tlp-select" multiple size="6" name="edit-tag-write[{{ id }}][]" {{ disabled }}>
+                                {{# writers }}
+                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                                {{/ writers }}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="tlp-select" multiple size="6" name="edit-tag-rewind[{{ id }}][]" {{ disabled }}>
+                                {{# rewinders }}
+                                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                                {{/ rewinders }}
+                            </select>
+                        </td>
+                        {{^ is_fork }}
+                            <td class="tlp-table-cell-actions">
+                                <a href="#"
+                                   class="tlp-table-cell-actions-button tlp-button-outline tlp-button-danger tlp-button-small"
+                                   data-toggle="popover"
+                                   data-trigger="click"
+                                   data-placement="left"
+                                   data-html="true"
+                                   data-popover-id="remove-{{ id }}-popover"
+                                   data-form-action="{{ remove_form_action }}"
+                                >
+                                    <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i> {{ remove_fine_grained_permission_delete }}
+                                </a>
+                                {{> settings/popover-remove-fine-grained-permission }}
+                            </td>
+                        {{/ is_fork }}
+                    </tr>
+                {{/ tags_permissions }}
+            {{/ has_tags_permissions }}
+            </tbody>
+        </table>
+        {{^ is_fork }}
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                type="button"
+                data-type="tag"
+                data-regexp-enabled="{{ is_regexp_enabled }}">
+                {{ add_tag_permission }}
+            </button>
+        {{/ is_fork }}
+
+    {{/ are_fine_grained_permissions_defined }}
+</div>
+
+<select id="add-fine-grained-permission-template" class="tlp-select" multiple size="6">
+    {{# new_fine_grained_ugroups }}
+        <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+    {{/ new_fine_grained_ugroups }}
+</select>

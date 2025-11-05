@@ -50,7 +50,7 @@ final readonly class ForkRepositoriesPresenter
         $this->has_forkable_repositories                 = ! empty($forkable_repositories);
         $this->has_user_projects                         = ! empty($user_projects);
         $this->user_name                                 = $user->getUserName();
-        $this->post_url                                  = ForkRepositoriesPOSTUrlBuilder::buildForksAndDestinationSelectionURL($project);
+        $this->post_url                                  = ForkRepositoriesUrlsBuilder::buildPOSTForksPermissionsURL($project);
         $this->project_id                                = (int) $project->getID();
     }
 }
