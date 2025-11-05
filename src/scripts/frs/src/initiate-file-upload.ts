@@ -197,7 +197,7 @@ function insertFileRow(
     textarea.classList.add("tlp-textarea", "tlp-textarea-small");
     comment_column.appendChild(textarea);
 
-    if (tbody.closest(".frs-release-files-table-update") !== null) {
+    if (tbody.closest(".frs-release-files-table-with-extra-columns") !== null) {
         const empty_columns = ["owner", "release", "release-date"];
         empty_columns.forEach(() => row.insertCell());
     }
