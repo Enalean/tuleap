@@ -24,8 +24,6 @@ namespace Tuleap\FRS;
 
 use EventManager;
 use FRSRelease;
-use Tuleap\Date\TlpRelativeDatePresenter;
-use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\FRS\Events\GetReleaseNotesLink;
 
 /**
@@ -37,7 +35,7 @@ final readonly class ShowPackageReleasePresenter
         public int $id,
         public string $name,
         public bool $is_hidden,
-        public TlpRelativeDatePresenter $date,
+        public string $date,
         public string $show_url,
         public string $edit_url,
         public string $delete_url,
@@ -47,8 +45,6 @@ final readonly class ShowPackageReleasePresenter
 
     public static function fromRelease(
         FRSRelease $release,
-        TlpRelativeDatePresenterBuilder $tlp_relative_date_presenter_builder,
-        \PFUser $user,
     ): self {
         $event = new GetReleaseNotesLink($release);
         EventManager::instance()->dispatch($event);
@@ -72,10 +68,7 @@ final readonly class ShowPackageReleasePresenter
             $release->getReleaseID(),
             $release->getName(),
             $release->isHidden(),
-            $tlp_relative_date_presenter_builder->getTlpRelativeDatePresenterInInlineContextWithoutTime(
-                (new \DateTimeImmutable())->setTimestamp((int) $release->getReleaseDate()),
-                $user,
-            ),
+            \format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (int) $release->getReleaseDate()),
             $show_url,
             $edit_url,
             $delete_url,
