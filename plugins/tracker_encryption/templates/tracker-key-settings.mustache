@@ -1,25 +1,27 @@
-   <form name="form1" method="POST" action="{{ action_url }}" id="tracker-settings">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <label for="tracker-key"> <h2 class="almost-tlp-title"> {{ tracker_key_label }} </h2>  </label>
-    <div id="help_tree" class="alert alert-warning">
-    {{ display_help }}
-    </div>
-    <textarea id="tracker-key" name="key" rows="20" cols="100">{{ get_tracker_key }}</textarea>
-    <div id="confirm" class="modal hide fade modal-content panel-warning">
-        <div class="modal-header panel-heading alert">
-          <h4 class="modal-title">Warning</h4>
+<div class="tlp-framed">
+    <form name="form1" method="POST" action="{{ action_url }}" class="tlp-pane">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{ tracker_key_label }}</h1>
+            </div>
+            <div class="tlp-pane-section">
+                <p>{{ display_help }}</p>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="tracker-key">{{ tracker_key_label }}</label>
+                    <textarea id="tracker-key" name="key" rows="20" class="tlp-textarea">{{ get_tracker_key }}</textarea>
+                    {{# get_tracker_key }}
+                        <p class="tlp-text-warning">{{ update_key_warning }}</p>
+                    {{/get_tracker_key}}
+                </div>
+
+                <div class="tlp-pane-section-submit">
+                    <input type="submit" class="tlp-button-primary" value="{{ submit_button }}" />
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-            {{ update_key_warning }}
-        </div>
-        <div class="modal-footer">
-            <input type="submit" data-dismiss="submit" class="btn btn-warning" id="submit_modal" value="{{ submit_button }}"/>
-            <input type="button" data-dismiss="modal" class="btn" value="{{ cancel_button }}"/>
-        </div>
-    </div>
-    <div class="submit-bar">
-        <input id="submit_form" type="submit" class="btn btn-large btn-primary" value="{{ submit_button }}" />
-    </div>
-   </form>
+    </form>
+</div>
