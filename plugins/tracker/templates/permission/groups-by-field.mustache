@@ -41,7 +41,7 @@
                                 </td>
                                 <td style="text-align:center;">
                                     <input type="hidden" name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" value="off" />
-                                    <input type='checkbox' name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" {{# has_submit_access }}checked="checked"{{/ has_submit_access }} {{# not_submitable }}disabled="disabled"{{/ not_submitable }} />
+                                    <input type='checkbox' name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" {{# has_submit_access }}checked="checked"{{/ has_submit_access }} {{# not_submitable }}disabled="disabled"{{/ not_submitable }} data-test="permissions-per-field-submit-checkbox"/>
                                 </td>
                                 <td>
                                     <select class="tlp-select tlp-select-adjusted" name="permissions[{{ field_id }}][{{ ugroup_id }}][others]" data-test="field-permissions">

@@ -158,6 +158,11 @@ declare global {
             deleteBotMattermost(bot_name: string): void;
 
             enableService(project_name: string, service_short_name: string): void;
+
+            generateLargeFile(
+                file_size_in_mb: number,
+                file_name: string,
+            ): Chainable<{ file: File; data_transfer: DataTransfer }>;
         }
     }
 }

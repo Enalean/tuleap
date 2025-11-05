@@ -6,7 +6,7 @@
         </button>
     </div>
     <div class="tlp-modal-body attachments-uploads-error-list">
-        <div class="tlp-pane-section attachment-upload-error" ng-repeat="error in $ctrl.errors">
+        <div class="tlp-pane-section attachment-upload-error" ng-repeat="error in $ctrl.errors" data-test="file-upload-error">
             <p class="attachment-upload-error-file-name">
                 {{ error.filename }}
             </p>
