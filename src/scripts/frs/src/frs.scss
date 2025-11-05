@@ -21,6 +21,10 @@
 @use "pkg:@tuleap/lazybox";
 @use "pkg:@tuleap/lazybox-users-autocomplete";
 
+.frs-unnamed-package {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
 .tlp-table.frs-monitor-users-table:last-child {
     // tlp-table in a pane is too greedy:
     // it says it should have a negative bottom margin when it is the last child

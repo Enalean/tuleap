@@ -110,7 +110,11 @@ class FRSPackageController
 
             $url = '?func=create&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId()));
             if (isset($package_data['name']) && isset($package_data['rank']) && isset($package_data['status_id'])) {
-                if ($this->package_factory->isPackageNameExist($package_data['name'], $project->getGroupId())) {
+                if (trim($package_data['name']) === '') {
+                    $GLOBALS['Response']->addFeedback(\Feedback::ERROR, _('The package name cannot be empty'));
+                    $package = new FRSPackage($package_data);
+                    frs_display_package_form($package, $title, $url, $existing_packages);
+                } elseif ($this->package_factory->isPackageNameExist($package_data['name'], $project->getGroupId())) {
                     $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name_exists'));
                     $package = new FRSPackage($package_data);
                     frs_display_package_form($package, $title, $url, $existing_packages);
