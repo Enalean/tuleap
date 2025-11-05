@@ -2755,7 +2755,12 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         $request = HTTPRequest::instance();
 
-        if ($request->get('action') === 'repo_management' && in_array($request->get('pane'), GitViews_RepoManagement::BURNING_PARROT_COMPATIBLE_PANES, true)) {
+        if ($request->get('action') === 'repo_management') {
+            if (in_array($request->get('pane'), GitViews_RepoManagement::BURNING_PARROT_COMPATIBLE_PANES, true)) {
+                $event->setIsInBurningParrotCompatiblePage();
+            }
+        }
+        if ($request->get('action') === 'admin-git-admins') {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }

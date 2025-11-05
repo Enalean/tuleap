@@ -76,6 +76,8 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private string $action;
 
+    public const string ADMIN_GIT_ADMINS_ACTION = 'admin-git-admins';
+
     /**
      * Lists all git-related permission types.
      *

@@ -21,27 +21,21 @@
 
 namespace Tuleap\Git;
 
-use EventManager;
+use Git;
 use GitPlugin;
 use HTTPRequest;
+use Override;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchableWithThemeSelection;
+use Tuleap\Request\NotFoundException;
 
-class GitPluginDefaultController implements DispatchableWithRequest
+final readonly class GitPluginDefaultController implements DispatchableWithRequest, DispatchableWithThemeSelection
 {
-    /**
-     * @var \Tuleap\Git\RouterLink
-     */
-    private $router_link;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    public function __construct(RouterLink $router_link, EventManager $event_manager)
+    public function __construct(private RouterLink $router_link, private EventDispatcherInterface $event_manager)
     {
-        $this->router_link   = $router_link;
-        $this->event_manager = $event_manager;
     }
 
     /**
@@ -51,19 +45,28 @@ class GitPluginDefaultController implements DispatchableWithRequest
      * @return void
      * @throws \Tuleap\Request\NotFoundException
      */
-    #[\Override]
+    #[Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getProject()->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            throw new \Tuleap\Request\NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
+            throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
-        \Tuleap\Project\ServiceInstrumentation::increment('git');
+        ServiceInstrumentation::increment('git');
 
-        $this->event_manager->processEvent(
+        $this->event_manager->dispatch(
             new GitAdditionalActionEvent($request)
         );
 
         $this->router_link->process($request);
+    }
+
+    #[Override]
+    public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
+    {
+        return match ($request->get('action')) {
+            Git::ADMIN_GIT_ADMINS_ACTION => true,
+            default            => false,
+        };
     }
 }
