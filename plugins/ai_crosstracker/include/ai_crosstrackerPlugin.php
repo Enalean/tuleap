@@ -22,6 +22,8 @@
 declare(strict_types=1);
 
 use Tuleap\AICrossTracker\REST\v1\TQLAssistantResource;
+use Tuleap\CrossTracker\GetCrossTrackerExternalPluginUsage;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -29,6 +31,8 @@ require_once __DIR__ . '/../../ai/vendor/autoload.php';
 
 final class ai_crosstrackerPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
+    private const string  AI_CROSSTRACKER_PLUGIN_NAME = 'plugin_ai_crosstracker';
+
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -54,9 +58,21 @@ final class ai_crosstrackerPlugin extends Plugin // phpcs:ignore PSR1.Classes.Cl
     }
 
     #[Override]
+    public function getServiceShortname(): string
+    {
+        return self::AI_CROSSTRACKER_PLUGIN_NAME;
+    }
+
+    #[Override]
     public function getDependencies(): array
     {
         return ['ai', 'crosstracker'];
+    }
+
+    #[ListeningToEventClass]
+    public function getExternalPlugin(GetCrossTrackerExternalPluginUsage $cross_tracker_external_plugin_usage): void
+    {
+        $cross_tracker_external_plugin_usage->addServiceNameUsed($this->getServiceShortname());
     }
 
     #[ListeningToEventName(Event::REST_RESOURCES)]

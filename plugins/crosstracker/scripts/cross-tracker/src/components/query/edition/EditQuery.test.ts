@@ -23,7 +23,7 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import QuerySuggested from "../QuerySuggested.vue";
 import TitleInput from "../TitleInput.vue";
-import { EMITTER, QUERY_UPDATER, WIDGET_ID } from "../../../injection-symbols";
+import { EMITTER, EXTERNAL_PLUGINS, QUERY_UPDATER, WIDGET_ID } from "../../../injection-symbols";
 import { Fault } from "@tuleap/fault";
 import type {
     EditedQueryEvent,
@@ -110,6 +110,7 @@ describe("EditQuery", () => {
                     [WIDGET_ID.valueOf()]: 96,
                     [EMITTER.valueOf()]: emitter,
                     [QUERY_UPDATER.valueOf()]: query_updater,
+                    [EXTERNAL_PLUGINS.valueOf()]: "",
                 },
             },
             props: {

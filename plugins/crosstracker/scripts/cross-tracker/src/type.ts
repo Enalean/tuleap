@@ -33,4 +33,5 @@ export type WidgetData = {
     readonly title_attribute: string;
     readonly default_title: string;
     readonly dashboard_id: number;
+    readonly external_plugins: string[];
 };

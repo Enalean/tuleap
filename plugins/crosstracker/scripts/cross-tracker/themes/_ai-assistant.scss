@@ -1,0 +1,97 @@
+/**
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.assistant-ai-mount-point {
+    flex-grow: 1;
+    min-width: 50%;
+}
+
+.assistant-ai-open {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+}
+
+.assistant-ai-title {
+    display: flex;
+    align-items: center;
+}
+
+.assistant-ai-container {
+    width: 50%;
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+}
+
+.assistant-ai-user-prompt-question-card {
+    max-width: fit-content;
+    margin: 0 0 var(--tlp-small-spacing) auto;
+    border: 0;
+
+    &:last-child {
+        margin: 0 0 var(--tlp-small-spacing) auto;
+    }
+}
+
+.assistant-ai-chatbox-container {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.assistant-ai-user-prompt-container {
+    display: flex;
+    gap: 10px;
+}
+
+.assistant-ai-loader-container {
+    display: flex;
+    color: var(--tlp-dimmed-color);
+    font-size: 0.5rem;
+    gap: 4px;
+}
+
+.assistant-ai-loader-second-dot {
+    --fa-animation-delay: 100ms;
+}
+
+.assistant-ai-loader-third-dot {
+    --fa-animation-delay: 200ms;
+}
+
+.markup-code-container {
+    position: relative;
+    margin: 0 0 var(--tlp-medium-spacing);
+
+    pre {
+        margin: 0;
+    }
+}
+
+.code-action-component-display {
+    display: block;
+    position: absolute;
+    top: var(--tlp-small-spacing);
+    right: var(--tlp-small-spacing);
+    width: fit-content;
+    margin: 0 0 0 auto;
+}
+
+.tlp-pane-container.assistant-ai-container {
+    display: block;
+}

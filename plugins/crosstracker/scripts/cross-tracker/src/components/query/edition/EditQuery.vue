@@ -18,7 +18,8 @@
   -->
 
 <template>
-    <section class="tlp-pane-section">
+    <section class="tlp-pane-section query-suggestion-container">
+        <ask-a-i v-if="doesAiPluginIsEnabled()" />
         <query-suggested
             v-on:query-chosen="handleChosenQuery"
             v-bind:is_modal_should_be_displayed="is_modal_should_be_displayed"
@@ -87,13 +88,15 @@
 <script setup lang="ts">
 import TitleInput from "../TitleInput.vue";
 import DescriptionTextArea from "../DescriptionTextArea.vue";
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { QuerySuggestion } from "../../../domain/SuggestedQueriesGetter";
 import QuerySuggested from "../QuerySuggested.vue";
 
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { EMITTER, QUERY_UPDATER, WIDGET_ID } from "../../../injection-symbols";
+import { EMITTER, EXTERNAL_PLUGINS, QUERY_UPDATER, WIDGET_ID } from "../../../injection-symbols";
+import type { TQLQueryEvent } from "../../../helpers/widget-events";
 import {
+    SEND_TQL_QUERY_FROM_CHATBOT_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
     QUERY_EDITED_EVENT,
@@ -103,6 +106,8 @@ import { useGettext } from "vue3-gettext";
 import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
 import type { Query } from "../../../type";
 import QueryEditor from "../QueryEditor.vue";
+import AskAI from "../../AskAI.vue";
+import { AI_CROSSTRACKER_PLUGIN } from "../../../helpers/external-plugins";
 import TableWrapper from "../../TableWrapper.vue";
 
 const { $gettext } = useGettext();
@@ -120,6 +125,8 @@ const emitter = strictInject(EMITTER);
 const widget_id = strictInject(WIDGET_ID);
 
 const query_updater = strictInject(QUERY_UPDATER);
+
+const external_plugins: string[] = strictInject(EXTERNAL_PLUGINS);
 
 const title = ref(props.query.title);
 const description = ref(props.query.description);
@@ -142,6 +149,24 @@ const is_search_button_disabled = computed((): boolean => {
 const is_save_button_disabled = computed((): boolean => {
     return tql_query.value === "" || title.value === "" || is_save_loading.value;
 });
+
+onMounted((): void => {
+    emitter.on(SEND_TQL_QUERY_FROM_CHATBOT_EVENT, handleSearchFromAi);
+});
+
+onBeforeUnmount(() => {
+    emitter.off(SEND_TQL_QUERY_FROM_CHATBOT_EVENT);
+});
+
+function doesAiPluginIsEnabled(): boolean {
+    return external_plugins.includes(AI_CROSSTRACKER_PLUGIN);
+}
+function handleSearchFromAi(event: TQLQueryEvent): void {
+    tql_query.value = event.tql_query;
+    searched_tql_query.value = tql_query.value;
+    query_editor.value?.updateEditor(event.tql_query);
+    is_selectable_table_displayed.value = true;
+}
 
 function handleCancelButton(): void {
     emit("return-to-active-query-pane");
@@ -194,6 +219,10 @@ function handleChosenQuery(query: QuerySuggestion): void {
 </script>
 
 <style scoped lang="scss">
+.query-suggestion-container {
+    position: relative;
+}
+
 .edit-query-title-description-container {
     display: flex;
     justify-content: space-between;

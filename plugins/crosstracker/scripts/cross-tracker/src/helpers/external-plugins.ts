@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "./reading-mode";
-@use "./writing-mode";
-@use "./ai-assistant";
-
-.cross-tracker-loader {
-    height: 100px;
-    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
-}
-
-.cross-tracker-report-archive-icon {
-    margin: 0 3px 0 0;
-    font-size: 10px;
-}
+export const AI_CROSSTRACKER_PLUGIN = "plugin_ai_crosstracker";

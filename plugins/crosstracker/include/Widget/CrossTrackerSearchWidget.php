@@ -24,8 +24,10 @@ use Codendi_Request;
 use HTTPRequest;
 use LogicException;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use SimpleXMLElement;
 use TemplateRendererFactory;
+use Tuleap\CrossTracker\GetCrossTrackerExternalPluginUsage;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeCoreAssets;
@@ -46,6 +48,7 @@ class CrossTrackerSearchWidget extends Widget
         private readonly WidgetCrossTrackerWidgetXMLExporter $widget_XML_exporter,
         private readonly CrossTrackerWidgetCreator $cross_tracker_widget_creator,
         private readonly CrossTrackerWidgetRetriever $cross_tracker_widget_retriever,
+        private readonly EventDispatcherInterface $event_manager,
     ) {
         parent::__construct(self::NAME);
     }
@@ -71,6 +74,7 @@ class CrossTrackerSearchWidget extends Widget
         return $this->cross_tracker_widget_retriever->retrieveWidgetById($this->content_id)
             ->match(
                 function (ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) use ($renderer, $is_admin, $user): string {
+                    $external_plugins = $this->event_manager->dispatch(new GetCrossTrackerExternalPluginUsage());
                     return $renderer->renderToString(
                         'cross-tracker-search-widget',
                         [
@@ -81,7 +85,8 @@ class CrossTrackerSearchWidget extends Widget
                                 $widget->getDashboardType(),
                                 $this->getTitleAttributeValue(),
                                 $this->getTitle(),
-                                $widget->getDashboardId()
+                                $widget->getDashboardId(),
+                                $external_plugins->getServiceNameUsed(),
                             )),
                         ]
                     );

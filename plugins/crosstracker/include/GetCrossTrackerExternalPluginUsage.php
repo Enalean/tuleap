@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "./reading-mode";
-@use "./writing-mode";
-@use "./ai-assistant";
+declare(strict_types=1);
 
-.cross-tracker-loader {
-    height: 100px;
-    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
-}
+namespace Tuleap\CrossTracker;
 
-.cross-tracker-report-archive-icon {
-    margin: 0 3px 0 0;
-    font-size: 10px;
+use Tuleap\Event\Dispatchable;
+
+final class GetCrossTrackerExternalPluginUsage implements Dispatchable
+{
+    public const string NAME = 'getExternalPlugin';
+
+    /**
+     * @var string[]
+     */
+    private array $services_name_used = [];
+
+    public function addServiceNameUsed(string $service_name): void
+    {
+        $this->services_name_used[] = $service_name;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getServiceNameUsed(): array
+    {
+        return $this->services_name_used;
+    }
 }

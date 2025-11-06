@@ -123,7 +123,8 @@ class crosstrackerPlugin extends Plugin
                         ),
                         $executor
                     ),
-                    $cross_tracker_widget_retriever
+                    $cross_tracker_widget_retriever,
+                    EventManager::instance()
                 )
             );
         }
