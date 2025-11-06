@@ -38,7 +38,5 @@ $db_root->run('GRANT ALL PRIVILEGES ON `testdb_%` . * TO "' . \ForgeConfig::get(
 $db_tables_dao = new \Tuleap\DAO\DBTablesDao();
 $db_tables_dao->updateFromFile(__DIR__ . '/../../../src/db/mysql/trackerv3structure.sql');
 $db_tables_dao->updateFromFile(__DIR__ . '/../../../src/db/mysql/trackerv3values.sql');
-// Need the raw import (instead of std activate of plugin) because we need to load
-// for Tv3->Tv5 migration tests
-$db_tables_dao->updateFromFile(__DIR__ . '/../../../plugins/tracker_date_reminder/db/install.sql');
-$db_tables_dao->updateFromFile(__DIR__ . '/../../../plugins/tracker_date_reminder/db/examples.sql');
+$db_tables_dao->updateFromFile(__DIR__ . '/../../../src/db/mysql/trackerv3_date_reminder_structure.sql');
+$db_tables_dao->updateFromFile(__DIR__ . '/../../../src/db/mysql/trackerv3_date_reminder_examples.sql');
