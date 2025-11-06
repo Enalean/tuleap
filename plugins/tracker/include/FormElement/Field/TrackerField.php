@@ -926,9 +926,8 @@ abstract class TrackerField extends TrackerFormElement implements Tracker_Report
     /**
      * Say if this fields suport notifications
      *
-     * @return bool
      */
-    public function isNotificationsSupported()
+    public function isNotificationsSupported(): bool
     {
         return false;
     }
@@ -1110,14 +1109,6 @@ abstract class TrackerField extends TrackerFormElement implements Tracker_Report
         }
 
         return true;
-    }
-
-    /**
-     * @return bool true if the field is considered to be required
-     */
-    public function isRequired()
-    {
-        return $this->required;
     }
 
     /**

@@ -1425,10 +1425,9 @@ abstract class ListField extends TrackerField implements Tracker_FormElement_Fie
     /**
      * Say if this fields suport notifications
      *
-     * @return bool
      */
     #[Override]
-    public function isNotificationsSupported()
+    public function isNotificationsSupported(): bool
     {
         if ($b = $this->getBind()) {
             return $b->isNotificationsSupported();

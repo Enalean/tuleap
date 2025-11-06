@@ -125,12 +125,7 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
      */
     public $label;
 
-    /**
-     * The description
-     *
-     * @var string $description
-     */
-    public $description;
+    public string $description;
 
     /**
      * Is the field used?
@@ -182,7 +177,6 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
      * @param int|string $parent_id The id of the parent element
      * @param ?string $name The short name of the field
      * @param string $label The label of the element
-     * @param string $description The description of the element
      * @param int|bool|null|string $use_it Is the element used?
      * @param string $scope The scope of the plugin 'S' | 'P'
      * @param int|bool|null|string $required Is the element required? Todo: move this in field?
@@ -191,14 +185,14 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
      *
      * @return void
      */
-    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, ?TrackerFormElement $original_field = null)
+    public function __construct($id, $tracker_id, $parent_id, $name, $label, ?string $description, $use_it, $scope, $required, $notifications, $rank, ?TrackerFormElement $original_field = null)
     {
         $this->id          = (int) $id;
         $this->tracker_id  = (int) $tracker_id;
         $this->parent_id   = (int) $parent_id;
         $this->name        = $name === null ? '' : trim($name);
         $this->label       = $label;
-        $this->description = $description;
+        $this->description = (string) $description;
         $this->use_it      = false;
         if (is_bool($use_it)) {
             $this->use_it = $use_it;
@@ -258,6 +252,11 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
             'permissions'         => $this->getPermissionsByUgroupId(),
             'specific_properties' => $this->getFlattenPropertiesValues(),
         ];
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->required;
     }
 
     public function isCSVImportable(): bool

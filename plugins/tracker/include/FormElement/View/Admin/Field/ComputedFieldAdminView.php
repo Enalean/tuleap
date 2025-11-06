@@ -85,9 +85,9 @@ class ComputedFieldAdminView extends FieldAdminView
         return $html;
     }
 
-    private function canUpgrade()
+    private function canUpgrade(): bool
     {
-        return $this->formElement->name === $this->formElement->getProperty('target_field_name');
+        return $this->formElement->getName() === $this->formElement->getProperty('target_field_name');
     }
 
     private function isMigrated()

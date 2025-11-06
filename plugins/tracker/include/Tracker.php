@@ -1878,11 +1878,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Test if tracker is deleted
      *
-     * @return bool
-     *
      * @psalm-mutation-free
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return ($this->deletion_date != '');
     }

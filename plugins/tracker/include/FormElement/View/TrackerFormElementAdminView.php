@@ -21,6 +21,7 @@ namespace Tuleap\Tracker\FormElement\View;
 
 use Codendi_HTMLPurifier;
 use LogicException;
+use Tracker_FormElement_Shared;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 
@@ -31,7 +32,7 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
  */
 class TrackerFormElementAdminView
 {
-    public function __construct(protected TrackerFormElement $formElement, protected $allUsedElements)
+    public function __construct(protected(set) readonly Tracker_FormElement_Shared|TrackerFormElement $formElement, private readonly array $allUsedElements)
     {
     }
 
@@ -96,7 +97,7 @@ class TrackerFormElementAdminView
         $html .= '<p>';
 
         $html .= '<label for="formElement_description">' . dgettext('tuleap-tracker', 'Description') . ':</label>';
-        $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">' . $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML) . '</textarea>';
+        $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">' . $hp->purify($this->formElement->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '</textarea>';
 
         $html .= '</p>';
         return $html;
@@ -142,7 +143,7 @@ class TrackerFormElementAdminView
         $html  = '';
         $html .= '<p>';
         $html .= '<label>' . dgettext('tuleap-tracker', 'Description') . '</label>';
-        $html .= $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $hp->purify($this->formElement->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</p>';
         return $html;
     }
@@ -154,6 +155,9 @@ class TrackerFormElementAdminView
 
     public function fetchCustomHelpForShared(): string
     {
+        if (! $this->formElement instanceof TrackerFormElement) {
+            return '';
+        }
         $hp                  = Codendi_HTMLPurifier::instance();
         $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
         $originalProjectName = $this->formElement->getOriginalProject()->getPublicName();
@@ -184,8 +188,8 @@ class TrackerFormElementAdminView
             $items[] = $field->getRankSelectboxDefinition();
         }
         $html .= $GLOBALS['HTML']->selectRank(
-            $this->formElement->id,
-            $this->formElement->rank,
+            $this->formElement->getId(),
+            $this->formElement->getRank(),
             $items,
             [
                 'id'   => 'formElement_rank',
@@ -351,7 +355,7 @@ class TrackerFormElementAdminView
         }
         $html  = '';
         $html .= '<p>';
-        $html .= '<a href="' . ByFieldController::getUrl($tracker) . '?selected_id=' . $this->formElement->id . '">';
+        $html .= '<a href="' . ByFieldController::getUrl($tracker) . '?selected_id=' . $this->formElement->getId() . '">';
         $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', [
             'style' => 'vertical-align:middle;',
         ]);
@@ -370,7 +374,7 @@ class TrackerFormElementAdminView
             $trackers = [];
             foreach ($fields as $field) {
                 $tracker = $field->getTracker();
-                if (! $tracker->isDeleted() && $tracker->getProject() && ! $tracker->getProject()->isDeleted()) {
+                if ($tracker->isDeleted() === false && $tracker->getProject()->isDeleted() === false) {
                     $trackers[$tracker->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode((string) $tracker->getId())) . '&func=admin-formElements">' . $hp->purify($tracker->getName()) . ' (' . $hp->purify($tracker->getProject()->getPublicName()) . ')</a>';
                 }
             }

@@ -19,6 +19,7 @@
 
 namespace Tuleap\Tracker\FormElement\View\Admin;
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\View\TrackerFormElementAdminView;
 
 class FieldAdminView extends TrackerFormElementAdminView
@@ -55,13 +56,11 @@ class FieldAdminView extends TrackerFormElementAdminView
 
     /**
      * Fetch the "notifications" part of field admin
-     *
-     * @return string html
      */
-    protected function fetchNotifications()
+    protected function fetchNotifications(): string
     {
         $html = '';
-        if ($this->formElement->isNotificationsSupported()) {
+        if ($this->formElement instanceof TrackerField && $this->formElement->isNotificationsSupported()) {
             $html .= ' <p>';
             $html .= ' <label for="formElement_notifications" class="checkbox">';
             $html .= '<input type="hidden" name="formElement_data[notifications]" value="0" />';
@@ -85,7 +84,7 @@ class FieldAdminView extends TrackerFormElementAdminView
         $html .= '<p>';
         $html .= '<input type="hidden" name="formElement_data[required]" value="0" />';
         $html .= '<label class="checkbox">';
-        $html .= '<input type="checkbox" name="formElement_data[required]" id="formElement_required" value="1" ' . ($this->formElement->required ? 'checked="checked"' : '') . '" />';
+        $html .= '<input type="checkbox" name="formElement_data[required]" id="formElement_required" value="1" ' . ($this->formElement->isRequired() ? 'checked="checked"' : '') . '" />';
         $html .= dgettext('tuleap-tracker', 'Required');
         $html .= '</label>';
         $html .= '</p>';
