@@ -21,7 +21,6 @@
 namespace Tuleap\AgileDashboard;
 
 use Codendi_Request;
-use CSRFSynchronizerToken;
 use EventManager;
 use Override;
 use Planning_MilestoneFactory;
@@ -129,7 +128,8 @@ class AdminController extends BaseController
             $this->scrum_presenter_builder->getAdminScrumPresenter(
                 $this->getCurrentUser(),
                 $this->project,
-                $this->additional_scrum_sections
+                $this->additional_scrum_sections,
+                $this->getCSRFToken(),
             )
         );
         $displayFooter();
@@ -181,8 +181,7 @@ class AdminController extends BaseController
             return;
         }
 
-        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
-        $token->check();
+        $this->checkCSRFToken();
 
         $project = $this->request->getProject();
 
@@ -251,11 +250,9 @@ class AdminController extends BaseController
 
     private function getAdminChartsPresenter(Project $project): AdminChartsPresenter
     {
-        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
-
         return new AdminChartsPresenter(
             $project,
-            $token,
+            $this->getCSRFToken(),
             $this->count_elements_mode_checker->burnupMustUseCountElementsMode($project),
         );
     }

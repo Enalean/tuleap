@@ -38,6 +38,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class ScrumPresenterBuilder
 {
@@ -75,7 +76,7 @@ class ScrumPresenterBuilder
         $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
     }
 
-    public function getAdminScrumPresenter(PFUser $user, Project $project, GetAdditionalScrumAdminSection $additional_scrum_sections)
+    public function getAdminScrumPresenter(PFUser $user, Project $project, GetAdditionalScrumAdminSection $additional_scrum_sections, CSRFSynchronizerTokenInterface $csrf_token): AdminScrumPresenter
     {
         $group_id                    = (int) $project->getID();
         $can_create_planning         = true;
@@ -113,6 +114,7 @@ class ScrumPresenterBuilder
             $additional_scrum_sections->getAdditionalSectionsControllers(),
             $planning_administration_delegation->isPlanningAdministrationDelegated(),
             $should_sidebar_display_last_milestones,
+            $csrf_token,
         );
     }
 

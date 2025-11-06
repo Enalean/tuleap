@@ -162,10 +162,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $template_file->required();
 
         if ($this->request->validFile($template_file)) {
+            $this->checkCSRFToken();
             $this->importConfiguration();
         }
 
-        $presenter = new ImportTemplateFormPresenter($project);
+        $presenter = new ImportTemplateFormPresenter($project, $this->getCSRFToken());
 
         $this->layout->addJavascriptAsset(
             new JavascriptViteAsset(
@@ -251,6 +252,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function create(): void
     {
         $this->checkUserIsAdmin();
+        $this->checkCSRFToken();
 
         if ($this->planning_request_validator->isValid($this->request, new EnsureThatTrackerIsReadableByUser())) {
             $this->planning_factory->createPlanning(
@@ -289,7 +291,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         if ($planning === null) {
             throw new \Tuleap\AgileDashboard\Planning\NotFoundException($planning_id);
         }
-        $presenter = $this->planning_edition_presenter_builder->build($planning, $this->request->getCurrentUser(), $this->project);
+        $presenter = $this->planning_edition_presenter_builder->build($planning, $this->request->getCurrentUser(), $this->project, $this->getCSRFToken());
 
         $this->layout->addJavascriptAsset(
             new JavascriptViteAsset(
@@ -344,6 +346,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $planning_trackers_filtered,
             $cardwall_admin,
             $this->getWarnings($planning),
+            $this->getCSRFToken(),
         );
     }
 
@@ -366,6 +369,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function update(): void
     {
         $this->checkUserIsAdmin();
+        $this->checkCSRFToken();
+
 
         $updated_planning_id = (int) $this->request->get('planning_id');
         $original_planning   = $this->planning_factory->getPlanning($this->request->getCurrentUser(), $updated_planning_id);
@@ -489,6 +494,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     {
         $this->checkUserIsAdmin();
         $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
+        $this->checkCSRFToken();
 
         $planning_id = $this->request->get('planning_id');
         $user        = $this->request->getCurrentUser();

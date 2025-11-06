@@ -41,6 +41,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -100,6 +101,8 @@ final class ScrumPresenterBuilderTest extends TestCase
 
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
+        $csrf_token = CSRFSynchronizerTokenStub::buildSelf();
+
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(
                 $planning,
@@ -118,11 +121,12 @@ final class ScrumPresenterBuilderTest extends TestCase
             [],
             false,
             false,
+            $csrf_token,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection($project);
 
-        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
+        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event, $csrf_token);
 
         self::assertEquals($expected_presenter, $presenter);
     }
@@ -154,6 +158,8 @@ final class ScrumPresenterBuilderTest extends TestCase
 
         $this->planning_factory->expects($this->once())->method('getPotentialPlanningTrackers')->willReturn([]);
 
+        $csrf_token = CSRFSynchronizerTokenStub::buildSelf();
+
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(
                 $planning,
@@ -172,11 +178,12 @@ final class ScrumPresenterBuilderTest extends TestCase
             [],
             false,
             false,
+            $csrf_token,
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection($project);
 
-        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
+        $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event, $csrf_token);
 
         self::assertEquals($expected_presenter, $presenter);
     }

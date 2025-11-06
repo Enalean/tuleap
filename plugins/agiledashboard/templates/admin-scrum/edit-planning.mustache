@@ -12,6 +12,9 @@
             </div>
 
             <form method="post" action="/plugins/agiledashboard/?group_id={{ project_id }}&planning_id={{ planning_id }}&action=update" >
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/csrf_token}}
             <section class="tlp-pane-section">
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="planning_name">{{# dgettext }}

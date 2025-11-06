@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Planning\Admin;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 class PlanningEditionPresenterBuilder
 {
@@ -37,7 +38,7 @@ class PlanningEditionPresenterBuilder
     ) {
     }
 
-    public function build(\Planning $planning, \PFUser $user, \Project $project): PlanningEditionPresenter
+    public function build(\Planning $planning, \PFUser $user, \Project $project, CSRFSynchronizerTokenInterface $csrf_token): PlanningEditionPresenter
     {
         $project_id = $planning->getGroupId();
 
@@ -76,7 +77,8 @@ class PlanningEditionPresenterBuilder
             $planning_trackers_filtered,
             $cardwall_admin,
             $this->getWarnings($planning),
-            $milestone_tracker_modification_ban
+            $milestone_tracker_modification_ban,
+            $csrf_token,
         );
     }
 
