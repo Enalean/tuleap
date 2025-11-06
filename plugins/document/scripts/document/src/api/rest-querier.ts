@@ -425,15 +425,12 @@ export async function getItemsReferencingSameWikiPage(
     return response.json();
 }
 
-export async function getProjectUserGroups(project_id: number): Promise<ReadonlyArray<UserGroup>> {
-    const response = await get(
-        "/api/projects/" +
-            encodeURIComponent(project_id) +
-            "/user_groups?query=" +
-            encodeURIComponent(JSON.stringify({ with_system_user_groups: true })),
+export function getProjectUserGroups(
+    project_id: number,
+): ResultAsync<ReadonlyArray<UserGroup>, Fault> {
+    return getJSON<ReadonlyArray<UserGroup>>(
+        uri`/api/projects/${project_id}/user_groups?query=${JSON.stringify({ with_system_user_groups: true })}`,
     );
-
-    return response.json();
 }
 
 export function postNewLinkVersionFromEmpty(item_id: number, link_url: string): Promise<Response> {

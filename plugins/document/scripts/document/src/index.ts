@@ -36,6 +36,7 @@ import {
     NEW_ITEMS_ALTERNATIVES,
     OTHER_ITEM_TYPES,
     PROJECT_PROPERTIES,
+    PROJECT_USER_GROUPS,
     SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
 } from "./injection-keys";
 import type { SearchCriterion, SearchListOption } from "./type";
@@ -228,7 +229,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(FILENAME_PATTERN, filename_pattern)
         .provide(IS_FILENAME_PATTERN_ENFORCED, is_filename_pattern_enforced)
         .provide(CAN_USER_SWITCH_TO_OLD_UI, can_user_switch_to_old_ui)
-        .provide(PROJECT_PROPERTIES, ref(null));
+        .provide(PROJECT_PROPERTIES, ref(null))
+        .provide(PROJECT_USER_GROUPS, ref(null));
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

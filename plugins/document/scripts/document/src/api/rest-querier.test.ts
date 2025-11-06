@@ -60,6 +60,9 @@ import type {
     Wiki,
 } from "../type";
 import { buildAdvancedSearchParams } from "../helpers/build-advanced-search-params";
+import * as fetch_result from "@tuleap/fetch-result";
+import { uri } from "@tuleap/fetch-result";
+import { okAsync } from "neverthrow";
 
 describe("rest-querier", () => {
     describe("getItem()", () => {
@@ -435,15 +438,16 @@ describe("rest-querier", () => {
 
     describe("getProjectUserGroups()", () => {
         it("Given a project ID, then the REST API will be queried with it to retrieve all user groups", async () => {
-            const tlpGet = vi.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(tlpGet, { return_json: [] });
+            const getJSON = vi.spyOn(fetch_result, "getJSON");
+            getJSON.mockReturnValue(okAsync([]));
 
             const result = await getProjectUserGroups(102);
 
-            expect(tlpGet).toHaveBeenCalledWith(
-                "/api/projects/102/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D",
+            expect(getJSON).toHaveBeenCalledWith(
+                uri`/api/projects/102/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D`,
             );
-            expect(result).toEqual([]);
+            expect(result.isOk()).toBe(true);
+            expect(result.unwrapOr(null)).toEqual([]);
         });
     });
 

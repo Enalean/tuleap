@@ -34,9 +34,6 @@ export const state: RootState = {
         has_global_modal_error: false,
         global_modal_error_message: null,
     },
-    permissions: {
-        project_ugroups: null,
-    },
     project_ugroups: null,
     is_loading_folder: true,
     folder_content: [],

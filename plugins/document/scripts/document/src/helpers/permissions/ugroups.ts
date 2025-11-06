@@ -18,8 +18,11 @@
  */
 
 import { getProjectUserGroups } from "../../api/rest-querier";
-import type { UserGroup } from "../../type";
-import { PROJECT_MEMBERS_ID, PROJECT_ADMINISTRATORS_ID } from "@tuleap/core-constants";
+import type { RootState, UserGroup } from "../../type";
+import { PROJECT_ADMINISTRATORS_ID, PROJECT_MEMBERS_ID } from "@tuleap/core-constants";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { ActionContext } from "vuex";
 
 function isUGroupAServiceSpecialUGroup(project_id: number, ugroup: UserGroup): boolean {
     return (
@@ -29,19 +32,16 @@ function isUGroupAServiceSpecialUGroup(project_id: number, ugroup: UserGroup): b
     );
 }
 
-export async function getProjectUserGroupsWithoutServiceSpecialUGroups(
+export function loadProjectUserGroups(
+    context: ActionContext<RootState, RootState>,
     project_id: number,
-): Promise<Array<UserGroup>> {
-    const ugroups = await getProjectUserGroups(project_id);
-
-    const filtered_groups: Array<UserGroup> = [];
-
-    ugroups.forEach((ugroup) => {
-        if (isUGroupAServiceSpecialUGroup(project_id, ugroup)) {
-            return;
-        }
-        filtered_groups.push(ugroup);
-    });
-
-    return filtered_groups;
+): ResultAsync<ReadonlyArray<UserGroup>, Fault> {
+    return getProjectUserGroups(project_id)
+        .map((ugroups) =>
+            ugroups.filter((ugroup) => !isUGroupAServiceSpecialUGroup(project_id, ugroup)),
+        )
+        .mapErr((fault) => {
+            context.dispatch("error/handleGlobalModalError", fault, { root: true });
+            return fault;
+        });
 }

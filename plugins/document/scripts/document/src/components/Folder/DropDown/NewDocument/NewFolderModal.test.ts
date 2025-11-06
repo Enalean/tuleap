@@ -25,12 +25,14 @@ import NewFolderModal from "./NewFolderModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+import { nextTick, ref } from "vue";
 import { IS_STATUS_PROPERTY_USED, PROJECT } from "../../../../configuration-keys";
 import { ProjectBuilder } from "../../../../../tests/builders/ProjectBuilder";
+import { PROJECT_USER_GROUPS } from "../../../../injection-keys";
+import * as user_group_helpers from "../../../../helpers/permissions/ugroups";
 
 describe("NewFolderModal", () => {
-    const load_projects_ugroups = vi.fn();
+    const load_projects_ugroups = vi.spyOn(user_group_helpers, "loadProjectUserGroups");
     const current_folder = {
         id: 42,
         title: "My current folder",
@@ -76,17 +78,6 @@ describe("NewFolderModal", () => {
         return shallowMount(NewFolderModal, {
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        permissions: {
-                            state: {
-                                project_ugroups: null,
-                            },
-                            namespaced: true,
-                            actions: {
-                                loadProjectUserGroupsIfNeeded: load_projects_ugroups,
-                            },
-                        },
-                    },
                     state: {
                         current_folder,
                     },
@@ -94,6 +85,7 @@ describe("NewFolderModal", () => {
                 provide: {
                     [PROJECT.valueOf()]: new ProjectBuilder(101).build(),
                     [IS_STATUS_PROPERTY_USED.valueOf()]: true,
+                    [PROJECT_USER_GROUPS.valueOf()]: ref(null),
                 },
             },
         });

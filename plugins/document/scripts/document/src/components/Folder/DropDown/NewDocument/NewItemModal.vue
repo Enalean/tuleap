@@ -76,7 +76,7 @@
             <creation-modal-permissions-section
                 v-if="item.permissions_for_groups"
                 v-bind:value="item.permissions_for_groups"
-                v-bind:project_ugroups="project_ugroups"
+                v-bind:project_ugroups="project_user_groups"
             />
         </div>
 
@@ -112,7 +112,6 @@ import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedPropertie
 import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
 import OtherInformationPropertiesForCreate from "./PropertiesForCreate/OtherInformationPropertiesForCreate.vue";
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
-import { handleErrors } from "../../../../store/actions-helpers/handle-errors";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import {
     transformCustomPropertiesForItemCreation,
@@ -132,11 +131,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
 import type { FakeItem, Item, RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
-import type { PermissionsState } from "../../../../store/permissions/permissions-default-state";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { IS_STATUS_PROPERTY_USED, PROJECT, USER_LOCALE } from "../../../../configuration-keys";
 import { getDocumentProperties } from "../../../../helpers/properties/document-properties";
+import { PROJECT_USER_GROUPS } from "../../../../injection-keys";
+import { loadProjectUserGroups } from "../../../../helpers/permissions/ugroups";
 
 const { $gettext } = useGettext();
 const $store = useStore();
@@ -161,10 +161,7 @@ const user_locale = strictInject(USER_LOCALE);
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",
 ]);
-const { project_ugroups } = useNamespacedState<Pick<PermissionsState, "project_ugroups">>(
-    "permissions",
-    ["project_ugroups"],
-);
+const project_user_groups = strictInject(PROJECT_USER_GROUPS);
 
 const submit_button_label = computed(() => {
     if (is_from_alternative.value) {
@@ -272,11 +269,15 @@ async function show(event: CreateItemEvent): Promise<void> {
 
     is_displayed.value = true;
     modal?.show();
-    try {
-        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project.id);
-    } catch (err) {
-        await handleErrors($store, err);
-        modal?.hide();
+    if (project_user_groups.value === null) {
+        await loadProjectUserGroups($store, project.id).match(
+            (user_groups) => {
+                project_user_groups.value = user_groups;
+            },
+            () => {
+                modal?.hide();
+            },
+        );
     }
 }
 

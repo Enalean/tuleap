@@ -24,7 +24,6 @@ import * as getters from "./getters";
 import * as actions from "./actions";
 import { state } from "./state";
 import error from "./error/module";
-import permissions from "./permissions/module";
 import type { RootState, State } from "../type";
 
 export let store: Store<State>;
@@ -37,7 +36,6 @@ export function createInitializedStore(): Store<RootState> {
         actions,
         modules: {
             error,
-            permissions,
         },
     });
 }

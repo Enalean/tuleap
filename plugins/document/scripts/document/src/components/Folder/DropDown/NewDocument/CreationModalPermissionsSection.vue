@@ -44,7 +44,7 @@ import PermissionsForGroupsSelector from "../../Permissions/PermissionsForGroups
 import type { Permissions, UserGroup } from "../../../../type";
 
 defineProps<{
-    project_ugroups: Array<UserGroup> | null;
+    project_ugroups: ReadonlyArray<UserGroup> | null;
     value: Permissions;
 }>();
 </script>
