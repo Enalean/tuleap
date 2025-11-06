@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.1
+
+* 🐛 Active service contrast has been improved 
+
 ## 2.7.0
 
 * 💄 Update Tuleap logo
