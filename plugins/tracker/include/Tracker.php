@@ -101,6 +101,7 @@ use TrackerFactory;
 use trackerPlugin;
 use TransitionFactory;
 use Tuleap\Color\ColorName;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
@@ -120,6 +121,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\CreateArtifactAction;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -809,7 +811,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 break;
             case 'admin-editoptions':
                 if ($this->userIsAdmin($current_user)) {
-                    if ($request->get('update')) {
+                    if ($request->isPost() && $request->get('update')) {
+                        $this->getAdminSettingsCSRFToken()->check();
                         $this->editOptions($request);
                     }
                     $this->displayAdminOptions($layout, $request, $current_user);
@@ -1641,10 +1644,18 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $this->getMailGatewayConfig(),
                 $this->getArtifactByMailStatus(),
                 $general_settings->cannot_configure_instantiate_for_new_projects,
+                CSRFSynchronizerTokenPresenter::fromToken(
+                    $this->getAdminSettingsCSRFToken(),
+                )
             )
         );
 
         $this->displayAdminFooter($layout);
+    }
+
+    private function getAdminSettingsCSRFToken(): CSRFSynchronizerTokenInterface
+    {
+        return new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&func=admin-editoptions');
     }
 
     public function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
