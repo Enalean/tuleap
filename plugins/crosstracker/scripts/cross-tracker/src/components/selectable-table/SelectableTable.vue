@@ -18,188 +18,36 @@
   -->
 
 <template>
-    <section class="tlp-pane-section artifact-table" ref="selectable-table">
-        <empty-state v-if="is_table_empty" v-bind:tql_query="tql_query" />
-        <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
-        <div class="overflow-wrapper" v-if="total > 0">
-            <div class="selectable-table" v-if="!is_loading">
-                <span
-                    class="headers-cell"
-                    v-for="(column_name, column_index) of table_data_store.getColumns()"
-                    v-bind:key="column_name"
-                    v-bind:class="{
-                        'is-last-cell-of-row': isLastCellOfRow(
-                            column_index,
-                            table_data_store.getColumns().size,
-                        ),
-                        'is-pretty-title-column': column_name === PRETTY_TITLE_COLUMN_NAME,
-                    }"
-                    data-test="column-header"
-                    >{{ getColumnName(column_name) }}</span
-                >
-                <artifact-rows
-                    v-bind:rows="rows"
-                    v-bind:level="0"
-                    v-bind:tql_query="tql_query"
-                    v-bind:ancestors="[]"
-                    v-bind:parent_row="null"
-                />
-            </div>
+    <empty-state v-if="total === 0" data-test="empty-state" />
+    <div class="overflow-wrapper" v-else data-test="selectable-table">
+        <div class="selectable-table">
+            <selectable-table-header v-bind:columns="table_state.columns" />
+            <selectable-table-content v-bind:table_state="table_state" />
         </div>
-        <selectable-pagination
-            v-if="!is_table_empty"
-            v-bind:limit="limit"
-            v-bind:offset="offset"
-            v-bind:total_number="total"
-            v-on:new-page="handleNewPage"
-        />
-    </section>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, provide } from "vue";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    ARROW_DATA_STORE,
-    ARROW_REDRAW_TRIGGERER,
-    EMITTER,
-    GET_COLUMN_NAME,
-    TABLE_DATA_ORCHESTRATOR,
-    TABLE_DATA_STORE,
-} from "../../injection-symbols";
+import { provide } from "vue";
+import { ARROW_DATA_STORE } from "../../injection-symbols";
 
-import type { ArtifactsTable } from "../../domain/ArtifactsTable";
-import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "../EmptyState.vue";
-import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
-import type { ColumnName } from "../../domain/ColumnName";
-import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
-import type { RefreshArtifactsEvent } from "../../helpers/widget-events";
-import {
-    SEARCH_ARTIFACTS_EVENT,
-    NOTIFY_FAULT_EVENT,
-    REFRESH_ARTIFACTS_EVENT,
-    SEARCH_ARTIFACTS_SUCCESS_EVENT,
-} from "../../helpers/widget-events";
-import ArtifactRows from "./ArtifactRows.vue";
 import { ArrowDataStore } from "../../domain/ArrowDataStore";
-import type { TableDataOrchestrator } from "../../domain/TableDataOrchestrator";
-import type { ArrowRedrawTriggerer } from "../../ArrowRedrawTriggerer";
-import type { TableDataStore } from "../../domain/TableDataStore";
-import type { GetColumnName } from "../../domain/ColumnNameGetter";
-
-const column_name_getter: GetColumnName = strictInject(GET_COLUMN_NAME);
-
-const table_data_orchestrator: TableDataOrchestrator = strictInject(TABLE_DATA_ORCHESTRATOR);
-const arrow_redraw_triggerer: ArrowRedrawTriggerer = strictInject(ARROW_REDRAW_TRIGGERER);
-const table_data_store: TableDataStore = strictInject(TABLE_DATA_STORE);
+import SelectableTableHeader from "./SelectableTableHeader.vue";
+import SelectableTableContent from "./SelectableTableContent.vue";
+import type { TableDataState } from "../TableWrapper.vue";
 
 provide(ARROW_DATA_STORE, ArrowDataStore());
 
 const props = defineProps<{
-    tql_query: string;
+    table_state: TableDataState;
+    total: number;
 }>();
 
-const selectable_table_element = useTemplateRef<HTMLElement>("selectable-table");
-const is_loading = ref(false);
-const rows = ref<ArtifactsTable["rows"]>([]);
-const total = ref(0);
-let offset = 0;
-const limit = 30;
+const number_of_selected_columns = numberOfSelectedColumnsMinusTheAtArtifactColumn();
 
-const is_table_empty = computed<boolean>(() => !is_loading.value && total.value === 0);
-const number_of_selected_columns = ref(0);
-
-const emitter = strictInject(EMITTER);
-
-const emit = defineEmits<{
-    (e: "search-finished"): void;
-    (e: "search-started"): void;
-}>();
-
-function handleNewPage(new_offset: number): void {
-    offset = new_offset;
-    refreshArtifactList();
-}
-
-function refreshArtifactList(): void {
-    resetArtifactList();
-    getSelectableQueryContent(props.tql_query);
-}
-
-function resetArtifactList(): void {
-    rows.value = [];
-    is_loading.value = true;
-    table_data_store.resetStore();
-}
-
-onMounted(() => {
-    table_data_store.resetStore();
-    refreshArtifactList();
-    emitter.on(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
-    emitter.on(SEARCH_ARTIFACTS_EVENT, handleSearchArtifactsEvent);
-
-    if (!selectable_table_element.value) {
-        return;
-    }
-    arrow_redraw_triggerer.listenToSelectableTableResize(selectable_table_element.value);
-});
-
-onBeforeUnmount(() => {
-    emitter.off(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
-    emitter.off(SEARCH_ARTIFACTS_EVENT, handleSearchArtifactsEvent);
-
-    if (!selectable_table_element.value) {
-        return;
-    }
-    arrow_redraw_triggerer.removeListener(selectable_table_element.value);
-});
-
-function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
-    resetArtifactList();
-    getSelectableQueryContent(event.query.tql_query);
-}
-
-function handleSearchArtifactsEvent(): void {
-    resetArtifactList();
-    getSelectableQueryContent(props.tql_query);
-}
-
-function getSelectableQueryContent(tql_query: string): void {
-    if (tql_query === "") {
-        emit("search-finished");
-        is_loading.value = false;
-        return;
-    }
-
-    table_data_orchestrator
-        .loadTopLevelArtifacts(tql_query, limit, offset)
-        .match(
-            (content_with_total) => {
-                number_of_selected_columns.value = table_data_store.getColumns().size - 1;
-                rows.value = content_with_total.table.rows;
-                total.value = content_with_total.total;
-                emitter.emit(SEARCH_ARTIFACTS_SUCCESS_EVENT);
-            },
-            (fault) => {
-                emitter.emit(NOTIFY_FAULT_EVENT, {
-                    fault: ArtifactsRetrievalFault(fault),
-                    tql_query,
-                });
-            },
-        )
-        .then(() => {
-            emit("search-finished");
-            is_loading.value = false;
-        });
-}
-
-const getColumnName = (name: ColumnName): string => {
-    return column_name_getter.getTranslatedColumnName(name);
-};
-
-function isLastCellOfRow(index: number, size: number): boolean {
-    return index + 1 === size;
+function numberOfSelectedColumnsMinusTheAtArtifactColumn(): number {
+    return props.table_state.columns.size - 1;
 }
 </script>
 
@@ -221,22 +69,5 @@ function isLastCellOfRow(index: number, size: number): boolean {
         [headers] var(--tlp-x-large-spacing)
         auto;
     font-size: 0.875rem;
-}
-
-.headers-cell {
-    @include cell.cell-template;
-
-    grid-row: headers;
-    border-bottom: 2px solid var(--tlp-main-color);
-    color: var(--tlp-main-color);
-    white-space: nowrap;
-}
-
-.is-pretty-title-column {
-    @include pretty-title.is-pretty-title-column;
-}
-
-.artifact-table {
-    position: relative;
 }
 </style>

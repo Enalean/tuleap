@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
 import type { VueWrapper } from "@vue/test-utils";
@@ -27,9 +27,16 @@ import type { Events } from "../../helpers/widget-events";
 import { SELECTABLE_TABLE_RESIZED_EVENT } from "../../helpers/widget-events";
 import { EMITTER } from "../../injection-symbols";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
-import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
+import type { ArtifactLinkDirection, ArtifactRow } from "../../domain/ArtifactsTable";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
 import { v4 as uuidv4 } from "uuid";
+import type { RowEntry } from "../../domain/TableDataStore";
+import * as check_row_has_children from "../../domain/CheckRowHasChildren";
+import * as check_is_last_row from "../../domain/IsRowALastElementChecker";
+import type { TableDataState } from "../TableWrapper.vue";
+
+vi.mock("../../domain/CheckRowHasChildren");
+vi.mock("../../domain/IsRowALastElementChecker");
 
 const parent_cell = {
     offsetHeight: 32,
@@ -62,7 +69,6 @@ const child_caret = {
 describe("ArtifactLinkArrow", () => {
     let emitter: Emitter<Events>,
         is_last_link: boolean,
-        reverse_links_count: number,
         direction: ArtifactLinkDirection,
         tableResizedEventsCounter: number;
 
@@ -73,7 +79,6 @@ describe("ArtifactLinkArrow", () => {
     beforeEach(() => {
         emitter = mitt<Events>();
         is_last_link = false;
-        reverse_links_count = 0;
         direction = FORWARD_DIRECTION;
         tableResizedEventsCounter = 0;
 
@@ -93,14 +98,13 @@ describe("ArtifactLinkArrow", () => {
                 },
             },
             props: {
-                parent_cell,
-                parent_caret,
-                child_cell,
-                child_caret,
                 is_last_link,
-                direction,
-                reverse_links_count,
-                uuid: uuidv4(),
+                row_entry: {
+                    parent_row_uuid: uuidv4(),
+                    row: {
+                        direction,
+                    } as ArtifactRow,
+                } as RowEntry,
                 parent_element: {
                     element: parent_cell,
                     caret: parent_caret,
@@ -111,12 +115,17 @@ describe("ArtifactLinkArrow", () => {
                     caret: child_caret,
                     uuid: uuidv4(),
                 },
+                table_state: {} as TableDataState,
             },
         });
     }
 
     describe("Forward links", () => {
         it("should display an horizontal arrow, when it is not the last link", () => {
+            vi.spyOn(check_row_has_children, "checkHasChildrenForReverseDirection").mockReturnValue(
+                false,
+            );
+            vi.spyOn(check_is_last_row, "isLastChildForDirection").mockReturnValue(false);
             const wrapper = getWrapper();
             const path = wrapper.find("path");
 
@@ -129,7 +138,10 @@ describe("ArtifactLinkArrow", () => {
         });
 
         it("should display an 'L' arrow, when it is the last link", () => {
-            is_last_link = true;
+            vi.spyOn(check_row_has_children, "checkHasChildrenForReverseDirection").mockReturnValue(
+                false,
+            );
+            vi.spyOn(check_is_last_row, "isLastChildForDirection").mockReturnValue(true);
             const wrapper = getWrapper();
             const path = wrapper.find("path");
 
@@ -142,8 +154,10 @@ describe("ArtifactLinkArrow", () => {
         });
 
         it("should display an 'L' arrow and an offset, when it is the last link and there are reverse links too", () => {
-            is_last_link = true;
-            reverse_links_count = 2;
+            vi.spyOn(check_is_last_row, "isLastChildForDirection").mockReturnValue(true);
+            vi.spyOn(check_row_has_children, "checkHasChildrenForReverseDirection").mockReturnValue(
+                true,
+            );
 
             const wrapper = getWrapper();
             const path = wrapper.find("path");
@@ -160,6 +174,7 @@ describe("ArtifactLinkArrow", () => {
     describe("Reverse links", () => {
         it("should display an horizontal line, when it is not the last link", () => {
             direction = REVERSE_DIRECTION;
+            vi.spyOn(check_is_last_row, "isLastChildForDirection").mockReturnValue(false);
 
             const wrapper = getWrapper();
             const path = wrapper.find("path");
@@ -169,7 +184,7 @@ describe("ArtifactLinkArrow", () => {
 
         it("should display an 'L' arrow, when it is the last link", () => {
             direction = REVERSE_DIRECTION;
-            is_last_link = true;
+            vi.spyOn(check_is_last_row, "isLastChildForDirection").mockReturnValue(true);
 
             const wrapper = getWrapper();
             const path = wrapper.find("path");
@@ -185,6 +200,10 @@ describe("ArtifactLinkArrow", () => {
 
     describe("Redraw of arrows", () => {
         it("should trigger a redraw of arrows on mount to compensate for the mutation of the table", () => {
+            vi.spyOn(check_row_has_children, "checkHasChildrenForReverseDirection").mockReturnValue(
+                false,
+            );
+            vi.spyOn(check_is_last_row, "isLastChildForDirection").mockReturnValue(false);
             getWrapper();
             expect(tableResizedEventsCounter).toBe(1);
         });

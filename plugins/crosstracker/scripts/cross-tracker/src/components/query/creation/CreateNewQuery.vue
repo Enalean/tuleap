@@ -32,7 +32,7 @@
         <div class="tlp-form-element">
             <query-editor
                 v-model:tql_query="tql_query"
-                v-on:trigger-search="handleSearch"
+                v-on:trigger-search="ctrlEnterSearchFromEditor"
                 ref="query_editor"
             />
         </div>
@@ -54,16 +54,9 @@
                 data-test="query-creation-search-button"
             >
                 <i
-                    v-if="!is_search_loading"
                     aria-hidden="true"
                     class="fa-solid fa-search tlp-button-icon"
                     data-test="query-creation-search-button-search-icon"
-                ></i>
-                <i
-                    v-if="is_search_loading"
-                    aria-hidden="true"
-                    class="tlp-button-icon fas fa-spin fa-circle-notch"
-                    data-test="query-creation-search-button-spin-icon"
                 ></i>
                 {{ $gettext("Search") }}
             </button>
@@ -87,12 +80,7 @@
                 {{ $gettext("Save") }}
             </button>
         </div>
-        <selectable-table
-            v-if="is_selectable_table_displayed"
-            v-on:search-finished="is_search_loading = false"
-            v-on:search-started="is_search_loading = true"
-            v-bind:tql_query="tql_query"
-        />
+        <table-wrapper v-if="is_selectable_table_displayed" v-bind:tql_query="searched_tql_query" />
     </section>
 </template>
 
@@ -109,14 +97,13 @@ import {
     NEW_QUERY_CREATED_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
-    SEARCH_ARTIFACTS_EVENT,
 } from "../../../helpers/widget-events";
 import type { PostQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
 import { useGettext } from "vue3-gettext";
 import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
 import QueryEditor from "../QueryEditor.vue";
-import SelectableTable from "../../selectable-table/SelectableTable.vue";
 import type { PostNewQuery } from "../../../domain/PostNewQuery";
+import TableWrapper from "../../TableWrapper.vue";
 
 const { $gettext } = useGettext();
 
@@ -138,11 +125,10 @@ const is_default_query = ref(false);
 const searched_tql_query = ref("");
 
 const is_save_loading = ref(false);
-const is_search_loading = ref(false);
 const is_selectable_table_displayed = ref(false);
 
 const is_search_button_disabled = computed((): boolean => {
-    return tql_query.value === searched_tql_query.value || is_search_loading.value;
+    return tql_query.value === searched_tql_query.value;
 });
 
 const is_save_button_disabled = computed((): boolean => {
@@ -157,9 +143,9 @@ function handleCancelButton(): void {
     emit("return-to-active-query-pane");
 }
 
-function handleSearch(tql_query: string): void {
+function ctrlEnterSearchFromEditor(tql_query: string): void {
     searched_tql_query.value = tql_query;
-    search();
+    is_selectable_table_displayed.value = true;
 }
 
 function handleSaveButton(): void {
@@ -192,12 +178,7 @@ function handleSaveButton(): void {
 
 function handleSearchButton(): void {
     searched_tql_query.value = tql_query.value;
-    search();
-}
-
-function search(): void {
     is_selectable_table_displayed.value = true;
-    emitter.emit(SEARCH_ARTIFACTS_EVENT);
 }
 
 function handleChosenQuery(query: QuerySuggestion): void {

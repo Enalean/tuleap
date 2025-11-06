@@ -32,7 +32,7 @@
             v-on:switch-to-writing-mode="handleSwitchWriting"
         />
     </section>
-    <selectable-table v-if="!is_loading" v-bind:tql_query="backend_query.tql_query" />
+    <table-wrapper v-if="!is_loading" v-bind:tql_query="backend_query.tql_query" />
 </template>
 
 <script setup lang="ts">
@@ -41,7 +41,6 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import ReadingMode from "../components/reading-mode/ReadingMode.vue";
 import { getQueries } from "../api/rest-querier";
 import type { Query } from "../type";
-import SelectableTable from "../components/selectable-table/SelectableTable.vue";
 import { EMITTER, IS_EXPORT_ALLOWED, IS_USER_ADMIN, WIDGET_ID } from "../injection-symbols";
 import { QueryRetrievalFault } from "../domain/QueryRetrievalFault";
 import ActionButtons from "../components/actions/ActionButtons.vue";
@@ -53,12 +52,12 @@ import type {
 import {
     INITIALIZED_WITH_QUERY_EVENT,
     EDIT_QUERY_EVENT,
-    REFRESH_ARTIFACTS_EVENT,
     QUERY_DELETED_EVENT,
     TOGGLE_QUERY_DETAILS_EVENT,
     NOTIFY_FAULT_EVENT,
     SWITCH_QUERY_EVENT,
 } from "../helpers/widget-events";
+import TableWrapper from "./TableWrapper.vue";
 
 const emit = defineEmits<{
     (e: "switch-to-create-query-pane"): void;
@@ -148,7 +147,6 @@ function handleDeleteQuery(event: DeletedQueryEvent): void {
         return;
     }
     const query = queries.value[0];
-    emitter.emit(REFRESH_ARTIFACTS_EVENT, { query });
     emitter.emit(SWITCH_QUERY_EVENT, { query });
 }
 

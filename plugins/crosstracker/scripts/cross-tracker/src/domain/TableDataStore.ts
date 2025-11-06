@@ -19,6 +19,7 @@
 
 import type { ArtifactRow, ArtifactsTable } from "./ArtifactsTable";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "./ArtifactsTable";
+import { Option } from "@tuleap/option";
 
 export type RowEntry = {
     readonly parent_row_uuid: string | null;
@@ -28,11 +29,11 @@ export type RowEntry = {
 export type TableDataStore = {
     getRowCollection(): Array<RowEntry>;
     resetStore(): void;
-    getParentByUUId(uuid: string): RowEntry | undefined;
     setColumns(columns: ArtifactsTable["columns"]): void;
     getColumns(): ArtifactsTable["columns"];
     addEntry(row: RowEntry): void;
     removeEntryByParentUUID(parent_uuid: string): void;
+    retrieveParentOfRow(row: RowEntry): RowEntry;
 };
 
 export const TableDataStore = (): TableDataStore => {
@@ -64,13 +65,13 @@ export const TableDataStore = (): TableDataStore => {
         return row.parent_row_uuid === null;
     };
 
-    const getParentOfRow = (row: RowEntry): RowEntry => {
+    const getParentOfRow = (row: RowEntry): Option<RowEntry> => {
         const parent = row_collection.find((entry) => entry.row.row_uuid === row.parent_row_uuid);
 
         if (parent === undefined) {
-            throw new Error("Parent is not found in collection");
+            return Option.nothing();
         }
-        return parent;
+        return Option.fromValue(parent);
     };
 
     const isLinkOfDirection = (row: RowEntry, direction: string): boolean => {
@@ -106,9 +107,51 @@ export const TableDataStore = (): TableDataStore => {
         row_collection = row_collection.filter((item) => item.parent_row_uuid !== uuid);
     };
 
+    const wouldCreateCircularReference = (row_entry: RowEntry, parent_row: RowEntry): boolean => {
+        const great_daddy = getParentOfRow(parent_row);
+        return great_daddy.match(
+            (value) => {
+                return value.row.artifact_id === row_entry.row.artifact_id;
+            },
+            () => {
+                return false;
+            },
+        );
+    };
+
+    const addChildEntry = (row: RowEntry, parent__entry: RowEntry): void => {
+        if (wouldCreateCircularReference(row, parent__entry)) {
+            return;
+        }
+
+        const is_duplicate = row_collection.some(
+            (entry) =>
+                entry.parent_row_uuid === row.parent_row_uuid &&
+                entry.row.artifact_id === row.row.artifact_id,
+        );
+
+        if (is_duplicate) {
+            return;
+        }
+
+        let insertion_index = ELEMENT_OF_COLLECTION_NOT_FOUND;
+
+        if (parentAlreadyHasChildren(parent__entry)) {
+            insertion_index = getInsertionIndexForParentWithChildren(parent__entry, row);
+        } else {
+            insertion_index = row_collection.indexOf(parent__entry);
+        }
+
+        if (insertion_index === ELEMENT_OF_COLLECTION_NOT_FOUND) {
+            throw new Error("Error while trying to determine parent’s position");
+        }
+
+        row_collection.splice(insertion_index + 1, 0, row);
+    };
+
     return {
         getRowCollection(): Array<RowEntry> {
-            return row_collection;
+            return [...row_collection];
         },
 
         resetStore(): void {
@@ -116,20 +159,12 @@ export const TableDataStore = (): TableDataStore => {
             table_columns = new Set();
         },
 
-        getParentByUUId(uuid: string): RowEntry | undefined {
-            const current_item = row_collection.find((item) => item.row.row_uuid === uuid);
-
-            return row_collection.find(
-                (item) => item.row.row_uuid === current_item?.parent_row_uuid,
-            );
-        },
-
         setColumns(columns: ArtifactsTable["columns"]): void {
             table_columns = columns;
         },
 
         getColumns(): ArtifactsTable["columns"] {
-            return table_columns;
+            return new Set(table_columns);
         },
 
         addEntry(row: RowEntry): void {
@@ -137,24 +172,27 @@ export const TableDataStore = (): TableDataStore => {
                 row_collection.push(row);
                 return;
             }
+
             const parent = getParentOfRow(row);
-
-            let insertion_index = ELEMENT_OF_COLLECTION_NOT_FOUND;
-
-            if (parentAlreadyHasChildren(parent)) {
-                insertion_index = getInsertionIndexForParentWithChildren(parent, row);
-            } else {
-                insertion_index = row_collection.indexOf(parent);
-            }
-
-            if (insertion_index === ELEMENT_OF_COLLECTION_NOT_FOUND) {
-                throw new Error("Error while trying to determine parent’s position");
-            }
-
-            row_collection.splice(insertion_index + 1, 0, row);
+            parent.match(
+                (parent__entry) => addChildEntry(row, parent__entry),
+                () => {},
+            );
         },
         removeEntryByParentUUID(uuid: string): void {
             removeEntry(uuid);
+        },
+
+        retrieveParentOfRow(row: RowEntry): RowEntry {
+            const parent = getParentOfRow(row);
+            return parent.match(
+                (row_entry) => {
+                    return row_entry;
+                },
+                () => {
+                    throw new Error("Parent not found");
+                },
+            );
         },
     };
 };

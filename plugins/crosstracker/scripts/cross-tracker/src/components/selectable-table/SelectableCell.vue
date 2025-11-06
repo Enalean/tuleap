@@ -18,73 +18,61 @@
   -->
 
 <template>
-    <template v-if="props.cell !== undefined">
+    <template v-if="cell !== undefined">
         <text-cell
-            v-if="props.cell.type === TEXT_CELL || props.cell.type === UNKNOWN_CELL"
+            v-if="cell.type === TEXT_CELL || cell.type === UNKNOWN_CELL"
             class="cell"
-            v-bind:text="props.cell.value"
+            v-bind:text="cell.value"
             data-test="cell"
         />
-        <span v-if="props.cell.type === USER_CELL" class="cell" data-test="cell"
-            ><user-value v-bind:user="props.cell" />
+        <span v-if="cell.type === USER_CELL" class="cell" data-test="cell"
+            ><user-value v-bind:user="cell" />
         </span>
-        <span v-if="props.cell.type === STATIC_LIST_CELL" class="cell list-cell" data-test="cell">
+        <span v-if="cell.type === STATIC_LIST_CELL" class="cell list-cell" data-test="cell">
             <span
-                v-for="list_value of props.cell.value"
+                v-for="list_value of cell.value"
                 v-bind:key="list_value.label"
                 v-bind:class="getOptionalBadgeClass(list_value.color)"
                 >{{ list_value.label }}</span
             >
         </span>
-        <span v-if="props.cell.type === USER_LIST_CELL" class="cell list-cell" data-test="cell">
+        <span v-if="cell.type === USER_LIST_CELL" class="cell list-cell" data-test="cell">
             <user-value
-                v-for="list_value of props.cell.value"
+                v-for="list_value of cell.value"
                 v-bind:key="list_value.display_name"
                 v-bind:user="list_value"
             />
         </span>
-        <span
-            v-if="props.cell.type === USER_GROUP_LIST_CELL"
-            class="cell list-cell"
-            data-test="cell"
+        <span v-if="cell.type === USER_GROUP_LIST_CELL" class="cell list-cell" data-test="cell"
             ><span
-                v-for="list_value of props.cell.value"
+                v-for="list_value of cell.value"
                 v-bind:key="list_value.label"
                 class="user-group"
                 >{{ list_value.label }}</span
             ></span
         >
-        <span v-if="props.cell.type === TRACKER_CELL" class="cell" data-test="cell"
-            ><span v-bind:class="getBadgeClass(props.cell.color)">{{ props.cell.name }}</span></span
+        <span v-if="cell.type === TRACKER_CELL" class="cell" data-test="cell"
+            ><span v-bind:class="getBadgeClass(cell.color)">{{ cell.name }}</span></span
         >
-        <span v-if="props.cell.type === LINK_TYPE_CELL" class="cell">
-            <link-type-cell-component v-bind:cell="props.cell" />
+        <span v-if="cell.type === LINK_TYPE_CELL" class="cell">
+            <link-type-cell-component v-bind:cell="cell" />
         </span>
         <pretty-title-cell-component
-            v-if="props.cell.type === PRETTY_TITLE_CELL"
-            v-bind:uuid="uuid"
+            v-if="cell.type === PRETTY_TITLE_CELL"
             v-bind:cell="cell"
-            v-bind:artifact_uri="artifact_uri"
-            v-bind:expected_number_of_forward_link="expected_number_of_forward_link"
-            v-bind:expected_number_of_reverse_link="expected_number_of_reverse_link"
-            v-bind:is_last="is_last"
-            v-on:toggle-links="toggleArtifactLinksDisplay"
             class="cell"
-            v-bind:level="level"
             data-test="cell"
-            v-bind:direction="direction"
-            v-bind:reverse_links_count="reverse_links_count"
+            v-bind:row_entry="row_entry"
+            v-bind:table_state="table_state"
         />
 
         <span
             v-if="
-                props.cell.type === DATE_CELL ||
-                props.cell.type === NUMERIC_CELL ||
-                props.cell.type === PROJECT_CELL
+                cell.type === DATE_CELL || cell.type === NUMERIC_CELL || cell.type === PROJECT_CELL
             "
             class="cell"
             data-test="cell"
-            >{{ renderCell(props.cell) }}</span
+            >{{ renderCell(cell) }}</span
         >
     </template>
 </template>
@@ -93,7 +81,7 @@
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { ColorName } from "@tuleap/core-constants";
 import type { Option } from "@tuleap/option";
-import type { ArtifactLinkDirection, Cell } from "../../domain/ArtifactsTable";
+import type { Cell } from "../../domain/ArtifactsTable";
 import {
     DATE_CELL,
     LINK_TYPE_CELL,
@@ -112,26 +100,19 @@ import { DATE_FORMATTER, DATE_TIME_FORMATTER } from "../../injection-symbols";
 import UserValue from "./UserValue.vue";
 import TextCell from "./TextCell.vue";
 import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
-import type { ToggleLinks } from "../../helpers/ToggleLinksEmit";
 import LinkTypeCellComponent from "./LinkTypeCellComponent.vue";
 import type { IntlFormatter } from "@tuleap/date-helper/src/IntlFormatter";
+import type { RowEntry } from "../../domain/TableDataStore";
+import type { TableDataState } from "../TableWrapper.vue";
 
 const date_formatter: IntlFormatter = strictInject(DATE_FORMATTER);
 const date_time_formatter: IntlFormatter = strictInject(DATE_TIME_FORMATTER);
 
-const props = defineProps<{
-    uuid: string;
+defineProps<{
     cell: Cell | undefined;
-    artifact_uri: string;
-    expected_number_of_forward_link: number;
-    expected_number_of_reverse_link: number;
-    level: number;
-    is_last: boolean;
-    direction: ArtifactLinkDirection | undefined;
-    reverse_links_count: number | undefined;
+    row_entry: RowEntry;
+    table_state: TableDataState;
 }>();
-
-const emit = defineEmits<ToggleLinks>();
 
 function renderCell(cell: Cell): string {
     if (cell.type === DATE_CELL) {
@@ -145,10 +126,6 @@ function renderCell(cell: Cell): string {
         return cell.icon !== "" ? cell.icon + " " + cell.name : cell.name;
     }
     return "";
-}
-
-function toggleArtifactLinksDisplay(): void {
-    emit("toggle-links");
 }
 
 const getBadgeClass = (color: ColorName): string => `tlp-badge-${color} tlp-badge-outline`;

@@ -160,9 +160,6 @@ msgstr ""
 msgid "Overwrite current query"
 msgstr ""
 
-msgid "Please create a new query."
-msgstr ""
-
 msgid "Previous"
 msgstr ""
 
@@ -179,9 +176,6 @@ msgid "Query creation is under implementation"
 msgstr ""
 
 msgid "Query details"
-msgstr ""
-
-msgid "Query is empty"
 msgstr ""
 
 msgid "Query suggestions"

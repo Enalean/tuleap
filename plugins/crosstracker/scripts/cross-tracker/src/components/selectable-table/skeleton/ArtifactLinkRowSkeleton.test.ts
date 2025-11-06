@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
@@ -31,12 +31,16 @@ import EmptyEditCell from "./EmptyEditCell.vue";
 import EmptySelectableCell from "./EmptySelectableCell.vue";
 import { TABLE_DATA_STORE } from "../../../injection-symbols";
 import { TableDataStore } from "../../../domain/TableDataStore";
+import * as get_number_of_parents from "../../../domain/NumberOfParentForRowCalculator";
+import type { TableDataState } from "../../TableWrapper.vue";
 
 const DATE_COLUMN_NAME = "start_date";
 const table_data_store = TableDataStore();
 table_data_store.setColumns(
     new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME).add(DATE_COLUMN_NAME),
 );
+
+vi.mock("../../domain/NumberOfParentForRowCalculator");
 
 describe("ArtifactLinkRowSkeleton", () => {
     function getWrapper(expected_number_of_links: number): VueWrapper {
@@ -48,22 +52,25 @@ describe("ArtifactLinkRowSkeleton", () => {
                 },
             },
             props: {
-                row: new ArtifactRowBuilder()
-                    .addCell(PRETTY_TITLE_COLUMN_NAME, {
-                        type: PRETTY_TITLE_CELL,
-                        title: "earthmaking",
-                        tracker_name: "lifesome",
-                        artifact_id: 512,
-                        color: "inca-silver",
-                    })
-                    .addCell(DATE_COLUMN_NAME, {
-                        type: DATE_CELL,
-                        value: Option.fromValue("2021-09-26T07:40:03+09:00"),
-                        with_time: true,
-                    })
-                    .build(),
+                row_entry: {
+                    parent_row_uuid: null,
+                    row: new ArtifactRowBuilder()
+                        .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                            type: PRETTY_TITLE_CELL,
+                            title: "earthmaking",
+                            tracker_name: "lifesome",
+                            artifact_id: 512,
+                            color: "inca-silver",
+                        })
+                        .addCell(DATE_COLUMN_NAME, {
+                            type: DATE_CELL,
+                            value: Option.fromValue("2021-09-26T07:40:03+09:00"),
+                            with_time: true,
+                        })
+                        .buildWithExpectedNumberOfLinks(expected_number_of_links, 0),
+                },
+                table_state: {} as TableDataState,
                 expected_number_of_links,
-                level: 0,
             },
         });
     }
@@ -71,6 +78,7 @@ describe("ArtifactLinkRowSkeleton", () => {
     it.each([6, 0])(
         "should display the correct number of row and the correct number of cell when there are %s links",
         (expected_number_of_links) => {
+            vi.spyOn(get_number_of_parents, "getNumberOfParent").mockReturnValue(2);
             const wrapper = getWrapper(expected_number_of_links);
 
             expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(expected_number_of_links);

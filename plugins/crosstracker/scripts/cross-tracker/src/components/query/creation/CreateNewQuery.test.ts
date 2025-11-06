@@ -37,7 +37,6 @@ import {
     NEW_QUERY_CREATED_EVENT,
     NOTIFY_FAULT_EVENT,
     NOTIFY_SUCCESS_EVENT,
-    SEARCH_ARTIFACTS_EVENT,
 } from "../../../helpers/widget-events";
 import SelectableTable from "../../selectable-table/SelectableTable.vue";
 import { PostNewQueryStub } from "../../../../tests/stubs/PostNewQueryStub";
@@ -51,7 +50,6 @@ vi.useFakeTimers();
 describe("CreateNewQuery", () => {
     let dispatched_fault_events: NotifyFaultEvent[];
     let dispatched_success_events: NotifySuccessEvent[];
-    let dispatched_search_events: true[];
     let dispatched_new_query_created_events: SwitchQueryEvent[];
     let emitter: Emitter<Events>;
 
@@ -71,10 +69,6 @@ describe("CreateNewQuery", () => {
         dispatched_success_events.push(event);
     };
 
-    const registerSearchEvent = (): void => {
-        dispatched_search_events.push(true);
-    };
-
     const registerQueryCreatedEvent = (event: CreatedQueryEvent): void => {
         dispatched_new_query_created_events.push(event);
     };
@@ -83,18 +77,15 @@ describe("CreateNewQuery", () => {
         emitter = mitt<Events>();
         dispatched_fault_events = [];
         dispatched_success_events = [];
-        dispatched_search_events = [];
         dispatched_new_query_created_events = [];
         emitter.on(NOTIFY_FAULT_EVENT, registerFaultEvent);
         emitter.on(NOTIFY_SUCCESS_EVENT, registerSuccessEvent);
-        emitter.on(SEARCH_ARTIFACTS_EVENT, registerSearchEvent);
         emitter.on(NEW_QUERY_CREATED_EVENT, registerQueryCreatedEvent);
     });
 
     afterEach(() => {
         emitter.off(NOTIFY_FAULT_EVENT, registerFaultEvent);
         emitter.off(NOTIFY_SUCCESS_EVENT, registerSuccessEvent);
-        emitter.off(SEARCH_ARTIFACTS_EVENT, registerSearchEvent);
         emitter.off(NEW_QUERY_CREATED_EVENT, registerQueryCreatedEvent);
     });
 
@@ -157,67 +148,6 @@ describe("CreateNewQuery", () => {
             const wrapper = getWrapper();
 
             expect(wrapper.findComponent(SelectableTable).exists()).toBe(false);
-        });
-        it("Search a tql query result by emitting an event when the Search button is clicked", async () => {
-            const wrapper = getWrapper();
-
-            wrapper
-                .findComponent(QueryEditor)
-                .vm.$emit("update:tql_query", "SELECT @id FROM @project = 'self' WHERE @id > 1 ");
-
-            await vi.runOnlyPendingTimersAsync();
-
-            await wrapper.find("[data-test=query-creation-search-button]").trigger("click");
-
-            expect(dispatched_search_events).toHaveLength(1);
-        });
-        it("Search a tql query result by emitting an event when the shortcut (ctrl+enter) is pressed", async () => {
-            const wrapper = getWrapper();
-
-            wrapper
-                .findComponent(QueryEditor)
-                .vm.$emit("trigger-search", "SELECT @id FROM @project = 'self' WHERE @id > 1 ");
-
-            await wrapper.find("[data-test=query-creation-search-button]").trigger("click");
-
-            expect(dispatched_search_events).toHaveLength(1);
-        });
-
-        it("displays the right icon according to the loading state", async () => {
-            const wrapper = getWrapper();
-
-            wrapper
-                .findComponent(QueryEditor)
-                .vm.$emit("update:tql_query", "SELECT @id FROM @project = 'self' WHERE @id > 1 ");
-            wrapper.findComponent(TitleInput).vm.$emit("update:title", "Some title");
-
-            await vi.runOnlyPendingTimersAsync();
-
-            const search_button = wrapper.find("[data-test=query-creation-search-button]");
-            await search_button.trigger("click");
-
-            const query_selectable_component = wrapper.findComponent(SelectableTable);
-            query_selectable_component.vm.$emit("search-started");
-
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(
-                wrapper.find("[data-test=query-creation-search-button-spin-icon]").exists(),
-            ).toBe(true);
-            expect(
-                wrapper.find("[data-test=query-creation-search-button-search-icon]").exists(),
-            ).toBe(false);
-
-            query_selectable_component.vm.$emit("search-finished");
-
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(
-                wrapper.find("[data-test=query-creation-search-button-spin-icon]").exists(),
-            ).toBe(false);
-            expect(
-                wrapper.find("[data-test=query-creation-search-button-search-icon]").exists(),
-            ).toBe(true);
         });
     });
     describe("Saving a new query", () => {

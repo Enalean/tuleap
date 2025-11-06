@@ -17,18 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import LoadAllConfirmationModal from "./LoadAllConfirmationModal.vue";
 import LoadAllButton from "./LoadAllButton.vue";
+import type { RowEntry } from "../../domain/TableDataStore";
+import type { ArtifactRow } from "../../domain/ArtifactsTable";
+import { TABLE_WRAPPER_OPERATIONS } from "../../injection-symbols";
+import type { TableWrapperOperations } from "../TableWrapper.vue";
 
 describe("LoadAllButton", () => {
+    let mock_table_wrapper_operations: TableWrapperOperations;
+    const row_entry = {
+        parent_row_uuid: null,
+        row: {} as ArtifactRow,
+    } as RowEntry;
+
+    beforeEach(() => {
+        mock_table_wrapper_operations = {
+            expandRow: vi.fn(),
+            collapseRow: vi.fn(),
+            loadAllArtifacts: vi.fn(),
+        };
+    });
     function getWrapper(): VueWrapper {
         return shallowMount(LoadAllButton, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [TABLE_WRAPPER_OPERATIONS.valueOf()]: mock_table_wrapper_operations,
+                },
+            },
+            props: {
+                row_entry,
             },
         });
     }
@@ -69,12 +92,7 @@ describe("LoadAllButton", () => {
 
         expect(confirmation_modal.exists()).toBe(false);
 
-        const load_all_event = wrapper.emitted("load-all");
-        if (!load_all_event) {
-            throw new Error("Expected a load-all event");
-        }
-
-        expect(load_all_event[0]).toStrictEqual([]);
+        expect(mock_table_wrapper_operations.loadAllArtifacts).toHaveBeenCalledWith(row_entry);
         expect(load_all_button.attributes("disabled")).toBeDefined();
     });
 
@@ -89,7 +107,6 @@ describe("LoadAllButton", () => {
 
         expect(confirmation_modal.exists()).toBe(false);
 
-        const load_all_event = wrapper.emitted("load-all");
-        expect(load_all_event).toBeUndefined();
+        expect(mock_table_wrapper_operations.loadAllArtifacts).not.toHaveBeenCalledWith(row_entry);
     });
 });

@@ -27,7 +27,7 @@
         <empty-selectable-cell
             v-for="column_name of table_data_store.getColumns()"
             v-bind:key="column_name + index"
-            v-bind:cell="row.cells.get(column_name)"
+            v-bind:cell="row_entry.row.cells.get(column_name)"
             v-bind:level="level"
         />
     </template>
@@ -35,18 +35,26 @@
 
 <script setup lang="ts">
 import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../../api/ArtifactLinksRetriever";
-import type { ArtifactRow } from "../../../domain/ArtifactsTable";
 import EmptySelectableCell from "./EmptySelectableCell.vue";
 import EmptyEditCell from "./EmptyEditCell.vue";
 import { TABLE_DATA_STORE } from "../../../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { TableDataStore } from "../../../domain/TableDataStore";
+import type { RowEntry, TableDataStore } from "../../../domain/TableDataStore";
+import { onMounted, ref } from "vue";
+import { getNumberOfParent } from "../../../domain/NumberOfParentForRowCalculator";
+import type { TableDataState } from "../../TableWrapper.vue";
 
 const table_data_store: TableDataStore = strictInject(TABLE_DATA_STORE);
 
-defineProps<{
-    row: ArtifactRow;
-    level: number;
+const props = defineProps<{
+    row_entry: RowEntry;
+    table_state: TableDataState;
     expected_number_of_links: number;
 }>();
+
+const level = ref(0);
+
+onMounted(() => {
+    level.value = getNumberOfParent(props.table_state.row_collection, props.row_entry) + 1;
+});
 </script>

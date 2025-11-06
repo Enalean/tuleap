@@ -163,6 +163,52 @@ describe("TableDataStore", () => {
             expect(row_collection[2]).toStrictEqual(second_root_element);
         });
 
+        it(`adds does not add first element when it's an already seen artifact to decrease the amount of links
+              ┌─────────────────────────┐
+              │                         │
+              │  first element          │
+              │                         │
+              └────┌─────────────────────────────┐
+                   │                             │
+                   │   first child element       │
+                   │                             │
+                   └────┌────────────────────────┘
+                        │                        │
+                        │  first element         │
+                        │ (not added again)      │
+                        └────────────────────────┘
+
+        `, () => {
+            const first_root_element = {
+                parent_row_uuid: null,
+                row: parent_row,
+            };
+
+            const first_child_element = {
+                parent_row_uuid: parent_row.row_uuid,
+                row: row,
+            };
+
+            const first_root_element_again = {
+                parent_row_uuid: row.row_uuid,
+                row: {
+                    row_uuid: uuidv4(),
+                    direction: NO_DIRECTION,
+                    artifact_id: parent_row.artifact_id,
+                } as ArtifactRow,
+            };
+
+            store.addEntry(first_root_element);
+            store.addEntry(first_child_element);
+            store.addEntry(first_root_element_again);
+
+            const row_collection = store.getRowCollection();
+
+            expect(row_collection.length).toBe(2);
+            expect(row_collection[0]).toStrictEqual(first_root_element);
+            expect(row_collection[1]).toStrictEqual(first_child_element);
+        });
+
         it(`adds the child after the last child of same direction of the parent if it as already some
               ┌─────────────────────────┐
               │   first element         │
@@ -208,6 +254,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: first_child_of_first_root_element_uuid,
                     direction: FORWARD_DIRECTION,
+                    artifact_id: 43,
                 } as ArtifactRow,
             };
 
@@ -216,6 +263,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: second_child_of_first_root_element_uuid,
                     direction: FORWARD_DIRECTION,
+                    artifact_id: 44,
                 } as ArtifactRow,
             };
 
@@ -263,6 +311,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: first_root_element_uuid,
                     direction: NO_DIRECTION,
+                    artifact_id: 10,
                 } as ArtifactRow,
             };
 
@@ -271,6 +320,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: second_root_element_uuid,
                     direction: NO_DIRECTION,
+                    artifact_id: 20,
                 } as ArtifactRow,
             };
 
@@ -279,6 +329,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: first_child_of_first_root_element_uuid,
                     direction: FORWARD_DIRECTION,
+                    artifact_id: 30,
                 } as ArtifactRow,
             };
 
@@ -287,6 +338,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: second_child_of_first_root_element_uuid,
                     direction: REVERSE_DIRECTION,
+                    artifact_id: 40,
                 } as ArtifactRow,
             };
 
@@ -342,6 +394,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: second_root_element_uuid,
                     direction: NO_DIRECTION,
+                    artifact_id: 100,
                 } as ArtifactRow,
             };
 
@@ -350,6 +403,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: first_child_of_first_root_element_uuid,
                     direction: FORWARD_DIRECTION,
+                    artifact_id: 200,
                 } as ArtifactRow,
             };
 
@@ -358,6 +412,7 @@ describe("TableDataStore", () => {
                 row: {
                     row_uuid: second_child_of_first_root_element_uuid,
                     direction: REVERSE_DIRECTION,
+                    artifact_id: 300,
                 } as ArtifactRow,
             };
 
@@ -373,6 +428,52 @@ describe("TableDataStore", () => {
             expect(row_collection[1]).toStrictEqual(first_child_of_first_root_element);
             expect(row_collection[2]).toStrictEqual(second_child_of_first_root_element);
             expect(row_collection[3]).toStrictEqual(second_root_element);
+        });
+
+        it(`should not add the element when it's already in the collection
+              ┌─────────────────────────┐
+              │   first element         │
+              │   no direction          │
+              │                         │
+              └────┌─────────────────────────────┐
+                   │   first child element       │
+                   │   forward                   │
+                   │                             │
+                   ┌─────────────────────────────┐
+                   │   first child element       │
+                   │   forward                   │
+                   │                             │
+                   └─────────────────────────────┘
+
+          `, () => {
+            const root_element_uuid = uuidv4();
+            const child_uuid = uuidv4();
+
+            const root_element = {
+                parent_row_uuid: null,
+                row: {
+                    row_uuid: root_element_uuid,
+                    direction: NO_DIRECTION,
+                } as ArtifactRow,
+            };
+
+            const child_element = {
+                parent_row_uuid: root_element_uuid,
+                row: {
+                    row_uuid: child_uuid,
+                    direction: FORWARD_DIRECTION,
+                } as ArtifactRow,
+            };
+
+            store.addEntry(root_element);
+            store.addEntry(child_element);
+            store.addEntry(child_element);
+
+            const row_collection = store.getRowCollection();
+
+            expect(row_collection.length).toBe(2);
+            expect(row_collection[0]).toStrictEqual(root_element);
+            expect(row_collection[1]).toStrictEqual(child_element);
         });
     });
 });

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,6 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-export type ToggleLinks = {
-    (e: "toggle-links"): void;
-};
+
+import type { RowEntry } from "./TableDataStore";
+
+export function getNumberOfParent(
+    table_data_store_row_list: Array<RowEntry>,
+    row_entry: RowEntry,
+): number {
+    if (!row_entry || row_entry.parent_row_uuid === null) {
+        return 0;
+    }
+
+    const parent = table_data_store_row_list.find(
+        (item) => item.row.row_uuid === row_entry.parent_row_uuid,
+    );
+
+    if (!parent) {
+        throw new Error("Parent not found in rows collection");
+    }
+
+    return 1 + getNumberOfParent(table_data_store_row_list, parent);
+}
