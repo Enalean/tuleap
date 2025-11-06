@@ -29,11 +29,11 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 
 class ChangelogSnapshotBuilder
 {
@@ -130,7 +130,7 @@ class ChangelogSnapshotBuilder
 
             if (
                 $field_mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE &&
-                $field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE &&
+                $field_mapping->getBindType() === \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE &&
                 $changed_field_to !== null
             ) {
                 $user              = $this->jira_user_retriever->getAssignedTuleapUser($changed_field_to);
@@ -148,7 +148,7 @@ class ChangelogSnapshotBuilder
 
             if (
                 $field_mapping->getType() === \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE &&
-                $field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE &&
+                $field_mapping->getBindType() === \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE &&
                 $changed_field_to !== null
             ) {
                 if (strpos($changed_field_to, '[') === 0) {
@@ -225,7 +225,7 @@ class ChangelogSnapshotBuilder
                 )
             ) {
                 $value = '';
-                if ($field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+                if ($field_mapping->getBindType() === \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE) {
                     $value = (string) \PFUser::NONE_USER_ID;
                 }
                 $fields_snapshot[] = new FieldSnapshot(

@@ -40,7 +40,7 @@ final class CardSemanticExporterTest extends TestCase
                 'Fassignee',
                 'assignee',
                 \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE,
                 [],
             )
         );

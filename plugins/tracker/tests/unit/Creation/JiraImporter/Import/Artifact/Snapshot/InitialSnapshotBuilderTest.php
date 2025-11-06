@@ -27,7 +27,6 @@ use DateTimeImmutable;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -42,6 +41,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class InitialSnapshotBuilderTest extends TestCase
@@ -266,7 +266,7 @@ final class InitialSnapshotBuilderTest extends TestCase
                 'Fassignee',
                 'assignee',
                 'sb',
-                Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                ListFieldUserBind::TYPE,
                 [],
             ),
         );
@@ -278,7 +278,7 @@ final class InitialSnapshotBuilderTest extends TestCase
                 'Fhomies',
                 'homies',
                 'msb',
-                Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                ListFieldUserBind::TYPE,
                 [],
             ),
         );
@@ -688,7 +688,7 @@ final class InitialSnapshotBuilderTest extends TestCase
                         'Fassignee',
                         'assignee',
                         'sb',
-                        Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        ListFieldUserBind::TYPE,
                         [],
                     ),
                     [
@@ -704,7 +704,7 @@ final class InitialSnapshotBuilderTest extends TestCase
                         'Fhomies',
                         'homies',
                         'msb',
-                        Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        ListFieldUserBind::TYPE,
                         [],
                     ),
                     [

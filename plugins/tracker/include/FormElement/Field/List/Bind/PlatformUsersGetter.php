@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
-use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 
 interface PlatformUsersGetter
 {
     /**
-     * @return array<int, Tracker_FormElement_Field_List_Bind_UsersValue>
+     * @return array<int, ListFieldUserBindValue>
      */
     public function getRegisteredUsers(\UserHelper $user_helper): array;
 }

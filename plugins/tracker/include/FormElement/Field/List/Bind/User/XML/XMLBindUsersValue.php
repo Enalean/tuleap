@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML;
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\User\XML;
 
 use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValue;
 

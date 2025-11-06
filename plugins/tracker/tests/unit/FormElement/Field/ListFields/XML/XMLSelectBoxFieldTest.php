@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticValue;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\XML\XMLBindUsersValue;
 use Tuleap\Tracker\FormElement\Field\List\XML\XMLSelectBoxField;
 use Tuleap\Tracker\XML\IDGenerator;
 use function PHPUnit\Framework\assertCount;
@@ -111,7 +111,7 @@ class XMLSelectBoxFieldTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->export(new \SimpleXMLElement('<formElements />'));
 
-        assertEquals(\Tracker_FormElement_Field_List_Bind_Users::TYPE, $xml->bind['type']);
+        assertEquals(\Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE, $xml->bind['type']);
         assertCount(1, $xml->bind->items->item);
         assertEquals('project_members', $xml->bind->items->item[0]['label']);
     }

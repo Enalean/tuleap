@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML;
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\User\XML;
 
 use Tuleap\Tracker\FormElement\Field\XML\XMLChangesetValue;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
@@ -50,7 +50,7 @@ final class XMLBindUsersChangesetValue extends XMLChangesetValue
         $field_change = parent::export($changeset_xml, $form_elements);
 
         $field_change->addAttribute('type', 'list');
-        $field_change->addAttribute('bind', \Tracker_FormElement_Field_List_Bind_Users::TYPE);
+        $field_change->addAttribute('bind', \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE);
 
         foreach ($this->values as $value) {
             $value->export('value', $field_change);

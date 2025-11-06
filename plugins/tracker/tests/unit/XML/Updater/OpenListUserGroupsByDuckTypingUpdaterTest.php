@@ -36,8 +36,8 @@ use XML_SimpleXMLCDATAFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \Tracker_FormElement_Field_List_Bind_Ugroups $source_bind;
-    private \Tracker_FormElement_Field_List_Bind_Ugroups $target_bind;
+    private \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind $source_bind;
+    private \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind $target_bind;
     private \Tuleap\Tracker\FormElement\Field\List\OpenListField $source_field;
     private \Tuleap\Tracker\FormElement\Field\List\OpenListField $target_field;
     private XML_SimpleXMLCDATAFactory $cdata_factory;

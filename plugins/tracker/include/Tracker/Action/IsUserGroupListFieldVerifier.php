@@ -31,7 +31,7 @@ final class IsUserGroupListFieldVerifier implements VerifyIsUserGroupListField
             return false;
         }
 
-        if ($field->getBind()->getType() !== \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE) {
+        if ($field->getBind()->getType() !== \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind::TYPE) {
             return false;
         }
 

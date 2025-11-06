@@ -27,7 +27,6 @@ use DateTimeImmutable;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ChangelogSnapshotBuilderTest extends TestCase
@@ -228,7 +228,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                         'Fassignee',
                         'assignee',
                         'sb',
-                        Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        ListFieldUserBind::TYPE,
                         [],
                     ),
                     ['id' => '105'],
@@ -242,7 +242,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                         'Fhomies',
                         'homies',
                         'msb',
-                        Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        ListFieldUserBind::TYPE,
                         [],
                     ),
                     [
@@ -537,7 +537,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                 'Fassignee',
                 'assignee',
                 'sb',
-                Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                ListFieldUserBind::TYPE,
                 [],
             )
         );
@@ -549,7 +549,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                 'Fhomies',
                 'homies',
                 'msb',
-                Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                ListFieldUserBind::TYPE,
                 [],
             )
         );
@@ -581,7 +581,7 @@ final class ChangelogSnapshotBuilderTest extends TestCase
                 'Fcustomfield_10057',
                 'customfield_10057',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                ListFieldUserBind::TYPE,
                 [],
             )
         );

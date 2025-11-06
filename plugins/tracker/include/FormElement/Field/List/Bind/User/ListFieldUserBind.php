@@ -19,6 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\User;
+
+use Codendi_HTMLPurifier;
+use PFUser;
+use ProjectUGroup;
+use Rule_Email;
+use SimpleXMLElement;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_List;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_Field_List_Value;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindListUserValueGetter;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsersDao;
@@ -34,8 +48,12 @@ use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
+use UserDao;
+use UserHelper;
+use UserManager;
+use UserXMLExporter;
 
-class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
+class ListFieldUserBind extends ListFieldBind
 {
     public const string TYPE = 'users';
 
@@ -110,7 +128,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     }
 
     /**
-     * @param Tracker_FormElement_Field_List_Bind_UsersValue $value the value of the field
+     * @param ListFieldUserBindValue $value the value of the field
      *
      * @return string
      */
@@ -164,19 +182,19 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
         $uh     = UserHelper::instance();
         $values = [];
         foreach ($this->getDao()->searchChangesetValues($changeset_id, $this->field->id, $uh->getDisplayNameSQLQuery(), $uh->getDisplayNameSQLOrder()) as $row) {
-            $values[] =  new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $row['id'], $row['user_name'], $row['full_name']);
+            $values[] = new ListFieldUserBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $row['id'], $row['user_name'], $row['full_name']);
         }
         return $values;
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue | null
+     * @return ListFieldUserBindValue | null
      */
     #[\Override]
     public function getValue($value_id)
     {
         if ($value_id == 100) {
-            $v = new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), 0);
+            $v = new ListFieldUserBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), 0);
         } else {
             $vs = $this->getAllValues();
             $v  = null;
@@ -270,9 +288,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     /**
      * Get all values to be displayed in the field depending of a ugroup list
      *
-     * @param array  $ugroups, a list of ugroups
+     * @param array $ugroups , a list of ugroups
      *
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     * @return ListFieldUserBindValue[]
      */
     protected function getAllValuesByUGroupList($ugroups)
     {
@@ -292,7 +310,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
      * If all values for this field are already fetched, then returns the collection. Else perform a lookup to retrieve
      * only the needed ids. This avoids to load ten thousands of users for nothing.
      *
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     * @return ListFieldUserBindValue[]
      */
     private function getValuesCollectionContainingIds(array $bindvalue_ids)
     {
@@ -315,7 +333,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     /**
      * Get all values to be displayed in the field
      *
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     * @return ListFieldUserBindValue[]
      */
     #[\Override]
     public function getAllValues()
@@ -324,7 +342,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     * @return ListFieldUserBindValue[]
      */
     #[\Override]
     public function getAllValuesWithActiveUsersOnly(): array
@@ -348,14 +366,14 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     /**
      * Return the addtionnal value
      *
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue|null
+     * @return ListFieldUserBindValue|null
      */
     protected function getAdditionnalValue($value_id)
     {
         if (! isset($this->additionnal_values[$value_id])) {
             $this->additionnal_values[$value_id] = null;
             if ($user = $this->userManager->getUserById($value_id)) {
-                $this->additionnal_values[$value_id] = new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $user->getId());
+                $this->additionnal_values[$value_id] = new ListFieldUserBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $user->getId());
             }
         }
         return $this->additionnal_values[$value_id];
@@ -371,7 +389,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     #[\Override]
     public function getValueFromRow($row)
     {
-        return new Tracker_FormElement_Field_List_Bind_UsersValue(
+        return new ListFieldUserBindValue(
             $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
             $row['id'],
             $row['user_name'],
@@ -406,7 +424,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     /**
      * Get the field data for artifact submission
      *
-     * @param string  $submitted_value
+     * @param string $submitted_value
      * @param bool $is_multiple if the value is multiple or not
      *
      * @return mixed the field data corresponding to the value for artifact submision (user_id)
@@ -684,7 +702,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
                 ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) ||
                 ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN'])
             ) {
-                   continue;
+                continue;
             }
 
             $ugr = 'ugroup_' . $ug;
@@ -717,7 +735,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
      * Process the request
      *
      * @param array $params the request parameters
-     * @param bool  $no_redirect true if we do not have to redirect the user
+     * @param bool $no_redirect true if we do not have to redirect the user
      *
      * @return void
      */
@@ -958,7 +976,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {
         $user_representation = new UserListValueRepresentation();
-        assert($value instanceof Tracker_FormElement_Field_List_Bind_UsersValue);
+        assert($value instanceof ListFieldUserBindValue);
         $user_representation->build($value);
 
         $representation = new FieldListBindUserValueRepresentation();
@@ -974,7 +992,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
 
         $rest_array = [];
         foreach ($bind_values as $value) {
-            $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser(), new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),);
+            $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser(), new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
             $rest_array[]   = $representation;
         }
         return $rest_array;
@@ -1027,7 +1045,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
             $user->setEmail($value->getLabel());
         }
 
-        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),);
+        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
     }
 
     #[\Override]
@@ -1042,6 +1060,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends ListFieldBind // phpcs:i
     #[\Override]
     public function getBindValueById($bindvalue_id): Tracker_FormElement_Field_List_BindValue
     {
-        return new Tracker_FormElement_Field_List_Bind_UsersValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $bindvalue_id);
+        return new ListFieldUserBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $bindvalue_id);
     }
 }

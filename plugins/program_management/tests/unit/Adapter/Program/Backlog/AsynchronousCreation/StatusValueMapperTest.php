@@ -226,7 +226,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         int $user_group_id,
         string $user_group_name,
         bool $is_hidden,
-    ): \Tracker_FormElement_Field_List_Bind_UgroupsValue {
+    ): \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBindValue {
         $project_ugroup = new \ProjectUGroup(['ugroup_id' => $user_group_id, 'name' => $user_group_name]);
         return ListUserGroupValueBuilder::aUserGroupValue($project_ugroup)->withId($bind_value_id)->isHidden($is_hidden)->build();
     }

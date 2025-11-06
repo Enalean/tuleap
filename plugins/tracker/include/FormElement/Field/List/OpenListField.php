@@ -30,8 +30,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_OpenList;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement_Field_List_Bind_Ugroups;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tracker_FormElement_Field_List_UnsavedValue;
 use Tracker_FormElement_FieldVisitor;
@@ -46,10 +44,12 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\OpenListSpecificPropertiesDAO;
@@ -1091,7 +1091,7 @@ class OpenListField extends ListField implements BindVisitor
     {
         $type = $this->getBind()->getType();
 
-        if ($type === Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+        if ($type === ListFieldUserBind::TYPE) {
             return [
                 'resource' => [
                     'type' => 'users',
@@ -1100,7 +1100,7 @@ class OpenListField extends ListField implements BindVisitor
             ];
         }
 
-        if ($type === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE) {
+        if ($type === ListFieldUserGroupBind::TYPE) {
             $ugroup_manager = new UGroupManager();
             $project        = $this->getTracker()->getProject();
             $user_groups    = $ugroup_manager->getUGroups($project, [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::NONE]);
@@ -1136,7 +1136,7 @@ class OpenListField extends ListField implements BindVisitor
 
     #[Override]
     public function visitListBindUsers(
-        Tracker_FormElement_Field_List_Bind_Users $bind,
+        ListFieldUserBind $bind,
         BindParameters $parameters,
     ) {
         return sprintf(dgettext('tuleap-tracker', '%1$s contains a value which is not a login or an email.'), $this->getLabel());
@@ -1144,7 +1144,7 @@ class OpenListField extends ListField implements BindVisitor
 
     #[Override]
     public function visitListBindUgroups(
-        Tracker_FormElement_Field_List_Bind_Ugroups $bind,
+        ListFieldUserGroupBind $bind,
         BindParameters $parameters,
     ) {
         return sprintf(dgettext('tuleap-tracker', '%1$s contains a value which is not a user group.'), $this->getLabel());
@@ -1174,7 +1174,7 @@ class OpenListField extends ListField implements BindVisitor
     #[Override]
     public function getSelectDefaultValues($default_values)
     {
-        if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Users) {
+        if (! $this->getBind() instanceof ListFieldUserBind) {
             return parent::getSelectDefaultValues($default_values);
         }
 

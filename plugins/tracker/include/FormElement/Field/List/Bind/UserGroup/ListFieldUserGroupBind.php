@@ -17,6 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup;
+
+use Codendi_HTMLPurifier;
+use Project_NotFoundException;
+use ProjectUGroup;
+use SimpleXMLElement;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_List;
+use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_Field_List_Value;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
@@ -25,16 +37,18 @@ use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListValueDao;
 use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
+use UGroupManager;
+use UserXMLExporter;
 
 /**
- * @template-extends ListFieldBind<Tracker_FormElement_Field_List_Bind_UgroupsValue>
+ * @template-extends ListFieldBind<ListFieldUserGroupBindValue>
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
+class ListFieldUserGroupBind extends ListFieldBind
 {
     public const string TYPE = 'ugroups';
 
@@ -44,12 +58,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
     private $ugroup_retriever;
 
     /**
-     * @var Tracker_FormElement_Field_List_Bind_UgroupsValue[]
+     * @var ListFieldUserGroupBindValue[]
      */
     private $values;
 
     /**
-     * @var Tracker_FormElement_Field_List_Bind_UgroupsValue[]
+     * @var ListFieldUserGroupBindValue[]
      */
     private $values_indexed_by_ugroup_id;
 
@@ -99,7 +113,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
     }
 
     /**
-     * @param Tracker_FormElement_Field_List_Bind_UsersValue $value the value of the field
+     * @param ListFieldUserBindValue $value the value of the field
      *
      * @return string
      */
@@ -111,7 +125,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
 
     /**
      *
-     * @param Tracker_FormElement_Field_List_Bind_UgroupsValue $value
+     * @param ListFieldUserGroupBindValue $value
      *
      * @return string
      */
@@ -135,7 +149,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UgroupsValue|null
+     * @return ListFieldUserGroupBindValue|null
      */
     #[\Override]
     public function getValue($value_id)
@@ -173,9 +187,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
         if ($ugroup) {
             $is_hidden = isset($row['is_hidden']) ? $row['is_hidden'] : false;
 
-            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $row['id'], $ugroup, $is_hidden);
+            return new ListFieldUserGroupBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), $row['id'], $ugroup, $is_hidden);
         }
-        return new Tracker_FormElement_Field_List_Bind_UgroupsValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), -1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
+        return new ListFieldUserGroupBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), -1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
     }
 
     /**
@@ -204,7 +218,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
     /**
      * Get the field data for artifact submission
      *
-     * @param string  $submitted_value the field value (username(s))
+     * @param string $submitted_value the field value (username(s))
      * @param bool $is_multiple if the value is multiple or not
      *
      * @return mixed the field data corresponding to the value for artifact submision (user_id)
@@ -488,7 +502,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
      * Process the request
      *
      * @param array $params the request parameters
-     * @param bool  $no_redirect true if we do not have to redirect the user
+     * @param bool $no_redirect true if we do not have to redirect the user
      *
      * @return void
      */
@@ -529,7 +543,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UgroupsValue or null if no match
+     * @return ListFieldUserGroupBindValue or null if no match
      */
     private function getValueByUGroupId($ugroup_id)
     {
@@ -653,7 +667,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
     {
         $recipients = [];
         foreach ($changeset_value->getListValues() as $ugroups_value) {
-            if ($ugroups_value instanceof Tracker_FormElement_Field_List_Bind_UgroupsValue) {
+            if ($ugroups_value instanceof ListFieldUserGroupBindValue) {
                 $recipients = array_merge($recipients, $ugroups_value->getMembersName());
             }
         }
@@ -844,7 +858,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends ListFieldBind
         $row = $this->value_dao->searchById($bindvalue_id);
 
         if (! $row) {
-            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), -1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
+            return new ListFieldUserGroupBindValue($this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()), -1, new ProjectUGroup(['ugroup_id' => 0, 'name' => '']), true);
         }
 
         return $this->getValueFromRow($row);

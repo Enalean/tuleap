@@ -31,6 +31,6 @@ final class UserGroupOpenListFieldVerifier implements VerifyIsUserGroupOpenListF
             return false;
         }
 
-        return $field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Ugroups;
+        return $field->getBind() instanceof \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
     }
 }

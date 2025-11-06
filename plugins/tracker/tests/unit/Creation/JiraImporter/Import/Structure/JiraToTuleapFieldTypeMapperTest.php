@@ -27,7 +27,6 @@ use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 use Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLTracker;
@@ -390,7 +390,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField('multiselectid');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldUserBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -414,7 +414,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME);
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldUserBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -438,7 +438,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_REPORTER_NAME);
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldUserBind::TYPE, $mapping->getBindType());
             },
         ];
 
@@ -462,7 +462,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
                 $mapping = $collection->getMappingFromJiraField('custom_123214');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::TYPE, $mapping->getBindType());
+                self::assertEquals(ListFieldUserBind::TYPE, $mapping->getBindType());
             },
         ];
 

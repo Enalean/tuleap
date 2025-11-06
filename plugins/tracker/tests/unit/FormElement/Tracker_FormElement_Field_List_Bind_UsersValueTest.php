@@ -25,10 +25,10 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use UserHelper;
 use UserManager;
@@ -103,9 +103,9 @@ final class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TestCase 
         self::assertNull($json);
     }
 
-    private function getListBindUserValue(): Tracker_FormElement_Field_List_Bind_UsersValue&MockObject
+    private function getListBindUserValue(): ListFieldUserBindValue&MockObject
     {
-        $bind = $this->createPartialMock(Tracker_FormElement_Field_List_Bind_UsersValue::class, [
+        $bind = $this->createPartialMock(ListFieldUserBindValue::class, [
             'getId', 'getUserManager', 'getUserHelper',
         ]);
         $bind->method('getId')->willReturn(12);

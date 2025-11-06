@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use Psr\Log\LoggerInterface;
-use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 use Tuleap\User\RetrieveUserById;
 
 final class CanUserFieldValuesBeFullyMovedVerifier implements VerifyUserFieldValuesCanBeFullyMoved
@@ -50,7 +50,7 @@ final class CanUserFieldValuesBeFullyMovedVerifier implements VerifyUserFieldVal
         $list_field_values = array_values($last_changeset_value->getListValues());
 
         foreach ($list_field_values as $value) {
-            assert($value instanceof Tracker_FormElement_Field_List_Bind_UsersValue);
+            assert($value instanceof ListFieldUserBindValue);
             $user = $this->retrieve_user->getUserById((int) $value->getId());
             if (! $user || $user->isAnonymous()) {
                 $logger->debug(sprintf('User %s not found ', $value->getId()));

@@ -24,14 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\List\XML;
 
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticValue;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\XML\XMLBindUsersValue;
 use Tuleap\Tracker\FormElement\Field\List\Bind\XML\XMLBindValue;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 abstract class XMLListField extends XMLField
 {
     /**
-     * @var null | \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE | \Tracker_FormElement_Field_List_Bind_Users::TYPE | \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE
+     * @var null | \Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind::TYPE | \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE | \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind::TYPE
      * @readonly
      */
     public ?string $bind_type = null;
@@ -85,11 +85,11 @@ abstract class XMLListField extends XMLField
      */
     public function withUsersValues(XMLBindUsersValue ...$bind_value): self
     {
-        if ($this->bind_type !== null && $this->bind_type !== \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+        if ($this->bind_type !== null && $this->bind_type !== \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE) {
             throw new \LogicException(sprintf('Cannot mix bind type, %s already set', $this->bind_type));
         }
         $new              = clone $this;
-        $new->bind_type   = \Tracker_FormElement_Field_List_Bind_Users::TYPE;
+        $new->bind_type   = \Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::TYPE;
         $new->bind_values = array_merge($new->bind_values, $bind_value);
         return $new;
     }

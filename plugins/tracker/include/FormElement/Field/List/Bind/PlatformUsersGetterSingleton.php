@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
-use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBindValue;
 
 final class PlatformUsersGetterSingleton implements PlatformUsersGetter
 {
@@ -44,7 +44,7 @@ final class PlatformUsersGetterSingleton implements PlatformUsersGetter
     }
 
     /**
-     * @return array<int, Tracker_FormElement_Field_List_Bind_UsersValue>
+     * @return array<int, ListFieldUserBindValue>
      */
     #[\Override]
     public function getRegisteredUsers(\UserHelper $user_helper): array
@@ -52,7 +52,7 @@ final class PlatformUsersGetterSingleton implements PlatformUsersGetter
         if (! isset($this->registered_users)) {
             $this->registered_users = [];
             foreach ($this->dao->getRegisteredUsers($user_helper->getDisplayNameSQLQuery(), $user_helper->getDisplayNameSQLOrder()) as $row) {
-                $this->registered_users[$row['user_id']] = Tracker_FormElement_Field_List_Bind_UsersValue::fromUser(
+                $this->registered_users[$row['user_id']] = ListFieldUserBindValue::fromUser(
                     $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes()),
                     $this->user_manager->getUserInstanceFromRow($row),
                     $row['full_name']

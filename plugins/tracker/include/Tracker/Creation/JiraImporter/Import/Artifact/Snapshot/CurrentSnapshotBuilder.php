@@ -26,16 +26,16 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 use DateTimeImmutable;
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\GetExistingArtifactLinkTypes;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\GetExistingArtifactLinkTypes;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class CurrentSnapshotBuilder
@@ -116,7 +116,7 @@ class CurrentSnapshotBuilder
         LinkedIssuesCollection $linked_issues_collection,
     ) {
         if (
-            $mapping->getBindType() === Tracker_FormElement_Field_List_Bind_Users::TYPE &&
+            $mapping->getBindType() === ListFieldUserBind::TYPE &&
             $mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
         ) {
             $user = $this->jira_user_retriever->retrieveUserFromAPIData(
@@ -129,7 +129,7 @@ class CurrentSnapshotBuilder
         }
 
         if (
-            $mapping->getBindType() === Tracker_FormElement_Field_List_Bind_Users::TYPE &&
+            $mapping->getBindType() === ListFieldUserBind::TYPE &&
             $mapping->getType() === \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE
         ) {
             $selected_users_ids = [];

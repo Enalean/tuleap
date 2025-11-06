@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\XML\Exporter\FieldChange;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
@@ -48,7 +48,7 @@ readonly class FieldChangeListBuilder
 
         if (empty($values)) {
             $field_change->addChild('value');
-        } elseif ($bind_type === Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+        } elseif ($bind_type === ListFieldUserBind::TYPE) {
             foreach ($values as $value) {
                 $this->user_xml_exporter->exportUserByUserId($value, $field_change, 'value');
             }

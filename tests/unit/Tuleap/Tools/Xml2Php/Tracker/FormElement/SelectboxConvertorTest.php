@@ -163,8 +163,8 @@ class SelectboxConvertorTest extends TestCase
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
             '\XMLSelectbox::fromTrackerAndName($tracker, \'assigned_to\')->withUsersValues(' .
-            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue(\'group_members\'), ' .
-            'new \Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue(\'group_admins\'))',
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\User\XML\XMLBindUsersValue(\'group_members\'), ' .
+            'new \Tuleap\Tracker\FormElement\Field\List\Bind\User\XML\XMLBindUsersValue(\'group_admins\'))',
             $printer->prettyPrint([$node])
         );
         self::assertEquals('assigned_to', $id_to_name_mapping->get('F123'));

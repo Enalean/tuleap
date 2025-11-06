@@ -41,7 +41,7 @@ final class CanUserGroupValuesBeFullyMovedVerifier implements VerifyUserGroupVal
         $destinations_values_labels = array_map(static fn($value) => $value->getLabel(), $destination_field->getAllValues());
 
         foreach ($list_field_values as $value) {
-            assert($value instanceof \Tracker_FormElement_Field_List_Bind_UgroupsValue);
+            assert($value instanceof \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBindValue);
             $user_group_name = NameTranslator::getUserGroupDisplayName($value->getUGroupName());
 
             if (! in_array($user_group_name, $destinations_values_labels, true)) {

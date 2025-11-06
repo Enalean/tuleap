@@ -29,7 +29,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\XML\XMLBindStaticValue;
-use Tuleap\Tracker\FormElement\Field\List\Bind\BindUsers\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\XML\XMLBindUsersValue;
 
 final class SelectboxConvertor extends FieldConvertor
 {

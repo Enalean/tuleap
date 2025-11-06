@@ -74,7 +74,7 @@ final class ListFieldCheckerWithBindUsersTest extends TestCase
         );
 
         $field     = CheckboxFieldBuilder::aCheckboxField(714)->withName(self::FIELD_NAME)->build();
-        $user_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind_Users::class);
+        $user_bind = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind::class);
         $user_bind->method('getField')->willReturn($field);
         $user_bind->method('accept')->willReturnCallback(
             fn(BindVisitor $visitor, BindParameters $parameters) => $visitor->visitListBindUsers(

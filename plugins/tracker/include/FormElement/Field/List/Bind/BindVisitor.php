@@ -20,17 +20,17 @@
 
 namespace Tuleap\Tracker\FormElement\Field\List\Bind;
 
-use Tracker_FormElement_Field_List_Bind_Ugroups;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
 
 interface BindVisitor
 {
     public function visitListBindStatic(ListFieldStaticBind $bind, BindParameters $parameters);
 
-    public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters);
+    public function visitListBindUsers(ListFieldUserBind $bind, BindParameters $parameters);
 
-    public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters);
+    public function visitListBindUgroups(ListFieldUserGroupBind $bind, BindParameters $parameters);
 
     public function visitListBindNull(ListFieldNullBind $bind, BindParameters $parameters);
 }

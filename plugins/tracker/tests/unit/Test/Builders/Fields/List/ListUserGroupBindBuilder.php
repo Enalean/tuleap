@@ -29,7 +29,7 @@ use Tuleap\Tracker\FormElement\Field\List\Bind\BindUgroupsValueDao;
 final class ListUserGroupBindBuilder
 {
     /**
-     * @var \Tracker_FormElement_Field_List_Bind_UgroupsValue[]
+     * @var \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBindValue[]
      */
     private array $bind_values = [];
     /**
@@ -62,9 +62,9 @@ final class ListUserGroupBindBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_List_Bind_Ugroups
+    public function build(): \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind
     {
-        $bind = new \Tracker_FormElement_Field_List_Bind_Ugroups(
+        $bind = new \Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind(
             new DatabaseUUIDV7Factory(),
             $this->field,
             $this->bind_values,

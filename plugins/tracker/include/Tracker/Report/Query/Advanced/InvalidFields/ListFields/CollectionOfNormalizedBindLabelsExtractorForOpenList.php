@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field_List_Bind_Ugroups;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
 use Tuleap\Tracker\FormElement\Field\List\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\List\Bind\ListFieldNullBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListValueDao;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
@@ -57,7 +57,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractorForOpenList implem
     }
 
     #[\Override]
-    public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters): array
+    public function visitListBindUsers(ListFieldUserBind $bind, BindParameters $parameters): array
     {
         return array_merge(
             $this->bind_labels_extractor->visitListBindUsers($bind, $parameters),
@@ -66,7 +66,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractorForOpenList implem
     }
 
     #[\Override]
-    public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters): array
+    public function visitListBindUgroups(ListFieldUserGroupBind $bind, BindParameters $parameters): array
     {
         return $this->bind_labels_extractor->visitListBindUgroups($bind, $parameters);
     }

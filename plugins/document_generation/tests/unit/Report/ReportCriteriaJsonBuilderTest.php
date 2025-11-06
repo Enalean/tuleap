@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\DocumentGeneration\Report;
 
 use ProjectUGroup;
-use Tracker_FormElement_Field_List_Bind_Ugroups;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_UnsavedValue;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Report;
@@ -36,6 +34,8 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\User\ListFieldUserBind;
+use Tuleap\Tracker\FormElement\Field\List\Bind\UserGroup\ListFieldUserGroupBind;
 use Tuleap\Tracker\FormElement\Field\List\ListField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -231,7 +231,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             0
         );
 
-        $user_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Users::class);
+        $user_bind = $this->createMock(ListFieldUserBind::class);
         $user_bind
             ->method('getValue')
             ->willReturnMap([
@@ -273,7 +273,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $ugroup_02 = $this->createMock(ProjectUGroup::class);
         $ugroup_02->method('getTranslatedName')->willReturn('Ugroup02');
 
-        $group_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Ugroups::class);
+        $group_bind = $this->createMock(ListFieldUserGroupBind::class);
         $group_bind
             ->method('getValue')
             ->willReturnMap([

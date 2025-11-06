@@ -39510,11 +39510,6 @@
       <code><![CDATA[$default_values]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/FormElement/Field/List/Bind/BindUsers/XML/XMLBindUsersValue.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/tracker/include/FormElement/Field/List/Bind/BindUsersDao.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeInt]]></code>
@@ -39786,6 +39781,236 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/List/Bind/User/ListFieldUserBind.php">
+    <DeprecatedFunction>
+      <code><![CDATA[db_fetch_array(ugroup_db_get_ugroup($matches[1]))]]></code>
+      <code><![CDATA[db_numrows($ugroup_res)]]></code>
+      <code><![CDATA[db_numrows($ugroup_res)]]></code>
+      <code><![CDATA[db_result($ugroup_res, $i, 'name')]]></code>
+      <code><![CDATA[db_result($ugroup_res, $i, 'name')]]></code>
+      <code><![CDATA[db_result($ugroup_res, $i, 'ugroup_id')]]></code>
+      <code><![CDATA[db_result($ugroup_res, $i, 'ugroup_id')]]></code>
+      <code><![CDATA[db_result($ugroup_res, 0, 'name')]]></code>
+      <code><![CDATA[db_result($ugroup_res, 0, 'name')]]></code>
+    </DeprecatedFunction>
+    <ForbiddenCode>
+      <code><![CDATA[var_dump($this, 'Properties must be "maxchars" and "size"')]]></code>
+      <code><![CDATA[var_dump($this, 'Properties must be "rows" and "cols"')]]></code>
+    </ForbiddenCode>
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[$field]]></code>
+    </ImplementedParamTypeMismatch>
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[void]]></code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidReturnStatement>
+      <code><![CDATA[parent::process($params, $no_redirect)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[void]]></code>
+    </InvalidReturnType>
+    <MissingParamType>
+      <code><![CDATA[$changeset_id]]></code>
+      <code><![CDATA[$decorators]]></code>
+      <code><![CDATA[$default_values]]></code>
+      <code><![CDATA[$field]]></code>
+      <code><![CDATA[$field]]></code>
+      <code><![CDATA[$select_name]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value_function]]></code>
+      <code><![CDATA[$value_function]]></code>
+      <code><![CDATA[$value_id]]></code>
+      <code><![CDATA[$value_id]]></code>
+      <code><![CDATA[$value_id]]></code>
+      <code><![CDATA[$value_id]]></code>
+      <code><![CDATA[$value_id]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$value_function]]></code>
+      <code><![CDATA[$values]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[accept]]></code>
+      <code><![CDATA[fetchSelectUsers]]></code>
+      <code><![CDATA[fixOriginalValueIds]]></code>
+      <code><![CDATA[getBindValues]]></code>
+      <code><![CDATA[getDao]]></code>
+      <code><![CDATA[getDefaultRESTValues]]></code>
+      <code><![CDATA[getFieldDataFromRESTObject]]></code>
+      <code><![CDATA[getFullRESTValue]]></code>
+      <code><![CDATA[getRESTBindValue]]></code>
+      <code><![CDATA[getValueDao]]></code>
+      <code><![CDATA[isValid]]></code>
+    </MissingReturnType>
+    <MissingTemplateParam>
+      <code><![CDATA[ListFieldUserBind]]></code>
+    </MissingTemplateParam>
+    <PossiblyInvalidOperand>
+      <code><![CDATA[str_replace('user.', '', $uh->getDisplayNameSQLOrder())]]></code>
+    </PossiblyInvalidOperand>
+    <PossiblyNullArgument>
+      <code><![CDATA[$default_values_root]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addChild]]></code>
+    </PossiblyNullReference>
+    <TypeDoesNotContainType>
+      <code><![CDATA[static::class == 'Tuleap\Tracker\FormElement\Field\String\StringField']]></code>
+      <code><![CDATA[static::class == 'Tuleap\Tracker\FormElement\Field\Text\TextField']]></code>
+    </TypeDoesNotContainType>
+    <UndefinedDocblockClass>
+      <code><![CDATA[Field]]></code>
+    </UndefinedDocblockClass>
+    <UndefinedMethod>
+      <code><![CDATA[getListValues]]></code>
+      <code><![CDATA[getUser]]></code>
+      <code><![CDATA[getUsername]]></code>
+      <code><![CDATA[testImport]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/List/Bind/User/ListFieldUserBindValue.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code><![CDATA[$display_name]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$user_name]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$display_name]]></code>
+      <code><![CDATA[$hp]]></code>
+      <code><![CDATA[$user_name]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[fetchCard]]></code>
+      <code><![CDATA[fetchFormatted]]></code>
+      <code><![CDATA[fetchFormattedForCSV]]></code>
+      <code><![CDATA[fetchUserDisplayName]]></code>
+      <code><![CDATA[getAPIValue]]></code>
+      <code><![CDATA[getFullRESTValue]]></code>
+      <code><![CDATA[getFullRESTValueForAnonymous]]></code>
+      <code><![CDATA[getJsonValue]]></code>
+      <code><![CDATA[getLink]]></code>
+      <code><![CDATA[getUserHelper]]></code>
+      <code><![CDATA[getUserManager]]></code>
+      <code><![CDATA[getUserUrl]]></code>
+      <code><![CDATA[getUsername]]></code>
+    </MissingReturnType>
+    <PossiblyNullArgument>
+      <code><![CDATA[$user]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/List/Bind/User/XML/XMLBindUsersValue.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/List/Bind/UserGroup/ListFieldUserGroupBind.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[$field]]></code>
+    </ImplementedParamTypeMismatch>
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[void]]></code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidNullableReturnType>
+      <code><![CDATA[ListFieldUserGroupBindValue]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[parent::process($params, $no_redirect)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[void]]></code>
+    </InvalidReturnType>
+    <InvalidScalarArgument>
+      <code><![CDATA[$project->getID()]]></code>
+      <code><![CDATA[(int) $value->isHidden()]]></code>
+    </InvalidScalarArgument>
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+    <MissingClosureParamType>
+      <code><![CDATA[$value]]></code>
+    </MissingClosureParamType>
+    <MissingClosureReturnType>
+      <code><![CDATA[static function ($value) {]]></code>
+    </MissingClosureReturnType>
+    <MissingParamType>
+      <code><![CDATA[$changeset_id]]></code>
+      <code><![CDATA[$decorators]]></code>
+      <code><![CDATA[$default_values]]></code>
+      <code><![CDATA[$field]]></code>
+      <code><![CDATA[$field]]></code>
+      <code><![CDATA[$rest_data]]></code>
+      <code><![CDATA[$select_name]]></code>
+      <code><![CDATA[$ugroup_id]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value_id]]></code>
+      <code><![CDATA[$value_id]]></code>
+      <code><![CDATA[$value_id]]></code>
+      <code><![CDATA[$values]]></code>
+      <code><![CDATA[$values]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[accept]]></code>
+      <code><![CDATA[fetchSelectUgroups]]></code>
+      <code><![CDATA[fixOriginalValueIds]]></code>
+      <code><![CDATA[getBindValues]]></code>
+      <code><![CDATA[getDao]]></code>
+      <code><![CDATA[getDefaultRESTValues]]></code>
+      <code><![CDATA[getFieldDataFromRESTObject]]></code>
+      <code><![CDATA[getFullRESTValue]]></code>
+      <code><![CDATA[getOpenValueDao]]></code>
+      <code><![CDATA[getRESTBindValue]]></code>
+      <code><![CDATA[getSelectedUgroupIds]]></code>
+      <code><![CDATA[getValueDao]]></code>
+      <code><![CDATA[hideUnwantedValues]]></code>
+      <code><![CDATA[isValid]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidOperand>
+      <code><![CDATA[$this->field->getTracker()->getProject()->getID()]]></code>
+    </PossiblyInvalidOperand>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addChild]]></code>
+      <code><![CDATA[addChild]]></code>
+    </PossiblyNullReference>
+    <UndefinedDocblockClass>
+      <code><![CDATA[Field]]></code>
+    </UndefinedDocblockClass>
+    <UndefinedMethod>
+      <code><![CDATA[getListValues]]></code>
+      <code><![CDATA[getProject]]></code>
+      <code><![CDATA[getUgroupId]]></code>
+      <code><![CDATA[getUgroupId]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/FormElement/Field/List/Bind/UserGroup/ListFieldUserGroupBindValue.php">
+    <InvalidScalarArgument>
+      <code><![CDATA[$project->getID()]]></code>
+    </InvalidScalarArgument>
+    <MissingParamType>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$is_hidden]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[getAPIValue]]></code>
+      <code><![CDATA[getFullRESTValue]]></code>
+      <code><![CDATA[getProject]]></code>
+      <code><![CDATA[getRESTId]]></code>
+      <code><![CDATA[getUGroupName]]></code>
+      <code><![CDATA[getUgroup]]></code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/FormElement/Field/List/CheckboxField.php">
     <MissingParamType>
@@ -45840,7 +46065,7 @@
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.php">
     <InvalidNullableReturnType>
-      <code><![CDATA[Tracker_FormElement_Field_List_Bind_UgroupsValue]]></code>
+      <code><![CDATA[ListFieldUserGroupBindValue]]></code>
     </InvalidNullableReturnType>
     <MissingParamType>
       <code><![CDATA[$b]]></code>
@@ -45878,231 +46103,6 @@
     <MissingReturnType>
       <code><![CDATA[getJsonId]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Ugroups.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[$field]]></code>
-    </ImplementedParamTypeMismatch>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[void]]></code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidNullableReturnType>
-      <code><![CDATA[Tracker_FormElement_Field_List_Bind_UgroupsValue]]></code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[parent::process($params, $no_redirect)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[void]]></code>
-    </InvalidReturnType>
-    <InvalidScalarArgument>
-      <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[(int) $value->isHidden()]]></code>
-    </InvalidScalarArgument>
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[array]]></code>
-    </LessSpecificImplementedReturnType>
-    <MissingClosureParamType>
-      <code><![CDATA[$value]]></code>
-    </MissingClosureParamType>
-    <MissingClosureReturnType>
-      <code><![CDATA[static function ($value) {]]></code>
-    </MissingClosureReturnType>
-    <MissingParamType>
-      <code><![CDATA[$changeset_id]]></code>
-      <code><![CDATA[$decorators]]></code>
-      <code><![CDATA[$default_values]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$rest_data]]></code>
-      <code><![CDATA[$select_name]]></code>
-      <code><![CDATA[$ugroup_id]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$values]]></code>
-      <code><![CDATA[$values]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-      <code><![CDATA[fetchSelectUgroups]]></code>
-      <code><![CDATA[fixOriginalValueIds]]></code>
-      <code><![CDATA[getBindValues]]></code>
-      <code><![CDATA[getDao]]></code>
-      <code><![CDATA[getDefaultRESTValues]]></code>
-      <code><![CDATA[getFieldDataFromRESTObject]]></code>
-      <code><![CDATA[getFullRESTValue]]></code>
-      <code><![CDATA[getOpenValueDao]]></code>
-      <code><![CDATA[getRESTBindValue]]></code>
-      <code><![CDATA[getSelectedUgroupIds]]></code>
-      <code><![CDATA[getValueDao]]></code>
-      <code><![CDATA[hideUnwantedValues]]></code>
-      <code><![CDATA[isValid]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[$this->field->getTracker()->getProject()->getID()]]></code>
-    </PossiblyInvalidOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-      <code><![CDATA[addChild]]></code>
-    </PossiblyNullReference>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Field]]></code>
-    </UndefinedDocblockClass>
-    <UndefinedMethod>
-      <code><![CDATA[getListValues]]></code>
-      <code><![CDATA[getProject]]></code>
-      <code><![CDATA[getUgroupId]]></code>
-      <code><![CDATA[getUgroupId]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UgroupsValue.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$project->getID()]]></code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$is_hidden]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getAPIValue]]></code>
-      <code><![CDATA[getFullRESTValue]]></code>
-      <code><![CDATA[getProject]]></code>
-      <code><![CDATA[getRESTId]]></code>
-      <code><![CDATA[getUGroupName]]></code>
-      <code><![CDATA[getUgroup]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Users.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array(ugroup_db_get_ugroup($matches[1]))]]></code>
-      <code><![CDATA[db_numrows($ugroup_res)]]></code>
-      <code><![CDATA[db_numrows($ugroup_res)]]></code>
-      <code><![CDATA[db_result($ugroup_res, $i, 'name')]]></code>
-      <code><![CDATA[db_result($ugroup_res, $i, 'name')]]></code>
-      <code><![CDATA[db_result($ugroup_res, $i, 'ugroup_id')]]></code>
-      <code><![CDATA[db_result($ugroup_res, $i, 'ugroup_id')]]></code>
-      <code><![CDATA[db_result($ugroup_res, 0, 'name')]]></code>
-      <code><![CDATA[db_result($ugroup_res, 0, 'name')]]></code>
-    </DeprecatedFunction>
-    <ForbiddenCode>
-      <code><![CDATA[var_dump($this, 'Properties must be "maxchars" and "size"')]]></code>
-      <code><![CDATA[var_dump($this, 'Properties must be "rows" and "cols"')]]></code>
-    </ForbiddenCode>
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[$field]]></code>
-    </ImplementedParamTypeMismatch>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[void]]></code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidReturnStatement>
-      <code><![CDATA[parent::process($params, $no_redirect)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[void]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$changeset_id]]></code>
-      <code><![CDATA[$decorators]]></code>
-      <code><![CDATA[$default_values]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$field]]></code>
-      <code><![CDATA[$select_name]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value_function]]></code>
-      <code><![CDATA[$value_function]]></code>
-      <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$value_id]]></code>
-      <code><![CDATA[$value_id]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$value_function]]></code>
-      <code><![CDATA[$values]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-      <code><![CDATA[fetchSelectUsers]]></code>
-      <code><![CDATA[fixOriginalValueIds]]></code>
-      <code><![CDATA[getBindValues]]></code>
-      <code><![CDATA[getDao]]></code>
-      <code><![CDATA[getDefaultRESTValues]]></code>
-      <code><![CDATA[getFieldDataFromRESTObject]]></code>
-      <code><![CDATA[getFullRESTValue]]></code>
-      <code><![CDATA[getRESTBindValue]]></code>
-      <code><![CDATA[getValueDao]]></code>
-      <code><![CDATA[isValid]]></code>
-    </MissingReturnType>
-    <MissingTemplateParam>
-      <code><![CDATA[Tracker_FormElement_Field_List_Bind_Users]]></code>
-    </MissingTemplateParam>
-    <PossiblyInvalidOperand>
-      <code><![CDATA[str_replace('user.', '', $uh->getDisplayNameSQLOrder())]]></code>
-    </PossiblyInvalidOperand>
-    <PossiblyNullArgument>
-      <code><![CDATA[$default_values_root]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addChild]]></code>
-    </PossiblyNullReference>
-    <TypeDoesNotContainType>
-      <code><![CDATA[static::class == 'Tuleap\Tracker\FormElement\Field\String\StringField']]></code>
-      <code><![CDATA[static::class == 'Tuleap\Tracker\FormElement\Field\Text\TextField']]></code>
-    </TypeDoesNotContainType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Field]]></code>
-    </UndefinedDocblockClass>
-    <UndefinedMethod>
-      <code><![CDATA[getListValues]]></code>
-      <code><![CDATA[getUser]]></code>
-      <code><![CDATA[getUsername]]></code>
-      <code><![CDATA[testImport]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UsersValue.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getAvatarUrl]]></code>
-      <code><![CDATA[getAvatarUrl]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$display_name]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$user_name]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$display_name]]></code>
-      <code><![CDATA[$hp]]></code>
-      <code><![CDATA[$user_name]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[fetchCard]]></code>
-      <code><![CDATA[fetchFormatted]]></code>
-      <code><![CDATA[fetchFormattedForCSV]]></code>
-      <code><![CDATA[fetchUserDisplayName]]></code>
-      <code><![CDATA[getAPIValue]]></code>
-      <code><![CDATA[getFullRESTValue]]></code>
-      <code><![CDATA[getFullRESTValueForAnonymous]]></code>
-      <code><![CDATA[getJsonValue]]></code>
-      <code><![CDATA[getLink]]></code>
-      <code><![CDATA[getUserHelper]]></code>
-      <code><![CDATA[getUserManager]]></code>
-      <code><![CDATA[getUserUrl]]></code>
-      <code><![CDATA[getUsername]]></code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$user]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_OpenValue.php">
     <MissingParamType>
