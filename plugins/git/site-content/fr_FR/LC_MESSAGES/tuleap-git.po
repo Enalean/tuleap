@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.8\n"
 
 msgid " At least a git repository is migrated to gerrit"
 msgstr " Au moins un repertoire git est migré sur gerrit"
@@ -58,9 +58,6 @@ msgstr "Modèle de permission sauvegardé."
 
 msgid "Access to Git repositories"
 msgstr "Accès aux dépôts Git"
-
-msgid "Action"
-msgstr "Action"
 
 msgid "Actions"
 msgstr "Actions"
@@ -269,6 +266,9 @@ msgstr "Cloner"
 msgid "Clone or download"
 msgstr "Cloner ou télécharger"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Command sent to remote gerrit servers"
 msgstr "Commande transmise au(x) serveur(s) gerrit"
 
@@ -379,9 +379,15 @@ msgstr "Affiche les derniers push Git faits par l'utilisateur"
 msgid "Do you confirm change of repository access to private ?"
 msgstr "Etes-vous certain(e) de vouloir changer l'accés a ce dépôt a privé ?"
 
+msgid "Edit"
+msgstr "Éditer"
+
 #, php-format
 msgid "Edit %1$s"
 msgstr "Éditer %1$s"
+
+msgid "Edit Gerrit template"
+msgstr "Éditer le modèle Gerrit"
 
 msgid "Edit generic webhook"
 msgstr "Éditer un webhook générique"
@@ -483,6 +489,9 @@ msgstr "Modèles Gerrit"
 
 msgid "Gerrit permission configuration templates"
 msgstr "Modèles de configuration de permissions Gerrit"
+
+msgid "Gerrit template"
+msgstr "Modèle Gerrit"
 
 #, php-format
 msgid ""
@@ -596,14 +605,6 @@ msgstr ""
 "Le chemin contient des caractères invalides. Seuls les caractères "
 "alphanumeriques sont autorisés."
 
-#, php-format
-msgid ""
-"It does not appear to be any <em><a href=\"%1$s\">gerrit server</a></em> set-"
-"up for this platform! Please contact your site administrator."
-msgstr ""
-"Il n'y a pas de <em><a href=\"%1$s\">serveur gerrit</a></em> configuré sur "
-"cette plateforme! Veuillez contacter l'administrateur du site."
-
 msgid "It is either SSH or password replication for replication"
 msgstr ""
 "La réplication se fait soit par SSH soit par le mot de passe de réplication"
@@ -628,6 +629,9 @@ msgstr "Liste des adresses mail a ne plus notifier"
 
 msgid "List of notified mails"
 msgstr "Liste des adresses mail à notifier"
+
+msgid "Loading"
+msgstr "Chargement"
 
 msgid "Login"
 msgstr "Identifiant"
@@ -668,9 +672,6 @@ msgstr ""
 msgid "Manually push SSH keys"
 msgstr "Pousser les clés SSH"
 
-msgid "Mass update of repositories"
-msgstr "Mise à jour massive des dépôts"
-
 msgid "Maximum number of days ago"
 msgstr "Nombre maximum de jours dans le passé"
 
@@ -699,6 +700,9 @@ msgstr "Mes derniers push Git"
 
 msgid "Name"
 msgstr "Nom"
+
+msgid "New Gerrit template"
+msgstr "Nouveau modèle Gerrit"
 
 msgid "No"
 msgstr "Non"
@@ -1066,6 +1070,13 @@ msgstr "Modèle modifié"
 msgid "Templates"
 msgstr "Modèles"
 
+msgid ""
+"The %1$s %%projectname%% %2$s variable is available; it will be replaced by "
+"the project's name during the migration process."
+msgstr ""
+"La variable %1$s %%projectname%% %2$s est mise à votre disposition ; elle "
+"sera remplacée par le nom du projet au moment de la migration."
+
 #, php-format
 msgid "The branch %s already exists in the repository %s"
 msgstr "La branche %s existe déjà dans le dépôt %s"
@@ -1188,6 +1199,9 @@ msgstr ""
 msgid "The update of the default branch did not succeed"
 msgstr "La mise à jour de la branche par défaut n'a pas réussi"
 
+msgid "There are no Gerrit templates yet."
+msgstr "Il n'y a aucun modèle Gerrit pour le moment."
+
 msgid "There are no projects matching the filter"
 msgstr "Aucun projet ne correspond au filtre"
 
@@ -1196,6 +1210,13 @@ msgstr "Il y'a des revues ouvertes concernant ce projet."
 
 msgid "There aren't any forkable repositories in this project."
 msgstr "Il n'y a aucun dépôt dans ce project que vous pouvez forker."
+
+msgid ""
+"There does not appear to be any %1$s Gerrit server %2$s set up for this "
+"platform! Please contact your site administrator."
+msgstr ""
+"Il n'y a pas de %1$s serveur Gerrit %2$s configuré sur cette plateforme ! "
+"Veuillez contacter l'administrateur du site."
 
 #, php-format
 msgid ""
@@ -1266,10 +1287,10 @@ msgstr ""
 
 msgid ""
 "This section allows you to choose a Gerrit project configuration and create "
-"a reusable template from it"
+"a reusable template from it."
 msgstr ""
 "Cette section permet de créer des modèles de configuration de permission "
-"réutilisables à partir de configurations de dépôts git existants."
+"réutilisables à partir de configurations de projet Gerrit existantes."
 
 msgid ""
 "This section allows you to regenerate the Gitolite configuration file of a "
@@ -1409,6 +1430,12 @@ msgstr ""
 "Les utilisateurs des groupes sélectionnés pourront s'authentifier avec leurs "
 "clés d'accès lorsqu'ils appellent les APIs pour changer le status des builds."
 
+msgid "View"
+msgstr "Aperçu"
+
+msgid "View Gerrit template"
+msgstr "Voir le modèle Gerrit"
+
 msgid "Warning"
 msgstr "Attention"
 
@@ -1506,14 +1533,6 @@ msgstr ""
 msgid "You can define several generic webhooks."
 msgstr "Vous pouvez définir plusieurs webhooks génériques."
 
-msgid ""
-"You can edit the template. The <b>%projectname%</b> variable is available; "
-"it will be replaced by the project's name during the migration process:"
-msgstr ""
-"Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à "
-"votre disposition; elle sera remplaçée par le nom du projet au moment de la "
-"migration:"
-
 #, php-format
 msgid ""
 "You can only change <strong>READ</strong> permissions since this repository "
@@ -1566,14 +1585,11 @@ msgstr "fermer les artifacts"
 msgid "disabled"
 msgstr "désactivées"
 
-msgid "edit"
-msgstr "éditer"
-
 msgid "enabled"
 msgstr "activées"
 
-msgid "from gerrit config"
-msgstr "à partir d'une configuration gerrit"
+msgid "from Gerrit config"
+msgstr "à partir d'une configuration Gerrit"
 
 msgid "from scratch"
 msgstr "vide"
@@ -1586,9 +1602,6 @@ msgstr "dépôt"
 
 msgid "submodule"
 msgstr "sous-module"
-
-msgid "view"
-msgstr "aperçu"
 
 msgid "{{ user_group_name }} has no global permission for Git"
 msgstr "{{ user_group_name }} n'a pas de permission globale pour Git"

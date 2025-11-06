@@ -205,12 +205,12 @@ describe("Git", function () {
                 cy.get("[data-test=git-admins-select]").select("Project Members");
                 cy.get("[data-test=update-git-administrators]").click();
 
-                cy.log("User can paramter gerrit templates");
+                cy.log("User can save gerrit templates");
                 cy.projectMemberSession();
                 cy.visit(`/plugins/git/gadmin-${now}/`);
                 cy.get("[data-test=git-administration]").click({ force: true });
                 cy.get("[data-test=create-new-gerrit-template]").click();
-                cy.get("[data-test=from-gerrit-config]").click();
+                cy.get("[data-test=from-scratch]").click();
 
                 cy.get("[data-test=git-admin-config-data]").type("fake data");
                 cy.get("[data-test=git-admin-file-name]").type("template name");

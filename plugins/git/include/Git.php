@@ -51,6 +51,12 @@ use Tuleap\User\RequestFromAutocompleter;
 
 class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    public const string ADMIN_ACTION                  = 'admin';
+    public const string ADMIN_GERRIT_TEMPLATES_ACTION = 'admin-gerrit-templates';
+    public const string GIT_ADMIN_USER_GROUPS_ACTION  = 'admin-git-admins';
+    public const string ADMIN_DEFAULT_SETTINGS_ACTION = 'admin-default-settings';
+    public const string ADMIN_GIT_ADMINS_ACTION       = 'admin-git-admins';
+
     public const string PERM_READ  = 'PLUGIN_GIT_READ';
     public const string PERM_WRITE = 'PLUGIN_GIT_WRITE';
     public const string PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
@@ -75,8 +81,6 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public const string DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
 
     private string $action;
-
-    public const string ADMIN_GIT_ADMINS_ACTION = 'admin-git-admins';
 
     /**
      * Lists all git-related permission types.
@@ -264,9 +268,9 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 'fork',
                 'set_private',
                 'confirm_private',
-                'admin',
-                'admin-git-admins',
-                'admin-gerrit-templates',
+                self::ADMIN_ACTION,
+                self::GIT_ADMIN_USER_GROUPS_ACTION,
+                self::ADMIN_GERRIT_TEMPLATES_ACTION,
                 'admin-default-access-rights',
                 'delete-permissions',
                 'delete-default-permissions',
@@ -534,9 +538,9 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $this->addAction('setPrivate', [$this->groupId, $repository->getId()]);
                 $this->addView('view');
                 break;
-            case 'admin-git-admins':
+            case self::GIT_ADMIN_USER_GROUPS_ACTION:
                 if ($this->request->get('submit')) {
-                    $this->defaultProjectAdminCSRFChecks($action);
+                    $this->defaultProjectAdminCSRFChecks(self::GIT_ADMIN_USER_GROUPS_ACTION);
                     $valid_url = new Valid_Numeric(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
                     $project   = $this->projectManager->getProject($this->groupId);
 
@@ -559,12 +563,12 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 );
 
                 break;
-            case 'admin':
-            case 'admin-gerrit-templates':
+            case self::ADMIN_ACTION:
+            case self::ADMIN_GERRIT_TEMPLATES_ACTION:
                 $project = $this->projectManager->getProject($this->groupId);
 
                 if ($this->request->get('save')) {
-                    $this->defaultProjectAdminCSRFChecks('admin-gerrit-templates');
+                    GitViews::getGerritTemplatesCSRF($this->groupId)->check();
                     $template_content = $this->request->getValidated('git_admin_config_data', 'text');
                     if ($this->request->getValidated('git_admin_template_id', 'uint')) {
                         $template_id = $this->request->get('git_admin_template_id');
@@ -576,7 +580,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 }
 
                 if ($this->request->get('delete')) {
-                    $this->defaultProjectAdminCSRFChecks('admin-gerrit-templates');
+                    GitViews::getGerritTemplatesCSRF($this->groupId)->check();
                     if ($this->request->getValidated('git_admin_template_id', 'uint')) {
                         $template_id = $this->request->get('git_admin_template_id');
                         $this->addAction('deleteGerritTemplate', [$template_id, $project, $user]);
@@ -766,7 +770,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $this->addAction('redirectToRepoManagement', [$this->groupId, $repository->getId(), $pane]);
                 break;
             case 'delete-default-permissions':
-                $url  = '?action=admin-default-settings&pane=access_control&group_id=' . $this->groupId;
+                $url  = '?action=' . self::ADMIN_DEFAULT_SETTINGS_ACTION . '&pane=access_control&group_id=' . $this->groupId;
                 $csrf = new CSRFSynchronizerToken($url);
                 $csrf->check();
 

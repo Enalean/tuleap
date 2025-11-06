@@ -1,0 +1,65 @@
+<form
+    id="edit-gerrit-template"
+    role="dialog"
+    aria-labelledby="edit-gerrit-template-title"
+    class="tlp-modal"
+    action="{{ form_action }}"
+    method="POST"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="edit-gerrit-template-title">
+            {{# dgettext }}tuleap-git | Edit Gerrit template{{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-git | Close{{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-property">
+            <label class="tlp-label">{{# dgettext }}tuleap-git | Template file name{{/ dgettext }}</label>
+            <span id="git_admin_config_template_name"></span>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="edit-template-text">
+                {{# dgettext }}tuleap-git | Gerrit template{{/ dgettext }}
+            </label>
+            <textarea
+                id="edit-template-text"
+                name="git_admin_config_data"
+                class="tlp-textarea"
+                rows="15"
+            ></textarea>
+            <p class="tlp-text-info">
+                {{# dgettext }}
+                    tuleap-git
+                    | The %1$s %%projectname%% %2$s variable is available; it will be replaced by the project's name during the migration process.
+                    | <b>
+                    | </b>
+                {{/ dgettext }}
+            </p>
+        </div>
+        <input type="hidden" id="git_admin_template_id" name="git_admin_template_id"/>
+    </div>
+    <div class="tlp-modal-footer">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <button
+            type="reset"
+            data-dismiss="modal"
+            class="tlp-button-primary tlp-button-outline tlp-modal-action"
+        >{{# dgettext }}tuleap-git | Cancel{{/ dgettext }}</button>
+        <button
+            type="submit"
+            name="delete"
+            value="1"
+            class="tlp-button-danger tlp-modal-action"
+        >{{# dgettext }}tuleap-git | Delete{{/ dgettext }}</button>
+        <button
+            type="submit"
+            name="save"
+            value="1"
+            class="tlp-button-primary tlp-modal-action"
+        >{{# dgettext }}tuleap-git | Save{{/ dgettext }}</button>
+    </div>
+</form>

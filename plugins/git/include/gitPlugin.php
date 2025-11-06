@@ -76,6 +76,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\GitPHP\Controller_Snapshot;
+use Tuleap\Git\GitPluginDefaultController;
 use Tuleap\Git\GitProjectRenamer;
 use Tuleap\Git\GitRepositoryBrowserController;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
@@ -164,6 +165,7 @@ use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Git\RepositoryList\ListPresenterBuilder;
 use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
 use Tuleap\Git\RestrictedGerritServerDao;
+use Tuleap\Git\RouterLink;
 use Tuleap\Git\SystemCheck;
 use Tuleap\Git\SystemEvent\OngoingDeletionDAO;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
@@ -824,7 +826,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    protected function getChainOfRouters()
+    protected function getChainOfRouters(): RouterLink
     {
         $repository_retriever = new RepositoryFromRequestRetriever(
             $this->getRepositoryFactory(),
@@ -881,7 +883,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    private function getWebhookRouter($repository_retriever)
+    private function getWebhookRouter($repository_retriever): RouterLink
     {
         $dao = new WebhookDao();
 
@@ -2376,7 +2378,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getPluginPath() . '/?' . http_build_query(
                     [
                         'group_id' => $project->getID(),
-                        'action'   => 'admin-git-admins',
+                        'action'   => Git::GIT_ADMIN_USER_GROUPS_ACTION,
                     ]
                 )
             )
@@ -2601,9 +2603,9 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    public function routeGetPostLegacyController()
+    public function routeGetPostLegacyController(): GitPluginDefaultController
     {
-        return new \Tuleap\Git\GitPluginDefaultController(
+        return new GitPluginDefaultController(
             $this->getChainOfRouters(),
             EventManager::instance()
         );
@@ -2940,14 +2942,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $event_manager
         );
         $handler->handle($event);
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/git'
-        );
     }
 
     #[ListeningToEventClass]

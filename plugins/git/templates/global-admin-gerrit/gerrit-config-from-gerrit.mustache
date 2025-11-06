@@ -1,0 +1,90 @@
+<form
+    id="gerrit-config-from-gerrit"
+    role="dialog"
+    aria-labelledby="gerrit-config-from-gerrit-title"
+    class="tlp-modal"
+    action="{{ form_action }}"
+    method="POST"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="gerrit-config-from-template-title">
+            {{# dgettext }}tuleap-git | New Gerrit template{{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-git | Close{{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-feedback git-admin-hidden" id="template-from-gerrit-feedback">
+        <div class="tlp-alert-danger" data-alert></div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="git_admin_config_list">
+                {{# dgettext }}tuleap-git | Configurations{{/ dgettext }}
+            </label>
+            <select id="git_admin_config_list" class="tlp-select">
+                <option value="" selected="selected">
+                    {{# dgettext }}tuleap-git | Please choose{{/ dgettext }}
+                </option>
+                {{# config_option }}
+                    {{# getRepository }}
+                        <option value="{{ getId }}">{{ getPath }}</option>
+                    {{/ getRepository }}
+                {{/ config_option }}
+            </select>
+        </div>
+        <i
+            id="template-from-gerrit-spinner"
+            class="fa-solid fa-spin fa-circle-notch git-admin-hidden"
+            role="img"
+            aria-label="{{# dgettext }}tuleap-git | Loading{{/ dgettext }}"></i>
+        <div class="tlp-form-element git-admin-hidden" data-gerrit-config>
+            <label class="tlp-label" for="template-name-from-gerrit">
+                {{# dgettext }}tuleap-git | Template file name{{/ dgettext }}<i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <input
+                type="text"
+                class="tlp-input"
+                id="template-name-from-gerrit"
+                name="git_admin_file_name"
+                required
+            >
+        </div>
+        <div class="tlp-form-element git-admin-hidden" data-gerrit-config>
+            <label class="tlp-label" for="gerrit-config-text">
+                {{# dgettext }}tuleap-git | Gerrit template{{/ dgettext }}
+            </label>
+            <textarea
+                id="gerrit-config-text"
+                name="git_admin_config_data"
+                class="tlp-textarea"
+                rows="15"
+            ></textarea>
+            <p class="tlp-text-info">
+                {{# dgettext }}
+                    tuleap-git
+                    | The %1$s %%projectname%% %2$s variable is available; it will be replaced by the project's name during the migration process.
+                    | <b>
+                    | </b>
+                {{/ dgettext }}
+            </p>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <button
+            type="reset"
+            data-dismiss="modal"
+            class="tlp-button-primary tlp-button-outline tlp-modal-action"
+        >{{# dgettext }}tuleap-git | Cancel{{/ dgettext }}</button>
+        <button
+            type="submit"
+            name="save"
+            value="1"
+            data-gerrit-button
+            class="tlp-button-primary tlp-modal-action"
+        >{{# dgettext }}tuleap-git | Save{{/ dgettext }}</button>
+    </div>
+</form>

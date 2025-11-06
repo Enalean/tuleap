@@ -1,9 +1,4 @@
 codendi.locales['git'] = {
-    preview: 'Aperçu',
-    path_placeholder_disabled: 'Chemin disponible uniquement en copie personnelle',
-    path_placeholder_enabled: 'Entrer un chemin ou laissez vide',
-    cannot_get_gerrit_config: 'Impossible de charger la configuration',
-    cannot_get_template: 'le modèle ne peut être chargé',
     remove_webhook_title: 'Attendez une minute…',
     regexp_permission_enabled_info: 'Les expressions régulières sont activées, seul \\n ne peut pas être utilisé'
 };

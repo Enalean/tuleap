@@ -53,9 +53,6 @@ msgstr ""
 msgid "Access to Git repositories"
 msgstr ""
 
-msgid "Action"
-msgstr ""
-
 msgid "Actions"
 msgstr ""
 
@@ -238,6 +235,9 @@ msgstr ""
 msgid "Clone or download"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Command sent to remote gerrit servers"
 msgstr ""
 
@@ -345,8 +345,14 @@ msgstr ""
 msgid "Do you confirm change of repository access to private ?"
 msgstr ""
 
+msgid "Edit"
+msgstr ""
+
 #, php-format
 msgid "Edit %1$s"
+msgstr ""
+
+msgid "Edit Gerrit template"
 msgstr ""
 
 msgid "Edit generic webhook"
@@ -436,6 +442,9 @@ msgid "Gerrit Templates"
 msgstr ""
 
 msgid "Gerrit permission configuration templates"
+msgstr ""
+
+msgid "Gerrit template"
 msgstr ""
 
 #, php-format
@@ -544,12 +553,6 @@ msgstr ""
 msgid "Invalid namespace, please only use alphanumeric characters."
 msgstr ""
 
-#, php-format
-msgid ""
-"It does not appear to be any <em><a href=\"%1$s\">gerrit server</a></em> set-"
-"up for this platform! Please contact your site administrator."
-msgstr ""
-
 msgid "It is either SSH or password replication for replication"
 msgstr ""
 
@@ -572,6 +575,9 @@ msgid "List of mails to remove from notification"
 msgstr ""
 
 msgid "List of notified mails"
+msgstr ""
+
+msgid "Loading"
 msgstr ""
 
 msgid "Login"
@@ -611,9 +617,6 @@ msgstr ""
 msgid "Manually push SSH keys"
 msgstr ""
 
-msgid "Mass update of repositories"
-msgstr ""
-
 msgid "Maximum number of days ago"
 msgstr ""
 
@@ -641,6 +644,9 @@ msgstr ""
 
 msgid "Name"
 msgstr "Nome"
+
+msgid "New Gerrit template"
+msgstr ""
 
 msgid "No"
 msgstr "Não"
@@ -983,6 +989,11 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
+msgid ""
+"The %1$s %%projectname%% %2$s variable is available; it will be replaced by "
+"the project's name during the migration process."
+msgstr ""
+
 #, php-format
 msgid "The branch %s already exists in the repository %s"
 msgstr ""
@@ -1083,6 +1094,9 @@ msgstr ""
 msgid "The update of the default branch did not succeed"
 msgstr ""
 
+msgid "There are no Gerrit templates yet."
+msgstr ""
+
 msgid "There are no projects matching the filter"
 msgstr ""
 
@@ -1090,6 +1104,11 @@ msgid "There are open changes for this project."
 msgstr ""
 
 msgid "There aren't any forkable repositories in this project."
+msgstr ""
+
+msgid ""
+"There does not appear to be any %1$s Gerrit server %2$s set up for this "
+"platform! Please contact your site administrator."
 msgstr ""
 
 #, php-format
@@ -1142,7 +1161,7 @@ msgstr ""
 
 msgid ""
 "This section allows you to choose a Gerrit project configuration and create "
-"a reusable template from it"
+"a reusable template from it."
 msgstr ""
 
 msgid ""
@@ -1264,6 +1283,12 @@ msgid ""
 "access keys when calling the build status update APIs."
 msgstr ""
 
+msgid "View"
+msgstr ""
+
+msgid "View Gerrit template"
+msgstr ""
+
 msgid "Warning"
 msgstr ""
 
@@ -1343,11 +1368,6 @@ msgstr ""
 msgid "You can define several generic webhooks."
 msgstr ""
 
-msgid ""
-"You can edit the template. The <b>%projectname%</b> variable is available; "
-"it will be replaced by the project's name during the migration process:"
-msgstr ""
-
 #, php-format
 msgid ""
 "You can only change <strong>READ</strong> permissions since this repository "
@@ -1388,13 +1408,10 @@ msgstr ""
 msgid "disabled"
 msgstr ""
 
-msgid "edit"
-msgstr ""
-
 msgid "enabled"
 msgstr ""
 
-msgid "from gerrit config"
+msgid "from Gerrit config"
 msgstr ""
 
 msgid "from scratch"
@@ -1407,9 +1424,6 @@ msgid "repository"
 msgstr ""
 
 msgid "submodule"
-msgstr ""
-
-msgid "view"
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission for Git"

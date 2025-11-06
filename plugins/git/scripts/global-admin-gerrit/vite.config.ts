@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2025-present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-namespace Tuleap\PullRequest\DefaultSettings;
-
-use Git;
-
-final class DefaultSettingsUrlBuilder
-{
-    public static function build(\Project $project): string
+export default vite.defineAppConfig(
     {
-        return '/plugins/git/?' . http_build_query(
-            [
-                'action'   => Git::ADMIN_DEFAULT_SETTINGS_ACTION,
-                'group_id' => $project->getID(),
-                'pane'     => PullRequestPane::NAME,
-            ]
-        );
-    }
-}
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    "global-admin-gerrit": path.resolve(__dirname, "./src/main.ts"),
+                },
+            },
+        },
+    },
+);

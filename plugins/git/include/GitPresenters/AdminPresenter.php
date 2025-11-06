@@ -54,11 +54,6 @@ abstract class GitPresenters_AdminPresenter
         return dgettext('tuleap-git', 'Git administrators');
     }
 
-    public function tab_mass_update()
-    {
-        return dgettext('tuleap-git', 'Mass update of repositories');
-    }
-
     public function tab_template_settings()
     {
         return dgettext('tuleap-git', 'Git settings template');

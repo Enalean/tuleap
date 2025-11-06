@@ -687,7 +687,7 @@ class GitActions extends PluginActions // phpcs:ignore PSR1.Classes.ClassDeclara
         $this->getController()->redirect(
             GIT_BASE_URL . '/?' . http_build_query(
                 [
-                    'action'   => 'admin-default-settings',
+                    'action'   => Git::ADMIN_DEFAULT_SETTINGS_ACTION,
                     'group_id' => $project_id,
                     'pane'     => $pane,
                 ]

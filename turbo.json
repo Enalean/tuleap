@@ -41,7 +41,8 @@
         "themes/**",
         "css/**",
         "images/**",
-        "po/**"
+        "po/**",
+        "styles/**"
       ],
       "outputs": ["dist/**", "frontend-assets/**", "backend-assets/**"]
     },
