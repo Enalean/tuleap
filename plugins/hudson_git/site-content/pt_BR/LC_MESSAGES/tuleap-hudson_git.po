@@ -19,9 +19,6 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Actions"
-msgstr ""
-
 msgid "Add Jenkins hook"
 msgstr ""
 
@@ -32,6 +29,9 @@ msgid "Add a Jenkins server"
 msgstr ""
 
 msgid "Add a Jenkins webhook"
+msgstr ""
+
+msgid "Branch source plugin"
 msgstr ""
 
 msgid "Branch source plugin:"
@@ -57,6 +57,12 @@ msgstr ""
 msgid "Continuous Integration with Hudson/Jenkins for Git plugin"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
+msgid "Delete Jenkins server"
+msgstr ""
+
 msgid "Do not send commit's SHA-1 to Jenkins"
 msgstr ""
 
@@ -70,6 +76,9 @@ msgid "Expected Jenkins server ID not found"
 msgstr ""
 
 msgid "Expected Jenkins server URL not found"
+msgstr ""
+
+msgid "Git plugin triggered jobs"
 msgstr ""
 
 msgid "Git plugin triggered jobs:"
@@ -150,9 +159,6 @@ msgstr ""
 
 msgid "Push date"
 msgstr ""
-
-msgid "Remove"
-msgstr "Remover"
 
 msgid "Repository"
 msgstr ""

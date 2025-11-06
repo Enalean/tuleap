@@ -1,54 +1,62 @@
-<div id="modal-add-jenkins-server"
-     class="modal hide fade modal-jenkins"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="modal-add-jenkins-server-title"
-     aria-hidden="true"
+<form method="POST"
+      action="/plugins/hudson_git/jenkins_server"
+      id="modal-add-jenkins-server"
+      class="tlp-modal"
+      role="dialog"
+      aria-labelledby="modal-add-jenkins-server-title"
 >
-    <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal">
-            <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-        </a>
-        <h3 id="modal-add-jenkins-server-title">{{# dgettext }} tuleap-hudson_git | Add a Jenkins server{{/ dgettext }}</h3>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-add-jenkins-server-title">{{# dgettext }} tuleap-hudson_git | Add a Jenkins server{{/ dgettext }}</h1>
+
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
     </div>
-    <form method="POST" action="/plugins/hudson_git/jenkins_server">
+    <div class="tlp-modal-body">
         <input type="hidden" name="project_id" value="{{ project_id }}" />
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
 
-        <div class="modal-body">
 
-            <p>{{# dgettext }} tuleap-hudson_git | Jenkins server will be notified about git activity on any repository in the project.{{/ dgettext }}</p>
-            <p>
-                <label for="jenkins-server-url">{{# dgettext }} tuleap-hudson_git | Jenkins URL{{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
-                <input type="url"
-                       id="jenkins-server-url"
-                       class="create-hook-url"
-                       name="url"
-                       value=""
-                       placeholder="https://example.com/jenkins"
-                       required
-                       pattern="https?://.+"
-                />
-                <label for="jenkins-token">{{# dgettext }} tuleap-hudson_git | Jenkins notifyCommit access token{{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
-                <input type="password"
-                       id="jenkins-token"
-                       class="create-hook-url"
-                       name="token"
-                       required
-                />
-            </p>
-            <div id="jenkins-server-test-feedback">
-                <button class="btn" type="button" id="jenkins-server-test" disabled>
-                    <i class="fa fa-play" aria-hidden="true"></i> {{# dgettext }} tuleap-hudson_git | Test the server{{/ dgettext }}
-                </button>
-            </div>
+        <p>{{# dgettext }} tuleap-hudson_git | Jenkins server will be notified about git activity on any repository in the project.{{/ dgettext }}</p>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="jenkins-server-url">{{# dgettext }} tuleap-hudson_git | Jenkins URL{{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+            <input type="url"
+                   id="jenkins-server-url"
+                   class="tlp-input"
+                   name="url"
+                   value=""
+                   placeholder="https://example.com/jenkins"
+                   required
+                   pattern="https?://.+"
+            />
         </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{# dgettext }} tuleap-hudson_git | Cancel{{/ dgettext }}</button>
-            <input type="submit" class="btn btn-primary" value="{{# dgettext }} tuleap-hudson_git | Save{{/ dgettext }}">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="jenkins-token">{{# dgettext }} tuleap-hudson_git | Jenkins notifyCommit access token{{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+            <input type="password"
+                   id="jenkins-token"
+                   class="tlp-input"
+                   name="token"
+                   required
+            />
         </div>
-    </form>
-</div>
+
+        <div id="jenkins-server-test-feedback" class="jenkins-server-test-feedback">
+            <button class="tlp-button-primary tlp-button-outline" type="button" id="jenkins-server-test" disabled>
+                <i class="fa-solid fa-play tlp-button-icon" id="jenkins-server-test-icon" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-hudson_git | Test the server{{/ dgettext }}
+            </button>
+        </div>
+    </div>
+
+    <div class="tlp-modal-footer">
+        <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+            {{# dgettext }} tuleap-hudson_git | Cancel{{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            {{# dgettext }} tuleap-hudson_git | Save{{/ dgettext }}
+        </button>
+    </div>
+</form>

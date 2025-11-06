@@ -36,7 +36,6 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\HudsonGit\Log\Log;
 use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\DB\UUIDTestContext;
@@ -89,11 +88,6 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $jenkins_server_factory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets
-     */
-    private $include_assets;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&LogFactory
      */
     private $log_factory;
@@ -108,7 +102,6 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->header_renderer         = $this->createMock(HeaderRenderer::class);
         $this->renderer                = $this->createMock(TemplateRenderer::class);
         $this->jenkins_server_factory  = $this->createMock(JenkinsServerFactory::class);
-        $this->include_assets          = $this->createMock(IncludeAssets::class);
         $this->log_factory             = $this->createMock(LogFactory::class);
 
         $this->controller = new AdministrationController(
@@ -118,7 +111,6 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->log_factory,
             $this->header_renderer,
             $this->renderer,
-            $this->include_assets,
             new class implements EventDispatcherInterface {
                 #[\Override]
                 public function dispatch(object $event): object
@@ -251,8 +243,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->header_renderer->expects($this->once())->method('renderServiceAdministrationHeader');
         $this->renderer->expects($this->once())->method('renderToPage');
         $this->layout->expects($this->once())->method('footer');
-        $this->layout->expects($this->once())->method('includeFooterJavascriptFile');
-        $this->include_assets->expects($this->once())->method('getFileURL');
+        $this->layout->expects($this->once())->method('addJavascriptAsset');
 
         $this->controller->process($this->request, $this->layout, $variables);
     }
