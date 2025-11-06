@@ -216,7 +216,7 @@ class ReleaseResource extends AuthenticatedResource
             $project
         );
 
-        if (! $this->package_permissions_manager->canUserSeePackage($user, $package, $project)) {
+        if (! $this->package_permissions_manager->canUserSeePackage($user, $package)) {
             throw new RestException(404);
         }
 
@@ -224,7 +224,7 @@ class ReleaseResource extends AuthenticatedResource
             throw new RestException(403, 'Package is not active');
         }
 
-        if (! $this->package_factory->userCanUpdate($package->getGroupID(), $package->getPackageID(), $user->getId())) {
+        if (! $this->package_factory->userCanUpdate($package, $user)) {
             throw new RestException(403, 'Write access to package denied');
         }
 
@@ -289,7 +289,7 @@ class ReleaseResource extends AuthenticatedResource
 
         $this->checkUserCanReadRelease($release, $user);
 
-        if (! $this->release_factory->userCanUpdate($release->getGroupID(), $release->getReleaseID(), $user->getId())) {
+        if (! $this->release_factory->userCanUpdate($release, $user->getId())) {
             throw new RestException(403, 'Write access to release denied');
         }
 
@@ -408,8 +408,7 @@ class ReleaseResource extends AuthenticatedResource
 
     private function checkUserCanReadRelease(FRSRelease $release, PFUser $user): void
     {
-        $package = $release->getPackage();
-        if (! $this->package_permissions_manager->canUserSeePackage($user, $package, $release->getProject())) {
+        if (! $this->release_factory->userCanRead($release, (int) $user->getId())) {
             throw new RestException(404);
         }
     }

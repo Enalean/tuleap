@@ -277,15 +277,15 @@ class WebDAVFRSPackage implements ICollection
     public function delete()
     {
         if ($this->userCanWrite()) {
+            $package = $this->getPackage();
             // don't delete a package if it is not empty
-            $releases    = $this->getReleaseList($this->getPackage());
+            $releases    = $this->getReleaseList($package);
             $numReleases = count($releases);
             if ($numReleases > 0) {
                 throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_empty'));
             } else {
-                $utils  = $this->getUtils();
-                $result = $utils->getPackageFactory()->delete_package($this->getProject()->getGroupId(), $this->getPackageId());
-                if ($result == 0) {
+                $utils = $this->getUtils();
+                if (! $utils->getPackageFactory()->delete($package, $this->getUser())) {
                     throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
                 }
             }

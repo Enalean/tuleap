@@ -368,13 +368,14 @@ class WebDAVFRSRelease implements ICollection
      */
     public function move($destination)
     {
-        $utils = $this->getUtils();
-        if ($utils->getReleaseFactory()->userCanUpdate($this->getProject()->getGroupId(), $this->getReleaseId()) && $destination->userCanWrite()) {
+        $utils   = $this->getUtils();
+        $release = $this->getRelease();
+        if ($utils->getReleaseFactory()->userCanUpdate($release) && $destination->userCanWrite()) {
             if (! $utils->getReleaseFactory()->isReleaseNameExist($this->getName(), $destination->getPackageId())) {
                 // We don't allow moving an active release under a hidden package.
-                if (! $destination->getPackage()->isHidden() || $this->getRelease()->isHidden()) {
-                    $this->getRelease()->setPackageID($destination->getPackageId());
-                    $utils->getReleaseFactory()->update($this->getRelease()->toArray());
+                if (! $destination->getPackage()->isHidden() || $release->isHidden()) {
+                    $release->setPackageID($destination->getPackageId());
+                    $utils->getReleaseFactory()->update($release->toArray());
                 } else {
                     throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'release_hidden'));
                 }

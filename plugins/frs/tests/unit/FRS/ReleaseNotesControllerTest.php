@@ -25,12 +25,10 @@ namespace TuleapCodingStandard\Tuleap\FRS;
 use FRSRelease;
 use FRSReleaseFactory;
 use HTTPRequest;
-use PHPUnit\Framework\MockObject\Stub;
 use TemplateRenderer;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\Link\Retriever;
-use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\ReleaseNotesController;
 use Tuleap\FRS\ReleasePresenter;
 use Tuleap\FRS\REST\v1\ReleasePermissionsForGroupsBuilder;
@@ -80,7 +78,6 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var IncludeAssets&\PHPUnit\Framework\MockObject\MockObject
      */
     private $script_assets;
-    private PackagePermissionManager&Stub $package_permission_manager;
 
     #[\Override]
     protected function setUp(): void
@@ -90,7 +87,6 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_for_groups_builder = $this->createMock(ReleasePermissionsForGroupsBuilder::class);
         $this->link_retriever                 = $this->createMock(Retriever::class);
         $this->uploaded_links_retriever       = $this->createMock(UploadedLinksRetriever::class);
-        $this->package_permission_manager     = $this->createStub(PackagePermissionManager::class);
         $this->renderer                       = $this->createMock(TemplateRenderer::class);
         $this->script_assets                  = $this->createMock(IncludeAssets::class);
         $content_interpreter                  = new class implements ContentInterpretor {
@@ -119,7 +115,6 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->permissions_for_groups_builder,
             $this->link_retriever,
             $this->uploaded_links_retriever,
-            $this->package_permission_manager,
             $content_interpreter,
             $this->renderer,
             $this->script_assets,
@@ -158,7 +153,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(124)
             ->willReturn($release);
 
-        $this->package_permission_manager->method('canUserSeePackage')->willReturn(false);
+        $this->release_factory->method('userCanRead')->willReturn(false);
 
         $this->expectException(NotFoundException::class);
         $this->release_notes_controller->process($request, $layout, $variables);
@@ -195,7 +190,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $release->method('getFiles')->willReturn([]);
         $release->method('getName')->willReturn('release01');
 
-        $this->package_permission_manager->method('canUserSeePackage')->willReturn(true);
+        $this->release_factory->method('userCanRead')->willReturn(true);
 
         $this->release_factory->expects($this->once())
             ->method('getFRSReleaseFromDb')

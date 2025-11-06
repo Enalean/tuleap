@@ -141,8 +141,9 @@ class FRSReleaseFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     {
         $releases = [];
         foreach ($dar as $data_array) {
-            if ($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())) {
-                $releases[] = $this->getFRSReleaseFromArray($data_array);
+            $release = $this->getFRSReleaseFromArray($data_array);
+            if ($this->userCanRead($release, $user->getID())) {
+                $releases[] = $release;
             }
         }
 
@@ -367,10 +368,7 @@ class FRSReleaseFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         return $this->_getFRSPackageFactory()->userCanAdmin($user, $project_id);
     }
 
-    /**
-     * @return bool
-     */
-    public function userCanRead($group_id, $package_id, $release_id, $user_id = false)
+    public function userCanRead(FRSRelease $release, $user_id = false): bool
     {
         $um = $this->getUserManager();
         if (! $user_id) {
@@ -383,11 +381,17 @@ class FRSReleaseFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             return false;
         }
 
-        if ($this->userCanAdmin($user, $group_id)) {
+        $project_id = $release->getGroupID();
+
+        if ($this->userCanAdmin($user, $project_id) && ($release->isHidden() || $release->isActive())) {
             return true;
         }
 
-        $project = ProjectManager::instance()->getProject($group_id);
+        if (! $release->isActive()) {
+            return false;
+        }
+
+        $project = ProjectManager::instance()->getProject($project_id);
         if ($project === null) {
             return false;
         }
@@ -403,53 +407,38 @@ class FRSReleaseFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             return false;
         }
 
+        $release_id = $release->getReleaseID();
+
+        $frspf            = $this->_getFRSPackageFactory();
+        $can_read_package = $frspf->userCanRead($release->getPackageID(), (int) $user->getId());
+
         $pm = $this->getPermissionsManager();
-        if ($pm->isPermissionExist($release_id, FRSRelease::PERM_READ)) {
+        if ($can_read_package && $pm->isPermissionExist($release_id, FRSRelease::PERM_READ)) {
             return $pm->userHasPermission(
                 $release_id,
                 FRSRelease::PERM_READ,
-                $user->getUgroups($project->getID(), [])
+                $user->getUgroups($project_id, [])
             );
         }
 
-        $frspf = $this->_getFRSPackageFactory();
-        return $frspf->userCanRead($project->getID(), $package_id, $user->getId());
+        return $can_read_package;
     }
 
     /**
      * Return true if user has Update permission on this release
      *
-     * @param int $group_id The project this release is in
-     * @param int $release_id The ID of the release to update
      * @param int $user_id If not given or false, take the current user
      *
      * @return bool true if user can update the release $release_id, false otherwise
      */
-    public function userCanUpdate($group_id, $release_id, $user_id = false)
+    public function userCanUpdate(FRSRelease $release, $user_id = false): bool
     {
-        return $this->userCanCreate($group_id, $user_id);
-    }
-
-    /**
-     * Returns true if user has permissions to Create releases
-     *
-     * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
-     * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
-     *
-     * @param int $group_id The project ID this release is in
-     * @param int $user_id The ID of the user. If not given or false, take the current user
-     *
-     * @return bool true if the user has permission to create releases, false otherwise
-     */
-    public function userCanCreate($group_id, $user_id = false)
-    {
-        $um = $this->getUserManager();
         if (! $user_id) {
-            $user = $um->getCurrentUser();
+            $user = $this->getUserManager()->getCurrentUser();
         } else {
-            $user = $um->getUserById($user_id);
+            $user = $this->getUserManager()->getUserById($user_id);
         }
-        return $this->userCanAdmin($user, $group_id);
+        return $this->userCanAdmin($user, (int) $release->getGroupID()) && $this->userCanRead($release, $user_id);
     }
 
     /**
@@ -501,9 +490,7 @@ class FRSReleaseFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             foreach ($result as $res) {
                 $user           = $user_manager->getUserById($res['user_id']);
                 $user_can_read  = $this->userCanRead(
-                    $release->getGroupID(),
-                    $release->getPackageID(),
-                    $release->getReleaseID(),
+                    $release,
                     $user->getID()
                 );
                 $user_can_admin = $this->userCanAdmin($user, $release->getGroupID());

@@ -249,7 +249,7 @@ class FileResource extends AuthenticatedResource
     private function checkUserCanReadRelease(FRSRelease $release, PFUser $user): void
     {
         $package = $release->getPackage();
-        if (! $this->package_permissions_manager->canUserSeePackage($user, $package, $release->getProject())) {
+        if (! $this->package_permissions_manager->canUserSeePackage($user, $package)) {
             throw new RestException(404);
         }
     }

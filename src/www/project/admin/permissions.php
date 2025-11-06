@@ -246,7 +246,7 @@ function permission_user_allowed_to_change($project_id, $permission_type, $objec
     } elseif ($permission_type == 'RELEASE_READ') {
         $frs_package_factory = new FRSPackageFactory();
 
-        return $frs_package_factory->userCanCreate($project_id, $user->getId());
+        return $frs_package_factory->userCanCreate((int) $project->getID(), $user);
     } else {
         $em      = EventManager::instance();
         $allowed = false;

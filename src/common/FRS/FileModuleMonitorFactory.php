@@ -139,28 +139,18 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         return $res;
     }
 
-    /**
-     * Add package monitoring for a user
-     *
-     * @param PFUser              $user         The user
-     * @param int $groupId Id of the project
-     * @param int $fileModuleId Id of the package
-     * @param FRSPackage        $package      Package
-     * @param FRSPackageFactory $frspf        Package factory
-     * @param UserHelper        $userHelper   User helper
-     *
-     * @return Void
-     */
-    public function addUserMonitoring(PFUser $user, $groupId, $fileModuleId, FRSPackage $package, FRSPackageFactory $frspf, UserHelper $userHelper)
+    public function addUserMonitoring(PFUser $user, FRSPackage $package, FRSPackageFactory $frspf, UserHelper $userHelper): void
     {
-        $publicly = true;
-        if ($frspf->userCanRead($groupId, $fileModuleId, $user->getId())) {
-            if (! $this->isMonitoring($fileModuleId, $user, $publicly)) {
+        $publicly   = true;
+        $package_id = $package->getPackageID();
+        $user_id    = (int) $user->getId();
+        if ($frspf->userCanRead($package_id, $user_id)) {
+            if (! $this->isMonitoring($package_id, $user, $publicly)) {
                 $anonymous = false;
-                $result    = $this->setMonitor($fileModuleId, $user, $anonymous);
+                $result    = $this->setMonitor($package_id, $user, $anonymous);
                 if ($result) {
                     $historyDao = new ProjectHistoryDao();
-                    $historyDao->groupAddHistory('frs_add_monitor_package', $fileModuleId . '_' . $user->getId(), $groupId);
+                    $historyDao->groupAddHistory('frs_add_monitor_package', $package_id . '_' . $user_id, $package->getGroupID());
                     $this->notifyAfterAdd($package, $user);
                     $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_added', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
                 } else {
@@ -194,23 +184,20 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * Stop the package monitoring for some users
      *
      * @param Array             $users        Array of users
-     * @param int $groupId Id of the project
-     * @param int $fileModuleId Id of the package
      * @param FRSPackage        $package      Package
      * @param UserManager       $um           User manager
      * @param UserHelper        $userHelper   User helper
      *
-     * @return Void
      */
-    public function stopMonitoringForUsers($users, $groupId, $fileModuleId, FRSPackage $package, UserManager $um, UserHelper $userHelper)
+    public function stopMonitoringForUsers($users, FRSPackage $package, UserManager $um, UserHelper $userHelper): void
     {
         if ($users && ! empty($users) && is_array($users)) {
             foreach ($users as $userId) {
                 $user = $um->getUserById($userId);
                 if ($user) {
                     $publicly = true;
-                    if ($this->isMonitoring($fileModuleId, $user, $publicly)) {
-                        $this->stopMonitoringForUser($fileModuleId, $user, $groupId, $package, $userHelper);
+                    if ($this->isMonitoring($package->getPackageID(), $user, $publicly)) {
+                        $this->stopMonitoringForUser($user, $package, $userHelper);
                     } else {
                         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_filemodule_monitor', 'not_monitoring', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
                     }
@@ -219,25 +206,15 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         } else {
             $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_delete'));
         }
-        $this->redirectToMonitoringPage($groupId, $fileModuleId);
+        $this->redirectToMonitoringPage($package);
     }
 
-    /**
-     * Stop only the public package monitoring for a given user
-     *
-     * @param int $fileModuleId Id of the package
-     * @param PFUser       $user         User we want to stop its monitoring
-     * @param int $groupId Id of the project
-     * @param FRSPackage $package      Package
-     * @param UserHelper $userHelper   User helper
-     *
-     * @return Void
-     */
-    private function stopMonitoringForUser($fileModuleId, $user, $groupId, FRSPackage $package, UserHelper $userHelper)
+    private function stopMonitoringForUser(PFUser $user, FRSPackage $package, UserHelper $userHelper): void
     {
-        if ($this->stopMonitor($fileModuleId, $user, true)) {
+        $package_id = $package->getPackageID();
+        if ($this->stopMonitor($package_id, $user, true)) {
             $historyDao = new ProjectHistoryDao();
-            $historyDao->groupAddHistory('frs_stop_monitor_package', $fileModuleId . '_' . $user->getId(), $groupId);
+            $historyDao->groupAddHistory('frs_stop_monitor_package', $package_id . '_' . $user->getId(), $package->getGroupID());
             $this->notifyAfterDelete($package, $user);
             $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
         } else {
@@ -245,17 +222,17 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         }
     }
 
-    private function redirectToMonitoringPage(int $project_id, int $id): void
+    private function redirectToMonitoringPage(FRSPackage $package): void
     {
         $GLOBALS['Response']->redirect('/file/filemodule_monitor.php?' . http_build_query([
-            'filemodule_id' => $id,
-            'group_id' => $project_id,
+            'filemodule_id' => $package->getPackageID(),
+            'group_id' => $package->getGroupID(),
         ]));
     }
 
-    private function redirectToPackage(int $project_id, int $package_id): void
+    private function redirectToPackage(FRSPackage $package): void
     {
-        $GLOBALS['Response']->redirect('/file/' . urlencode((string) $project_id) . '/package/' . urlencode((string) $package_id));
+        $GLOBALS['Response']->redirect('/file/' . urlencode((string) $package->getGroupID()) . '/package/' . urlencode((string) $package->getPackageID()));
     }
 
     /**
@@ -524,11 +501,10 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * Display the HTML of the monitoring UI
      *
      * @param PFUser        $currentUser  Current user
-     * @param int $groupId Id of the project
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
      */
-    public function getMonitoringHTML($currentUser, $groupId, FRSPackage $package, $um, $userHelper, CSRFSynchronizerToken $csrf_token): string
+    public function getMonitoringHTML($currentUser, FRSPackage $package, $um, $userHelper, CSRFSynchronizerToken $csrf_token): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -545,11 +521,11 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                 <div class="tlp-pane-section">
                     <div class="tlp-property">
                         <label class="tlp-label">' . $purifier->purify(_('Package')) . '</label>
-                        <p><a href="/file/' . urlencode($groupId) . '/package/' . urlencode((string) $package->getPackageID()) . '" >' . $purifier->purify(util_unconvert_htmlspecialchars($package->getName())) . '</a></p>
+                        <p><a href="/file/' . urlencode($package->getGroupID()) . '/package/' . urlencode((string) $package->getPackageID()) . '" >' . $purifier->purify(util_unconvert_htmlspecialchars($package->getName())) . '</a></p>
                     </div>';
         $html .= $this->getSelfMonitoringForm($currentUser, $package->getPackageID(), $csrf_token);
         $html .= '</div>';
-        if ($frspf->userCanAdmin($currentUser, $groupId)) {
+        if ($frspf->userCanAdmin($currentUser, $package->getGroupID())) {
             $html .= '<div class="tlp-pane-section">';
             $html .= $this->getMonitoringListHTML($package->getPackageID(), $um, $userHelper, $csrf_token);
             $html .= $this->getAddMonitoringForm($package->getPackageID(), $csrf_token);
@@ -567,11 +543,9 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      *
      * @param HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
-     * @param int $groupId Id of the project
-     * @param int $fileModuleId Id of the package
      *
      */
-    private function processSelfMonitoringAction(HTTPRequest $request, $currentUser, $groupId, $fileModuleId): void
+    private function processSelfMonitoringAction(HTTPRequest $request, $currentUser, FRSPackage $package): void
     {
         $anonymous     = true;
         $performAction = false;
@@ -580,19 +554,19 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                 $action = $request->get('frs_monitoring');
                 switch ($action) {
                     case 'stop_monitoring':
-                        $performAction = $this->stopMonitorActionListener($currentUser, $fileModuleId);
+                        $performAction = $this->stopMonitorActionListener($currentUser, $package->getPackageID());
                         break;
                     case 'public_monitoring':
                         $anonymous = false;
                         // Fall-through seems wanted here
                     case 'anonymous_monitoring':
-                        $performAction = $this->anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId);
+                        $performAction = $this->anonymousMonitoringActionListener($currentUser, $package, $anonymous);
                         break;
                     default:
                         break;
                 }
                 if ($performAction) {
-                    $this->redirectToPackage($groupId, $fileModuleId);
+                    $this->redirectToPackage($package);
                     $GLOBALS['Response']->redirect($request->getFromServer('REQUEST_URI'));
                 }
             }
@@ -623,25 +597,24 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * Listening to anonymous monitoring action
      *
      * @param PFUser    $currentUser  Current user
-     * @param int $fileModuleId Id of the package
      * @param bool $anonymous Anonymous monitoring flag
-     * @param int $groupId Id of the project
      *
      * @return bool
      */
-    private function anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId)
+    private function anonymousMonitoringActionListener($currentUser, FRSPackage $package, $anonymous)
     {
+        $package_id    = $package->getPackageID();
         $performAction = false;
-        if ($anonymous && (! $this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
+        if ($anonymous && (! $this->isMonitoring($package_id, $currentUser, false) || $this->isMonitoring($package_id, $currentUser, $anonymous))) {
             $performAction = true;
-        } elseif (! $anonymous && ! $this->isMonitoring($fileModuleId, $currentUser, ! $anonymous)) {
+        } elseif (! $anonymous && ! $this->isMonitoring($package_id, $currentUser, ! $anonymous)) {
             $performAction = true;
             $historyDao    = new ProjectHistoryDao();
-            $historyDao->groupAddHistory('frs_self_add_monitor_package', $fileModuleId, $groupId);
+            $historyDao->groupAddHistory('frs_self_add_monitor_package', $package_id, $package->getGroupID());
         }
         if ($performAction) {
-            $this->stopMonitor($fileModuleId, $currentUser);
-            $result = $this->setMonitor($fileModuleId, $currentUser, $anonymous);
+            $this->stopMonitor($package_id, $currentUser);
+            $result = $this->setMonitor($package_id, $currentUser, $anonymous);
             if (! $result) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
             } else {
@@ -657,18 +630,17 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      *
      * @param HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
-     * @param int $groupId Id of the project
-     * @param int $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
      *
      */
-    private function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper): void
+    private function processEditMonitoringAction($request, $currentUser, FRSPackage $package, $um, $userHelper): void
     {
-        $frspf   = new FRSPackageFactory();
-        $package = $frspf->getFRSPackageFromDb($fileModuleId);
+        $frspf = new FRSPackageFactory();
 
-        if ($frspf->userCanAdmin($currentUser, $groupId)) {
+        $project_id = $package->getGroupID();
+
+        if ($frspf->userCanAdmin($currentUser, $project_id)) {
             if ($request->valid(new Valid_WhiteList('action', ['add_monitoring', 'delete_monitoring'])) && $request->isPost()) {
                 $action = $request->get('action');
                 switch ($action) {
@@ -678,15 +650,15 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                             if (! empty($userName)) {
                                 $user = $um->findUser($userName);
                                 if ($user !== null) {
-                                    $this->addUserMonitoring($user, $groupId, $fileModuleId, $package, $frspf, $userHelper);
+                                    $this->addUserMonitoring($user, $package, $frspf, $userHelper);
                                 }
                             }
                         }
-                        $this->redirectToMonitoringPage($groupId, $fileModuleId);
+                        $this->redirectToMonitoringPage($package);
                         break;
                     case 'delete_monitoring':
                         $users = $request->get('delete_user');
-                        $this->stopMonitoringForUsers($users, $groupId, $fileModuleId, $package, $um, $userHelper);
+                        $this->stopMonitoringForUsers($users, $package, $um, $userHelper);
                         break;
                     default:
                         break;
@@ -700,18 +672,17 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      *
      * @param HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
-     * @param int $groupId Id of the project
-     * @param int $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
      */
-    public function processMonitoringActions($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper, CSRFSynchronizerToken $csrf_token): void
+    public function processMonitoringActions($request, $currentUser, FRSPackage $package, $um, $userHelper, CSRFSynchronizerToken $csrf_token): void
     {
         if (! $request->isPost()) {
             return;
         }
         $csrf_token->check();
-        $this->processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId);
-        $this->processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper);
+
+        $this->processSelfMonitoringAction($request, $currentUser, $package);
+        $this->processEditMonitoringAction($request, $currentUser, $package, $um, $userHelper);
     }
 }

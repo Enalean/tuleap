@@ -55,10 +55,7 @@ class FRSPackageFactory
         return $frs_package;
     }
 
-    /**
-     * @return FRSPackage|void
-     */
-    public function getFRSPackageFromDb($package_id = null, $group_id = null, $extraFlags = 0)
+    public function getFRSPackageFromDb($package_id = null, $group_id = null, $extraFlags = 0): ?FRSPackage
     {
         $_id = (int) $package_id;
         $dao = $this->_getFRSPackageDao();
@@ -69,16 +66,16 @@ class FRSPackageFactory
             $dar = $dao->searchById($_id, $extraFlags);
         }
         if ($dar->isError()) {
-            return;
+            return null;
         }
 
         if (! $dar->valid()) {
-            return;
+            return null;
         }
 
         $data_array = $dar->current();
 
-        return($this->getFRSPackageFromArray($data_array));
+        return $this->getFRSPackageFromArray($data_array);
     }
 
     public function getFRSPackageByFileIdFromDb($file_id)
@@ -169,7 +166,7 @@ class FRSPackageFactory
             $frsrf = new FRSReleaseFactory();
 
             foreach ($dar as $data_array) {
-                if ($this->userCanRead($group_id, $data_array['package_id'], $user->getID())) {
+                if ($this->userCanRead($data_array['package_id'], (int) $user->getID())) {
                     $packages[] = $this->getFRSPackageFromArray($data_array);
                 } else {
                     $authorised_releases = $frsrf->getActiveFRSReleases($data_array['package_id'], $group_id);
@@ -286,47 +283,28 @@ class FRSPackageFactory
         );
     }
 
-    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    public function _delete($package_id)
+    public function delete(FRSPackage $package, PFUser $user): bool
     {
-        $_id     = (int) $package_id;
-        $package = $this->getFRSPackageFromDb($_id);
-        $dao     = $this->_getFRSPackageDao();
-        if ($dao->delete($_id, FRSPackage::STATUS_DELETED)) {
+        if (! $this->userCanUpdate($package, $user)) {
+            return false;
+        }
+
+        return $this->deleteWithoutPermissionsVerification($package);
+    }
+
+    protected function deleteWithoutPermissionsVerification(FRSPackage $package): bool
+    {
+        $id = (int) $package->getPackageID();
+        if ($this->_getFRSPackageDao()->delete($id, FRSPackage::STATUS_DELETED)) {
             $this->getEventManager()->processEvent(
                 'frs_delete_package',
                 ['group_id' => $package->getGroupID(),
-                    'item_id'    => $_id,
+                    'item_id'    => $id,
                 ]
             );
             return true;
         }
         return false;
-    }
-
-    /**
-     * Delete an empty package
-     * first, make sure the package is theirs
-     * and delete the package from the database
-     * return false if release not deleted, true otherwise
-     *
-     * @param int $group_id
-     * @param int $package_id
-     *
-     * @return bool
-     */
-    public function delete_package($group_id, $package_id) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $package = $this->getFRSPackageFromDb($package_id, $group_id);
-
-        if (! $package_id) {
-            //package not found for this project
-            return false;
-        } else {
-            //delete the package from the database
-            $this->_delete($package_id);
-            return true;
-        }
     }
 
     /**
@@ -342,7 +320,7 @@ class FRSPackageFactory
         $resPackages = $this->getFRSPackagesFromDb($groupId);
         if (! empty($resPackages)) {
             foreach ($resPackages as $package) {
-                if (! $this->delete_package($groupId, $package->getPackageID())) {
+                if (! $this->deleteWithoutPermissionsVerification($package)) {
                     $deleteState = false;
                 }
             }
@@ -371,25 +349,34 @@ class FRSPackageFactory
         return FRSPermissionManager::build();
     }
 
-    public function userCanRead($project_id, $package_id, $user_id = false)
+    public function userCanRead(int $package_id, int $user_id): bool
     {
         $frs_permission_manager = $this->getFRSPermissionManager();
 
-        $user    = $this->getUser($user_id);
-        $project = $this->getProjectManager()->getProject($project_id);
+        $package = $this->getFRSPackageFromDb($package_id);
+        if ($package === null) {
+            return false;
+        }
+        $project = $this->getProjectManager()->getProject($package->getGroupID());
+        if ($project === null) {
+            return false;
+        }
 
-        $ok = $frs_permission_manager->isAdmin($project, $user)
-            || (
-                $frs_permission_manager->userCanRead($project, $user)
-                &&
-                $this->userCanReadPackage($project_id, $package_id, $user)
-            );
+        $user = $this->getUser($user_id);
 
-        return $ok;
+        if ($package->isHidden()) {
+            return $frs_permission_manager->isAdmin($project, $user);
+        }
+
+        if ($package->isActive()) {
+            return $frs_permission_manager->userCanRead($project, $user) &&
+                $this->userCanReadPackage($package, $user);
+        }
+
+        return false;
     }
 
-    /** @return PFUser */
-    private function getUser($user_id = false)
+    private function getUser(int $user_id): PFUser
     {
         $user_manager = $this->getUserManager();
         if (! $user_id) {
@@ -401,42 +388,29 @@ class FRSPackageFactory
         return $user;
     }
 
-    private function userCanReadPackage($project_id, $package_id, PFUser $user)
+    private function userCanReadPackage(FRSPackage $package, PFUser $user): bool
     {
         $global_permission_manager = $this->getPermissionsManager();
 
-        $user_groups = $user->getUgroups($project_id, []);
+        $user_groups = $user->getUgroups($package->getGroupID(), []);
+
+        $package_id = $package->getPackageID();
 
         return $global_permission_manager->userHasPermission($package_id, FRSPackage::PERM_READ, $user_groups)
             || ! $global_permission_manager->isPermissionExist($package_id, FRSPackage::PERM_READ);
     }
 
-    /**
-     * Return true if user has Update permission on this package
-     *
-     * @param int $group_id The project this package is in
-     * @param int $package_id The ID of the package to update
-     * @param int $user_id if Not given or false, take the current user
-     *
-     * @return bool true of user can update the package $package_id, false otherwise
-     */
-    public function userCanUpdate($group_id, $package_id, $user_id = false)
+    public function userCanUpdate(FRSPackage $package, PFUser $user): bool
     {
-        return $this->userCanCreate($group_id, $user_id);
+        return ($package->isActive() || $package->isHidden()) &&
+            $this->userCanCreate((int) $package->getGroupID(), $user);
     }
 
-    /**
-     * Returns true if user has permissions to Create packages
-     *
-     * @return bool true if the user has permission to create packages, false otherwise
-     */
-    public function userCanCreate($project_id, $user_id = false)
+    public function userCanCreate(int $project_id, ?PFUser $user = null): bool
     {
         $user_manager = $this->getUserManager();
-        if (! $user_id) {
+        if ($user === null) {
             $user = $user_manager->getCurrentUser();
-        } else {
-            $user = $user_manager->getUserById($user_id);
         }
 
         return $this->userCanAdmin($user, $project_id);

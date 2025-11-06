@@ -620,7 +620,7 @@ class WebDAVFRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVFRSPackage->method('getReleaseList')->willReturn([]);
         $webDAVFRSPackage->method('getPackageId')->willReturn(1);
         $packageFactory = $this->createMock(\FRSPackageFactory::class);
-        $packageFactory->method('delete_package')->willReturn(0);
+        $packageFactory->method('delete')->willReturn(false);
         $utils = $this->createMock(\WebDAVUtils::class);
         $utils->method('getPackageFactory')->willReturn($packageFactory);
         $webDAVFRSPackage->method('getUtils')->willReturn($utils);
@@ -650,7 +650,7 @@ class WebDAVFRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVFRSPackage->method('getReleaseList')->willReturn([]);
         $webDAVFRSPackage->method('getPackageId')->willReturn(1);
         $packageFactory = $this->createMock(\FRSPackageFactory::class);
-        $packageFactory->method('delete_package')->willReturn(1);
+        $packageFactory->method('delete')->willReturn(true);
         $utils = $this->createMock(\WebDAVUtils::class);
         $utils->method('getPackageFactory')->willReturn($packageFactory);
         $webDAVFRSPackage->method('getUtils')->willReturn($utils);

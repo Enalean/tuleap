@@ -26,7 +26,6 @@ use FRSPackage;
 use FRSPackageFactory;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Project;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -38,10 +37,6 @@ final class FRSPackagePermissionManagerTest extends TestCase
      */
     private $package_factory;
 
-    /**
-     * @var MockObject&FRSPackage
-     */
-    private $package;
 
     /**
      * @var PackagePermissionManager
@@ -53,11 +48,6 @@ final class FRSPackagePermissionManagerTest extends TestCase
      */
     private $user;
 
-    /**
-     * @var Project
-     */
-    private $project;
-
     #[\Override]
     public function setUp(): void
     {
@@ -67,47 +57,26 @@ final class FRSPackagePermissionManagerTest extends TestCase
             $this->package_factory
         );
 
-        $this->user    = UserTestBuilder::buildWithDefaults();
-        $this->project = new Project(['group_id' => 101]);
+        $this->user = UserTestBuilder::buildWithDefaults();
     }
 
-    public function testItReturnsTrueWhenPackageIsHiddenAndUserIsFrsAdmin(): void
+    public function testItReturnsTrueWhenUserCanReadThePackage(): void
     {
-        $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_HIDDEN]);
-        $this->package_factory->method('userCanAdmin')->with($this->user, $this->project->getId())->willReturn(true);
+        $package = new FRSPackage(['package_id' => 101]);
+        $this->package_factory->method('userCanRead')->with(101, $this->user->getId())->willReturn(true);
 
         self::assertTrue(
-            $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
+            $this->package_permission_manager->canUserSeePackage($this->user, $package)
         );
     }
 
-    public function testItReturnsFalseWhenPackageIsHiddenAndUserDoesntHaveAdminPermissions(): void
+    public function testItReturnsFalseWhenUserCannotReadThePackage(): void
     {
-        $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_HIDDEN]);
-        $this->package_factory->method('userCanAdmin')->with($this->user, $this->project->getId())->willReturn(false);
+        $package = new FRSPackage(['package_id' => 101]);
+        $this->package_factory->method('userCanRead')->with(101, $this->user->getId())->willReturn(false);
 
         self::assertFalse(
-            $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
-        );
-    }
-
-    public function testItReturnsTrueWhenPackageIsActiveAndUserCanReadThePackage(): void
-    {
-        $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_ACTIVE]);
-        $this->package_factory->method('userCanRead')->willReturn(true);
-
-        self::assertTrue(
-            $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
-        );
-    }
-
-    public function testItReturnsFalseWhenPackageIsActiveAndUserCannotReadThePackage(): void
-    {
-        $this->package = new FRSPackage(['status_id' => FRSPackage::STATUS_ACTIVE]);
-        $this->package_factory->method('userCanRead')->willReturn(false);
-
-        self::assertFalse(
-            $this->package_permission_manager->canUserSeePackage($this->user, $this->package, $this->project)
+            $this->package_permission_manager->canUserSeePackage($this->user, $package)
         );
     }
 }

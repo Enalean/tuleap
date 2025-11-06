@@ -23,38 +23,15 @@ namespace Tuleap\FRS;
 use FRSRelease;
 use FRSReleaseFactory;
 use PFUser;
-use Project;
 
-class ReleasePermissionManager
+readonly class ReleasePermissionManager
 {
-    /**
-     * @var FRSPermissionManager
-     */
-    private $frs_service_permission_manager;
-
-    /**
-     * @var FRSReleaseFactory
-     */
-    private $release_factory;
-
-    public function __construct(FRSPermissionManager $permission_manager, FRSReleaseFactory $release_factory)
+    public function __construct(private FRSReleaseFactory $release_factory)
     {
-        $this->frs_service_permission_manager = $permission_manager;
-        $this->release_factory                = $release_factory;
     }
 
-    public function canUserSeeRelease(PFUser $user, FRSRelease $release, Project $project)
+    public function canUserSeeRelease(PFUser $user, FRSRelease $release): bool
     {
-        if (
-            $release->isActive()
-            && $this->frs_service_permission_manager->userCanRead($project, $user)
-            && $this->release_factory->userCanRead($project->getID(), $release->getPackageID(), $release->getReleaseID())
-        ) {
-            return true;
-        } elseif ($release->isHidden() && $this->release_factory->userCanAdmin($user, $project->getID())) {
-            return true;
-        }
-
-        return false;
+        return $this->release_factory->userCanRead($release, (int) $user->getId());
     }
 }

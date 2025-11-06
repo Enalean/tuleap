@@ -47,10 +47,10 @@ $user    = UserManager::instance()->getCurrentUser();
 $release = $frsrf->getFRSReleaseFromDb($release_id);
 
 $permission_manager         = FRSPermissionManager::build();
-$release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
+$release_permission_manager = new ReleasePermissionManager($frsrf);
 if (
     $release === null ||
-    $release_permission_manager->canUserSeeRelease($user, $release, $release->getProject()) === false
+    $release_permission_manager->canUserSeeRelease($user, $release) === false
 ) {
     exit_error($Language->getText('file_shownotes', 'not_found_err'), $Language->getText('file_shownotes', 'release_not_found'));
 }

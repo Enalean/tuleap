@@ -259,7 +259,7 @@ class PackageResource extends AuthenticatedResource
 
         $user = $this->user_manager->getCurrentUser();
 
-        if (! $this->package_permissions_manager->canUserSeePackage($user, $package, $this->getPackageProject($package))) {
+        if (! $this->package_permissions_manager->canUserSeePackage($user, $package)) {
             throw new RestException(404);
         }
 

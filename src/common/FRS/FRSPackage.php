@@ -214,10 +214,10 @@ class FRSPackage // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->package_releases;
     }
 
-    public function userCanRead($user_id = 0)
+    public function userCanRead($user_id = 0): bool
     {
         $factory = new FRSPackageFactory();
 
-        return $factory->userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
+        return $factory->userCanRead($this->getPackageID(), $user_id);
     }
 }
