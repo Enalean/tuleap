@@ -6,19 +6,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "-- Please choose"
+msgstr ""
+
 #, php-format
 msgid "<b>%s</b> field will determine background color."
-msgstr ""
-
-msgid ""
-"<p>Note: you can delete a column by removing its name (make text field "
-"blank).</p>"
-msgstr ""
-
-msgid ""
-"<p>You can define your own set of columns for the cardwall. Values will be "
-"associated is they match column title (be careful to lower case/upper case)."
-"</p>"
 msgstr ""
 
 msgid "A card will be displayed for each available background color."
@@ -146,6 +138,10 @@ msgstr ""
 msgid "No matching for this column"
 msgstr ""
 
+msgid ""
+"Note: you can delete a column by removing its name (make text field blank)."
+msgstr ""
+
 msgid "Now a cardwall exists on top of the tracker"
 msgstr ""
 
@@ -258,6 +254,11 @@ msgstr ""
 
 #, php-format
 msgid "Values mapping changed for \"%1$s\" field"
+msgstr ""
+
+msgid ""
+"You can define your own set of columns for the cardwall. Values will be "
+"associated is they match column title (be careful to lower case/upper case)."
 msgstr ""
 
 msgid "cards open"

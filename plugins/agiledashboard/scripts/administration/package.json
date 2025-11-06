@@ -8,7 +8,9 @@
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/dom": "workspace:*",
+    "@tuleap/list-picker": "workspace:*",
     "@tuleap/plugin-cardwall-column-colors": "workspace:^",
+    "@tuleap/plugin-cardwall-styles": "workspace:*",
     "@tuleap/tlp-color-picker": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",

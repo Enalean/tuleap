@@ -61,11 +61,9 @@ class Codendi_HTMLPurifier
 
     /**
      * Hold an instance of the class
-     *
-     * @var self|null
      */
-    private static $Codendi_HTMLPurifier_instance;
-    private $config = [];
+    private static ?self $Codendi_HTMLPurifier_instance = null;
+    private $config                                     = [];
 
     /**
      * Constructor
@@ -76,13 +74,11 @@ class Codendi_HTMLPurifier
 
     /**
      * Singleton access.
-     *
-     * @return Codendi_HTMLPurifier
      */
-    public static function instance()
+    public static function instance(): self
     {
-        if (! isset(self::$Codendi_HTMLPurifier_instance)) {
-            self::$Codendi_HTMLPurifier_instance = new Codendi_HTMLPurifier();
+        if (self::$Codendi_HTMLPurifier_instance === null) {
+            self::$Codendi_HTMLPurifier_instance = new self();
         }
         return self::$Codendi_HTMLPurifier_instance;
     }

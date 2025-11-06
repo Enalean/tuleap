@@ -13,25 +13,12 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "-- Please choose"
+msgstr "-- Sélectionner"
+
 #, php-format
 msgid "<b>%s</b> field will determine background color."
 msgstr "Le champ <b>%s</b> va définir la couleur de fond des cartes."
-
-msgid ""
-"<p>Note: you can delete a column by removing its name (make text field "
-"blank).</p>"
-msgstr ""
-"<p>Note : vous pouvez supprimer une colonne en supprimant son nom (effacer "
-"le champ text correspondant).</p>"
-
-msgid ""
-"<p>You can define your own set of columns for the cardwall. Values will be "
-"associated is they match column title (be careful to lower case/upper case)."
-"</p>"
-msgstr ""
-"<p>Vous pouvez définir les colonnes dont vous avez besoin. Les valeurs des "
-"champs seront automatiquement associées si leur nom correspond (attention "
-"aux majuscules/minuscules).</p>"
 
 msgid "A card will be displayed for each available background color."
 msgstr "Pour chaque couleur de fond disponible, une carte sera affichée."
@@ -166,6 +153,12 @@ msgstr "Aucun champ n'a été choisi pour définir la couleur de fond des cartes
 msgid "No matching for this column"
 msgstr "Aucune correspondance"
 
+msgid ""
+"Note: you can delete a column by removing its name (make text field blank)."
+msgstr ""
+"Note : vous pouvez supprimer une colonne en supprimant son nom (effacer le "
+"champ texte correspondant)."
+
 msgid "Now a cardwall exists on top of the tracker"
 msgstr "Un cardwall existe maintenant au dessus de tracker"
 
@@ -291,6 +284,14 @@ msgstr "Basculer vers l'affichage des utilisateurs ou des avatars"
 #, php-format
 msgid "Values mapping changed for \"%1$s\" field"
 msgstr "Modification de la correspondance des valeurs avec le champ %1$s"
+
+msgid ""
+"You can define your own set of columns for the cardwall. Values will be "
+"associated is they match column title (be careful to lower case/upper case)."
+msgstr ""
+"Vous pouvez définir les colonnes dont vous avez besoin. Les valeurs des "
+"champs seront automatiquement associées si leur nom correspond (attention "
+"aux majuscules/minuscules)."
 
 msgid "cards open"
 msgstr "cartes ouvertes"

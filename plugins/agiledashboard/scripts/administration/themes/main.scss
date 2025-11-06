@@ -78,6 +78,11 @@ body {
     font-size: 20px;
 }
 
+.agiledashboard-planning-setup {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+}
+
 #agiledashboard-administration-cannot-create-planning-popover-trigger {
     cursor: not-allowed;
 
@@ -88,4 +93,8 @@ body {
 
 .scrum-administration-submit-hidden {
     display: none;
+}
+
+.cardwall-admin-header > th {
+    vertical-align: bottom;
 }

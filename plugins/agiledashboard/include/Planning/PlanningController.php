@@ -40,7 +40,9 @@ use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActio
 use Tuleap\AgileDashboard\Planning\TrackersHaveAtLeastOneHierarchicalLinkException;
 use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundException;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -98,6 +100,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         private readonly BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
         private readonly ProjectHistoryDao $project_history_dao,
         private readonly TrackerFactory $tracker_factory,
+        private readonly BaseLayout $layout,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -164,7 +167,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
         $presenter = new ImportTemplateFormPresenter($project);
 
-        $GLOBALS['HTML']->addJavascriptAsset(
+        $this->layout->addJavascriptAsset(
             new JavascriptViteAsset(
                 new IncludeViteAssets(
                     __DIR__ . '/../../scripts/administration/frontend-assets',
@@ -199,17 +202,17 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 })
                 ->match(
                     function (): void {
-                        $GLOBALS['Response']->addFeedback(
+                        $this->layout->addFeedback(
                             Feedback::INFO,
                             dgettext('tuleap-agiledashboard', 'The configuration has been successfully imported!')
                         );
                     },
                     function (\Tuleap\NeverThrow\Fault $fault): void {
-                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, (string) $fault);
+                        $this->layout->addFeedback(Feedback::ERROR, (string) $fault);
                     }
                 );
         } catch (Exception) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to import the configuration!'));
+            $this->layout->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to import the configuration!'));
         }
     }
 
@@ -224,11 +227,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($project);
             $xml = $this->getFullConfigurationAsXML($project);
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to export the configuration'));
+            $this->layout->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to export the configuration'));
             $this->redirect(['group_id' => $this->group_id, 'action' => 'admin']);
         }
 
-        $GLOBALS['Response']->sendXMLAttachementFile($xml, self::AGILE_DASHBOARD_TEMPLATE_NAME);
+        $this->layout->sendXMLAttachementFile($xml, self::AGILE_DASHBOARD_TEMPLATE_NAME);
     }
 
     /**
@@ -288,7 +291,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         }
         $presenter = $this->planning_edition_presenter_builder->build($planning, $this->request->getCurrentUser(), $this->project);
 
-        $GLOBALS['HTML']->addJavascriptAsset(
+        $this->layout->addJavascriptAsset(
             new JavascriptViteAsset(
                 new IncludeViteAssets(
                     __DIR__ . '/../../scripts/administration/frontend-assets',
@@ -297,6 +300,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 'src/planning-admin-colorpicker.ts'
             )
         );
+        $this->layout->addCssAsset(CssViteAsset::fromFileName(new IncludeViteAssets(
+            __DIR__ . '/../../../cardwall/scripts/styles/frontend-assets',
+            '/assets/cardwall/styles'
+        ), 'themes/BurningParrot/card-preview.scss'));
 
         $title = dgettext('tuleap-agiledashboard', 'Edit');
 

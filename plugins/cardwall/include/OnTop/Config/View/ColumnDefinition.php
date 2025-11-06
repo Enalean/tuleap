@@ -18,43 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder;
 use Tuleap\Tracker\Tracker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
-class Cardwall_OnTop_Config_View_ColumnDefinition
+final readonly class Cardwall_OnTop_Config_View_ColumnDefinition
 {
-    /**
-     * @var array of Cardwall_OnTop_Config
-     */
-    protected $config;
+    private Codendi_HTMLPurifier $hp;
 
-    /**
-     * @var Codendi_HTMLPurifier
-     */
-    private $hp;
-
-    public function __construct(Cardwall_OnTop_Config $config)
+    public function __construct(private Cardwall_OnTop_Config $config)
     {
-        $this->config = $config;
-        $this->hp     = Codendi_HTMLPurifier::instance();
+        $this->hp = Codendi_HTMLPurifier::instance();
     }
 
-    /**
-     * @return string
-     */
-    public function fetchColumnDefinition()
+    public function fetchColumnDefinition(): string
     {
-        $html  = '';
-        $html .= $this->fetchSpeech();
-        $html .= '<br>';
-        $html .= $this->fetchMappings();
-        return $html;
+        return $this->fetchSpeech() . $this->fetchMappings();
     }
 
-    private function fetchMappings()
+    private function fetchMappings(): string
     {
-        $html  = '';
-        $html .= '<table class="table table-bordered cardwall_admin_ontop_mappings"><thead><tr valign="top">';
+        $html  = '<table class="tlp-table cardwall_admin_ontop_mappings">';
+        $html .= '<thead><tr class="cardwall-admin-header">';
         $html .= '<th></th>';
         foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<th>';
@@ -72,14 +57,13 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
             $html .= $this->fetchColumnHeader($column);
             $html .= '</th>';
         }
-        $html      .= '<th>';
-        $html      .= $this->fetchAdditionalColumnHeader();
-        $html      .= '</th>';
-        $html      .= '</tr></thead>';
-        $html      .= '<tbody>';
-        $row_number = 0;
+        $html .= '<th>';
+        $html .= $this->fetchAdditionalColumnHeader();
+        $html .= '</th>';
+        $html .= '</tr></thead>';
+        $html .= '<tbody>';
         foreach ($this->config->getMappings() as $mapping) {
-            $html .= '<tr class="' . html_get_alt_row_color(++$row_number) . '" valign="top">';
+            $html .= '<tr>';
             $html .= $mapping->accept($this);
             $html .= '<td>';
             $html .= '</td>';
@@ -90,20 +74,21 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         return $html;
     }
 
-    public function visitTrackerMappingNoField($mapping)
+    public function visitTrackerMappingNoField($mapping): string
     {
         $mapping_tracker = $mapping->getTracker();
         $used_sb_fields  = $mapping->getAvailableFields();
 
-        $html  = '';
-        $html .= '<td>';
+        $html  = '<td>';
         $html .= '<a href="/plugins/tracker/?tracker=' . $mapping_tracker->getId() . '&func=admin">' . $this->purify($mapping_tracker->getName()) . '</a><br />';
-        $html .= '<select name="mapping_field[' . (int) $mapping_tracker->getId() . '][field]" disabled="disabled">';
-        $html .= '<option value="">' . $GLOBALS['Language']->getText('global', 'please_choose_dashed') . '</option>';
+        $html .= '<div class="tlp-form-element">';
+        $html .= '<select class="tlp-select" name="mapping_field[' . (int) $mapping_tracker->getId() . '][field]" disabled="disabled">';
+        $html .= '<option value="">' . dgettext('tuleap-cardwall', '-- Please choose') . '</option>';
         foreach ($used_sb_fields as $sb_field) {
             $html .= '<option value="' . (int) $sb_field->getId() . '">' . $this->purify($sb_field->getLabel()) . '</option>';
         }
         $html .= '</select>';
+        $html .= '</div>';
         $html .= $this->fetchCustomizationSwitch($mapping_tracker);
         $html .= '</td>';
         foreach ($this->config->getDashboardColumns() as $column) {
@@ -114,23 +99,23 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         return $html;
     }
 
-    public function visitTrackerMappingStatus($mapping)
+    public function visitTrackerMappingStatus($mapping): string
     {
         $mapping_tracker = $mapping->getTracker();
         $used_sb_fields  = $mapping->getAvailableFields();
         $field           = $mapping->getField();
-        $mapping_values  = $mapping->getValueMappings();
 
-        $html     = '';
-        $html    .= '<td class="not-freestyle">';
+        $html     = '<td class="not-freestyle">';
         $html    .= '<a href="/plugins/tracker/?tracker=' . $mapping_tracker->getId() . '&func=admin">' . $this->purify($mapping_tracker->getName()) . '</a><br />';
         $disabled = $field ? 'disabled="disabled"' : '';
-        $html    .= '<select name="mapping_field[' . (int) $mapping_tracker->getId() . '][field]" ' . $disabled . '>';
+        $html    .= '<div class="tlp-form-element">';
+        $html    .= '<select class="tlp-select" name="mapping_field[' . (int) $mapping_tracker->getId() . '][field]" ' . $disabled . '>';
         foreach ($used_sb_fields as $sb_field) {
             $selected = $field == $sb_field ? 'selected="selected"' : '';
             $html    .= '<option value="' . (int) $sb_field->getId() . '" ' . $selected . '>' . $this->purify($sb_field->getLabel()) . '</option>';
         }
         $html .= '</select>';
+        $html .= '</div>';
         $html .= $this->fetchCustomizationSwitch($mapping_tracker);
         $html .= '</td>';
         foreach ($this->config->getDashboardColumns() as $column) {
@@ -141,23 +126,24 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         return $html;
     }
 
-    public function visitTrackerMappingFreestyle($mapping)
+    public function visitTrackerMappingFreestyle($mapping): string
     {
         $mapping_tracker = $mapping->getTracker();
         $used_sb_fields  = $mapping->getAvailableFields();
         $field           = $mapping->getField();
         $mapping_values  = $mapping->getValueMappings();
 
-        $html  = '';
-        $html .= '<td>';
+        $html  = '<td>';
         $html .= '<a href="/plugins/tracker/?tracker=' . $mapping_tracker->getId() . '&func=admin">' . $this->purify($mapping_tracker->getName()) . '</a><br />';
-        $html .= '<select name="mapping_field[' . (int) $mapping_tracker->getId() . '][field]">';
-        $html .= '<option value="">' . $GLOBALS['Language']->getText('global', 'please_choose_dashed') . '</option>';
+        $html .= '<div class="tlp-form-element">';
+        $html .= '<select class="tlp-select" name="mapping_field[' . (int) $mapping_tracker->getId() . '][field]">';
+        $html .= '<option value="">' . dgettext('tuleap-cardwall', '-- Please choose') . '</option>';
         foreach ($used_sb_fields as $sb_field) {
             $selected = $field == $sb_field ? 'selected="selected"' : '';
             $html    .= '<option value="' . (int) $sb_field->getId() . '" ' . $selected . '>' . $this->purify($sb_field->getLabel()) . '</option>';
         }
         $html .= '</select>';
+        $html .= '</div>';
         $html .= $this->fetchCustomizationSwitch($mapping_tracker, true);
         $html .= '</td>';
         foreach ($this->config->getDashboardColumns() as $column) {
@@ -168,28 +154,28 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         return $html;
     }
 
-    private function fetchCustomizationSwitch(Tracker $mapping_tracker, $customized = false)
+    private function fetchCustomizationSwitch(Tracker $mapping_tracker, $customized = false): string
     {
         $html     = '';
         $selected = '';
         if ($customized) {
             $selected = 'checked="checked"';
         }
-        $name  = 'custom_mapping[' . (int) $mapping_tracker->getId() . ']';
-        $html .= '<p>';
+        $name  = 'custom_mapping[' . $mapping_tracker->getId() . ']';
+        $html .= '<div class="tlp-form-element">';
         $html .= '<input type="hidden" name="' . $name . '" value="0" />';
-        $html .= '<label><input type="checkbox" name="' . $name . '" ' . $selected . ' value="1" /> ' . dgettext('tuleap-cardwall', 'Custom mapping') . '</label>';
-        $html .= '</p>';
+        $html .= '<label class="tlp-label tlp-checkbox"><input type="checkbox" name="' . $name . '" ' . $selected . ' value="1" /> ' . dgettext('tuleap-cardwall', 'Custom mapping') . '</label>';
+        $html .= '</div>';
         return $html;
     }
 
-    private function editValues($mapping_tracker, $column, $mapping_values, $field)
+    private function editValues($mapping_tracker, $column, $mapping_values, $field): string
     {
         $column_id    = $column->id;
         $field_values = $field->getVisibleValuesPlusNoneIfAny();
         $html         = '';
         if ($field_values) {
-            $html .= '<select name="mapping_field[' . (int) $mapping_tracker->getId() . '][values][' . $column_id . '][]" multiple="multiple" size="' . count($field_values) . '">';
+            $html .= '<select class="tlp-select mapping-value-selector" name="mapping_field[' . (int) $mapping_tracker->getId() . '][values][' . $column_id . '][]" multiple="multiple" size="' . count($field_values) . '">';
             foreach ($field_values as $value) {
                 $selected = '';
 
@@ -208,26 +194,28 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         return $html;
     }
 
-    protected function fetchSpeech()
+    protected function fetchSpeech(): string
     {
         if (! count($this->config->getDashboardColumns())) {
-            return dgettext('tuleap-cardwall', '<p>You can define your own set of columns for the cardwall. Values will be associated is they match column title (be careful to lower case/upper case).</p>');
+            $message = dgettext('tuleap-cardwall', 'You can define your own set of columns for the cardwall. Values will be associated is they match column title (be careful to lower case/upper case).');
         } else {
-            return dgettext('tuleap-cardwall', '<p>Note: you can delete a column by removing its name (make text field blank).</p>');
+            $message = dgettext('tuleap-cardwall', 'Note: you can delete a column by removing its name (make text field blank).');
         }
+
+        return '<div class="tlp-alert-info">' . $message . '</div>';
     }
 
-    protected function fetchColumnHeader(Cardwall_Column $column)
+    protected function fetchColumnHeader(Cardwall_Column $column): string
     {
         $html  = '<div class="planning-admin-color-picker">';
-        $html .= '<input type="text" name="column[' . $column->id . '][label]" value="' . $this->purify($column->label) . '" />';
+        $html .= '<input class="tlp-input" type="text" name="column[' . $column->id . '][label]" value="' . $this->purify($column->label) . '" />';
         $html .= $this->decorateEdit($column);
         $html .= '</div>';
 
         return $html;
     }
 
-    private function decorateEdit(Cardwall_Column $column)
+    private function decorateEdit(Cardwall_Column $column): string
     {
         if ($column->isHeaderATLPColor()) {
             $current_color = $column->getHeadercolor();
@@ -247,7 +235,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
 
         return $renderer->renderToString(
             'colorpicker-mount-point',
-            \Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder::buildPresenter(
+            ColorpickerMountPointPresenterBuilder::buildPresenter(
                 $current_color,
                 $input_name,
                 $input_id
@@ -255,43 +243,40 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         );
     }
 
-    protected function fetchAdditionalColumnHeader()
+    protected function fetchAdditionalColumnHeader(): string
     {
         $suggestion = sprintf(dgettext('tuleap-cardwall', 'E.g.: %1$s'), $this->getPlaceholderSuggestion());
-        return '<label>' . dgettext('tuleap-cardwall', 'New column:') . '<br /><input type="text" name="new_column" value="" placeholder="' . $suggestion  . '" /></label>';
+        return '<div class="tlpform-element">
+                <label class="tlp-label" for="new_column">' . dgettext('tuleap-cardwall', 'New column:') . '</label>
+                <input class="tlp-input" type="text" name="new_column" id="new_column" value="" placeholder="' . $suggestion  . '" />
+                </div>';
     }
 
-    /**
-     * @return string
-     */
-    private function getPlaceholderSuggestion()
+    private function getPlaceholderSuggestion(): string
     {
         $placeholders = explode('|', dgettext('tuleap-cardwall', 'Todo|On Going|Done|Done-Done'));
         foreach ($this->config->getDashboardColumns() as $column) {
             array_walk(
                 $placeholders,
                 function (&$placeholder, $key, $column_label) {
-                    $this->removeUsedColumns($placeholder, $key, $column_label);
+                    $this->removeUsedColumns($placeholder, $column_label);
                 },
                 $column->getLabel()
             );
         }
         $filtered_placeholders = array_filter($placeholders);
         $suggestion            = array_shift($filtered_placeholders);
-        return $suggestion ? $suggestion : dgettext('tuleap-cardwall', 'On Going');
+        return $suggestion ?: dgettext('tuleap-cardwall', 'On Going');
     }
 
-    private function removeUsedColumns(&$placeholder, $key, $column_label)
+    private function removeUsedColumns(&$placeholder, $column_label): void
     {
         if (! levenshtein(soundex($column_label), soundex($placeholder))) {
             $placeholder = '';
         }
     }
 
-    /**
-     * @return string
-     */
-    protected function purify($value)
+    protected function purify($value): string
     {
         return $this->hp->purify($value);
     }

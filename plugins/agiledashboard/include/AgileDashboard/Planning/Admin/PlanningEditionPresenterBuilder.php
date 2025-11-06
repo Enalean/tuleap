@@ -28,39 +28,13 @@ use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 
 class PlanningEditionPresenterBuilder
 {
-    /**
-     * @var \PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ScrumPlanningFilter
-     */
-    private $scrum_planning_filter;
-    /**
-     * @var \PlanningPermissionsManager
-     */
-    private $planning_permissions_manager;
-    /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $tracker_form_element_factory;
-
     public function __construct(
-        \PlanningFactory $planning_factory,
-        \EventManager $event_manager,
-        ScrumPlanningFilter $scrum_planning_filter,
-        \PlanningPermissionsManager $planning_permissions_manager,
-        \Tracker_FormElementFactory $tracker_form_element_factory,
+        private readonly \PlanningFactory $planning_factory,
+        private readonly \EventManager $event_manager,
+        private readonly ScrumPlanningFilter $scrum_planning_filter,
+        private readonly \PlanningPermissionsManager $planning_permissions_manager,
+        private readonly \Tracker_FormElementFactory $tracker_form_element_factory,
     ) {
-        $this->planning_factory             = $planning_factory;
-        $this->event_manager                = $event_manager;
-        $this->scrum_planning_filter        = $scrum_planning_filter;
-        $this->planning_permissions_manager = $planning_permissions_manager;
-        $this->tracker_form_element_factory = $tracker_form_element_factory;
     }
 
     public function build(\Planning $planning, \PFUser $user, \Project $project): PlanningEditionPresenter

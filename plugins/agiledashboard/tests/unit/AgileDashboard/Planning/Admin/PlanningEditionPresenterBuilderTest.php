@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\AgileDashboard\Planning\Admin;
 
 use EventManager;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_Controller;
@@ -43,11 +44,11 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class PlanningEditionPresenterBuilderTest extends TestCase
 {
-    private const PLANNING_ID = 89;
-    private const PROJECT_ID  = 109;
+    private const int PLANNING_ID = 89;
+    private const int PROJECT_ID  = 109;
 
     private PlanningFactory&MockObject $planning_factory;
     private EventManager $event_manager;
@@ -77,7 +78,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
             $this->event_manager,
             $this->scrum_planning_filter,
             $this->planning_permissions_manager,
-            $this->tracker_form_element_factory
+            $this->tracker_form_element_factory,
         );
 
         return $builder->build($this->planning, $user, $project);

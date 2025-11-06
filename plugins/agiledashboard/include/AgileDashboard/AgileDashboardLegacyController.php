@@ -75,7 +75,8 @@ final readonly class AgileDashboardLegacyController implements DispatchableWithR
     {
         return $this->isInOverviewTab($request)
             || $this->isPlanningV2URL($request)
-            || $this->isScrumAdminURL($request);
+            || $this->isScrumAdminURL($request)
+            || $this->isPlanningAdministration($request);
     }
 
     public static function isInOverviewTab(HTTPRequest $request): bool
@@ -94,6 +95,11 @@ final readonly class AgileDashboardLegacyController implements DispatchableWithR
     public static function isScrumAdminURL(HTTPRequest $request): bool
     {
         return $request->get('action') === 'import-form' || $request->get('action') === 'admin';
+    }
+
+    public function isPlanningAdministration(HTTPRequest $request): bool
+    {
+        return $request->get('action') === 'edit';
     }
 
     private function includeAssets(HTTPRequest $request, BaseLayout $layout): void
