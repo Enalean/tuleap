@@ -159,10 +159,6 @@ deptrac:
       collectors:
         - type: directory
           value: plugins/tracker/include/.*
-    - name: TrackerDateReminder
-      collectors:
-        - type: directory
-          value: plugins/tracker_date_reminder/include/.*
     - name: TrackerEncryption
       collectors:
         - type: directory
@@ -311,9 +307,6 @@ deptrac:
       - TestManagement
     Tracker:
       - Core
-    TrackerDateReminder:
-      - Core
-      - Tracker
     TrackerEncryption:
       - Core
       - Tracker
