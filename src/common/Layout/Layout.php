@@ -261,47 +261,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo '</div>';
     }
 
-    /**
-     * Box Top, equivalent to html_box1_top()
-     *
-     * @see Widget_Static
-     * @deprecated You should consider using Widget_Static instead
-     */
-    public function box1_top($title, $echoout = 1, $bgcolor = '', $cols = 2) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-            $return = '<TABLE class="boxtable" cellspacing="1" cellpadding="5" width="100%" border="0">
-                        <TR class="boxtitle" align="center">
-                                <TD colspan="' . $cols . '"><SPAN class=titlebar>' . $title . '</SPAN></TD>
-                        </TR>
-                        <TR class="boxitem">
-                                <TD colspan="' . $cols . '">';
-        if ($echoout) {
-                print $return;
-        } else {
-                return $return;
-        }
-    }
-
-    /**
-     * Box Bottom, equivalent to html_box1_bottom()
-     *
-     * @see Widget_Static
-     * @deprecated You should consider using Widget_Static instead
-     */
-    public function box1_bottom($echoout = 1) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-            $return = '
-                </TD>
-                        </TR>
-        </TABLE>
-';
-        if ($echoout) {
-                print $return;
-        } else {
-                return $return;
-        }
-    }
-
     private function shouldIncludeFatCombined(array $params)
     {
         return ! isset($params[self::INCLUDE_FAT_COMBINED]) || $params[self::INCLUDE_FAT_COMBINED] == true;
