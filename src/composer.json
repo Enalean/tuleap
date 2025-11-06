@@ -109,12 +109,14 @@
     "sort-packages": true,
     "allow-plugins": {
       "composer/package-versions-deprecated": true,
+      "cyclonedx/cyclonedx-php-composer": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "php-http/discovery": false
     }
   },
   "require-dev": {
     "colinodell/psr-testlogger": "^1.2",
+    "cyclonedx/cyclonedx-php-composer": "^5.3",
     "deptrac/deptrac": "^4.2",
     "mikey179/vfsstream": "^1.6",
     "php-http/mock-client": "^1.2",

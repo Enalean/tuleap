@@ -43,6 +43,7 @@ tsconfig.tsbuildinfo
 .turbo/
 js-test-results/
 result
+bom.json
 
 # Workaround OSV Scanner not taking into account .gitignore not located at root directory
 plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-*/extensions/
