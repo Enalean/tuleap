@@ -6,9 +6,13 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/plugin-pullrequest-constants": "workspace:*",
+    "@tuleap/locale": "workspace:^",
+    "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue-strict-inject": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",

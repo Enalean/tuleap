@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/date-helper':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/date-helper
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../../lib/frontend/dom
@@ -14,6 +17,15 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/locale
+  '@tuleap/plugin-pullrequest-constants':
+    specifier: workspace:*
+    version: link:../lib/constants
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tooltip

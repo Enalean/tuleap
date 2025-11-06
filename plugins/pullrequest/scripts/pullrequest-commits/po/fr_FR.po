@@ -12,11 +12,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.4.4\n"
 
+msgid "An error occurred: %{fault}"
+msgstr "Une erreur est survenue : %{fault}"
+
 msgid "Changes"
 msgstr "Changements"
 
 msgid "Commits"
 msgstr "Commits"
 
+msgid "Failure"
+msgstr "Échec"
+
+msgid "Failure on"
+msgstr "Échec le"
+
+msgid "It seems that the pull request does not have any commits."
+msgstr "Il semblerait que la pull request n'ait aucun commit."
+
 msgid "Overview"
 msgstr "Résumé"
+
+msgid "Pending since"
+msgstr "En cours depuis"
+
+msgid "Success"
+msgstr "Succès"
+
+msgid "Success on"
+msgstr "Succès le"
