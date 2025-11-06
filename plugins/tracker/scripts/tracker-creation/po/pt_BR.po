@@ -87,9 +87,6 @@ msgstr ""
 msgid "Give your tracker some basic info"
 msgstr "Dê ao seu rastreador algumas informações básicas"
 
-msgid "I want to migrate a tracker v3"
-msgstr ""
-
 msgid "Information"
 msgstr ""
 

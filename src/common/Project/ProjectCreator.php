@@ -369,9 +369,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
             $this->initFRSModuleFromTemplate($group, $template_group, $ugroup_mapping);
 
-            if ($data->projectShouldInheritFromTemplate() && $legacy[Service::TRACKERV3]) {
-                $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
-            }
             $this->initWikiModuleFromTemplate($group_id, $template_group->getID());
 
             //Create project specific references if template is not default site template
@@ -544,50 +541,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $template_project,
             $packages_mapping
         );
-    }
-
-    /**
-     * protected for testing purpose
-     */
-    protected function initTrackerV3ModuleFromTemplate(Group $group, Group $template_group, $ugroup_mapping)
-    {
-        $group_id = $group->getID();
-        if (TrackerV3::instance()->available()) {
-            $atf = new ArtifactTypeFactory($template_group);
-            //$tracker_error = "";
-            // Add all trackers from template project (tracker templates) that need to be instanciated for new trackers.
-            $res = $atf->getTrackerTemplatesForNewProjects();
-            while ($arr_template = db_fetch_array($res)) {
-                $ath_temp                        = new ArtifactType($template_group, $arr_template['group_artifact_id']);
-                $report_mapping_for_this_tracker = [];
-                $new_at_id                       = $atf->create($group_id, $template_group->getID(), $ath_temp->getID(), db_escape_string($ath_temp->getName()), db_escape_string($ath_temp->getDescription()), $ath_temp->getItemName(), $ugroup_mapping, $report_mapping_for_this_tracker);
-                if (! $new_at_id) {
-                    $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
-                } else {
-                    // Copy all the artifacts from the template tracker to the new tracker
-                    $ath_new = new ArtifactType($group, $new_at_id);
-
-                    // not now. perhaps one day
-                    //if (!$ath_new->copyArtifacts($ath_temp->getID()) ) {
-                    //$GLOBALS['Response']->addFeedback('info', $ath_new->getErrorMessage());
-                    //}
-
-                    // Create corresponding reference
-                    $ref = new Reference(
-                        0, // no ID yet
-                        strtolower($ath_temp->getItemName()),
-                        $GLOBALS['Language']->getText('project_reference', 'reference_art_desc_key'), // description
-                        '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
-                        'P', // scope is 'project'
-                        'tracker',  // service short name
-                        ReferenceManager::REFERENCE_NATURE_ARTIFACT,   // nature
-                        '1', // is_used
-                        $group_id
-                    );
-                    $this->reference_manager->createReference($ref, true); // Force reference creation because default trackers use reserved keywords
-                }
-            }
-        }
     }
 
     /**
