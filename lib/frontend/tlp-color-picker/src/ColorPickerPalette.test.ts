@@ -29,7 +29,7 @@ describe("ColorPickerPalette", () => {
         current_color: string,
     ): VueWrapper<InstanceType<typeof ColorPickerPalette>> {
         return shallowMount(ColorPickerPalette, {
-            props: { current_color },
+            props: { current_color, is_no_color_allowed: true },
             global: {
                 plugins: [createGettext({ silent: true })],
             },

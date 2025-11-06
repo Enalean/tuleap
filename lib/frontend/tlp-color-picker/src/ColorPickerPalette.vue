@@ -35,6 +35,7 @@
             v-bind:data-test-color="color_name"
         ></span>
         <div
+            v-if="is_no_color_allowed"
             v-on:click="emit('color-update', NO_COLOR)"
             class="color-picker-row-no-color"
             data-test="color-picker-item"
@@ -58,6 +59,7 @@ import { NO_COLOR } from "./colors";
 
 defineProps<{
     current_color: string;
+    is_no_color_allowed: boolean;
 }>();
 
 const emit = defineEmits<{

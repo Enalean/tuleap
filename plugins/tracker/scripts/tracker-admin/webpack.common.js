@@ -33,6 +33,8 @@ module.exports = [
             colorpicker: "./styles/colorpicker.scss",
             notifications: "./src/index.js",
             hierarchy: "./styles/hierarchy.scss",
+            "general-settings": "./src/general-settings.ts",
+            "general-settings-style": "./styles/general-settings.scss",
         },
         context: __dirname,
         output: webpack_configurator.configureOutput(

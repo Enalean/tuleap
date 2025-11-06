@@ -1,98 +1,156 @@
-<h2 class="almost-tlp-title">{{# dgettext }}tuleap-tracker | General settings{{/ dgettext }}</h2>
-<form name="form1" method="POST" action="{{ action_url }}" id="tracker-settings">
-    <input type="hidden" name="update" value="1">
-    <input type="hidden" name="instantiate_for_new_projects" value="0">
+<div class="tlp-framed">
+    <form class="tlp-pane" method="POST" action="{{ action_url }}">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}tuleap-tracker | General settings{{/ dgettext }}
+                </h1>
+            </div>
+            <div class="tlp-pane-section">
+                <input type="hidden" name="update" value="1">
+                <input type="hidden" name="instantiate_for_new_projects" value="0">
 
-    <label for="tracker-name">{{ tracker_name_label }} <font color="red">*</font></label>
-    <input id="tracker-name" type="text" name="name" value="{{ tracker_name }}" required>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="tracker-name">
+                        {{ tracker_name_label }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input id="tracker-name" class="tlp-input" type="text" name="name" size="40" value="{{ tracker_name }}" required>
+                </div>
 
-    <label for="tracker-description">{{ tracker_description_label }}</label>
-    <textarea id="tracker-description" name="description" rows="3" cols="50">{{ tracker_description }}</textarea>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="tracker-description">
+                        {{ tracker_description_label }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <textarea id="tracker-description" class="tlp-textarea" name="description" rows="3">{{ tracker_description }}</textarea>
+                </div>
 
-    <label for="tracker-shortname">{{ tracker_shortname_label }} <font color="red">*</font></label>
-        <input id="tracker-shortname"
-               type="text"
-               name="item_name"
-               required
-               value="{{ tracker_shortname }}"
-               {{^ has_excessive_shortname_length }} maxlength="{{ max_tracker_length }}" {{/ has_excessive_shortname_length }}
-        />
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="tracker-shortname">
+                        {{ tracker_shortname_label }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input id="tracker-shortname"
+                           class="tlp-input"
+                           type="text"
+                           name="item_name"
+                           required
+                           size="15"
+                           value="{{ tracker_shortname }}"
+                        {{^ has_excessive_shortname_length }} maxlength="{{ max_tracker_length }}" {{/ has_excessive_shortname_length }}
+                    />
+                </div>
 
-    <label>{{ tracker_color_label }} <font color="red">*</font></label>
-    {{> tracker-color-settings }}
+                <div class="tlp-form-element tlp-swatch-{{ tracker_color }}">
+                    <label class="tlp-label">
+                        {{ tracker_color_label }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <span class="tracker-admin-general-settings-color-picker" data-color="{{ tracker_color }}"></span>
+                    <p class="tlp-text-muted tracker-admin-general-settings-selected-color-preview">
+                        {{ preview_label }} <span class="cross-ref-badge">{{ tracker_shortname }} #123</span>
+                    </p>
+                </div>
 
-    <label class="checkbox">
-        <input
-            type="checkbox"
-            name="instantiate_for_new_projects"
-            value="1"
-            {{# is_instatiate_for_new_projects }} checked {{/ is_instatiate_for_new_projects }}
-            {{# cannot_configure_instantiate_for_new_projects }} Disabled {{/ cannot_configure_instantiate_for_new_projects }} />
-        {{ tracker_instantiate_label }}
-    </label>
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input
+                            type="checkbox"
+                            name="instantiate_for_new_projects"
+                            value="1"
+                            {{# is_instatiate_for_new_projects }} checked {{/ is_instatiate_for_new_projects }}
+                            {{# cannot_configure_instantiate_for_new_projects }} Disabled {{/ cannot_configure_instantiate_for_new_projects }} />
+                        {{ tracker_instantiate_label }}
+                    </label>
+                </div>
 
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input
+                            type="checkbox"
+                            name="log_priority_changes"
+                            value="1"
+                            {{# is_log_priority_changes }} checked {{/ is_log_priority_changes }} />
+                        {{ tracker_log_priority_changes }}
+                    </label>
+                </div>
 
-    <label class="checkbox"><input
-        type="checkbox"
-        name="log_priority_changes"
-        value="1"
-        {{# is_log_priority_changes }} checked {{/ is_log_priority_changes }} />
-        {{ tracker_log_priority_changes }}
-    </label>
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input
+                            type="checkbox"
+                            name="allow_copy"
+                            value="1"
+                            {{# is_copy_allowed }} checked {{/ is_copy_allowed }} />
+                        {{# dgettext }} tuleap-tracker | Allow duplication of artifacts {{/ dgettext }}
+                    </label>
+                </div>
 
-    <label class="checkbox"><input
-        type="checkbox"
-        name="allow_copy"
-        value="1"
-        {{# is_copy_allowed }} checked {{/ is_copy_allowed }} />
-        {{# dgettext }} tuleap-tracker | Allow duplication of artifacts {{/ dgettext }}
-    </label>
+                {{# enable_insecure_emailgateway }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label tlp-checkbox">
+                            <input
+                                type="checkbox"
+                                name="enable_emailgateway"
+                                value="1"
+                                {{# is_emailgateway_used }} checked {{/ is_emailgateway_used }} />
+                            {{ tracker_emailgateway }}
+                        </label>
 
-    {{# enable_insecure_emailgateway }}
-        <label class="checkbox">
-            <input
-                type="checkbox"
-                name="enable_emailgateway"
-                value="1"
-                {{# is_emailgateway_used }} checked {{/ is_emailgateway_used }} />
-            {{ tracker_emailgateway }}
-        </label>
+                        {{^ is_insecure_emailgateway_properly_configured }}
+                            <div class="tlp-alert-warning tracker-admin-general-settings-reply-by-mail-error">
+                                <ul class="tracker-admin-general-settings-reply-by-mail-error-list">
+                                    <li class="tlp-text-success"><i class="fa-solid fa-check" aria-hidden="true"></i> {{ reply_possible }}</li>
+                                    <li>
+                                        <span class="tlp-text-danger">
+                                            <i class="fa fa-times" aria-hidden="true"></i> {{{ create_not_possible }}}
+                                        </span>
+                                        <ul class="tracker-admin-general-settings-reply-by-mail-error-list">
+                                            {{# is_semantic_configured_for_insecure_emailgateway }}
+                                                <li class="tlp-text-success"><i class="fa fa-check" aria-hidden="true"></i> {{ semantic_ok }}</li>
+                                            {{/ is_semantic_configured_for_insecure_emailgateway }}
+                                            {{^ is_semantic_configured_for_insecure_emailgateway }}
+                                                <li class="tlp-text-danger"><i class="fa fa-times" aria-hidden="true"></i> {{ semantic_ko }}</li>
+                                            {{/ is_semantic_configured_for_insecure_emailgateway }}
 
-        {{^ is_insecure_emailgateway_properly_configured }}
-            <ul class="unstyled alert alert-warning" style="margin-left: 1em; display: inline-block; margin: 5px 20px;">
-                <li><i class="fa fa-check"></i> {{ reply_possible }}</li>
-                <li class="text-error"><i class="fa fa-times"></i> {{{ create_not_possible }}}</li>
-                <ul class="unstyled" style="margin-left: 1em;">
-                    {{# is_semantic_configured_for_insecure_emailgateway }}
-                        <li><i class="fa fa-check"></i> {{ semantic_ok }}</li>
-                    {{/ is_semantic_configured_for_insecure_emailgateway }}
-                    {{^ is_semantic_configured_for_insecure_emailgateway }}
-                        <li class="text-error"><i class="fa fa-times"></i> {{ semantic_ko }}</li>
-                    {{/ is_semantic_configured_for_insecure_emailgateway }}
+                                            {{# are_required_fields_configured_for_insecure_emailgateway }}
+                                                <li class="tlp-text-success"><i class="fa fa-check" aria-hidden="true"></i> {{ required_ok }}</li>
+                                            {{/ are_required_fields_configured_for_insecure_emailgateway }}
+                                            {{^ are_required_fields_configured_for_insecure_emailgateway }}
+                                                <li class="tlp-text-danger"><i class="fa fa-times" aria-hidden="true"></i> {{ required_ko }}</li>
+                                            {{/ are_required_fields_configured_for_insecure_emailgateway }}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        {{/ is_insecure_emailgateway_properly_configured }}
+                    </div>
+                {{/ enable_insecure_emailgateway }}
 
-                    {{# are_required_fields_configured_for_insecure_emailgateway }}
-                        <li><i class="fa fa-check"></i> {{ required_ok }}</li>
-                    {{/ are_required_fields_configured_for_insecure_emailgateway }}
-                    {{^ are_required_fields_configured_for_insecure_emailgateway }}
-                        <li class="text-error"><i class="fa fa-times"></i> {{ required_ko }}</li>
-                    {{/ are_required_fields_configured_for_insecure_emailgateway }}
-                </ul>
-            </ul>
-        {{/ is_insecure_emailgateway_properly_configured }}
-    {{/ enable_insecure_emailgateway }}
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="tracker-submit-instructions">
+                        {{ submit_instructions_label }}
+                    </label>
+                    <textarea id="tracker-submit-instructions" class="tlp-textarea" name="submit_instructions" rows="3">{{ submit_instructions }}</textarea>
+                    <p class="tlp-text-info">{{ html_tags }}</p>
+                </div>
 
-    <label for="tracker-submit-instructions">{{ submit_instructions_label }}</label>
-    <textarea id="tracker-submit-instructions" name="submit_instructions" rows="3" cols="50">{{ submit_instructions }}</textarea>
-    <div class="help">{{ html_tags }}</div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="tracker-browse-instructions">
+                        {{ browse_instructions_label }}
+                    </label>
+                    <textarea id="tracker-browse-instructions" class="tlp-textarea" name="browse_instructions" rows="3">{{ browse_instructions }}</textarea>
+                    <p class="tlp-text-info">{{ html_tags }}</p>
+                </div>
 
-    <label for="tracker-browse-instructions">{{ browse_instructions_label }}</label>
-    <textarea id="tracker-browse-instructions" name="browse_instructions" rows="3" cols="50">{{ browse_instructions }}</textarea>
-    <div class="help">{{ html_tags }}</div>
-
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token}}
-    <div class="submit-bar">
-        <input type="submit" class="btn btn-large btn-primary" value="{{ submit_button }}" />
-    </div>
-</form>
+                <div class="tlp-pane-section-submit">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token}}
+                    <input type="submit" class="tlp-button-primary" value="{{ submit_button }}" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
