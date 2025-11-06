@@ -3465,6 +3465,9 @@ msgstr "Il manque le nom pour éditer le tableau de bord."
 msgid "The name must start with a letter."
 msgstr "Le nom doit commencer par une lettre."
 
+msgid "The package name cannot be empty"
+msgstr "Le nom du paquet ne peut pas être vide"
+
 msgid "The page you are looking for does not exist"
 msgstr "La page demandée n'existe pas"
 
@@ -3725,6 +3728,9 @@ msgstr ""
 "l'Agiledashboard et sur les rapports de type cardwall dans les trackers. "
 "Ceci permet de mieux différencier les couleurs ainsi que leurs variantes."
 
+msgid "This package has no name, this is not supported."
+msgstr "Ce paquet n'a pas de nom, ce n'est pas supporté."
+
 msgid "This package is hidden"
 msgstr "Ce paquet est caché"
 
@@ -3959,6 +3965,9 @@ msgstr "Nom du groupe unix"
 
 msgid "Unix name"
 msgstr "Nom unix"
+
+msgid "Unnamed package"
+msgstr "Paquet sans nom"
 
 msgid "Up to 2 categories can be used as flag."
 msgstr "Jusqu'à 2 catégories peuvent être utilisées en tant que marqueur."

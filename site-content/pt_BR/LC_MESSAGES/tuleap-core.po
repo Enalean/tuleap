@@ -3387,6 +3387,9 @@ msgstr "Falta o nome para editar o painel."
 msgid "The name must start with a letter."
 msgstr ""
 
+msgid "The package name cannot be empty"
+msgstr ""
+
 msgid "The page you are looking for does not exist"
 msgstr "A página que você está procurando não existe"
 
@@ -3646,6 +3649,9 @@ msgstr ""
 "e nos relatórios do Cardwall. Isso ajuda a distinguir as cores e suas "
 "variantes."
 
+msgid "This package has no name, this is not supported."
+msgstr ""
+
 msgid "This package is hidden"
 msgstr ""
 
@@ -3879,6 +3885,9 @@ msgstr "Nome do Grupo Unix"
 
 msgid "Unix name"
 msgstr "Nome Unix"
+
+msgid "Unnamed package"
+msgstr ""
 
 msgid "Up to 2 categories can be used as flag."
 msgstr "Até 2 categorias podem ser utilizadas como flag."

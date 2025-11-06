@@ -40,7 +40,20 @@
                             {{# packages }}
                                 <tr>
                                     <td>
-                                        <a href="{{ show_url }}" {{# is_hidden }}class="tlp-text-muted"{{/ is_hidden }} data-test="package-name">{{ name }}</a>
+                                        {{# name }}
+                                            <a href="{{ show_url }}" {{# is_hidden }}class="tlp-text-muted"{{/ is_hidden }} data-test="package-name">
+                                                {{ . }}
+                                            </a>
+                                        {{/ name }}
+                                        {{^ name }}
+                                            <em class="tlp-text-muted">
+                                                {{# gettext }}Unnamed package{{/ gettext }}
+                                            </em>
+                                            <span class="tlp-text-danger frs-unnamed-package">
+                                                <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                                                {{# gettext }}This package has no name, this is not supported.{{/ gettext }}
+                                            </span>
+                                        {{/ name }}
                                         {{# is_hidden }}
                                             <span class="tlp-badge-secondary tlp-badge-outline" title="{{# gettext }}This package is hidden{{/ gettext }}">
                                                 <i class="tlp-badge-icon fa-solid fa-eye-slash" aria-hidden="true"></i>

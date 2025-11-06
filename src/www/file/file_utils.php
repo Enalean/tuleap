@@ -308,12 +308,14 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings):
         <div class="tlp-form-element">
             <label class="tlp-label" for="package">
                 ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'p_name')) . '
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
             <input type="text"
                 id="package"
                 name="package[name]"
                 data-test="frs-create-package"
                 size="40"
+                required
                 class="tlp-input" value="' . $hp->purify(util_unconvert_htmlspecialchars($package->getName())) . '"
             >
         </div>';
