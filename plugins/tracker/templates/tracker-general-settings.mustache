@@ -89,6 +89,9 @@
     <textarea id="tracker-browse-instructions" name="browse_instructions" rows="3" cols="50">{{ browse_instructions }}</textarea>
     <div class="help">{{ html_tags }}</div>
 
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token}}
     <div class="submit-bar">
         <input type="submit" class="btn btn-large btn-primary" value="{{ submit_button }}" />
     </div>
