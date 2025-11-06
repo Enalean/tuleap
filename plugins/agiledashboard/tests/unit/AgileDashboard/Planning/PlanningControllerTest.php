@@ -93,7 +93,7 @@ final class PlanningControllerTest extends TestCase
 
     private function getPlanningController(Codendi_Request $request): Planning_Controller
     {
-        return $this->planning_controller = new Planning_Controller(
+        $planning_controller              = new class (
             $request,
             $this->planning_factory,
             $this->createMock(ProjectManager::class),
@@ -115,7 +115,15 @@ final class PlanningControllerTest extends TestCase
             $this->project_history_dao,
             $this->tracker_factory,
             new TestLayout(new LayoutInspector()),
-        );
+        ) extends Planning_Controller
+        {
+            #[\Override]
+            protected function checkCSRFToken(): void
+            {
+                // Do nothing, always consider requests as valid
+            }
+        };
+        return $this->planning_controller = $planning_controller;
     }
 
     public function testItDeletesThePlanningAndRedirectsToTheIndex(): void

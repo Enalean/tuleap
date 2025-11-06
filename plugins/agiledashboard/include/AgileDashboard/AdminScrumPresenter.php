@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
-use CSRFSynchronizerToken;
 use Tuleap\AgileDashboard\Event\IScrumAdminSectionControllers;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Tracker;
 
 final readonly class AdminScrumPresenter
@@ -52,6 +52,7 @@ final readonly class AdminScrumPresenter
         public array $additional_scrum_sections_controllers,
         public bool $is_planning_administration_delegated,
         public bool $should_sidebar_display_last_milestones,
+        public CSRFSynchronizerTokenInterface $csrf_token,
     ) {
         $this->planning_hierarchy = array_map(static fn(Tracker $tracker) => $tracker->getName(), $hierarchy);
         $this->has_side_panes     = ! $is_planning_administration_delegated || $additional_content !== '';
@@ -137,11 +138,5 @@ final readonly class AdminScrumPresenter
     public function activate_scrum_label(): string
     {
         return dgettext('tuleap-agiledashboard', 'Activate Scrum');
-    }
-
-    public function token(): string
-    {
-        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
-        return $token->fetchHTMLInput();
     }
 }

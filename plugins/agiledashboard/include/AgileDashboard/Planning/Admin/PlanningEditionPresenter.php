@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\Admin;
 
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
 /**
  * @psalm-immutable
  */
@@ -89,6 +91,7 @@ final class PlanningEditionPresenter
         string $cardwall_admin,
         array $warning_list,
         ?ModificationBanPresenter $milestone_tracker_modification_ban,
+        public readonly CSRFSynchronizerTokenInterface $csrf_token,
     ) {
         $planning_id                              = $planning->getId();
         $project_id                               = $planning->getGroupId();

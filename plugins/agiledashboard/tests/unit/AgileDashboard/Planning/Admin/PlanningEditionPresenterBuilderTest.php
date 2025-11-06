@@ -42,6 +42,7 @@ use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -81,7 +82,7 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
             $this->tracker_form_element_factory,
         );
 
-        return $builder->build($this->planning, $user, $project);
+        return $builder->build($this->planning, $user, $project, CSRFSynchronizerTokenStub::buildSelf());
     }
 
     public function testBuildReturnsACompletePresenter(): void

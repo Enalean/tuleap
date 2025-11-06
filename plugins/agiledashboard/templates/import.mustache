@@ -25,6 +25,9 @@
                 </h1>
             </div>
             <form method="post" action="{{ import_url }}" enctype="multipart/form-data" class="tlp-pane-section">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/csrf_token}}
                 <p>
                     {{# dgettext }}
                         tuleap-agiledashboard |

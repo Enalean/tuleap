@@ -2,6 +2,9 @@
 <div class="agiledashboard">
     <h3>{{createPlanning}}</h3>
     <form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=create">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/csrf_token}}
         <p>
             <label for="planning_name">{{planningNameFieldLabel}}</label>
             <input type="text" name="planning[name]" id="planning_name" value="Sprint Planning" />

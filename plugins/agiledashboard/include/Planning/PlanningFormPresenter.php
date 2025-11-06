@@ -77,6 +77,7 @@ class Planning_FormPresenter extends PlanningPresenter
         array $available_planning_trackers,
         $cardwall_admin,
         array $warning_list,
+        public readonly CSRFSynchronizerToken $csrf_token,
     ) {
         parent::__construct($planning);
 

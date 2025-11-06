@@ -24,15 +24,16 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Project;
 
-final class ImportTemplateFormPresenter
+final readonly class ImportTemplateFormPresenter
 {
-    public readonly string $template_url;
+    public string $template_url;
 
-    public readonly int $group_id;
-    public readonly string $import_url;
+    public int $group_id;
+    public string $import_url;
 
     public function __construct(
         Project $project,
+        public \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->group_id = (int) $project->getID();
 

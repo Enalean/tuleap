@@ -56,4 +56,17 @@ abstract class MVC2_PluginController extends MVC2_Controller
             $this->redirect(['group_id' => $this->group_id]);
         }
     }
+
+    protected function checkCSRFToken(): void
+    {
+        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+            $this->redirect(['group_id' => $this->group_id]);
+        }
+        $this->getCSRFToken()->check();
+    }
+
+    final protected function getCSRFToken(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken('/plugins/' . urlencode($this->base_name) . '/?group_id=' . urlencode((string) $this->group_id));
+    }
 }
