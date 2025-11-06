@@ -1046,7 +1046,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $hierarchy_controller = $this->getHierarchyController($request);
                     $hierarchy_controller->includeHeaderAssets();
-                    $this->displayAdminHeader($layout, 'hierarchy', dgettext('tuleap-tracker', 'Hierarchy'));
+                    $this->displayAdminHeaderBurningParrot($layout, 'hierarchy', dgettext('tuleap-tracker', 'Hierarchy'), []);
                     $hierarchy_controller->edit();
                     $this->displayAdminFooter($layout);
                 } else {
