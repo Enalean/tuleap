@@ -12003,16 +12003,6 @@
       <code><![CDATA[getInheritableMdLabelArray]]></code>
     </TooManyArguments>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionReferences.php">
-    <MissingParamType>
-      <code><![CDATA[$item]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$url]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionStatistics.php">
     <InvalidArrayOffset>
       <code><![CDATA[$s[$e]]]></code>
@@ -12516,6 +12506,17 @@
     <MissingTemplateParam>
       <code><![CDATA[ItemVisitor]]></code>
     </MissingTemplateParam>
+  </file>
+  <file src="plugins/docman/tests/integration/Notifications/UgroupsToNotifyDaoTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getRow]]></code>
+      <code><![CDATA[getRow]]></code>
+      <code><![CDATA[getRow]]></code>
+      <code><![CDATA[getRow]]></code>
+      <code><![CDATA[rowCount]]></code>
+      <code><![CDATA[rowCount]]></code>
+      <code><![CDATA[rowCount]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/docman/tests/rest/Docman/DocmanEmbeddedTest.php">
     <MissingParamType>
@@ -20139,12 +20140,6 @@
     <MissingReturnType>
       <code><![CDATA[add]]></code>
       <code><![CDATA[getPanes]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/GitViews/RepoManagement/RepoManagement.php">
-    <MissingReturnType>
-      <code><![CDATA[display]]></code>
-      <code><![CDATA[displayTab]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitViews/ShowRepo/Content.php">
@@ -33283,7 +33278,6 @@
   </file>
   <file src="plugins/svn/include/SVN/Admin/ImmutableTagController.php">
     <MissingReturnType>
-      <code><![CDATA[displayImmutableTag]]></code>
       <code><![CDATA[saveImmutableTag]]></code>
     </MissingReturnType>
   </file>
@@ -62115,9 +62109,6 @@
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
     <MissingPropertyType>
-      <code><![CDATA[$frsrf->STATUS_ACTIVE]]></code>
-      <code><![CDATA[$frsrf->STATUS_DELETED]]></code>
-      <code><![CDATA[$frsrf->STATUS_HIDDEN]]></code>
       <code><![CDATA[$package_releases]]></code>
     </MissingPropertyType>
     <MissingReturnType>
@@ -62157,10 +62148,6 @@
       <code><![CDATA[$permission_type]]></code>
       <code><![CDATA[$permission_type]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$this->package_factory->STATUS_ACTIVE]]></code>
-      <code><![CDATA[$this->package_factory->STATUS_HIDDEN]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[create]]></code>
       <code><![CDATA[delete]]></code>
@@ -62214,11 +62201,6 @@
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$STATUS_ACTIVE]]></code>
-      <code><![CDATA[$STATUS_DELETED]]></code>
-      <code><![CDATA[$STATUS_HIDDEN]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[_delete]]></code>
       <code><![CDATA[_getFRSPackageDao]]></code>
@@ -62498,17 +62480,8 @@
     </RedundantPropertyInitializationCheck>
   </file>
   <file src="src/common/FRS/FRSReleaseController.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($release_ugroups)]]></code>
-    </DeprecatedFunction>
     <MissingParamType>
       <code><![CDATA[$package_id]]></code>
-      <code><![CDATA[$permission_type]]></code>
-      <code><![CDATA[$permission_type]]></code>
-      <code><![CDATA[$permission_type]]></code>
-      <code><![CDATA[$release_id]]></code>
-      <code><![CDATA[$release_id]]></code>
-      <code><![CDATA[$release_id]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$this->release_factory->STATUS_ACTIVE]]></code>
@@ -62516,14 +62489,7 @@
     <MissingReturnType>
       <code><![CDATA[add]]></code>
       <code><![CDATA[create]]></code>
-      <code><![CDATA[delete]]></code>
       <code><![CDATA[displayForm]]></code>
-      <code><![CDATA[displayUserGroups]]></code>
-      <code><![CDATA[getAllUserGroups]]></code>
-      <code><![CDATA[getFrsUGroupsByPermission]]></code>
-      <code><![CDATA[getTemplateDir]]></code>
-      <code><![CDATA[isUgroupHidden]]></code>
-      <code><![CDATA[isUgroupSelected]]></code>
       <code><![CDATA[update]]></code>
     </MissingReturnType>
   </file>
@@ -62663,12 +62629,10 @@
       <code><![CDATA[$release]]></code>
       <code><![CDATA[$release]]></code>
       <code><![CDATA[$release]]></code>
-      <code><![CDATA[$release]]></code>
     </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/FRS/FRSRouter.php">
     <MissingReturnType>
-      <code><![CDATA[redirectToDefaultRoute]]></code>
       <code><![CDATA[useDefaultRoute]]></code>
     </MissingReturnType>
   </file>
@@ -62772,9 +62736,6 @@
       <code><![CDATA[$res]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code><![CDATA[String]]></code>
-      <code><![CDATA[String]]></code>
-      <code><![CDATA[String]]></code>
       <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
     </InvalidReturnType>
     <InvalidScalarArgument>
@@ -62801,16 +62762,10 @@
       <code><![CDATA[$package]]></code>
       <code><![CDATA[$package]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[getName]]></code>
-    </PossiblyNullReference>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $filemodule_id]]></code>
       <code><![CDATA[(int) $filemodule_id]]></code>
     </RedundantCastGivenDocblockType>
-    <UndefinedVariable>
-      <code><![CDATA[$userName]]></code>
-    </UndefinedVariable>
   </file>
   <file src="src/common/FRS/FileReference.php">
     <MissingParamType>
@@ -62880,7 +62835,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[displayHeader]]></code>
-      <code><![CDATA[displayPermissions]]></code>
       <code><![CDATA[getFrsUGroupsByPermission]]></code>
       <code><![CDATA[isUgroupHidden]]></code>
       <code><![CDATA[isUgroupSelected]]></code>
@@ -63020,7 +62974,6 @@
   </file>
   <file src="src/common/FRS/ServiceFile.php">
     <DeprecatedFunction>
-      <code><![CDATA[db_ei($frspf->STATUS_ACTIVE)]]></code>
       <code><![CDATA[db_ei($this->getGroupId())]]></code>
       <code><![CDATA[db_numrows($res_files)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
@@ -63030,11 +62983,9 @@
       <code><![CDATA[db_result($res_files, $f, 'release_name')]]></code>
     </DeprecatedFunction>
     <MissingParamType>
-      <code><![CDATA[$title]]></code>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[displayFRSHeader]]></code>
       <code><![CDATA[getFRSPackageFactory]]></code>
       <code><![CDATA[getFrsPermissionManager]]></code>
     </MissingReturnType>
@@ -75730,10 +75681,7 @@
       <code><![CDATA[PFUser]]></code>
     </InvalidReturnType>
     <MissingParamType>
-      <code><![CDATA[$array]]></code>
       <code><![CDATA[$index]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$rule]]></code>
       <code><![CDATA[$validator]]></code>
@@ -75741,13 +75689,11 @@
       <code><![CDATA[$validator]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$variable]]></code>
-      <code><![CDATA[$variable]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[_get]]></code>
       <code><![CDATA[checkUserIsSuperUser]]></code>
       <code><![CDATA[getJsonDecodedBody]]></code>
-      <code><![CDATA[getToggleVariable]]></code>
       <code><![CDATA[getValidated]]></code>
       <code><![CDATA[isAjax]]></code>
       <code><![CDATA[set]]></code>
@@ -75858,7 +75804,6 @@
       <code><![CDATA[$validator]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_get]]></code>
       <code><![CDATA[clearInstance]]></code>
       <code><![CDATA[setInstance]]></code>
     </MissingReturnType>
@@ -77841,9 +77786,6 @@
       <code><![CDATA[$changes]]></code>
       <code><![CDATA[$changes]]></code>
     </PossibleRawObjectIteration>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$key]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code><![CDATA[$body]]></code>
     </PossiblyNullArgument>
@@ -78671,12 +78613,6 @@
     <NullableReturnStatement>
       <code><![CDATA[isset($this->USAGE_BY_ID[$field_id]) ? $this->USAGE_BY_ID[$field_id] : null]]></code>
     </NullableReturnStatement>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-    </PossiblyInvalidArgument>
     <TooManyArguments>
       <code><![CDATA[new ArtifactField($this->ArtifactType->getID(), '')]]></code>
     </TooManyArguments>
@@ -81934,7 +81870,6 @@
       <code><![CDATA[checkEachRules]]></code>
       <code><![CDATA[disableFeedback]]></code>
       <code><![CDATA[errorMessage]]></code>
-      <code><![CDATA[getKey]]></code>
       <code><![CDATA[populateFeedback]]></code>
       <code><![CDATA[required]]></code>
       <code><![CDATA[setErrorMessage]]></code>
@@ -83171,17 +83106,11 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$page]]></code>
-      <code><![CDATA[$pageList]]></code>
       <code><![CDATA[$rank]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_browsePages]]></code>
-      <code><![CDATA[_browseWikiDocument]]></code>
-      <code><![CDATA[_createWikiDocument]]></code>
-      <code><![CDATA[_displayEntryForm]]></code>
       <code><![CDATA[attachmentPerms]]></code>
       <code><![CDATA[browseAttachment]]></code>
-      <code><![CDATA[displayMenu]]></code>
       <code><![CDATA[docPerms]]></code>
       <code><![CDATA[install]]></code>
       <code><![CDATA[main]]></code>
@@ -83191,7 +83120,6 @@
       <code><![CDATA[wikiAttachments]]></code>
       <code><![CDATA[wikiDocuments]]></code>
       <code><![CDATA[wikiPages]]></code>
-      <code><![CDATA[wikiPerms]]></code>
     </MissingReturnType>
     <RiskyCast>
       <code><![CDATA[$_GET['id']]]></code>
@@ -83209,15 +83137,8 @@
       <code><![CDATA[$purifier]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_browseEmptyWikiPages]]></code>
-      <code><![CDATA[_browsePages]]></code>
-      <code><![CDATA[_browseProjectWikiPages]]></code>
-      <code><![CDATA[_browseWikiDocuments]]></code>
-      <code><![CDATA[_newPageForm]]></code>
       <code><![CDATA[browse]]></code>
-      <code><![CDATA[browsePages]]></code>
       <code><![CDATA[display]]></code>
-      <code><![CDATA[displayMenu]]></code>
       <code><![CDATA[doinstall]]></code>
       <code><![CDATA[install]]></code>
       <code><![CDATA[pagePerms]]></code>
@@ -83246,11 +83167,7 @@
       <code><![CDATA[$view]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[WikiView]]></code>
-      <code><![CDATA[_pagePerms]]></code>
-      <code><![CDATA[displayMenu]]></code>
       <code><![CDATA[exit_wiki_empty]]></code>
-      <code><![CDATA[header]]></code>
       <code><![CDATA[hide_url]]></code>
       <code><![CDATA[wiki_display_footer]]></code>
       <code><![CDATA[wiki_display_header]]></code>
@@ -83898,7 +83815,6 @@
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($group_id)]]></code>
-      <code><![CDATA[db_ei($group_id)]]></code>
       <code><![CDATA[db_ei($pid)]]></code>
       <code><![CDATA[db_ei($pid)]]></code>
       <code><![CDATA[db_ei($prank)]]></code>
@@ -83909,26 +83825,18 @@
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
-      <code><![CDATA[db_query($sql)]]></code>
       <code><![CDATA[db_query('SELECT * FROM frs_filetype ORDER BY type_id')]]></code>
       <code><![CDATA[db_query('SELECT * FROM frs_processor WHERE group_id=100 OR group_id=' . db_ei($group_id) . ' ORDER BY `rank`')]]></code>
       <code><![CDATA[db_result($result, $j, 'group_id')]]></code>
       <code><![CDATA[db_result($result, $j, 'name')]]></code>
       <code><![CDATA[db_result($result, $j, 'processor_id')]]></code>
       <code><![CDATA[db_result($result, $j, 'rank')]]></code>
-      <code><![CDATA[html_build_select_box_from_arrays($arr_id, $arr_status, $name, $checked_val, false)]]></code>
     </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[$dar]]></code>
-      <code><![CDATA[$dar]]></code>
-    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$_FILES['file']['name']]]></code>
     </InvalidArgument>
     <InvalidArrayAccess>
       <code><![CDATA[$_FILES['file']['error'][$i]]]></code>
-      <code><![CDATA[$_FILES['file']['error'][0]]]></code>
     </InvalidArrayAccess>
     <InvalidScalarArgument>
       <code><![CDATA[$date_list[0]]]></code>
@@ -83942,19 +83850,10 @@
       <code><![CDATA[$checked_val]]></code>
       <code><![CDATA[$checked_val]]></code>
       <code><![CDATA[$checked_val]]></code>
-      <code><![CDATA[$checked_val]]></code>
-      <code><![CDATA[$group_id]]></code>
-      <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$is_update]]></code>
-      <code><![CDATA[$is_update]]></code>
       <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$pid]]></code>
       <code><![CDATA[$pid]]></code>
@@ -83962,37 +83861,21 @@
       <code><![CDATA[$pname]]></code>
       <code><![CDATA[$prank]]></code>
       <code><![CDATA[$prank]]></code>
-      <code><![CDATA[$release]]></code>
-      <code><![CDATA[$request]]></code>
       <code><![CDATA[$result]]></code>
       <code><![CDATA[$siblings]]></code>
       <code><![CDATA[$title]]></code>
       <code><![CDATA[$title]]></code>
-      <code><![CDATA[$title]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$url]]></code>
       <code><![CDATA[$url]]></code>
       <code><![CDATA[$url]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$package_factory->STATUS_ACTIVE]]></code>
-      <code><![CDATA[$package_factory->STATUS_HIDDEN]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[detectSpecialCharactersInName]]></code>
       <code><![CDATA[file_utils_add_proc]]></code>
       <code><![CDATA[file_utils_delete_proc]]></code>
       <code><![CDATA[file_utils_footer]]></code>
-      <code><![CDATA[file_utils_header]]></code>
-      <code><![CDATA[file_utils_show_processors]]></code>
       <code><![CDATA[file_utils_update_proc]]></code>
-      <code><![CDATA[frs_display_package_form]]></code>
-      <code><![CDATA[frs_display_release_form]]></code>
-      <code><![CDATA[frs_process_release_form]]></code>
       <code><![CDATA[frs_show_filetype_popup]]></code>
       <code><![CDATA[frs_show_processor_popup]]></code>
       <code><![CDATA[frs_show_release_popup2]]></code>
-      <code><![CDATA[frs_show_status_popup]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[\filesize($_FILES['uploaded_change_log']['tmp_name'])]]></code>
@@ -84014,30 +83897,15 @@
       <code><![CDATA[$date_list[1]]]></code>
       <code><![CDATA[$date_list[2]]]></code>
       <code><![CDATA[$date_list[2]]]></code>
-      <code><![CDATA[$release['name']]]></code>
-      <code><![CDATA[$release['package_id']]]></code>
       <code><![CDATA[$release['release_id']]]></code>
       <code><![CDATA[$release['release_id']]]></code>
-      <code><![CDATA[$release['status_id']]]></code>
     </PossiblyUndefinedArrayOffset>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$release_id]]></code>
-    </PossiblyUndefinedVariable>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$notification]]></code>
     </RiskyTruthyFalsyComparison>
-    <TooManyArguments>
-      <code><![CDATA[getText('file_admin_editreleases', 'add_rel_fail')]]></code>
-      <code><![CDATA[html_build_select_box($FRS_PROCESSOR_RES, $name, $checked_val, true, $Language->getText('file_file_utils', 'must_choose_one'), false, '', false, '', false, '', CODENDI_PURIFIER_CONVERT_HTML)]]></code>
-    </TooManyArguments>
     <TypeDoesNotContainType>
       <code><![CDATA[empty($release_files_to_delete)]]></code>
     </TypeDoesNotContainType>
-  </file>
-  <file src="src/www/file/filemodule_monitor.php">
-    <PossiblyNullArgument>
-      <code><![CDATA[$package]]></code>
-    </PossiblyNullArgument>
   </file>
   <file src="src/www/file/files_permissions_per_group.php">
     <PossiblyInvalidArgument>
@@ -84045,48 +83913,12 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/www/file/showfiles.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($res_filetype)]]></code>
-      <code><![CDATA[db_fetch_array($res_processor)]]></code>
-      <code><![CDATA[db_query($q)]]></code>
-      <code><![CDATA[db_query($q)]]></code>
-    </DeprecatedFunction>
-    <PossiblyNullReference>
-      <code><![CDATA[getRealName]]></code>
-    </PossiblyNullReference>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$proj_stats['downloads']]]></code>
-      <code><![CDATA[$proj_stats['files']]]></code>
-      <code><![CDATA[$proj_stats['releases']]]></code>
-    </PossiblyUndefinedArrayOffset>
-    <PossiblyUndefinedGlobalVariable>
-      <code><![CDATA[$file_type]]></code>
-      <code><![CDATA[$processor]]></code>
-      <code><![CDATA[$proj_stats]]></code>
-    </PossiblyUndefinedGlobalVariable>
     <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $pv]]></code>
-      <code><![CDATA[! $res_file]]></code>
-      <code><![CDATA[$pv]]></code>
       <code><![CDATA[$res_file]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedMethod>
       <code><![CDATA[displayFRSHeader]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="src/www/file/shownotes.php">
-    <UndefinedGlobalVariable>
-      <code><![CDATA[$HTML]]></code>
-      <code><![CDATA[$HTML]]></code>
-    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/help/index.php">
     <UndefinedGlobalVariable>
