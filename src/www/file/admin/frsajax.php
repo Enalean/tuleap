@@ -50,7 +50,6 @@ if ($action === 'permissions_frs_package') {
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),
-            Codendi_HTMLPurifier::instance(),
         );
 
         $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $package_id);
