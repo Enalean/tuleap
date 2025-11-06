@@ -697,7 +697,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             Tracker_FormElementFactory::instance(),
             new FieldUsedInSemanticObjectChecker(new BackgroundColorDao())
         );
-        $allowed_types = $retriever->retrieveAllowedFieldType($event_retriever->getField());
+        $allowed_types = $retriever->retrieveAllowedFieldType($event_retriever->field);
 
         $event_retriever->setAllowedTypes($allowed_types);
     }

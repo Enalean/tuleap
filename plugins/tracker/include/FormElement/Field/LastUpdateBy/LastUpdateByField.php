@@ -375,10 +375,9 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
     /**
      * Say if this fields suport notifications
      *
-     * @return bool
      */
     #[Override]
-    public function isNotificationsSupported()
+    public function isNotificationsSupported(): bool
     {
         return true;
     }

@@ -28,6 +28,26 @@ class Tracker_FormElement_Shared extends ProvideFactoryButtonInformation
      */
     private $tracker;
 
+    public function __construct(
+        private readonly int $id,
+        private int $tracker_id,
+        $parent_id,
+        private readonly ?string $name,
+        private readonly string $label,
+        private readonly ?string $description,
+        $use_it,
+        $scope,
+        $required,
+        $notifications,
+        private readonly ?int $rank,
+    ) {
+        $this->parent_id     = $parent_id;
+        $this->use_it        = $use_it;
+        $this->scope         = $scope;
+        $this->required      = $required;
+        $this->notifications = $notifications;
+    }
+
     #[\Override]
     public static function getFactoryLabel()
     {
@@ -79,23 +99,69 @@ class Tracker_FormElement_Shared extends ProvideFactoryButtonInformation
         $visitor->visit($this);
     }
 
-    public function __construct($id, private int $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank)
-    {
-        $this->id            = $id;
-        $this->parent_id     = $parent_id;
-        $this->name          = $name;
-        $this->label         = $label;
-        $this->description   = $description;
-        $this->use_it        = $use_it;
-        $this->scope         = $scope;
-        $this->required      = $required;
-        $this->notifications = $notifications;
-        $this->rank          = $rank;
-    }
-
     #[\Override]
     public function getTrackerId(): int
     {
         return $this->tracker_id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getPropertyLabel(): string
+    {
+        return '';
+    }
+
+    public function getProperty(): null
+    {
+        return null;
+    }
+
+    public function getProperties(): array
+    {
+        return [];
+    }
+
+    public function getRank(): int
+    {
+        return (int) $this->rank;
+    }
+
+    public function getDescription(): string
+    {
+        return (string) $this->description;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    public function getName(): string
+    {
+        return (string) $this->name;
+    }
+
+    public function isNotificationsSupported(): false
+    {
+        return false;
+    }
+
+    public function isRequired(): false
+    {
+        return false;
+    }
+
+    public function formatDate(): string
+    {
+        return '';
+    }
+
+    public function getSharedTargets(): array
+    {
+        return [];
     }
 }

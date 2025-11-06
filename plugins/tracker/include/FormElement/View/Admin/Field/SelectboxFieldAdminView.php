@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 use Codendi_HTMLPurifier;
 use EventManager;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use WorkflowFactory;
 
 class SelectboxFieldAdminView extends ListFieldAdminView
@@ -37,7 +38,7 @@ class SelectboxFieldAdminView extends ListFieldAdminView
 
         //do not change from SB to MSB if the field is used to define the workflow
         $wf = WorkflowFactory::instance();
-        if (! $wf->isWorkflowField($this->formElement)) {
+        if ($this->formElement instanceof TrackerField && ! $wf->isWorkflowField($this->formElement)) {
             $html .= ' (' . dgettext('tuleap-tracker', 'Switch to:') . ' ';
 
             $change_links = [];
@@ -71,10 +72,12 @@ class SelectboxFieldAdminView extends ListFieldAdminView
         return $html;
     }
 
-    public function getAvailableTypes()
+    public function getAvailableTypes(): array
     {
-        $event = new AllowedFieldTypeChangesRetriever();
-        $event->setField($this->formElement);
+        if (! $this->formElement instanceof TrackerField) {
+            return [];
+        }
+        $event = new AllowedFieldTypeChangesRetriever($this->formElement);
 
         EventManager::instance()->processEvent($event);
 

@@ -25,9 +25,8 @@ use Tuleap\Tracker\FormElement\View\TrackerFormElementAdminView;
 
 class SharedAdminView extends TrackerFormElementAdminView
 {
-    public function __construct(Tracker_FormElement_Shared $formElement, $allUsedElements)
+    public function __construct(Tracker_FormElement_Shared $formElement, array $allUsedElements)
     {
-        $this->formElement     = $formElement;
-        $this->allUsedElements = $allUsedElements;
+        parent::__construct($formElement, $allUsedElements);
     }
 }

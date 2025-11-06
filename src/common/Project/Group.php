@@ -152,7 +152,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->getStatus() == 'A';
     }
 
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return $this->getStatus() == 'D';
     }
