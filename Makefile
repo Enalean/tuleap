@@ -59,6 +59,11 @@ preload:
 		-d opcache.preload=$(CURDIR)/tools/utils/preload/verification-loader.php \
 		 tools/utils/preload/check-preload.php
 
+.PHONY: generate-sbom
+generate-sbom: ## Generate Software-Bill-of-Materials
+	COMPOSER_HOME="$(CURDIR)/src/" COMPOSER_CACHE_DIR=/dev/null COMPOSER_HTACCESS_PROTECT=0 COMPOSER_DISABLE_NETWORK=1 \
+		$(MAKE) composer COMPOSER_INSTALL='composer --quiet CycloneDX:make-sbom --output-format=json --output-reproducible --output-file=bom.json --spec-version=1.5'
+
 ## RNG generation
 
 .PHONY: rnc2rng
