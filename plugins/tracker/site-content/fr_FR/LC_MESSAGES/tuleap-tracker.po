@@ -943,6 +943,9 @@ msgstr "Case à cocher"
 msgid "Child"
 msgstr "Enfant"
 
+msgid "Children"
+msgstr "Enfants"
+
 msgid "Choose a field..."
 msgstr "Choisir un champ ..."
 

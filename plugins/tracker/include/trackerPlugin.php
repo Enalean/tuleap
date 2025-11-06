@@ -551,7 +551,14 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     private function isInTrackerAdmin(): bool
     {
-        return HTTPRequest::instance()->get('func') === 'admin-canned';
+        return in_array(
+            HTTPRequest::instance()->get('func'),
+            [
+                'admin-canned',
+                'admin-hierarchy',
+            ],
+            true,
+        );
     }
 
     #[ListeningToEventName('cssfile')]

@@ -18,22 +18,19 @@
  */
 
 .tracker-admin-hierarchy-section {
-    display: flex;
-    gap: var(--tlp-jumbo-spacing);
+    display: grid;
+    gap: var(--tlp-medium-spacing);
+    grid-template-columns: 1fr 1fr;
 }
 
 .tracker-admin-hierarchy-edit-form {
-    flex: none;
+    height: fit-content;
 }
 
 .tracker-admin-hierarchy-edit-children {
-    min-width: 250px;
     min-height: 200px;
 }
 
-.tracker-hierarchy-current,
-.tracker-hierarchy-current:visited,
-.tracker-hierarchy-current:hover {
-    color: #0676b9;
+.tracker-hierarchy-current {
     font-weight: bold;
 }
