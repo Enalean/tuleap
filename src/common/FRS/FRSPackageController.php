@@ -52,10 +52,6 @@ class FRSPackageController
 
     /** @var LicenseAgreementFactory */
     private $license_agreement_factory;
-    /**
-     * @var \Codendi_HTMLPurifier
-     */
-    private $purifier;
 
     public function __construct(
         FRSPackageFactory $package_factory,
@@ -63,14 +59,12 @@ class FRSPackageController
         User_ForgeUserGroupFactory $ugroup_factory,
         PermissionsManager $permission_manager,
         LicenseAgreementFactory $license_agreement_factory,
-        \Codendi_HTMLPurifier $purifier,
     ) {
         $this->release_factory           = $release_factory;
         $this->package_factory           = $package_factory;
         $this->ugroup_factory            = $ugroup_factory;
         $this->permission_manager        = $permission_manager;
         $this->license_agreement_factory = $license_agreement_factory;
-        $this->purifier                  = $purifier;
     }
 
     public function delete(HTTPRequest $request, FRSPackage $package, Project $project)
@@ -91,46 +85,62 @@ class FRSPackageController
         }
     }
 
-    public function displayCreationForm(Project $project, array $existing_packages)
+    public function displayCreationForm(Project $project, array $existing_packages): void
     {
-        $title   = $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p');
-        $package = new FRSPackage(['group_id' => $project->getGroupId()]);
-        frs_display_package_form($package, $title, '?group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;func=create', $existing_packages);
+        $title                  = $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p');
+        $project_id             = (int) $project->getID();
+        $package                = new FRSPackage(['group_id' => $project_id]);
+        $project_id_url_encoded = urlencode((string) $project_id);
+        frs_display_package_form(
+            $package,
+            $title,
+            '?group_id=' . $project_id_url_encoded . '&func=create',
+            $existing_packages,
+            '/file/?group_id=' . $project_id_url_encoded,
+        );
     }
 
-    public function create(HTTPRequest $request, Project $project, array $existing_packages)
+    public function create(HTTPRequest $request, Project $project, array $existing_packages): void
     {
+        $url_home_frs = '/file/?group_id=' . urlencode($project->getGroupId());
         if (! $request->exist('submit')) {
             $GLOBALS['Response']->addFeedback(\Feedback::INFO, $GLOBALS['Language']->getText('file_admin_editpackages', 'create_canceled'));
-            $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
+            $GLOBALS['Response']->redirect($url_home_frs);
         } else {
             $package_data             = $request->get('package');
             $package_data['group_id'] = $project->getGroupId();
             $title                    = $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p');
 
-            $url = '?func=create&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId()));
+            $url = '?func=create&group_id=' . urlencode($project->getGroupId());
             if (isset($package_data['name']) && isset($package_data['rank']) && isset($package_data['status_id'])) {
                 if (trim($package_data['name']) === '') {
                     $GLOBALS['Response']->addFeedback(\Feedback::ERROR, _('The package name cannot be empty'));
                     $package = new FRSPackage($package_data);
-                    frs_display_package_form($package, $title, $url, $existing_packages);
+                    frs_display_package_form($package, $title, $url, $existing_packages, $url_home_frs);
                 } elseif ($this->package_factory->isPackageNameExist($package_data['name'], $project->getGroupId())) {
                     $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name_exists'));
                     $package = new FRSPackage($package_data);
-                    frs_display_package_form($package, $title, $url, $existing_packages);
+                    frs_display_package_form($package, $title, $url, $existing_packages, $url_home_frs);
                 } else {
                     $this->package_factory->create((array) $package_data);
                     $GLOBALS['Response']->addFeedback(\Feedback::SUCCESS, $GLOBALS['Language']->getText('file_admin_editpackages', 'p_added'));
-                    $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
+                    $GLOBALS['Response']->redirect($url_home_frs);
                 }
             }
         }
     }
 
-    public function edit(Project $project, FRSPackage $package, array $existing_packages)
+    public function edit(Project $project, FRSPackage $package, array $existing_packages): void
     {
-        $title = $GLOBALS['Language']->getText('file_admin_editpackages', 'edit_package');
-        frs_display_package_form($package, $title, '?func=update&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;id=' . $this->purifier->purify(urlencode($package->getPackageID())), $existing_packages);
+        $title                  = $GLOBALS['Language']->getText('file_admin_editpackages', 'edit_package');
+        $project_id_url_encoded = urlencode((string) $project->getID());
+        frs_display_package_form(
+            $package,
+            $title,
+            '?func=update&group_id=' . $project_id_url_encoded . '&id=' . urlencode($package->getPackageID()),
+            $existing_packages,
+            '/file/?group_id=' . $project_id_url_encoded
+        );
     }
 
     public function update(HTTPRequest $request, FRSPackage $package, Project $project, PFUser $user)

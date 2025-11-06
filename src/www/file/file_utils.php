@@ -277,7 +277,7 @@ function file_utils_delete_proc($pid)
     }
 }
 
-function frs_display_package_form(FRSPackage $package, $title, $url, $siblings): void
+function frs_display_package_form(FRSPackage $package, string $title, string $url_submit, array $siblings, string $url_frs_home): void
 {
     $hp                        = Codendi_HTMLPurifier::instance();
     $project                   = ProjectManager::instance()->getProject($package->getGroupID());
@@ -303,7 +303,7 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings):
             </div>
     EOS;
     echo '
-    <form action="' . $url . '" method="post" class="tlp-pane-section">
+    <form action="' . $hp->purify($url_submit) . '" method="post" class="tlp-pane-section">
         ' . $csrf_token->fetchHTMLInput() . '
         <div class="tlp-form-element">
             <label class="tlp-label" for="package">
@@ -330,11 +330,11 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings):
                 <option value="beginning">' . $hp->purify($GLOBALS['Language']->getText('global', 'at_the_beginning')) . '</option>
                 <option value="end">' . $hp->purify($GLOBALS['Language']->getText('global', 'at_the_end')) . '</option>';
 
-        foreach ($siblings as $i => $item) {
+        foreach ($siblings as $item) {
             $value = $item['rank'] + 1;
 
             $selected = '';
-            if (isset($siblings[$i + 1]) && $siblings[$i + 1]['id'] === $package->getPackageId()) {
+            if ($item['id'] === $package->getPackageId()) {
                 $selected = 'selected="selected"';
             }
             echo '<option value="' . $hp->purify($value) . '" ' . $selected . '>';
@@ -348,7 +348,6 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings):
         echo '<input type="hidden" name="package[rank]" value="0" />';
     }
 
-    $package_factory = new FRSPackageFactory();
     $active_selected = $package->isActive() ? 'selected' : '';
     $hidden_selected = $package->isHidden() ? 'selected' : '';
     echo '<div class="tlp-form-element">
@@ -377,7 +376,6 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings):
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),
-            Codendi_HTMLPurifier::instance(),
         );
 
         $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $package->getPackageID());
@@ -388,9 +386,9 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings):
                 <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
                 ' . $hp->purify(_('Submit')) . '
             </button>
-            <button type="submit" name="cancel" value="1" class="tlp-button-primary tlp-button-outline">
+            <a href="' . $hp->purify($url_frs_home) . '" class="tlp-button-primary tlp-button-outline">
                 ' . $hp->purify(_('Cancel')) . '
-            </button>
+            </a>
         </div>
     </form>';
 
@@ -756,7 +754,6 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
                             new LicenseAgreementFactory(
                                 new LicenseAgreementDao()
                             ),
-                            Codendi_HTMLPurifier::instance(),
                         );
 
                         $release_controller->displayUserGroups($project, FRSRelease::PERM_READ, $release->getReleaseID());
@@ -769,7 +766,6 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
                             new LicenseAgreementFactory(
                                 new LicenseAgreementDao()
                             ),
-                            Codendi_HTMLPurifier::instance(),
                         );
 
                         $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $release->getPackageID());
