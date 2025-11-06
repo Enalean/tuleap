@@ -5,7 +5,7 @@ classification: 'TLP:CLEAR'
 mdc: true
 fonts:
   provider: none
-  sans: 'Open Sans'
+  sans: 'Public Sans'
 
 layout: enalean-cover
 ---
@@ -15,31 +15,31 @@ layout: enalean-cover
 A general overview
 
 ---
-src: ./pages/0-introduction.md
+src: ./pages/prosemirror-architecture/0-introduction.md
 ---
 
 ---
-src: ./pages/1-editor-view.md
+src: ./pages/prosemirror-architecture/1-editor-view.md
 ---
 
 ---
-src: ./pages/2-editor-state.md
+src: ./pages/prosemirror-architecture/2-editor-state.md
 ---
 
 ---
-src: ./pages/3-plugin-system.md
+src: ./pages/prosemirror-architecture/3-plugin-system.md
 ---
 
 ---
-src: ./pages/4-schema.md
+src: ./pages/prosemirror-architecture/4-schema.md
 ---
 
 ---
-src: ./pages/5-data-structures.md
+src: ./pages/prosemirror-architecture/5-data-structures.md
 ---
 
 ---
-src: ./pages/6-limitations.md
+src: ./pages/prosemirror-architecture/6-limitations.md
 ---
 
 ---

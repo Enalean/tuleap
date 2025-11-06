@@ -1,0 +1,25 @@
+{
+    "name": "@tuleap/technical-slides",
+    "type": "module",
+    "private": true,
+    "license": "GPL-2.0-or-later",
+    "scripts": {
+        "dev:life-tuleap-request": "slidev --open life-tuleap-request.md",
+        "dev:prosemirror-architecture": "slidev --open prosemirror-architecture.md"
+    },
+    "dependencies": {
+        "@fontsource/public-sans": "^5.2.7",
+        "vue": "^3.5.22"
+    },
+    "devDependencies": {
+        "@slidev/cli": "^52.6.0",
+        "@slidev/theme-default": "^0.25.0"
+    },
+    "pnpm": {
+        "overrides": {
+            "isarray": "npm:@nolyfill/isarray@^1",
+            "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
+            "safer-buffer": "npm:@nolyfill/safer-buffer@^1"
+        }
+    }
+}

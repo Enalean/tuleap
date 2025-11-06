@@ -125,7 +125,7 @@ const input_rule = new InputRule(
 
 When a Transaction is applied, a new EditorState is created from the steps defined into the Transaction and the EditorView is updated.
 
-<img src="/img/data-flow.png" style="max-height: 95%" class="mx-auto"/>
+<img src="/img/prosemirror-architecture/data-flow.png" style="max-height: 95%" class="mx-auto"/>
 
 ---
 
