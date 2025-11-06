@@ -1,6 +1,0 @@
-{
-  "name": "tuleap/plugin-projectlinks",
-  "autoload": {
-    "classmap": ["include/"]
-  }
-}

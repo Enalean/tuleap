@@ -1071,7 +1071,6 @@ fi
 # Plugins dir
 %dir %{APP_DIR}/plugins
 %{APP_DIR}/plugins/pluginsadministration
-%{APP_DIR}/plugins/projectlinks
 %{APP_DIR}/plugins/statistics
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
