@@ -20,6 +20,8 @@
 
 namespace Tuleap\SVN\AccessControl;
 
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\SVN\ServiceSvn;
 use HTTPRequest;
 use Tuleap\SVN\SVNAccessFileReader;
@@ -81,6 +83,14 @@ class AccessControlController
         foreach ($faults as $fault) {
             $GLOBALS['Response']->addFeedback(\Feedback::WARN, (string) $fault);
         }
+
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../scripts/admin/frontend-assets',
+                '/assets/svn/admin',
+            ),
+            'src/admin.ts',
+        ));
 
         $service->renderInPageRepositoryAdministration(
             $request,

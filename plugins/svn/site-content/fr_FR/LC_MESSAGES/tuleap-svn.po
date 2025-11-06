@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2025-09-01 22:22+0200\n"
+"PO-Revision-Date: 2025-11-01 09:44+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -174,12 +174,6 @@ msgstr "Notifications par email lors des commits"
 msgid "Error during new revision file creation"
 msgstr "Erreur lors de la création de la nouvelle révision"
 
-msgid "Example of impacted svn operations"
-msgstr "Exemple d'operations svn"
-
-msgid "Example of impacted svn operations in"
-msgstr "Exemple d'operations svn dans"
-
 msgid "Force every commit to include a reference."
 msgstr "Requiert une référence dans tous les messages de commit."
 
@@ -206,13 +200,6 @@ msgstr "L'entête n'a pas été mise à jour."
 
 msgid "Header updated successfully"
 msgstr "Entête mise à jour avec succès"
-
-msgid ""
-"Here is a preview of what your configuration does. Click on highlighted "
-"folders to get more information."
-msgstr ""
-"Voici une prévisualisation des impacts de votre configuration. Cliquez sur "
-"les dossiers en surbrillance pour les détails."
 
 msgid ""
 "If a file is already bigger than the limit it can no longer be modified. It "
@@ -251,9 +238,6 @@ msgstr ""
 
 msgid "Last commit"
 msgstr "Dernier commit"
-
-msgid "Loading..."
-msgstr "Chargement en cours..."
 
 msgid "Mail to specific recipients or mailing lists (comma separated)"
 msgstr ""
@@ -319,12 +303,6 @@ msgstr ""
 msgid "Permission"
 msgstr "Permission"
 
-msgid "Please select tag on the left"
-msgstr "Veuillez sélectionner un tag dans l'arborescence à gauche"
-
-msgid "Preview of your configuration"
-msgstr "Prévisualisation de votre configuration"
-
 msgid "Project SVN repositories"
 msgstr "Dépôts SVN du projet"
 
@@ -356,9 +334,6 @@ msgstr "Le dépôt n'a pas été trouvé"
 
 msgid "Repository not found."
 msgstr "Dépôt non trouvé."
-
-msgid "Repository tree structure"
-msgstr "Arborescence"
 
 msgid "Rules on commit"
 msgstr "Règles lors d'un commit"
@@ -394,9 +369,6 @@ msgstr "Le service SVN est inactif."
 msgid "SVN service is not activated in project %s"
 msgstr "Le service SVN n'est pas activé dans le projet %s"
 
-msgid "SVN status style"
-msgstr "Façon SVN status"
-
 msgid "SVN with multiple repositories"
 msgstr "SVN avec dépôt multiple"
 
@@ -421,8 +393,8 @@ msgstr "Sauvegarder les règles"
 msgid "Save the subject"
 msgstr "Sauvegarder le sujet"
 
-msgid "Saved versions:"
-msgstr "Versions sauvegardées :"
+msgid "Saved versions"
+msgstr "Versions sauvegardées"
 
 msgid "Select a version"
 msgstr "Séléctionnez une version"
@@ -623,7 +595,7 @@ msgstr "L'utilisateur n'a pas les droits pour créer un nouveau dépôt"
 
 #, php-format
 msgid "User group \"%s\" is empty or does not exist"
-msgstr "Le groupe \"%s\ est vide ou n'existe pas"
+msgstr "Le groupe \"%s\" est vide ou n'existe pas"
 
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, mail"
@@ -658,12 +630,12 @@ msgstr ""
 "un <a href=\"%1$s\">administrateur du projet</a>"
 
 #, php-format
-msgid "You are using a previous version (#%1$s):"
-msgstr "Vous utilisez une version antérieure (#%1$s) :"
+msgid "You are using a previous version (#%1$s)"
+msgstr "Vous utilisez une version précédente (#%1$s)"
 
 #, php-format
-msgid "You are using the last version (#%1$s):"
-msgstr "Vous utilisez la dernière version (#%1$s) :"
+msgid "You are using the last version (#%1$s)"
+msgstr "Vous utilisez la dernière version (#%1$s)"
 
 msgid "You can not browse the repository without being logged."
 msgstr "Vous ne pouvez pas naviguer dans le dépôt sans être authentifié."
@@ -673,22 +645,6 @@ msgstr "Vous ne pouvez pas supprimer."
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas les droits de voir les groupes utilisateurs."
-
-msgid ""
-"Your SVN repository is not impacted by immutable tags because the "
-"configuration is empty or does not match the current repository layout"
-msgstr ""
-"Votre dépôt SVN n'est pas impacté par les tags immutable car la "
-"configuration actuelle est vide ou ne correspond pas à l'arborescence du "
-"dépôt."
-
-msgid ""
-"Your repository contains too many folders (more than %s), for performance "
-"reasons, we cannot display the preview of your configuration."
-msgstr ""
-"Votre dépôt contient trop de dossiers (plus que %s), nous ne pouvons pas "
-"afficher la prévisualisation de la configuration pour des raisons de "
-"performances."
 
 msgid "Your settings could not be saved."
 msgstr "Vos paramètres n'ont pas pu être sauvegardés."
@@ -711,14 +667,8 @@ msgstr ""
 msgid "my-new-repository"
 msgstr "mon-depot"
 
-msgid "my-tag"
-msgstr "mon-tag"
-
 msgid "saved on"
 msgstr "sauvegardée le"
-
-msgid "some/path"
-msgstr "le/chemin"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

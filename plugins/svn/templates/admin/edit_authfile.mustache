@@ -1,47 +1,67 @@
-<div class="tabbable" id="svn-administration">
-    {{> admin/section_presenter}}
+{{> admin/section_presenter_burning_parrot}}
 
-    <div class="tab-content">
-        <h3>{{ edit_access_file_title }}</h3>
-        <form action="/plugins/svn/?group_id={{ project_id }}&action=save-access-file&repo_id={{ repository_id }}" method="POST">
-            {{{ csrf }}}
-            <input type="hidden" name="project_id" value="{{ project_id }}">
-            <input type="hidden" name="repo_id" value="{{ repository_id }}">
-
-            <p>{{ default_text }}</p>
-
-            <div>
-                <label class="checkbox">
-                    <input type="checkbox" name="has_default_permissions" value="1" {{# has_default_permissions }}checked{{/ has_default_permissions }}> {{# dgettext }}tuleap-svn | Use default permissions{{/ dgettext }}
-                </label>
-                <p class="text-info"><i class="fa-regular fa-life-ring" aria-hidden="true"></i> {{# dgettext }}tuleap-svn | Default permissions means that Tuleap will generate [/] permissions for members according to project visibility.{{/ dgettext }}</p>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa-solid fa-lock tlp-pane-title-icon" aria-hidden="true"></i>
+                    {{ edit_access_file_title }}
+                </h1>
             </div>
+            <form action="/plugins/svn/?group_id={{ project_id }}&action=save-access-file&repo_id={{ repository_id }}" method="POST" class="tlp-pane-section">
+                {{{ csrf }}}
+                <input type="hidden" name="project_id" value="{{ project_id }}">
+                <input type="hidden" name="repo_id" value="{{ repository_id }}">
 
-            <div id="access-file-container">
-                <div id="current-access-file-container">
-                    <h4>{{ current_version_title }}</h4>
-                    <pre>{{ default_content }}</pre>
-                    <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" name="form_accessfile" id="form_accessfile">{{{ auth_file }}}</textarea>
-                    <button type="submit" name="submit_new_version" class="btn btn-primary"><i class="far fa-save"></i> {{ button_new_version_label }}</button>
+                <p>{{ default_text }}</p>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input type="checkbox" name="has_default_permissions" value="1" {{# has_default_permissions }}checked{{/ has_default_permissions }}> {{# dgettext }}tuleap-svn | Use default permissions{{/ dgettext }}
+                    </label>
+                    <p class="tlp-text-info">
+                        {{# dgettext }}tuleap-svn | Default permissions means that Tuleap will generate [/] permissions for members according to project visibility.{{/ dgettext }}
+                    </p>
                 </div>
 
-                <div id="old-access-file-container">
-                    <h4>
+                <div class="access-file-container">
+                    <label class="tlp-label current-version-label" for="form_accessfile">{{ current_version_title }}</label>
+
+                    <label class="tlp-label old-version-label">
                         {{ saved_versions }}
-                        <select name="version_selected" id="version-selected">
+                        <select name="version_selected" id="version-selected" class="tlp-select tlp-select-adjusted tlp-select-small">
                             <option value="0"> {{ select_version }} </option>
                             {{# versions }}
-                            <option value="{{ file_id }}">#{{ version }} ({{ saved_on }} {{ date }})</option>
+                                <option value="{{ file_id }}">#{{ version }} ({{ saved_on }} {{ date }})</option>
                             {{/ versions }}
                         </select>
-                    </h4>
+                    </label>
 
-                    <span id="old-access-file-form">
-                        <pre>{{ default_content }}</pre>
-                        <pre class="empty-version" id="other-version-content" data-empty-version="{{ empty_version }}"></pre>
-                    </span>
+                    <div>
+                        <pre class="default-content">{{ default_content }}</pre>
+                        <textarea
+                            class="tlp-textarea current-access-file-textarea"
+                            rows="20"
+                            wrap="virtual"
+                            name="form_accessfile"
+                            id="form_accessfile"
+                        >{{{ auth_file }}}</textarea>
+
+                        <button type="submit" name="submit_new_version" class="tlp-button-primary save-new-access-file-button">
+                            <i class="fa-solid fa-save tlp-button-icon"></i>
+                            {{ button_new_version_label }}
+                        </button>
+                    </div>
+
+                    <div>
+                        <div id="old-access-file-form" hidden>
+                            <pre class="default-content">{{ default_content }}</pre>
+                            <pre class="old-content empty-version" id="other-version-content" data-empty-version="{{ empty_version }}"></pre>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    </section>
 </div>

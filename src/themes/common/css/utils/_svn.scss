@@ -19,49 +19,6 @@
     font-weight: bold;
 }
 
-/* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
-textarea.not_resizable {
-    resize: none;
-
-    &[readonly] {
-        cursor: inherit;
-    }
-}
-/* stylelint-enable */
-
-/* stylelint-disable-next-line selector-id-pattern */
-#access_file_container {
-    display: inline-block;
-}
-
-/* stylelint-disable-next-line selector-id-pattern */
-#current_access_file_container {
-    display: inline-block;
-    margin-right: 10px;
-}
-
-/* stylelint-disable-next-line selector-id-pattern */
-#old_access_file_form {
-    visibility: hidden;
-}
-
-/* stylelint-disable-next-line selector-id-pattern */
-#old_access_file_container {
-    display: inline-block;
-
-    > h3 > select {
-        position: relative;
-        top: 3.5px;
-    }
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    .empty_version {
-        color: #bbbbbb;
-        font-style: italic;
-        text-align: center;
-    }
-}
-
 .svn-intro-command {
     margin-bottom: 15px;
 

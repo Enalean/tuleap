@@ -18,8 +18,10 @@
  */
 
 import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+import { initiateAccessControl } from "./initiate-access-control";
 import "./immutable-tags.scss";
 
 document.addEventListener("DOMContentLoaded", () => {
     openAllTargetModalsOnClick(document, ".svn-admin-trigger-modal");
+    initiateAccessControl();
 });
