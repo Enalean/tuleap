@@ -1624,6 +1624,9 @@ msgstr "Permissions des champs"
 msgid "Fieldset"
 msgstr "Groupe de champs"
 
+msgid "File"
+msgstr "Fichier"
+
 msgid "File not found"
 msgstr "Fichier non trouvé"
 
@@ -2939,14 +2942,14 @@ msgstr "Sémantiques"
 msgid "Send an email to"
 msgstr "Envoyer un email à"
 
+msgid "Send notifications"
+msgstr "Envoyer les notifications"
+
 msgid "Send notifications to people monitoring these artifacts"
 msgstr "Envoyer les notifications aux personnes suivant ces artifacts"
 
 msgid "Send notifications to selected people"
 msgstr "Envoyer des notifications aux personnes sélectionnées"
-
-msgid "Send notifications:"
-msgstr "Envoyer les notifications :"
 
 msgid "Separator"
 msgstr "Séparateur"
