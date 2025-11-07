@@ -941,52 +941,6 @@ class GitActions extends PluginActions // phpcs:ignore PSR1.Classes.ClassDeclara
         return $this->factory->getRepositoryById($repositoryId);
     }
 
-    /**
-     * Fork a bunch of repositories in a project for a given user
-     *
-     * @param array  $repos       The array of id of repositories to fork
-     * @param string $namespace       The namespace where the new repositories will live
-     * @param PFUser   $user            The owner of those new repositories
-     * @param Layout $response        The response object
-     * @param array  $forkPermissions Permissions to be applied for the new repository
-     */
-    public function fork(array $repos, Project $to_project, $namespace, $scope, PFUser $user, Layout $response, $redirect_url, array $forkPermissions)
-    {
-        try {
-            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope, $forkPermissions)) {
-                $this->history_dao->groupAddHistory(
-                    'git_fork_repositories',
-                    (string) $to_project->getID(),
-                    (int) $to_project->getID()
-                );
-
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-git', 'Successfully forked'));
-                $response->redirect($redirect_url);
-            }
-        } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-        }
-    }
-
-    /**
-     * Prepare data for fork permissions action
-     *
-     * @param array  $repos     Repositories Ids we want to fork
-     * @param array  $project   The project Id where repositories would be forked
-     * @param string $namespace The namespace where the new repositories will live
-     * @param string $scope     The scope of the fork: personal or cross project.
-     *
-     * @return void
-     */
-    public function forkRepositoriesPermissions($repos, $project, $namespace, $scope)
-    {
-        $this->addData(['repos'     => join(',', $repos),
-            'group_id'  => $project,
-            'namespace' => $namespace,
-            'scope'     => $scope,
-        ]);
-    }
-
     public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user)
     {
         try {

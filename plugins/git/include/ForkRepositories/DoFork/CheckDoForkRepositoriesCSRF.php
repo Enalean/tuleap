@@ -18,26 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\Git\ForkRepositories;
+namespace Tuleap\Git\ForkRepositories\DoFork;
 
 use Project;
 
-final readonly class ForkRepositoriesUrlsBuilder
+interface CheckDoForkRepositoriesCSRF
 {
-    public static function buildGETForksAndDestinationSelectionURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/';
-    }
-
-    public static function buildPOSTForksPermissionsURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/permissions/';
-    }
-
-    public static function buildPOSTDoForksRepositoriesURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/fork/';
-    }
+    public function checkCSRF(Project $project): void;
 }

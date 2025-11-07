@@ -24,9 +24,12 @@ namespace Tuleap\Git\ForkRepositories\Permissions;
 
 use CuyZ\Valinor\MapperBuilder;
 use Tuleap\HTTPRequest;
+use Tuleap\Git\ForkRepositories\ForkPathContainsDoubleDotsFault;
 use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -41,7 +44,7 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
     }
 
     /**
-     * @return Ok<ForkRepositoriesFormInputs>|Err<MissingRequiredParametersFault>
+     * @return Ok<ForkRepositoriesFormInputs>|Err<Fault>
      */
     private function build(): Ok|Err
     {
@@ -49,7 +52,7 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
             new MapperBuilder()->mapper(),
         );
 
-        return $builder->fromRequest($this->request);
+        return $builder->fromRequest($this->request, UserTestBuilder::aUser()->withUserName('johndoe')->build());
     }
 
     public function testItBuildsFromRequest(): void
@@ -132,5 +135,19 @@ final class ForkRepositoriesFormInputsBuilderTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(MissingRequiredParametersFault::class, $result->error);
+    }
+
+    public function testItReturnsAForkPathContainsDoubleDotsFault(): void
+    {
+        $this->request->params = [
+            'path'               => '../my-forks',
+            'repos'              => ['1', '2', '3'],
+            'choose_destination' => ForkType::PERSONAL->value,
+        ];
+
+        $result = $this->build();
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(ForkPathContainsDoubleDotsFault::class, $result->error);
     }
 }

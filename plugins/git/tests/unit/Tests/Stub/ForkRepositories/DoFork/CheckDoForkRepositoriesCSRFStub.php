@@ -20,24 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\ForkRepositories;
+namespace Tuleap\Git\Tests\Stub\ForkRepositories\DoFork;
 
 use Project;
+use Tuleap\Git\ForkRepositories\DoFork\CheckDoForkRepositoriesCSRF;
 
-final readonly class ForkRepositoriesUrlsBuilder
+final readonly class CheckDoForkRepositoriesCSRFStub implements CheckDoForkRepositoriesCSRF
 {
-    public static function buildGETForksAndDestinationSelectionURL(Project $project): string
+    private function __construct()
     {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/';
     }
 
-    public static function buildPOSTForksPermissionsURL(Project $project): string
+    public static function build(): self
     {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/permissions/';
+        return new self();
     }
 
-    public static function buildPOSTDoForksRepositoriesURL(Project $project): string
+    #[\Override]
+    public function checkCSRF(Project $project): void
     {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/fork/';
+        // Do nothing
     }
 }

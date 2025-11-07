@@ -555,6 +555,10 @@ msgstr "Configuration Gitolite"
 msgid "Global permissions"
 msgstr "Permissions globales"
 
+#, php-format
+msgid "Got an unexpected error while forking %s: %s"
+msgstr "Une erreur est survenue durant le fork de %s : %s"
+
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
@@ -703,9 +707,6 @@ msgstr "Non"
 msgid "No CI Token"
 msgstr "Aucun jeton défini"
 
-msgid "No access selected for the fork"
-msgstr "Aucun accès sélectionné pour le fork"
-
 msgid "No data retrieved from the request"
 msgstr "La requête ne contient aucune donnée."
 
@@ -730,17 +731,11 @@ msgstr "Pas de permissions prédéfinies"
 msgid "No project selected"
 msgstr "Pas de projet sélectionné"
 
-msgid "No project selected for the fork"
-msgstr "Aucun projet sélectionné pour le fork"
-
 msgid "No pushes to display"
 msgstr "Pas de push a afficher"
 
 msgid "No repository has been forked."
 msgstr "Aucun dépôt n'a été forké."
-
-msgid "No repository selected for the fork"
-msgstr "Aucun dépôt sélectionné pour le fork"
 
 msgid "No restorable git repositories found"
 msgstr "Aucun dépôt Git restorable n'a été trouvé"

@@ -20,24 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\ForkRepositories;
+namespace Tuleap\Git\ForkRepositories\DoFork;
 
+use CSRFSynchronizerToken;
 use Project;
+use Tuleap\Git\ForkRepositories\ForkRepositoriesUrlsBuilder;
 
-final readonly class ForkRepositoriesUrlsBuilder
+final class DoForkRepositoriesCSRFChecker implements CheckDoForkRepositoriesCSRF
 {
-    public static function buildGETForksAndDestinationSelectionURL(Project $project): string
+    #[\Override]
+    public function checkCSRF(Project $project): void
     {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/';
-    }
-
-    public static function buildPOSTForksPermissionsURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/permissions/';
-    }
-
-    public static function buildPOSTDoForksRepositoriesURL(Project $project): string
-    {
-        return '/projects/' . urlencode($project->getUnixNameLowerCase()) . '/fork-repositories/fork/';
+        $token = new CSRFSynchronizerToken(ForkRepositoriesUrlsBuilder::buildGETForksAndDestinationSelectionURL($project));
+        $token->check(ForkRepositoriesUrlsBuilder::buildGETForksAndDestinationSelectionURL($project));
     }
 }
