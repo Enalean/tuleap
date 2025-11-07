@@ -1,26 +1,29 @@
-<div id="svn-repository">
-    <div class="svn-repository-header">
-        <h1 class="almost-tlp-title project-header-title">{{ repository_name }}</h1>
+<h1 class="project-administration-title">{{ repository_name }}</h1>
 
-        <div id="svn-repository-url-bar">
-            <div class="input-append">
-                <input type="text" value="{{ svn_url }}" />
-                <button id="toggle-svn-help" class="btn"><i class="fa-solid fa-circle-question"></i></button>
-            </div>
-        </div>
+<div class="svn-repository-header">
+    <div class="tlp-form-element tlp-form-element-append">
+        <input type="text"
+               class="tlp-input svn-repository-url"
+               value="{{ svn_url }}"
+               readonly
+               title="{{# dgettext }} tuleap-svn | Repository URL {{/ dgettext }}"
+        >
+        <button type="button" id="toggle-svn-help" class="tlp-button-secondary tlp-button-outline tlp-append">
+            <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+        </button>
     </div>
+</div>
 
-    <div id="svn-repository-viewvc" data-test="svn-repository-view">
-        <div id="svn-repository-help" class="svn-repository-help-hidden">
-            <div class="alert alert-info">
+<div class="tlp-framed">
+    <div data-test="svn-repository-view">
+        <div id="svn-repository-help" class="svn-repository-help" hidden>
+            <div class="tlp-alert-info">
                 <p>{{# dgettext }} tuleap-svn |Below is a typical command you would use to checkout the source code of this project.{{/ dgettext }}</p>
-                <div class="svn-intro-command">
-                    <pre>{{ help_command }}</pre>
-                </div>
+                <pre class="svn-intro-command">{{ help_command }}</pre>
             </div>
 
             {{# max_file_size }}
-                <p class="alert alert-info">{{# dgettext }} tuleap-svn |Site administrator defined a limit on allowed file size. One can no longer commit files bigger than %1$sMB|{{ max_file_size }}{{/ dgettext }}</p>
+                <p class="tlp-alert-info">{{# dgettext }} tuleap-svn |Site administrator defined a limit on allowed file size. One can no longer commit files bigger than %1$sMB|{{ max_file_size }}{{/ dgettext }}</p>
             {{/ max_file_size }}
         </div>
 
@@ -28,7 +31,7 @@
             {{{ viewvc_html }}}
         {{/ is_repository_created }}
         {{^ is_repository_created }}
-            <div class="alert alert-info svn-repository-not-created-yet">
+            <div class="tlp-alert-info svn-repository-not-created-yet">
                 {{ repository_not_created }}
             </div>
         {{/ is_repository_created }}

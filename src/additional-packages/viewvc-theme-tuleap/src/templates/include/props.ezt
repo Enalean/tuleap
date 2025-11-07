@@ -1,7 +1,7 @@
 [if-any properties]
 <div id="tuleap-viewvc-properties">
-    <h4>Properties</h4>
-    <table class="table" class="auto">
+    <h2>Properties</h2>
+    <table class="tlp-table">
     <thead>
       <tr>
         <th class="vc_header_sort">Name</th>

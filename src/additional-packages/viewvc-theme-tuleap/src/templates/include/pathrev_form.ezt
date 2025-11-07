@@ -1,13 +1,13 @@
 <div class="tuleap-viewvc-header-actions-entry">
-    <span class="tuleap-viewvc-header-actions-entry-stickyrevision">Sticky Revision:</span>
-    <span>
+    <span>Sticky Revision:</span>
+    <span class="tuleap-viewvc-sticky-container">
         <form method="get" action="[pathrev_action]" style="display: inline">
             [for pathrev_hidden_values]
                 <input type="hidden" name="[pathrev_hidden_values.name]" value="[pathrev_hidden_values.value]"/>
             [end]
-            <div class="input-append">
-                <input type="text" name="pathrev" value="[pathrev]" class="input-small" size="6"/>
-                <button type="submit" class="btn">Set</button>
+            <div class="tlp-form-element tlp-form-element-append">
+                <input type="text" class="tlp-input tlp-input-small" name="pathrev" value="[pathrev]" size="6">
+                <button type="submit" class="tlp-append tlp-button-secondary tlp-button-outline tlp-button-small">Set</span>
             </div>
         </form>
 
@@ -19,10 +19,10 @@
                   [if-any lastrev]
                       [is pathrev lastrev]
                       [else]
-                          <input type="submit" class="btn tuleap-viewvc-sticky-button" value="Set to last revision" />
+                          <input type="submit" class="tlp-button-small tlp-button-outline tlp-button-secondary" value="Set to last revision" />
                       [end]
                   [else]
-                      <input type="submit" class="btn tuleap-viewvc-sticky-button" value="Clear" />
+                      <input type="submit" class="tlp-button-small tlp-button-outline tlp-button-secondary" value="Clear" />
                   [end]
             </form>
         [end]

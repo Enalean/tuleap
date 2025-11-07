@@ -57,18 +57,6 @@ body.viewvc-epel {
     margin: 0 0 40px;
 }
 
-#svn-repository-url-bar {
-    padding: 0 16px;
-
-    > .input-append {
-        margin: 0;
-
-        > input[type="text"] {
-            width: 500px;
-        }
-    }
-}
-
 .project-with-background {
     #svn-administration {
         > .svn-administration-title {
@@ -224,8 +212,4 @@ body.viewvc-epel {
     width: 22px;
     height: 22px;
     margin: 0 3px 0 0;
-}
-
-.svn-repository-help-hidden {
-    display: none;
 }
