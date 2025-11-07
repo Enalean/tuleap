@@ -208,7 +208,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->expects($this->once())->method('setMessageToRequesterFromTemplate');
         $this->creator->expects($this->once())->method('initSVNModuleFromTemplate');
         $this->creator->expects($this->once())->method('initFRSModuleFromTemplate');
-        $this->creator->expects($this->once())->method('initTrackerV3ModuleFromTemplate');
         $this->creator->expects($this->once())->method('initWikiModuleFromTemplate');
 
         $this->email_copier->expects($this->once())->method('copyEmailOptionsFromTemplate');
@@ -265,7 +264,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->expects($this->once())->method('setMessageToRequesterFromTemplate');
         $this->creator->expects($this->once())->method('initSVNModuleFromTemplate');
         $this->creator->expects($this->once())->method('initFRSModuleFromTemplate');
-        $this->creator->expects($this->once())->method('initTrackerV3ModuleFromTemplate');
         $this->creator->expects($this->once())->method('initWikiModuleFromTemplate');
 
         $this->email_copier->expects($this->once())->method('copyEmailOptionsFromTemplate');
@@ -327,7 +325,6 @@ final class ProjectCreatorTest extends TestCase
                 'setMessageToRequesterFromTemplate',
                 'initSVNModuleFromTemplate',
                 'initFRSModuleFromTemplate',
-                'initTrackerV3ModuleFromTemplate',
                 'initWikiModuleFromTemplate',
                 'autoActivateProject',
             ])

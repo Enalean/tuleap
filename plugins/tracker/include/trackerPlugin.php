@@ -222,7 +222,6 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Hierarchy\HierarchyHistoryEntry;
 use Tuleap\Tracker\Import\Spotter;
-use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
 use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
@@ -755,11 +754,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         }
     }
 
-    private function isLegacyTrackerV3StillUsed($legacy)
-    {
-        return $legacy[Service::TRACKERV3];
-    }
-
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         if ($event->shouldProjectInheritFromTemplate()) {
@@ -774,21 +768,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 $project,
                 $event->getMappingRegistry(),
             );
-
-            $legacy_services = $event->getLegacyServiceUsage();
-
-            if (
-                ! $this->isRestricted() &&
-                ! $this->isLegacyTrackerV3StillUsed($legacy_services) &&
-                TrackerV3::instance()->available()
-            ) {
-                $inheritor = new Inheritor(
-                    new ArtifactTypeFactory($template),
-                    $this->getTrackerFactory()
-                );
-
-                $inheritor->inheritFromLegacy($this->getUserManager()->getCurrentUser(), $template, $project);
-            }
 
             $artifact_link_types_duplicator = new ArtifactLinksUsageDuplicator(new ArtifactLinksUsageDao());
             $artifact_link_types_duplicator->duplicate($template, $project);

@@ -93,9 +93,6 @@ msgstr "Depuis Jira"
 msgid "Give your tracker some basic info"
 msgstr "Donnez à votre tracker quelques infos de base"
 
-msgid "I want to migrate a tracker v3"
-msgstr "Je veux migrer un tracker v3"
-
 msgid "Information"
 msgstr "Information"
 

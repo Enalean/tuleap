@@ -40,7 +40,6 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
         Service::FILE,
         Service::SVN,
         Service::WIKI,
-        Service::TRACKERV3,
     ];
 
     private $list_of_services_per_project = [];

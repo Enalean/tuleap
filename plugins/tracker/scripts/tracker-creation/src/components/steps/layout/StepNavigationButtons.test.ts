@@ -38,7 +38,6 @@ describe("StepNavigationButtons", () => {
         is_ready_for_step_2 = true,
         is_ready_to_submit = true,
         has_form_been_submitted = false,
-        are_there_tv3 = false,
     ): VueWrapper {
         return shallowMount(StepNavigationButtons, {
             global: {
@@ -48,7 +47,6 @@ describe("StepNavigationButtons", () => {
                     createStore({
                         state: {
                             has_form_been_submitted,
-                            are_there_tv3,
                         },
                         getters: {
                             is_ready_for_step_2: () => is_ready_for_step_2,
@@ -128,17 +126,5 @@ describe("StepNavigationButtons", () => {
         wrapper.get("[data-test=button-next]").trigger("click");
 
         expect(push).toHaveBeenCalledWith({ name: "step-2" });
-    });
-
-    it("Does not display legacy button if no tv3", () => {
-        const wrapper = getWrapper({ next_step_name: "step-2" });
-
-        expect(wrapper.find("[data-test=back-to-legacy]").exists()).toBe(false);
-    });
-
-    it("Displays legacy button if tv3", () => {
-        const wrapper = getWrapper({ next_step_name: "step-2" }, true, true, false, true);
-
-        expect(wrapper.find("[data-test=back-to-legacy]").exists()).toBe(true);
     });
 });

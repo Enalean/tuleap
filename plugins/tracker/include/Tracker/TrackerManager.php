@@ -29,7 +29,6 @@ use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
-use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
@@ -188,20 +187,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
                 if ($project = $this->getProject($group_id)) {
                     if ($this->checkServiceEnabled($project, $request)) {
                         switch ($request->get('func')) {
-                            case 'docreate':
-                                if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
-                                      $this->doCreateTracker($project, $request);
-                                } else {
-                                    $this->redirectToTrackerHomepage($group_id);
-                                }
-                                break;
-                            case 'create':
-                                if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
-                                    $this->displayCreateTracker($project, $request);
-                                } else {
-                                    $this->redirectToTrackerHomepage($group_id);
-                                }
-                                break;
                             case 'restore-tracker':
                                 if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
                                     $restorer = new TrackerRestorer($this->getTrackerFactory(), new DeletedTrackerDao());
@@ -322,207 +307,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
         if ($service = $project->getService('plugin_tracker')) {
             $service->displayFooter();
         }
-    }
-
-    public function doCreateTracker(Project $project, Codendi_Request $request)
-    {
-        $new_tracker = null;
-
-        $name          = trim($request->get('name'));
-        $description   = trim($request->get('description'));
-        $itemname      = trim($request->get('itemname'));
-        $color         = null;
-        $atid_template = $request->getValidated('atid_template', 'uint', 0);
-
-        if (! $request->existAndNonEmpty('create_mode')) {
-            return;
-        }
-
-        if ($request->get('create_mode') === 'tv3') {
-            $atid        = $request->get('tracker_new_tv3');
-            $user        = UserManager::instance()->getCurrentUser();
-            $new_tracker = $this->getTrackerFactory()->createFromTV3($user, $atid, $project, $name, $description, $itemname);
-        } elseif ($request->get('create_mode') === 'migrate_from_tv3') {
-            $tracker_id = $request->get('tracker_new_tv3');
-            if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname, false)) {
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?group_id=' . $project->group_id);
-            }
-        } elseif ($request->get('create_mode') === 'migrate_from_tv3_with_ids') {
-            $tracker_id = $request->get('tracker_new_tv3');
-            if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname, true)) {
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?group_id=' . $project->group_id);
-            }
-        }
-
-        if ($new_tracker) {
-            $GLOBALS['Response']->redirect(
-                TRACKER_BASE_URL . '/?group_id=' . urlencode($project->group_id) . '&tracker=' . urlencode($new_tracker->id)
-            );
-        } else {
-            $tracker_template = $this->getTrackerFactory()->getTrackerById($atid_template);
-            $this->displayCreateTracker($project, $request, $name, $description, $itemname, $tracker_template);
-        }
-    }
-
-    /**
-     * Display tracker creation interface
-     *
-     * @param String $name
-     * @param String $description
-     * @param String $itemname
-     */
-    public function displayCreateTracker(
-        Project $project,
-        Codendi_Request $request,
-        $name = '',
-        $description = '',
-        $itemname = '',
-        ?Tracker $tracker_template = null,
-    ) {
-        global $Language;
-
-        $route_to_new_ui = TrackerCreationController::getRouteToTrackerCreationController($project);
-
-        $trackers_v3 = $this->getTrackersV3ForProject($project);
-        if (empty($trackers_v3)) {
-            $GLOBALS['HTML']->redirect($route_to_new_ui);
-            return;
-        }
-
-        $breadcrumbs = [
-            [
-                'title' => dgettext('tuleap-tracker', 'Create a New Tracker'),
-                'url'   => TRACKER_BASE_URL . '/?group_id=' . $project->group_id . '&amp;func=create',
-            ],
-        ];
-        $title       = 'Trackers';
-        $this->displayHeader(
-            $project,
-            $title,
-            $breadcrumbs,
-            \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
-                ->inProject($project, trackerPlugin::SERVICE_SHORTNAME)
-                ->build()
-        );
-
-        $hp = Codendi_HTMLPurifier::instance();
-
-        echo '<div class="alert alert-error">';
-        echo dgettext('tuleap-tracker', 'This page is deprecated and will be removed soon. You should switch to the new tracker creation flow.');
-        echo '<a href="' . $route_to_new_ui . '" class="btn btn-primary tracker-creation-link">
-                <i class="fas fa-long-arrow-alt-right"></i> ' . dgettext('tuleap-tracker', 'Switch to new tracker creation flow') .
-            '</a>';
-        echo '</div>';
-        echo '<h2>' . dgettext('tuleap-tracker', 'Create a new tracker') . '</h2>';
-
-        echo '<form name="form_create" method="post" enctype="multipart/form-data" id="tracker_create_new">
-          <input type="hidden" name="group_id" value="' . $hp->purify($project->getId()) . '">
-          <input type="hidden" name="func" value="docreate">
-
-          <table>
-          <tr valign="top"><td style="padding-right:2em; border-right: 1px solid #eee;">';
-
-        echo '<p>' . dgettext('tuleap-tracker', 'First, select a template you want to start from') . '</p>';
-
-        $create_mode = $request->get('create_mode');
-        $this->displayCreateTrackerFromTV3($create_mode, $project, $request->get('tracker_new_tv3'));
-        $this->displayMigrateFromTV3Option($create_mode, $project, $request->get('tracker_new_tv3'));
-
-        echo '</td><td style="padding-left:2em;">';
-
-        echo '<p>' . dgettext('tuleap-tracker', 'Then, fill the name, description and short name of this new tracker:') . '</p>
-          <p>
-              <label for="newtracker_name"><b>' . dgettext('tuleap-tracker', 'Name') . '</b>: <font color="red">*</font></label><br />
-              <input type="text" name="name" id="newtracker_name" value="' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '" required="required" />
-          </p>
-          <p>
-              <label for="newtracker_description"><b>' . dgettext('tuleap-tracker', 'Description') . '</b>:<br />
-              <textarea id="newtracker_description" name="description" rows="3" cols="50">' . $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) . '</textarea>
-          </p>
-          <p>
-              <label for="newtracker_itemname"><b>' . dgettext('tuleap-tracker', 'Short name') . '</b>: <font color="red">*</font></label><br />
-              <input type="text" id="newtracker_itemname" name="itemname" value="' . $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) . '" required="required" /><br />
-              <span style="color:#999;">' . dgettext('tuleap-tracker', 'Please avoid spaces and punctuation in short names') . '</span>
-          </p>';
-
-        echo '<div id="check_consistency_feedback"></div>';
-        echo '<input type="submit" name="Create" value="' . $Language->getText('global', 'btn_create') . '" id="create_new_tracker_btn" class="btn">';
-
-        echo '</td></tr></table></form>';
-
-        $this->displayFooter($project);
-    }
-
-    private function getTrackersV3ForProject(Project $project)
-    {
-        if ($project->usesService('tracker')) {
-            $atf = new ArtifactTypeFactory($project);
-            return $atf->getArtifactTypes();
-        }
-
-        return null;
-    }
-
-    private function displayCreateTrackerFromTV3($requested_create_mode, Project $project, $requested_template_id)
-    {
-        $trackers_v3 = $this->getTrackersV3ForProject($project);
-
-        if ($trackers_v3) {
-            $radio = $this->getCreateTrackerRadio('tv3', $requested_create_mode);
-            echo $this->getSelectBoxForTV3(
-                $requested_template_id,
-                [
-                    [
-                        'button' => $radio,
-                        'label'  => dgettext('tuleap-tracker', 'From a Tracker v3'),
-                    ],
-                ],
-                $trackers_v3
-            );
-        }
-    }
-
-    /**
-     * @param list<array{button: string, label: string}> $radio_buttons
-     */
-    private function getSelectBoxForTV3($requested_template_id, array $radio_buttons, array $trackers_v3): string
-    {
-        $html = '';
-        $hp   = Codendi_HTMLPurifier::instance();
-        foreach ($radio_buttons as $radio) {
-            $html .= '<h3><label>' . $radio['button'] . $radio['label'] . '</label></h3>';
-        }
-        $html   .= '<br>';
-        $html   .= '<div class="tracker_create_mode">';
-        $checked = $requested_template_id ? '' : 'checked="checked"';
-
-        foreach ($trackers_v3 as $tracker_v3) {
-            $html .= '<p>';
-            $html .= '<label>';
-            if ($requested_template_id == $tracker_v3->getID()) {
-                $checked = 'checked="checked"';
-            }
-            $html   .= '<input type="radio" name="tracker_new_tv3" value="' . $tracker_v3->getID() . '" ' . $checked . ' />';
-            $html   .= $hp->purify(SimpleSanitizer::unsanitize($tracker_v3->getName()), CODENDI_PURIFIER_CONVERT_HTML);
-            $html   .= '</label>';
-            $html   .= '</p>';
-            $checked = '';
-        }
-        $html .= '</div>';
-
-        return $html;
-    }
-
-    public function getCreateTrackerRadio($create_mode, $requested_create_mode): string
-    {
-        $checked = '';
-        if (! $requested_create_mode) {
-            $requested_create_mode = 'gallery';
-        }
-        if ($create_mode == $requested_create_mode) {
-            $checked = 'checked="checked"';
-        }
-        return '<input type="radio" name="create_mode" value="' . $create_mode . '" ' . $checked . ' />';
     }
 
     /**
@@ -760,33 +544,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
             $dateReminderManager->process();
         }
         $logger->debug('[TDR] End processing date reminders');
-    }
-
-    private function displayMigrateFromTV3Option($requested_create_mode, Project $project, $requested_template_id)
-    {
-        $html        = '';
-        $trackers_v3 = $this->getTrackersV3ForProject($project);
-        if ($trackers_v3) {
-            $html      .= '<hr />';
-            $html      .= '<p>' . dgettext('tuleap-tracker', 'Or you can migrate a Tracker v3...') . '</p>';
-            $radio_test = $this->getCreateTrackerRadio('migrate_from_tv3', $requested_create_mode);
-            $radio      = $this->getCreateTrackerRadio('migrate_from_tv3_with_ids', $requested_create_mode);
-            $html      .= $this->getSelectBoxForTV3(
-                $requested_template_id,
-                [
-                    [
-                        'button' => $radio_test,
-                        'label'  => dgettext('tuleap-tracker', 'Migrate a Tracker v3 content for test'),
-                    ],
-                    [
-                        'button' => $radio,
-                        'label'  => dgettext('tuleap-tracker', 'Migrate a Tracker v3 content keeping original ids'),
-                    ],
-                ],
-                $trackers_v3,
-            );
-        }
-        echo $html;
     }
 
     private function getTV3MigrationManager(): Tracker_Migration_MigrationManager

@@ -19,10 +19,6 @@
 
 <template>
     <div class="tracker-creation-navigation">
-        <div>
-            <back-to-legacy v-if="are_there_tv3" data-test="back-to-legacy" />
-        </div>
-
         <div class="tracker-creation-navigation-buttons">
             <router-link
                 v-if="previous_step_name"
@@ -80,7 +76,6 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import { useState, useGetters, useMutations } from "vuex-composition-helpers";
-import BackToLegacy from "./BackToLegacy.vue";
 import { useRouter } from "vue-router";
 
 const { $gettext } = useGettext();
@@ -90,10 +85,9 @@ const props = defineProps<{
     previous_step_name?: string | undefined;
 }>();
 
-const { has_form_been_submitted, is_parsing_a_xml_file, are_there_tv3 } = useState([
+const { has_form_been_submitted, is_parsing_a_xml_file } = useState([
     "has_form_been_submitted",
     "is_parsing_a_xml_file",
-    "are_there_tv3",
 ]);
 
 const { is_ready_for_step_2, is_ready_to_submit } = useGetters([
