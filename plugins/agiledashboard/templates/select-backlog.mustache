@@ -1,4 +1,5 @@
-<select name="planning[backlog_tracker_ids][]" style="vertical-align: top;" multiple="multiple">
+<select class="tlp-select" name="planning[backlog_tracker_ids][]" style="vertical-align: top;" multiple="multiple"
+        id="backlog_tracker_ids" required>
     {{# available_backlog_trackers }}
         <option value="{{ id }}" {{# selected }} selected {{/ selected }}>{{ name }}</option>
     {{/ available_backlog_trackers }}

@@ -20,7 +20,7 @@
 
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 
-class Planning_FormPresenter extends PlanningPresenter
+class Planning_FormPresenter extends PlanningPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * @var PlanningPermissionsManager
@@ -51,16 +51,6 @@ class Planning_FormPresenter extends PlanningPresenter
      * @var string HTML string that allows for the cardwall configuration on a planning
      */
     public $cardwall_admin;
-
-    /**
-     * @var String
-     */
-    public $planning_allows_assignment_intro;
-
-    /**
-     * @var String
-     */
-    public $planning_allows_assignment_to;
     /**
      * @var bool
      */
@@ -88,51 +78,12 @@ class Planning_FormPresenter extends PlanningPresenter
         $this->available_planning_trackers  = $available_planning_trackers;
         $this->cardwall_admin               = $cardwall_admin;
 
-        $this->planning_allows_assignment_intro = dgettext('tuleap-agiledashboard', 'This planning allows assignment of');
-
-        $this->planning_allows_assignment_to = dgettext('tuleap-agiledashboard', 'to');
-
         $this->warning_list = $warning_list;
         $this->has_warning  = count($warning_list) > 0;
     }
 
-    public function adminTitle()
-    {
-        return dgettext('tuleap-agiledashboard', 'Backlog administration');
-    }
-
-    public function createPlanning()
-    {
-        return dgettext('tuleap-agiledashboard', 'Create a new planning');
-    }
-
-    public function planningNameFieldLabel()
-    {
-        return dgettext('tuleap-agiledashboard', 'Name');
-    }
-
-    public function planningBacklogTitleFieldLabel()
-    {
-        return dgettext('tuleap-agiledashboard', 'Backlog title');
-    }
-
-    public function planningPlanTitleFieldLabel()
-    {
-        return dgettext('tuleap-agiledashboard', 'Plan title');
-    }
-
-    public function planningPriorityChangePermissionFieldLabel()
-    {
-        return dgettext('tuleap-agiledashboard', 'Who can prioritize items?');
-    }
-
-    public function priority_change_permission()
+    public function priority_change_permission(): string // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->planning_permissions_manager->getPlanningPermissionForm($this->planning_id, $this->group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, 'planning[' . PlanningPermissionsManager::PERM_PRIORITY_CHANGE . ']');
-    }
-
-    public function btnSubmit()
-    {
-        return $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 }
