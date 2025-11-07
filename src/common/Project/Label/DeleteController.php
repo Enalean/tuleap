@@ -23,7 +23,6 @@ namespace Tuleap\Project\Label;
 use CSRFSynchronizerToken;
 use EventManager;
 use Exception;
-use HTTPRequest;
 use ProjectHistoryDao;
 use Tuleap\Label\CollectionOfLabelableDao;
 
@@ -64,7 +63,7 @@ class DeleteController
         $this->event_manager  = $event_manager;
     }
 
-    public function delete(HTTPRequest $request)
+    public function delete(\Tuleap\HTTPRequest $request)
     {
         $project = $request->getProject();
         $url     = $this->url_builder->getURL($project);

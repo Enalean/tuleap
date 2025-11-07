@@ -27,7 +27,6 @@ use Cardwall_OnTop_ColumnMappingFieldValueDao;
 use Cardwall_OnTop_Config_Command_DeleteMappingFields;
 use Cardwall_OnTop_Config_TrackerMappingFreestyle;
 use Cardwall_OnTop_Config_TrackerMappingNoField;
-use HTTPRequest;
 use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
 use TrackerFactory;
@@ -72,7 +71,7 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends TestCa
 
     public function testItDeletesOnlyCustomMappings(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('custom_mapping', ['13' => '1', '42' => 0, '69' => 0]);
         $this->dao->expects($this->once())->method('delete')->with($this->tracker_id, 69)->willReturn(true);
         $this->value_dao->expects($this->once())->method('delete')->with($this->tracker_id, 69);

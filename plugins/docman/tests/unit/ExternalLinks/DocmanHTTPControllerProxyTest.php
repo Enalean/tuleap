@@ -24,7 +24,6 @@ namespace Tuleap\Docman\ExternalLinks;
 
 use Docman_HTTPController;
 use Docman_ItemDao;
-use HTTPRequest;
 use Project;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -41,7 +40,7 @@ final class DocmanHTTPControllerProxyTest extends TestCase
             $this->createMock(Docman_ItemDao::class)
         );
 
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $project = $this->createMock(Project::class);
         $project->method('getID')->willReturn(null);
         $request->setProject($project);

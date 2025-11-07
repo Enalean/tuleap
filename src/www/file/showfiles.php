@@ -33,7 +33,7 @@ use Tuleap\Layout\JavascriptViteAsset;
 
 $authorized_user = false;
 
-$request  = HTTPRequest::instance();
+$request  = \Tuleap\HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if ($request->valid($vGroupId)) {

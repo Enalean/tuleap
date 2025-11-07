@@ -263,7 +263,7 @@ class UserManager
             throw new NoAuthenticationHeadersException(self::HTTP_ACCESS_KEY_HEADER);
         }
 
-        $request = \HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         return $this->access_key_verifier->getUser($access_key, RESTAccessKeyScope::fromItself(), $request->getIPAddress());
     }
 

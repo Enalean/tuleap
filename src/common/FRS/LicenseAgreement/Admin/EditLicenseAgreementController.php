@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use HTTPRequest;
 use Project;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
@@ -105,7 +104,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->helper->assertCanAccess($project, $request->getCurrentUser());

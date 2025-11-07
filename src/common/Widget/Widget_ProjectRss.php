@@ -36,7 +36,7 @@ class Widget_ProjectRss extends Widget_Rss
 {
     public function __construct()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         parent::__construct('projectrss', $request->get('group_id'), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
     }
 

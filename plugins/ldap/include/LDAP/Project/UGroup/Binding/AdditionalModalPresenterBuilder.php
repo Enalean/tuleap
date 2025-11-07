@@ -22,7 +22,6 @@ namespace Tuleap\LDAP\Project\UGroup\Binding;
 
 use CSRFSynchronizerToken;
 use ForgeConfig;
-use HTTPRequest;
 use LDAP_GroupManager;
 use LDAP_UserGroupManager;
 use LDAPResult;
@@ -43,7 +42,7 @@ class AdditionalModalPresenterBuilder
      */
     private $user_group_manager;
     /**
-     * @var HTTPRequest
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -51,7 +50,7 @@ class AdditionalModalPresenterBuilder
      */
     private $ldap_server_common_name;
 
-    public function __construct(LDAP_UserGroupManager $user_group_manager, HTTPRequest $request, string $ldap_server_common_name)
+    public function __construct(LDAP_UserGroupManager $user_group_manager, \Tuleap\HTTPRequest $request, string $ldap_server_common_name)
     {
         $this->renderer = TemplateRendererFactory::build()->getRenderer(
             LDAP_TEMPLATE_DIR . '/project/ugroup/binding'

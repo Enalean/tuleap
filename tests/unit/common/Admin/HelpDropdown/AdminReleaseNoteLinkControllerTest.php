@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\admin\HelpDropdown;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
@@ -73,7 +72,7 @@ final class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItDisplaysTheAdminPage(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($this->admin_user);
 
         $this->release_note_manager->expects($this->atLeastOnce())->method('getReleaseNoteLink');
@@ -86,7 +85,7 @@ final class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\Test
     {
         $user = UserTestBuilder::anActiveUser()->withoutSiteAdministrator()->build();
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($user);
 
         $this->expectException(ForbiddenException::class);

@@ -67,7 +67,7 @@ final class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUn
             $this->authorization_verifier
         );
 
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
             ->willReturn('valid_auth');
 
@@ -87,7 +87,7 @@ final class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUn
             $this->authorization_verifier
         );
 
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
             ->willReturn(false);
 
@@ -111,7 +111,7 @@ final class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUn
             $this->authorization_verifier
         );
 
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
             ->willReturn('incorrectly_formatted_header');
 
@@ -137,7 +137,7 @@ final class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUn
             $this->authorization_verifier
         );
 
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
             ->willReturn('invalid_authorization');
 
@@ -164,7 +164,7 @@ final class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUn
             $this->authorization_verifier
         );
 
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
             ->willReturn('valid_auth');
 

@@ -27,7 +27,6 @@ use CSRFSynchronizerToken;
 use Docman_Controller;
 use Docman_ItemFactory;
 use Docman_VersionFactory;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Request\DispatchableWithRequest;
@@ -40,7 +39,7 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
         // Need to setup the controller so the notification & logging works (setup in controller constructor)

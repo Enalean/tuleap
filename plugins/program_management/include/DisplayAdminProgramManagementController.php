@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement;
 
-use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HeaderConfigurationBuilder;
@@ -100,7 +99,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
 

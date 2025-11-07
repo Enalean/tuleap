@@ -21,7 +21,6 @@
 
 namespace Tuleap\Git\HTTP;
 
-use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
@@ -132,7 +131,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $this->checkUserCanAccess($variables);
 

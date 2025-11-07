@@ -47,7 +47,7 @@ final class FileDownloaderControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(NotFoundException::class);
         $file_downloader_controler->process(
-            $this->createStub(\HTTPRequest::class),
+            $this->createStub(\Tuleap\HTTPRequest::class),
             $this->createStub(BaseLayout::class),
             ['repo_id' => '102']
         );

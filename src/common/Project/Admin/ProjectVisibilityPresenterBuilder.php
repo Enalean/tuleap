@@ -25,7 +25,6 @@
 namespace Tuleap\Project\Admin;
 
 use ForgeConfig;
-use HTTPRequest;
 use Project;
 use ProjectTruncatedEmailsPresenter;
 use Tuleap\Project\Admin\Visibility\UpdateVisibilityChecker;
@@ -64,7 +63,7 @@ class ProjectVisibilityPresenterBuilder
         $this->project_visibility_options_generator = $project_visibility_options_generator;
     }
 
-    public function build(HTTPRequest $request)
+    public function build(\Tuleap\HTTPRequest $request)
     {
         $project              = $request->getProject();
         $current_user         = $request->getCurrentUser();

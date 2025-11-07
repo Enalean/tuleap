@@ -102,7 +102,7 @@ class WikiServiceAdminActions extends WikiActions
    */
     public function deleteAttachments()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($request->isPost() && $request->exist('attachments_to_delete')) {
             $args         = $request->get('attachments_to_delete');
             $deleteStatus = true;

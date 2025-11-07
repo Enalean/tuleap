@@ -53,7 +53,7 @@ class Statistics_Widget_ProjectStatistics extends Widget //phpcs:ignore PSR1.Cla
     #[\Override]
     public function getContent(): string
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
 
         $disk_usage_dao = new Statistics_DiskUsageDao();

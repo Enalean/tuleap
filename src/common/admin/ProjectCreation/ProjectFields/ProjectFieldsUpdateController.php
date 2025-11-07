@@ -23,7 +23,6 @@ namespace Tuleap\Admin\ProjectCreation\ProjetFields;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Tuleap\admin\ProjectCreation\ProjectFields\ProjectFieldsDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -57,7 +56,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

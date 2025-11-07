@@ -42,7 +42,7 @@ class hudsonActions extends Actions // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function addJob(): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $this->csrf_token_provider->getCSRF($request->getProject())->check();
 
         $group_id = $request->get('group_id');
@@ -85,7 +85,7 @@ class hudsonActions extends Actions // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function updateJob(): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $this->csrf_token_provider->getCSRF($request->getProject())->check();
 
         $job_id       = $request->get('job_id');
@@ -124,7 +124,7 @@ class hudsonActions extends Actions // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function deleteJob(): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $this->csrf_token_provider->getCSRF($request->getProject())->check();
 
         $job_id  = $request->get('job_id');

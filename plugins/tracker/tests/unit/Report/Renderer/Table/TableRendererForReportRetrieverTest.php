@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Renderer\Table;
 
-use HTTPRequest;
 use Override;
 use PFUser;
 use Tracker_Report;
@@ -70,7 +69,7 @@ final class TableRendererForReportRetrieverTest extends TestCase
             }
 
             #[Override]
-            public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
+            public function fetch(array $matching_ids, \Tuleap\HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
             {
                 // TODO: Implement fetch() method.
             }

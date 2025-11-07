@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Admin;
 
 use GitPermissionsManager;
 use GitPlugin;
-use HTTPRequest;
 use Project;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
@@ -62,7 +61,7 @@ final readonly class GitLabLinkGroupController implements DispatchableWithReques
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
 

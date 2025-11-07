@@ -28,7 +28,7 @@ use Tuleap\FRS\ToolbarPresenter;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

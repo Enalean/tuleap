@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\LostPassword;
 
-use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -42,7 +41,7 @@ final class DisplayLostPasswordController implements DispatchableWithRequestNoAu
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $this->event_manager->dispatch(new BeforeLostPassword());
 

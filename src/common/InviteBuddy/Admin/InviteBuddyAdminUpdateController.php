@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy\Admin;
 
 use Tuleap\Config\ConfigDao;
-use HTTPRequest;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
@@ -49,7 +48,7 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

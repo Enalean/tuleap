@@ -21,7 +21,6 @@
 namespace Tuleap\GitLFS\Download;
 
 use GitRepositoryFactory;
-use HTTPRequest;
 use League\Flysystem\FilesystemReader;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
@@ -81,7 +80,7 @@ class FileDownloaderController implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
         $repository = $this->git_repository_factory->getRepositoryById($variables['repo_id']);

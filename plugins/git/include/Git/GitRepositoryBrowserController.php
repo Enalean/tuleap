@@ -27,7 +27,6 @@ use GitPlugin;
 use GitRepository;
 use GitViews_GitPhpViewer;
 use GitViews_ShowRepo_Content;
-use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Config\ConfigKey;
@@ -86,7 +85,7 @@ final readonly class GitRepositoryBrowserController implements DispatchableWithR
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
@@ -151,7 +150,7 @@ final readonly class GitRepositoryBrowserController implements DispatchableWithR
         $layout->footer([]);
     }
 
-    private function addUrlParametersToRequest(HTTPRequest $request, Git_URL $url)
+    private function addUrlParametersToRequest(\Tuleap\HTTPRequest $request, Git_URL $url)
     {
         $url_parameters_as_string = $url->getParameters();
         if (! $url_parameters_as_string) {
@@ -167,7 +166,7 @@ final readonly class GitRepositoryBrowserController implements DispatchableWithR
         }
     }
 
-    private function redirectOutdatedActions(HTTPRequest $request, \Response $response)
+    private function redirectOutdatedActions(\Tuleap\HTTPRequest $request, \Response $response)
     {
         $parsed_url = parse_url($request->getFromServer('REQUEST_URI'));
 
@@ -199,7 +198,7 @@ final readonly class GitRepositoryBrowserController implements DispatchableWithR
      *
      * @return Git_URL
      */
-    private function getURL(HTTPRequest $request, GitRepository $repository)
+    private function getURL(\Tuleap\HTTPRequest $request, GitRepository $repository)
     {
         $url = new Git_URL(
             $this->project_manager,

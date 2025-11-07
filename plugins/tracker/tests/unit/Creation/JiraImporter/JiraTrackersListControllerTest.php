@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use HTTPRequest;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
@@ -40,7 +39,7 @@ final class JiraTrackersListControllerTest extends TestCase
     private ClientWrapperBuilder&MockObject $wrapper_builder;
     private JiraTrackerBuilder&MockObject $project_builder;
     private BaseLayout&MockObject $layout;
-    private HTTPRequest $request;
+    private \Tuleap\HTTPRequest $request;
     private JiraTrackersListController $controller;
 
     #[\Override]
@@ -65,7 +64,7 @@ final class JiraTrackersListControllerTest extends TestCase
             $this->wrapper_builder
         );
 
-        $this->request = new HTTPRequest();
+        $this->request = new \Tuleap\HTTPRequest();
         $this->request->setCurrentUser($user);
 
         $this->layout = $this->createMock(BaseLayout::class);

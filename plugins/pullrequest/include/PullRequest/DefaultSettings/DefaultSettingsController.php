@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\DefaultSettings;
 
 use DateTimeImmutable;
 use GitPlugin;
-use HTTPRequest;
 use ProjectHistoryDao;
 use Tuleap\Git\Permissions\VerifyUserIsGitAdministrator;
 use Tuleap\Layout\BaseLayout;
@@ -46,7 +45,7 @@ class DefaultSettingsController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $request->getProject();
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {

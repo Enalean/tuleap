@@ -38,7 +38,7 @@ final class RegisterFormPresenterBuilder
      * @return \Closure(): void
      */
     public function getPresenterClosureForFirstDisplay(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         RegisterFormContext $context,
     ): \Closure {
@@ -49,7 +49,7 @@ final class RegisterFormPresenterBuilder
      * @return \Closure(): void
      */
     public function getPresenterClosure(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         RegisterFormContext $context,
         ?RegisterFormValidationIssue $form_validation_issue,

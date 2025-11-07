@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Tuleap\OpenIDConnectClient\Login\Controller;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -43,7 +42,7 @@ class AzureADUserLinkController implements DispatchableWithRequest, Dispatchable
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->login_controller->login($request, $request->get('return_to'), RequestTime::getTimestamp());
     }

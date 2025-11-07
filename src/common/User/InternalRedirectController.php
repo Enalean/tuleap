@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
@@ -38,7 +37,7 @@ final readonly class InternalRedirectController implements DispatchableWithReque
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $redirect_url = $request->getValidated('return_to', new \Valid_LocalURI(), false);
 

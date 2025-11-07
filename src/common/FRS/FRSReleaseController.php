@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../www/file/file_utils.php';
 use FRSPackage;
 use FRSRelease;
 use FRSReleaseFactory;
-use HTTPRequest;
 use Project;
 
 readonly class FRSReleaseController
@@ -63,7 +62,7 @@ readonly class FRSReleaseController
         frs_display_release_form($is_update = false, $release, $project->getGroupId(), $title, $subtitle, $url);
     }
 
-    public function create(HTTPRequest $request, Project $project, FRSPackage $package)
+    public function create(\Tuleap\HTTPRequest $request, Project $project, FRSPackage $package)
     {
         if ($request->exist('cancel')) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'create_canceled'));
@@ -91,7 +90,7 @@ readonly class FRSReleaseController
         );
     }
 
-    public function update(HTTPRequest $request, Project $project, FRSRelease $release)
+    public function update(\Tuleap\HTTPRequest $request, Project $project, FRSRelease $release)
     {
         frs_process_release_form(
             $is_update = true,

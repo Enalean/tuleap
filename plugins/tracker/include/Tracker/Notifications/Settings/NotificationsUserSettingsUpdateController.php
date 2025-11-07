@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
-use HTTPRequest;
 use TrackerFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -52,7 +51,7 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['id']);
         if ($tracker === null) {
@@ -72,7 +71,7 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
         $layout->redirect($current_uri);
     }
 
-    private function processUpdate(HTTPRequest $request, BaseLayout $layout, \Tuleap\Tracker\Tracker $tracker, \PFUser $user)
+    private function processUpdate(\Tuleap\HTTPRequest $request, BaseLayout $layout, \Tuleap\Tracker\Tracker $tracker, \PFUser $user)
     {
         $notification_label = dgettext('plugin-tracker', 'Notify me on all updates of artifacts I\'m involved (assigned, submitter, cc, comment)');
         switch ($request->get('notification-mode')) {

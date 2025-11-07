@@ -39,13 +39,13 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private SynchronizedProjectMembershipDao&MockObject $dao;
     private \CSRFSynchronizerToken&MockObject $csrf;
     private BaseLayout&MockObject $layout;
-    private \HTTPRequest&MockObject $request;
+    private \Tuleap\HTTPRequest&MockObject $request;
 
     #[\Override]
     protected function setUp(): void
     {
         $this->layout                = $this->createMock(BaseLayout::class);
-        $this->request               = $this->createMock(\HTTPRequest::class);
+        $this->request               = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->project_retriever     = $this->createMock(ProjectRetriever::class);
         $this->administrator_checker = $this->createMock(ProjectAdministratorChecker::class);
         $this->dao                   = $this->createMock(SynchronizedProjectMembershipDao::class);

@@ -26,7 +26,6 @@ use Cardwall_OnTop_Config_Command_UpdateMappingFields;
 use Cardwall_OnTop_Config_TrackerMappingFreestyle;
 use Cardwall_OnTop_Config_TrackerMappingStatus;
 use Cardwall_OnTop_Config_ValueMapping;
-use HTTPRequest;
 use TestHelper;
 use Tuleap\Tracker\FormElement\Field\List\Bind\Static\ListFieldStaticBindValue;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -69,7 +68,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
 
     public function testItDoesntUpdatesMappingFieldValuesWhenMappingDoesntChange(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'mapping_field',
             [
@@ -91,7 +90,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
 
     public function testItUpdatesMappingFieldValuesWhenThereIsANewValue(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'mapping_field',
             [
@@ -114,7 +113,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
 
     public function testItUpdatesMappingFieldValuesWhenAValueIsRemoved(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'mapping_field',
             [

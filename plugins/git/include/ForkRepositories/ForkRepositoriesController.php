@@ -24,7 +24,6 @@ namespace Tuleap\Git\ForkRepositories;
 
 use CSRFSynchronizerToken;
 use GitPlugin;
-use HTTPRequest;
 use Project;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
@@ -63,7 +62,7 @@ final readonly class ForkRepositoriesController implements DispatchableWithReque
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {

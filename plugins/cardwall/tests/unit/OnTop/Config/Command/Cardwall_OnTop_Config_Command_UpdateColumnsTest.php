@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall\OnTop\Config\Command;
 
 use Cardwall_OnTop_ColumnDao;
 use Cardwall_OnTop_Config_Command_UpdateColumns;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -49,7 +48,7 @@ final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TestCase // 
 
     public function testItUpdatesAllColumns(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'column',
             [

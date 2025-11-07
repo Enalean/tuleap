@@ -94,7 +94,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
      * Propagate process dispatch to sub-tracker elements
      *
      */
-    protected function processSubElement(Tracker_Dispatchable_Interface $object, HTTPRequest $request, PFUser $user)
+    protected function processSubElement(Tracker_Dispatchable_Interface $object, \Tuleap\HTTPRequest $request, PFUser $user)
     {
         // Tracker related check
         $this->checkUserCanAccessTracker($object->getTracker(), $user, $request);
@@ -151,7 +151,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
     /**
      * Controler
      *
-     * @param HTTPRequest       $request The request
+     * @param \Tuleap\HTTPRequest       $request The request
      * @param PFUser            $user    The user that execute the request
      *
      * @return void

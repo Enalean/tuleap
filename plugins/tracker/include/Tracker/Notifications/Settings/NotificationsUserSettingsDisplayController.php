@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use TemplateRenderer;
 use TrackerFactory;
 use TrackerManager;
@@ -46,7 +45,7 @@ final readonly class NotificationsUserSettingsDisplayController implements Dispa
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['id']);
         if ($tracker === null) {

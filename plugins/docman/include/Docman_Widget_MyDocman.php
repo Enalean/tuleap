@@ -76,7 +76,7 @@ class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDec
         }
 
         if (count($reviewsArray) > 0) {
-            $request = HTTPRequest::instance();
+            $request = \Tuleap\HTTPRequest::instance();
             // Get hide arguments
             $hideItemId   = (int) $request->get('hide_item_id');
             $hideApproval = null;
@@ -170,7 +170,7 @@ class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDec
     #[\Override]
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_plugin_docman_approval') || $request->exist('hide_item_id')) {
             $ajax_url .= '&hide_plugin_docman_approval=' . $request->get('hide_plugin_docman_approval') . '&hide_item_id=' . $request->get('hide_item_id');

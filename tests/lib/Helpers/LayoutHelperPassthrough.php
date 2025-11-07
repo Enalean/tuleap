@@ -39,7 +39,7 @@ final class LayoutHelperPassthrough implements LayoutHelper
 
     #[\Override]
     public function renderInProjectAdministrationLayout(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         string $project_id,
         string $page_title,
         string $current_pane_shortname,

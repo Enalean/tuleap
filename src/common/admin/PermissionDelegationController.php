@@ -37,7 +37,7 @@ class Admin_PermissionDelegationController
     public const string REDIRECT_URL = '/admin/permission_delegation.php';
 
     /**
-     * @var HTTPRequest
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
@@ -101,7 +101,7 @@ class Admin_PermissionDelegationController
 
 
     public function __construct(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         CSRFSynchronizerToken $csrf_token,
         User_ForgeUserGroupPermissionsFactory $user_group_permissions_factory,
         User_ForgeUserGroupPermissionsManager $user_group_permissions_manager,

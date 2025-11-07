@@ -45,7 +45,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
     public function initDisplay()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         // User may request a specific table id
         $vVersion = new Valid_UInt('version');
@@ -527,7 +527,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
         $this->initDisplay();
 
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         // Show toolbar
         $html .= $this->getToolbar();

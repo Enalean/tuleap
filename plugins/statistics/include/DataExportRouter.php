@@ -21,7 +21,6 @@
 namespace Tuleap\Statistics;
 
 use Feedback;
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 
 class DataExportRouter
@@ -37,7 +36,7 @@ class DataExportRouter
         $this->data_export_builder = $data_export_builder;
     }
 
-    public function route(HTTPRequest $request)
+    public function route(\Tuleap\HTTPRequest $request)
     {
         try {
             $this->displayExportData($request);
@@ -50,7 +49,7 @@ class DataExportRouter
         }
     }
 
-    private function displayExportData(HTTPRequest $request)
+    private function displayExportData(\Tuleap\HTTPRequest $request)
     {
         $services_usage_start_date       = $request->get('services_usage_start_date');
         $services_usage_end_date         = $request->get('services_usage_end_date');

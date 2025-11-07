@@ -23,7 +23,6 @@ namespace Tuleap\Project\Label;
 use CSRFSynchronizerToken;
 use EventManager;
 use Exception;
-use HTTPRequest;
 use Project;
 use ProjectHistoryDao;
 use Tuleap\Color\AllowedColorsCollection;
@@ -72,7 +71,7 @@ class EditController
         $this->event_manager  = $event_manager;
     }
 
-    public function edit(HTTPRequest $request)
+    public function edit(\Tuleap\HTTPRequest $request)
     {
         $project = $request->getProject();
         $url     = $this->url_builder->getURL($project);

@@ -21,7 +21,6 @@
 namespace Tuleap\Trove;
 
 use Feedback;
-use HTTPRequest;
 use TroveCatDao;
 use TroveCatFactory;
 use Tuleap\Layout\BaseLayout;
@@ -61,7 +60,7 @@ class TroveCatListController implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();
@@ -101,7 +100,7 @@ class TroveCatListController implements DispatchableWithRequest
      * @throws TroveCatWrongShortNameException
      * @throws TroveCatWrongFullNameException
      */
-    private function add(HTTPRequest $request)
+    private function add(\Tuleap\HTTPRequest $request)
     {
         $trove_category = $this->formatTroveCategoriesFromRequest($request);
         $this->trove_cat_dao->add(
@@ -139,7 +138,7 @@ class TroveCatListController implements DispatchableWithRequest
         return $display;
     }
 
-    private function update(HTTPRequest $request)
+    private function update(\Tuleap\HTTPRequest $request)
     {
         $current_trove_category = $this->formatTroveCategoriesFromRequest($request);
 
@@ -211,7 +210,7 @@ class TroveCatListController implements DispatchableWithRequest
      * @throws TroveCatWrongShortNameException
      * @throws TroveCatWrongFullNameException
      */
-    private function formatTroveCategoriesFromRequest(HTTPRequest $request)
+    private function formatTroveCategoriesFromRequest(\Tuleap\HTTPRequest $request)
     {
         $trove_cat_id = '';
         $id_validator = new \Valid_Int('id');
@@ -280,7 +279,7 @@ class TroveCatListController implements DispatchableWithRequest
         return $trove_categories;
     }
 
-    private function delete(HTTPRequest $request)
+    private function delete(\Tuleap\HTTPRequest $request)
     {
         $trove_cat_id            = $request->get('trove_cat_id');
         $last_parent             = [];
@@ -312,7 +311,7 @@ class TroveCatListController implements DispatchableWithRequest
      * @return bool
      * @throws \Exception
      */
-    private function isProjectFlag(HTTPRequest $request, $nb_max_values)
+    private function isProjectFlag(\Tuleap\HTTPRequest $request, $nb_max_values)
     {
         $is_project_flag = $request->get('is-project-flag') === '1';
         if ($is_project_flag) {
@@ -330,7 +329,7 @@ class TroveCatListController implements DispatchableWithRequest
         return $is_project_flag;
     }
 
-    private function checkNbOfExistingProjectFlags(HTTPRequest $request)
+    private function checkNbOfExistingProjectFlags(\Tuleap\HTTPRequest $request)
     {
         $last_parent    = [];
         $already_seen   = [];

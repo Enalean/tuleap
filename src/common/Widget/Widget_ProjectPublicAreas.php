@@ -41,7 +41,7 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
     public function getContent(): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = db_ei($request->get('group_id'));
         $pm       = ProjectManager::instance();
         $project  = $pm->getProject($group_id);

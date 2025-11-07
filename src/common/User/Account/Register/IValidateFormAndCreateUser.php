@@ -30,5 +30,5 @@ interface IValidateFormAndCreateUser
     /**
      * @return Ok<\PFUser>|Err<RegisterFormValidationIssue>|Err<null>
      */
-    public function process(\HTTPRequest $request, RegisterFormContext $context, string $mail_confirm_code): Ok|Err;
+    public function process(\Tuleap\HTTPRequest $request, RegisterFormContext $context, string $mail_confirm_code): Ok|Err;
 }

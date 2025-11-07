@@ -22,7 +22,6 @@ namespace Tuleap\SVN\Explorer;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Project;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\IncludeAssets;
@@ -66,12 +65,12 @@ class ExplorerController
         $this->repository_creator  = $repository_creator;
     }
 
-    public function index(ServiceSvn $service, HTTPRequest $request)
+    public function index(ServiceSvn $service, \Tuleap\HTTPRequest $request)
     {
         $this->renderIndex($service, $request);
     }
 
-    private function renderIndex(ServiceSvn $service, HTTPRequest $request): void
+    private function renderIndex(ServiceSvn $service, \Tuleap\HTTPRequest $request): void
     {
         $project = $request->getProject();
         $token   = $this->generateTokenForCeateRepository($request->getProject());
@@ -105,7 +104,7 @@ class ExplorerController
         return new CSRFSynchronizerToken(SVN_BASE_URL . '/?group_id=' . $project->getid() . '&action=createRepo');
     }
 
-    public function createRepository(HTTPRequest $request, \PFUser $user)
+    public function createRepository(\Tuleap\HTTPRequest $request, \PFUser $user)
     {
         $token = $this->generateTokenForCeateRepository($request->getProject());
         $token->check();

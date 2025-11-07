@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\LostPassword;
 
-use HTTPRequest;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\BaseLayout;
@@ -50,7 +49,7 @@ final class ResetPasswordController implements DispatchableWithRequestNoAuthz, D
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $confirm_hash = new ConcealedString(
             $request->valid(new \Valid_String('confirm_hash')) === false ? '' : $request->get('confirm_hash')

@@ -35,7 +35,7 @@ final class RouterLinkStub extends RouterLink
     }
 
     #[Override]
-    public function process(\HTTPRequest $request): void
+    public function process(\Tuleap\HTTPRequest $request): void
     {
         $this->call_count++;
     }

@@ -50,7 +50,7 @@ class LockListRequest implements GitLfsHTTPOperation
         $this->reference = $reference;
     }
 
-    public static function buildFromHTTPRequest(\HTTPRequest $request): LockListRequest
+    public static function buildFromHTTPRequest(\Tuleap\HTTPRequest $request): LockListRequest
     {
         $reference = null;
         $refspec   = $request->get('refspec') ?: null;

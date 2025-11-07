@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\SVN\SiteAdmin;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -54,7 +53,7 @@ final class DisplayTuleapPMParamsController implements DispatchableWithRequest, 
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

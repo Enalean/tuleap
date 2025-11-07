@@ -21,7 +21,6 @@
 namespace Tuleap\Git;
 
 use Git;
-use HTTPRequest;
 
 class GitGodObjectWrapper extends RouterLink
 {
@@ -37,7 +36,7 @@ class GitGodObjectWrapper extends RouterLink
     }
 
     #[\Override]
-    public function process(HTTPRequest $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         $this->god_object->process();
     }

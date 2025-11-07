@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProjectMilestones\Widget;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use PFUser;
 use Planning;
 use Project;
@@ -41,7 +40,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 {
     private ProjectAccessChecker&\PHPUnit\Framework\MockObject\MockObject $project_access_checker;
     private PFUser $user;
-    private \PHPUnit\Framework\MockObject\MockObject&HTTPRequest $http;
+    private \PHPUnit\Framework\MockObject\MockObject&\Tuleap\HTTPRequest $http;
     private ProjectManager&\PHPUnit\Framework\MockObject\MockObject $project_manager;
     private ProjectMilestonesDao&\PHPUnit\Framework\MockObject\MockObject $project_milestones_dao;
     private CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject $csrf_token;
@@ -60,7 +59,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->user = UserTestBuilder::aUser()->build();
 
-        $this->http = $this->createMock(HTTPRequest::class);
+        $this->http = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->http->method('getCurrentUser')->willReturn($this->user);
 
         $this->project_manager        = $this->createMock(ProjectManager::class);

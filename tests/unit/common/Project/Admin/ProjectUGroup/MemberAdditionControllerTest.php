@@ -41,7 +41,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UGroupManager&MockObject $ugroup_manager;
     private \UserManager&MockObject $user_manager;
     private MemberAdditionController $controller;
-    private \HTTPRequest&MockObject $http_request;
+    private \Tuleap\HTTPRequest&MockObject $http_request;
     private BaseLayout&MockObject $layout;
     private \CSRFSynchronizerToken&MockObject $csrf;
     private MemberAdder&MockObject $member_adder;
@@ -55,7 +55,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager        = $this->createMock(\UGroupManager::class);
         $this->user_manager          = $this->createMock(\UserManager::class);
         $this->member_adder          = $this->createMock(MemberAdder::class);
-        $this->http_request          = $this->createMock(\HTTPRequest::class);
+        $this->http_request          = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->layout                = $this->createMock(BaseLayout::class);
         $this->csrf                  = $this->createMock(\CSRFSynchronizerToken::class);
         $this->csrf->expects($this->once())->method('check');

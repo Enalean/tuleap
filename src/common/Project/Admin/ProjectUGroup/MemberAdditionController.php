@@ -25,7 +25,6 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
@@ -102,7 +101,7 @@ class MemberAdditionController implements DispatchableWithRequest
      * @throws \UGroup_Invalid_Exception
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project      = $this->project_retriever->getProjectFromId($variables['project_id']);
         $current_user = $request->getCurrentUser();

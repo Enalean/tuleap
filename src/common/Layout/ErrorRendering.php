@@ -21,14 +21,13 @@
 
 namespace Tuleap\Layout;
 
-use HTTPRequest;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 class ErrorRendering
 {
     private $presenter = [];
 
-    public function rendersError(BurningParrotTheme $layout, HTTPRequest $request, $http_code, $title, $message)
+    public function rendersError(BurningParrotTheme $layout, \Tuleap\HTTPRequest $request, $http_code, $title, $message)
     {
         $this->presenter['title']   = $title;
         $this->presenter['message'] = $message;
@@ -51,7 +50,7 @@ class ErrorRendering
         $layout->footer([]);
     }
 
-    public function rendersErrorWithException(BurningParrotTheme $layout, HTTPRequest $request, $http_code, $title, $message, \Exception $exception)
+    public function rendersErrorWithException(BurningParrotTheme $layout, \Tuleap\HTTPRequest $request, $http_code, $title, $message, \Exception $exception)
     {
         if (isset($exception->xdebug_message) && ini_get('display_errors') === '1') {
             $this->presenter['xdebug_message'] = $exception->xdebug_message;

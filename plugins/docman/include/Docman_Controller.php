@@ -38,7 +38,7 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
 {
     // variables
     /**
-     * @var HTTPRequest
+     * @var \Tuleap\HTTPRequest
      */
     public $request;
     private ?PFUser $user;

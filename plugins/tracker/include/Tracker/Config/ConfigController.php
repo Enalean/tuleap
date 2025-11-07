@@ -45,7 +45,7 @@ final class ConfigController implements DispatchableWithRequestNoAuthz, Dispatch
     }
 
     #[\Override]
-    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         $this->checkUserIsSiteadmin($user, $layout);

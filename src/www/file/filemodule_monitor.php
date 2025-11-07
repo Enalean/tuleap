@@ -33,7 +33,7 @@ if (! isset($group_id)) {
     $group_id = 0;
 }
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $vFilemodule_id = new Valid_UInt('filemodule_id');
 $vFilemodule_id->required();

@@ -25,7 +25,6 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 use EventManager;
-use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -86,7 +85,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

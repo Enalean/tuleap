@@ -25,7 +25,6 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 use EventManager;
-use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
@@ -89,7 +88,7 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

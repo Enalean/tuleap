@@ -41,7 +41,7 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Stub&\ProjectManager
      */
     private $project_manager;
-    private \HTTPRequest $request;
+    private \Tuleap\HTTPRequest $request;
     private array $variables;
     private StorePendingTeamSynchronizationStub $store_pending_team_synchronization;
 

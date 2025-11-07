@@ -28,7 +28,6 @@ use DataAccessException;
 use EventManager;
 use Feedback;
 use ForgeConfig;
-use HTTPRequest;
 use JsonException;
 use PFUser;
 use Project;
@@ -145,7 +144,7 @@ class ProjectDetailsController
         $this->template_factory                     = $template_factory;
     }
 
-    public function display(HTTPRequest $request)
+    public function display(\Tuleap\HTTPRequest $request)
     {
         $title        = _('Details');
         $project      = $request->getProject();
@@ -209,7 +208,7 @@ class ProjectDetailsController
         );
     }
 
-    public function update(HTTPRequest $request)
+    public function update(\Tuleap\HTTPRequest $request)
     {
         $this->csrf_token->check();
         if (! $this->validateFormData($request)) {
@@ -248,7 +247,7 @@ class ProjectDetailsController
         $header_displayer->displayBurningParrotNavigation($title, $project, 'details');
     }
 
-    private function validateFormData(HTTPRequest $request)
+    private function validateFormData(\Tuleap\HTTPRequest $request)
     {
         $form_group_name = trim($request->get('form_group_name'));
         $form_shortdesc  = $request->get('form_shortdesc');
@@ -288,7 +287,7 @@ class ProjectDetailsController
         return true;
     }
 
-    private function updateCustomProjectFields(HTTPRequest $request)
+    private function updateCustomProjectFields(\Tuleap\HTTPRequest $request)
     {
         $group_id                  = $request->get('group_id');
         $description_fields_values = $this->reindexRowsByDescriptionId(
@@ -323,7 +322,7 @@ class ProjectDetailsController
     /**
      * @throws CannotUpdateProjectHierarchyException
      */
-    private function updateParentProject(HTTPRequest $request)
+    private function updateParentProject(\Tuleap\HTTPRequest $request)
     {
         $current_user = $request->getCurrentUser();
         $group_id     = $request->get('group_id');
@@ -348,7 +347,7 @@ class ProjectDetailsController
         }
     }
 
-    private function validateChanges(HTTPRequest $request)
+    private function validateChanges(\Tuleap\HTTPRequest $request)
     {
         $group_id = $request->get('group_id');
 
@@ -405,7 +404,7 @@ class ProjectDetailsController
      * @throws InvalidProjectIconException
      * @throws JsonException
      */
-    private function updateGroup(HTTPRequest $request)
+    private function updateGroup(\Tuleap\HTTPRequest $request)
     {
         $form_group_name = trim($request->get('form_group_name'));
         $form_shortdesc  = $request->get('form_shortdesc');
@@ -497,7 +496,7 @@ class ProjectDetailsController
         return $result;
     }
 
-    private function updateTruncatedMails(PFUser $user, Project $project, HTTPRequest $request)
+    private function updateTruncatedMails(PFUser $user, Project $project, \Tuleap\HTTPRequest $request)
     {
         if ($this->project_visibility_configuration->canUserConfigureTruncatedMail($user)) {
             $usage = (int) $request->exist('truncated_emails');
@@ -507,7 +506,7 @@ class ProjectDetailsController
         }
     }
 
-    private function updateProjectVisibility(PFUser $user, Project $project, HTTPRequest $request)
+    private function updateProjectVisibility(PFUser $user, Project $project, \Tuleap\HTTPRequest $request)
     {
         if ($this->project_visibility_configuration->canUserConfigureProjectVisibility($user, $project)) {
             if ($project->getAccess() !== $request->get('project_visibility')) {

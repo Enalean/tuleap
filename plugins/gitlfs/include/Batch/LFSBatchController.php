@@ -20,7 +20,6 @@
 
 namespace Tuleap\GitLFS\Batch;
 
-use HTTPRequest;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\GitLFS\Batch\Response\UnknownOperationException;
@@ -69,7 +68,7 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
 

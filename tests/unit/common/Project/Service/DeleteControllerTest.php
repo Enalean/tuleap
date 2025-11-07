@@ -25,7 +25,6 @@ namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Service;
@@ -47,7 +46,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectRetriever&MockObject $project_retriever;
     private CSRFSynchronizerToken&MockObject $csrf_token;
     private ServiceManager&MockObject $service_manager;
-    private HTTPRequest&MockObject $request;
+    private \Tuleap\HTTPRequest&MockObject $request;
     private BaseLayout&MockObject $layout;
     private Project $project;
     private int $project_id;
@@ -74,7 +73,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);
         $this->csrf_token->expects($this->once())->method('check');
-        $this->request = $this->createMock(HTTPRequest::class);
+        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->request
             ->expects($this->once())
             ->method('getCurrentUser')

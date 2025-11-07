@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Repository\Settings;
 
-use HTTPRequest;
 use Tuleap\Git\RouterLink;
 
 class CITokenRouter extends RouterLink
@@ -37,7 +36,7 @@ class CITokenRouter extends RouterLink
     }
 
     #[\Override]
-    public function process(HTTPRequest $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         switch ($request->get('action')) {
             case 'generate-ci-token':

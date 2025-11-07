@@ -267,7 +267,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function fakeGroupIdIntoHTTPParams($group_id)
     {
         $_REQUEST['group_id']        = $_GET['group_id'] = $group_id;
-        $request                     = HTTPRequest::instance();
+        $request                     = \Tuleap\HTTPRequest::instance();
         $request->params['group_id'] = $_REQUEST['group_id'];
     }
 

@@ -1184,7 +1184,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $params === ['action', 'group_id', 'repo_id']
                 && in_array($query['action'], ['display-repository-delete', 'hooks-config', 'display-immutable-tag', 'access-control'], true)
             )
-            || HTTPRequest::instance()->exist('root');
+            || \Tuleap\HTTPRequest::instance()->exist('root');
     }
 
     #[ListeningToEventClass]

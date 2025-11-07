@@ -77,7 +77,7 @@ class Tracker_DateReminderFactory
         return $reminders;
     }
 
-    public function addNewReminder(HTTPRequest $request): bool
+    public function addNewReminder(\Tuleap\HTTPRequest $request): bool
     {
         try {
             $fieldId                 = $this->date_reminder_renderer->validateFieldId($request);
@@ -195,11 +195,11 @@ class Tracker_DateReminderFactory
     /**
      * Edit a given date reminder
      *
-     * @param HTTPRequest $request Reminder edit request
+     * @param \Tuleap\HTTPRequest $request Reminder edit request
      *
      * @return bool
      */
-    public function editTrackerReminder(Tracker_DateReminder $reminder, HTTPRequest $request)
+    public function editTrackerReminder(Tracker_DateReminder $reminder, \Tuleap\HTTPRequest $request)
     {
         try {
             $notificationType        = $this->date_reminder_renderer->validateNotificationType($request);

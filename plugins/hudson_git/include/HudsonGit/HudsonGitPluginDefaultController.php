@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit;
 
-use HTTPRequest;
 use Tuleap\HudsonGit\Hook\HookController;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -46,7 +45,7 @@ class HudsonGitPluginDefaultController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $action = $request->get('action');
 

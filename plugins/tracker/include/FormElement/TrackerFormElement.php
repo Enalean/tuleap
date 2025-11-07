@@ -26,7 +26,6 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
-use HTTPRequest;
 use PermissionsManager;
 use PFUser;
 use ProjectHistoryDao;
@@ -278,7 +277,7 @@ abstract class TrackerFormElement extends ProvideFactoryButtonInformation implem
      * Process the request
      *
      * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
-     * @param HTTPRequest $request The data coming from the user
+     * @param \Tuleap\HTTPRequest $request The data coming from the user
      * @param PFUser $current_user The user who mades the request
      *
      * @return void

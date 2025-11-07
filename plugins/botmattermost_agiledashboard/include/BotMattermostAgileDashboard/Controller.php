@@ -23,7 +23,6 @@ namespace Tuleap\BotMattermostAgileDashboard;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
-use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -43,7 +42,7 @@ class Controller
     private NotificationCreator $notification_creator;
 
     public function __construct(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         CSRFSynchronizerToken $csrf,
         Factory $bot_agiledashboard_factory,
         BotFactory $bot_factory,

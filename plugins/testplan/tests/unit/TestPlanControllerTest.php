@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan;
 
-use HTTPRequest;
 use Project;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
@@ -57,7 +56,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private mixed $user;
     /**
-     * @var HTTPRequest&\PHPUnit\Framework\MockObject\MockObject
+     * @var \Tuleap\HTTPRequest&\PHPUnit\Framework\MockObject\MockObject
      */
     private mixed $request;
     /**
@@ -88,7 +87,7 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->renderer                  = $this->createMock(TemplateRenderer::class);
 
         $this->user    = $this->createMock(\PFUser::class);
-        $this->request = $this->createMock(HTTPRequest::class);
+        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->request->method('getCurrentUser')->willReturn($this->user);
 
         $header_options_provider = $this->createMock(TestPlanHeaderOptionsProvider::class);

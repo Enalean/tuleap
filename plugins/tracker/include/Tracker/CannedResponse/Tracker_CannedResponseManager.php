@@ -34,7 +34,7 @@ class Tracker_CannedResponseManager //phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $tracker_manager, HTTPRequest $request, PFUser $current_user): void
+    public function process(TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         if (! $request->isPost()) {
             if ($request->get('edit') !== false) {

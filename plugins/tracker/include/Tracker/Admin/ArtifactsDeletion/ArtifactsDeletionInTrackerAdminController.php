@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\ArtifactsDeletion;
 
-use HTTPRequest;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -42,7 +41,7 @@ final readonly class ArtifactsDeletionInTrackerAdminController implements Dispat
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker      = $this->retrieve_tracker->getTrackerById($variables['tracker_id']);
         $current_user = $request->getCurrentUser();

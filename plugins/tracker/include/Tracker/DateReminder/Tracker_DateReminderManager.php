@@ -82,7 +82,7 @@ class Tracker_DateReminderManager
         }
     }
 
-    public function processReminderUpdate(HTTPRequest $request)
+    public function processReminderUpdate(\Tuleap\HTTPRequest $request)
     {
         if (! $request->get('submit') && ! $request->get('confirm_delete')) {
             return;

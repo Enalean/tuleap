@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
-use HTTPRequest;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Layout\BaseLayout;
@@ -55,7 +54,7 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         (
             new DocmanHTTPControllerProxy(
@@ -72,7 +71,7 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
     }
 
     #[\Override]
-    public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
+    public function isInABurningParrotPage(\Tuleap\HTTPRequest $request, array $variables): bool
     {
         return in_array(
             $request->get('action'),

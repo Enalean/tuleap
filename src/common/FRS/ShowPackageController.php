@@ -26,7 +26,6 @@ use FileModuleMonitorFactory;
 use FRSPackageFactory;
 use FRSRelease;
 use FRSReleaseFactory;
-use HTTPRequest;
 use Project;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
@@ -68,7 +67,7 @@ final readonly class ShowPackageController implements DispatchableWithBurningPar
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $user = $request->getCurrentUser();
 

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin;
 
-use HTTPRequest;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Export\Pdf\Template\Identifier\InvalidPdfTemplateIdentifierStringException;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
@@ -54,7 +53,7 @@ final readonly class DisplayPdfTemplateDuplicateFormController implements Dispat
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         $this->can_manage_templates_checker->checkUserCanManageTemplates($current_user);

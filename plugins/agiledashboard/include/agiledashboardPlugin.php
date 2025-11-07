@@ -604,7 +604,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function tracker_event_include_css_file($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($request->get('pane') === CardwallPaneInfo::IDENTIFIER || $this->isHomepageURL($request)) {
             $params['include_tracker_css_file'] = true;
         }
@@ -787,7 +787,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return $this->currentRequestIsForPlugin();
     }
 
-    private function isHomepageURL(HTTPRequest $request)
+    private function isHomepageURL(\Tuleap\HTTPRequest $request)
     {
         return (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/?group_id=') === 0
             && $request->get('action') === false
@@ -906,7 +906,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
      */
     public function import_xml_project_cardwall_done($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('action', 'import');
         $request->set('xml_content', $params['xml_content']);
         $request->set('mapping', $params['mapping']);
@@ -1020,7 +1020,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     #[ListeningToEventClass]
     public function cardwallUseStandardJavascriptEvent(CardwallUseStandardJavascriptEvent $event): void
     {
-        $request              = HTTPRequest::instance();
+        $request              = \Tuleap\HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboardPaneInfoIdentifier();
         if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane'))) {
             $event->use_standard_javascript = false;
@@ -1247,7 +1247,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             return;
         }
 
-        $ugroup_id = HTTPRequest::instance()->get('group');
+        $ugroup_id = \Tuleap\HTTPRequest::instance()->get('group');
 
         $ugroup_manager = new UGroupManager();
         $ugroup         = $ugroup_manager->getUGroup($project, $ugroup_id);
@@ -1409,7 +1409,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getMilestonePaneFactory(): PlanningMilestonePaneFactory
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $planning_factory    = $this->getPlanningFactory();
         $milestone_factory   = $this->getMilestoneFactory();

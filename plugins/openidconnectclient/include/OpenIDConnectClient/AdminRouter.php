@@ -22,7 +22,6 @@ namespace Tuleap\OpenIDConnectClient;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OpenIDConnectClient\Administration\Controller;
@@ -47,7 +46,7 @@ class AdminRouter implements DispatchableWithRequest, DispatchableWithBurningPar
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user, $layout);

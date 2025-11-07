@@ -25,7 +25,6 @@
 namespace Tuleap\Project\Admin\Navigation;
 
 use EventManager;
-use HTTPRequest;
 use Project;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 
@@ -52,7 +51,7 @@ class HeaderNavigationDisplayer
 
         $template_path = __DIR__ . '/../../../../templates/project';
 
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $builder  = new NavigationPresenterBuilder(
             new NavigationPermissionsDropdownPresenterBuilder(),

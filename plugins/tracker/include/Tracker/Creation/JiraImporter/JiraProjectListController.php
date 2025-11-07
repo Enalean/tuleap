@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use HTTPRequest;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Layout\BaseLayout;
@@ -69,7 +68,7 @@ class JiraProjectListController implements DispatchableWithRequest, Dispatchable
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
         $user    = $request->getCurrentUser();

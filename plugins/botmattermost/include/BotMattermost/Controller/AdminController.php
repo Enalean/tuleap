@@ -21,7 +21,6 @@
 namespace Tuleap\BotMattermost\Controller;
 
 use Exception;
-use HTTPRequest;
 use CSRFSynchronizerToken;
 use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
@@ -75,7 +74,7 @@ class AdminController
         }
     }
 
-    public function addBot(HTTPRequest $request, BaseLayout $response)
+    public function addBot(\Tuleap\HTTPRequest $request, BaseLayout $response)
     {
         $this->csrf->check();
         if ($this->validPostArgument($request, $response)) {
@@ -95,7 +94,7 @@ class AdminController
         $this->redirectToIndex($response);
     }
 
-    public function deleteBot(HTTPRequest $request, BaseLayout $response)
+    public function deleteBot(\Tuleap\HTTPRequest $request, BaseLayout $response)
     {
         $this->csrf->check();
         $bot_id = $request->get('bot_id');
@@ -111,7 +110,7 @@ class AdminController
         $this->redirectToIndex($response);
     }
 
-    public function editBot(HTTPRequest $request, BaseLayout $response)
+    public function editBot(\Tuleap\HTTPRequest $request, BaseLayout $response)
     {
         $this->csrf->check();
         $id = $request->get('bot_id');
@@ -131,7 +130,7 @@ class AdminController
         $this->redirectToIndex($response);
     }
 
-    private function validPostArgument(HTTPRequest $request, BaseLayout $response)
+    private function validPostArgument(\Tuleap\HTTPRequest $request, BaseLayout $response)
     {
         if (! $request->existAndNonEmpty('bot_name') || ! $request->existAndNonEmpty('webhook_url')) {
             $response->addFeedback(Feedback::ERROR, dgettext('tuleap-botmattermost', 'The name and the webhook URL input must be filled'));

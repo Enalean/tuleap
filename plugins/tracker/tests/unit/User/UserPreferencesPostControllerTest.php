@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\User;
 
 use Codendi_Mail_Interface;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -49,7 +48,7 @@ final class UserPreferencesPostControllerTest extends TestCase
         $this->preferences_store = new StoreUserPreferenceStub();
     }
 
-    private function processRequest(HTTPRequest $request, LayoutInspector $inspector, PFUser $user): void
+    private function processRequest(\Tuleap\HTTPRequest $request, LayoutInspector $inspector, PFUser $user): void
     {
         $controller = new UserPreferencesPostController(
             ProvideAndRetrieveUserStub::build($user),

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field;
 
-use HTTPRequest;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
@@ -462,7 +461,7 @@ final class ListFieldTest extends TestCase
         $layout = $this->createMock(Tracker_IDisplayTrackerLayout::class);
         $user   = UserTestBuilder::buildWithDefaults();
 
-        $request = $this->createStub(HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('get')->willReturn('stuff');
         $request->method('isPost')->willReturn(false);
 
@@ -475,7 +474,7 @@ final class ListFieldTest extends TestCase
         $layout = $this->createMock(Tracker_IDisplayTrackerLayout::class);
         $user   = UserTestBuilder::buildWithDefaults();
 
-        $request = $this->createStub(HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('get')->willReturn('get-values');
         $request->method('isPost')->willReturn(false);
 

@@ -25,7 +25,7 @@ require_once __DIR__ . '/../export/project_export_utils.php';
 $GLOBALS['HTML']->includeCalendarScripts();
 
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();

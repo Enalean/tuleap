@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
@@ -45,7 +44,7 @@ class Router implements DispatchableWithRequestNoAuthz
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $action = $request->get('action');
 

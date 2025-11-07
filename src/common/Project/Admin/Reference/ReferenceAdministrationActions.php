@@ -24,7 +24,6 @@ namespace Tuleap\Project\Admin\Reference;
 use Actions;
 use ArtifactGroupListDao;
 use CodendiDataAccess;
-use HTTPRequest;
 use Reference;
 use ReferenceManager;
 use Tuleap\Reference\CrossReferencesDao;
@@ -41,7 +40,7 @@ class ReferenceAdministrationActions extends Actions
     // Create a new reference
     public function do_create() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         // Sanity check
         if (
             (! $request->get('group_id'))
@@ -114,7 +113,7 @@ class ReferenceAdministrationActions extends Actions
     // Edit an existing reference
     public function do_edit() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         // Sanity check
         if (
             (! $request->get('group_id'))
@@ -218,7 +217,7 @@ class ReferenceAdministrationActions extends Actions
     // WARNING: If it is a system reference, delete all occurences of the reference!
     public function do_delete() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         // Sanity check
         if (
             (! $request->get('group_id'))

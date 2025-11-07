@@ -41,7 +41,7 @@ class PullrequestDisplayer
     ) {
     }
 
-    public function display(\HTTPRequest $request, BaseLayout $layout): void
+    public function display(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         $repository = $this->repository_factory->getRepositoryById($request->getValidated('repo_id', 'uint', 0));
         if (! $repository) {

@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall\OnTop\Config\Command;
 
 use Cardwall_OnTop_Config_Command_EnableCardwallOnTop;
 use Cardwall_OnTop_Dao;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -52,7 +51,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends TestCa
 
     public function testItEnablesIfItIsNotAlreadyTheCase(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('cardwall_on_top', '1');
         $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(false);
         $this->dao->expects($this->once())->method('enable')->with($this->tracker_id);
@@ -62,7 +61,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends TestCa
 
     public function testItDoesNotEnableIfItIsNotAlreadyTheCase(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('cardwall_on_top', '1');
         $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(true);
         $this->dao->expects($this->never())->method('enable');
@@ -72,7 +71,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends TestCa
 
     public function testItDisablesIfItIsNotAlreadyTheCase(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('cardwall_on_top', '0');
         $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(true);
         $this->dao->expects($this->once())->method('disable')->with($this->tracker_id);
@@ -82,7 +81,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends TestCa
 
     public function testItDoesNotDisableIfItIsNotAlreadyTheCase(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('cardwall_on_top', '0');
         $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(false);
         $this->dao->expects($this->never())->method('disable');

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
-use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
@@ -53,7 +52,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->prometheus->increment(
             'plugin_onlyoffice_open_document_total',

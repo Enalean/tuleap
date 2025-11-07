@@ -23,7 +23,6 @@ namespace Tuleap\Admin\ProjectCreation;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Request\DispatchableWithRequest;
@@ -40,7 +39,7 @@ class WebhooksUpdateController implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

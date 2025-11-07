@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
-use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\MediawikiStandalone\Instance\CheckOngoingInitializationStatus;
@@ -50,7 +49,7 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
      * @throws \Tuleap\Request\NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
 

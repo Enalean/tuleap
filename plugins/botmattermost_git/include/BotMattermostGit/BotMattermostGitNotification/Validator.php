@@ -25,7 +25,6 @@ use Exception;
 use Feedback;
 use GitRepository;
 use GitRepositoryFactory;
-use HTTPRequest;
 use Tuleap\BotMattermost\Bot\BotValidityChecker;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
 use Valid_UInt;
@@ -39,7 +38,7 @@ class Validator
 
     public function isValid(
         CSRFSynchronizerToken $csrf,
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         GitRepositoryFactory $repository_factory,
         $action,
     ) {
@@ -72,7 +71,7 @@ class Validator
         return false;
     }
 
-    private function isValidAddAction(HTTPRequest $request, GitRepository $repository)
+    private function isValidAddAction(\Tuleap\HTTPRequest $request, GitRepository $repository)
     {
         if (
             $request->existAndNonEmpty('bot_id') &&
@@ -88,7 +87,7 @@ class Validator
         return false;
     }
 
-    private function isValidEditAction(HTTPRequest $request)
+    private function isValidEditAction(\Tuleap\HTTPRequest $request)
     {
         if ($request->exist('channels')) {
             return true;

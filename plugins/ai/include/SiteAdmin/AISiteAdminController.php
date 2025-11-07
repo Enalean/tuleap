@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\AI\SiteAdmin;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Override;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\AI\Mistral\AuthenticationFailure;
@@ -50,7 +49,7 @@ final readonly class AISiteAdminController implements DispatchableWithRequest, D
     }
 
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $this->current_user_provider->getCurrentUser();
         if (! $current_user->isSuperUser()) {

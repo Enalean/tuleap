@@ -546,7 +546,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     private function isInTrackerAdmin(): bool
     {
         return in_array(
-            HTTPRequest::instance()->get('func'),
+            \Tuleap\HTTPRequest::instance()->get('func'),
             [
                 'admin-canned',
                 'admin-hierarchy',
@@ -1860,7 +1860,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $ugroup_manager
         );
 
-        $request            = HTTPRequest::instance();
+        $request            = \Tuleap\HTTPRequest::instance();
         $selected_ugroup_id = $event->getSelectedUGroupId();
         $presenter          = $presenter_builder->buildPresenter(
             $request->getProject(),

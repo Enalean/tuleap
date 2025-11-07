@@ -27,7 +27,6 @@ use CSRFSynchronizerToken;
 use EventManager;
 use Exception;
 use Feedback;
-use HTTPRequest;
 use PasswordHandlerFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use RandomNumberGenerator;
@@ -117,7 +116,7 @@ final class UpdatePasswordController implements DispatchableWithRequest
      * @inheritDoc
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

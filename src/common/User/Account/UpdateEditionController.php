@@ -25,7 +25,6 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -47,7 +46,7 @@ class UpdateEditionController implements DispatchableWithRequest
      * @inheritDoc
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {
@@ -61,7 +60,7 @@ class UpdateEditionController implements DispatchableWithRequest
         $layout->redirect(DisplayEditionController::URL);
     }
 
-    private function updatePreferences(HTTPRequest $request, BaseLayout $layout, PFUser $user): void
+    private function updatePreferences(\Tuleap\HTTPRequest $request, BaseLayout $layout, PFUser $user): void
     {
         $text_default_format = $user->getPreference(PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT);
         $csv_separator       = $user->getPreference(PFUser::PREFERENCE_NAME_CSV_SEPARATOR);

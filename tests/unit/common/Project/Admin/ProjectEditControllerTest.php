@@ -24,7 +24,6 @@ namespace Tuleap\Project\Admin;
 
 use EventManager;
 use Feedback;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectHistoryDao;
@@ -83,7 +82,7 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateProjectStatus(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = self::exactly(2);
         $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {
@@ -130,7 +129,7 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateProjectUnixNameDoesntWorkIfUnixNameCantBeEdited(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = self::exactly(2);
         $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {
@@ -194,7 +193,7 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withId(111)
             ->withStatusDeleted()
             ->build();
-        $request       = $this->createMock(HTTPRequest::class);
+        $request       = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher       = $this->exactly(2);
         $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {
@@ -239,7 +238,7 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withId(111)
             ->withStatusDeleted()
             ->build();
-        $request       = $this->createMock(HTTPRequest::class);
+        $request       = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher       = $this->exactly(2);
         $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {

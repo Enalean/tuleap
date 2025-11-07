@@ -24,5 +24,5 @@ namespace Tuleap\AgileDashboard\Event;
 
 interface IScrumAdminSectionControllers
 {
-    public function onSubmitCallback(\HTTPRequest $request): void;
+    public function onSubmitCallback(\Tuleap\HTTPRequest $request): void;
 }

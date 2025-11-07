@@ -22,7 +22,6 @@ namespace Tuleap\SVN\ViewVC;
 
 use Codendi_HTMLPurifier;
 use CrossReferenceFactory;
-use HTTPRequest;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -44,7 +43,7 @@ class ViewVCProxy
     ) {
     }
 
-    private function displayViewVcHeader(HTTPRequest $request)
+    private function displayViewVcHeader(\Tuleap\HTTPRequest $request)
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
 
@@ -78,7 +77,7 @@ class ViewVCProxy
     /**
      * @return bool
      */
-    private function isViewingPatch(HTTPRequest $request)
+    private function isViewingPatch(\Tuleap\HTTPRequest $request)
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
         return strpos($request_uri, 'view=patch') !== false;
@@ -87,20 +86,20 @@ class ViewVCProxy
     /**
      * @return bool
      */
-    private function isCheckoutingFile(HTTPRequest $request)
+    private function isCheckoutingFile(\Tuleap\HTTPRequest $request)
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
         return strpos($request_uri, 'view=co') !== false;
     }
 
-    private function buildQueryString(HTTPRequest $request)
+    private function buildQueryString(\Tuleap\HTTPRequest $request)
     {
         parse_str($request->getFromServer('QUERY_STRING'), $query_string_parts);
         unset($query_string_parts['roottype']);
         return http_build_query($query_string_parts);
     }
 
-    private function escapeStringFromServer(HTTPRequest $request, $key)
+    private function escapeStringFromServer(\Tuleap\HTTPRequest $request, $key)
     {
         $string = $request->getFromServer($key);
 
@@ -167,7 +166,7 @@ class ViewVCProxy
         return '/usr/bin/python3 ' . __DIR__ . '/../../../bin/viewvc.cgi';
     }
 
-    public function getContent(HTTPRequest $request, CurrentUserWithLoggedInInformation $current_user, Repository $repository, string $path)
+    public function getContent(\Tuleap\HTTPRequest $request, CurrentUserWithLoggedInInformation $current_user, Repository $repository, string $path)
     {
         if (! $current_user->is_logged_in) {
             return dgettext('tuleap-svn', 'You can not browse the repository without being logged.');

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\DefaultSettings;
 
 use GitPlugin;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
 use Tuleap\Git\Tests\Stub\VerifyUserIsGitAdministratorStub;
@@ -58,7 +57,7 @@ final class DefaultSettingsControllerTest extends TestCase
         $this->project_history_dao = $this->createMock(ProjectHistoryDao::class);
     }
 
-    private function process(HTTPRequest $request): void
+    private function process(\Tuleap\HTTPRequest $request): void
     {
         (new DefaultSettingsController(
             $this->merge_setting_dao,

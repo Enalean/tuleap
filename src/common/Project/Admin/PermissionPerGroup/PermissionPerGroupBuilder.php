@@ -21,7 +21,6 @@
 namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
 use ForgeConfig;
-use HTTPRequest;
 use Project;
 use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
@@ -42,7 +41,7 @@ class PermissionPerGroupBuilder
     /**
      * @return array
      */
-    public function buildUGroup(Project $project, HTTPRequest $request)
+    public function buildUGroup(Project $project, \Tuleap\HTTPRequest $request)
     {
         $selected_ugroup_id = $request->get('group');
 

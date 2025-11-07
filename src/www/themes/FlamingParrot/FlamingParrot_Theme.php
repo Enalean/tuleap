@@ -105,7 +105,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $this->renderer         = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $license_builder        = CachedLicenseBuilder::instance();
         $this->tuleap_version   = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense($license_builder));
-        $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+        $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(\Tuleap\HTTPRequest::instance());
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
         $this->feedback_builder      = new FeedbackBuilder($license_builder, UserManager::instance()->getCurrentUser(), SystemClock::fromSystemTimezone());
@@ -374,7 +374,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $switch_to_presenter_builder = new SwitchToPresenterBuilder(
             $project_presenters_builder,
-            new \Tuleap\Layout\SearchFormPresenterBuilder($event_manager, HTTPRequest::instance())
+            new \Tuleap\Layout\SearchFormPresenterBuilder($event_manager, \Tuleap\HTTPRequest::instance())
         );
 
         $switch_to = $switch_to_presenter_builder->build($current_user);

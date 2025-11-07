@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermost;
 
-use HTTPRequest;
 use Override;
 use PFUser;
 use Feedback;
@@ -45,7 +44,7 @@ class Router implements DispatchableWithRequest
      * @throws \Tuleap\Request\NotFoundException
      */
     #[Override]
-    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);

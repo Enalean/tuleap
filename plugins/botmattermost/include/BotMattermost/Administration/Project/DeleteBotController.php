@@ -24,7 +24,6 @@ namespace Tuleap\BotMattermost\Administration\Project;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Override;
 use Tuleap\BotMattermost\Bot\BotDeletor;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -42,7 +41,7 @@ class DeleteBotController implements DispatchableWithRequest
     }
 
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         try {
             $bot_id = $variables['bot_id'];

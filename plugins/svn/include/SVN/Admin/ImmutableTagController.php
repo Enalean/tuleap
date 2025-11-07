@@ -26,7 +26,6 @@ namespace Tuleap\SVN\Admin;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use System_Command_CommandException;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\IncludeViteAssets;
@@ -58,7 +57,7 @@ class ImmutableTagController
         $this->immutable_tag_factory = $immutable_tag_factory;
     }
 
-    public function displayImmutableTag(ServiceSvn $service, HTTPRequest $request): void
+    public function displayImmutableTag(ServiceSvn $service, \Tuleap\HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -94,7 +93,7 @@ class ImmutableTagController
         );
     }
 
-    public function saveImmutableTag(ServiceSvn $service, HTTPRequest $request)
+    public function saveImmutableTag(ServiceSvn $service, \Tuleap\HTTPRequest $request)
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 

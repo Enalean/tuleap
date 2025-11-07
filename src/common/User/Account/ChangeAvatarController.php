@@ -24,7 +24,6 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use Feedback;
 use Gumlet\ImageResizeException;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Avatar\AvatarHashStorageDeletor;
@@ -56,7 +55,7 @@ class ChangeAvatarController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

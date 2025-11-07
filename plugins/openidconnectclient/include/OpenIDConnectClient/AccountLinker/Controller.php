@@ -22,7 +22,6 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
 use Exception;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
@@ -89,7 +88,7 @@ class Controller
         $this->event_dispatcher            = $event_dispatcher;
     }
 
-    public function showIndex(HTTPRequest $request): void
+    public function showIndex(\Tuleap\HTTPRequest $request): void
     {
         try {
             $unlinked_account = $this->unlinked_account_manager->getbyId($this->session_storage[\openidconnectclientPlugin::SESSION_LINK_ID_KEY] ?? '');
@@ -124,7 +123,7 @@ class Controller
         $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
     }
 
-    private function generateLinkToRegisterPage(HTTPRequest $request)
+    private function generateLinkToRegisterPage(\Tuleap\HTTPRequest $request)
     {
         $openid_connect_to_register_page = [
             'name'     => 'form_realname',
@@ -143,7 +142,7 @@ class Controller
         return '/account/register.php?' . http_build_query($query_parameters);
     }
 
-    public function linkExistingAccount(HTTPRequest $request): void
+    public function linkExistingAccount(\Tuleap\HTTPRequest $request): void
     {
         try {
             $unlinked_account = $this->unlinked_account_manager->getbyId($this->session_storage[\openidconnectclientPlugin::SESSION_LINK_ID_KEY] ?? '');
@@ -172,7 +171,7 @@ class Controller
         }
     }
 
-    protected function redirectAfterLogin(PFUser $user, HTTPRequest $request): void
+    protected function redirectAfterLogin(PFUser $user, \Tuleap\HTTPRequest $request): void
     {
         require_once __DIR__ . '/../../../../../src/www/include/account.php';
         \account_redirect_after_login($user, $request->get('return_to'));

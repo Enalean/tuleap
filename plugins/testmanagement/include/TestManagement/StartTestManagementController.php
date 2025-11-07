@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement;
 
 use Feedback;
-use HTTPRequest;
 use Project;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
@@ -58,7 +57,7 @@ class StartTestManagementController
         $this->transaction_executor        = $transaction_executor;
     }
 
-    public function misconfiguration(HTTPRequest $request): string
+    public function misconfiguration(\Tuleap\HTTPRequest $request): string
     {
         $current_user  = $request->getCurrentUser();
         $project_id    = (int) $request->getProject()->getID();
@@ -74,7 +73,7 @@ class StartTestManagementController
         );
     }
 
-    public function createConfig(\HTTPRequest $request): void
+    public function createConfig(\Tuleap\HTTPRequest $request): void
     {
         $this->csrf_token->check();
         $project = $request->getProject();

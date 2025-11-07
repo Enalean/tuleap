@@ -22,7 +22,6 @@
 namespace Tuleap\User\Account;
 
 use EventManager;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -56,7 +55,7 @@ final class ConfirmNewEmailController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $confirmation_hash = (string) $request->getValidated('confirm_hash', 'string', '');
         $current_user      = $request->getCurrentUser();

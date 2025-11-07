@@ -557,7 +557,7 @@ function site_project_header(Project $project, HeaderConfiguration|array $params
 
     //for dead projects must be member of admin project
     if (! $project->isActive()) {
-        HTTPRequest::instance()->checkUserIsSuperUser();
+        \Tuleap\HTTPRequest::instance()->checkUserIsSuperUser();
     }
 
     if (is_array($params)) {

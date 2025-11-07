@@ -20,7 +20,6 @@
 
 namespace Tuleap\FRS;
 
-use HTTPRequest;
 use Project;
 use Feedback;
 use UserManager;
@@ -40,7 +39,7 @@ class FRSRouter
      * Routes the request to the correct controller
      * @return void
      */
-    public function route(HTTPRequest $request, Project $project)
+    public function route(\Tuleap\HTTPRequest $request, Project $project)
     {
         $user = UserManager::instance()->getCurrentUser();
         if (! $request->get('action')) {

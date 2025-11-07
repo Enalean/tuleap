@@ -33,7 +33,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
     {
         parent::setUp();
 
-        $this->request       = $this->createMock(HTTPRequest::class);
+        $this->request       = $this->createMock(\Tuleap\HTTPRequest::class);
         $GLOBALS['Language'] = $this->createMock(BaseLanguage::class);
         $GLOBALS['Language']->method('getText');
 

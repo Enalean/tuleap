@@ -23,7 +23,6 @@ namespace Tuleap\PullRequest\RepoManagement;
 use GitPermissionsManager;
 use GitRepository;
 use GitRepositoryFactory;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
@@ -55,7 +54,7 @@ class RepoManagementController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getProject()->usesService(\gitPlugin::SERVICE_SHORTNAME)) {
             throw new \Tuleap\Request\NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
@@ -77,7 +76,7 @@ class RepoManagementController implements DispatchableWithRequest
      * @return GitRepository
      * @throws \Tuleap\Request\ForbiddenException
      */
-    protected function getRepositoryFromRequest(HTTPRequest $request)
+    protected function getRepositoryFromRequest(\Tuleap\HTTPRequest $request)
     {
         $repository = $this->repository_factory->getRepositoryById($request->get('repository_id'));
         if (! $this->canUserAdministrateRepository($request->getCurrentUser(), $repository)) {
@@ -97,7 +96,7 @@ class RepoManagementController implements DispatchableWithRequest
             $repository->belongsTo($user);
     }
 
-    private function getPaneURL(HTTPRequest $request, GitRepository $repository): string
+    private function getPaneURL(\Tuleap\HTTPRequest $request, GitRepository $repository): string
     {
         return GIT_BASE_URL . '/?' . http_build_query(
             [

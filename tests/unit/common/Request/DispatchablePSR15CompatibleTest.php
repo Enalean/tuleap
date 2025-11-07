@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use HTTPRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -84,7 +83,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
         ))->willReturn(true);
 
         $dispatchable->process(
-            $this->createMock(HTTPRequest::class),
+            $this->createMock(\Tuleap\HTTPRequest::class),
             $base_layout,
             ['front_controller_attribute' => 'front_controller_param']
         );
@@ -105,7 +104,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->expectException(PSR15PipelineResponseEmissionException::class);
         $dispatchable->process(
-            $this->createMock(HTTPRequest::class),
+            $this->createMock(\Tuleap\HTTPRequest::class),
             $this->createMock(BaseLayout::class),
             []
         );

@@ -98,7 +98,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //
     /**
      * Fetch content of the renderer
      */
-    abstract public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string;
+    abstract public function fetch(array $matching_ids, \Tuleap\HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string;
 
     /**
      * Adds assets to the current page
@@ -110,7 +110,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //
 
     /**
      * Process the request
-     * @param HTTPRequest $request
+     * @param \Tuleap\HTTPRequest $request
      */
     abstract public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user);
 

@@ -21,7 +21,6 @@
 
 namespace Tuleap\Admin;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -37,7 +36,7 @@ class ProjectCreationModerationUpdateController implements DispatchableWithReque
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();
@@ -61,7 +60,7 @@ class ProjectCreationModerationUpdateController implements DispatchableWithReque
         $layout->redirect('/admin/project-creation/moderation');
     }
 
-    private function getInputNotLowerThanMinusOne(HTTPRequest $request, $variable)
+    private function getInputNotLowerThanMinusOne(\Tuleap\HTTPRequest $request, $variable)
     {
         return $this->sanitizeInteger($request->getValidated($variable, 'int', -1));
     }

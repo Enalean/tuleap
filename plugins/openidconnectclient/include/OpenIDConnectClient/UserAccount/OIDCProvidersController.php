@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\UserAccount;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
@@ -93,7 +92,7 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
      * @inheritDoc
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

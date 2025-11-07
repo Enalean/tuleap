@@ -54,7 +54,7 @@ use Tuleap\WebAuthn\Controllers\DeleteSourceController;
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 $site_administrator = $request->getCurrentUser();
 

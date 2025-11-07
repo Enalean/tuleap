@@ -21,7 +21,6 @@
 namespace Tuleap\CrossTracker\Widget;
 
 use Codendi_Request;
-use HTTPRequest;
 use LogicException;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -66,7 +65,7 @@ class CrossTrackerSearchWidget extends Widget
             __DIR__ . '/../../templates/widgets'
         );
 
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $user    = $request->getCurrentUser();
 
         $is_admin = $this->permission_checker->isUserWidgetAdmin($user, $this->content_id);

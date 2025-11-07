@@ -27,7 +27,7 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 
 require_once __DIR__ . '/../../include/pre.php';
 
-$request         = HTTPRequest::instance();
+$request         = \Tuleap\HTTPRequest::instance();
 $project_manager = ProjectManager::instance();
 
 $valid_group_id = new Valid_GroupId();

@@ -20,7 +20,6 @@
 
 namespace Tuleap\User;
 
-use HTTPRequest;
 use PFUser;
 use RandomNumberGenerator;
 use SessionDao;
@@ -91,7 +90,7 @@ class SessionManager
      * @return string
      * @throws SessionNotCreatedException
      */
-    public function createSession(PFUser $user, HTTPRequest $request, $current_time)
+    public function createSession(PFUser $user, \Tuleap\HTTPRequest $request, $current_time)
     {
         $token        = $this->random_number_generator->getNumber();
         $hashed_token = hash(self::HASH_ALGORITHM, $token);

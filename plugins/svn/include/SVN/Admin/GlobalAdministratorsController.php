@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\Admin;
 
-use HTTPRequest;
 use Project;
 use ProjectUGroup;
 use Tuleap\Layout\BaseLayout;
@@ -66,7 +65,7 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
         $service = $project->getService(\SvnPlugin::SERVICE_SHORTNAME);

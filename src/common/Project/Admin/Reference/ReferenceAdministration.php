@@ -22,14 +22,13 @@
 namespace Tuleap\Project\Admin\Reference;
 
 use Controler;
-use HTTPRequest;
 
 class ReferenceAdministration extends Controler
 {
     #[\Override]
     public function process(): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $project = $request->getProject();
 
         session_require(['group' => $project->getID(), 'admin_flags' => 'A']);

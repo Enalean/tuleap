@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall\OnTop\Config\Command;
 
 use Cardwall_OnTop_ColumnMappingFieldDao;
 use Cardwall_OnTop_Config_Command_CreateMappingField;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -53,7 +52,7 @@ final class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends TestCas
 
     public function testItCreatesANewMappingField(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('add_mapping_on', '42');
         $this->dao->expects($this->once())->method('create')->with($this->tracker_id, 42, null);
         $this->command->execute($request);

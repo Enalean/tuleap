@@ -20,7 +20,6 @@
 namespace Tuleap\Tracker\FormElement\View\Admin;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use TrackerManager;
 
 /**
@@ -47,9 +46,9 @@ class UpdateVisitorAdminView extends VisitorAdminView
      * Display the form to administrate the element
      *
      * @param TrackerManager $tracker_manager The tracker manager
-     * @param HTTPRequest $request The data coming from the user
+     * @param \Tuleap\HTTPRequest $request The data coming from the user
      */
-    public function display(TrackerManager $tracker_manager, HTTPRequest $request, ?CSRFSynchronizerToken $csrf_token = null): void
+    public function display(TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, ?CSRFSynchronizerToken $csrf_token = null): void
     {
         $label = $this->element->getLabel();
         $title = sprintf(dgettext('tuleap-tracker', 'Update Field \'%1$s\''), $label);

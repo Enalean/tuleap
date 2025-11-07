@@ -97,7 +97,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
     }
 
     #[\Override]
-    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
         if (! $this->permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $request->getCurrentUser())) {

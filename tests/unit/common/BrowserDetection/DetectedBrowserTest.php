@@ -137,7 +137,7 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesNotIdentifyAnythingWhenNoUserAgentHeaderIsSet(): void
     {
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_USER_AGENT')->willReturn(false);
 
         $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
@@ -151,7 +151,7 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildDetectedBrowserFromSpecificUserAgentString(string $user_agent): DetectedBrowser
     {
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_USER_AGENT')->willReturn($user_agent);
 
         return DetectedBrowser::detectFromTuleapHTTPRequest($request);

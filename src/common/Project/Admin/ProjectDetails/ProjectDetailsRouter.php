@@ -24,8 +24,6 @@
 
 namespace Tuleap\Project\Admin\ProjectDetails;
 
-use HTTPRequest;
-
 class ProjectDetailsRouter
 {
     /**
@@ -39,7 +37,7 @@ class ProjectDetailsRouter
         $this->project_details_controller = $project_details_controller;
     }
 
-    public function route(HTTPRequest $request)
+    public function route(\Tuleap\HTTPRequest $request)
     {
         if ($request->isPost()) {
             $this->project_details_controller->update($request);
@@ -49,7 +47,7 @@ class ProjectDetailsRouter
         $this->display($request);
     }
 
-    private function display(HTTPRequest $request)
+    private function display(\Tuleap\HTTPRequest $request)
     {
         $this->project_details_controller->display($request);
     }

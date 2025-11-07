@@ -33,7 +33,7 @@ use Tuleap\Project\Label\LabelsManagementURLBuilder;
 require_once __DIR__ . '/../../include/pre.php';
 
 $event_manager = EventManager::instance();
-$request       = HTTPRequest::instance();
+$request       = \Tuleap\HTTPRequest::instance();
 $project       = $request->getProject();
 session_require(['group' => $project->getID(), 'admin_flags' => 'A']);
 

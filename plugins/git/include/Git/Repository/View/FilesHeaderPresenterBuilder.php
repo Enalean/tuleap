@@ -22,7 +22,6 @@ namespace Tuleap\Git\Repository\View;
 
 use Git_GitRepositoryUrlManager;
 use GitRepository;
-use HTTPRequest;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Ref;
 use Tuleap\Git\GitPHP\RepositoryAccessException;
@@ -59,7 +58,7 @@ class FilesHeaderPresenterBuilder
      *
      * @return FilesHeaderPresenter
      */
-    public function build(HTTPRequest $request, GitRepository $repository)
+    public function build(\Tuleap\HTTPRequest $request, GitRepository $repository)
     {
         $repository_url = $this->url_manager->getRepositoryBaseUrl($repository);
 
@@ -112,7 +111,7 @@ class FilesHeaderPresenterBuilder
      *
      * @return array [string, bool]
      */
-    private function getHeadNameForCurrentCommit(HTTPRequest $request, Commit $commit)
+    private function getHeadNameForCurrentCommit(\Tuleap\HTTPRequest $request, Commit $commit)
     {
         if (empty($commit->GetHeads()) && empty($commit->GetTags())) {
             return [$commit->GetHash(), false];
@@ -169,7 +168,7 @@ class FilesHeaderPresenterBuilder
      *
      * @return array|null
      */
-    private function searchRequestedRef(HTTPRequest $request, Commit $commit)
+    private function searchRequestedRef(\Tuleap\HTTPRequest $request, Commit $commit)
     {
         $requested_hashbase = preg_replace('%^refs/(?:tags|heads)/%', '', $request->get('hb'));
 
@@ -187,7 +186,7 @@ class FilesHeaderPresenterBuilder
     /**
      * @return array
      */
-    private function getURLParameters(HTTPRequest $request)
+    private function getURLParameters(\Tuleap\HTTPRequest $request)
     {
         $parameters         = [];
         $parameters_to_keep = ['a', 'f', 's', 'st', 'm'];

@@ -22,7 +22,6 @@
 namespace Tuleap\GitLFS\HTTP;
 
 use GitRepository;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Authentication\SplitToken\IncorrectSizeVerificationStringException;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
@@ -52,7 +51,7 @@ class LSFAPIHTTPAuthorization
         $this->split_token_unserializer = $split_token_unserializer;
     }
 
-    public function getUserFromAuthorizationToken(HTTPRequest $request, GitRepository $repository, GitLfsHTTPOperation $lfs_request): ?PFUser
+    public function getUserFromAuthorizationToken(\Tuleap\HTTPRequest $request, GitRepository $repository, GitLfsHTTPOperation $lfs_request): ?PFUser
     {
         $authorization_header = $request->getFromServer('HTTP_AUTHORIZATION');
         if ($authorization_header === false) {

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\admin\HelpDropdown;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BuildVersion\FlavorFinderFromLicense;
@@ -94,7 +93,7 @@ final class AdminReleaseNoteLinkController implements DispatchableWithRequest, D
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);

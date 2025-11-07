@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
@@ -61,7 +60,7 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
      * @throws \Tuleap\Request\ForbiddenException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         try {
             $this->permission_checker->checkUserCreateAProject($request->getCurrentUser());

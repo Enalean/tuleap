@@ -26,10 +26,10 @@ use Tuleap\Layout\BaseLayout;
 
 interface IDisplayRegisterForm
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
+    public function display(\Tuleap\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
 
     public function displayWithPossibleIssue(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         RegisterFormContext $context,
         ?RegisterFormValidationIssue $issue,

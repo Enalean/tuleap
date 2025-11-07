@@ -27,7 +27,7 @@ require_once __DIR__ . '/../../include/pre.php';
 // Inherited from old .htaccess (needed for reports, linked artifact view, etc)
 ini_set('max_execution_time', 1800);
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');

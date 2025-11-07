@@ -40,7 +40,7 @@ class AuthorizationResponse
     /**
      * @return AuthorizationResponse
      */
-    public static function buildFromHTTPRequest(\HTTPRequest $request)
+    public static function buildFromHTTPRequest(\Tuleap\HTTPRequest $request)
     {
         $code  = self::getParameterFromRequest($request, 'code');
         $state = self::getParameterFromRequest($request, 'state');
@@ -51,7 +51,7 @@ class AuthorizationResponse
     /**
      * @return string
      */
-    private static function getParameterFromRequest(\HTTPRequest $request, $parameter)
+    private static function getParameterFromRequest(\Tuleap\HTTPRequest $request, $parameter)
     {
         $value = $request->get($parameter);
         if ($value === false) {

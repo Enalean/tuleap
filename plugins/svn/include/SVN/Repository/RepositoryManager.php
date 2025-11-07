@@ -24,7 +24,6 @@ use Tuleap\SVN\BackendSVN;
 use EventManager;
 use Exception;
 use ForgeConfig;
-use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Project;
 use ProjectManager;
@@ -246,7 +245,7 @@ class RepositoryManager
     /**
      * @throws CannotFindRepositoryException
      */
-    public function getRepositoryFromPublicPath(HTTPRequest $request): Repository
+    public function getRepositoryFromPublicPath(\Tuleap\HTTPRequest $request): Repository
     {
         $path         = $request->get('root');
         $project      = $request->getProject();

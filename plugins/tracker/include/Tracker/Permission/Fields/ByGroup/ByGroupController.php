@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
-use HTTPRequest;
 use Tracker_FormElementFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
@@ -60,7 +59,7 @@ class ByGroupController implements DispatchableWithRequest, DispatchableWithBurn
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['id']);
         if (! $tracker || ! $tracker->isActive()) {
@@ -73,7 +72,7 @@ class ByGroupController implements DispatchableWithRequest, DispatchableWithBurn
         $this->display($tracker, $request, $layout);
     }
 
-    protected function display(\Tuleap\Tracker\Tracker $tracker, HTTPRequest $request, BaseLayout $layout): void
+    protected function display(\Tuleap\Tracker\Tracker $tracker, \Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         $selected_id = (int) $request->getValidated('selected_id', 'uint', 0);
 

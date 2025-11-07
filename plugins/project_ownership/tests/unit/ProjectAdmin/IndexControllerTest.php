@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectOwnership\ProjectAdmin;
 
-use HTTPRequest;
 use PFUser;
 use Project;
 use Tuleap\Layout\BaseLayout;
@@ -63,7 +62,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = $this->createMock(PFUser::class);
         $this->helper->setCallbackParams($project, $current_user);
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $layout  = $this->createMock(BaseLayout::class);
         $layout->expects($this->once())->method('addCssAsset');
         $this->presenter_builder->expects($this->once())->method('build')->with($project);

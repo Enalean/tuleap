@@ -22,7 +22,6 @@ namespace Tuleap\Git\Repository\Settings;
 
 use CSRFSynchronizerToken;
 use GitRepository;
-use HTTPRequest;
 use Tuleap\Git\CIBuilds\BuildStatusChangePermissionManager;
 use Tuleap\Git\CIBuilds\CITokenManager;
 use Tuleap\Git\GitViews\RepoManagement\Pane\CIBuilds;
@@ -49,7 +48,7 @@ class CITokenController extends SettingsController
         $this->build_status_change_manager = $build_status_change_manager;
     }
 
-    public function generateToken(HTTPRequest $request)
+    public function generateToken(\Tuleap\HTTPRequest $request)
     {
         $this->checkCSRF($request);
 
@@ -59,7 +58,7 @@ class CITokenController extends SettingsController
         $this->redirect($repository);
     }
 
-    public function setBuildStatusChangePermission(HTTPRequest $request): void
+    public function setBuildStatusChangePermission(\Tuleap\HTTPRequest $request): void
     {
         $this->checkCSRF($request);
 
@@ -74,7 +73,7 @@ class CITokenController extends SettingsController
         $this->redirect($repository);
     }
 
-    private function checkCSRF(HTTPRequest $request)
+    private function checkCSRF(\Tuleap\HTTPRequest $request)
     {
         $project_id = $request->getProject()->getID();
         $pane_url   = GIT_BASE_URL . '/?' . http_build_query([

@@ -58,11 +58,11 @@ class ProjectQuotaHtml
     /**
      * Validate project quota offset param used for display formatting.
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return int
      */
-    private function validateOffset(HTTPRequest $request)
+    private function validateOffset(\Tuleap\HTTPRequest $request)
     {
         $valid = new Valid('offset');
         $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
@@ -79,11 +79,11 @@ class ProjectQuotaHtml
     /**
      * Validate project quota filtering param used for display formatting.
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return string|null
      */
-    private function validateProjectFilter(HTTPRequest $request)
+    private function validateProjectFilter(\Tuleap\HTTPRequest $request)
     {
         $validFilter = new Valid_String('project_filter');
         $filter      = null;
@@ -96,11 +96,11 @@ class ProjectQuotaHtml
     /**
      * Validate project quota ordering params used for display formatting.
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return Array
      */
-    private function validateOrderByFilter(HTTPRequest $request)
+    private function validateOrderByFilter(\Tuleap\HTTPRequest $request)
     {
         $validSort    = new Valid_String('sort');
         $sortBy       = null;
@@ -121,7 +121,7 @@ class ProjectQuotaHtml
         return $validRequest;
     }
 
-    public function getListOfProjectQuotaPresenters(HTTPRequest $request)
+    public function getListOfProjectQuotaPresenters(\Tuleap\HTTPRequest $request)
     {
         $quotas      = [];
         $count       = 25;
@@ -206,11 +206,11 @@ class ProjectQuotaHtml
     /**
      * Handle the HTTP request
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return Void
      */
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(\Tuleap\HTTPRequest $request)
     {
         $validAction = new Valid_WhiteList('action', ['add', 'delete']);
         if ($request->valid($validAction)) {

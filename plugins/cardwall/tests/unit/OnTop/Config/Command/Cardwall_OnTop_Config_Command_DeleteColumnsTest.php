@@ -26,7 +26,6 @@ use Cardwall_OnTop_ColumnDao;
 use Cardwall_OnTop_ColumnMappingFieldDao;
 use Cardwall_OnTop_ColumnMappingFieldValueDao;
 use Cardwall_OnTop_Config_Command_DeleteColumns;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -60,7 +59,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
 
     public function testItDeletesOneColumn(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'column',
             [
@@ -76,7 +75,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
 
     public function testItDeletes2Columns(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'column',
             [
@@ -115,7 +114,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
 
     public function testItDeleteFieldMappingWhenRemoveTheLastColumn(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('column', [14 => ['label' => '']]);
         $this->field_dao->expects($this->once())->method('deleteCardwall')->with($this->tracker_id);
         $this->value_dao->expects($this->once())->method('deleteForColumn')->with($this->tracker_id, 14);
@@ -125,7 +124,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // 
 
     public function testItDeletesAllColumns(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'column',
             [

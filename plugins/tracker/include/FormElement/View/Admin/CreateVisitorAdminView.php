@@ -21,7 +21,6 @@ namespace Tuleap\Tracker\FormElement\View\Admin;
 
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use TrackerManager;
 
 /**
@@ -55,7 +54,7 @@ class CreateVisitorAdminView extends VisitorAdminView
         $this->label = $label;
     }
 
-    public function display(TrackerManager $tracker_manager, HTTPRequest $request, ?CSRFSynchronizerToken $csrf_token = null): void
+    public function display(TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, ?CSRFSynchronizerToken $csrf_token = null): void
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = 'Create a new ' . $this->label;

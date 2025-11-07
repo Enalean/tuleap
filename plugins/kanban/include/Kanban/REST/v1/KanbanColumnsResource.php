@@ -226,7 +226,7 @@ class KanbanColumnsResource
             $kanban,
             'kanban_column:edit',
             $current_user,
-            \HTTPRequest::instance(),
+            \Tuleap\HTTPRequest::instance(),
             $data
         );
     }
@@ -290,7 +290,7 @@ class KanbanColumnsResource
             $kanban,
             'kanban_column:delete',
             $current_user,
-            \HTTPRequest::instance(),
+            \Tuleap\HTTPRequest::instance(),
             $column->getId()
         );
     }

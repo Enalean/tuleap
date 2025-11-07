@@ -35,7 +35,7 @@ use Tuleap\CSRF\CSRFSigningKeyStorage;
  *
  * Then in the target page, which deals with sensitive data, check that the token is valid
  * <pre>
- *   $request = HTTPRequest::instance();
+ *   $request = \Tuleap\HTTPRequest::instance();
  *   $token = new CSRFSynchronizerToken('/path/of/my/page');
  *   $token->check();
  *   // ... continue in a safe way
@@ -104,7 +104,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
     /**
      * Redirect to somewhere else if the token in request is not valid
      *
-     * @param Codendi_Request $request     The request object, if null then use HTTPRequest
+     * @param Codendi_Request $request     The request object, if null then use \Tuleap\HTTPRequest
      * @param string          $redirect_to Url to be redirected to in case of error. if null then use $url instead. Default is null
      *
      */
@@ -112,7 +112,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
     public function check(?string $redirect_to = null, ?Codendi_Request $request = null): void
     {
         if (! $request) {
-            $request = HTTPRequest::instance();
+            $request = \Tuleap\HTTPRequest::instance();
         }
         if (! $this->isValid($request->get($this->token_name))) {
             $GLOBALS['Response']->addFeedback(

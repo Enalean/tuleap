@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\User\SSHKey;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Request\DispatchableWithRequest;
@@ -57,7 +56,7 @@ final class SSHKeyCreateController implements DispatchableWithRequest
      * @inheritDoc
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

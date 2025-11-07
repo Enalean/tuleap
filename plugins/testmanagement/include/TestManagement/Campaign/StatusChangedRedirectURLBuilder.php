@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Campaign;
 
-use HTTPRequest;
 use Project;
 
 class StatusChangedRedirectURLBuilder
 {
-    public static function buildRedirectURL(HTTPRequest $request, Project $project, int $campaign_id): string
+    public static function buildRedirectURL(\Tuleap\HTTPRequest $request, Project $project, int $campaign_id): string
     {
         $redirect_url = '/plugins/testmanagement/?group_id=' . (int) $project->getID();
         if ($request->get('milestone_id') !== false) {

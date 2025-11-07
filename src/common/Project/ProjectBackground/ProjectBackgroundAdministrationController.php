@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\ProjectBackground;
 
-use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
@@ -75,7 +74,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->addJavascriptAsset(new JavascriptAsset($this->assets, 'project/header-background-admin.js'));
 

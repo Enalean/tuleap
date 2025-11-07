@@ -23,7 +23,7 @@ require_once __DIR__ . '/pre.php';
 $csrf = new CSRFSynchronizerToken('');
 $csrf->check('/my/');
 
-$request         = HTTPRequest::instance();
+$request         = \Tuleap\HTTPRequest::instance();
 $pm              = ProjectManager::instance();
 $massmail_sender = new MassmailSender();
 

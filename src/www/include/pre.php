@@ -158,7 +158,7 @@ if (! IS_SCRIPT) {
 
 $feedback = ''; // Initialize global var
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 //Language
 if (! ForgeConfig::get('sys_lang')) {

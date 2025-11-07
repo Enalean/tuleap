@@ -22,7 +22,6 @@ namespace Tuleap\SVN\Admin;
 
 use Tuleap\Layout\BaseLayout;
 use Tuleap\SVN\SvnPermissionManager;
-use HTTPRequest;
 use CSRFSynchronizerToken;
 use Project;
 use ProjectUGroup;
@@ -46,7 +45,7 @@ class GlobalAdministratorsUpdater
     }
 
     public function saveAdminGroups(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
     ): void {
         $project = $request->getProject();

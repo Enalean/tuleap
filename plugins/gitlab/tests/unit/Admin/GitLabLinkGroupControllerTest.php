@@ -63,7 +63,7 @@ final class GitLabLinkGroupControllerTest extends TestCase
     private \Project $project;
     private ProjectByUnixNameFactory $project_factory;
     private RetrieveGroupLinkedToProjectStub $group_retriever;
-    private \HTTPRequest $request;
+    private \Tuleap\HTTPRequest $request;
     private LayoutInspector $inspector;
 
     #[\Override]
@@ -82,7 +82,7 @@ final class GitLabLinkGroupControllerTest extends TestCase
         $this->project_factory = ProjectByUnixUnixNameFactory::buildWith($this->project);
         $this->group_retriever = RetrieveGroupLinkedToProjectStub::withNoGroupLink();
 
-        $this->request   = new \HTTPRequest();
+        $this->request   = new \Tuleap\HTTPRequest();
         $this->inspector = new LayoutInspector();
     }
 

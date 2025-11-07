@@ -48,7 +48,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget //phpcs:ignore PSR1
      */
     public function __construct($owner_type, $owner_id, MinimalHudsonJobFactory $factory, HudsonJobBuilder $job_builder)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->widget_id = 'plugin_hudson_my_joblastartifacts';
             $this->group_id  = $owner_id;

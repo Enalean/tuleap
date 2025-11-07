@@ -22,7 +22,6 @@ namespace Tuleap\Project\Label;
 
 use CSRFSynchronizerToken;
 use Exception;
-use HTTPRequest;
 use ProjectHistoryDao;
 use Tuleap\Color\AllowedColorsCollection;
 
@@ -57,7 +56,7 @@ class AddController
         $this->allowed_colors = $allowed_colors;
     }
 
-    public function add(HTTPRequest $request)
+    public function add(\Tuleap\HTTPRequest $request)
     {
         $project = $request->getProject();
         $url     = $this->url_builder->getURL($project);

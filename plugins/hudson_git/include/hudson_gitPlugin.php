@@ -276,7 +276,7 @@ class hudson_gitPlugin extends Plugin
 
     public function routeGetPostLegacyController()
     {
-        $request    = HTTPRequest::instance();
+        $request    = \Tuleap\HTTPRequest::instance();
         $project_id = (int) $request->getProject()->getID();
 
         return new HudsonGitPluginDefaultController(

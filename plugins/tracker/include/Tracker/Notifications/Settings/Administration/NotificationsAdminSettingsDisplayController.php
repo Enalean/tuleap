@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
-use HTTPRequest;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
@@ -55,7 +54,7 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->getTrackerFromTrackerID($this->tracker_factory, $variables['id']);
 

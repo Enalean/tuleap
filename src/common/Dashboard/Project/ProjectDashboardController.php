@@ -26,7 +26,6 @@ use EventManager;
 use Exception;
 use Feedback;
 use ForgeConfig;
-use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectHistoryDao;
@@ -73,7 +72,7 @@ class ProjectDashboardController
     ) {
     }
 
-    public function display(HTTPRequest $request)
+    public function display(\Tuleap\HTTPRequest $request)
     {
         $project            = $request->getProject();
         $user               = $request->getCurrentUser();
@@ -172,7 +171,7 @@ class ProjectDashboardController
         $this->layout->footer([]);
     }
 
-    public function createDashboard(HTTPRequest $request)
+    public function createDashboard(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -218,7 +217,7 @@ class ProjectDashboardController
         $this->redirectToDefaultDashboard();
     }
 
-    public function editDashboard(HTTPRequest $request)
+    public function editDashboard(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -276,7 +275,7 @@ class ProjectDashboardController
         $this->redirectToDashboard($dashboard_id);
     }
 
-    public function deleteDashboard(HTTPRequest $request)
+    public function deleteDashboard(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -392,7 +391,7 @@ class ProjectDashboardController
         return $user->isAdmin($project->getID());
     }
 
-    public function deleteWidget(HTTPRequest $request)
+    public function deleteWidget(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -433,7 +432,7 @@ class ProjectDashboardController
         $this->redirectToDashboard($dashboard_id);
     }
 
-    public function minimizeWidget(HTTPRequest $request)
+    public function minimizeWidget(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -446,7 +445,7 @@ class ProjectDashboardController
         $this->redirectToDashboard($dashboard_id);
     }
 
-    public function maximizeWidget(HTTPRequest $request)
+    public function maximizeWidget(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 

@@ -23,7 +23,6 @@ namespace Tuleap\Dashboard\Widget\Add;
 use CSRFSynchronizerToken;
 use DataAccessException;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
@@ -41,7 +40,7 @@ class AddWidgetController
     ) {
     }
 
-    public function display(HTTPRequest $request)
+    public function display(\Tuleap\HTTPRequest $request)
     {
         $dashboard_id   = $request->get('dashboard-id');
         $dashboard_type = $request->get('dashboard-type');
@@ -55,7 +54,7 @@ class AddWidgetController
         }
     }
 
-    public function create(HTTPRequest $request)
+    public function create(\Tuleap\HTTPRequest $request)
     {
         $dashboard_id   = $request->get('dashboard-id');
         $dashboard_type = $request->get('dashboard-type');
@@ -169,7 +168,7 @@ class AddWidgetController
      * @param $dashboard_type
      * @param $dashboard_id
      */
-    private function checkThatDashboardBelongsToTheOwner(HTTPRequest $request, $dashboard_type, $dashboard_id)
+    private function checkThatDashboardBelongsToTheOwner(\Tuleap\HTTPRequest $request, $dashboard_type, $dashboard_id)
     {
         $owner_id = $this->getOwnerIdByDashboardType($request, $dashboard_type);
         $this->dao->checkThatDashboardBelongsToTheOwner(
@@ -183,7 +182,7 @@ class AddWidgetController
      * @param $dashboard_type
      * @return int
      */
-    private function getOwnerIdByDashboardType(HTTPRequest $request, $dashboard_type)
+    private function getOwnerIdByDashboardType(\Tuleap\HTTPRequest $request, $dashboard_type)
     {
         if ($dashboard_type === UserDashboardController::DASHBOARD_TYPE) {
             $owner_id = $request->getCurrentUser()->getId();
@@ -211,7 +210,7 @@ class AddWidgetController
      * @param $dashboard_id
      * @param $dashboard_type
      */
-    private function redirectToDashboard(HTTPRequest $request, $dashboard_id, $dashboard_type)
+    private function redirectToDashboard(\Tuleap\HTTPRequest $request, $dashboard_id, $dashboard_type)
     {
         if ($dashboard_type === ProjectDashboardController::DASHBOARD_TYPE) {
             $url = '/projects/' . $request->getProject()->getUnixName() . '/';

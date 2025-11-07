@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Controllers;
 
 use ForgeConfig;
-use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use Tuleap\CSRFSynchronizerTokenPresenter;
@@ -56,7 +55,7 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

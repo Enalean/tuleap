@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use Account_TimezoneSelectorPresenter;
-use HTTPRequest;
 use LDAP_UserManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
@@ -64,7 +63,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         assert($layout instanceof \Layout);
 

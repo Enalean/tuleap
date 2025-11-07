@@ -65,7 +65,7 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     private function update(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         CheckMilestonesInSidebar $milestones_in_sidebar,
     ): void {
         $configuration_updater = new ScrumConfigurationUpdater(

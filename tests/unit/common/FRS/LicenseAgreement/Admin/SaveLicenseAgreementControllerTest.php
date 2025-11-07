@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
@@ -60,7 +59,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
      * @var MockObject&FRSPermissionManager
      */
     private $permissions_manager;
-    private HTTPRequest $request;
+    private \Tuleap\HTTPRequest $request;
     private PFUser $current_user;
     /**
      * @var MockObject&LicenseAgreementFactory
@@ -86,7 +85,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->current_user = new PFUser(['language_id' => 'en_US']);
 
-        $this->request = new HTTPRequest();
+        $this->request = new \Tuleap\HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
 
         $this->service_file = $this->createMock(\ServiceFile::class);

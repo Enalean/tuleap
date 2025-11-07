@@ -27,7 +27,7 @@ final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildFromRequest(): void
     {
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
 
         $request->method('get')->willReturnCallback(
             fn (string $variable): string => match ($variable) {
@@ -48,7 +48,7 @@ final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestCanBeParsedWhenNoRefIsGiven(): void
     {
-        $request_without_ref = $this->createStub(\HTTPRequest::class);
+        $request_without_ref = $this->createStub(\Tuleap\HTTPRequest::class);
 
         $request_without_ref->method('get')->willReturnCallback(
             fn (string $variable): ?string => match ($variable) {
@@ -75,7 +75,7 @@ final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testListRequestShouldBeConsideredAsBothReadAndWriteRequest(): void
     {
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('get')->willReturnCallback(
             fn (string $variable): string => match ($variable) {
                 'id' => '2',

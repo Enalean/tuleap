@@ -57,7 +57,7 @@ final class PermissionPerGroupBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccessPrivate()
             ->withUsedService(Service::WIKI)
             ->build();
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('get');
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
@@ -76,7 +76,7 @@ final class PermissionPerGroupBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccessPrivate()
             ->withUsedService(Service::WIKI)
             ->build();
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('get');
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
@@ -95,7 +95,7 @@ final class PermissionPerGroupBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccessPrivate()
             ->withUsedService(Service::WIKI)
             ->build();
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('get');
 
         $this->ugroup_manager->method('getStaticUGroups')->with($project)->willReturn([]);

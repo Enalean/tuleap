@@ -106,7 +106,7 @@ class WebDAVAuthentication
     public function getUser(string $username, ConcealedString $password): PFUser
     {
         try {
-            $user = $this->access_key_authenticator->getUser($username, $password, \HTTPRequest::instance()->getIPAddress());
+            $user = $this->access_key_authenticator->getUser($username, $password, \Tuleap\HTTPRequest::instance()->getIPAddress());
         } catch (HTTPBasicAuthUserAccessKeyMisusageException $exception) {
             $this->setHeader();
         }

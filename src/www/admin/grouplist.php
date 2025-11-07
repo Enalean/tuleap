@@ -27,7 +27,7 @@ use Tuleap\Project\Admin\ProjectListSearchFieldsPresenterBuilder;
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $include_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');

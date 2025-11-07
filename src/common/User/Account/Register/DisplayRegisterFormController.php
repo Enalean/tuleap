@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
-use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -40,7 +39,7 @@ final class DisplayRegisterFormController implements DispatchableWithRequestNoAu
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isAnonymous()) {
             $this->alreadyLoggedIn($layout);

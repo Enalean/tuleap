@@ -20,8 +20,6 @@
 
 namespace Tuleap\Project\Label;
 
-use HTTPRequest;
-
 class LabelsManagementRouter
 {
     /**
@@ -53,7 +51,7 @@ class LabelsManagementRouter
         $this->add_controller    = $add_controller;
     }
 
-    public function process(HTTPRequest $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         switch ($request->get('action')) {
             case 'delete':

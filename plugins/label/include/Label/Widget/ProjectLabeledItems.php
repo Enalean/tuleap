@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 use Codendi_Request;
 use DataAccessException;
 use Feedback;
-use HTTPRequest;
 use Project;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssViteAsset;
@@ -295,7 +294,7 @@ class ProjectLabeledItems extends Widget
      */
     private function getProject()
     {
-        return HTTPRequest::instance()->getProject();
+        return \Tuleap\HTTPRequest::instance()->getProject();
     }
 
     #[\Override]

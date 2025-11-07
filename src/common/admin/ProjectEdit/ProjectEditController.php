@@ -23,7 +23,6 @@ namespace Tuleap\admin\ProjectEdit;
 use Event;
 use EventManager;
 use Feedback;
-use HTTPRequest;
 use Project;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -97,7 +96,7 @@ class ProjectEditController
         );
     }
 
-    public function updateProject(HTTPRequest $request)
+    public function updateProject(\Tuleap\HTTPRequest $request)
     {
         $new_name   = $request->get('new_name');
         $project_id = $request->get('group_id');
@@ -218,7 +217,7 @@ class ProjectEditController
         return $project->getStatus() !== $form_status;
     }
 
-    private function getProjectStatus(HTTPRequest $request, Project $project)
+    private function getProjectStatus(\Tuleap\HTTPRequest $request, Project $project)
     {
         if ($project->getGroupId() !== Project::DEFAULT_TEMPLATE_PROJECT_ID) {
             return $request->getValidated('form_status', 'string', $project->getStatus());

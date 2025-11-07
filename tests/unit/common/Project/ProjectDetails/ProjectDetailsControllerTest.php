@@ -28,7 +28,6 @@ use EventManager;
 use Feedback;
 use ForgeAccess;
 use ForgeConfig;
-use HTTPRequest;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
@@ -114,7 +113,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateIsInvalidWhenProjectNameIsNotProvided(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = self::exactly(2);
         $request
             ->expects($matcher)
@@ -136,7 +135,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdateIsInvalidWhenDescriptionIsNotProvidedAndFlagIsNotProvided(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = self::exactly(2);
         $request
             ->expects($matcher)
@@ -160,7 +159,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('enable_not_mandatory_description', false);
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = self::exactly(2);
         $request
             ->expects($matcher)
@@ -185,7 +184,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('enable_not_mandatory_description', true);
         ForgeConfig::set('feature_flag_project_icon_display', '1');
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = self::atLeast(8);
         $request
             ->expects($matcher)
@@ -247,7 +246,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('feature_flag_project_icon_display', '1');
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = self::exactly(12);
         $request
             ->expects($matcher)
@@ -343,7 +342,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set('feature_flag_project_icon_display', '1');
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = self::exactly(9);
         $request
             ->expects($matcher)

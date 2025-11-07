@@ -52,7 +52,7 @@ class Git_Widget_ProjectPushes extends Widget
     #[\Override]
     public function getContent(): string
     {
-        $request     = HTTPRequest::instance();
+        $request     = \Tuleap\HTTPRequest::instance();
         $groupId     = $request->get('group_id');
         $weeksNumber = $request->get('weeks_number');
         if (empty($weeksNumber)) {

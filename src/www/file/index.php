@@ -23,7 +23,7 @@
 // Avoid listing content of the directory!
 require_once __DIR__ . '/../include/pre.php';
 
-$request  = HTTPRequest::instance();
+$request  = \Tuleap\HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if ($request->valid($vGroupId)) {

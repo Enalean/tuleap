@@ -34,7 +34,7 @@ require_once __DIR__ . '/../project/admin/project_admin_utils.php';
 require_once __DIR__ . '/../project/export/project_export_utils.php';
 require_once __DIR__ . '/../project/admin/project_history.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $project_manager = ProjectManager::instance();

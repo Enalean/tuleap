@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Repository\Settings;
 
-use HTTPRequest;
 use Tuleap\Git\RouterLink;
 
 class WebhookRouter extends RouterLink
@@ -50,7 +49,7 @@ class WebhookRouter extends RouterLink
     }
 
     #[\Override]
-    public function process(HTTPRequest $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         switch ($request->get('action')) {
             case 'remove-webhook':

@@ -24,7 +24,6 @@ namespace Tuleap\Layout;
 use Admin_Homepage_Dao;
 use CSRFSynchronizerToken;
 use EventManager;
-use HTTPRequest;
 use Event;
 use ProjectManager;
 use SVN_LogDao;
@@ -70,7 +69,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $event_manager = EventManager::instance();
 

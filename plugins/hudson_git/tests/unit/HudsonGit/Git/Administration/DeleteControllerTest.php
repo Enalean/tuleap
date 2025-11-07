@@ -25,7 +25,6 @@ namespace Tuleap\HudsonGit\Git\Administration;
 use CSRFSynchronizerToken;
 use GitPermissionsManager;
 use GitPlugin;
-use HTTPRequest;
 use Project;
 use RuntimeException;
 use Tuleap\Layout\BaseLayout;
@@ -49,7 +48,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $layout;
 
     /**
-     * @var HTTPRequest&\PHPUnit\Framework\MockObject\MockObject
+     * @var \Tuleap\HTTPRequest&\PHPUnit\Framework\MockObject\MockObject
      */
     private $request;
 
@@ -90,7 +89,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->layout  = $this->createMock(BaseLayout::class);
-        $this->request = $this->createMock(HTTPRequest::class);
+        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->project = $this->createMock(Project::class);
 
         $this->project->method('isError')->willReturn(false);

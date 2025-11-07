@@ -48,7 +48,7 @@ class GitViews_GitPhpViewer //phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     ) {
     }
 
-    public function displayContent(HTTPRequest $request)
+    public function displayContent(\Tuleap\HTTPRequest $request)
     {
         if ($this->canDisplayEnclosingDiv($request)) {
             echo '
@@ -77,7 +77,7 @@ class GitViews_GitPhpViewer //phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         $this->displayGitPHP();
     }
 
-    private function canDisplayEnclosingDiv(HTTPRequest $request)
+    private function canDisplayEnclosingDiv(\Tuleap\HTTPRequest $request)
     {
         return ! in_array($request->get('a'), self::GLOSSIFIED_GITPHP_ACTIONS, true);
     }

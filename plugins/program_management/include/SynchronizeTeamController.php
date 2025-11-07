@@ -21,7 +21,6 @@
 
 namespace Tuleap\ProgramManagement;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchMirroredTimeboxesSynchronization;
@@ -62,7 +61,7 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
         if (! $project->usesService(ProgramService::SERVICE_SHORTNAME)) {

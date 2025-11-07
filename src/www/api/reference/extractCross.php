@@ -51,7 +51,7 @@ function sendResponse(int $status_code, string $body_content): void
     exit();
 }
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $group_id = 100;
 if ($request->existAndNonEmpty('group_id')) {

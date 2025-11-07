@@ -24,7 +24,6 @@ use GitPermissionsManager;
 use GitRepoNotFoundException;
 use GitRepository;
 use GitRepositoryFactory;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Git\Repository\Settings\UserCannotAdministrateRepositoryException;
 use Valid_UInt;
@@ -54,7 +53,7 @@ class RepositoryFromRequestRetriever
      * @throws GitRepoNotFoundException
      * @throws UserCannotAdministrateRepositoryException
      */
-    public function getRepositoryUserCanAdministrate(HTTPRequest $request)
+    public function getRepositoryUserCanAdministrate(\Tuleap\HTTPRequest $request)
     {
         $repository = null;
 

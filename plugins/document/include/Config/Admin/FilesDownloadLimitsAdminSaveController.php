@@ -24,7 +24,6 @@ namespace Tuleap\Document\Config\Admin;
 
 use Tuleap\Config\ConfigDao;
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -56,7 +55,7 @@ class FilesDownloadLimitsAdminSaveController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();
@@ -74,7 +73,7 @@ class FilesDownloadLimitsAdminSaveController implements DispatchableWithRequest
         $layout->redirect(FilesDownloadLimitsAdminController::URL);
     }
 
-    private function getSubmittedMaxArchiveSize(HTTPRequest $request, BaseLayout $layout): int
+    private function getSubmittedMaxArchiveSize(\Tuleap\HTTPRequest $request, BaseLayout $layout): int
     {
         $max_archive_size = (int) $request->getValidated('max-archive-size', 'uint');
         if (! $max_archive_size) {
@@ -87,7 +86,7 @@ class FilesDownloadLimitsAdminSaveController implements DispatchableWithRequest
         return $max_archive_size;
     }
 
-    private function getSubmittedWarningThreshold(HTTPRequest $request, BaseLayout $layout): int
+    private function getSubmittedWarningThreshold(\Tuleap\HTTPRequest $request, BaseLayout $layout): int
     {
         $warning_threshold = (int) $request->getValidated('warning-threshold', 'uint');
         if (! $warning_threshold) {

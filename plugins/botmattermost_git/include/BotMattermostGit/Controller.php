@@ -25,7 +25,6 @@ use Exception;
 use Feedback;
 use GitRepository;
 use GitRepositoryFactory;
-use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -44,7 +43,7 @@ class Controller
     private $bot_factory;
 
     public function __construct(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         CSRFSynchronizerToken $csrf,
         GitRepositoryFactory $git_repository_factory,
         Factory $bot_git_factory,

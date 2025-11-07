@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
-use HTTPRequest;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
 
@@ -42,7 +41,7 @@ final class AfterSuccessfulUserRegistrationHandlerStub implements AfterSuccessfu
     #[\Override]
     public function afterSuccessfullUserRegistration(
         PFUser $new_user,
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         string $mail_confirm_code,
         RegisterFormContext $context,

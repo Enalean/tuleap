@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchMeilisearch\Server\Administration;
 
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\FullTextSearchMeilisearch\Server\IProvideCurrentKeyForLocalServer;
 use Tuleap\Layout\BaseLayout;
@@ -44,7 +43,7 @@ final class MeilisearchAdminSettingsController implements DispatchableWithReques
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $key_local_meilisearch_server = $this->local_meilisearch_server->getCurrentKey();
         $is_using_local_server        = $key_local_meilisearch_server !== null;

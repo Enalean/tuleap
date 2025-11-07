@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\Admin;
 
-use HTTPRequest;
 use SystemEventManager;
 use TemplateRendererFactory;
 use Tuleap\SVN\Repository\RepositoryManager;
@@ -34,7 +33,7 @@ class RestoreController
         $this->repository_manager = $repository_manager;
     }
 
-    public function restoreRepository(HTTPRequest $request)
+    public function restoreRepository(\Tuleap\HTTPRequest $request)
     {
         $project       = $request->getProject();
         $project_id    = $project->getID();

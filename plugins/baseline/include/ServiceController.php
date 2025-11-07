@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
-use HTTPRequest;
 use Override;
 use Project;
 use TemplateRenderer;
@@ -88,7 +87,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
      * @return void
      */
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment(\baselinePlugin::NAME);
 

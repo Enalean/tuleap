@@ -31,7 +31,7 @@ require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../project/export/project_export_utils.php';
 require_once __DIR__ . '/../project/admin/project_history.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $include_assets = new IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');

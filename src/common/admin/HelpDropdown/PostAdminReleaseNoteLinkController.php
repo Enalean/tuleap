@@ -25,7 +25,6 @@ namespace Tuleap\admin\HelpDropdown;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use Tuleap\BuildVersion\FlavorFinderFromLicense;
 use Tuleap\BuildVersion\VersionPresenter;
@@ -85,7 +84,7 @@ class PostAdminReleaseNoteLinkController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);

@@ -21,7 +21,6 @@
 namespace Tuleap\Error;
 
 use Error_PermissionDenied;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use UnexpectedValueException;
@@ -47,7 +46,7 @@ abstract class PermissionDeniedMailSender extends Error_PermissionDenied impleme
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $this->token->check('/my/');
 

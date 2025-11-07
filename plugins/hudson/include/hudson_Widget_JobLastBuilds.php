@@ -42,7 +42,7 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget //phpcs:ignore PSR1.Cl
      */
     public function __construct($owner_type, $owner_id, MinimalHudsonJobFactory $factory, HudsonJobBuilder $job_builder)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->widget_id = 'plugin_hudson_my_joblastbuilds';
             $this->group_id  = $owner_id;

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS;
 
-use HTTPRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Tuleap\Layout\BaseLayout;
@@ -38,7 +37,7 @@ final class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
         $dispatchable = $this->createMock(DispatchableWithRequestNoAuthz::class);
         $dispatchable->expects($this->once())->method('process');
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_ACCEPT')
             ->willReturn($accept_header);
 
@@ -63,7 +62,7 @@ final class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
         $dispatchable = $this->createMock(DispatchableWithRequestNoAuthz::class);
         $dispatchable->expects($this->never())->method('process');
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_ACCEPT')->willReturn('text/plain');
 
         $lfs_json_dispatchable = new LFSJSONHTTPDispatchable($dispatchable);
@@ -93,7 +92,7 @@ final class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $dispatchable->method('process')->willThrowException($git_lfs_error);
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->with('HTTP_ACCEPT')
             ->willReturn('application/vnd.git-lfs+json');
 

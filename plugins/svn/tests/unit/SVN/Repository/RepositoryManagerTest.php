@@ -23,7 +23,6 @@ namespace Tuleap\SVN\Repository;
 
 use Tuleap\SVN\BackendSVN;
 use EventManager;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Psr\Log\NullLogger;
@@ -49,7 +48,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dao;
     /**
-     * @var MockObject&HTTPRequest
+     * @var MockObject&\Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -83,7 +82,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project = $this->createMock(\Project::class);
-        $this->request = $this->createMock(HTTPRequest::class);
+        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
     }
 
     public function testItReturnsRepositoryFromAPublicPath(): void

@@ -41,7 +41,7 @@ class ClientWrapperBuilder
     /**
      * @throws JiraConnectionException
      */
-    public function buildFromRequest(\HTTPRequest $request, LoggerInterface $logger): JiraClient
+    public function buildFromRequest(\Tuleap\HTTPRequest $request, LoggerInterface $logger): JiraClient
     {
         $body = $request->getJsonDecodedBody();
 

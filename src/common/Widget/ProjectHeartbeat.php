@@ -20,7 +20,6 @@
 
 namespace Tuleap\Widget;
 
-use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Widget;
@@ -59,7 +58,7 @@ class ProjectHeartbeat extends Widget
             __DIR__ . '/../../templates/widgets'
         );
 
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         return $renderer->renderToString(
             'project-heartbeat',

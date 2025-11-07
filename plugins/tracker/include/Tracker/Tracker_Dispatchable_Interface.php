@@ -38,7 +38,7 @@ interface Tracker_Dispatchable_Interface
      * Process the request
      *
      * @param Tracker_IDisplayTrackerLayout  $layout       The tracker manager
-     * @param HTTPRequest                    $request      The data coming from the user
+     * @param \Tuleap\HTTPRequest                    $request      The data coming from the user
      * @param PFUser                           $current_user The user who mades the request
      *
      * @return void

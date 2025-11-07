@@ -38,7 +38,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 
 $csrf = new CSRFSynchronizerToken('project_quota.php');
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $pqHtml  = new ProjectQuotaHtml(Codendi_HTMLPurifier::instance());
 $pqHtml->HandleRequest($request);
 

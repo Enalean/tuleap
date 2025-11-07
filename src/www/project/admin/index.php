@@ -23,7 +23,7 @@
 
 require_once __DIR__ . '/../../include/pre.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $url = '/project/' . $request->getProject()->getid() . '/admin/members';
 

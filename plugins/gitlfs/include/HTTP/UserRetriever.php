@@ -21,7 +21,6 @@
 namespace Tuleap\GitLFS\HTTP;
 
 use GitRepository;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Request\NotFoundException;
@@ -58,7 +57,7 @@ class UserRetriever
      * @throws NotFoundException
      */
     public function retrieveUser(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         GitRepository $repository,
         GitLfsHTTPOperation $lfs_request,
     ): ?PFUser {

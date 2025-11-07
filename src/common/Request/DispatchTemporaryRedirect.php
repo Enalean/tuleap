@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 
 final class DispatchTemporaryRedirect implements DispatchableWithRequest
@@ -46,7 +45,7 @@ final class DispatchTemporaryRedirect implements DispatchableWithRequest
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $layout->redirect($this->url);
     }

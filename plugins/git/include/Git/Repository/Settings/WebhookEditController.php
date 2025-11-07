@@ -21,7 +21,6 @@
 namespace Tuleap\Git\Repository\Settings;
 
 use Feedback;
-use HTTPRequest;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 use Tuleap\Git\Webhook\WebhookDao;
 use Valid_UInt;
@@ -39,7 +38,7 @@ class WebhookEditController extends WebhookController
         $this->dao = $dao;
     }
 
-    public function editWebhook(HTTPRequest $request)
+    public function editWebhook(\Tuleap\HTTPRequest $request)
     {
         $repository   = $this->getRepositoryUserCanAdministrate($request);
         $redirect_url = $this->getWebhookSettingsURL($repository);
@@ -64,7 +63,7 @@ class WebhookEditController extends WebhookController
         $GLOBALS['Response']->redirect($redirect_url);
     }
 
-    private function getId(HTTPRequest $request, $redirect_url)
+    private function getId(\Tuleap\HTTPRequest $request, $redirect_url)
     {
         $valid_id = new Valid_UInt('id');
         $valid_id->required();

@@ -23,13 +23,13 @@ class PluginsAdministration extends Controler
 {
     public function __construct()
     {
-        HTTPRequest::instance()->checkUserIsSuperUser();
+        \Tuleap\HTTPRequest::instance()->checkUserIsSuperUser();
     }
 
     #[\Override]
     public function request()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         if ($request->exist('view')) {
             switch ($request->get('view')) {

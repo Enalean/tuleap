@@ -20,7 +20,6 @@
 
 namespace Tuleap\ProjectOwnership\ProjectAdmin;
 
-use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -74,7 +73,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $layout->addCssAsset(
             new CssAssetWithoutVariantDeclinaisons(

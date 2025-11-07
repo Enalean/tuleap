@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Codendi_HTMLPurifier;
 use Codendi_Request;
 use EventManager;
-use HTTPRequest;
 use PFUser;
 use ReferenceManager;
 use TemplateRendererFactory;
@@ -701,7 +700,7 @@ class ArtifactLinkField extends TrackerField
      * Process the request
      *
      * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
-     * @param HTTPRequest $request The data coming from the user
+     * @param \Tuleap\HTTPRequest $request The data coming from the user
      * @param PFUser $current_user The user who mades the request
      *
      * @return void

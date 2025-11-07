@@ -113,7 +113,7 @@ class StatisticsPlugin extends Plugin implements PluginWithConfigKeys
     /** @see Event::AFTER_MASSMAIL_TO_PROJECT_ADMINS */
     public function after_massmail_to_project_admins($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($request->get('project_over_quota')) {
             $GLOBALS['Response']->redirect('/plugins/statistics/project_over_quota.php');
         }

@@ -29,7 +29,7 @@ class Docman_Widget_ProjectEmbedded extends Docman_Widget_Embedded
     {
         parent::__construct(
             'plugin_docman_project_embedded',
-            HTTPRequest::instance()->get('group_id'),
+            \Tuleap\HTTPRequest::instance()->get('group_id'),
             ProjectDashboardController::LEGACY_DASHBOARD_TYPE,
             $plugin_path
         );

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-use HTTPRequest;
 use Tuleap\Dashboard\Widget\Add\AddWidgetController;
 use Tuleap\Option\Option;
 use Tuleap\Widget\WidgetFactory;
@@ -51,7 +50,7 @@ class Router
         $this->widget_factory         = $widget_factory;
     }
 
-    public function route(HTTPRequest $request): void
+    public function route(\Tuleap\HTTPRequest $request): void
     {
         $action = $request->get('action');
 
@@ -108,7 +107,7 @@ class Router
         $this->rejectMalformedRequest();
     }
 
-    private function rejectIfRequestDoesNotAppearToBeFetched(HTTPRequest $request): void
+    private function rejectIfRequestDoesNotAppearToBeFetched(\Tuleap\HTTPRequest $request): void
     {
         $sec_fetch_dest = $request->getFromServer('HTTP_SEC_FETCH_DEST');
         $sec_fetch_mode = $request->getFromServer('HTTP_SEC_FETCH_MODE');
@@ -136,7 +135,7 @@ class Router
     /**
      * @return Option<Widget>
      */
-    private function getWidgetFromUrl(HTTPRequest $request): Option
+    private function getWidgetFromUrl(\Tuleap\HTTPRequest $request): Option
     {
         $param = $request->get('name');
         if (! is_array($param)) {

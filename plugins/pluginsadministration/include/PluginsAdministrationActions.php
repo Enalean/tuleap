@@ -50,7 +50,7 @@ class PluginsAdministrationActions extends Actions
     public function enable(): void
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
-        $request     = HTTPRequest::instance();
+        $request     = \Tuleap\HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data) {
             $plugin_manager = $this->plugin_manager;
@@ -85,7 +85,7 @@ class PluginsAdministrationActions extends Actions
     public function install(): void
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $name    = $request->get('name');
         if ($name) {
             try {
@@ -106,7 +106,7 @@ class PluginsAdministrationActions extends Actions
     public function disable(): void
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
-        $request     = HTTPRequest::instance();
+        $request     = \Tuleap\HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data && $this->plugin_disabler_verifier->canPluginBeDisabled($plugin_data['plugin'])) {
             $plugin_manager = $this->plugin_manager;
@@ -195,7 +195,7 @@ class PluginsAdministrationActions extends Actions
     public function _getPluginFromRequest()
     {
         $return  = false;
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($request->exist('plugin_id') && is_numeric($request->get('plugin_id'))) {
             $plugin_manager = $this->plugin_manager;
             $plugin         = $plugin_manager->getPluginById($request->get('plugin_id'));
@@ -216,7 +216,7 @@ class PluginsAdministrationActions extends Actions
 
     public function setPluginRestriction()
     {
-        $request     = HTTPRequest::instance();
+        $request     = \Tuleap\HTTPRequest::instance();
         $plugin_id   = $request->get('plugin_id');
         $plugin_data = $this->_getPluginFromRequest();
         $all_allowed = $request->get('all-allowed');
@@ -272,7 +272,7 @@ class PluginsAdministrationActions extends Actions
 
     public function updateAllowedProjectList()
     {
-        $request               = HTTPRequest::instance();
+        $request               = \Tuleap\HTTPRequest::instance();
         $plugin_id             = $request->get('plugin_id');
         $plugin_data           = $this->_getPluginFromRequest();
         $project_to_add        = $request->get('project-to-allow');

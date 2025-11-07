@@ -24,7 +24,6 @@ namespace Tuleap\Project;
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use EventManager;
-use HTTPRequest;
 use Project;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -80,7 +79,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project  = $this->getProject($variables);
         $group_id = $project->getId();

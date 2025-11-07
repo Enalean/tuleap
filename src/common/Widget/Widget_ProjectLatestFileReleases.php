@@ -27,7 +27,7 @@ class Widget_ProjectLatestFileReleases extends Widget
     public function __construct()
     {
         parent::__construct('projectlatestfilereleases');
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {

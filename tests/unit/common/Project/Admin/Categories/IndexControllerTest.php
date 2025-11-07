@@ -67,7 +67,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = UserTestBuilder::aUser()->build();
         $this->layout_helper->setCallbackParams($project, $current_user);
 
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $layout  = $this->createMock(BaseLayout::class);
 
         $this->assets

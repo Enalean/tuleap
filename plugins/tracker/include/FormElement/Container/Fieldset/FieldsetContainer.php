@@ -26,7 +26,6 @@
 namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 
 use Codendi_HTMLPurifier;
-use HTTPRequest;
 use Override;
 use PFUser;
 use Toggler;
@@ -53,7 +52,7 @@ class FieldsetContainer extends TrackerFormElementContainer
      * Process the request
      *
      * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
-     * @param HTTPRequest $request The data coming from the user
+     * @param \Tuleap\HTTPRequest $request The data coming from the user
      * @param PFUser $current_user The user who mades the request
      *
      * @return void

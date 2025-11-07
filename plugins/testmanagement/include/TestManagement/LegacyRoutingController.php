@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement;
 
 use Feedback;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -56,7 +55,7 @@ final class LegacyRoutingController implements DispatchableWithRequest, Dispatch
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->includeFooterJavascriptFile($this->include_core_js_assets->getFileURL('ckeditor.js'));
         $mermaid_asset = new \Tuleap\Layout\JavascriptViteAsset(

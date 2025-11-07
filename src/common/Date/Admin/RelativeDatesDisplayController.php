@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Date\Admin;
 
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
@@ -59,7 +58,7 @@ class RelativeDatesDisplayController implements DispatchableWithRequest, Dispatc
      * @throws ForbiddenException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

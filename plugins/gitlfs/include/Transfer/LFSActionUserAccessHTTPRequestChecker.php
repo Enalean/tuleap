@@ -61,7 +61,7 @@ class LFSActionUserAccessHTTPRequestChecker
      * @throws NotFoundException
      */
     public function userCanAccess(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         ActionAuthorizationType $action_type,
         $oid,
     ) {

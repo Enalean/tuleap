@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Password\Administration;
 
-use HTTPRequest;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Admin\AdminPageRenderer;
@@ -64,7 +63,7 @@ final class PasswordPolicyDisplayController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $request->checkUserIsSuperUser();
 

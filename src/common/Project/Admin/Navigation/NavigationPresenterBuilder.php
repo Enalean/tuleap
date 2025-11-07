@@ -21,7 +21,6 @@
 namespace Tuleap\Project\Admin\Navigation;
 
 use EventManager;
-use HTTPRequest;
 use Project;
 use Service;
 use Tuleap\Label\CanProjectUseLabels;
@@ -55,7 +54,7 @@ class NavigationPresenterBuilder
         $this->event_manager      = $event_manager;
     }
 
-    public function build(Project $project, HTTPRequest $request, $current_pane_shortname)
+    public function build(Project $project, \Tuleap\HTTPRequest $request, $current_pane_shortname)
     {
         $project_id = $project->getID();
         $user       = $request->getCurrentUser();

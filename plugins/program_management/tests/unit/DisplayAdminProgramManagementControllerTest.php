@@ -83,7 +83,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
     private PotentialPlannableTrackersConfigurationBuilder $plannable_tracker_builder;
-    private \HTTPRequest $request;
+    private \Tuleap\HTTPRequest $request;
     private \PFUser $user;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager

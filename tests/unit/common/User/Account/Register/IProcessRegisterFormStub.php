@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 
 class IProcessRegisterFormStub implements IProcessRegisterForm
@@ -41,7 +40,7 @@ class IProcessRegisterFormStub implements IProcessRegisterForm
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $this->has_been_processed = true;
         $this->is_admin           = $context->is_admin;

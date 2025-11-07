@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
-use HTTPRequest;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -58,7 +57,7 @@ class AjaxController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $jenkins_url_to_test = $request->get('jenkins_url_to_test');
         if ($jenkins_url_to_test === false) {

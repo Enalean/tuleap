@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Administration;
 
-use HTTPRequest;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CSRFSynchronizerTokenPresenter;
@@ -58,7 +57,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->getTracker((int) $variables['id']);
 

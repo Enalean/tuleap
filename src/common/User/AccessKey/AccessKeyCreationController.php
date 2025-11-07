@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
-use HTTPRequest;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
@@ -59,7 +58,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         if ($current_user->isAnonymous()) {
@@ -116,7 +115,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
     /**
      * @return AuthenticationScope[]
      */
-    private function getAccessKeyScopes(HTTPRequest $request, BaseLayout $layout): array
+    private function getAccessKeyScopes(\Tuleap\HTTPRequest $request, BaseLayout $layout): array
     {
         $access_key_scope_builder = AggregateAuthenticationScopeBuilder::fromBuildersList(
             CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
@@ -161,7 +160,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
         $layout->redirect(DisplayKeysTokensController::URL);
     }
 
-    private function getExpirationDate(HTTPRequest $request, BaseLayout $layout): ?DateTimeImmutable
+    private function getExpirationDate(\Tuleap\HTTPRequest $request, BaseLayout $layout): ?DateTimeImmutable
     {
         $expiration_date = null;
 

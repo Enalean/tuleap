@@ -83,7 +83,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     private function _getFolderFromRequest()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $folder  = new Docman_Folder();
         $folder->setId((int) $request->get('id'));
         $folder->setGroupId((int) $request->get('group_id'));
@@ -1091,7 +1091,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     public function change_view()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($request->exist('selected_view')) {
             if (is_numeric($request->get('selected_view'))) {
                 $this->_controler->setReportId($request->get('selected_view'));
@@ -1230,7 +1230,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     public function admin_change_view()
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
 
         if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
@@ -1253,7 +1253,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     public function admin_set_permissions()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($request->exist('forbid_writers_to_update')) {
             $settings_dao = new Tuleap\Docman\Settings\SettingsDAO();
             $settings_dao->saveForbidWriters(
@@ -1277,7 +1277,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     public function admin_md_details_update()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $_label  = $request->get('label');
         $_gid    = (int) $request->get('group_id');
 
@@ -1347,7 +1347,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     public function admin_create_metadata()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $_gid                   = (int) $request->get('group_id');
         $_name                  = trim($request->get('name'));
@@ -1408,7 +1408,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     public function admin_create_love()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $_name        = $request->get('name');
         $_description = $request->get('descr');
@@ -1437,7 +1437,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     public function admin_delete_love()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $_loveId  = (int) $request->get('loveid');
         $_mdLabel = $request->get('md');
@@ -2113,7 +2113,7 @@ class Docman_Actions extends Actions // phpcs:ignoreFile
 
     public function admin_change_filename_pattern(): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $project_id       = (int) $request->get('group_id');
         $filename_pattern = new Tuleap\Docman\FilenamePattern\FilenamePattern(

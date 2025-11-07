@@ -20,7 +20,6 @@ namespace Tuleap\Theme\BurningParrot;
 
 use Event;
 use EventManager;
-use HTTPRequest;
 use Lcobucci\Clock\SystemClock;
 use Project;
 use TemplateRendererFactory;
@@ -100,7 +99,7 @@ class BurningParrotTheme extends BaseLayout
      */
     private $detected_browser;
 
-    /** @var HTTPRequest */
+    /** @var \Tuleap\HTTPRequest */
     private $request;
 
     private $show_sidebar = false;
@@ -119,7 +118,7 @@ class BurningParrotTheme extends BaseLayout
     {
         parent::__construct($root);
         $this->event_manager    = EventManager::instance();
-        $this->request          = HTTPRequest::instance();
+        $this->request          = \Tuleap\HTTPRequest::instance();
         $this->renderer         = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $license_builder        = CachedLicenseBuilder::instance();
         $this->version          = VersionPresenter::fromFlavorFinder(new FlavorFinderFromLicense($license_builder));

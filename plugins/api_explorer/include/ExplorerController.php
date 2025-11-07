@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\APIExplorer;
 
-use HTTPRequest;
 use Override;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
@@ -45,7 +44,7 @@ final class ExplorerController implements DispatchableWithRequestNoAuthz, Dispat
     }
 
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment(\api_explorerPlugin::SERVICE_NAME_INSTRUMENTATION);
 

@@ -30,11 +30,11 @@ final class BeforeRegisterFormValidationEvent implements Dispatchable
 
     private ?RegisterFormValidationIssue $validation_error = null;
 
-    public function __construct(private \HTTPRequest $request)
+    public function __construct(private \Tuleap\HTTPRequest $request)
     {
     }
 
-    public function getRequest(): \HTTPRequest
+    public function getRequest(): \Tuleap\HTTPRequest
     {
         return $this->request;
     }

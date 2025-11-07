@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProjectMilestones\Widget;
 
 use AgileDashboardPlugin;
-use HTTPRequest;
 use Planning;
 use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
@@ -63,7 +62,7 @@ class ProjectMilestonesPresenterBuilder
     private const string EFFORT_MODE         = 'effort';
 
     /**
-     * @var HTTPRequest
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -117,7 +116,7 @@ class ProjectMilestonesPresenterBuilder
     private $semantic_timeframe_builder;
 
     public function __construct(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         MilestoneBacklogFactory $agile_dashboard_milestone_backlog_backlog_factory,
         BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory,
         Planning_MilestoneFactory $planning_milestone_factory,
@@ -154,7 +153,7 @@ class ProjectMilestonesPresenterBuilder
         $milestone_factory = Planning_MilestoneFactory::build();
 
         return new self(
-            HTTPRequest::instance(),
+            \Tuleap\HTTPRequest::instance(),
             new MilestoneBacklogFactory(
                 new BacklogItemDao(),
                 $artifact_factory,

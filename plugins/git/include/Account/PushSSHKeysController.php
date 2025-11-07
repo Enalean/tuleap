@@ -25,7 +25,6 @@ namespace Tuleap\Git\Account;
 
 use Git_UserAccountManager;
 use Git_UserSynchronisationException;
-use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
@@ -46,7 +45,7 @@ final readonly class PushSSHKeysController implements DispatchableWithRequest
      * @inheritDoc
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

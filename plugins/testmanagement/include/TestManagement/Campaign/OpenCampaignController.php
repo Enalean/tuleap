@@ -24,7 +24,6 @@ namespace Tuleap\TestManagement\Campaign;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -49,7 +48,7 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         try {
             $campaign_id = (int) $variables['campaign_id'];

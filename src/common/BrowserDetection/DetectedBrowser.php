@@ -90,7 +90,7 @@ final class DetectedBrowser
         }
     }
 
-    public static function detectFromTuleapHTTPRequest(\HTTPRequest $request): self
+    public static function detectFromTuleapHTTPRequest(\Tuleap\HTTPRequest $request): self
     {
         return self::detectFromUserAgentString($request->getFromServer('HTTP_USER_AGENT') ?: '');
     }

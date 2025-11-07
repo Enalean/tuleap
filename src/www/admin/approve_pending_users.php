@@ -42,7 +42,7 @@ require_once __DIR__ . '/../include/account.php';
 require_once __DIR__ . '/../include/proj_email.php';
 require_once __DIR__ . '/admin_utils.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $include_assets = new IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');

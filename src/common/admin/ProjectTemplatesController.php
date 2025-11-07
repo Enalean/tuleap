@@ -21,7 +21,6 @@
 
 namespace Tuleap\Admin;
 
-use HTTPRequest;
 use ProjectManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\TemplateListPresenter;
@@ -40,7 +39,7 @@ class ProjectTemplatesController implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

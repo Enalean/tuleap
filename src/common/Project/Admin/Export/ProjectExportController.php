@@ -49,7 +49,7 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
         $user    = $request->getCurrentUser();

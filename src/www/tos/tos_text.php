@@ -4,4 +4,4 @@
 // http://sourceforge.net
 
 require_once __DIR__ . '/../include/pre.php';
-include(HTTPRequest::instance()->getCurrentUser()->getLanguage()->getContent('project/tos'));
+include(\Tuleap\HTTPRequest::instance()->getCurrentUser()->getLanguage()->getContent('project/tos'));

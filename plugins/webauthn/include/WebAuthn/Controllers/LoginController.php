@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Controllers;
 
 use Feedback;
-use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
@@ -50,7 +49,7 @@ final class LoginController implements DispatchableWithRequestNoAuthz, Dispatcha
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         if (! $current_user->isAnonymous()) {
@@ -74,7 +73,7 @@ final class LoginController implements DispatchableWithRequestNoAuthz, Dispatcha
         $layout->footer([]);
     }
 
-    private function handlePost(HTTPRequest $request, BaseLayout $layout): void
+    private function handlePost(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         $this->synchronizer_token->check(self::URL, $request);
 

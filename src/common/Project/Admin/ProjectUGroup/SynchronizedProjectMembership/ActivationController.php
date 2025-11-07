@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership;
 
-use HTTPRequest;
 use Feedback;
 use Project;
 use Tuleap\Layout\BaseLayout;
@@ -87,7 +86,7 @@ class ActivationController implements DispatchableWithRequest
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);

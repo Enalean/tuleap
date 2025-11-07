@@ -20,7 +20,7 @@
 
 require_once __DIR__ . '/../../include/pre.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());

@@ -28,7 +28,6 @@ use Git;
 use GitPermissionsManager;
 use GitRepository;
 use GitRepositoryFactory;
-use HTTPRequest;
 use ProjectManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -78,7 +77,7 @@ final class GitForkCrossProjectTest extends TestCase
         $repositoryFactory = $this->createMock(GitRepositoryFactory::class);
         $repositoryFactory->method('getRepositoryById')->with($repo_ids)->willReturn($repo);
 
-        $request         = new HTTPRequest();
+        $request         = new \Tuleap\HTTPRequest();
         $request->params = [
             'choose_destination' => 'project',
             'to_project'         => $toProjectId,

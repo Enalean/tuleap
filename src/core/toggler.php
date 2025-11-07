@@ -20,4 +20,4 @@
  *
  */
 
-Toggler::toggle(HTTPRequest::instance()->get('id'));
+Toggler::toggle(\Tuleap\HTTPRequest::instance()->get('id'));

@@ -22,7 +22,6 @@
 namespace Tuleap\Project\Admin\Reference;
 
 use EventManager;
-use HTTPRequest;
 use ReferenceManager;
 use TemplateRendererFactory;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
@@ -71,7 +70,7 @@ class ReferenceAdministrationViews extends Views
                 strpos($_SERVER['REQUEST_URI'], '/project/admin/reference.php?view=edit') === 0
             )
         ) {
-            $request          = HTTPRequest::instance();
+            $request          = \Tuleap\HTTPRequest::instance();
             $project          = $request->getProject();
             $header_displayer = new HeaderNavigationDisplayer();
             $header_displayer->displayBurningParrotNavigation(_('Editing reference patterns'), $project, NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME);
@@ -91,7 +90,7 @@ class ReferenceAdministrationViews extends Views
 
     public function creation(): void
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
 
         $user                        = $this->user_manager->getCurrentUser();
@@ -116,7 +115,7 @@ class ReferenceAdministrationViews extends Views
 
     public function edit(): void
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
 
         $user         = $this->user_manager->getCurrentUser();

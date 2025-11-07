@@ -43,7 +43,7 @@ final class Tracker_Widget_ProjectRendererTest extends TestCase // phpcs:ignore 
     #[\Override]
     protected function setUp(): void
     {
-        \HTTPRequest::setInstance(
+        \Tuleap\HTTPRequest::setInstance(
             HTTPRequestBuilder::get()->withParam('group_id', self::CURRENT_PROJECT_ID)->build()
         );
 
@@ -54,7 +54,7 @@ final class Tracker_Widget_ProjectRendererTest extends TestCase // phpcs:ignore 
     #[\Override]
     protected function tearDown(): void
     {
-        \HTTPRequest::clearInstance();
+        \Tuleap\HTTPRequest::clearInstance();
     }
 
     public function testExportsWidgetWhenRendererExist(): void

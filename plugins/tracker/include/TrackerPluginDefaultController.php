@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker;
 
-use HTTPRequest;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -38,7 +37,7 @@ class TrackerPluginDefaultController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         require_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
         // Inherited from old .htaccess (needed for reports, linked artifact view, etc)

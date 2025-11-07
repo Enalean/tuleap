@@ -25,7 +25,6 @@ namespace Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits;
 use CSRFSynchronizerToken;
 use DocmanPlugin;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollection;
 use Tuleap\Layout\BaseLayout;
@@ -43,7 +42,7 @@ class DocmanFilesUploadLimitsAdminController implements DispatchableWithRequest,
      *
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             $layout->addFeedback(

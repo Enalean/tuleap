@@ -44,7 +44,7 @@ class Docman_MetadataHtmlFile extends \Docman_MetadataHtml
     public function &getValidator($request = \null)
     {
         if ($request === \null) {
-            $request = \HTTPRequest::instance();
+            $request = \Tuleap\HTTPRequest::instance();
         }
         $validator = new \Docman_ValidateUpload($request);
         return $validator;

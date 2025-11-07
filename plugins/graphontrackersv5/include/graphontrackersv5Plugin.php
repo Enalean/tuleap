@@ -226,7 +226,7 @@ final class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.C
     #[\Override]
     public function isAllowed($group_id): bool
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if (! isset($this->allowedForProject[$group_id])) {
             $pM                                 = PluginManager::instance();

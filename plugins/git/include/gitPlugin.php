@@ -1488,7 +1488,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $groupId = $request->get('group_id');
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($groupId);
@@ -1570,7 +1570,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getRepositoryFactory(),
             UserManager::instance(),
             ProjectManager::instance(),
-            HTTPRequest::instance(),
+            \Tuleap\HTTPRequest::instance(),
             $this->getProjectCreator(),
             new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao()),
             $this->getGitPermissionsManager(),
@@ -2665,7 +2665,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $selected_tab = RepositoryHeaderPresenterBuilder::TAB_FILES;
 
         $gitphp_actions_displayed_in_commits_tab = ['shortlog', 'commit', 'commitdiff', 'blobdiff', 'search'];
-        if (in_array(HTTPRequest::instance()->get('a'), $gitphp_actions_displayed_in_commits_tab, true)) {
+        if (in_array(\Tuleap\HTTPRequest::instance()->get('a'), $gitphp_actions_displayed_in_commits_tab, true)) {
             $selected_tab = RepositoryHeaderPresenterBuilder::TAB_COMMITS;
         }
 
@@ -2753,7 +2753,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     #[ListeningToEventClass]
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         if ($request->get('action') === 'repo_management') {
             if (in_array($request->get('pane'), GitViews_RepoManagement::BURNING_PARROT_COMPATIBLE_PANES, true)) {

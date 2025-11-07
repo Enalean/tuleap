@@ -116,7 +116,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
         GitRepositoryFactory $git_repository_factory,
         UserManager $user_manager,
         ProjectManager $project_manager,
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         private readonly Git_Driver_Gerrit_ProjectCreator $project_creator,
         private readonly Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
         GitPermissionsManager $permissions_manager,
@@ -208,7 +208,7 @@ class Git extends PluginController //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->factory = $factory;
     }
 
-    public function setRequest(HTTPRequest $request)
+    public function setRequest(\Tuleap\HTTPRequest $request)
     {
         $this->request = $request;
     }

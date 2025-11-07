@@ -53,7 +53,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
      */
     public function __construct($owner_type, $owner_id, MinimalHudsonJobFactory $factory, HudsonJobBuilder $hudson_job_builder)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->widget_id = 'plugin_hudson_my_jobtestresults';
             $this->group_id  = $owner_id;

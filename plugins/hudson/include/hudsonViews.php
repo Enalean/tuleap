@@ -41,7 +41,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     #[\Override]
     public function header()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $GLOBALS['HTML']->header(
             \Tuleap\Layout\HeaderConfigurationBuilder::get($this->getTitle())
                 ->inProject($request->getProject(), 'hudson')
@@ -65,7 +65,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     // {{{ Views
     public function projectOverview()
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $user     = UserManager::instance()->getCurrentUser();
         $em       = EventManager::instance();
@@ -127,7 +127,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     public function job_details(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ($request->exist('job_id')) {
@@ -181,7 +181,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     public function build_number(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
         if ($request->exist('build')) {
             $build_id = $request->get('build');
@@ -251,7 +251,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     public function last_test_result(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id   = $request->get('job_id');
         $purifier = Codendi_HTMLPurifier::instance();
@@ -292,7 +292,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     public function test_trend(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id   = $request->get('job_id');
         $purifier = Codendi_HTMLPurifier::instance();
@@ -332,7 +332,7 @@ class hudsonViews extends Views // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     private function displayJobsTable($group_id, $services): void
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $purifier = Codendi_HTMLPurifier::instance();
         $user     = UserManager::instance()->getCurrentUser();
         $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());

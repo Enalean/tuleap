@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account\LostPassword;
 
 use ForgeConfig;
-use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
@@ -66,7 +65,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->event_manager->dispatch(new BeforeLostPasswordConfirm());
 
@@ -149,7 +148,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
     }
 
     private function redisplayFormWithError(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         array $variables,
         string $error_message,
