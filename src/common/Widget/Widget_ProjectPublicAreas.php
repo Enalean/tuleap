@@ -47,18 +47,6 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
         $project  = $pm->getProject($group_id);
         $html     = '';
 
-        $homepage_service = $project->getService(Service::HOMEPAGE);
-        if ($homepage_service !== null) {
-            $html .= '<p><a ';
-            if (substr($homepage_service->getUrl(), 0, 1) != '/') {
-                // Absolute link -> open new window on click
-                $html .= 'target="_blank" rel="noreferrer" ';
-            }
-            $html .= 'href="' . $purifier->purify($homepage_service->getUrl()) . '">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($homepage_service->getIcon()) . '"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'proj_home') . '</a></p>';
-        }
-
         // ######################### Wiki (only for Active)
 
         $wiki_service = $project->getService(Service::WIKI);
@@ -74,27 +62,6 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
             $html .= '</p>';
         }
 
-        // ######################### Subversion (only for Active)
-
-        $svn_service = $project->getService(Service::SVN);
-        if ($svn_service !== null) {
-            $html        .= '<p><a href="' . $purifier->purify($svn_service->getUrl()) . '">';
-            $html        .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($svn_service->getIcon()) . '"></i>';
-            $html        .= $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
-            $sql          = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='" . db_ei($group_id) . "'";
-            $result       = db_query($sql);
-            $svn_accesses = db_result($result, 0, 0);
-            if (! $svn_accesses) {
-                $svn_accesses = 0;
-            }
-
-            $html .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'accesses', $svn_accesses) . ' )';
-            if ($svn_accesses) {
-                $uri   = session_make_url('/svn/viewvc.php/?root=' . urlencode($project->getUnixName(false)) . '&roottype=svn');
-                $html .= '<br> &nbsp; - <a href="' . $purifier->purify($uri) . '">' . $GLOBALS['Language']->getText('include_project_home', 'browse_svn') . '</a>';
-            }
-            $html .= '</p>';
-        }
 
         // ######################### File Releases (only for Active)
 
@@ -103,58 +70,6 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
             $html .= $file_service->getPublicArea();
         }
 
-        // ######################### Trackers (only for Active)
-        $trackerv3_service = $project->getService(Service::TRACKERV3);
-        if ($trackerv3_service !== null) {
-            $html .= '<p><a href="' . $purifier->purify($trackerv3_service->getUrl()) . '">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($trackerv3_service->getIcon()) . '"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'trackers') . '</a>';
-            //  get the Group object
-            $pm    = ProjectManager::instance();
-            $group = $pm->getProject($group_id);
-            if (! $group || ! is_object($group) || $group->isError()) {
-                exit_no_group();
-            }
-            $atf = new ArtifactTypeFactory($group);
-            if (! $group || ! is_object($group) || $group->isError()) {
-                exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('include_project_home', 'no_arttypefact'));
-            }
-
-            // Get the artfact type list
-            $at_arr = $atf->getArtifactTypes();
-
-            if (! $at_arr || count($at_arr) < 1) {
-                $html .= '<br><i>' . $GLOBALS['Language']->getText('include_project_home', 'no_trackers_accessible') . '</i>';
-            } else {
-                $html .= '<ul>';
-                for ($j = 0; $j < count($at_arr); $j++) {
-                    if ($at_arr[$j]->userCanView()) {
-                        $html .= '<li>
-                        <a href="/tracker/?atid=' . urlencode($at_arr[$j]->getID()) . '&group_id=' . urlencode($group_id) . '&func=browse">' .
-                            $purifier->purify($at_arr[$j]->getName()) . '</a></li>';
-                    }
-                }
-                $html .= '</ul>';
-            }
-            $html .= '</p>';
-        }
-
-        // ######################## AnonFTP (only for Active)
-
-        if ($project->isActive()) {
-            $html .= '<p>';
-
-            $host = \Tuleap\ServerHostname::rawHostname();
-            if (ForgeConfig::get('sys_disable_subdomains')) {
-                $ftp_subdomain = '';
-            } else {
-                $ftp_subdomain = $project->getUnixName() . '.';
-            }
-            $html .= '<a href="ftp://' . $ftp_subdomain . $host . '/pub/' . urlencode($project->getUnixName(false)) . '/">';    // keep the first occurence in lower case
-            $html .= '<i class="dashboard-widget-content-projectpublicareas fa fa-tlp-folder-globe"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'anon_ftp_space') . '</a>';
-            $html .= '</p>';
-        }
 
         $event = new GetPublicAreas($project);
         EventManager::instance()->processEvent($event);

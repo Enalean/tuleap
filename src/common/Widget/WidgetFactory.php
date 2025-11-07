@@ -33,7 +33,6 @@ use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 use Widget;
 use Widget_MyAdmin;
-use Widget_MyArtifacts;
 use Widget_MyBookmarks;
 use Widget_MyImageViewer;
 use Widget_MyMonitoredFp;
@@ -88,9 +87,6 @@ class WidgetFactory implements IBuildInstanceOfWidgets
                 break;
             case 'mymonitoredfp':
                 $widget = new Widget_MyMonitoredFp();
-                break;
-            case 'myartifacts':
-                $widget = new Widget_MyArtifacts();
                 break;
             case 'myrss':
                 $widget = new Widget_MyRss();
