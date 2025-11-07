@@ -3905,9 +3905,6 @@ msgstr "Total : %s"
 msgid "Trace and Track all types of activities."
 msgstr "Suivez et gérez tous types d'activités."
 
-msgid "Trackers"
-msgstr "Trackers"
-
 msgid "Trackers v3 import"
 msgstr "Import trackers v3"
 
