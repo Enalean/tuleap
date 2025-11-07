@@ -211,7 +211,7 @@ class Tracker_GeneralSettings_Presenter // phpcs:ignore PSR1.Classes.ClassDeclar
 
         $this->submit_button                = $GLOBALS['Language']->getText('global', 'save_change');
         $this->tracker_emailgateway         = dgettext('tuleap-tracker', 'Enable to create/reply to artifacts by mail');
-        $this->html_tags                    = dgettext('tuleap-tracker', '(HTML tags allowed)');
+        $this->html_tags                    = dgettext('tuleap-tracker', 'HTML tags allowed');
         $this->tracker_name_label           = dgettext('tuleap-tracker', 'Name');
         $this->tracker_description_label    = dgettext('tuleap-tracker', 'Description');
         $this->tracker_shortname_label      = dgettext('tuleap-tracker', 'Short name');

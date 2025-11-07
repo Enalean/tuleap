@@ -23,6 +23,7 @@
 @use "pkg:@tuleap/tlp-popovers";
 
 .color-picker-popover {
+    z-index: 2004;
     width: unset;
 }
 

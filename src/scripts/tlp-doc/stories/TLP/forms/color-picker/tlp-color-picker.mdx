@@ -23,6 +23,10 @@ createColorPicker(mount_point, {
     input_id: "color_name",
     current_color: "clockwork-orange",
     is_unsupported_color: false,
+    on_color_change_callback(color: string) { // optional
+        // do stuff with selected color
+    }
+}
 });
 ```
 

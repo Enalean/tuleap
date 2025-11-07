@@ -17,11 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type ColorPickerOptions = {
-    readonly input_name: string;
-    readonly input_id: string;
-    readonly current_color: string;
-    readonly is_unsupported_color: boolean;
-    readonly on_color_change_callback?: (color: string) => void;
-    readonly is_no_color_allowed?: boolean;
-};
+@use "pkg:@tuleap/tlp-color-picker";
+
+.tracker-admin-general-settings-reply-by-mail-error-list {
+    list-style: none;
+}
+
+.tracker-admin-general-settings-reply-by-mail-error
+    > .tracker-admin-general-settings-reply-by-mail-error-list {
+    padding: 0;
+}
+
+.tracker-admin-general-settings-selected-color-preview {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    align-items: center;
+}

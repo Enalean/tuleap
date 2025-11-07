@@ -112,7 +112,9 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
@@ -1632,8 +1634,12 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
+        $assets = new IncludeAssets(__DIR__ . '/../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($assets, 'general-settings.js'));
+        $GLOBALS['HTML']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'general-settings-style'));
+
         $this->displayWarningGeneralsettings();
-        $this->displayAdminItemHeader($layout, 'editoptions', dgettext('tuleap-tracker', 'General settings'));
+        $this->displayAdminItemHeaderBurningParrot($layout, 'editoptions', dgettext('tuleap-tracker', 'General settings'));
         $general_settings = EventManager::instance()->dispatch(new \Tuleap\Tracker\Config\GeneralSettingsEvent($this));
         $this->renderer->renderToPage(
             'tracker-general-settings',

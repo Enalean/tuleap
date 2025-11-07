@@ -135,9 +135,6 @@ msgstr ""
 msgid "'%s' is not supported for the operator %s."
 msgstr ""
 
-msgid "(HTML tags allowed)"
-msgstr ""
-
 #, php-format
 msgid ""
 "(The maximum upload file size is %1$s Mb. The file must be encoded in UTF-8)"
@@ -1541,6 +1538,9 @@ msgid "Group fields in a set"
 msgstr ""
 
 msgid "HTML"
+msgstr ""
+
+msgid "HTML tags allowed"
 msgstr ""
 
 msgid "Hidden fieldsets:"

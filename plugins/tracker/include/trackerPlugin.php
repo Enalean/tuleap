@@ -556,6 +556,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             [
                 'admin-canned',
                 'admin-hierarchy',
+                'admin-editoptions',
             ],
             true,
         );
