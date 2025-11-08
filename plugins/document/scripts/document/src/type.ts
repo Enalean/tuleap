@@ -581,3 +581,8 @@ export type OtherItemTypeCollection = Record<string, OtherItemType>;
 export type EmbeddedFileDisplayPreference = "large" | "narrow";
 export const EMBEDDED_FILE_DISPLAY_LARGE: EmbeddedFileDisplayPreference = "large";
 export const EMBEDDED_FILE_DISPLAY_NARROW: EmbeddedFileDisplayPreference = "narrow";
+
+export type CsrfToken = {
+    readonly value: string;
+    readonly name: string;
+};

@@ -21,7 +21,7 @@ import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import type { ProjectFlag } from "@tuleap/vue3-breadcrumb-privacy";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { LocaleString } from "@tuleap/locale";
-import type { ListOfSearchResultColumnDefinition, SearchCriteria } from "./type";
+import type { CsrfToken, ListOfSearchResultColumnDefinition, SearchCriteria } from "./type";
 
 export interface Project {
     readonly id: number;
@@ -73,3 +73,4 @@ export const IS_FILENAME_PATTERN_ENFORCED: StrictInjectionKey<boolean> = Symbol(
 export const CAN_USER_SWITCH_TO_OLD_UI: StrictInjectionKey<boolean> = Symbol(
     "can-user-switch-to-old-ui",
 );
+export const CSRF_TOKEN: StrictInjectionKey<CsrfToken> = Symbol("csrf_token");

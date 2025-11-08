@@ -90,9 +90,6 @@ msgstr ""
 msgid "-- Project saved search:"
 msgstr ""
 
-msgid "...and for the whole sub-hierarchy."
-msgstr ""
-
 msgid "12 Months from today"
 msgstr ""
 
@@ -852,9 +849,6 @@ msgstr ""
 msgid "Empty documents:"
 msgstr ""
 
-msgid "Enable monitoring for the whole sub-hierarchy"
-msgstr ""
-
 msgid "Enabled"
 msgstr "Habilitado"
 
@@ -1170,9 +1164,6 @@ msgstr ""
 msgid "Metadata successfully updated."
 msgstr ""
 
-msgid "Monitored document"
-msgstr ""
-
 #, php-format
 msgid "Monitoring for group(s) '%1$s' already exists"
 msgstr ""
@@ -1285,9 +1276,6 @@ msgstr ""
 msgid "No email sent to reviewers."
 msgstr ""
 
-msgid "No notifications set"
-msgstr ""
-
 msgid "No review requested."
 msgstr ""
 
@@ -1327,9 +1315,6 @@ msgstr ""
 
 msgid "Notifications"
 msgstr "Notificações"
-
-msgid "Notified people"
-msgstr ""
 
 msgid "Number of items in this folder:"
 msgstr ""
@@ -1708,9 +1693,6 @@ msgstr ""
 msgid "Submit permissions"
 msgstr ""
 
-msgid "Subscribers"
-msgstr ""
-
 msgid "Summary"
 msgstr "Resumo"
 
@@ -2040,12 +2022,6 @@ msgstr ""
 msgid "User successfully added to the approval table."
 msgstr ""
 
-msgid "User, group"
-msgstr ""
-
-msgid "Validate"
-msgstr ""
-
 msgid "Validity:"
 msgstr ""
 
@@ -2328,9 +2304,6 @@ msgstr ""
 msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
 msgstr ""
 
-msgid "You cannot add emails"
-msgstr ""
-
 msgid "You cannot add people to an old approval table."
 msgstr ""
 
@@ -2341,11 +2314,6 @@ msgid "You cannot cut something and then paste it into its child."
 msgstr ""
 
 msgid "You cannot cut this folder."
-msgstr ""
-
-msgid ""
-"You cannot delete because a parent folder is monitored with its sub-"
-"hierarchy. You can delete that monitoring only from the parent itself."
 msgstr ""
 
 msgid "You cannot delete the root folder."

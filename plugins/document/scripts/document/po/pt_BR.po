@@ -28,6 +28,9 @@ msgstr ""
 msgid "*lorem* => contains \"lorem\""
 msgstr ""
 
+msgid "...and for the whole sub-hierarchy."
+msgstr ""
+
 msgid "1 warning"
 msgid_plural "%{ nb_warnings } warnings"
 msgstr[0] ""
@@ -54,6 +57,9 @@ msgid "A folder already exists with the same title."
 msgstr ""
 
 msgid "Actions in Documents service"
+msgstr ""
+
+msgid "Add notification"
 msgstr ""
 
 msgid "Administration"
@@ -144,6 +150,9 @@ msgstr ""
 
 msgid "Close"
 msgstr "Fechar"
+
+msgid "Confirm deletion"
+msgstr ""
 
 msgid ""
 "Contact your administrator or try to reorganize this folder, then try again."
@@ -270,6 +279,9 @@ msgstr ""
 msgid "Empty"
 msgstr "Vazio"
 
+msgid "Enable monitoring for the whole sub-hierarchy"
+msgstr ""
+
 msgid "End"
 msgstr ""
 
@@ -387,6 +399,9 @@ msgstr ""
 msgid "Maximum archive size threshold exceeded"
 msgstr ""
 
+msgid "Monitored document"
+msgstr ""
+
 msgid "My content..."
 msgstr ""
 
@@ -435,6 +450,9 @@ msgstr "Próximo"
 msgid "No matching results"
 msgstr ""
 
+msgid "No notifications set"
+msgstr ""
+
 msgid "No version history"
 msgstr ""
 
@@ -444,8 +462,14 @@ msgstr "Nenhum"
 msgid "Not yet"
 msgstr ""
 
+msgid "Notification deletion"
+msgstr ""
+
 msgid "Notifications"
 msgstr "Notificações"
+
+msgid "Notified people or groups"
+msgstr ""
 
 msgid "Obsolescence date"
 msgstr ""
@@ -518,6 +542,9 @@ msgid "Permanent"
 msgstr ""
 
 msgid "Permissions"
+msgstr ""
+
+msgid "Please confirm your action."
 msgstr ""
 
 msgid "Please describe the changes of the new version here"
@@ -620,6 +647,9 @@ msgstr ""
 msgid "Send mail"
 msgstr ""
 
+msgid "Send me an email whenever this item is updated."
+msgstr ""
+
 msgid ""
 "Shortcuts will apply to the selected document or folder. If there is no "
 "selected item they will apply to the current folder."
@@ -645,6 +675,12 @@ msgstr ""
 
 msgid "Status"
 msgstr "Estado"
+
+msgid "Submit"
+msgstr ""
+
+msgid "Subscribers"
+msgstr ""
 
 msgid "Switch to old user interface"
 msgstr ""
@@ -758,6 +794,15 @@ msgstr ""
 msgid "User avatar"
 msgstr "Avatar do Usuário"
 
+msgid "User groups that will receive the notification"
+msgstr ""
+
+msgid "Users who will receive the notification"
+msgstr ""
+
+msgid "Validate"
+msgstr ""
+
 msgid "Validity"
 msgstr ""
 
@@ -850,6 +895,11 @@ msgid "You are not allowed to write in this folder"
 msgstr ""
 
 msgid "You are viewing an old version (%{ version_number }) of this document."
+msgstr ""
+
+msgid ""
+"You cannot delete because a parent folder is monitored with its sub-"
+"hierarchy. You can delete that monitoring only from the parent itself."
 msgstr ""
 
 msgid "You don't have read permission for this item"

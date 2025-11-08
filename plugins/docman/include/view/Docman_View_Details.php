@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
 
 class Docman_View_Details extends Docman_View_Display // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
@@ -148,21 +147,6 @@ class Docman_View_Details extends Docman_View_Display // phpcs:ignore PSR1.Class
             $sections['permissions'] = true;
             $permissions             = new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url']);
             $details->addSection($permissions);
-        }
-
-        if ($user_can_read) {
-            $notifications_manager = $this->_controller->notificationsManager;
-
-            $sections['notifications'] = true;
-            $details->addSection(
-                new Docman_View_ItemDetailsSectionNotifications(
-                    $params['item'],
-                    $params['default_url'],
-                    $notifications_manager,
-                    $token,
-                    new CollectionOfUgroupMonitoredItemsBuilder($notifications_manager)
-                )
-            );
         }
 
         if ($user_can_read && ! ($params['item'] instanceof Docman_Empty)) {
