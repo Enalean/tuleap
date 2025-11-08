@@ -355,7 +355,6 @@ admin_system_events	send_email	Envoyer un email à :
 admin_system_events	nobody	Personne
 admin_system_events	default_queue	Queue principale
 admin_system_events	fts_queue	Full Text Search
-admin_system_events	tv3tv5_queue	Migration TV3 -> TV5
 admin_system_events	empty_state	Aucun événement système ne correspond à votre filtre.
 admin_system_events	filter_label	Filtrer
 admin_system_events	search_label	Chercher

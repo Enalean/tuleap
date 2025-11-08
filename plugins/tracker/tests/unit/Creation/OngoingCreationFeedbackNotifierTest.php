@@ -26,14 +26,12 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Response;
-use Tracker_Migration_MigrationManager;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class OngoingCreationFeedbackNotifierTest extends TestCase
 {
-    private Tracker_Migration_MigrationManager&MockObject $tv3_migration_manager;
     private PendingJiraImportDao&MockObject $pending_jira_import_dao;
     private OngoingCreationFeedbackNotifier $feedback_notifier;
     private Project&MockObject $project;
@@ -42,7 +40,6 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->tv3_migration_manager   = $this->createMock(Tracker_Migration_MigrationManager::class);
         $this->pending_jira_import_dao = $this->createMock(PendingJiraImportDao::class);
 
         $this->project = $this->createMock(Project::class);
@@ -50,14 +47,12 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
         $this->response = $this->createMock(Response::class);
 
         $this->feedback_notifier = new OngoingCreationFeedbackNotifier(
-            $this->tv3_migration_manager,
             $this->pending_jira_import_dao
         );
     }
 
     public function testItDoesNotInformAnythingIfThereIsNoOngoingMigrations(): void
     {
-        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
         $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')->willReturn([]);
 
         $this->response->expects($this->never())->method('addFeedback');
@@ -65,38 +60,8 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
         $this->feedback_notifier->informUserOfOngoingMigrations($this->project, $this->response);
     }
 
-    public function testItInformsTv3Migrations(): void
-    {
-        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(true);
-        $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')->willReturn([]);
-
-        $this->project->expects($this->once())->method('getTruncatedEmailsUsage')->willReturn(false);
-
-        $this->response->expects($this->once())->method('addFeedback')
-            ->with('info', 'Some migrations are being processed. Your new trackers will appear as soon as the migrations are completed.');
-
-        $this->feedback_notifier->informUserOfOngoingMigrations($this->project, $this->response);
-    }
-
-    public function testItInformsTv3MigrationsAndUntruncatedEmails(): void
-    {
-        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(true);
-        $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')->willReturn([]);
-
-        $this->project->expects($this->once())->method('getTruncatedEmailsUsage')->willReturn(true);
-
-        $this->response->expects($this->exactly(2))->method('addFeedback')
-            ->with('info', self::callback(static fn(string $message) => in_array($message, [
-                'Some migrations are being processed. Your new trackers will appear as soon as the migrations are completed.',
-                'An email not truncated will be sent at the end of the migration process.',
-            ])));
-
-        $this->feedback_notifier->informUserOfOngoingMigrations($this->project, $this->response);
-    }
-
     public function testItInformsPendingJiraImport(): void
     {
-        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
         $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')
             ->willReturn([
                 ['tracker_shortname' => 'bug'],
@@ -110,7 +75,6 @@ final class OngoingCreationFeedbackNotifierTest extends TestCase
 
     public function testItInformsManyPendingJiraImports(): void
     {
-        $this->tv3_migration_manager->expects($this->once())->method('thereAreMigrationsOngoingForProject')->willReturn(false);
         $this->pending_jira_import_dao->expects($this->once())->method('searchByProjectId')
             ->willReturn([
                 ['tracker_shortname' => 'bug'],

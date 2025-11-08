@@ -1,10 +1,3 @@
-/var/log/%PROJECT_NAME%/tv3_tv5_migration_syslog {
-    missingok
-    weekly
-    rotate 4
-    create 640 %APP_USER% %APP_USER%
-}
-
 /var/log/%PROJECT_NAME%/burndown_syslog {
     missingok
     weekly

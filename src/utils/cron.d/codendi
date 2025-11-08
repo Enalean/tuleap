@@ -16,7 +16,6 @@ TLP_DELAY_CRON_CMD=1
 # Once a minute, process Tuleap system events
 * * * * * root /usr/bin/tuleap process-system-event default
 * * * * * root /usr/bin/tuleap process-system-event statistics
-* * * * * codendiadm /usr/bin/tuleap process-system-event tv3_tv5_migration
 * * * * * codendiadm /usr/bin/tuleap process-system-event git
 
 # Ask plugins if they have something to execute each minute

@@ -30,7 +30,6 @@ final readonly class HomepagePresenterBuilder
 {
     public function __construct(
         private \TrackerFactory $tracker_factory,
-        private \Tracker_Migration_MigrationManager $migration_manager,
     ) {
     }
 
@@ -58,7 +57,7 @@ final readonly class HomepagePresenterBuilder
 
     private function canTrackerBeDisplayed(\Tuleap\Tracker\Tracker $tracker, \PFUser $user): bool
     {
-        return $tracker->userCanView($user) && ! $this->migration_manager->isTrackerUnderMigration($tracker);
+        return $tracker->userCanView($user);
     }
 
     /**
