@@ -1,4 +1,3 @@
-tests/integration/tests/tracker_v3_to_v5/tv3_tv5_migration_syslog
 src/www/scripts/combined/*
 src/utils/*.pyc
 src/utils/svn/*.pyc

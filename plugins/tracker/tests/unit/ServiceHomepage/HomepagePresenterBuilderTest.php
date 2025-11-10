@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\ServiceHomepage;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
@@ -38,15 +37,13 @@ final class HomepagePresenterBuilderTest extends TestCase
 
     private const PROJECT_NAME = 'contemptibleness-prenotion';
     private \TrackerFactory&Stub $tracker_factory;
-    private \Tracker_Migration_MigrationManager&MockObject $migration_manager;
     private bool $is_tracker_admin;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->tracker_factory   = $this->createStub(\TrackerFactory::class);
-        $this->migration_manager = $this->createMock(\Tracker_Migration_MigrationManager::class);
-        $this->is_tracker_admin  = false;
+        $this->tracker_factory  = $this->createStub(\TrackerFactory::class);
+        $this->is_tracker_admin = false;
 
         $GLOBALS['Language']
             ->method('getText')
@@ -58,7 +55,6 @@ final class HomepagePresenterBuilderTest extends TestCase
     {
         $builder = new HomepagePresenterBuilder(
             $this->tracker_factory,
-            $this->migration_manager
         );
         return $builder->build(
             ProjectTestBuilder::aProject()->withId(152)->withUnixName(self::PROJECT_NAME)->build(),
@@ -72,10 +68,6 @@ final class HomepagePresenterBuilderTest extends TestCase
         $first_tracker  = $this->mockTracker(true, true);
         $second_tracker = $this->mockTracker(true, true);
         $this->tracker_factory->method('getTrackersByGroupId')->willReturn([$first_tracker, $second_tracker,]);
-        $this->migration_manager->method('isTrackerUnderMigration')->willReturnMap([
-            [$first_tracker, false],
-            [$second_tracker, false],
-        ]);
         $this->is_tracker_admin = true;
 
         $presenter = $this->build();
@@ -98,10 +90,6 @@ final class HomepagePresenterBuilderTest extends TestCase
         $first_tracker  = $this->mockTracker(true, true);
         $second_tracker = $this->mockTracker(true, true);
         $this->tracker_factory->method('getTrackersByGroupId')->willReturn([$first_tracker, $second_tracker,]);
-        $this->migration_manager->method('isTrackerUnderMigration')->willReturnMap([
-            [$first_tracker, false],
-            [$second_tracker, false],
-        ]);
         $this->is_tracker_admin = false;
 
         $presenter = $this->build();
@@ -125,25 +113,6 @@ final class HomepagePresenterBuilderTest extends TestCase
         $first_tracker  = $this->mockTracker(false, false);
         $second_tracker = $this->mockTracker(true, true);
         $this->tracker_factory->method('getTrackersByGroupId')->willReturn([$first_tracker, $second_tracker,]);
-        $this->migration_manager->method('isTrackerUnderMigration')->willReturnMap([
-            [$first_tracker, false],
-            [$second_tracker, false],
-        ]);
-
-        $presenter = $this->build();
-
-        self::assertCount(1, $presenter->trackers);
-    }
-
-    public function testItOmitsTrackersThatAreUnderMigration(): void
-    {
-        $first_tracker  = $this->mockTracker(true, true);
-        $second_tracker = $this->mockTracker(true, true);
-        $this->tracker_factory->method('getTrackersByGroupId')->willReturn([$first_tracker, $second_tracker,]);
-        $this->migration_manager->method('isTrackerUnderMigration')->willReturnMap([
-            [$first_tracker, true],
-            [$second_tracker, false],
-        ]);
 
         $presenter = $this->build();
 
@@ -155,10 +124,6 @@ final class HomepagePresenterBuilderTest extends TestCase
         $first_tracker  = $this->mockTracker(true, false);
         $second_tracker = $this->mockTracker(true, true);
         $this->tracker_factory->method('getTrackersByGroupId')->willReturn([$first_tracker, $second_tracker,]);
-        $this->migration_manager->method('isTrackerUnderMigration')->willReturnMap([
-            [$first_tracker, false],
-            [$second_tracker, false],
-        ]);
 
         $presenter = $this->build();
 

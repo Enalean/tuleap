@@ -16,6 +16,10 @@
   <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
   <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-1.35/*</exclude-pattern>
   <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-current-lts/*</exclude-pattern>
+  <!-- phpcs incorrectly flags files modifications on non php files here -->
+  <!-- to be removed when https://github.com/PHPCSStandards/PHP_CodeSniffer/issues/1317 is fixed and released -->
+  <exclude-pattern>*/src/utils/cron.d/*</exclude-pattern>
+  <exclude-pattern>*/.gitignore</exclude-pattern>
 
   <!-- Forbid useless semicolon `;` -->
   <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>

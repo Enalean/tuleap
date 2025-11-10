@@ -407,10 +407,6 @@ msgid ""
 "following values:"
 msgstr ""
 
-msgid ""
-"An email not truncated will be sent at the end of the migration process."
-msgstr ""
-
 #, php-format
 msgid "An error has occurred during the deletion of the type: %1$s"
 msgstr ""
@@ -2674,11 +2670,6 @@ msgstr ""
 msgid ""
 "Some child trackers don't have a \"remaining_effort\" Integer or Float or "
 "Computed field:"
-msgstr ""
-
-msgid ""
-"Some migrations are being processed. Your new trackers will appear as soon "
-"as the migrations are completed."
 msgstr ""
 
 msgid ""

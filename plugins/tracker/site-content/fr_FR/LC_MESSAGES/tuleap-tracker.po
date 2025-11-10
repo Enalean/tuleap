@@ -481,11 +481,6 @@ msgstr ""
 "Un artifact sera considéré ouvert quand son champ %s aura une des valeurs "
 "suivantes :"
 
-msgid ""
-"An email not truncated will be sent at the end of the migration process."
-msgstr ""
-"Un courriel non tronqué sera envoyé à la fin du processus de migration."
-
 #, php-format
 msgid "An error has occurred during the deletion of the type: %1$s"
 msgstr "Une erreur est survenue pendant la suppression de la nature : %1$s"
@@ -3001,13 +2996,6 @@ msgid ""
 msgstr ""
 "Des trackers enfants n'ont pas de champ \"remaining_effort\" de type Entier, "
 "Flottant ou Calculé :"
-
-msgid ""
-"Some migrations are being processed. Your new trackers will appear as soon "
-"as the migrations are completed."
-msgstr ""
-"Des migrations sont en cours. Les nouveaux trackers apparaîtront dès que les "
-"migrations seront terminées."
 
 msgid ""
 "Some selected values was not saved because they are used in another semantic."

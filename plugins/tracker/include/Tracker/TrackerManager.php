@@ -29,10 +29,7 @@ use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
-use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
-use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
-use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
@@ -314,11 +311,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
      */
     public function displayAllTrackers(\Project $project, \PFUser $user): void
     {
-        $migration_manager = $this->getTV3MigrationManager();
-        $renderer          = new HomepageRenderer(
+        $renderer = new HomepageRenderer(
             new HomepagePresenterBuilder(
                 $this->getTrackerFactory(),
-                $migration_manager,
             ),
             new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
                 new User_ForgeUserGroupPermissionsManager(
@@ -326,7 +321,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
                 )
             ),
             new \Tuleap\Tracker\Creation\OngoingCreationFeedbackNotifier(
-                $migration_manager,
                 new PendingJiraImportDao()
             ),
             TemplateRendererFactory::build()
@@ -544,31 +538,5 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
             $dateReminderManager->process();
         }
         $logger->debug('[TDR] End processing date reminders');
-    }
-
-    private function getTV3MigrationManager(): Tracker_Migration_MigrationManager
-    {
-        $backend_logger = BackendLogger::getDefaultLogger(Tracker_Migration_MigrationManager::LOG_FILE);
-        $mail_logger    = new Tracker_Migration_MailLogger();
-
-        return new Tracker_Migration_MigrationManager(
-            new Tracker_SystemEventManager(SystemEventManager::instance()),
-            $this->getTrackerFactory(),
-            UserManager::instance(),
-            ProjectManager::instance(),
-            $this->getCreationDataChecker(),
-            new LegacyTrackerMigrationDao(),
-            new KeepReverseCrossReferenceDAO(),
-            $mail_logger,
-            new Tracker_Migration_MigrationLogger(
-                $backend_logger,
-                $mail_logger
-            )
-        );
-    }
-
-    private function getCreationDataChecker(): TrackerCreationDataChecker
-    {
-        return TrackerCreationDataChecker::build();
     }
 }

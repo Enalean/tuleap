@@ -99,7 +99,6 @@ use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\StatisticsCore\StatisticsServiceUsage;
-use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
@@ -222,8 +221,6 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Hierarchy\HierarchyHistoryEntry;
 use Tuleap\Tracker\Import\Spotter;
-use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
-use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
@@ -352,8 +349,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook('permission_get_object_type', 'permission_get_object_type');
         $this->addHook('permission_get_object_name', 'permission_get_object_name');
         $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change');
-        $this->addHook(GetSystemEventQueuesEvent::NAME);
-        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
 
         $this->addHook('url_verification_instance', 'url_verification_instance');
@@ -657,12 +652,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function getSystemEventClass($params)
     {
         switch ($params['type']) {
-            case SystemEvent_TRACKER_V3_MIGRATION::NAME:
-                $params['class']        = 'SystemEvent_TRACKER_V3_MIGRATION';
-                $params['dependencies'] = [
-                    $this->getMigrationManager(),
-                ];
-                break;
             case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME:
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
                 $params['dependencies'] = [
@@ -1452,35 +1441,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return new $class_with_right_namespace();
     }
 
-    private function getTrackerSystemEventManager()
-    {
-        return new Tracker_SystemEventManager($this->getSystemEventManager());
-    }
-
     private function getSystemEventManager()
     {
         return SystemEventManager::instance();
-    }
-
-    private function getMigrationManager(): Tracker_Migration_MigrationManager
-    {
-        $backend_logger = BackendLogger::getDefaultLogger(Tracker_Migration_MigrationManager::LOG_FILE);
-        $mail_logger    = new Tracker_Migration_MailLogger();
-
-        return new Tracker_Migration_MigrationManager(
-            $this->getTrackerSystemEventManager(),
-            $this->getTrackerFactory(),
-            $this->getUserManager(),
-            $this->getProjectManager(),
-            $this->getTrackerChecker(),
-            new LegacyTrackerMigrationDao(),
-            new KeepReverseCrossReferenceDAO(),
-            $mail_logger,
-            new Tracker_Migration_MigrationLogger(
-                $backend_logger,
-                $mail_logger
-            )
-        );
     }
 
     private function getProjectManager()
@@ -1543,22 +1506,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             if ($tracker) {
                 $params['project_id'] = $tracker->getGroupId();
             }
-        }
-    }
-
-    public function getSystemEventQueuesEvent(GetSystemEventQueuesEvent $event): void
-    {
-        $event->addAvailableQueue(
-            Tracker_SystemEvent_Tv3Tv5Queue::NAME,
-            new Tracker_SystemEvent_Tv3Tv5Queue()
-        );
-    }
-
-    /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
-    public function system_event_get_types_for_custom_queue($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['queue'] === Tracker_SystemEvent_Tv3Tv5Queue::NAME) {
-            $params['types'][] = SystemEvent_TRACKER_V3_MIGRATION::NAME;
         }
     }
 
