@@ -1666,7 +1666,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
-        $this->displayAdminHeader($layout, 'editperms', $title);
+        $this->displayAdminHeaderBurningParrot($layout, 'editperms', $title, []);
     }
 
     public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
