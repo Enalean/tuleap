@@ -557,6 +557,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 'admin-hierarchy',
                 'admin-editoptions',
                 'admin-csvimport',
+                'admin-perms-tracker',
             ],
             true,
         );

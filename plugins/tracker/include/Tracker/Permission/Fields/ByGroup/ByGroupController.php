@@ -28,11 +28,12 @@ use Tracker_FormElementFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class ByGroupController implements DispatchableWithRequest
+class ByGroupController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public const string URL = '/permissions/fields-by-group';
 

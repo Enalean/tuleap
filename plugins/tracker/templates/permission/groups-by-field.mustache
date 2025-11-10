@@ -1,64 +1,77 @@
-<h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker |Manage Fields Permissions{{/ dgettext }}</h2>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <form action="{{ update_url }}" method="post" class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }} tuleap-tracker |Manage Fields Permissions{{/ dgettext }}
+                </h1>
+            </div>
+            <div class="tlp-pane-section">
+                <p>{{# dgettext }} tuleap-tracker |Please note that project administrators and tracker administrators are granted full access to the tracker.{{/ dgettext }}</p>
+                <p>{{# dgettext }} tuleap-tracker |Project admins can also <a href="/project/admin/ugroup.php?group_id=%s">create or modify</a> user groups.| {{ project_id }} {{/ dgettext }}</p>
 
-{{# has_permissions}}
+                {{# has_permissions}}
+                    <input type="hidden" name="origin" value="fields-by-field" />
+                    <input type="hidden" name="selected_id" value="{{ selected_id }}" />
+                    <p>{{# dgettext }} tuleap-tracker |You may <a href="%s">switch to the 'group' view</a> by clicking on a field label in the table below.| {{ by_group_url }} {{/ dgettext}}</p>
+                    <table class="tlp-table">
+                        <thead>
+                        <tr>
+                            <th>{{# dgettext }} tuleap-tracker |Fields{{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-tracker |User groups{{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-tracker |Can submit{{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-tracker |Access permissions{{/ dgettext }}</th>
+                        </tr>
+                        </thead>
 
-<form name="form_tracker_permissions" action="{{ update_url }}" method="post">
-    <div>
-        <input type="hidden" name="origin" value="fields-by-field" />
-        <input type="hidden" name="selected_id" value="{{ selected_id }}" />
-        <p>{{# dgettext }} tuleap-tracker |Please note that project administrators and tracker administrators are granted full access to the tracker.{{/ dgettext }}</p>
-        <p>{{# dgettext }} tuleap-tracker |You may <a href="%s">switch to the 'group' view</a> by clicking on a field label in the table below.| {{ by_group_url }} {{/ dgettext}}</p>
-        <table class="table tracker-admin-permissions-per-field">
-            <thead>
-            <tr>
-                <th>{{# dgettext }} tuleap-tracker |Fields{{/ dgettext }}</th>
-                <th>{{# dgettext }} tuleap-tracker |User groups{{/ dgettext }}</th>
-                <th>{{# dgettext }} tuleap-tracker |Can submit{{/ dgettext }}</th>
-                <th>{{# dgettext }} tuleap-tracker |Access permissions{{/ dgettext }}</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            {{# ugroup_list }}
-            <tr>
-                {{# is_first }}
-                <td rowspan="{{ nb_permissions }}" style="vertical-align:top;">
-                    <select id="permissions-selector-target-element" data-test="select-field-permissions">
-                        {{# field_list }}
-                            <option value="{{ id }}"{{# is_selected }} selected="selected" style="background:#EEE;"{{/ is_selected }}>{{ name }}</option>
-                        {{/ field_list }}
-                    </select>
-                </td>
-                {{/ is_first }}
-                <td>
-                    <a href="{{ by_group_url }}?selected_id={{ ugroup_id }}">{{ ugroup_name }}</a>{{# might_not_have_access }} *{{/ might_not_have_access}}
-                </td>
-                <td style="text-align:center;">
-                    <input type="hidden" name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" value="off" />
-                    <input type='checkbox' name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" {{# has_submit_access }}checked="checked"{{/ has_submit_access }} {{# not_submitable }}disabled="disabled"{{/ not_submitable }} />
-                </td>
-                <td>
-                    <select name="permissions[{{ field_id }}][{{ ugroup_id }}][others]" data-test="field-permissions">
-                        <option value="100" {{# has_no_access }}selected="selected" style="background:#EEE;"{{/ has_no_access }}>-</option>
-                        <option value="0" {{# has_read_access }}selected="selected" style="background:#EEE;"{{/ has_read_access }} >{{# dgettext }} tuleap-tracker |Read only{{/ dgettext }}</option>
-                        {{# is_updatable }}
-                            <option value="1" {{# has_update_access }}selected="selected" style="background:#EEE;"{{/ has_update_access }} >{{# dgettext }} tuleap-tracker |Update{{/ dgettext }}</option>
-                        {{/ is_updatable }}
-                    </select>
-                </td>
-            </tr>
-            {{/ ugroup_list }}
-            </tbody>
-        </table>
-        {{# might_not_have_access }}
-            <p>{{# dgettext }} tuleap-tracker |* denotes user groups that may not have access to the tracker (no <a href="%s">tracker permission</a> set).| {{ tracker_url }} {{/ dgettext }}</p>
-        {{/ might_not_have_access }}
-        <input type='submit' name='update' data-test="submit-permissions" value="{{# dgettext }} tuleap-tracker |Submit permissions{{/ dgettext }}" />
-    </div>
-</form>
-{{/ has_permissions }}
-{{^ has_permissions }}
-    <p><em>{{# dgettext }} tuleap-tracker |No user group has access to this tracker{{/ dgettext }}</em></p>
-{{/ has_permissions }}
-
-<p>{{# dgettext }} tuleap-tracker |Project admins can also <a href="/project/admin/ugroup.php?group_id=%s">create or modify</a> user groups.| {{ project_id }} {{/ dgettext }}</p>
+                        <tbody>
+                        {{# ugroup_list }}
+                            <tr>
+                                {{# is_first }}
+                                    <td rowspan="{{ nb_permissions }}" style="vertical-align:top;">
+                                        <select class="tlp-select tlp-select-adjusted" id="permissions-selector-target-element" data-test="select-field-permissions">
+                                            {{# field_list }}
+                                                <option value="{{ id }}"{{# is_selected }} selected="selected" style="background:#EEE;"{{/ is_selected }}>{{ name }}</option>
+                                            {{/ field_list }}
+                                        </select>
+                                    </td>
+                                {{/ is_first }}
+                                <td>
+                                    <a href="{{ by_group_url }}?selected_id={{ ugroup_id }}">{{ ugroup_name }}</a>{{# might_not_have_access }} *{{/ might_not_have_access}}
+                                </td>
+                                <td style="text-align:center;">
+                                    <input type="hidden" name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" value="off" />
+                                    <input type='checkbox' name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" {{# has_submit_access }}checked="checked"{{/ has_submit_access }} {{# not_submitable }}disabled="disabled"{{/ not_submitable }} />
+                                </td>
+                                <td>
+                                    <select class="tlp-select tlp-select-adjusted" name="permissions[{{ field_id }}][{{ ugroup_id }}][others]" data-test="field-permissions">
+                                        <option value="100" {{# has_no_access }}selected="selected" style="background:#EEE;"{{/ has_no_access }}>-</option>
+                                        <option value="0" {{# has_read_access }}selected="selected" style="background:#EEE;"{{/ has_read_access }} >{{# dgettext }} tuleap-tracker |Read only{{/ dgettext }}</option>
+                                        {{# is_updatable }}
+                                            <option value="1" {{# has_update_access }}selected="selected" style="background:#EEE;"{{/ has_update_access }} >{{# dgettext }} tuleap-tracker |Update{{/ dgettext }}</option>
+                                        {{/ is_updatable }}
+                                    </select>
+                                </td>
+                            </tr>
+                        {{/ ugroup_list }}
+                        </tbody>
+                    </table>
+                    {{# might_not_have_access }}
+                        <p class="tlp-text-muted">{{# dgettext }} tuleap-tracker |* denotes user groups that may not have access to the tracker (no <a href="%s">tracker permission</a> set).| {{ tracker_url }} {{/ dgettext }}</p>
+                    {{/ might_not_have_access }}
+                    <div class="tlp-pane-section-submit">
+                        <input type='submit'
+                               name='update'
+                               data-test="submit-permissions"
+                               value="{{# dgettext }} tuleap-tracker |Submit permissions{{/ dgettext }}"
+                               class="tlp-button-primary"
+                        />
+                    </div>
+                {{/ has_permissions }}
+                {{^ has_permissions }}
+                    <p>{{# dgettext }} tuleap-tracker |No user group has access to this tracker{{/ dgettext }}</p>
+                {{/ has_permissions }}
+            </div>
+        </form>
+    </section>
+</div>
