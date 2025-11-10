@@ -54,9 +54,9 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         $this->assertUserIsProjectAdmin($service, $request);
 
-        $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../frontend-assets', '/assets/mediawiki');
+        $assets = new \Tuleap\Layout\IncludeViteAssets(__DIR__ . '/../scripts/admin/frontend-assets', '/assets/mediawiki/admin');
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('admin.js'));
+        $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/admin.ts'));
 
         $project = $request->getProject();
 

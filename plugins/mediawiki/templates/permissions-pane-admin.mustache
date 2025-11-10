@@ -1,95 +1,125 @@
-<form name="admin_group_mediawiki" class="admin_group_mediawiki" method="post" action="{{ route }}">
-    <h1>{{ admin_title }}</h1>
+<h1 class="project-administration-title">{{ admin_title }}</h1>
 
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="?group_id={{ group_id }}&pane=permissions">{{ permissions_label }}</a>
-        </li>
-        <li>
-            <a href="?group_id={{ group_id }}&pane=language">{{ language_label }}</a>
-        </li>
-    </ul>
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        <a class="tlp-tab tlp-tab-active" href="?group_id={{ group_id }}&pane=permissions">{{ permissions_label }}</a>
+        <a class="tlp-tab" href="?group_id={{ group_id }}&pane=language">{{ language_label }}</a>
+    </nav>
+</div>
 
-    {{# can_show_options }}
-        <h2>{{ options_title }}</h2>
-        <div class="mediawiki-options">
-            <label class="checkbox" for="mw-embedded">
-                <input type="checkbox" id="mw-embedded" name="enable_compatibility_view" {{# is_compatibility_enabled_value }} checked="checked" {{/ is_compatibility_enabled_value }} value="1" />
-                {{ compatibility_view_text }}
-            </label>
-        </div>
-    {{/ can_show_options }}
+<div class="tlp-framed">
 
-    <h2>{{ access_control_title }}</h2>
-    <p>{{ access_control_intro }}</p>
-    <div>
-        <div class="forge_mw_access_read_control">
-            <label>{{ read }}</label>
-            <select
-                title="{{ read }}"
-                multiple="multiple"
-                name="read_ugroups[]"
-                size="8"
-                data-test="mediawiki-read-ugroups"
-            >
-                {{# read_ugroups }}
-                <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ label }}</option>
-                {{/ read_ugroups }}
-            </select>
-        </div>
+    <form name="admin_group_mediawiki" class="admin_group_mediawiki" method="post" action="{{ route }}">
 
-        <div class="forge_mw_access_write_control">
-            <label>{{ write }}</label>
-            <select
-                title="{{ write }}"
-                multiple="multiple"
-                name="write_ugroups[]"
-                size="8"
-                data-test="mediawiki-write-ugroups"
-            >
-                {{# write_ugroups }}
-                <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ label }}</option>
-                {{/ write_ugroups }}
-            </select>
-        </div>
-        <div class="clearfix"></div>
-    </div>
+        {{# can_show_options }}
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            {{ options_title }}
+                        </h1>
+                    </div>
+                    <div class="tlp-pane-section">
+                        <label class="tlp-checkbox">
+                            <input type="checkbox" name="enable_compatibility_view" {{# is_compatibility_enabled_value }} checked="checked" {{/ is_compatibility_enabled_value }} value="1" />
+                            {{ compatibility_view_text }}
+                        </label>
+                    </div>
+                </div>
+            </section>
+        {{/ can_show_options }}
 
-    <h2>{{ title }}</h2>
-    <div class="forge_mw_help_block">
-        <p>{{ help_intro }}</p>
-        <p>{{{ help_link }}}</p>
-        <p>{{ help_project }}</p>
-    </div>
-    <div>
-        {{# groups_permissions }}
-        <div>
-            <div class="forge_mw_mapping_available">
-                <div>{{ tuleap_group_label }}</div>
-                {{# available_groups }}{{> selectbox }}{{/ available_groups }}
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        {{ access_control_title }}
+                    </h1>
+                </div>
+                <div class="tlp-pane-section">
+                    <p>{{ access_control_intro }}</p>
+                    <div class="mediawiki-admin-permissions">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="read_ugroups">{{ read }}</label>
+                            <select
+                                title="{{ read }}"
+                                multiple="multiple"
+                                name="read_ugroups[]"
+                                id="read_ugroups"
+                                size="8"
+                                data-test="mediawiki-read-ugroups"
+                                class="tlp-select tlp-select-adjusted"
+                            >
+                                {{# read_ugroups }}
+                                    <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ label }}</option>
+                                {{/ read_ugroups }}
+                            </select>
+                        </div>
+
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="write_ugroups">{{ write }}</label>
+                            <select
+                                title="{{ write }}"
+                                multiple="multiple"
+                                name="write_ugroups[]"
+                                id="write_ugroups"
+                                size="8"
+                                data-test="mediawiki-write-ugroups"
+                                class="tlp-select tlp-select-adjusted"
+                            >
+                                {{# write_ugroups }}
+                                    <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ label }}</option>
+                                {{/ write_ugroups }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="forge_mw_btn btn-group btn-group-vertical">
-                <button class="forge_mw_add_ugroup btn"><i class="fa fa-chevron-right"></i></button>
-                <button class="forge_mw_remove_ugroup btn"><i class="fa fa-chevron-left"></i></button>
-            </div>
-            <div class="forge_mw_mapping_selected">
-                <div>{{ mediawiki_group_label }}</div>
-                <input type="hidden" name="{{ hidden_selected_groups_name }}" class="forge_mw_hidden_selected_groups" value="{{ hidden_selected_groups_value }}"/>
-                {{# selected_groups }}{{> selectbox }}{{/ selected_groups }}
-            </div>
-        </div>
-        <div class="forge_mw_mapping_spacer"></div>
-        {{/ groups_permissions }}
-    </div>
+        </section>
 
-    <div class="admin_group_mediawiki_submit">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        {{ title }}
+                    </h1>
+                </div>
+                <div class="tlp-pane-section">
+                    <p>{{ help_intro }}</p>
+                    <p>{{{ help_link }}}</p>
+                    <p>{{ help_project }}</p>
+                    {{# groups_permissions }}
+                        <div class="mediawiki-admin-permissions">
+                            <div class="tlp-form-element">
+                                {{# available_groups }}
+                                    <label class="tlp-label" for="{{ id }}">{{ tuleap_group_label }}</label>
+                                    {{> selectbox }}
+                                {{/ available_groups }}
+                            </div>
+                            <div class="mediawiki-admin-permissions-buttons">
+                                <button type="button" class="forge_mw_add_ugroup tlp-button-secondary tlp-button-small"><i class="fa fa-chevron-right"></i></button>
+                                <button type="button" class="forge_mw_remove_ugroup tlp-button-secondary tlp-button-small"><i class="fa fa-chevron-left"></i></button>
+                            </div>
+                            <div class="tlp-form-element">
+                                {{# selected_groups }}
+                                    <label class="tlp-label" for="{{ id }}">{{ mediawiki_group_label }}</label>
+                                    <input type="hidden" name="{{ hidden_selected_groups_name }}" class="forge_mw_hidden_selected_groups" value="{{ hidden_selected_groups_value }}"/>
+                                    {{> selectbox }}
+                                {{/ selected_groups }}
+                            </div>
+                        </div>
+                    {{/ groups_permissions }}
+                </div>
+            </div>
+        </section>
+
         <input type="submit"
                name="submit"
                value="{{ submit_label }}"
-               class="btn btn-primary"
+               class="tlp-button-primary"
                data-test="mediawiki-administration-permission-submit-button"
         />
         {{ or_string }}
-        <input type="submit" name="restore" value="{{ restore_label }}" class="btn btn-danger"/>
-    </div>
-</form>
+        <input type="submit" name="restore" value="{{ restore_label }}" class="tlp-button-danger"/>
+    </form>
+</div>

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ff-mw-wrapper {
-    position: relative;
-    margin-top: var(--tlp-large-spacing);
-}
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-/* stylelint-disable-next-line selector-no-qualifying-type */
-#mw-content-text a.new {
-    color: #ba0000;
-}
-
-.portlet a,
-#mw-content-text a {
-    color: #002bb8;
-}
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    admin: path.resolve(__dirname, "src/admin.ts"),
+                },
+            },
+        },
+    },
+);

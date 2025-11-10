@@ -48,6 +48,7 @@ use Tuleap\Layout\BeforeStartProjectHeader;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeAssets;
@@ -283,7 +284,7 @@ class BurningParrotTheme extends BaseLayout
             $url_redirect,
             $this->toolbar,
             $breadcrumbs,
-            $this->css_assets,
+            $this->getBurningParrotStylesheetsBuilder(),
             $open_graph,
             $help_dropdown_presenter,
             $new_dropdown_presenter_builder->getPresenter($this->current_user->user, $project, $current_context_section),
@@ -297,8 +298,6 @@ class BurningParrotTheme extends BaseLayout
             $this->getPlatformBannerWithScript($this->current_user->user, 'platform/platform-banner.js'),
             $this->detected_browser,
             $this->theme_variant_color,
-            $this->theme_variation,
-            $this->javascript_assets,
             $in_project_without_project_context,
             $invite_buddies_presenter,
         );
@@ -308,6 +307,16 @@ class BurningParrotTheme extends BaseLayout
         if ($project) {
             $this->event_manager->dispatch(new AfterStartProjectContainer($project, $this->current_user->user));
         }
+    }
+
+    public function getBurningParrotStylesheetsBuilder(): BurningParrotStylesheetsBuilder
+    {
+        return new BurningParrotStylesheetsBuilder($this->theme_variation, $this->css_assets, $this->javascript_assets);
+    }
+
+    public function getCssAssets(): CssAssetCollection
+    {
+        return $this->css_assets;
     }
 
     protected function hasHeaderBeenWritten(): bool

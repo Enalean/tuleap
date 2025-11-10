@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiGroupPresenter
+class MediawikiGroupPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var ProjectUGroup[] */
     private $available_ugroups;
@@ -40,21 +40,22 @@ class MediawikiGroupPresenter
         $this->current_mapping       = $mapping;
     }
 
-    public function tuleap_group_label()
+    public function tuleap_group_label() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return 'Tuleap groups';
     }
 
-    public function mediawiki_group_label()
+    public function mediawiki_group_label() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->mediawiki_group_label . ' (Mediawiki)';
     }
 
-    public function available_groups()
+    public function available_groups() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $selector = [
             'name'     => 'available_' . $this->mediawiki_group_id . '[]',
-            'class'    => 'forge_mw_available_groups',
+            'id'       => 'available_' . $this->mediawiki_group_id,
+            'class'    => 'forge-mw-available-groups',
             'options'  => [],
         ];
         foreach ($this->available_ugroups as $ugroup) {
@@ -67,11 +68,12 @@ class MediawikiGroupPresenter
         return $selector;
     }
 
-    public function selected_groups()
+    public function selected_groups() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $selector = [
             'name'     => 'selected_' . $this->mediawiki_group_id . '[]',
-            'class'    => 'forge_mw_selected_groups',
+            'id'       => 'selected_' . $this->mediawiki_group_id,
+            'class'    => 'forge-mw-selected-groups',
             'options'  => [],
         ];
 
@@ -86,12 +88,12 @@ class MediawikiGroupPresenter
         return $selector;
     }
 
-    public function hidden_selected_groups_name()
+    public function hidden_selected_groups_name() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return 'hidden_selected_' . $this->mediawiki_group_id;
     }
 
-    public function hidden_selected_groups_value()
+    public function hidden_selected_groups_value() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $ids = [];
         foreach ($this->current_mapping as $ugroup) {

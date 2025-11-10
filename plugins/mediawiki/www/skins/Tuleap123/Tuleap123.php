@@ -58,8 +58,9 @@ class SkinTuleap123 extends SkinTemplate
     public function setupSkinUserCss(OutputPage $out)
     {
             /* add Tuleap styles */
-        foreach ($GLOBALS['HTML']->getAllStyleSheets() as $sheet) {
-                $out->addStyle($sheet['css'], $sheet['media']);
+        assert($GLOBALS['HTML'] instanceof \Tuleap\Theme\BurningParrot\BurningParrotTheme);
+        foreach ($GLOBALS['HTML']->getBurningParrotStylesheetsBuilder()->getStylesheets() as $sheet) {
+                $out->addStyle($sheet, 'screen');
         }
 
             parent::setupSkinUserCss($out);
@@ -76,18 +77,26 @@ class SkinTuleap123 extends SkinTemplate
     public function addToBodyAttributes($out, &$bodyAttrs)
     {
         parent::addToBodyAttributes($out, $bodyAttrs);
-        $current_user  = UserManager::instance()->getCurrentUser();
-        $sidebar_state = $current_user->getPreference('sidebar_state');
+        $current_user = UserManager::instance()->getCurrentUser();
+        if (! $this->isCompatibilityViewEnabled()) {
+            $sidebar_state = $current_user->getPreference('sidebar_state');
 
-        if (! $sidebar_state) {
-            $sidebar_state = 'sidebar-expanded';
+            if (! $sidebar_state) {
+                $sidebar_state = 'sidebar-expanded';
+            }
+
+            $bodyAttrs['class'] .= ' has-sidebar ' . $sidebar_state;
         }
-
-        $bodyAttrs['class'] .= ' has-sidebar ' . $sidebar_state;
-
         $theme_variant       = new ThemeVariant();
         $prefered_variant    = $theme_variant->getVariantColorForUser($current_user);
         $bodyAttrs['class'] .= ' ' . $prefered_variant->getName();
+    }
+
+    private function isCompatibilityViewEnabled(): bool
+    {
+        $project = $GLOBALS['group'];
+
+        return new MediawikiManager(new MediawikiDao())->isCompatibilityViewEnabled($project);
     }
 }
 

@@ -52,34 +52,6 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
         UserManager::clearInstance();
     }
 
-    public function testAddStyleSheet(): void
-    {
-        $l = new class extends \Layout {
-            public function __construct()
-            {
-                parent::__construct('');
-            }
-
-            #[\Override]
-            public function header(array|HeaderConfiguration $params): void
-            {
-            }
-
-            #[\Override]
-            protected function hasHeaderBeenWritten(): bool
-            {
-                return false;
-            }
-
-            #[\Override]
-            public function footer(FooterConfiguration|array $params): void
-            {
-            }
-        };
-        $l->addStylesheet('/theme/css/style.css');
-        self::assertEquals(['/theme/css/style.css'], $l->getAllStyleSheets());
-    }
-
     public function testAddedStyleSheetShouldBeRenderedInPageHeaders(): void
     {
         $l             = new class extends \Layout {
