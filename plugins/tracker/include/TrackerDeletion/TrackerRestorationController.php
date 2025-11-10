@@ -22,18 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\TrackerDeletion;
 
+use Feedback;
+use Override;
 use RuntimeException;
+use Tuleap\HTTPRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\Request\DispatchableWithBurningParrot;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Tracker\Config\SiteAdminChecker;
 use Tuleap\Tracker\RetrieveTracker;
 
-final readonly class TrackerRestorer
+final readonly class TrackerRestorationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    public function __construct(private RetrieveTracker $tracker_factory, private RestoreDeletedTracker $dao)
+    public function __construct(private RetrieveTracker $tracker_factory, private RestoreDeletedTracker $dao, private CSRFSynchronizerTokenInterface $synchronizer_token)
     {
     }
 
-    public function restoreTracker(\Tuleap\HTTPRequest $request, BaseLayout $response): void
+    #[Override]
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        $user = $request->getCurrentUser();
+        SiteAdminChecker::checkUserIsSiteadmin($user, $layout);
+
+        $this->synchronizer_token->check();
+
         $tracker_id = $request->get('tracker_id');
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
         if ($tracker === null) {
@@ -41,7 +54,7 @@ final readonly class TrackerRestorer
         }
         $tracker_name = $tracker->getName();
         $this->dao->restoreTrackerMarkAsDeleted((int) $tracker_id);
-        $response->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'The tracker \'%1$s\' has been properly restored'), $tracker_name));
-        $response->redirect('/tracker/admin/restore.php');
+        $layout->addFeedback(Feedback::SUCCESS, sprintf(dgettext('tuleap-tracker', 'The tracker \'%1$s\' has been properly restored'), $tracker_name));
+        $layout->redirect(TrackerRestorationDisplayController::FULL_URL);
     }
 }

@@ -26,7 +26,6 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Project\MappingRegistry;
-use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
@@ -36,8 +35,6 @@ use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBu
 use Tuleap\Tracker\ServiceHomepage\HomepagePresenterBuilder;
 use Tuleap\Tracker\ServiceHomepage\HomepageRenderer;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
-use Tuleap\Tracker\TrackerDeletion\TrackerRestorer;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -173,28 +170,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher //phpcs:ignore PSR
                 $GLOBALS['Response']->send401UnauthorizedHeader();
             }
         } catch (Tracker_NoMachingResourceException $e) {
-            $global_admin_permissions_checker = new GlobalAdminPermissionsChecker(
-                new User_ForgeUserGroupPermissionsManager(
-                    new User_ForgeUserGroupPermissionsDao()
-                )
-            );
             //show, admin all trackers
             if ((int) $request->get('group_id')) {
                 $group_id = (int) $request->get('group_id');
                 if ($project = $this->getProject($group_id)) {
                     if ($this->checkServiceEnabled($project, $request)) {
                         switch ($request->get('func')) {
-                            case 'restore-tracker':
-                                if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
-                                    $restorer = new TrackerRestorer($this->getTrackerFactory(), new DeletedTrackerDao());
-                                    $token    = new CSRFSynchronizerToken('/tracker/admin/restore.php');
-                                    $token->check();
-                                    $restorer->restoreTracker($request, $GLOBALS['Response']);
-                                } else {
-                                    $this->redirectToTrackerHomepage($group_id);
-                                }
-                                break;
-
                             case 'permissions-per-group':
                                 if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
                                     $GLOBALS['Response']->send400JSONErrors(

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.8\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -4385,6 +4385,9 @@ msgstr "Trackers en attente de suppression"
 
 msgid "Trackers new generation"
 msgstr "Tracker nouvelle génération"
+
+msgid "Trackers restoration"
+msgstr "Restauration de trackers"
 
 msgid "Transition not found."
 msgstr "Transition non trouvée."

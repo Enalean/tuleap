@@ -20,16 +20,20 @@
 
 namespace Tuleap\Tracker\Config;
 
+use Tuleap\Tracker\TrackerDeletion\TrackerRestorationDisplayController;
+
 class SectionsPresenter
 {
-    public string $artifact_link_active     = '';
-    public string $artifact_deletion_active = '';
-    public string $email_gateway_active     = '';
-    public string $report_active            = '';
+    public string $artifact_link_active       = '';
+    public string $artifact_deletion_active   = '';
+    public string $email_gateway_active       = '';
+    public string $report_active              = '';
+    public string $tracker_restoration_active = '';
     public string $emailgateway_url;
     public string $types_url;
     public string $report_config_url;
     public string $artifacts_deletion_url;
+    public string $tracker_restoration_url = TRACKER_BASE_URL . TrackerRestorationDisplayController::URL;
 
     public function __construct()
     {

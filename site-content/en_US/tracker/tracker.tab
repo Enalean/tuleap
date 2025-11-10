@@ -225,16 +225,6 @@ tracker_admin_index	modify_fieldset	 - Modify Field Set
 tracker_admin_index	modify_fieldset_for	 - Modify Field Set for '$1'
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/admin/restore.php
-#
-tracker_admin_restore	restore_failed	Restore operation failed
-tracker_admin_restore	tracker_restored	Restored tracker
-tracker_admin_restore	delay_failed	Delay operation failed
-tracker_admin_restore	delayed_deletion	Delayed deletion
-tracker_admin_restore	pending_deletions	Trackers Deletion
-tracker_admin_restore	tracker_deleted	Tracker deleted
-#
-#-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactCannedHtml.class.php
 #
 tracker_include_canned	create_response	Create a new response

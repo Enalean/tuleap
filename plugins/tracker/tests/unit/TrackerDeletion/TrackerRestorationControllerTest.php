@@ -26,13 +26,15 @@ use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\TrackerDeletion\RestoreDeletedTrackerStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerRestorerTest extends TestCase
+final class TrackerRestorationControllerTest extends TestCase
 {
     private RestoreDeletedTrackerStub $dao;
     private MockObject&BaseLayout $response;
@@ -49,15 +51,16 @@ final class TrackerRestorerTest extends TestCase
     {
         $request = HTTPRequestBuilder::get()
             ->withParam('tracker_id', '101')
+            ->withUser(UserTestBuilder::buildSiteAdministrator())
             ->build();
 
         $tracker_factory = RetrieveTrackerStub::withoutTracker();
-        $restorer        = new TrackerRestorer($tracker_factory, $this->dao);
+        $restorer        = new TrackerRestorationController($tracker_factory, $this->dao, CSRFSynchronizerTokenStub::buildSelf());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Tracker does not exist');
 
-        $restorer->restoreTracker($request, $this->response);
+        $restorer->process($request, $this->response, []);
     }
 
     public function testItRestoresTrackerSuccessfully(): void
@@ -66,14 +69,15 @@ final class TrackerRestorerTest extends TestCase
 
         $request = HTTPRequestBuilder::get()
             ->withParam('tracker_id', '101')
+            ->withUser(UserTestBuilder::buildSiteAdministrator())
             ->build();
 
         $tracker_factory = RetrieveTrackerStub::withTracker($tracker);
-        $restorer        = new TrackerRestorer($tracker_factory, $this->dao);
+        $restorer        = new TrackerRestorationController($tracker_factory, $this->dao, CSRFSynchronizerTokenStub::buildSelf());
         $this->response->expects($this->once())->method('addFeedback');
-        $this->response->expects($this->once())->method('redirect')->with('/tracker/admin/restore.php');
+        $this->response->expects($this->once())->method('redirect')->with(TrackerRestorationDisplayController::FULL_URL);
 
-        $restorer->restoreTracker($request, $this->response);
+        $restorer->process($request, $this->response, []);
 
         $this->assertEquals(1, $this->dao->getCallCount());
     }

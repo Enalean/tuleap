@@ -1,5 +1,8 @@
+<?php
 /**
- * Copyright (c) Enalean SAS - 2016 - Present. All rights reserved
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,10 +16,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+declare(strict_types=1);
 
-document.addEventListener("DOMContentLoaded", () => {
-    openAllTargetModalsOnClick(document, ".delete-tv3-button");
-});
+namespace Tuleap\Tracker\TrackerDeletion;
+
+use Tuleap\Tracker\Config\SectionsPresenter;
+
+final class TrackerRestorationSectionsPresenter extends SectionsPresenter
+{
+    public string $tracker_restoration_active = 'tlp-tab-active';
+}

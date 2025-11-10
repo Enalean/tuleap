@@ -100,7 +100,6 @@ class AdminSidebarPresenter
         $this->configuration_nav_categories            = _('Public project categories');
         $this->configuration_nav_project_fields        =  _('Project fields');
         $this->configuration_nav_predefined_references = _('Predefined project references');
-        $this->configuration_nav_tracker_restore       = _('Pending trackers removal');
 
         $this->utils_section_title     = _('Global utils');
         $this->utils_nav_system_events = _('System events');

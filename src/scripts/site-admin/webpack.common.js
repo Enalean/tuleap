@@ -40,7 +40,6 @@ export default [
             "site-admin-system-events": "./src/system-events.ts",
             "site-admin-system-events-admin-homepage": "./src/system-events-admin-homepage.ts",
             "site-admin-system-events-notifications": "./src/system-events-notifications.ts",
-            "site-admin-trackers-pending-removal": "./src/trackers-pending-removal.ts",
             "site-admin-user-details": "./src/user-details.ts",
             "site-admin-user-details-styles": "./styles/user-details.scss",
             "site-admin-user-list": "./src/user-list.ts",

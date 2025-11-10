@@ -278,6 +278,8 @@ use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
 use Tuleap\Tracker\TrackerDeletion\DeleteTrackerPresenterBuilder;
 use Tuleap\Tracker\TrackerDeletion\TrackerDeletionRetriever;
+use Tuleap\Tracker\TrackerDeletion\TrackerRestorationController;
+use Tuleap\Tracker\TrackerDeletion\TrackerRestorationDisplayController;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\User\UserPreferencesPostController;
@@ -329,7 +331,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public const string EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
     public const string SERVICE_SHORTNAME                       = 'plugin_tracker';
     public const string TRUNCATED_SERVICE_NAME                  = 'Trackers';
-    public const string DELETED_TRACKERS_TEMPLATE_NAME          = 'deleted_trackers';
 
     public function __construct($id)
     {
@@ -426,7 +427,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $this->addHook(MilestoneResource::AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN);
         }
 
-        $this->addHook(Event::LIST_DELETED_TRACKERS);
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
 
         $this->addHook(GlyphLocationsCollector::NAME);
@@ -1141,19 +1141,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $tracker_manager = new TrackerManager();
             $tracker_manager->deleteProjectTrackers((int) $event->project->getID());
         }
-    }
-
-    public function display_deleted_trackers(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $deleted_tracker_presenter_builder = new DeleteTrackerPresenterBuilder(new TrackerDeletionRetriever(new DeletedTrackerDao(), $this->getTrackerFactory()));
-        $presenter                         = $deleted_tracker_presenter_builder->displayDeletedTrackers();
-        $renderer                          = new AdminPageRenderer();
-
-        $renderer->renderToPage(
-            $presenter->getTemplateDir(),
-            self::DELETED_TRACKERS_TEMPLATE_NAME,
-            $presenter
-        );
     }
 
     /**
@@ -2124,6 +2111,29 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         );
     }
 
+    public function routeGetRestoreTracker(): DispatchableWithRequest
+    {
+        return new TrackerRestorationDisplayController(
+            new AdminPageRenderer(),
+            new DeleteTrackerPresenterBuilder(
+                new TrackerDeletionRetriever(
+                    new DeletedTrackerDao(),
+                    $this->getTrackerFactory(),
+                ),
+                new CSRFSynchronizerToken(TrackerRestorationDisplayController::FULL_URL),
+            ),
+        );
+    }
+
+    public function routePostRestoreTracker(): DispatchableWithRequest
+    {
+        return new TrackerRestorationController(
+            $this->getTrackerFactory(),
+            new DeletedTrackerDao(),
+            new CSRFSynchronizerToken(TrackerRestorationDisplayController::FULL_URL),
+        );
+    }
+
     public function routeGetFieldsPermissionsByField(): DispatchableWithRequest
     {
         return new ByFieldController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/permission'));
@@ -2187,6 +2197,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $r->post('/invert_display_changes.php', $this->getRouteHandler('routePostInvertDisplayChanges'));
 
             $r->addRoute(['GET', 'POST'], '/config.php', $this->getRouteHandler('routeConfig'));
+            $r->get(TrackerRestorationDisplayController::URL, $this->getRouteHandler('routeGetRestoreTracker'));
+            $r->post(TrackerRestorationDisplayController::URL, $this->getRouteHandler('routePostRestoreTracker'));
 
             $r->get('/notifications/{id:\d+}/', $this->getRouteHandler('routeGetNotifications'));
             $r->post('/notifications/{id:\d+}/', $this->getRouteHandler('routePostNotifications'));
