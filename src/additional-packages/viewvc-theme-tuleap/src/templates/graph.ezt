@@ -11,7 +11,7 @@
         [end]
     [end]
   [end]
-  [define page_title]<small>Graph of</small> [resource_name][end]
+  [define page_title]Graph of [resource_name][end]
   [define help_href][docroot]/help_rootview.html[end]
 [# end]
 

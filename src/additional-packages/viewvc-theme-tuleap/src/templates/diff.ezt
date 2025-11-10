@@ -11,14 +11,12 @@
         [end]
     [end]
   [end]
-  [define page_title]<small>Diff of</small> [resource_name][end]
+  [define page_title]Diff of [resource_name][end]
   [define help_href][docroot]/help_rootview.html[end]
 [# end]
 
 [include "include/header.ezt" "diff"]
 [include "include/file_header.ezt"]
-</div><!-- tuleap-viewvc-header -->
-<div class="tuleap-viewvc-body-diff">
 
 [if-any diffs]
   [for diffs]
@@ -75,7 +73,7 @@
     [end]
 
     [is diffs.diff_block_format "sidebyside-1"]
-    <table cellspacing="0" cellpadding="0" id="tuleap-viewvc-diff-changes">
+    <table class="tlp-table" id="tuleap-viewvc-diff-changes">
       <tr class="vc_diff_header">
         <th style="width:6%;"></th>
         <th style="width:47%; vertical-align:top;">[left_header]</th>
@@ -264,7 +262,7 @@
     <form method="get" action="[diff_format_action]">
         [for diff_format_hidden_values]<input type="hidden" name="[diff_format_hidden_values.name]" value="[diff_format_hidden_values.value]"/>[end]
         Switch to:
-        <select name="diff_format" onchange="submit()">
+        <select name="diff_format" class="tlp-select tlp-select-adjusted tlp-select-small tuleap-viewvc-select-diff" onchange="submit()">
             <option value="h" [is diff_format "h"]selected="selected"[end]>Colored Diff</option>
             <option value="l" [is diff_format "l"]selected="selected"[end]>Long Colored Diff</option>
             <option value="f" [is diff_format "f"]selected="selected"[end]>Full Colored Diff</option>

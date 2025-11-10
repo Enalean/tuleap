@@ -60,7 +60,7 @@
     <option value="c" [is diff_format "c"]selected="selected"[end]>Context Diff</option>
     <option value="s" [is diff_format "s"]selected="selected"[end]>Side by Side</option>
   </select>
-  <input type="submit" class="btn" value="Get Diffs" />
+  <input type="submit" class="tlp-button-secondary tlp-button-outline" value="Get Diffs" />
   </td>
   </tr>
   </table>

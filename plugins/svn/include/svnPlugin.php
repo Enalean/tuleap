@@ -490,24 +490,11 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return ProjectManager::instance();
     }
 
-    #[ListeningToEventName('cssfile')]
-    public function cssfile(): void
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $assets = $this->getIncludeAssets();
-            echo '<link rel="stylesheet" type="text/css" href="' . $assets->getFileURL('style-fp.css') . '" />';
-        }
-    }
-
     #[ListeningToEventName('javascript_file')]
     public function javascriptFile(array $params): void
     {
         $layout = $params['layout'];
         assert($layout instanceof \Tuleap\Layout\BaseLayout);
-        // Only show the javascript if we're actually in the svn pages.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'svn.js'));
-        }
         if ($this->currentRequestIsForPlugin()) {
             $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'svn-admin.js'));
         }
@@ -1196,7 +1183,8 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             || (
                 $params === ['action', 'group_id', 'repo_id']
                 && in_array($query['action'], ['display-repository-delete', 'hooks-config', 'display-immutable-tag', 'access-control'], true)
-            );
+            )
+            || HTTPRequest::instance()->exist('root');
     }
 
     #[ListeningToEventClass]

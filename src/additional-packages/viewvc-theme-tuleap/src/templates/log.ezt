@@ -11,7 +11,7 @@
     <div class="log-revision-header">
         [is entries.state "dead"]
           <div class="log-revision-header-title">Revision <strong>[entries.rev]</strong>
-              <span class="badge badge-default log-revision-header-title-removed">File removed</span>
+              <span class="tlp-badge-secondary log-revision-header-title-removed">File removed</span>
           </div>
 
         [else]
@@ -29,22 +29,22 @@
               </h4>
 
               [if-any entries.lockinfo]
-                <span class="badge badge-important log-revision-header-title-lock" title="Locked: [entries.lockinfo]"><i class="fas fa-lock"></i></span>
+                <span class="tlp-badge-danger log-revision-header-title-lock" title="Locked: [entries.lockinfo]"><i class="fas fa-lock"></i></span>
               [end]
           </div>
 
           <div class="log-revision-header-actions">
-              <div class="btn-group log-revision-header-actions-view">
+              <div class="tlp-form-element-append tlp-form-element-prepend log-revision-header-actions-view">
                   [if-any entries.view_href]
                     [is pathtype "file"]
-                      <a href="[entries.view_href]" class="btn btn-small"><i class="icon-file-alt"></i> View</a>
+                      <a href="[entries.view_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-prepend"><i class="icon-file-alt"></i> View</a>
                     [else]
-                      <a href="[entries.view_href]" class="btn btn-small"><i class="icon-folder-close-alt"></i> Directory Listing</a>
+                      <a href="[entries.view_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-prepend"><i class="icon-folder-close-alt"></i> Directory Listing</a>
                     [end]
                   [end]
-                  [if-any entries.download_href]<a href="[entries.download_href]" class="btn btn-small"><i class="fas fa-download"></i> Download</a>[end]
-                  [if-any entries.download_text_href]<a href="[entries.download_text_href]" class="btn btn-small"><i class="far fa-file-alt"></i> As text</a>[end]
-                  [if-any entries.annotate_href]<a href="[entries.annotate_href]" class="btn btn-small"><i class="fas fa-bullhorn"></i> Annotate</a>[end]
+                  [if-any entries.download_href]<a href="[entries.download_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-append tlp-prepend"><i class="fas fa-download"></i> Download</a>[end]
+                  [if-any entries.download_text_href]<a href="[entries.download_text_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-append"><i class="far fa-file-alt"></i> As text</a>[end]
+                  [if-any entries.annotate_href]<a href="[entries.annotate_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-append"><i class="fas fa-bullhorn"></i> Annotate</a>[end]
               </div>
 
               [is pathtype "file"]
@@ -52,20 +52,20 @@
                       [if-any entries.prev]
                         <span>Diff to: </span>
                       [end]
-                      <div class="btn-group">
+                      <div class="tlp-form-element-append tlp-form-element-prepend tuleap-viewvc-prepend-append">
                         [if-any entries.prev]
-                          <a href="[entries.diff_to_prev_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Previous [entries.prev]</a>
+                          <a href="[entries.diff_to_prev_href][if-any human_readable][else]&amp;diff_format=h[end]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-prepend tlp-append">Previous [entries.prev]</a>
                         [end]
 
                         [if-any entries.diff_to_sel_href]
-                          <a href="[entries.diff_to_sel_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Selected [rev_selected]</a>
+                          <a href="[entries.diff_to_sel_href][if-any human_readable][else]&amp;diff_format=h[end]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-prepend tlp-append">Selected [rev_selected]</a>
                         [end]
                      </div>
 
                     [is entries.rev rev_selected]
-                      <span class="badge badge-default log-revision-header-selectfordiffs">Selected for diff</button>
+                      <span class="tlp-badge-primary log-revision-header-selectfordiffs">Selected for diff</button>
                     [else]
-                      <a href="[entries.sel_for_diff_href]" class="btn btn-small log-revision-header-selectfordiffs">Select for diffs</a>
+                      <a href="[entries.sel_for_diff_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small log-revision-header-selectfordiffs">Select for diffs</a>
                     [end]
                 </div>
               [end]
@@ -76,7 +76,8 @@
     <div class="log-revision-footer">
         <span class="log-revision-footer-entry">
             [if-any entries.author]
-                <div class="avatar"><img src="/users/[entries.author]/avatar.png" /></div>[entries.author]
+                <div class="tlp-avatar-small"><img src="/users/[entries.author]/avatar.png" /></div>
+                [entries.author]
             [else](unknown author)[end]
         </span>
 

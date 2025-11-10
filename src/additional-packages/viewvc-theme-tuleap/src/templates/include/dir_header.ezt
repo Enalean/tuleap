@@ -15,14 +15,14 @@
         [end]
     [end]
   [end]
-  [define page_title]<small>Index of</small> [resource_name][end]
+  [define page_title]Index of [resource_name][end]
   [define help_href][docroot]/help_[if-any where]dir[else]root[end]view.html[end]
 [# end]
 
 [include "header.ezt" "directory"]
 
     [if-any log_href]
-        <a href="[log_href]" class="btn btn-small"><i class="far fa-list-alt"></i> Revision Log</a>
+        <a href="[log_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small"><i class="far fa-list-alt"></i> Revision Log</a>
     [end]
 
     <div id="tuleap-viewvc-header-actions">
@@ -38,7 +38,3 @@
 
         [include "pathrev_form.ezt"]
     </div>
-
-</div>
-
-<div class="tuleap-viewvc-body">

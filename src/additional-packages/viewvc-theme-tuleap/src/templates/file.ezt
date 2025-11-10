@@ -22,9 +22,9 @@
     [end]
   [end]
   [is annotation "annotated"]
-    [define page_title]<small>Annotation of</small> [resource_name][end]
+    [define page_title]Annotation of [resource_name][end]
   [else]
-    [define page_title]<small>Contents of</small> [resource_name][end]
+    [define page_title]Contents of [resource_name][end]
   [end]
   [define help_href][docroot]/help_rootview.html[end]
 [# end]
@@ -49,8 +49,6 @@
       <br /><strong>Error occurred while calculating annotation data.</strong>
     [end]
 </div>
-</div><!-- .tuleap-viewvc-header -->
-<div class="tuleap-viewvc-body">
 
     <div class="log-revision" id="tuleap-viewvc-file-revision">
         <div class="log-revision-header">
@@ -65,7 +63,7 @@
                     <span title="[if-any ago][ago] ago[end]">[if-any date][date][else]unknown date[end]</span>
                 </span>
                 <span class="log-revision-header-actions-user">
-                    [if-any author]<div class="avatar"><img src="/users/[author]/avatar.png"></div>&nbsp;[author][else]unknown author[end]
+                    [if-any author]<div class="tlp-avatar-small"><img src="/users/[author]/avatar.png"></div>&nbsp;[author][else]unknown author[end]
                 </span>
             </div>
 
@@ -79,25 +77,6 @@
                 </span>
             [end]
         </div>
-        <script>
-        (function () {
-            var element = document.querySelector('#tuleap-viewvc-file-revision-message'),
-                message = element.innerHTML.trim(),
-                button = '<button id="tuleap-viewvc-file-revision-message-button" class="btn btn-mini">Expand</button><div id="tuleap-viewvc-file-revision-message-description">',
-                new_message = message.replace(/\n/, button);
-
-            if (message.length === new_message.length) {
-                return;
-            }
-
-            element.innerHTML = new_message + '</div>';
-
-            document.querySelector('#tuleap-viewvc-file-revision-message-button').addEventListener('click', function () {
-                element.classList.add('tuleap-viewvc-file-revision-message--expand');
-                this.style.display = 'none';
-            });
-        })();
-        </script>
     </div>
 
 [if-any prefer_markup][define hide_binary_garbage]0[end][end]
@@ -114,7 +93,7 @@
 [define rowclass]vc_row_even[end]
 
 [is state "dead"]
-  <div class="alert alert-warning">File removed</div>
+  <div class="tlp-alert-warning">File removed</div>
 [end]
 
 [if-any lines]
@@ -131,18 +110,18 @@
                 </span>
             [end]
             [if-any lockinfo]
-              <span class="badge badge-important" id="tuleap-viewvc-file-header-info-locked" title="Locked: [lockinfo]"><i class="fas fa-lock"></i></span>
+              <span class="tlp-badge-danger" id="tuleap-viewvc-file-header-info-locked" title="Locked: [lockinfo]"><i class="fas fa-lock"></i></span>
             [end]
         </div>
         <div id="tuleap-viewvc-file-header-actions">
-            <div class="btn-group">
-                [if-any download_href]<a href="[download_href]" class="btn btn-small"><i class="icon-download-alt"></i> Download</a>[end]
-                [if-any download_text_href]<a href="[download_text_href]" class="btn btn-small"><i class="icon-file-text-alt"></i> As text</a>[end]
+            <div class="tlp-form-element-append tlp-form-element-prepend tuleap-viewvc-prepend-append">
+                [if-any download_href]<a href="[download_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-prepend"><i class="icon-download-alt"></i> Download</a>[end]
+                [if-any download_text_href]<a href="[download_text_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-append tlp-prepend"><i class="icon-file-text-alt"></i> As text</a>[end]
                 <a
                     [is annotation "annotated"]
-                        href="[view_href]" class="btn btn-small active"
+                        href="[view_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-append tlp-prepend active"
                     [else]
-                        href="[annotate_href]" class="btn btn-small"
+                        href="[annotate_href]" class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-append tlp-prepend"
                     [end]
                 ><i class="fas fa-bullhorn"></i> Annotate</a>
             </div>

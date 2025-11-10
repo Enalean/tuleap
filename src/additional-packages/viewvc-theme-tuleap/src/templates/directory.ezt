@@ -1,6 +1,6 @@
 [include "include/dir_header.ezt"]
 
-<table class="table" id="directory-content">
+<table class="tlp-table" id="directory-content">
 <thead>
 <tr>
   <th class="vc_header[is sortby "file"]_sort[end]" colspan="2">
@@ -134,7 +134,7 @@
 [end]
 [else]
 <tr>
-    <td colspan="[is cfg.options.show_logs "1"]6[else]5[end]" class="tuleap-viewvc-directory-content-empty">This directory is empty</td>
+    <td colspan="[is cfg.options.show_logs "1"]6[else]5[end]" class="tlp-table-cell-empty">This directory is empty</td>
 </tr>
 [end]
 </tbody>

@@ -27,23 +27,5 @@ body.viewvc-epel {
         padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
         background: none;
     }
-
-    .tuleap-viewvc-file-content-line:target {
-        background: var(--tlp-main-color-transparent-90);
-
-        > .tuleap-viewvc-file-content-line-number {
-            border-left-color: var(--tlp-main-color);
-            box-shadow: inset 2px 0 0 0 var(--tlp-main-color);
-        }
-    }
-
-    /* stylelint-disable selector-max-compound-selectors,selector-class-pattern */
-    #tuleap-viewvc-diff-changes > thead > tr > th,
-    #tuleap-viewvc-properties > table > thead > tr > th,
-    .log-revision.log-revision--selected > .log-revision-header,
-    #revision-changed-files > thead > tr > th,
-    #directory-content > thead > tr > th {
-        border-bottom-color: var(--tlp-main-color);
-    }
 }
 /* stylelint-enable */

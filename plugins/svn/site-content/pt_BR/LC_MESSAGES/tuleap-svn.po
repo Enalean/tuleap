@@ -282,6 +282,9 @@ msgstr ""
 msgid "Repository '%1$s' will be removed in a few seconds"
 msgstr ""
 
+msgid "Repository URL"
+msgstr ""
+
 msgid "Repository list"
 msgstr ""
 
