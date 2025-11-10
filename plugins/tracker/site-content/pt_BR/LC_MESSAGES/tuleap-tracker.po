@@ -1431,6 +1431,9 @@ msgstr ""
 msgid "Fieldset"
 msgstr ""
 
+msgid "File"
+msgstr ""
+
 msgid "File not found"
 msgstr ""
 
@@ -2618,13 +2621,13 @@ msgstr ""
 msgid "Send an email to"
 msgstr ""
 
+msgid "Send notifications"
+msgstr ""
+
 msgid "Send notifications to people monitoring these artifacts"
 msgstr ""
 
 msgid "Send notifications to selected people"
-msgstr ""
-
-msgid "Send notifications:"
 msgstr ""
 
 msgid "Separator"
