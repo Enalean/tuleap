@@ -23,7 +23,7 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const config = {
     entry: {
         svn: "./src/svn.ts",
-        "svn-admin": "./src/svn-admin.js",
+        "svn-admin": "./src/svn-admin.ts",
         homepage: "./src/homepage.ts",
         "style-bp": "./themes/BurningParrot/css/style.scss",
     },

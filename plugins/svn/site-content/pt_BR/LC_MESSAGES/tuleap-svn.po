@@ -9,9 +9,7 @@ msgstr ""
 msgid "0 or no value means no limits."
 msgstr ""
 
-msgid ""
-"A notification already exists for this path. You cannot save it. Please "
-"change the path or update the existing notification."
+msgid "A comma-separated list of email addresses."
 msgstr ""
 
 #, php-format
@@ -31,6 +29,9 @@ msgstr ""
 msgid "Add notification"
 msgstr ""
 
+msgid "Add the notification"
+msgstr ""
+
 msgid "Admin Groups"
 msgstr ""
 
@@ -44,9 +45,6 @@ msgid "Archive should not contain svn data."
 msgstr ""
 
 msgid "Authentication cache"
-msgstr ""
-
-msgid "Be careful"
 msgstr ""
 
 #, php-format
@@ -65,9 +63,6 @@ msgstr ""
 
 msgid "Cache lifetime (in minutes)"
 msgstr ""
-
-msgid "Cancel"
-msgstr "Cancelar"
 
 msgid "Cannot find changed directories information"
 msgstr ""
@@ -141,10 +136,16 @@ msgstr "Editar"
 msgid "Edit access control file"
 msgstr ""
 
+msgid "Edit notification"
+msgstr ""
+
 msgid "Email Notification updated successfully"
 msgstr ""
 
 msgid "Email notifications on commits"
+msgstr ""
+
+msgid "Emails who will receive the notification"
 msgstr ""
 
 msgid "Error during new revision file creation"
@@ -208,9 +209,6 @@ msgstr ""
 msgid "Last commit"
 msgstr ""
 
-msgid "Mail to specific recipients or mailing lists (comma separated)"
-msgstr ""
-
 msgid "Max file size"
 msgstr ""
 
@@ -243,6 +241,9 @@ msgstr ""
 msgid "Notification deleted successfully."
 msgstr ""
 
+msgid "Notification deletion"
+msgstr ""
+
 msgid "Notification list"
 msgstr ""
 
@@ -252,9 +253,6 @@ msgstr ""
 
 msgid "Notifications"
 msgstr "Notificações"
-
-msgid "Path"
-msgstr ""
 
 #, php-format
 msgid ""
@@ -442,6 +440,9 @@ msgstr ""
 msgid "There is no notification"
 msgstr ""
 
+msgid "These can be mailing list addresses or external recipients."
+msgstr ""
+
 msgid "This action cannot be undone."
 msgstr ""
 
@@ -536,7 +537,10 @@ msgstr ""
 msgid "User group \"%s\" is empty or does not exist"
 msgstr ""
 
-msgid "User, group, email"
+msgid "User groups that will receive the notification"
+msgstr ""
+
+msgid "Users who will receive the notification"
 msgstr ""
 
 msgid "Wait a minute..."

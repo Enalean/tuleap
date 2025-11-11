@@ -114,42 +114,20 @@ describe("SVN", function () {
             cy.get("[data-test=svn-admin-repository-access]").click();
             cy.get("[data-test=svn-notifications-add]").click();
             cy.get("[data-test=svn-add-path]").type("/src");
-            addToNotifiedPeople("mail@example.com");
-            addToNotifiedPeople("ARegularUser");
+            cy.get("[data-test=svn-add-email]").type("mail@example.com");
+            cy.get("[data-test=svn-add-users]").within(() => {
+                cy.searchItemInLazyboxDropdown("ARegularUser", "ARegularUser").click();
+            });
             cy.get("[data-test=svn-save-notifications]").click();
 
-            editNotifiedPeople("NonExisting");
-
-            cy.get("[data-test=feedback]").contains("The entered value 'NonExisting' is invalid");
-
-            editNotifiedPeople("developper");
+            cy.get("[data-test=edit-svn-notifications]").click();
+            cy.get("[data-test=svn-edit-ugroups]").select("developper");
+            cy.get("[data-test=svn-save-notifications]:visible").click();
             cy.get("[data-test=group-icon]").should(
                 "have.class",
                 "svn-notification-email-list-group-icon",
             );
         });
-
-        function editNotifiedPeople(user: string): void {
-            cy.get("[data-test=edit-svn-notifications]").click();
-            cy.get("[data-test=tr-edit-notification]").within(() => {
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get(".select2-container").click();
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get(".select2-input").type(`${user}{enter}`);
-            });
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".select2-result-label").last().click();
-            cy.get("[data-test=svn-edit-notifications]").click();
-        }
-
-        function addToNotifiedPeople(user: string): void {
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".select2-container").click();
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".select2-input").type(`${user}{enter}`);
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".select2-result-label").last().click();
-        }
 
         it("repository created by REST API should have a correct history", function () {
             cy.projectAdministratorSession();

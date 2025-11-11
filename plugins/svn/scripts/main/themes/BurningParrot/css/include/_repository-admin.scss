@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./svn-admin-notifications";
-import "./svn-admin-notifications-popover";
+@use "pkg:@tuleap/lazybox";
+@use "pkg:@tuleap/lazybox-users-autocomplete";
+
+.svn-notification-email-list-entry {
+    white-space: nowrap;
+
+    &:last-child > .svn-notification-email-list-separator {
+        display: none;
+    }
+}

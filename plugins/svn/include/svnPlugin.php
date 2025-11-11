@@ -87,6 +87,7 @@ use Tuleap\SVN\Admin\MailHeaderManager;
 use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Admin\RestoreController;
+use Tuleap\SVN\Admin\UserGroupsPresenterBuilder;
 use Tuleap\SVN\BackendSVN;
 use Tuleap\SVN\Commit\FileSizeValidator;
 use Tuleap\SVN\Commit\Svnlook;
@@ -154,6 +155,9 @@ use Tuleap\SVNCore\GetAllRepositories;
 use Tuleap\SVN\SVNAccessFileReader;
 use Tuleap\SVNCore\SvnCoreAccess;
 use Tuleap\SystemEvent\RootPostEventsActionsEvent;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
@@ -490,16 +494,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return ProjectManager::instance();
     }
 
-    #[ListeningToEventName('javascript_file')]
-    public function javascriptFile(array $params): void
-    {
-        $layout = $params['layout'];
-        assert($layout instanceof \Tuleap\Layout\BaseLayout);
-        if ($this->currentRequestIsForPlugin()) {
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'svn-admin.js'));
-        }
-    }
-
     #[\Override]
     #[ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
@@ -594,15 +588,21 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getMailNotificationManager(),
                 self::getLogger(),
                 new NotificationListBuilder(
-                    new UGroupDao(),
+                    new UgroupsToNotifyDao(),
+                    new UsersToNotifyDao(),
+                    UserManager::instance(),
+                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    new UserGroupsPresenterBuilder(),
                     new CollectionOfUserToBeNotifiedPresenterBuilder($this->getUserNotifyDao()),
-                    new CollectionOfUgroupToBeNotifiedPresenterBuilder($this->getUGroupNotifyDao())
+                    new CollectionOfUgroupToBeNotifiedPresenterBuilder($this->getUGroupNotifyDao()),
                 ),
                 $this->getUserManager(),
                 new UGroupManager(),
                 $hook_config_updator,
                 $this->getHookConfigRetriever(),
                 $this->getRepositoryDeleter(),
+                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                new UserGroupsPresenterBuilder(),
             ),
             new ExplorerController(
                 $repository_manager,
@@ -1171,20 +1171,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     private function isInSvn(): bool
     {
-        if (! str_starts_with($_SERVER['REQUEST_URI'], $this->getPluginPath())) {
-            return false;
-        }
-
-        parse_str($_SERVER['QUERY_STRING'], $query);
-        $params = array_keys($query);
-        sort($params);
-
-        return $params === ['group_id']
-            || (
-                $params === ['action', 'group_id', 'repo_id']
-                && in_array($query['action'], ['display-repository-delete', 'hooks-config', 'display-immutable-tag', 'access-control'], true)
-            )
-            || \Tuleap\HTTPRequest::instance()->exist('root');
+        return str_starts_with($_SERVER['REQUEST_URI'], $this->getPluginPath());
     }
 
     #[ListeningToEventClass]

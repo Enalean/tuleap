@@ -1,4 +1,4 @@
-<h1 class="almost-tlp-title project-header-title svn-administration-title">
+<h1 class="project-administration-title">
     {{# dgettext }}
         tuleap-svn
         | Settings of %s
@@ -8,24 +8,40 @@
 
 {{# sections }}
     <div class="main-project-tabs">
-        <ul class="nav nav-tabs">
-            <li {{# notification_active }}class="active"{{/ notification_active }}>
-                <a href="{{ notifications_url }}"><i class="fa fa-bell"></i> {{ notifications }}</a>
-            </li>
-            <li {{# access_control_active }}class="active"{{/ access_control_active }}>
-                <a href="{{ access_control_url }}"><i class="fa fa-lock"></i> {{ access_control }}</a>
-            </li>
-            <li {{# immutable_tag_url_active }}class="active"{{/ immutable_tag_url_active }}>
-                <a href="{{ immutable_tag_url }}"><i class="fa fa-tags"></i> {{ immutable_tag }}</a>
-            </li>
-            <li {{# commit_rule_active }}class="active"{{/ commit_rule_active }}>
-                <a href="{{ hooks_config_url }}"><i class="fa fa-check-square"></i> {{ hooks_config }}</a>
-            </li>
+        <nav class="tlp-tabs">
+            <a class="tlp-tab {{# notification_active }}tlp-tab-active{{/ notification_active }}"
+               href="{{ notifications_url }}"
+            >
+                <i class="fa-solid fa-bell tlp-tab-icon" aria-hidden="true"></i>
+                {{ notifications }}
+            </a>
+            <a class="tlp-tab {{# access_control_active }}tlp-tab-active{{/ access_control_active }}"
+               href="{{ access_control_url }}"
+            >
+                <i class="fa-solid fa-lock tlp-tab-icon" aria-hidden="true"></i>
+                {{ access_control }}
+            </a>
+            <a class="tlp-tab {{# immutable_tag_url_active }}tlp-tab-active{{/ immutable_tag_url_active }}"
+               href="{{ immutable_tag_url }}"
+            >
+                <i class="fa-solid fa-tags tlp-tab-icon" aria-hidden="true"></i>
+                {{ immutable_tag }}
+            </a>
+            <a class="tlp-tab {{# commit_rule_active }}tlp-tab-active{{/ commit_rule_active }}"
+               href="{{ hooks_config_url }}"
+            >
+                <i class="fa-solid fa-check-square tlp-tab-icon" aria-hidden="true"></i>
+                {{ hooks_config }}
+            </a>
             {{# can_delete }}
-                <li {{# repository_delete_active }}class="active"{{/ repository_delete_active }} data-test="svn-repository-settings-delete">
-                    <a href="{{ repository_delete_url }}"><i class="far fa-trash-alt"></i> {{ repository_delete }}</a>
-                </li>
+                <a class="tlp-tab {{# repository_delete_active }}tlp-tab-active{{/ repository_delete_active }}"
+                   href="{{ repository_delete_url }}"
+                   data-test="svn-repository-settings-delete"
+                >
+                    <i class="fa-regular fa-trash-alt tlp-tab-icon" aria-hidden="true"></i>
+                    {{ repository_delete }}
+                </a>
             {{/ can_delete }}
-        </ul>
+        </nav>
     </div>
 {{/ sections }}

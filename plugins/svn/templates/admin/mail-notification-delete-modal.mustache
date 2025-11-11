@@ -1,0 +1,39 @@
+<form id="svn-notification-delete-modal-{{ notification_id }}"
+      role="dialog"
+      aria-labelledby="svn-notification-delete-modal-{{ notification_id }}-title"
+      class="tlp-modal tlp-modal-danger"
+      action="/plugins/svn/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=update-mailing-lists"
+      method="post"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="svn-notification-delete-modal-{{ notification_id }}-title">
+            {{# dgettext }}tuleap-svn | Notification deletion {{/dgettext}}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <p>{{# dgettext }}tuleap-svn | You are about to remove the notification. Please confirm your action.{{/ dgettext }}</p>
+
+        <input type="hidden" name="group_id" value="{{ project_id }}">
+        <input type="hidden" name="repo_id" value="{{ repository_id }}">
+        <input type="hidden" name="notification_remove_id" value="{{ notification_id }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/csrf_token}}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" data-dismiss="modal" class="tlp-button-danger tlp-button-outline tlp-modal-action">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit"
+                class="tlp-button-danger tlp-modal-action"
+                name="delete-mailing-lists"
+                value="1"
+        >
+            <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+            {{ remove_notification_confirm }}
+        </button>
+    </div>
+</form>

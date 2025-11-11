@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2025-11-07 10:35+0100\n"
+"PO-Revision-Date: 2025-11-12 21:54+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -16,13 +16,8 @@ msgstr ""
 msgid "0 or no value means no limits."
 msgstr "0 ou aucune valeur signifie sans limites."
 
-msgid ""
-"A notification already exists for this path. You cannot save it. Please "
-"change the path or update the existing notification."
-msgstr ""
-"Une notification existe déjà pour ce chemin. Vous ne pouvez pas "
-"l’enregistrer. Veuillez modifier le chemin d’accès ou mettre à jour la "
-"notification existante."
+msgid "A comma-separated list of email addresses."
+msgstr "Une liste d'adresses e-mail séparées par des virgules."
 
 #, php-format
 msgid ""
@@ -39,6 +34,9 @@ msgid "Active notifications list"
 msgstr "Liste des notifications actives"
 
 msgid "Add notification"
+msgstr "Ajouter une notification"
+
+msgid "Add the notification"
 msgstr "Ajouter la notification"
 
 msgid "Admin Groups"
@@ -57,9 +55,6 @@ msgstr "L'archive ne peut contenir des données svn."
 
 msgid "Authentication cache"
 msgstr "Cache d'authentification"
-
-msgid "Be careful"
-msgstr "Attention"
 
 #, php-format
 msgid ""
@@ -81,9 +76,6 @@ msgstr "Accès depuis l'interface"
 
 msgid "Cache lifetime (in minutes)"
 msgstr "Durée de vie du cache (en minutes)"
-
-msgid "Cancel"
-msgstr "Annuler"
 
 msgid "Cannot find changed directories information"
 msgstr "Impossible de trouver les informations des repertoires mis à jour"
@@ -165,11 +157,17 @@ msgstr "Éditer"
 msgid "Edit access control file"
 msgstr "Modifier le fichier de contrôle d'accès"
 
+msgid "Edit notification"
+msgstr "Éditer la notification"
+
 msgid "Email Notification updated successfully"
 msgstr "Notification email mise à jour avec succès"
 
 msgid "Email notifications on commits"
 msgstr "Notifications par email lors des commits"
+
+msgid "Emails who will receive the notification"
+msgstr "E-mails qui recevront la notification"
 
 msgid "Error during new revision file creation"
 msgstr "Erreur lors de la création de la nouvelle révision"
@@ -239,11 +237,6 @@ msgstr ""
 msgid "Last commit"
 msgstr "Dernier commit"
 
-msgid "Mail to specific recipients or mailing lists (comma separated)"
-msgstr ""
-"Envoyer à certains destinataires ou listes de diffusion (séparés par des "
-"virgules)"
-
 msgid "Max file size"
 msgstr "Taille max de fichier"
 
@@ -279,6 +272,9 @@ msgstr "Aucun dépôt svn à restaurer."
 msgid "Notification deleted successfully."
 msgstr "La notification a été correctement supprimée."
 
+msgid "Notification deletion"
+msgstr "Suppression de notification"
+
 msgid "Notification list"
 msgstr "Liste des emails notifiés"
 
@@ -288,9 +284,6 @@ msgstr "La notification à mettre à jour n’existe pas."
 
 msgid "Notifications"
 msgstr "Notifications"
-
-msgid "Path"
-msgstr "Chemin"
 
 #, php-format
 msgid ""
@@ -500,6 +493,10 @@ msgstr ""
 msgid "There is no notification"
 msgstr "Il n'y a aucune notification"
 
+msgid "These can be mailing list addresses or external recipients."
+msgstr ""
+"Elles peuvent être celles de liste de diffusion ou de destinataires externes."
+
 msgid "This action cannot be undone."
 msgstr "Cette action est irréversible."
 
@@ -600,8 +597,11 @@ msgstr "L'utilisateur n'a pas les droits pour créer un nouveau dépôt"
 msgid "User group \"%s\" is empty or does not exist"
 msgstr "Le groupe \"%s\" est vide ou n'existe pas"
 
-msgid "User, group, email"
-msgstr "Utilisateur, groupe, mail"
+msgid "User groups that will receive the notification"
+msgstr "Groupes d'utilisateurs qui recevront la notification"
+
+msgid "Users who will receive the notification"
+msgstr "Utilisateurs qui recevront la notification"
 
 msgid "Wait a minute..."
 msgstr "Attendez une minute ..."
