@@ -36,7 +36,7 @@ class Tracker_Rule_Date extends Tracker_Rule //phpcs:ignore PSR1.Classes.ClassDe
     public const string COMPARATOR_GREATER_THAN           = '>';
     public const string COMPARATOR_GREATER_THAN_OR_EQUALS = '≥';
 
-    public static $allowed_comparators = [
+    public static array $allowed_comparators = [
         self::COMPARATOR_LESS_THAN,
         self::COMPARATOR_LESS_THAN_OR_EQUALS,
         self::COMPARATOR_EQUALS,

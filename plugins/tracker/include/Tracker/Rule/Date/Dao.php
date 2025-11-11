@@ -23,7 +23,7 @@ use ParagonIE\EasyDB\EasyStatement;
 /**
  *  Data Access Object for Tracker_Rule
  */
-class Tracker_Rule_Date_Dao extends \Tuleap\DB\DataAccessObject
+class Tracker_Rule_Date_Dao extends \Tuleap\DB\DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function searchById($tracker_id, $id): array
     {
@@ -101,15 +101,6 @@ class Tracker_Rule_Date_Dao extends \Tuleap\DB\DataAccessObject
             );
             return $db->delete('tracker_rule', ['id' => $rule_id, 'tracker_id' => $tracker_id]);
         });
-    }
-
-    public function save($id, $source_field_id, $target_field_id, $comparator)
-    {
-        return $this->getDB()->update(
-            'tracker_rule_date',
-            ['source_field_id' => $source_field_id, 'target_field_id' => $target_field_id, 'comparator' => $comparator],
-            ['tracker_rule_id' => $id]
-        );
     }
 
     /**

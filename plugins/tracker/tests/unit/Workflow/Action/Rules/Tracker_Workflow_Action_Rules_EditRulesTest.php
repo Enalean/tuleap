@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
@@ -33,10 +34,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 {
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
+    use \Tuleap\TemporaryTestDirectory;
 
-    private const string PARAMETER_ADD_RULE     = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE;
-    private const string PARAMETER_UPDATE_RULES = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES;
-    private const string PARAMETER_REMOVE_RULES = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_REMOVE_RULES;
+    private const string PARAMETER_ADD_RULE    = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE;
+    private const string PARAMETER_REMOVE_RULE = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_REMOVE_RULE;
 
     private const string PARAMETER_SOURCE_FIELD = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD;
     private const string PARAMETER_TARGET_FIELD = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD;
@@ -73,14 +74,12 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
         $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker->method('getId')->willReturn($this->tracker_id);
-        $this->tracker->method('displayAdminItemHeader');
+        $this->tracker->method('displayAdminItemHeaderBurningParrot');
         $this->tracker->method('displayFooter');
         $this->tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
         $this->tracker->method('getId')->willReturn($this->tracker_id);
 
-        $token = $this->createMock(\CSRFSynchronizerToken::class);
-        $token->method('fetchHTMLInput');
-        $token->method('check');
+        $token = \Tuleap\Test\Stubs\CSRFSynchronizerTokenStub::buildSelf();
 
         $this->planned_start_date = DateFieldBuilder::aDateField($this->source_field_id)->withLabel('Planned Start Date')->build();
         $this->actual_start_date  = DateFieldBuilder::aDateField($this->target_field_id)->withLabel('Actual Start Date')->build();
@@ -131,7 +130,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
 
         $this->project_history_dao = $this->createMock(ProjectHistoryDao::class);
-        $this->action              = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $token, $this->project_history_dao);
+        $this->action              = new Tracker_Workflow_Action_Rules_EditRules(
+            $this->tracker,
+            $this->date_factory,
+            $token,
+            $this->project_history_dao,
+            TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
+        );
     }
 
     private function setUpRule($id, TrackerField $source_field, $comparator, TrackerField $target_field): Tracker_Rule_Date
@@ -172,7 +177,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     public function testItDeletesARule(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => ['123']],
+            [self::PARAMETER_REMOVE_RULE => '123'],
             $this->createMock(ProjectManager::class)
         );
         $this->date_factory->expects($this->once())->method('deleteById')->with($this->tracker_id, 123)->willReturn(true);
@@ -183,35 +188,26 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     public function testItDeletesMultipleRules(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => ['123', '456']],
+            [self::PARAMETER_REMOVE_RULE => '123'],
             $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->expects($this->exactly(2))
+        $this->date_factory->expects($this->once())
             ->method('deleteById')
-            ->willReturnCallback(static fn (int $tracker_id, int $rule_id) => $rule_id === 123 || $rule_id === 456);
-        $this->project_history_dao->expects($this->exactly(2))->method('addHistory');
+            ->with($this->tracker_id, 123)
+            ->willReturn(true);
+        $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotFailIfRequestDoesNotContainAnArray(): void
-    {
-        $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => '123'],
-            $this->createMock(ProjectManager::class)
-        );
-        $this->date_factory->expects($this->never())->method('deleteById');
-        $this->processRequestAndExpectFormOutput($request);
     }
 
     public function testItDoesNotFailIfRequestContainsIrrevelantId(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => ['invalid_id']],
+            [self::PARAMETER_REMOVE_RULE => 'invalid_id'],
             $this->createMock(ProjectManager::class)
         );
-        $this->date_factory->expects($this->once())->method('deleteById')->with($this->tracker_id, 0)->willReturn(true);
-        $this->project_history_dao->expects($this->once())->method('addHistory');
-        $this->processRequestAndExpectRedirection($request);
+        $this->date_factory->expects($this->never())->method('deleteById');
+        $this->project_history_dao->expects($this->never())->method('addHistory');
+        $this->processRequestAndExpectFormOutput($request);
     }
 
     public function testItDoesNotFailIfRequestDoesNotContainRemoveParameter(): void
@@ -227,52 +223,23 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     public function testItProvidesFeedbackWhenDeletingARule(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => ['123']],
+            [self::PARAMETER_REMOVE_RULE => '123'],
             $this->createMock(ProjectManager::class)
         );
         $this->date_factory->method('deleteById')->willReturn(true);
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::SUCCESS);
         $this->project_history_dao->expects($this->once())->method('addHistory');
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotPrintMultipleTimesTheFeedbackWhenRemovingMoreThanOneRule(): void
-    {
-        $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => ['123', '456']],
-            $this->createMock(ProjectManager::class)
-        );
-        $this->date_factory->method('deleteById')->willReturn(true);
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
-        $this->project_history_dao->expects($this->exactly(2))->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
     }
 
     public function testItDoesNotPrintSuccessfullFeebackIfTheDeleteFailed(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => ['123']],
+            [self::PARAMETER_REMOVE_RULE => '123'],
             $this->createMock(ProjectManager::class)
         );
         $this->date_factory->method('deleteById')->willReturn(false);
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('info');
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotStopOnTheFirstFailedDelete(): void
-    {
-        $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => ['123', '456']],
-            $this->createMock(ProjectManager::class)
-        );
-        $this->date_factory->expects($this->exactly(2))
-            ->method('deleteById')
-            ->willReturnCallback(static fn (int $tracker_id, int $rule_id) => match ($rule_id) {
-                123 => false,
-                456 => true,
-            });
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
-        $this->project_history_dao->expects($this->once())->method('addHistory');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::ERROR);
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -288,25 +255,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         return ob_get_clean();
     }
 
-    public function testItSelectTheSourceField(): void
+    public function testItDisplaysTheExistingRules(): void
     {
         $output = $this->processIndexRequest();
-        $this->assertMatchesRegularExpression('/SELECTED>Planned Start Date</s', $output);
-        $this->assertMatchesRegularExpression('/SELECTED>Actual Start Date</s', $output);
-    }
-
-    public function testItSelectTheTargetField(): void
-    {
-        $output = $this->processIndexRequest();
-        $this->assertMatchesRegularExpression('/SELECTED>Planned End Date</s', $output);
-        $this->assertMatchesRegularExpression('/SELECTED>Actual End Date</s', $output);
-    }
-
-    public function testItSelectTheComparator(): void
-    {
-        $output = $this->processIndexRequest();
-        $this->assertMatchesRegularExpression('/SELECTED>=</s', $output);
-        $this->assertMatchesRegularExpression('/SELECTED>&lt;</s', $output);
+        $this->assertMatchesRegularExpression('#<span>Planned Start Date</span>\s*<span>=</span>\s*<span>Planned End Date</span>#', $output);
+        $this->assertMatchesRegularExpression('#<span>Actual Start Date</span>\s*<span>&lt;</span>\s*<span>Actual End Date</span>#', $output);
     }
 
     public function testItAddsARuleAndCheckFeedbackIsDisplayed(): void
@@ -340,7 +293,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
 
         $this->date_factory->expects($this->never())->method('create');
-        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('info');
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with(Feedback::SUCCESS);
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -524,7 +477,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             ],
             $this->createMock(ProjectManager::class)
         );
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with(Feedback::SUCCESS);
         $this->date_factory->method('create')->willReturn($this->rule_42);
         $this->project_history_dao->expects($this->once())->method('addHistory');
         $this->processRequestAndExpectRedirection($request);
@@ -562,272 +515,5 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
         $this->date_factory->expects($this->never())->method('create');
         $this->processRequestAndExpectFormOutput($request);
-    }
-
-    public function testItUpdatesARule(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '44',
-                        self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->rule_42->expects($this->once())->method('setSourceField')->with($this->planned_start_date);
-        $this->rule_42->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
-        $this->rule_42->expects($this->once())->method('setTargetField')->with($this->actual_start_date);
-        $this->rule_42->method('getTargetFieldId')->willReturn($this->actual_start_date->getId());
-        $this->rule_42->expects($this->once())->method('setComparator')->with('>');
-        $this->date_factory->expects($this->once())->method('save')->with($this->rule_42);
-        $this->project_history_dao->expects($this->once())->method('addHistory');
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItUpdatesMoreThanOneRule(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '44',
-                        self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>',
-                    ],
-                    "$this->rule_66_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '22',
-                        self::PARAMETER_TARGET_FIELD => '44',
-                        self::PARAMETER_COMPARATOR   => '<',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->rule_42->expects($this->once())->method('setSourceField')->with($this->planned_start_date);
-        $this->rule_42->method('setTargetField');
-        $this->rule_42->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
-        $this->rule_42->method('setComparator');
-        $this->rule_42->method('getComparator');
-        $this->rule_42->method('getSourceField');
-        $this->rule_42->method('getTargetFieldId')->willReturn($this->planned_start_date->getId());
-
-        $this->rule_66->expects($this->once())->method('setSourceField')->with($this->actual_start_date);
-        $this->rule_66->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
-        $this->rule_66->method('setTargetField');
-        $this->rule_66->method('setComparator');
-        $this->rule_66->method('getComparator');
-        $this->rule_66->method('getSourceField');
-        $this->rule_66->method('getTargetFieldId')->willReturn($this->planned_start_date->getId());
-
-        $this->date_factory->expects($this->exactly(2))
-            ->method('save')
-            ->willReturnCallback(fn (Tracker_Rule_Date $rule) => $rule === $this->rule_42 || $rule === $this->rule_66);
-        $this->project_history_dao->expects($this->exactly(2))->method('addHistory');
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotUpdateTheRuleIfTheNewSourceFieldIsNotADateOne(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '666',
-                        self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->rule_42->expects($this->never())->method('setSourceField');
-        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotUpdateTheRuleIfTheNewTargetFieldIsNotADateOne(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '44',
-                        self::PARAMETER_TARGET_FIELD => '666',
-                        self::PARAMETER_COMPARATOR => '>',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->rule_42->expects($this->never())->method('setTargetField');
-        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotUpdateTheRuleIfTheNewComparatorIsNotValid(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '44',
-                        self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR   => '%invalid_comparator%',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->rule_42->expects($this->never())->method('setComparator');
-        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotFailIfTheTargetFieldIsMissingFromTheRequest(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '44',
-                        self::PARAMETER_COMPARATOR   => '<',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->rule_42->expects($this->never())->method('setComparator');
-        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotFailIfTheSourceFieldIsMissingFromTheRequest(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->rule_42->expects($this->never())->method('setComparator');
-        $this->date_factory->expects($this->never())->method('save')->with($this->rule_42);
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotFailIfTheRuleDoesNotBelongToTracker(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    '%invalid_rule_id%' => [
-                        self::PARAMETER_SOURCE_FIELD => '44',
-                        self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->date_factory->expects($this->never())->method('save');
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotUpdateIfTheRuleDoesNotChange(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => $this->rule_42->getSourceField()->getId(),
-                        self::PARAMETER_TARGET_FIELD => $this->rule_42->getTargetField()->getId(),
-                        self::PARAMETER_COMPARATOR => $this->rule_42->getComparator(),
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->date_factory->expects($this->never())->method('save');
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItDoesNotUpdateTheRuleIfTheTargetAndSourceFieldsAreTheSame(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '22',
-                        self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR => '>',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->date_factory->expects($this->never())->method('save');
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error');
-        $this->processRequestAndExpectRedirection($request);
-    }
-
-    public function testItProvidesFeedbackIfRulesSuccessfullyUpdated(): void
-    {
-        $request = new Codendi_Request(
-            [
-                self::PARAMETER_UPDATE_RULES => [
-                    "$this->rule_42_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '44',
-                        self::PARAMETER_TARGET_FIELD => '22',
-                        self::PARAMETER_COMPARATOR   => '>',
-                    ],
-                    "$this->rule_66_id" => [
-                        self::PARAMETER_SOURCE_FIELD => '22',
-                        self::PARAMETER_TARGET_FIELD => '44',
-                        self::PARAMETER_COMPARATOR   => '<',
-                    ],
-                ],
-            ],
-            $this->createMock(ProjectManager::class)
-        );
-
-        $this->date_factory->method('save')->willReturn(true);
-
-        $this->rule_42->method('setSourceField');
-        $this->rule_42->method('setTargetField');
-        $this->rule_42->method('setComparator');
-        $this->rule_42->method('getComparator');
-        $this->rule_42->method('getSourceField');
-        $this->rule_42->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
-        $this->rule_42->method('getTargetFieldId')->willReturn($this->planned_start_date->getId());
-
-        $this->rule_66->method('getSourceField');
-        $this->rule_66->method('getSourceFieldId')->willReturn($this->planned_start_date->getId());
-        $this->rule_66->method('getTargetFieldId')->willReturn($this->planned_start_date->getId());
-        $this->rule_66->method('setSourceField');
-        $this->rule_66->method('setTargetField');
-        $this->rule_66->method('setComparator');
-        $this->rule_66->method('getComparator');
-
-        $this->project_history_dao->expects($this->exactly(2))->method('addHistory');
-        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('info');
-        $this->processRequestAndExpectRedirection($request);
     }
 }

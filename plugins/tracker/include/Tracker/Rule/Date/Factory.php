@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
  * Factory of rules
  * Base class to create, retrieve, update or delete rules
  */
-class Tracker_Rule_Date_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class Tracker_Rule_Date_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      *
@@ -111,16 +111,6 @@ class Tracker_Rule_Date_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $rule['target_field_id'],
             $rule['comparator'],
             $rule['id']
-        );
-    }
-
-    public function save(Tracker_Rule_Date $rule)
-    {
-        return $this->dao->save(
-            $rule->getId(),
-            $rule->getSourceField()->getId(),
-            $rule->getTargetField()->getId(),
-            $rule->getComparator()
         );
     }
 

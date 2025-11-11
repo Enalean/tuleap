@@ -176,6 +176,9 @@ msgstr "-- Choisir un champ source"
 msgid "-- Choose target field"
 msgstr "-- Choisir un champ cible"
 
+msgid "-- Please choose"
+msgstr "-- Veuillez choisir"
+
 #, php-format
 msgid ""
 "<h3>Confirm deletion of date reminder</h3><p>You are going to delete this "
@@ -503,6 +506,9 @@ msgstr "Une erreur est survenue lors de la création du tracker."
 
 msgid "An error occurred while clearing done values."
 msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
+
+msgid "An error occurred while deleting the rule"
+msgstr "Une erreur est survenue lors de la suppression de la règle"
 
 msgid "An error occurred while deleting the semantic"
 msgstr "Une erreur est survenue lors de suppression de la sémantique"
@@ -1099,6 +1105,9 @@ msgstr "Créer par courriel..."
 msgid "Create new trigger"
 msgstr "Ajouter un nouveau déclencheur"
 
+msgid "Create rule"
+msgstr "Créer la règle"
+
 msgid ""
 "Creating artifact by mail is not possible due to the current configuration "
 "of the tracker."
@@ -1207,6 +1216,9 @@ msgstr ""
 msgid "Define global date rules"
 msgstr "Définition des règles globales sur les dates"
 
+msgid "Define rule between two fields:"
+msgstr "Définissez la règle entre deux champs :"
+
 msgid "Define the closed status that are considered Done"
 msgstr ""
 "Définissez les valeurs fermées de la sémantique État considérées comme finies"
@@ -1247,6 +1259,9 @@ msgstr "Supprimer définitivement le champ"
 
 msgid "Delete the reference?"
 msgstr "Supprimer la référence ?"
+
+msgid "Delete the rule"
+msgstr "Supprimer la règle"
 
 msgid "Delete the value"
 msgstr "Supprimer la valeur"
@@ -2515,6 +2530,9 @@ msgstr ""
 "Veuillez d'abord <a href=\"{{ tracker_fields_admin_url }}\">ajouter un champ "
 "de lien d'artifact</a> à votre tracker."
 
+msgid "Please confirm your action."
+msgstr "Merci de confirmer votre action."
+
 msgid ""
 "Please note that date reminders does not take tracker notifications settings "
 "into account and will always be sent even if notifications are disabled."
@@ -2786,14 +2804,17 @@ msgstr "Annuler"
 msgid "Rows"
 msgstr "Lignes"
 
+msgid "Rule"
+msgstr "Règle"
+
+msgid "Rule deletion"
+msgstr "Suppression de règle"
+
 msgid "Rule successfully created"
 msgstr "Règle créée avec succès"
 
-msgid "Rule(s) successfully deleted"
-msgstr "Règle(s) supprimée(s) avec succès"
-
-msgid "Rule(s) successfully updated"
-msgstr "Règle(s) mise(s) à jour avec succès"
+msgid "Rule successfully deleted"
+msgstr "Règle supprimée avec succès"
 
 msgid "S"
 msgstr "S"
@@ -3017,6 +3038,9 @@ msgstr "Quelque chose s'est mal passé."
 
 msgid "Sort by:"
 msgstr "Triés par :"
+
+msgid "Source and target fields must be different"
+msgstr "Les champs source et destination doivent être différents"
 
 msgid "Source id does not exist."
 msgstr "L'id source n'existe pas."
@@ -3999,6 +4023,9 @@ msgstr "Il n'y a aucun champs à ajouter à l'infobulle"
 msgid "There isn't any information in the tooltip yet."
 msgstr "Il n'y a aucune information dans l'infobulle pour l'instant."
 
+msgid "There isn't any rules yet"
+msgstr "Il n'y a pas encore de règles"
+
 msgid "There isn't any trackers yet"
 msgstr "Il n'y pas encore de tracker"
 
@@ -4720,6 +4747,9 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer une nature. Cette action est "
 "irréversible. Confirmez-vous la suppression ?"
+
+msgid "You are about to delete the rule: %s"
+msgstr "Vous êtes sur le point de supprimer la règle : %s"
 
 msgid "You are about to delete the tracker %s. Please, confirm your action."
 msgstr ""

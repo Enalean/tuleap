@@ -154,6 +154,9 @@ msgstr ""
 msgid "-- Choose target field"
 msgstr ""
 
+msgid "-- Please choose"
+msgstr ""
+
 #, php-format
 msgid ""
 "<h3>Confirm deletion of date reminder</h3><p>You are going to delete this "
@@ -428,6 +431,9 @@ msgid "An error occured while creating the tracker."
 msgstr ""
 
 msgid "An error occurred while clearing done values."
+msgstr ""
+
+msgid "An error occurred while deleting the rule"
 msgstr ""
 
 msgid "An error occurred while deleting the semantic"
@@ -963,6 +969,9 @@ msgstr ""
 msgid "Create new trigger"
 msgstr ""
 
+msgid "Create rule"
+msgstr ""
+
 msgid ""
 "Creating artifact by mail is not possible due to the current configuration "
 "of the tracker."
@@ -1055,6 +1064,9 @@ msgstr ""
 msgid "Define global date rules"
 msgstr ""
 
+msgid "Define rule between two fields:"
+msgstr ""
+
 msgid "Define the closed status that are considered Done"
 msgstr ""
 
@@ -1090,6 +1102,9 @@ msgid "Delete permanently the field"
 msgstr ""
 
 msgid "Delete the reference?"
+msgstr ""
+
+msgid "Delete the rule"
 msgstr ""
 
 msgid "Delete the value"
@@ -2232,6 +2247,9 @@ msgid ""
 "field</a> to your tracker first."
 msgstr ""
 
+msgid "Please confirm your action."
+msgstr ""
+
 msgid ""
 "Please note that date reminders does not take tracker notifications settings "
 "into account and will always be sent even if notifications are disabled."
@@ -2475,13 +2493,16 @@ msgstr ""
 msgid "Rows"
 msgstr ""
 
+msgid "Rule"
+msgstr ""
+
+msgid "Rule deletion"
+msgstr ""
+
 msgid "Rule successfully created"
 msgstr ""
 
-msgid "Rule(s) successfully deleted"
-msgstr ""
-
-msgid "Rule(s) successfully updated"
+msgid "Rule successfully deleted"
 msgstr ""
 
 msgid "S"
@@ -2687,6 +2708,9 @@ msgid "Something went wrong."
 msgstr ""
 
 msgid "Sort by:"
+msgstr ""
+
+msgid "Source and target fields must be different"
 msgstr ""
 
 msgid "Source id does not exist."
@@ -3515,6 +3539,9 @@ msgstr ""
 msgid "There isn't any information in the tooltip yet."
 msgstr ""
 
+msgid "There isn't any rules yet"
+msgstr ""
+
 msgid "There isn't any trackers yet"
 msgstr ""
 
@@ -4138,6 +4165,9 @@ msgstr ""
 msgid ""
 "You are about to delete a type. This action is action is irreversible. Do "
 "you confirm this deletion?"
+msgstr ""
+
+msgid "You are about to delete the rule: %s"
 msgstr ""
 
 msgid "You are about to delete the tracker %s. Please, confirm your action."

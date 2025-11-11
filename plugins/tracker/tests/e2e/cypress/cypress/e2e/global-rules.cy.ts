@@ -40,16 +40,14 @@ describe("Tracker Workflow Global Rules", () => {
             cy.log("Set rule Start Date < End Date");
             goToWorkflowGlobalRulesAdministration();
             cy.get("[data-test=add-new-rule]").click();
-            cy.get("[data-test=global-rules-form]")
+            cy.get("[data-test=add-rule-form]")
                 .find('[name="add_rule[source_date_field]"]')
                 .select("Start Date");
-            cy.get("[data-test=global-rules-form]")
-                .find('[name="add_rule[comparator]"]')
-                .select("<");
-            cy.get("[data-test=global-rules-form]")
+            cy.get("[data-test=add-rule-form]").find('[name="add_rule[comparator]"]').select("<");
+            cy.get("[data-test=add-rule-form]")
                 .find('[name="add_rule[target_date_field]"]')
                 .select("End Date");
-            cy.get("[data-test=submit]").click();
+            cy.get("[data-test=add-rule-form]").find("[data-test=submit]").click();
             cy.get("[data-test=feedback]").contains("Rule successfully created");
             cy.get("[data-test=global-rule]").should("have.length", 1);
 
@@ -68,16 +66,14 @@ describe("Tracker Workflow Global Rules", () => {
             cy.log("Set rule Due Date > End Date");
             goToWorkflowGlobalRulesAdministration();
             cy.get("[data-test=add-new-rule]").click();
-            cy.get("[data-test=global-rules-form]")
+            cy.get("[data-test=add-rule-form]")
                 .find('[name="add_rule[source_date_field]"]')
                 .select("Due Date");
-            cy.get("[data-test=global-rules-form]")
-                .find('[name="add_rule[comparator]"]')
-                .select(">");
-            cy.get("[data-test=global-rules-form]")
+            cy.get("[data-test=add-rule-form]").find('[name="add_rule[comparator]"]').select(">");
+            cy.get("[data-test=add-rule-form]")
                 .find('[name="add_rule[target_date_field]"]')
                 .select("End Date");
-            cy.get("[data-test=submit]").click();
+            cy.get("[data-test=add-rule-form]").find("[data-test=submit]").click();
             cy.get("[data-test=feedback]").contains("Rule successfully created");
             cy.get("[data-test=global-rule]").should("have.length", 2);
 
@@ -97,12 +93,9 @@ describe("Tracker Workflow Global Rules", () => {
 
             cy.log("Delete rule");
             goToWorkflowGlobalRulesAdministration();
-            cy.get("[data-test=global-rules-form]")
-                .find('[name="remove_rules[]"]')
-                .first()
-                .check({ force: true });
-            cy.get("[data-test=submit]").click();
-            cy.get("[data-test=feedback]").contains("Rule(s) successfully deleted");
+            cy.get("[data-test=delete-rule]").first().click();
+            cy.get("[data-test=delete-rule-form]").find("[data-test=submit]:visible").click();
+            cy.get("[data-test=feedback]").contains("Rule successfully deleted");
             cy.get("[data-test=global-rule]").should("have.length", 1);
 
             cy.log("Test that deleted rule is not anymore applied");
