@@ -26,7 +26,6 @@ use EventManager;
 use Exception;
 use FastRoute;
 use ForgeConfig;
-use HTTPRequest;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\Attributes\TestWith;
@@ -56,7 +55,7 @@ final class FrontRouterTest extends TestCase
     private FrontRouter $router;
     private URLVerificationFactory&MockObject $url_verification_factory;
     private RouteCollector&MockObject $route_collector;
-    private HTTPRequest&MockObject $request;
+    private \Tuleap\HTTPRequest&MockObject $request;
     private BaseLayout&MockObject $layout;
     private TestLogger $logger;
     private ErrorRendering&MockObject $error_rendering;
@@ -75,7 +74,7 @@ final class FrontRouterTest extends TestCase
             ->onlyMethods(['collect'])
             ->getMock();
         $this->url_verification_factory = $this->createMock(URLVerificationFactory::class);
-        $this->request                  = $this->createMock(HTTPRequest::class);
+        $this->request                  = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->request->method('getFromServer')->willReturn('Some user-agent string');
         $this->layout                  = $this->createMock(BaseLayout::class);
         $this->logger                  = new TestLogger();
@@ -227,7 +226,7 @@ final class FrontRouterTest extends TestCase
             $r->get('/stuff', function (): DispatchableWithRequest {
                 return new class implements DispatchableWithRequest {
                     #[\Override]
-                    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+                    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
                     {
                         throw new Exception('Failure');
                     }
@@ -278,9 +277,9 @@ final class FrontRouterTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
         $handler = new class ($project) implements DispatchableWithRequest, DispatchableWithProject {
-            public ?HTTPRequest $request = null;
-            public ?BaseLayout $layout   = null;
-            public ?array $variables     = null;
+            public ?\Tuleap\HTTPRequest $request = null;
+            public ?BaseLayout $layout           = null;
+            public ?array $variables             = null;
 
             public function __construct(private readonly Project $project)
             {
@@ -293,7 +292,7 @@ final class FrontRouterTest extends TestCase
             }
 
             #[\Override]
-            public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+            public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
                 $this->request   = $request;
                 $this->layout    = $layout;
@@ -326,12 +325,12 @@ final class FrontRouterTest extends TestCase
     public function testItProvidesABurningParrotThemeWhenControllerAskForIt(): void
     {
         $handler = new class implements DispatchableWithRequest, DispatchableWithBurningParrot {
-            public ?HTTPRequest $request = null;
-            public ?BaseLayout $layout   = null;
-            public ?array $variables     = null;
+            public ?\Tuleap\HTTPRequest $request = null;
+            public ?BaseLayout $layout           = null;
+            public ?array $variables             = null;
 
             #[\Override]
-            public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+            public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
                 $this->request   = $request;
                 $this->layout    = $layout;
@@ -367,14 +366,14 @@ final class FrontRouterTest extends TestCase
             public bool $has_processed = false;
 
             #[\Override]
-            public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+            public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
                 $this->has_processed = true;
                 assertInstanceOf(BurningParrotTheme::class, $layout);
             }
 
             #[\Override]
-            public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
+            public function isInABurningParrotPage(\Tuleap\HTTPRequest $request, array $variables): bool
             {
                 return true;
             }
@@ -444,7 +443,7 @@ final class FrontRouterTest extends TestCase
         return new class implements DispatchableWithRequest
         {
             #[\Override]
-            public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+            public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
             }
         };
@@ -485,7 +484,7 @@ final class FrontRouterTest extends TestCase
                     }
 
                     #[\Override]
-                    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+                    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
                     {
                         $this->counter_process++;
                     }

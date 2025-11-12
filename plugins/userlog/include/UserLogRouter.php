@@ -20,7 +20,6 @@
 
 namespace Tuleap\Userlog;
 
-use HTTPRequest;
 use Rule_Date;
 use Rule_GreaterOrEqual;
 use Rule_Int;
@@ -49,7 +48,7 @@ class UserLogRouter
      * Routes the request to the correct controller
      * @return void
      */
-    public function route(HTTPRequest $request)
+    public function route(\Tuleap\HTTPRequest $request)
     {
         $this->checkAccess($request);
 
@@ -74,12 +73,12 @@ class UserLogRouter
         }
     }
 
-    private function checkAccess(HTTPRequest $request)
+    private function checkAccess(\Tuleap\HTTPRequest $request)
     {
         $request->checkUserIsSuperUser();
     }
 
-    private function validAndExtractOffset(HTTPRequest $request)
+    private function validAndExtractOffset(\Tuleap\HTTPRequest $request)
     {
         $valid = new Valid('offset');
         $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
@@ -94,7 +93,7 @@ class UserLogRouter
         return $offset;
     }
 
-    private function validAndExtractDate(HTTPRequest $request)
+    private function validAndExtractDate(\Tuleap\HTTPRequest $request)
     {
         $valid = new Valid('day');
         $valid->addRule(new Rule_Date(), 'Invalid date submitted. Force it to today.');

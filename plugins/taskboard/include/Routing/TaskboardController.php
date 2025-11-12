@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Routing;
 
-use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
@@ -90,7 +89,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment(\taskboardPlugin::NAME);
 

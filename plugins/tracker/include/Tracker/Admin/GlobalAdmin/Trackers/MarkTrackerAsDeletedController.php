@@ -27,7 +27,6 @@ use EventManager;
 use Exception;
 use Feedback;
 use ForgeConfig;
-use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectHistoryDao;
@@ -78,7 +77,7 @@ final readonly class MarkTrackerAsDeletedController implements DispatchableWithR
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $tracker = $this->getTracker($variables);
         if (

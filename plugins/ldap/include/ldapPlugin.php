@@ -550,7 +550,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
     {
         global $Language;
         if ($this->isLdapAuthType()) {
-            $request = HTTPRequest::instance();
+            $request = \Tuleap\HTTPRequest::instance();
             $ldapId  = $request->getValidated('ldap_id', 'string', false);
             if ($ldapId !== false) {
                 $result = db_query("UPDATE user SET ldap_id='" . db_es($ldapId) . "' WHERE user_id=" . db_ei($params['user_id']));
@@ -1034,7 +1034,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
 
     private function updateAdministrationOptions()
     {
-        $request   = HTTPRequest::instance();
+        $request   = \Tuleap\HTTPRequest::instance();
         $ldap_type = $request->getValidated('ldap_type', 'string', false);
 
         if (! $ldap_type) {
@@ -1204,7 +1204,7 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function bindingAdditionalModalPresenterCollection(BindingAdditionalModalPresenterCollection $collection): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $builder = new AdditionalModalPresenterBuilder($this->getLdapUserGroupManager(), $request, $this->getLDAPServerCommonName());
         $collection->addModal(
             $builder->build(

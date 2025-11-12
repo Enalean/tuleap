@@ -185,7 +185,7 @@ class AdminController extends BaseController
 
         $project = $this->request->getProject();
 
-        $this->additional_scrum_sections->notifyAdditionalSectionsControllers(\HTTPRequest::instance());
+        $this->additional_scrum_sections->notifyAdditionalSectionsControllers(\Tuleap\HTTPRequest::instance());
 
         if ($this->request->exist('burnup-count-mode')) {
             $updater = new AgileDashboardChartsConfigurationUpdater(

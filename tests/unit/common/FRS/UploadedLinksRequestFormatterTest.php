@@ -21,7 +21,6 @@
 
 namespace Tuleap\FRS;
 
-use HTTPRequest;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -29,7 +28,7 @@ final class UploadedLinksRequestFormatterTest extends TestCase
 {
     public function testItExtractsOneArrayFromLinksProvidedInRequest(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = $this->exactly(3);
         $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {
@@ -58,7 +57,7 @@ final class UploadedLinksRequestFormatterTest extends TestCase
 
     public function testItThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = $this->exactly(3);
         $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {
@@ -83,7 +82,7 @@ final class UploadedLinksRequestFormatterTest extends TestCase
 
     public function testItDoesNotAcceptInvalidLinks(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = $this->exactly(3);
         $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {
@@ -109,7 +108,7 @@ final class UploadedLinksRequestFormatterTest extends TestCase
 
     public function testItDoesNotEmptyLinks(): void
     {
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher = $this->exactly(3);
         $request->expects($matcher)->method('get')->willReturnCallback(function (...$parameters) use ($matcher) {
             if ($matcher->numberOfInvocations() === 1) {

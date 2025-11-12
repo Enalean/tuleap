@@ -32,7 +32,7 @@
 header('Content-type: text/html');
 
 $reference_manager = ReferenceManager::instance();
-$request           = HTTPRequest::instance();
+$request           = \Tuleap\HTTPRequest::instance();
 
 
 if (! $request->getValidated('group_id', 'GroupId')) {

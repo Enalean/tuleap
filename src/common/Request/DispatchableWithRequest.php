@@ -21,7 +21,6 @@
 
 namespace Tuleap\Request;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 
 interface DispatchableWithRequest
@@ -33,5 +32,5 @@ interface DispatchableWithRequest
      * @throws ForbiddenException
      * @return void
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables);
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables);
 }

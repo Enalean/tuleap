@@ -25,11 +25,11 @@ namespace Tuleap\Test\Builders;
 
 class HTTPRequestBuilder
 {
-    private \HTTPRequest $request;
+    private \Tuleap\HTTPRequest $request;
 
     public function __construct()
     {
-        $this->request = new \HTTPRequest();
+        $this->request = new \Tuleap\HTTPRequest();
     }
 
     public static function get(): self
@@ -73,7 +73,7 @@ class HTTPRequestBuilder
         return $this;
     }
 
-    public function build(): \HTTPRequest
+    public function build(): \Tuleap\HTTPRequest
     {
         return $this->request;
     }

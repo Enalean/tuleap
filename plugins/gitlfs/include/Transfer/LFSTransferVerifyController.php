@@ -20,7 +20,6 @@
 
 namespace Tuleap\GitLFS\Transfer;
 
-use HTTPRequest;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeVerify;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -45,7 +44,7 @@ class LFSTransferVerifyController implements DispatchableWithRequestNoAuthz
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
         $authorized_action = $this->user_access_request_checker->userCanAccess(

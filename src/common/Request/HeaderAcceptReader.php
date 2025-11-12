@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use HTTPRequest;
 use Negotiation\BaseAccept;
 use Negotiation\Negotiator;
 
 class HeaderAcceptReader
 {
-    public static function doesClientPreferHTMLResponse(HTTPRequest $request): bool
+    public static function doesClientPreferHTMLResponse(\Tuleap\HTTPRequest $request): bool
     {
         $negotiator    = new Negotiator();
         $accept_header = $request->getFromServer('HTTP_ACCEPT');

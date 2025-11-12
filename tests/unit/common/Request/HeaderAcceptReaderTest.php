@@ -22,21 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HeaderAcceptReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var HTTPRequest&MockObject
+     * @var \Tuleap\HTTPRequest&MockObject
      */
     private $request;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->request = $this->createMock(\HTTPRequest::class);
+        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
     }
 
     public function testItReturnsTrueWhenTextHasImplicitWeight(): void

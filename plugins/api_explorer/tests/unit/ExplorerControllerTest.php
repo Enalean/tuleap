@@ -50,7 +50,7 @@ final class ExplorerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectOutputRegex('/id="api-explorer"/');
         $controller->process(
-            $this->createMock(\HTTPRequest::class),
+            $this->createMock(\Tuleap\HTTPRequest::class),
             $layout,
             []
         );

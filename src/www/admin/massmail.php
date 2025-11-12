@@ -21,7 +21,7 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 // get numbers of users for each mailing

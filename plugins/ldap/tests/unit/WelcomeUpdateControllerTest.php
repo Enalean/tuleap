@@ -43,7 +43,7 @@ final class WelcomeUpdateControllerTest extends TestCase
 
     public function testUpdateIsRejectedWhenTimezoneIsNotProvided(): void
     {
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser(UserTestBuilder::anActiveUser()->build());
         $request->set('pv', '2');
 

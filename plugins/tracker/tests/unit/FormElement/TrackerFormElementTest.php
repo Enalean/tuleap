@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use ForgeConfig;
-use HTTPRequest;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElementFactory;
 use TrackerManager;
@@ -133,7 +132,7 @@ final class TrackerFormElementTest extends TestCase
         ob_start();
         $form_element->displayAdminFormElement(
             $this->createMock(TrackerManager::class),
-            new HTTPRequest(),
+            new \Tuleap\HTTPRequest(),
             new \CSRFSynchronizerToken('update_form', 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub()),
         );
         $content = ob_get_contents();

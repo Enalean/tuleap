@@ -541,11 +541,11 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     /**
      * Process the self monitoring request
      *
-     * @param HTTPRequest $request      HTTP request
+     * @param \Tuleap\HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
      *
      */
-    private function processSelfMonitoringAction(HTTPRequest $request, $currentUser, FRSPackage $package): void
+    private function processSelfMonitoringAction(\Tuleap\HTTPRequest $request, $currentUser, FRSPackage $package): void
     {
         $anonymous     = true;
         $performAction = false;
@@ -628,7 +628,7 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     /**
      * Process the monitoring request
      *
-     * @param HTTPRequest $request      HTTP request
+     * @param \Tuleap\HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
@@ -670,7 +670,7 @@ class FileModuleMonitorFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     /**
      * Process the monitoring request
      *
-     * @param HTTPRequest $request      HTTP request
+     * @param \Tuleap\HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance

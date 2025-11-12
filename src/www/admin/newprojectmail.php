@@ -22,7 +22,7 @@
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/proj_email.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $project_id = $request->getValidated('group_id', 'uint', 0);

@@ -39,7 +39,7 @@ use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 require_once __DIR__ . '/../../include/pre.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(['group' => $group_id, 'admin_flags' => 'A']);

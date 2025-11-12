@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -42,7 +41,7 @@ class AccessKeyRevocationController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         if ($current_user->isAnonymous()) {

@@ -259,7 +259,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('getID')->willReturn(105);
         $project->method('getMinimalRank')->willReturn(10);
         $response = $this->createMock(BaseLayout::class);
-        $request  = $this->createMock(\HTTPRequest::class);
+        $request  = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher  = self::exactly(8);
         $request
             ->expects($matcher)
@@ -329,7 +329,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('getMinimalRank')->willReturn(10);
         $service  = new Service($project, ['label' => 'foo', 'short_name' => 'bar', 'description' => 'baz']);
         $response = $this->createMock(BaseLayout::class);
-        $request  = $this->createMock(\HTTPRequest::class);
+        $request  = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher  = self::exactly(9);
         $request
             ->expects($matcher)
@@ -412,7 +412,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->method('getMinimalRank')->willReturn(10);
 
         $response = $this->createMock(BaseLayout::class);
-        $request  = $this->createMock(\HTTPRequest::class);
+        $request  = $this->createMock(\Tuleap\HTTPRequest::class);
         $matcher  = $this->exactly(9);
         $request->expects($matcher)->method('getValidated')->willReturnCallback(function (...$parameters) use ($matcher, $submitted_label, $submitted_description) {
             if ($matcher->numberOfInvocations() === 1) {

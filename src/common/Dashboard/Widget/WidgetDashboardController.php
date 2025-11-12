@@ -21,7 +21,6 @@
 namespace Tuleap\Dashboard\Widget;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 
 class WidgetDashboardController
 {
@@ -74,7 +73,7 @@ class WidgetDashboardController
         $this->widget_line_updater = $widget_line_updater;
     }
 
-    public function reorderWidgets(HTTPRequest $request, $dashboard_type)
+    public function reorderWidgets(\Tuleap\HTTPRequest $request, $dashboard_type)
     {
         $this->csrf->check();
 
@@ -150,7 +149,7 @@ class WidgetDashboardController
      * @param $dashboard_type
      * @return bool
      */
-    private function hasEditPermission(HTTPRequest $request, $dashboard_type)
+    private function hasEditPermission(\Tuleap\HTTPRequest $request, $dashboard_type)
     {
         $user = $request->getCurrentUser();
         if ($dashboard_type === self::USER_DASHBOARD_TYPE) {
@@ -241,7 +240,7 @@ class WidgetDashboardController
         return $deleted_ids;
     }
 
-    public function editWidgetLine(HTTPRequest $request, $dashboard_type)
+    public function editWidgetLine(\Tuleap\HTTPRequest $request, $dashboard_type)
     {
         $this->csrf->check();
 

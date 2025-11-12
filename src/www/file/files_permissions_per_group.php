@@ -61,7 +61,7 @@ $permissions_retriever       = new PackagePermissionPerGroupJSONRepresentationRe
     )
 );
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $permissions_retriever->retrieve(
     $request->getProject(),

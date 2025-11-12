@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use WebDAVAuthentication;
@@ -67,7 +66,7 @@ final class WebdavController implements DispatchableWithRequestNoAuthz
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $this->server_builder->getServerOnSubPath($this->authentication->authenticate())->start();
     }

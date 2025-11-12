@@ -50,7 +50,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->willReturn('valid_authorization');
         $this->token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $batch_request = $this->createStub(BatchRequest::class);
@@ -73,7 +73,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->willReturn('valid_authorization');
         $this->token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $batch_request = $this->createStub(BatchRequest::class);
@@ -96,7 +96,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->willReturn('valid_authorization');
         $this->token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $lfs_request = $this->createStub(GitLfsHTTPOperation::class);
@@ -124,7 +124,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->willReturn(false);
 
         $this->assertNull(
@@ -140,7 +140,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->willReturn('invalid_token');
         $this->token_unserializer->method('getSplitToken')->willThrowException(new InvalidIdentifierFormatException());
 
@@ -157,7 +157,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->willReturn('valid_token');
         $this->token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $batch_request = $this->createStub(BatchRequest::class);
@@ -177,7 +177,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
-        $request = $this->createStub(\HTTPRequest::class);
+        $request = $this->createStub(\Tuleap\HTTPRequest::class);
         $request->method('getFromServer')->willReturn('valid_authorization');
         $this->token_unserializer->method('getSplitToken')->willReturn($this->createStub(SplitToken::class));
         $batch_request = $this->createStub(BatchRequest::class);

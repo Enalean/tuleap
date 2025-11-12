@@ -65,7 +65,7 @@ class Widget_MyMonitoredFp extends Widget //phpcs:ignore PSR1.Classes.ClassDecla
             $html_my_monitored_fp .= $GLOBALS['Language']->getText('my_index', 'my_files_msg');
         } else {
             $html_my_monitored_fp .= '<table class="tlp-table" style="width:100%">';
-            $request               = HTTPRequest::instance();
+            $request               = \Tuleap\HTTPRequest::instance();
             for ($j = 0; $j < $rows; $j++) {
                 $group_id = db_result($result, $j, 'group_id');
 
@@ -145,7 +145,7 @@ class Widget_MyMonitoredFp extends Widget //phpcs:ignore PSR1.Classes.ClassDecla
     #[\Override]
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_item_id') || $request->exist('hide_frs')) {
             $ajax_url .= '&hide_item_id=' . urlencode($request->get('hide_item_id')) .

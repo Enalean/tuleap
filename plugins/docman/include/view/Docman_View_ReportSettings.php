@@ -30,7 +30,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
 
     public function _title($params)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $hp      = Codendi_HTMLPurifier::instance();
         if ($request->exist('report_id')) {
             echo '<h2 class="project-header-title">' . dgettext('tuleap-docman', 'Report') . ' "' . $hp->purify($params['filter']->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '"</h2>';
@@ -262,7 +262,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
 
         $this->init($params);
 
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($request->exist('report_id')) {
             $reportId = (int) $request->get('report_id');
             $html    .= $this->_getReportSettings($reportId);

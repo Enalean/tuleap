@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Document\Tree;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
@@ -64,7 +63,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('document');
 
@@ -147,7 +146,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         );
     }
 
-    private function includeJavascriptFiles(BaseLayout $layout, HTTPRequest $request): void
+    private function includeJavascriptFiles(BaseLayout $layout, \Tuleap\HTTPRequest $request): void
     {
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $layout->includeFooterJavascriptFile($core_assets->getFileURL('ckeditor.js'));

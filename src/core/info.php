@@ -19,6 +19,6 @@
  *
  */
 
-HTTPRequest::instance()->checkUserIsSuperUser();
+\Tuleap\HTTPRequest::instance()->checkUserIsSuperUser();
 
 phpinfo();

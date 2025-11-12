@@ -91,7 +91,7 @@ final readonly class ArtifactLinkConfigController
         $layout->redirect(self::URL);
     }
 
-    public function activateNewInterface(\HTTPRequest $request, BaseLayout $layout): void
+    public function activateNewInterface(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         $this->new_artifact_link_interface->massActivateForActiveTrackers();
         $layout->addFeedback(

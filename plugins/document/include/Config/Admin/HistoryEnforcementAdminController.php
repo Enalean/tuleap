@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Document\Config\Admin;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollection;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
@@ -53,7 +52,7 @@ class HistoryEnforcementAdminController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

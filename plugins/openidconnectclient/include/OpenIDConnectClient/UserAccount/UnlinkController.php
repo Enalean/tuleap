@@ -23,7 +23,6 @@ namespace Tuleap\OpenIDConnectClient\UserAccount;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
@@ -63,7 +62,7 @@ final class UnlinkController implements DispatchableWithRequest
      * @inheritDoc
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {

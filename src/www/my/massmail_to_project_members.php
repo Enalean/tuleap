@@ -34,7 +34,7 @@ if ((bool) ForgeConfig::get(MyProjects::CONFIG_DISABLE_CONTACT) === true) {
 $csrf = new CSRFSynchronizerToken('massmail_to_project_members.php');
 $csrf->check('/my/');
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $pm      = ProjectManager::instance();
 
 $user     = $request->getCurrentUser();

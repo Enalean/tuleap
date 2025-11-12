@@ -22,7 +22,6 @@ namespace Tuleap\Git;
 
 use Exception;
 use Git_GitRepositoryUrlManager;
-use HTTPRequest;
 use Tuleap\Git\Repository\RepositoryCreator;
 use Valid_String;
 
@@ -48,7 +47,7 @@ class CreateRepositoryController extends RouterLink
     }
 
     #[\Override]
-    public function process(HTTPRequest $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         switch ($request->get('action')) {
             case 'add':
@@ -60,7 +59,7 @@ class CreateRepositoryController extends RouterLink
         }
     }
 
-    private function createRepositoryFromRequest(HTTPRequest $request)
+    private function createRepositoryFromRequest(\Tuleap\HTTPRequest $request)
     {
         $repository_name = $this->getNameFromRequest($request);
 
@@ -87,7 +86,7 @@ class CreateRepositoryController extends RouterLink
     /**
      * @return null|string
      */
-    private function getNameFromRequest(HTTPRequest $request)
+    private function getNameFromRequest(\Tuleap\HTTPRequest $request)
     {
         $valid = new Valid_String('repo_name');
         $valid->required();

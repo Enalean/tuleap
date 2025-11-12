@@ -20,7 +20,6 @@
 
 namespace Tuleap\FRS;
 
-use HTTPRequest;
 use Rule_Regexp;
 use Valid_FTPURI;
 use Valid_LocalURI;
@@ -28,7 +27,7 @@ use Valid_String;
 
 class UploadedLinksRequestFormatter
 {
-    public function formatFromRequest(HTTPRequest $request)
+    public function formatFromRequest(\Tuleap\HTTPRequest $request)
     {
         if ($request->validArray(new Valid_String('uploaded-link-name'))) {
             $release_links_name = $request->get('uploaded-link-name');

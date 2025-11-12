@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\MoveArtifacts;
 
-use HTTPRequest;
 use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
@@ -41,7 +40,7 @@ final class MoveArtifactsAdminController implements DispatchableWithRequest, Dis
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['tracker_id']);
         if (! $tracker) {

@@ -25,7 +25,6 @@ namespace Tuleap\HudsonGit\Git\Administration;
 use CSRFSynchronizerToken;
 use GitPermissionsManager;
 use GitPlugin;
-use HTTPRequest;
 use Project;
 use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -56,7 +55,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
 

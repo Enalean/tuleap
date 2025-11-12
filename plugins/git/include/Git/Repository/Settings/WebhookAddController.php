@@ -21,7 +21,6 @@
 namespace Tuleap\Git\Repository\Settings;
 
 use Feedback;
-use HTTPRequest;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 use Tuleap\Git\Webhook\WebhookDao;
 
@@ -38,7 +37,7 @@ class WebhookAddController extends WebhookController
         $this->dao = $dao;
     }
 
-    public function addWebhook(HTTPRequest $request)
+    public function addWebhook(\Tuleap\HTTPRequest $request)
     {
         $repository   = $this->getRepositoryUserCanAdministrate($request);
         $redirect_url = $this->getWebhookSettingsURL($repository);

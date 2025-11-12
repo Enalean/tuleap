@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\SiteAdmin;
 
-use HTTPRequest;
 use Override;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
@@ -43,7 +42,7 @@ final readonly class ArtidocAdminSettingsController implements DispatchableWithR
     }
 
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $this->current_user_provider->getCurrentUser();
         if (! $current_user->isSuperUser()) {

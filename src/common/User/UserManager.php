@@ -672,7 +672,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         $this->destroySession();
 
         $session_manager    = $this->getSessionManager();
-        $request            = HTTPRequest::instance();
+        $request            = \Tuleap\HTTPRequest::instance();
         $session_identifier = $session_manager->createSession($user, $request, $request->getFromServer('REQUEST_TIME'));
 
         $this->getCookieManager()->setCookie(

@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall\OnTop\Config\Command;
 
 use Cardwall_OnTop_Config_Command_EnableFreestyleColumns;
 use Cardwall_OnTop_Dao;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -48,7 +47,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends Tes
 
     public function testItEnablesIfItIsNotAlreadyTheCase(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('use_freestyle_columns', '1');
         $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(false);
         $this->dao->expects($this->once())->method('enableFreestyleColumns')->willReturn($this->tracker_id);
@@ -58,7 +57,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends Tes
 
     public function testItDoesNotEnableIfItIsNotAlreadyTheCase(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('use_freestyle_columns', '1');
         $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(true);
         $this->dao->expects($this->never())->method('enableFreestyleColumns');
@@ -68,7 +67,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends Tes
 
     public function testItDisablesIfItIsNotAlreadyTheCase(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('use_freestyle_columns', '0');
         $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(true);
         $this->dao->expects($this->once())->method('disableFreestyleColumns')->with($this->tracker_id);
@@ -78,7 +77,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends Tes
 
     public function testItDoesNotDisableIfItIsNotAlreadyTheCase(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('use_freestyle_columns', '0');
         $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(false);
         $this->dao->expects($this->never())->method('disableFreestyleColumns');

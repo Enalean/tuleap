@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use Account_TimezonesCollection;
-use HTTPRequest;
 use Tuleap\LDAP\User\UserDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -62,7 +61,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         include_once __DIR__ . '/../../../src/www/include/account.php';
 
@@ -102,7 +101,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
         account_redirect_after_login($current_user, $request->get('return_to'));
     }
 
-    private function welcomeExitError(HTTPRequest $request, BaseLayout $layout, $title, $text): void
+    private function welcomeExitError(\Tuleap\HTTPRequest $request, BaseLayout $layout, $title, $text): void
     {
         assert($layout instanceof \Layout);
 

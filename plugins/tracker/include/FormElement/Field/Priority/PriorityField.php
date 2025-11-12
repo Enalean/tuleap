@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\FormElement\Field\Priority;
 
 use EventManager;
-use HTTPRequest;
 use Override;
 use PFUser;
 use Tracker_Artifact_Changeset;
@@ -391,7 +390,7 @@ final class PriorityField extends IntegerField implements Tracker_FormElement_Fi
         $changeset_id = (int) $artifact->getLastChangeset()->getId();
         $value        = $artifact->getLastChangeset()->getValue($this);
         $report       = Tracker_ReportFactory::instance()->getDefaultReportsByTrackerId($artifact->getTracker()->getId());
-        $request      = HTTPRequest::instance();
+        $request      = \Tuleap\HTTPRequest::instance();
 
         if ($request->exist('report')) {
             $report = Tracker_ReportFactory::instance()->getReportById(

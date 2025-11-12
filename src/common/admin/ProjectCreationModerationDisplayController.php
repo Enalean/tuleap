@@ -23,7 +23,6 @@ namespace Tuleap\Admin;
 
 use CSRFSynchronizerToken;
 use ForgeConfig;
-use HTTPRequest;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -40,7 +39,7 @@ class ProjectCreationModerationDisplayController implements DispatchableWithRequ
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

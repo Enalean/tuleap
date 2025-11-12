@@ -179,7 +179,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
 
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $user        = UserManager::instance()->getCurrentUser();
         $hf          = $this->getMinimalHudsonJobFactory();

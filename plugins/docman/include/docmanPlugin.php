@@ -517,7 +517,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
 
     public function process()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $user    = $request->getCurrentUser();
         $proxy   = new DocmanHTTPControllerProxy(
             new ExternalLinkParametersExtractor(),
@@ -749,7 +749,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function pendingDocumentsRetriever(PendingDocumentsRetriever $event): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $limit   = 25;
 
         //return all pending versions for given group id
@@ -1073,7 +1073,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
     protected function getHTTPController($request = null)
     {
         if ($request == null) {
-            $request = HTTPRequest::instance();
+            $request = \Tuleap\HTTPRequest::instance();
         }
         return $this->getController('Docman_HTTPController', $request);
     }

@@ -40,7 +40,7 @@ final class IDisplayRegisterFormStub implements IDisplayRegisterForm
     }
 
     #[\Override]
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
+    public function display(\Tuleap\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $this->has_been_displayed = true;
         $this->context            = $context;
@@ -68,7 +68,7 @@ final class IDisplayRegisterFormStub implements IDisplayRegisterForm
 
     #[\Override]
     public function displayWithPossibleIssue(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         RegisterFormContext $context,
         ?RegisterFormValidationIssue $issue,

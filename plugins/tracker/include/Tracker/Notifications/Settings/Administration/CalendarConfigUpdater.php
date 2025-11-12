@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Notifications\Settings\Administration;
 
-use HTTPRequest;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -46,7 +45,7 @@ final class CalendarConfigUpdater
     /**
      * @return Ok<bool>|Err<string>
      */
-    public function updateConfigAccordingToRequest(\Tuleap\Tracker\Tracker $tracker, HTTPRequest $request): Ok|Err
+    public function updateConfigAccordingToRequest(\Tuleap\Tracker\Tracker $tracker, \Tuleap\HTTPRequest $request): Ok|Err
     {
         if (! $request->exist(self::ENABLE_CALENDAR_EVENTS)) {
             return Result::ok(false);

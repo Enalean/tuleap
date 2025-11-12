@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-use HTTPRequest;
 use LDAP_GroupManager;
 use LDAP_UserGroupManager;
 use Tuleap\Layout\BaseLayout;
@@ -69,7 +68,7 @@ class BindUgroupConfirmController implements DispatchableWithRequest
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
         if (! $ugroup_id) {

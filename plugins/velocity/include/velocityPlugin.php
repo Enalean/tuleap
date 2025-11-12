@@ -157,7 +157,7 @@ class velocityPlugin extends Plugin // phpcs:ignore
 
     private function isAPlanningOverviewRequest()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         return $request->exist('planning_id') && $request->get('pane') === 'details';
     }

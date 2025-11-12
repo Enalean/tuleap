@@ -50,7 +50,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->language_manager       = new MediawikiLanguageManager(new MediawikiLanguageDao());
     }
 
-    public function index(ServiceMediawiki $service, HTTPRequest $request)
+    public function index(ServiceMediawiki $service, \Tuleap\HTTPRequest $request)
     {
         $this->assertUserIsProjectAdmin($service, $request);
 
@@ -195,7 +195,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         }
     }
 
-    public function save_language(ServiceMediawiki $service, HTTPRequest $request) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function save_language(ServiceMediawiki $service, \Tuleap\HTTPRequest $request) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->assertUserIsProjectAdmin($service, $request);
         if ($request->isPost()) {
@@ -217,7 +217,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         ));
     }
 
-    public function save_permissions(ServiceMediawiki $service, HTTPRequest $request) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function save_permissions(ServiceMediawiki $service, \Tuleap\HTTPRequest $request) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->assertUserIsProjectAdmin($service, $request);
         if ($request->isPost()) {
@@ -263,7 +263,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         ));
     }
 
-    private function getSelectedMappingsFromRequest(HTTPRequest $request, Project $project)
+    private function getSelectedMappingsFromRequest(\Tuleap\HTTPRequest $request, Project $project)
     {
         if ($this->requestIsRestore($request)) {
             return $this->mapper->getDefaultMappingsForProject($project);
@@ -276,12 +276,12 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $list;
     }
 
-    private function requestIsRestore(HTTPRequest $request)
+    private function requestIsRestore(\Tuleap\HTTPRequest $request)
     {
         return $request->get('restore') != null;
     }
 
-    private function assertUserIsProjectAdmin(ServiceMediawiki $service, HTTPRequest $request)
+    private function assertUserIsProjectAdmin(ServiceMediawiki $service, \Tuleap\HTTPRequest $request)
     {
         if (! $service->userIsAdmin($request->getCurrentUser())) {
             $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL . '/wiki/' . $request->getProject()->getUnixName());

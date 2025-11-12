@@ -50,7 +50,7 @@ class DocmanHTTPControllerProxy
         $this->docman_item_dao        = $docman_item_dao;
     }
 
-    public function process(\HTTPRequest $request, \PFUser $user): void
+    public function process(\Tuleap\HTTPRequest $request, \PFUser $user): void
     {
         $project_id = $request->getProject()->getID();
         if ($project_id === null) {

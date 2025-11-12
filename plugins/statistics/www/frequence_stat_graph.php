@@ -40,7 +40,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 
 $sampleFactory = new SampleFactory();
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $sampleFactory->setSample($request->get('data'));
 
 //advanced search

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use HTTPRequest;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
 use stdClass;
@@ -46,14 +45,14 @@ final class ClientWrapperBuilderTest extends TestCase
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionMessage('credentials key is mandatory');
 
-        $this->wrapper_builder->buildFromRequest(new HTTPRequest(), new NullLogger());
+        $this->wrapper_builder->buildFromRequest(new \Tuleap\HTTPRequest(), new NullLogger());
     }
 
     public function testItThrowsAnExceptionWhenCredentialValuesAreMissing(): void
     {
         $body              = new stdClass();
         $body->credentials = '';
-        $request           = $this->createMock(HTTPRequest::class);
+        $request           = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getJsonDecodedBody')->willReturn($body);
 
         $this->expectException(JiraConnectionException::class);
@@ -70,7 +69,7 @@ final class ClientWrapperBuilderTest extends TestCase
         $body->credentials->user_email = 'user-email@example.com';
         $body->credentials->token      = 'azerty1234';
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getJsonDecodedBody')->willReturn($body);
 
         $this->expectException(JiraConnectionException::class);
@@ -87,7 +86,7 @@ final class ClientWrapperBuilderTest extends TestCase
         $body->credentials->user_email = 'user-email@example.com';
         $body->credentials->token      = 'azerty1234';
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getJsonDecodedBody')->willReturn($body);
 
         $wrapper_builder = new ClientWrapperBuilder(static function (JiraCredentials $jira_credentials) {

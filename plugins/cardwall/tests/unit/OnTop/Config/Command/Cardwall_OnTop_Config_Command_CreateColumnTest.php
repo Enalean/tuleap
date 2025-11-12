@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall\OnTop\Config\Command;
 
 use Cardwall_OnTop_ColumnDao;
 use Cardwall_OnTop_Config_Command_CreateColumn;
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -53,7 +52,7 @@ final class Cardwall_OnTop_Config_Command_CreateColumnTest extends TestCase // p
 
     public function testItCreatesANewColumn(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('new_column', 'On Going');
         $this->dao->expects($this->once())->method('create')->with($this->tracker_id, 'On Going');
         $this->command->execute($request);

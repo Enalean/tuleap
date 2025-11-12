@@ -21,7 +21,6 @@
 namespace Tuleap\Dashboard\Widget;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use PFUser;
 use Feedback;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
@@ -54,7 +53,7 @@ class PreferencesController
         $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
-    public function display(HTTPRequest $request): void
+    public function display(\Tuleap\HTTPRequest $request): void
     {
         $user      = $request->getCurrentUser();
         $widget_id = $request->get('widget-id');
@@ -70,7 +69,7 @@ class PreferencesController
         echo $this->getWidget($row)->getPreferences($row['id'], $row['content_id']);
     }
 
-    public function update(HTTPRequest $request): void
+    public function update(\Tuleap\HTTPRequest $request): void
     {
         $user      = $request->getCurrentUser();
         $widget_id = $request->get('widget-id');
@@ -122,14 +121,14 @@ class PreferencesController
         }
     }
 
-    protected function forceGroupIdToBePresentInRequest(HTTPRequest $request, array $row): void
+    protected function forceGroupIdToBePresentInRequest(\Tuleap\HTTPRequest $request, array $row): void
     {
         if (isset($row['dashboard_type']) && $row['dashboard_type'] === 'project') {
             $request->set('group_id', $row['project_id']);
         }
     }
 
-    protected function forceContentIdToBePresentInRequest(HTTPRequest $request, array $row): void
+    protected function forceContentIdToBePresentInRequest(\Tuleap\HTTPRequest $request, array $row): void
     {
         if (isset($row['content_id'])) {
             $request->set('content_id', $row['content_id']);

@@ -20,7 +20,7 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $pm      = ProjectManager::instance();
 $project = $pm->getProject($request->get('group_id'));

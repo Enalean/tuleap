@@ -24,7 +24,6 @@ namespace Tuleap\User\Account\Register;
 
 use Feedback;
 use ForgeConfig;
-use HTTPRequest;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
@@ -49,7 +48,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
     #[\Override]
     public function afterSuccessfullUserRegistration(
         PFUser $new_user,
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         string $mail_confirm_code,
         RegisterFormContext $context,
@@ -107,7 +106,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
 
     private function automagicallyLogUser(
         PFUser $new_user,
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         InvitationToEmail $invitation_to_email,
     ): void {

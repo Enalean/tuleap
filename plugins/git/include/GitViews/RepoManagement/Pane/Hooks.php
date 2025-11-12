@@ -46,7 +46,7 @@ class Hooks extends Pane
      *
      * Parameters:
      *   'repository'           => (Input) GitRepository Git repository currently modified
-     *   'request'              => (Input) HTTPRequest   Current request
+     *   'request'              => (Input) \Tuleap\HTTPRequest   Current request
      *   'descritption'         => (Output) String       The description of the hooks
      *   'create_buttons'       => (Output) Array of CreateWebhookButtonPresenter
      *   'additional_html_bits' => (Output) Array of html string

@@ -29,7 +29,7 @@ final class AzureADUserLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testProcessRequest(): void
     {
         $login_controller = $this->createMock(Controller::class);
-        $request          = $this->createMock(\HTTPRequest::class);
+        $request          = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('get')->with('return_to');
 
         $login_controller->expects($this->once())->method('login');

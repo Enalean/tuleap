@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Repository\View;
 
-use HTTPRequest;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Project;
 
@@ -30,7 +29,7 @@ class CommitForCurrentTreeRetriever
      *
      * @return Commit|null
      */
-    public function getCommitOfCurrentTree(HTTPRequest $request, Project $gitphp_project)
+    public function getCommitOfCurrentTree(\Tuleap\HTTPRequest $request, Project $gitphp_project)
     {
         $hashbase = 'HEAD';
         if ($request->exist('h')) {

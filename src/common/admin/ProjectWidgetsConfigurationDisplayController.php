@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Admin;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
@@ -47,7 +46,7 @@ class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRe
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

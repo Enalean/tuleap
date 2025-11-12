@@ -230,7 +230,7 @@ class Tracker_Widget_MyArtifacts extends Widget
     #[\Override]
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_item_id') || $request->exist('hide_artifact')) {
             $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_artifact=' . $request->get('hide_artifact');

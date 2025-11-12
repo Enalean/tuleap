@@ -113,7 +113,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         );
 
         if ($get_widget_event->getName() === DashboardProjectMilestones::NAME) {
-            $project = HTTPRequest::instance()->getProject();
+            $project = \Tuleap\HTTPRequest::instance()->getProject();
 
             $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
             if (! $agiledashboard_plugin || ! $agiledashboard_plugin->isAllowed($project->getID())) {
@@ -125,7 +125,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
                 new ProjectMilestonesDao(),
                 new ProjectRetriever(ProjectManager::instance()),
                 PlanningFactory::build(),
-                HTTPRequest::instance(),
+                \Tuleap\HTTPRequest::instance(),
                 new CSRFSynchronizerToken('/project/')
             ));
         }
@@ -136,7 +136,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
                 new ProjectMilestonesDao(),
                 new ProjectRetriever(ProjectManager::instance()),
                 PlanningFactory::build(),
-                HTTPRequest::instance(),
+                \Tuleap\HTTPRequest::instance(),
                 new CSRFSynchronizerToken('/my/')
             ));
         }

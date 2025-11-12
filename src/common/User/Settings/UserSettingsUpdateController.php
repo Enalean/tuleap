@@ -20,7 +20,6 @@
 
 namespace Tuleap\User\Settings;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -31,7 +30,7 @@ final class UserSettingsUpdateController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $request->checkUserIsSuperUser();
 

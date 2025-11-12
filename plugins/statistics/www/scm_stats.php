@@ -35,7 +35,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $vStartDate = new Valid('scm_statistics_start_date');
 $vStartDate->addRule(new Rule_Date());

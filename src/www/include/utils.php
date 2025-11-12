@@ -793,7 +793,7 @@ function getStringFromServer($key)
 
 function util_return_to($url)
 {
-    $request       = HTTPRequest::instance();
+    $request       = \Tuleap\HTTPRequest::instance();
     $event_manager = EventManager::instance();
     $url_redirect  = new URLRedirect($event_manager);
     $return_to     = $request->get('return_to');

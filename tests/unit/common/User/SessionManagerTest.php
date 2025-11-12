@@ -145,7 +145,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             new \RuntimeException('Something really bad happened, could not create the session in the DB')
         );
         $user    = UserTestBuilder::aUser()->build();
-        $request = $this->createMock(\HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
 
         $this->random_number_generator->method('getNumber')->willReturn('1');
 
@@ -160,7 +160,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $session_id   = 1;
         $user         = $this->createMock(\PFUser::class);
-        $request      = $this->createMock(\HTTPRequest::class);
+        $request      = $this->createMock(\Tuleap\HTTPRequest::class);
         $random_token = 'random_token';
         $this->session_dao->method('create')->willReturn($session_id);
         $this->random_number_generator->method('getNumber')->willReturn($random_token);

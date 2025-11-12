@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\User;
 use Codendi_Mail_Interface;
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
@@ -46,7 +45,7 @@ final readonly class UserPreferencesPostController implements DispatchableWithRe
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->csrf_synchronizer_token->check(DisplayNotificationsController::URL, $request);
 

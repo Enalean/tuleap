@@ -45,7 +45,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     private $css_asset_collection;
 
     /**
-     * @var \HTTPRequest&MockObject
+     * @var \Tuleap\HTTPRequest&MockObject
      */
     private $request;
 
@@ -64,7 +64,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
             [new CssAssetWithoutVariantDeclinaisons($css_include_assets, 'dashboards-style')]
         );
 
-        $this->request = $this->createMock(\HTTPRequest::class);
+        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->request->method('getFromServer');
 
         $this->includer = new AssetsIncluder(

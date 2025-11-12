@@ -24,7 +24,7 @@ namespace Tuleap\Docman\ExternalLinks;
 
 class ExternalLinkParametersExtractor
 {
-    public function extractFolderIdFromParams(\HTTPRequest $request): int
+    public function extractFolderIdFromParams(\Tuleap\HTTPRequest $request): int
     {
         if (isset($request->params['action']) && $request->params['action'] === 'show') {
             return (int) $request->params['id'];
@@ -32,7 +32,7 @@ class ExternalLinkParametersExtractor
         return 0;
     }
 
-    public function extractRequestIsForOldUIParams(\HTTPRequest $request): bool
+    public function extractRequestIsForOldUIParams(\Tuleap\HTTPRequest $request): bool
     {
         return ! isset($request->params['switcholdui']) ||
             (isset($request->params['switcholdui']) && $request->params['switcholdui'] === true);

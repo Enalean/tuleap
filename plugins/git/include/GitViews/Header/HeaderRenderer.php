@@ -22,7 +22,6 @@ namespace Tuleap\Git\GitViews\Header;
 
 use EventManager;
 use GitRepository;
-use HTTPRequest;
 use PFUser;
 use Project;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
@@ -69,7 +68,7 @@ class HeaderRenderer
         $this->repository_crumb_builder     = $repository_crumb_builder;
     }
 
-    public function renderDefaultHeader(HTTPRequest $request, PFUser $user, Project $project)
+    public function renderDefaultHeader(\Tuleap\HTTPRequest $request, PFUser $user, Project $project)
     {
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
@@ -82,7 +81,7 @@ class HeaderRenderer
         $this->renderHeader($request, $project, $breadcrumbs);
     }
 
-    public function renderServiceAdministrationHeader(HTTPRequest $request, PFUser $user, Project $project)
+    public function renderServiceAdministrationHeader(\Tuleap\HTTPRequest $request, PFUser $user, Project $project)
     {
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
@@ -97,7 +96,7 @@ class HeaderRenderer
     }
 
     public function renderRepositoryHeader(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $user,
         Project $project,
         GitRepository $repository,
@@ -107,7 +106,7 @@ class HeaderRenderer
     }
 
     public function renderRepositorySettingsHeader(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         PFUser $user,
         Project $project,
         GitRepository $repository,
@@ -135,7 +134,7 @@ class HeaderRenderer
     }
 
     private function renderHeader(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         Project $project,
         BreadCrumbCollection $breadcrumbs,
     ) {

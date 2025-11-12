@@ -21,7 +21,6 @@
 
 namespace Tuleap\Request;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 
 class LegacyRoutesController implements DispatchableWithRequest
@@ -41,7 +40,7 @@ class LegacyRoutesController implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $Language = $GLOBALS['Language'];
         $HTML     = $layout;

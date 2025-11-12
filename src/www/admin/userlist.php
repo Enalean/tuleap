@@ -26,14 +26,14 @@ require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
 require_once __DIR__ . '/../project/admin/ugroup_utils.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 /**
  * @psalm-return "user_name"|"realname"|"status"
  * @psalm-taint-escape sql
  */
-function getSortHeaderVerifiedParameter(HTTPRequest $request, string $parameter_name): string
+function getSortHeaderVerifiedParameter(\Tuleap\HTTPRequest $request, string $parameter_name): string
 {
     $value           = 'user_name';
     $parameter_value = $request->get($parameter_name);

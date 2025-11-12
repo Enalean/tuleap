@@ -29,7 +29,7 @@ enum PullRequestApp: string
     case HOMEPAGE_APP       = 'homepage';
     case COMMITS_APP        = 'commits';
 
-    public static function fromRequest(\HTTPRequest $request): self
+    public static function fromRequest(\Tuleap\HTTPRequest $request): self
     {
         return match ($request->get('tab')) {
             'overview' => self::OVERVIEW_APP,

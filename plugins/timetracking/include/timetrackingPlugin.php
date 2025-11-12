@@ -133,7 +133,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // phpcs:ignore
             $this->getTimeController()
         );
 
-        $router->route(HTTPRequest::instance());
+        $router->route(\Tuleap\HTTPRequest::instance());
     }
 
     /**
@@ -340,7 +340,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // phpcs:ignore
     {
         return isset($_SERVER['REQUEST_URI'])
             && str_starts_with($_SERVER['REQUEST_URI'], $this->getPluginPath())
-            && HTTPRequest::instance()->get('action') === 'admin-timetracking';
+            && \Tuleap\HTTPRequest::instance()->get('action') === 'admin-timetracking';
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

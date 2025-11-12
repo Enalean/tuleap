@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\LostPassword;
 
-use HTTPRequest;
 use PasswordStrategy;
 use PFUser;
 use TemplateRendererFactory;
@@ -54,7 +53,7 @@ final class DisplayResetPasswordController implements DispatchableWithBurningPar
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $required_confirm_hash = new \Valid_String('confirm_hash');
         $required_confirm_hash->required();

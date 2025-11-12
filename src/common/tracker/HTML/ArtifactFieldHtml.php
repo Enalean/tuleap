@@ -471,7 +471,7 @@ class ArtifactFieldHtml extends ArtifactField
         $hp = Codendi_HTMLPurifier::instance();
         //Use url parameters to populate fields
         if (! $ro) {
-            $request = HTTPRequest::instance();
+            $request = \Tuleap\HTTPRequest::instance();
             if ($request->get('func') == 'add' && $request->exist($this->field_name)) {
                 $value = htmlentities($request->get($this->field_name), ENT_QUOTES, 'UTF-8');
             }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\BotMattermost\Administration\Project;
 
-use HTTPRequest;
 use Override;
 use TemplateRenderer;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -45,7 +44,7 @@ class ListBotController implements DispatchableWithRequest, DispatchableWithBurn
     }
 
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user       = $request->getCurrentUser();
         $project_id = $variables['project_id'];

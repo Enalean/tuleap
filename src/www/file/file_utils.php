@@ -816,7 +816,7 @@ function frs_display_release_form(bool $is_update, FRSRelease $release, int $gro
     file_utils_footer([]);
 }
 
-function frs_process_release_form($is_update, HTTPRequest $request, $group_id, $title, $url): void
+function frs_process_release_form($is_update, \Tuleap\HTTPRequest $request, $group_id, $title, $url): void
 {
     global $package_factory, $release_factory, $files_factory;
 

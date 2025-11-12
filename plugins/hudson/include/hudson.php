@@ -26,7 +26,7 @@ class hudson extends Controler // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     #[\Override]
     public function request()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $vgi     = new Valid_GroupId();
         $vgi->required();
         if ($request->valid($vgi)) {

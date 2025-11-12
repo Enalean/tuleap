@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\PermissionsPerGroup;
 
-use HTTPRequest;
 use Tuleap\Git\RouterLink;
 
 class PermissionPerGroupController extends RouterLink
@@ -36,7 +35,7 @@ class PermissionPerGroupController extends RouterLink
     }
 
     #[\Override]
-    public function process(HTTPRequest $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         switch ($request->get('action')) {
             case 'permission-per-group':
@@ -48,7 +47,7 @@ class PermissionPerGroupController extends RouterLink
         }
     }
 
-    public function getPermissions(HTTPRequest $request)
+    public function getPermissions(\Tuleap\HTTPRequest $request)
     {
         if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
             $GLOBALS['Response']->send400JSONErrors(

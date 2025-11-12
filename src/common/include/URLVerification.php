@@ -310,7 +310,7 @@ class URLVerification implements CheckUserCanAccessProject, CheckUserCanAccessPr
      *
      * @return void
      */
-    public function assertValidUrl($server, HTTPRequest $request, ?Project $project = null)
+    public function assertValidUrl($server, \Tuleap\HTTPRequest $request, ?Project $project = null)
     {
         if (! $this->isException($server)) {
             $this->verifyRequest($server);

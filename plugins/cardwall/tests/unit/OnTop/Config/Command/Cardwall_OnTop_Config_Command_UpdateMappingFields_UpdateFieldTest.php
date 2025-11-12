@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Cardwall\OnTop\Config\Command;
 
-use HTTPRequest;
 use TestHelper;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -35,7 +34,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
 
     public function testItUpdatesMappingFields(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'mapping_field',
             [
@@ -79,7 +78,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
 
     public function testItDoesntUpdatesMappingFieldsIfItIsNotNeeded(): void
     {
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set(
             'mapping_field',
             [

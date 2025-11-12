@@ -23,7 +23,6 @@ namespace Tuleap\Git;
 
 use Git;
 use GitPlugin;
-use HTTPRequest;
 use Override;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
@@ -46,7 +45,7 @@ final readonly class GitPluginDefaultController implements DispatchableWithReque
      * @throws \Tuleap\Request\NotFoundException
      */
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getProject()->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
@@ -62,7 +61,7 @@ final readonly class GitPluginDefaultController implements DispatchableWithReque
     }
 
     #[Override]
-    public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
+    public function isInABurningParrotPage(\Tuleap\HTTPRequest $request, array $variables): bool
     {
         return match ($request->get('action')) {
             Git::ADMIN_GIT_ADMINS_ACTION => true,

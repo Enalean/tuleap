@@ -20,7 +20,6 @@
 
 namespace Tuleap\User\Profile;
 
-use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
@@ -51,7 +50,7 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = UserManager::instance()->getUserByUserName($variables['name']);
         if ($user === null) {

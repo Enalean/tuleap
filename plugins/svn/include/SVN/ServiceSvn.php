@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN;
 
-use HTTPRequest;
 use PermissionsManager;
 use Service;
 use SvnPlugin;
@@ -71,7 +70,7 @@ class ServiceSvn extends Service
     /**
      * @param BaseGlobalAdminPresenter|ExplorerPresenter $presenter
      */
-    public function renderInPage(HTTPRequest $request, string $title, string $template, $presenter)
+    public function renderInPage(\Tuleap\HTTPRequest $request, string $title, string $template, $presenter)
     {
         $body_class  = '';
         $breadcrumbs = new BreadCrumbCollection();
@@ -82,7 +81,7 @@ class ServiceSvn extends Service
      * @param AccessControlPresenter|MailNotificationPresenter|HooksConfigurationPresenter|RepositoryDeletePresenter|ImmutableTagPresenter $presenter
      */
     public function renderInPageRepositoryAdministration(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         string $title,
         string $template,
         $presenter,
@@ -104,7 +103,7 @@ class ServiceSvn extends Service
      * @param AccessControlPresenter|MailNotificationPresenter|HooksConfigurationPresenter|RepositoryDeletePresenter|ImmutableTagPresenter|RepositoryDisplayPresenter $presenter
      */
     public function renderInPageRepository(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         string $title,
         string $template,
         $presenter,
@@ -139,7 +138,7 @@ class ServiceSvn extends Service
      * @param BaseGlobalAdminPresenter|ExplorerPresenter|AccessControlPresenter|MailNotificationPresenter|HooksConfigurationPresenter|RepositoryDeletePresenter|ImmutableTagPresenter|RepositoryDisplayPresenter $presenter
      */
     private function renderInPageWithBodyClass(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         string $title,
         string $template,
         $presenter,
@@ -157,7 +156,7 @@ class ServiceSvn extends Service
         return TemplateRendererFactory::build()->getRenderer(dirname(SVN_BASE_DIR) . '/templates');
     }
 
-    private function displaySVNHeader(HTTPRequest $request, string $title, string $body_class, BreadCrumbCollection $breadcrumbs): void
+    private function displaySVNHeader(\Tuleap\HTTPRequest $request, string $title, string $body_class, BreadCrumbCollection $breadcrumbs): void
     {
         $title  = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
         $params = HeaderConfigurationBuilder::get($title)

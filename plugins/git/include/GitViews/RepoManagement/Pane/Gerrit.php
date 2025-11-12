@@ -117,7 +117,7 @@ class Gerrit extends Pane
     {
         if ($this->repository->isMigratedToGerrit()) {
             try {
-                $user = \HTTPRequest::instance()->getCurrentUser();
+                $user = \Tuleap\HTTPRequest::instance()->getCurrentUser();
                 return $this->getContentAlreadyMigrated($user);
             } catch (UnsupportedGerritVersionException $exception) {
                 return '<p class="alert alert-error">' .

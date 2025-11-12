@@ -24,7 +24,7 @@ use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/adminPresenter.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $token = new CSRFSynchronizerToken('/admin/system_events/');

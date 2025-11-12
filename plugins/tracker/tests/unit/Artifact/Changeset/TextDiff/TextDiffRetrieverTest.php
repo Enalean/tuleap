@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
 use Codendi_Diff;
 use Codendi_UnifiedDiffFormatter;
-use HTTPRequest;
 use LogicException;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -73,7 +72,7 @@ final class TextDiffRetrieverTest extends TestCase
     public function testItThrowsIfUserCanNotReadArtifact(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
         $this->buildAnArtifact($user, false);
 
@@ -94,7 +93,7 @@ final class TextDiffRetrieverTest extends TestCase
     public function testItThrowsWhenChangesetIsNotATypeText(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
         $this->buildAnArtifact($user, true);
 
@@ -127,7 +126,7 @@ final class TextDiffRetrieverTest extends TestCase
     public function testItReturnsEmptyWhenLastChangesetDoesNotExists(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
         $this->buildAnArtifact($user, true);
 
@@ -158,7 +157,7 @@ final class TextDiffRetrieverTest extends TestCase
     public function testItReturnsEmptyWhenLastChangesetDidNotHaveAVValue(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
         $this->buildAnArtifact($user, true);
 
@@ -192,7 +191,7 @@ final class TextDiffRetrieverTest extends TestCase
     public function testItReturnsTheDiffForTextFormat(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
         $this->buildAnArtifact($user, true);
 
@@ -236,7 +235,7 @@ final class TextDiffRetrieverTest extends TestCase
     public function testItReturnsTheDiffForHTMLFormat(): void
     {
         $user    = UserTestBuilder::buildWithDefaults();
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
         $this->buildAnArtifact($user, true);
 

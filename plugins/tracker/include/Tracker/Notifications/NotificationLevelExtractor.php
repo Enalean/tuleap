@@ -20,12 +20,11 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use HTTPRequest;
 use Tuleap\Tracker\Tracker;
 
 class NotificationLevelExtractor
 {
-    public function extractNotificationLevel(HTTPRequest $request)
+    public function extractNotificationLevel(\Tuleap\HTTPRequest $request)
     {
         if ($request->exist('disable_notifications')) {
             return Tracker::NOTIFICATIONS_LEVEL_DISABLED;

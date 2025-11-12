@@ -91,7 +91,7 @@ class Tracker_URL extends URL
     #[\Override]
     public function getGroupIdFromUrl($url)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $user    = UserManager::instance()->getCurrentUser();
 
         try {

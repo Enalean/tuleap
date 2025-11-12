@@ -22,7 +22,6 @@
 namespace Tuleap\Git;
 
 use GitPlugin;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -53,7 +52,7 @@ class GitLegacyURLRedirectController implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_manager->getProject($variables['project_id']);
         if (! $project || $project->isError()) {

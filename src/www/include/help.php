@@ -22,7 +22,7 @@
 function help_button(string $type, string $prompt = '[?]')
 {
     $purifier = Codendi_HTMLPurifier::instance();
-    $lang     = HTTPRequest::instance()->getCurrentUser()->getShortLocale();
+    $lang     = \Tuleap\HTTPRequest::instance()->getCurrentUser()->getShortLocale();
     $href     = '/doc/' . urlencode($lang) . '/user-guide/' . $type;
     return '<a data-help-window href="' . $purifier->purify($href) . '"><b>' . $purifier->purify($prompt) . '</b></a>';
 }

@@ -1669,7 +1669,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         }
     }
 
-    private function checkReportUpdateRequest(HTTPRequest $request, Tracker $tracker): void
+    private function checkReportUpdateRequest(\Tuleap\HTTPRequest $request, Tracker $tracker): void
     {
         if (! $request->isPost()) {
             $GLOBALS['Response']->addFeedback(

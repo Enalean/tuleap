@@ -399,7 +399,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Fetch content of the renderer
      */
     #[\Override]
-    public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
+    public function fetch(array $matching_ids, \Tuleap\HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
     {
         $html       = '';
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
@@ -1869,7 +1869,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     /**
      * Process the request
-     * @param HTTPRequest $request
+     * @param \Tuleap\HTTPRequest $request
      */
     #[\Override]
     public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)
@@ -2167,7 +2167,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
     }
 
-    private function checkReportRendererUpdateRequest(HTTPRequest $request): void
+    private function checkReportRendererUpdateRequest(\Tuleap\HTTPRequest $request): void
     {
         $tracker = $this->getReport()->getTracker();
         if (! $request->isPost()) {

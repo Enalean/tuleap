@@ -29,7 +29,7 @@ class WorkflowManager
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $engine, HTTPRequest $request, PFUser $current_user)
+    public function process(TrackerManager $engine, \Tuleap\HTTPRequest $request, PFUser $current_user)
     {
         $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {

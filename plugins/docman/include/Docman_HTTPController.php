@@ -30,7 +30,7 @@ class Docman_HTTPController extends Docman_Controller
     public function __construct(&$plugin, $pluginPath, $themePath, $request = null)
     {
         if (! $request) {
-            $request = HTTPRequest::instance();
+            $request = \Tuleap\HTTPRequest::instance();
         }
         parent::__construct($plugin, $pluginPath, $themePath, $request);
     }

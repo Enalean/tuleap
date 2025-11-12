@@ -28,7 +28,7 @@ use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 
 final class ToStandaloneMediawikiRedirector
 {
-    public function tryRedirection(\Project $project, \HTTPRequest $request, BaseLayout $layout): void
+    public function tryRedirection(\Project $project, \Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         $standalone_service = $project->getService(\Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService::SERVICE_SHORTNAME);
         if (! $standalone_service instanceof MediawikiStandaloneService) {

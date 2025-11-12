@@ -23,13 +23,12 @@ namespace Tuleap\Git\Repository\Settings;
 use CSRFSynchronizerToken;
 use Feedback;
 use GitRepository;
-use HTTPRequest;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Valid_HTTPURI;
 
 abstract class WebhookController extends SettingsController
 {
-    protected function getURL(HTTPRequest $request, $redirect_url)
+    protected function getURL(\Tuleap\HTTPRequest $request, $redirect_url)
     {
         $valid_url = new Valid_HTTPURI('url');
         $valid_url->required();

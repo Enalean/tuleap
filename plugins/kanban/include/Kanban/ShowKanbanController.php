@@ -20,7 +20,6 @@
 
 namespace Tuleap\Kanban;
 
-use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use TrackerFactory;
@@ -66,7 +65,7 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment(KanbanService::INSTRUMENTATION_NAME);
 

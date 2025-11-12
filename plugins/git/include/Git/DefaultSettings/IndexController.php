@@ -23,7 +23,6 @@ namespace Tuleap\Git\DefaultSettings;
 use EventManager;
 use GitPermissionsManager;
 use GitPresenters_AdminDefaultSettingsPresenter;
-use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
@@ -93,7 +92,7 @@ class IndexController
         $this->event_manager                           = $event_manager;
     }
 
-    public function displayDefaultSettings(HTTPRequest $request)
+    public function displayDefaultSettings(\Tuleap\HTTPRequest $request)
     {
         $project = $request->getProject();
 
@@ -114,7 +113,7 @@ class IndexController
     /**
      * @return Pane\Pane[]
      */
-    private function getPanes(Project $project, HTTPRequest $request)
+    private function getPanes(Project $project, \Tuleap\HTTPRequest $request)
     {
         $current_pane   = AccessControl::NAME;
         $requested_pane = $request->get('pane');
@@ -150,7 +149,7 @@ class IndexController
     /**
      * @param             $presenter
      */
-    private function render(HTTPRequest $request, $presenter)
+    private function render(\Tuleap\HTTPRequest $request, $presenter)
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
 

@@ -506,7 +506,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
         $this->initDisplay();
 
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         // Toolbar
         $html .= $this->getToolbar();

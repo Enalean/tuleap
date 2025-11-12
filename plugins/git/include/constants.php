@@ -48,7 +48,7 @@ define('GIT_ADDITIONAL_PERMITTED_ACTIONS', 'git_additional_permitted_actions');
  *
  * Parameters:
  *   'repository' => (Input) GitRepository Git repository currently modified
- *   'request'    => (Input) HTTPRequest   Current request
+ *   'request'    => (Input) \Tuleap\HTTPRequest   Current request
  *   'output'     => (Output) String       The HTML to present
  */
 define('GIT_ADDITIONAL_NOTIFICATIONS', 'git_additional_notifications');

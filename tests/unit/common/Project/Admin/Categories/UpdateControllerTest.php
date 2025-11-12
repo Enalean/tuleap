@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Categories;
 
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
@@ -36,7 +35,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private HTTPRequest&MockObject $request;
+    private \Tuleap\HTTPRequest&MockObject $request;
     private PFUser $project_admin;
     private UpdateController $controller;
     private ProjectRetriever&MockObject $project_retriever;
@@ -49,7 +48,7 @@ final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         #[\PHPUnit\Framework\Attributes\Before]
     public function instantiateMocks(): void
     {
-        $this->request               = $this->createMock(HTTPRequest::class);
+        $this->request               = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->layout                = $this->createMock(BaseLayout::class);
         $this->project_retriever     = $this->createMock(ProjectRetriever::class);
         $this->administrator_checker = $this->createMock(ProjectAdministratorChecker::class);

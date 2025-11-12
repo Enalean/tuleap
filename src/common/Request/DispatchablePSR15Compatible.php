@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Request;
 
 use GuzzleHttp\Psr7\ServerRequest;
-use HTTPRequest;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\MiddlewareDispatcher;
@@ -52,7 +51,7 @@ abstract class DispatchablePSR15Compatible implements DispatchableWithRequest, R
     }
 
     #[\Override]
-    final public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    final public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $server_request = ServerRequest::fromGlobals();
         foreach ($variables as $variable_name => $variable_value) {

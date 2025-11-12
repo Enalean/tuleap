@@ -43,7 +43,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 
 set_time_limit(180);
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $vStartDate = new Valid('services_usage_start_date');
 $vStartDate->addRule(new Rule_Date());

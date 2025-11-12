@@ -79,7 +79,7 @@ class RoadmapPlugin extends Plugin
             $filter_report_dao = new \Tuleap\Roadmap\FilterReportDao();
 
             $get_widget_event->setWidget(new RoadmapProjectWidget(
-                HTTPRequest::instance()->getProject(),
+                \Tuleap\HTTPRequest::instance()->getProject(),
                 new RoadmapWidgetDao($filter_report_dao),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),

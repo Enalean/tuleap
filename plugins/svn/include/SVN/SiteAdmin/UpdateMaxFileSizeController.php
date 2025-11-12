@@ -25,7 +25,6 @@ namespace Tuleap\SVN\SiteAdmin;
 
 use Exception;
 use Feedback;
-use HTTPRequest;
 use Tuleap\Config\ConfigSet;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -46,7 +45,7 @@ final class UpdateMaxFileSizeController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

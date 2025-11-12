@@ -26,7 +26,6 @@ namespace Tuleap\User\Account;
 use BaseLanguage;
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use ThemeVariant;
 use Tuleap\Date\DateHelper;
@@ -81,7 +80,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
      * @inheritDoc
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {
@@ -116,7 +115,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         $layout->redirect(DisplayAppearanceController::URL);
     }
 
-    private function setNewAccessibilityMode(HTTPRequest $request, PFUser $user): bool
+    private function setNewAccessibilityMode(\Tuleap\HTTPRequest $request, PFUser $user): bool
     {
         $has_accessibility   = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
         $wants_accessibility = (bool) $request->get('accessibility_mode');
@@ -129,7 +128,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         return true;
     }
 
-    private function setNewUsernameDisplay(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    private function setNewUsernameDisplay(\Tuleap\HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
     {
         $current_username_display = (int) $user->getPreference(PFUser::PREFERENCE_NAME_DISPLAY_USERS);
         $new_username_display     = (int) $request->get('username_display');
@@ -155,7 +154,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         return true;
     }
 
-    private function setNewRelativeDatesDisplay(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    private function setNewRelativeDatesDisplay(\Tuleap\HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
     {
         $current_relative_dates_display = (string) $user->getPreference(DateHelper::PREFERENCE_NAME);
         $new_relative_dates_display     = (string) $request->get('relative-dates-display');
@@ -177,7 +176,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         return true;
     }
 
-    private function setNewDarkMode(HTTPRequest $request, PFUser $user): bool
+    private function setNewDarkMode(\Tuleap\HTTPRequest $request, PFUser $user): bool
     {
         $current_mode = DarkModeValue::fromUser($user);
 
@@ -192,7 +191,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         return true;
     }
 
-    private function setNewDisplayDensity(HTTPRequest $request, PFUser $user): bool
+    private function setNewDisplayDensity(\Tuleap\HTTPRequest $request, PFUser $user): bool
     {
         $preference   = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY);
         $is_condensed = $preference === PFUser::DISPLAY_DENSITY_CONDENSED;
@@ -212,7 +211,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         return true;
     }
 
-    private function setNewColor(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    private function setNewColor(\Tuleap\HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
     {
         $color = (string) $request->get('color');
         if (! $color) {
@@ -238,7 +237,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         return true;
     }
 
-    private function setFaviconVariant(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    private function setFaviconVariant(\Tuleap\HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
     {
         if (! FaviconVariant::isFeatureFlagEnabled()) {
             return false;
@@ -261,7 +260,7 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
         return true;
     }
 
-    private function prepareNewLanguage(HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
+    private function prepareNewLanguage(\Tuleap\HTTPRequest $request, BaseLayout $layout, PFUser $user): bool
     {
         $language_id = (string) $request->get('language_id');
         if (! $language_id) {

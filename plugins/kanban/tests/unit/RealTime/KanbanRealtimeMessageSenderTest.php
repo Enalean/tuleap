@@ -45,7 +45,7 @@ final class KanbanRealtimeMessageSenderTest extends TestCase
     private \PFUser $user;
     private KanbanRealtimeStructureMessageSender $sender;
     private Tracker $tracker;
-    private \HTTPRequest&MockObject $request;
+    private \Tuleap\HTTPRequest&MockObject $request;
     #[\Override]
     protected function setUp(): void
     {
@@ -57,7 +57,7 @@ final class KanbanRealtimeMessageSenderTest extends TestCase
         $this->tracker                   = TrackerTestBuilder::aTracker()->withId(1)->build();
         $this->kanban                    = $this->createMock(Kanban::class);
         $this->user                      = ProvideCurrentUserStub::buildCurrentUserByDefault()->getCurrentUser();
-        $this->request                   = $this->createMock(\HTTPRequest::class);
+        $this->request                   = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->kanban->method('getTrackerId')->willReturn(1);
         $this->sender = new KanbanRealtimeStructureMessageSender($this->tracker_factory, $this->structure_realtime_kanban, $this->node_js_client, $this->permissions_serializer);
     }

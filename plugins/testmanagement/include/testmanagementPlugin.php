@@ -842,7 +842,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             return false;
         }
 
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $artifact_id = $request->get('aid');
         if ($artifact_id) {

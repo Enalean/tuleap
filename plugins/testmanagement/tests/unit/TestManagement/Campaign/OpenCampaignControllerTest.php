@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Campaign;
 
-use HTTPRequest;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Layout\BaseLayout;
@@ -63,7 +62,7 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAsksToOpenTheCampaign(): void
     {
         $user    = $this->createMock(PFUser::class);
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
 
         $layout    = $this->createMock(BaseLayout::class);
@@ -104,7 +103,7 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDisplayErrorFeedbackIfNoPossibleValueToOpenTheCampaign(): void
     {
         $user    = $this->createMock(PFUser::class);
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
 
         $layout    = $this->createMock(BaseLayout::class);
@@ -145,7 +144,7 @@ final class OpenCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfCampaignNotFound(): void
     {
         $user    = $this->createMock(PFUser::class);
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->setCurrentUser($user);
 
         $layout    = $this->createMock(BaseLayout::class);

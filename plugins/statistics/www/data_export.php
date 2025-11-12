@@ -33,7 +33,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
     $GLOBALS['HTML']->redirect('/');
 }
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $data_export_router = new DataExportRouter(
     new DataExportPresenterBuilder()

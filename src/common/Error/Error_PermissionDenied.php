@@ -132,7 +132,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
      */
     function processMail($messageToAdmin)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $pm      = $this->getProjectManager();
         $project = $pm->getProject($request->get('groupId'));

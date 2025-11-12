@@ -242,7 +242,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         );
 
         return new ArtidocAttachmentController(
-            $retriever_builder->buildForUser(HTTPRequest::instance()->getCurrentUser()),
+            $retriever_builder->buildForUser(\Tuleap\HTTPRequest::instance()->getCurrentUser()),
             $file_identifier_factory,
             new OngoingUploadDao($file_identifier_factory),
             new BinaryFileResponseBuilder(
@@ -313,7 +313,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         );
 
         return new ArtidocController(
-            $retriever_builder->buildForUser(HTTPRequest::instance()->getCurrentUser()),
+            $retriever_builder->buildForUser(\Tuleap\HTTPRequest::instance()->getCurrentUser()),
             new ConfiguredTrackerRetriever(
                 $dao,
                 $tracker_factory,

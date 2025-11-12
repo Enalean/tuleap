@@ -21,7 +21,6 @@
 namespace Tuleap\Bugzilla\Administration;
 
 use Feedback;
-use HTTPRequest;
 use Override;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
@@ -37,7 +36,7 @@ class Router implements DispatchableWithRequest, DispatchableWithBurningParrot
     }
 
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);

@@ -57,7 +57,7 @@ class ProjectMembers extends Widget
             __DIR__ . '/../../../templates/widgets'
         );
 
-        $request = \HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $project = $request->getProject();
 
         $builder        = new AdministratorPresenterBuilder(

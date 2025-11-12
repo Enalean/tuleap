@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -47,7 +46,7 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         $this->can_manage_templates_checker->checkUserCanManageTemplates($current_user);

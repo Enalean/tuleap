@@ -48,7 +48,7 @@ class MediawikiSiteAdminController
         $this->version_manager      = new MediawikiVersionManager(new MediawikiVersionDao());
     }
 
-    public function site_index(HTTPRequest $request)
+    public function site_index(\Tuleap\HTTPRequest $request)
     {
         $this->assertSiteAdmin($request);
 
@@ -73,7 +73,7 @@ class MediawikiSiteAdminController
         );
     }
 
-    public function site_update_allow_all_projects(HTTPRequest $request)
+    public function site_update_allow_all_projects(\Tuleap\HTTPRequest $request)
     {
         $this->assertSiteAdmin($request);
 
@@ -85,7 +85,7 @@ class MediawikiSiteAdminController
         $GLOBALS['Response']->redirect('/plugins/mediawiki/forge_admin.php?action=site_index');
     }
 
-    public function site_update_allowed_project_list(HTTPRequest $request)
+    public function site_update_allowed_project_list(\Tuleap\HTTPRequest $request)
     {
         $this->assertSiteAdmin($request);
 
@@ -142,7 +142,7 @@ class MediawikiSiteAdminController
         );
     }
 
-    private function assertSiteAdmin(HTTPRequest $request)
+    private function assertSiteAdmin(\Tuleap\HTTPRequest $request)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             $GLOBALS['Response']->redirect('/');

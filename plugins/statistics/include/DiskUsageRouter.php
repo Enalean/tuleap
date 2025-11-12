@@ -21,7 +21,6 @@
 namespace Tuleap\Statistics;
 
 use Feedback;
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 
 class DiskUsageRouter
@@ -49,7 +48,7 @@ class DiskUsageRouter
         $this->global_builder   = $global_builder;
     }
 
-    public function route(HTTPRequest $request)
+    public function route(\Tuleap\HTTPRequest $request)
     {
         if ($request->get('menu')) {
             $menu = $request->get('menu');
@@ -76,7 +75,7 @@ class DiskUsageRouter
         }
     }
 
-    private function displayServices(HTTPRequest $request)
+    private function displayServices(\Tuleap\HTTPRequest $request)
     {
         $project_id             = $request->get('project_id');
         $selected_project       = $request->get('project_filter');

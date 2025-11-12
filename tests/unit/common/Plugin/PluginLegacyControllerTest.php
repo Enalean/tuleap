@@ -35,6 +35,6 @@ final class PluginLegacyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $plugin->expects($this->once())->method('process');
 
-        $controller->process($this->createMock(\HTTPRequest::class), $this->createMock(BaseLayout::class), []);
+        $controller->process($this->createMock(\Tuleap\HTTPRequest::class), $this->createMock(BaseLayout::class), []);
     }
 }

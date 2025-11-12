@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProjectMilestones\Widget;
 
 use AgileDashboardPlugin;
-use HTTPRequest;
 use PFUser;
 use Planning;
 use Planning_Milestone;
@@ -50,7 +49,7 @@ use Tuleap\Tracker\Tracker;
 final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProjectMilestonesPresenterBuilder $builder;
-    private \PHPUnit\Framework\MockObject\MockObject&HTTPRequest $http_request;
+    private \PHPUnit\Framework\MockObject\MockObject&\Tuleap\HTTPRequest $http_request;
     private Planning_MilestoneFactory&\PHPUnit\Framework\MockObject\MockObject $planning_milestone_factory;
     private Project&\PHPUnit\Framework\MockObject\MockObject $project;
     private \PHPUnit\Framework\MockObject\MockObject&PFUser $john_doe;
@@ -72,7 +71,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
     public function setUp(): void
     {
         parent::setUp();
-        $this->http_request                                             = $this->createMock(HTTPRequest::class);
+        $this->http_request                                             = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->planning_milestone_factory                               = $this->createMock(Planning_MilestoneFactory::class);
         $this->project                                                  = $this->createMock(Project::class);
         $this->john_doe                                                 = $this->createMock(PFUser::class);

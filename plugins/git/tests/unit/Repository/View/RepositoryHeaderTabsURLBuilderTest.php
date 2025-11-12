@@ -38,7 +38,7 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
 
     public function testItBuildsFilesTabURLWithBranchInformation(): void
     {
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('hb', 'branch01');
 
         $repository = new \GitRepository();
@@ -53,7 +53,7 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
 
     public function testItBuildsFilesTabURLWithCommitInformation(): void
     {
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('h', 'commit01');
 
         $repository = new \GitRepository();
@@ -68,7 +68,7 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
 
     public function testItBuildsFilesTabURLWithoutAnyInformation(): void
     {
-        $request    = new \HTTPRequest();
+        $request    = new \Tuleap\HTTPRequest();
         $repository = new \GitRepository();
 
         $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn('repository_url');
@@ -81,7 +81,7 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
 
     public function testItBuildsCommitsTabURLWithBranchInformation(): void
     {
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('hb', 'branch01');
 
         $repository = new \GitRepository();
@@ -96,7 +96,7 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
 
     public function testItBuildsCommitsTabURLWithCommitInformation(): void
     {
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('h', 'commit01');
 
         $repository = new \GitRepository();
@@ -111,7 +111,7 @@ final class RepositoryHeaderTabsURLBuilderTest extends TestCase
 
     public function testItBuildsCommitsTabURLWithoutAnyInformation(): void
     {
-        $request    = new \HTTPRequest();
+        $request    = new \Tuleap\HTTPRequest();
         $repository = new \GitRepository();
 
         $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn('repository_url');

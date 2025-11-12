@@ -22,7 +22,6 @@ namespace Tuleap\OpenIDConnectClient\Administration;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -142,7 +141,7 @@ class Controller
     /**
      * @throws ProviderMalformedDataException
      */
-    public function createGenericProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request): void
+    public function createGenericProvider(CSRFSynchronizerToken $csrf_token, \Tuleap\HTTPRequest $request): void
     {
         $csrf_token->check();
 
@@ -186,7 +185,7 @@ class Controller
     /**
      * @throws ProviderMalformedDataException
      */
-    public function createAzureADProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request): void
+    public function createAzureADProvider(CSRFSynchronizerToken $csrf_token, \Tuleap\HTTPRequest $request): void
     {
         $csrf_token->check();
 
@@ -223,7 +222,7 @@ class Controller
         $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
     }
 
-    public function updateGenericProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request)
+    public function updateGenericProvider(CSRFSynchronizerToken $csrf_token, \Tuleap\HTTPRequest $request)
     {
         $csrf_token->check();
 
@@ -288,7 +287,7 @@ class Controller
         $this->showAdministration($csrf_token, $request->getCurrentUser());
     }
 
-    public function updateAzureProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request)
+    public function updateAzureProvider(CSRFSynchronizerToken $csrf_token, \Tuleap\HTTPRequest $request)
     {
         $csrf_token->check();
 

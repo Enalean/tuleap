@@ -29,7 +29,7 @@ ini_set('max_execution_time', 1800);
 $sanitizer = new SimpleSanitizer();
 
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $group_id = $request->getValidated('group_id', 'GroupId');
 $atid     = $request->getValidated('atid', 'uint');

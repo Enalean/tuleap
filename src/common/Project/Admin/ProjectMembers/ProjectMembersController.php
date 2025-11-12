@@ -28,7 +28,6 @@ use ArtifactTypeFactory;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectHistoryDao;
@@ -202,7 +201,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $user    = $request->getCurrentUser();
@@ -257,7 +256,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $layout->redirect('/project/' . urlencode((string) $project->getID()) . '/admin/members');
     }
 
-    private function display(HTTPRequest $request, BaseLayout $layout, Project $project)
+    private function display(\Tuleap\HTTPRequest $request, BaseLayout $layout, Project $project)
     {
         $title = _('Members');
 
@@ -304,7 +303,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         site_project_footer([]);
     }
 
-    private function addUserToProject(HTTPRequest $request, Project $project)
+    private function addUserToProject(\Tuleap\HTTPRequest $request, Project $project)
     {
         $this->csrf_token->check();
 
@@ -318,7 +317,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         \account_add_user_to_group($project->getID(), $form_unix_name);
     }
 
-    private function removeUserFromProject(HTTPRequest $request, Project $project)
+    private function removeUserFromProject(\Tuleap\HTTPRequest $request, Project $project)
     {
         $this->csrf_token->check();
 

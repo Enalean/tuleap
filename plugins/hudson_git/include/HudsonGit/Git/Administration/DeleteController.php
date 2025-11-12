@@ -26,7 +26,6 @@ use CSRFSynchronizerToken;
 use Feedback;
 use GitPermissionsManager;
 use GitPlugin;
-use HTTPRequest;
 use RuntimeException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -68,7 +67,7 @@ class DeleteController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->exist('jenkins_server_id')) {
             throw new RuntimeException(dgettext('tuleap-hudson_git', 'Expected Jenkins server ID not found'));

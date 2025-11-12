@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 
 interface IProcessRegisterForm
 {
-    public function process(HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
 }

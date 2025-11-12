@@ -48,7 +48,7 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
      * @return Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>
      */
     #[\Override]
-    public function process(\HTTPRequest $request, RegisterFormContext $context, string $mail_confirm_code): Ok|Err
+    public function process(\Tuleap\HTTPRequest $request, RegisterFormContext $context, string $mail_confirm_code): Ok|Err
     {
         $is_admin           = $context->is_admin;
         $is_password_needed = $context->is_password_needed;

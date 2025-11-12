@@ -30,7 +30,7 @@ if (! $ath->isValid()) {
     exit_error($Language->getText('global', 'error'), $GLOBALS['Language']->getText('tracker_add', 'invalid'));
 }
 
-$request     = HTTPRequest::instance();
+$request     = \Tuleap\HTTPRequest::instance();
 $export_aids = $request->get('export_aids');
 $constraint  = 'AND a.artifact_id IN (' . db_es($export_aids) . ')';
 

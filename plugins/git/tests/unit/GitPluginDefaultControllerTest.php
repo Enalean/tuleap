@@ -24,7 +24,6 @@ namespace Tuleap\Git;
 
 use Git;
 use GitPlugin;
-use HTTPRequest;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
@@ -49,7 +48,7 @@ final class GitPluginDefaultControllerTest extends TestCase
         $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
     }
 
-    private function isBurningParrot(HTTPRequest $request): bool
+    private function isBurningParrot(\Tuleap\HTTPRequest $request): bool
     {
         $controller = new GitPluginDefaultController(
             RouterLinkStub::buildPassThrough(),
@@ -92,7 +91,7 @@ final class GitPluginDefaultControllerTest extends TestCase
         self::assertFalse($this->isBurningParrot($request));
     }
 
-    private function process(HTTPRequest $request): void
+    private function process(\Tuleap\HTTPRequest $request): void
     {
         $controller = new GitPluginDefaultController(
             $this->router_link,

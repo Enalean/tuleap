@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Plugin;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithRequest;
@@ -49,7 +48,7 @@ final class PluginLegacyController implements DispatchableWithRequest
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment($this->plugin->getName());
         $this->plugin->process();

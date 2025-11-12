@@ -22,7 +22,6 @@ namespace Tuleap\Kanban\Widget;
 
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Kanban\KanbanPermissionsManager;
-use HTTPRequest;
 use TrackerFactory;
 use Tuleap\Kanban\XML\KanbanXMLExporter;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
@@ -44,7 +43,7 @@ class ProjectKanban extends KanbanWidget
     ) {
         parent::__construct(
             self::NAME,
-            (int) HTTPRequest::instance()->get('group_id'),
+            (int) \Tuleap\HTTPRequest::instance()->get('group_id'),
             ProjectDashboardController::LEGACY_DASHBOARD_TYPE,
             $widget_kanban_creator,
             $widget_kanban_retriever,

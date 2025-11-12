@@ -21,7 +21,6 @@ namespace Tuleap\Tracker\FormElement\View\Admin;
 
 use Codendi_HTMLPurifier;
 use Exception;
-use HTTPRequest;
 use TemplateRendererFactory;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_Shared;
@@ -345,7 +344,7 @@ class VisitorAdminView implements Tracker_FormElement_Visitor, Tracker_FormEleme
         return $this->adminElement;
     }
 
-    protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $url, $title, $formContent, string $form_prefix_content = ''): void
+    protected function displayForm(TrackerManager $tracker_manager, \Tuleap\HTTPRequest $request, $url, $title, $formContent, string $form_prefix_content = ''): void
     {
         $form  = '<div>' . $form_prefix_content;
         $form .= '<form name="form1" method="POST" action="' . $url . '" data-admin-form="true">';

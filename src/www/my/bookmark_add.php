@@ -7,7 +7,7 @@ require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/bookmarks.php';
 require_once __DIR__ . '/my_utils.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $vUrl    = new Valid_String('bookmark_url');
 $vUrl->required();
 $vTitle = new Valid_String('bookmark_title');

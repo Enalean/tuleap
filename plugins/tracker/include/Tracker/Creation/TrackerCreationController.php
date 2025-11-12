@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Project;
 use trackerPlugin;
 use Tuleap\Layout\BaseLayout;
@@ -91,7 +90,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
      * @throws ForbiddenException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
         $user    = $this->user_manager->getCurrentUser();

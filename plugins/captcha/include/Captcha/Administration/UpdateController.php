@@ -23,7 +23,6 @@ namespace Tuleap\Captcha\Administration;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Override;
 use PFUser;
 use Tuleap\Captcha\ConfigurationDataAccessException;
@@ -42,7 +41,7 @@ class UpdateController implements DispatchableWithRequest
     }
 
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user, $layout);

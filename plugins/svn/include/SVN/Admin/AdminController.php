@@ -22,7 +22,6 @@ namespace Tuleap\SVN\Admin;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Project;
 use Rule_Email;
@@ -104,7 +103,7 @@ class AdminController
         return new CSRFSynchronizerToken(SVN_BASE_URL . '/?group_id=' . $project->getid() . '&repo_id=' . $repository->getId() . '&action=display-mail-notification');
     }
 
-    public function displayMailNotification(ServiceSvn $service, HTTPRequest $request): void
+    public function displayMailNotification(ServiceSvn $service, \Tuleap\HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -132,7 +131,7 @@ class AdminController
         );
     }
 
-    public function saveMailHeader(HTTPRequest $request): void
+    public function saveMailHeader(\Tuleap\HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -162,7 +161,7 @@ class AdminController
         ));
     }
 
-    public function saveMailingList(HTTPRequest $request): void
+    public function saveMailingList(\Tuleap\HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -182,7 +181,7 @@ class AdminController
         }
     }
 
-    private function createMailingList(HTTPRequest $request, Repository $repository, $notification_to_add): void
+    private function createMailingList(\Tuleap\HTTPRequest $request, Repository $repository, $notification_to_add): void
     {
         $form_path       = $notification_to_add['path'];
         $valid_path      = new Valid_String($form_path);
@@ -248,7 +247,7 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    private function updateMailingList(HTTPRequest $request, Repository $repository, $notification_to_update): void
+    private function updateMailingList(\Tuleap\HTTPRequest $request, Repository $repository, $notification_to_update): void
     {
         $notification_ids = array_keys($notification_to_update);
         $notification_id  = $notification_ids[0];
@@ -332,7 +331,7 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    public function deleteMailingList(HTTPRequest $request): void
+    public function deleteMailingList(\Tuleap\HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -367,7 +366,7 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request): void
+    public function updateHooksConfig(ServiceSvn $service, \Tuleap\HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
@@ -389,7 +388,7 @@ class AdminController
         ));
     }
 
-    public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request): void
+    public function displayHooksConfig(ServiceSvn $service, \Tuleap\HTTPRequest $request): void
     {
         $repository  = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         $hook_config = $this->hook_config_retriever->getHookConfig($repository);
@@ -414,7 +413,7 @@ class AdminController
         );
     }
 
-    public function displayRepositoryDelete(ServiceSvn $service, HTTPRequest $request): void
+    public function displayRepositoryDelete(ServiceSvn $service, \Tuleap\HTTPRequest $request): void
     {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         if (! $repository->canBeDeleted()) {
@@ -447,7 +446,7 @@ class AdminController
         );
     }
 
-    public function deleteRepository(HTTPRequest $request): void
+    public function deleteRepository(\Tuleap\HTTPRequest $request): void
     {
         $project       = $request->getProject();
         $project_id    = $project->getID();
@@ -511,7 +510,7 @@ class AdminController
         ));
     }
 
-    private function redirectOnDisplayNotification(HTTPRequest $request): void
+    private function redirectOnDisplayNotification(\Tuleap\HTTPRequest $request): void
     {
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
             [

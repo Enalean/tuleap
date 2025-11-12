@@ -21,7 +21,6 @@
 
 namespace Tuleap\GraphOnTrackersV5;
 
-use HTTPRequest;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 class GraphOnTrackersV5_Widget_ProjectChart extends GraphOnTrackersV5_Widget_Chart //phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
@@ -30,7 +29,7 @@ class GraphOnTrackersV5_Widget_ProjectChart extends GraphOnTrackersV5_Widget_Cha
     {
         parent::__construct(
             'project_plugin_graphontrackersv5_chart',
-            HTTPRequest::instance()->get('group_id'),
+            \Tuleap\HTTPRequest::instance()->get('group_id'),
             ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }

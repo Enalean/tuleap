@@ -23,18 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Event\Events;
 
-use HTTPRequest;
 use Tuleap\Event\Dispatchable;
 
 final class HitEvent implements Dispatchable
 {
     public const string NAME = 'hitEvent';
 
-    public function __construct(private HTTPRequest $request, private bool $is_script)
+    public function __construct(private \Tuleap\HTTPRequest $request, private bool $is_script)
     {
     }
 
-    public function getRequest(): HTTPRequest
+    public function getRequest(): \Tuleap\HTTPRequest
     {
         return $this->request;
     }

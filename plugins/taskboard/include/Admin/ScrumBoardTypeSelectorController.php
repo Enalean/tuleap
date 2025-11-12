@@ -55,7 +55,7 @@ class ScrumBoardTypeSelectorController implements IScrumAdminSectionControllers
     }
 
     #[\Override]
-    public function onSubmitCallback(\HTTPRequest $request): void
+    public function onSubmitCallback(\Tuleap\HTTPRequest $request): void
     {
         $board_type = (string) $request->get(self::FIELD_NAME);
         if (! $board_type) {

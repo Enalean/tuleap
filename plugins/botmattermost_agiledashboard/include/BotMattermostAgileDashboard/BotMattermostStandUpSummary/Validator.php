@@ -23,7 +23,6 @@ namespace Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
-use HTTPRequest;
 use Valid_UInt;
 use Tuleap\BotMattermost\Bot\BotFactory;
 
@@ -36,7 +35,7 @@ class Validator
         $this->bot_factory = $bot_factory;
     }
 
-    public function isValid(CSRFSynchronizerToken $csrf, HTTPRequest $request, $action)
+    public function isValid(CSRFSynchronizerToken $csrf, \Tuleap\HTTPRequest $request, $action)
     {
         $csrf->check();
 
@@ -54,7 +53,7 @@ class Validator
         return false;
     }
 
-    private function isValidAddAction(HTTPRequest $request)
+    private function isValidAddAction(\Tuleap\HTTPRequest $request)
     {
         if (
             $request->exist('bot_id') &&
@@ -68,7 +67,7 @@ class Validator
         return false;
     }
 
-    private function isValidEditAction(HTTPRequest $request)
+    private function isValidEditAction(\Tuleap\HTTPRequest $request)
     {
         if (
             $request->existAndNonEmpty('send_time') &&

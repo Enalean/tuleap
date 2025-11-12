@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
 
-use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
@@ -79,7 +78,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/src/administration.ts'));

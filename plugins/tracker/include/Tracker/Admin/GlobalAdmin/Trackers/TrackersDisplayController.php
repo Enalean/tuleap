@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
-use HTTPRequest;
 use Project;
 use ProjectManager;
 use TemplateRendererFactory;
@@ -101,7 +100,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
         if (! $this->permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $request->getCurrentUser())) {

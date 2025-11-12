@@ -55,7 +55,7 @@ final class AdministrationLayoutHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCallsCallbackWithProjectAndCurrentUser(): void
     {
-        $request                = $this->createMock(\HTTPRequest::class);
+        $request                = $this->createMock(\Tuleap\HTTPRequest::class);
         $project_id             = '101';
         $page_title             = 'Project Administration';
         $current_pane_shortname = 'details';

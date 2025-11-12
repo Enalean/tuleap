@@ -33,7 +33,6 @@ use PlanningFactory;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use CSRFSynchronizerToken;
-use HTTPRequest;
 
 class DashboardProjectMilestones extends Widget
 {
@@ -67,7 +66,7 @@ class DashboardProjectMilestones extends Widget
      */
     private $csrf_token;
     /**
-     * @var HTTPRequest
+     * @var \Tuleap\HTTPRequest
      */
     private $http;
 
@@ -76,7 +75,7 @@ class DashboardProjectMilestones extends Widget
         ProjectMilestonesDao $project_milestones_dao,
         ProjectRetriever $project_retriever,
         PlanningFactory $planning_factory,
-        HTTPRequest $http,
+        \Tuleap\HTTPRequest $http,
         CSRFSynchronizerToken $csrf_token,
     ) {
         $this->project_milestones_widget_retriever = $project_milestones_widget_retriever;

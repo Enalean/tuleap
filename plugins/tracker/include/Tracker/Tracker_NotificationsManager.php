@@ -127,13 +127,13 @@ class Tracker_NotificationsManager
         $this->force_usage_updater            = $force_usage_updater;
     }
 
-    public function displayTrackerAdministratorSettings(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
+    public function displayTrackerAdministratorSettings(\Tuleap\HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
     {
         $this->displayAdminNotifications($csrf_token);
         (new Tracker_DateReminderRenderer($this->tracker))->displayDateReminders($request, $csrf_token);
     }
 
-    public function processUpdate(HTTPRequest $request)
+    public function processUpdate(\Tuleap\HTTPRequest $request)
     {
         if ($this->requestProvidesNewNotificationLevel($request)) {
             $this->updateNotificationLevel($request);
@@ -700,7 +700,7 @@ class Tracker_NotificationsManager
         }
     }
 
-    private function updateNotificationLevel(HTTPRequest $request)
+    private function updateNotificationLevel(\Tuleap\HTTPRequest $request)
     {
         if (! $this->notificationLevelMustBeUpdated($request)) {
             return;
@@ -734,7 +734,7 @@ class Tracker_NotificationsManager
         }
     }
 
-    private function notificationLevelMustBeUpdated(HTTPRequest $request)
+    private function notificationLevelMustBeUpdated(\Tuleap\HTTPRequest $request)
     {
         return ((int) $this->tracker->getNotificationsLevel() !== (int) $request->get('notifications_level')) ||
             $request->exist('disable_notifications');
@@ -743,7 +743,7 @@ class Tracker_NotificationsManager
     /**
      * @return bool
      */
-    private function requestProvidesNewNotificationLevel(HTTPRequest $request)
+    private function requestProvidesNewNotificationLevel(\Tuleap\HTTPRequest $request)
     {
         return $request->exist('notifications_level') ||
             $request->exist('disable_notifications') ||

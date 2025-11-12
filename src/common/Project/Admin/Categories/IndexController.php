@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Categories;
 
-use HTTPRequest;
 use Project;
 use TemplateRenderer;
 use TemplateRendererFactory;
@@ -83,7 +82,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
      * @throws ForbiddenException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-admin.js'));
         $callback = function (\Project $project, \PFUser $current_user): void {

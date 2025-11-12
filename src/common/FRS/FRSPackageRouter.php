@@ -21,7 +21,6 @@
 namespace Tuleap\FRS;
 
 use FRSPackageFactory;
-use HTTPRequest;
 use PFUser;
 use Project;
 
@@ -46,7 +45,7 @@ class FRSPackageRouter
         $this->permission_manager = $permission_manager;
     }
 
-    public function route(HTTPRequest $request, Project $project, PFUser $user)
+    public function route(\Tuleap\HTTPRequest $request, Project $project, PFUser $user)
     {
         $existing_packages = $this->getExistingPackagesForProject($project);
         if (! $request->get('func')) {
@@ -113,7 +112,7 @@ class FRSPackageRouter
         $this->package_controller->displayCreationForm($project, $existing_packages);
     }
 
-    private function getFrsPackage(HTTPRequest $request, Project $project, PFUser $user)
+    private function getFrsPackage(\Tuleap\HTTPRequest $request, Project $project, PFUser $user)
     {
         $package_id = $request->get('id');
         $package    = $this->package_factory->getFRSPackageFromDb($package_id);

@@ -111,7 +111,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
         $assets = new IncludeAssets(
             __DIR__ . '/../frontend-assets/',

@@ -56,7 +56,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->mockDefaultBoardType('cardwall');
 
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
 
         $this->dao->expects($this->never())->method('deleteBoardTypeByProjectId');
         $this->dao->expects($this->never())->method('updateBoardTypeByProjectId');
@@ -68,7 +68,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->mockDefaultBoardType('cardwall');
 
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('scrum-board-type', 'both');
 
         $this->dao->expects($this->once())->method('deleteBoardTypeByProjectId')->with(150);
@@ -80,7 +80,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->mockDefaultBoardType('cardwall');
 
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('scrum-board-type', 'taskboard');
 
         $this->dao->expects($this->once())->method('updateBoardTypeByProjectId')->with(150, 'taskboard');
@@ -92,7 +92,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->mockDefaultBoardType(false);
 
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('scrum-board-type', 'taskboard');
 
         $this->dao->expects($this->once())->method('create')->with(150, 'taskboard');
@@ -104,7 +104,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->mockDefaultBoardType('cardwall');
 
-        $request = new \HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('scrum-board-type', 'cardwall');
 
         $this->dao->expects($this->never())->method('create')->with(150, 'taskboard');

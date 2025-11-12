@@ -135,7 +135,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
 
     public function botmattermost_bot_deleted(BotMattermostDeleted $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
+        $this->getController(\Tuleap\HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }
 
     private function getRenderToString()
@@ -143,7 +143,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         return $this->getController($this->getRequest())->render();
     }
 
-    private function getController(HTTPRequest $request)
+    private function getController(\Tuleap\HTTPRequest $request)
     {
         $bot_factory = new BotFactory(new BotDao());
         $project_id  = $request->getProject()->getID();
@@ -167,7 +167,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
 
     private function getRequest()
     {
-        return HTTPRequest::instance();
+        return \Tuleap\HTTPRequest::instance();
     }
 
     #[Override]

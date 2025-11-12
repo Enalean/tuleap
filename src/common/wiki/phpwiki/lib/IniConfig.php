@@ -588,7 +588,7 @@ function fixup_dynamic_configs($file)
             define($var, $_SERVER[$var]);
         }
     }
-    $tuleap_request = HTTPRequest::instance();
+    $tuleap_request = \Tuleap\HTTPRequest::instance();
     if (! defined('SERVER_NAME')) {
         define('SERVER_NAME', '127.0.0.1');
     }

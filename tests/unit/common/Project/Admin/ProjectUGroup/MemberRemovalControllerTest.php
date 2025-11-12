@@ -45,7 +45,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UGroupManager&MockObject $ugroup_manager;
     private \UserManager&MockObject $user_manager;
     private MemberRemovalController $controller;
-    private \HTTPRequest&MockObject $http_request;
+    private \Tuleap\HTTPRequest&MockObject $http_request;
     private BaseLayout&MockObject $layout;
     private MemberRemover&MockObject $member_remover;
     private ProjectMemberRemover&MockObject $project_member_remover;
@@ -59,7 +59,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager         = $this->createMock(\UGroupManager::class);
         $this->user_manager           = $this->createMock(\UserManager::class);
         $this->member_remover         = $this->createMock(MemberRemover::class);
-        $this->http_request           = $this->createMock(\HTTPRequest::class);
+        $this->http_request           = $this->createMock(\Tuleap\HTTPRequest::class);
         $this->layout                 = $this->createMock(BaseLayout::class);
         $this->project_member_remover = $this->createMock(ProjectMemberRemover::class);
         $this->csrf                   = $this->createMock(\CSRFSynchronizerToken::class);

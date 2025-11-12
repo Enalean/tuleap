@@ -40,7 +40,6 @@ use GitPlugin;
 use GitRepository;
 use GitRepositoryFactory;
 use GitRepositoryManager;
-use HTTPRequest;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
@@ -139,7 +138,7 @@ final class GitGerritRouteTest extends TestCase
     }
 
     private function getGit(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         GitRepositoryFactory $factory,
         ?Git_Driver_Gerrit_Template_TemplateFactory $template_factory = null,
     ): Git&MockObject {
@@ -158,7 +157,7 @@ final class GitGerritRouteTest extends TestCase
         $gerrit_driver->method('doesTheProjectExist')->willReturn(false);
         $gerrit_driver->method('getGerritProjectName');
 
-        $http_request         = new HTTPRequest();
+        $http_request         = new \Tuleap\HTTPRequest();
         $http_request->params = ['group_id' => $this->group_id];
         $driver_factory       = $this->createMock(Git_Driver_Gerrit_GerritDriverFactory::class);
         $driver_factory->method('getDriver')->willReturn($gerrit_driver);
@@ -218,7 +217,7 @@ final class GitGerritRouteTest extends TestCase
     private function assertItIsForbiddenForNonProjectAdmins(GitRepositoryFactory $factory): void
     {
         $this->user_manager->method('getCurrentUser')->willReturn($this->user);
-        $request         = new HTTPRequest();
+        $request         = new \Tuleap\HTTPRequest();
         $request->params = ['repo_id' => $this->repo_id];
 
         $git = $this->getGitDisconnect($request, $factory);
@@ -232,7 +231,7 @@ final class GitGerritRouteTest extends TestCase
     private function assertItNeedsAValidRepoId(GitRepositoryFactory $factory): void
     {
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $repo_id = 999;
         $request->set('repo_id', $repo_id);
 
@@ -248,7 +247,7 @@ final class GitGerritRouteTest extends TestCase
     public function testItDispatchToDisconnectFromGerritWithRepoManagementView(): void
     {
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
-        $request         = new HTTPRequest();
+        $request         = new \Tuleap\HTTPRequest();
         $request->params = ['repo_id' => $this->repo_id];
         $repo            = GitRepositoryTestBuilder::aProjectRepository()->build();
         $factory         = $this->createMock(GitRepositoryFactory::class);
@@ -284,7 +283,7 @@ final class GitGerritRouteTest extends TestCase
         $this->assertItNeedsAValidRepoId($factory);
     }
 
-    private function getGitDisconnect(HTTPRequest $request, GitRepositoryFactory $factory): Git&MockObject
+    private function getGitDisconnect(\Tuleap\HTTPRequest $request, GitRepositoryFactory $factory): Git&MockObject
     {
         $git = $this->getGit($request, $factory);
         $git->setAction('disconnect_gerrit');
@@ -298,7 +297,7 @@ final class GitGerritRouteTest extends TestCase
         $factory->expects($this->once())->method('getRepositoryById')->willReturn($this->repository);
 
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
-        $request            = new HTTPRequest();
+        $request            = new \Tuleap\HTTPRequest();
         $server_id          = 111;
         $gerrit_template_id = 'default';
 
@@ -329,7 +328,7 @@ final class GitGerritRouteTest extends TestCase
         $factory->expects($this->once())->method('getRepositoryById')->willReturn($this->repository);
 
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
-        $request = new HTTPRequest();
+        $request = new \Tuleap\HTTPRequest();
         $request->set('repo_id', $this->repo_id);
         $not_valid = 'a_string';
         $request->set('remote_server_id', $not_valid);
@@ -349,7 +348,7 @@ final class GitGerritRouteTest extends TestCase
         $factory->expects($this->once())->method('getRepositoryById')->willReturn($this->repository);
         ForgeConfig::set('sys_auth_type', 'not_ldap');
         $this->user_manager->method('getCurrentUser')->willReturn($this->admin);
-        $request   = new HTTPRequest();
+        $request   = new \Tuleap\HTTPRequest();
         $server_id = 111;
         $request->set('repo_id', $this->repo_id);
         $request->set('remote_server_id', $server_id);
@@ -376,7 +375,7 @@ final class GitGerritRouteTest extends TestCase
         $template_factory->method('getTemplatesAvailableForRepository')->willReturn([$template]);
         $template_factory->method('getTemplate')->with($template_id)->willReturn($template);
 
-        $request   = new HTTPRequest();
+        $request   = new \Tuleap\HTTPRequest();
         $server_id = 111;
         $request->set('repo_id', $this->repo_id);
         $request->set('remote_server_id', $server_id);
@@ -391,7 +390,7 @@ final class GitGerritRouteTest extends TestCase
     }
 
     private function getGitMigrate(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         GitRepositoryFactory $factory,
         ?Git_Driver_Gerrit_Template_TemplateFactory $template_factory = null,
     ): Git&MockObject {

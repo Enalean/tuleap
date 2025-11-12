@@ -191,7 +191,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $GLOBALS['HTML']->addToolbarItem('<a href="' . $t['url'] . '" ' . $class . ' ' . $data_test . '>' . $item_title . '</a>');
         }
 
-        $pv = (int) HTTPRequest::instance()->get('pv');
+        $pv = (int) \Tuleap\HTTPRequest::instance()->get('pv');
         if (is_array($params) && empty($params)) {
             $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
                 ->inProject($this->project, (string) $this->getId())
@@ -231,7 +231,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $params = [
             'project' => $this->project,
         ];
-        if ($pv = (int) HTTPRequest::instance()->get('pv')) {
+        if ($pv = (int) \Tuleap\HTTPRequest::instance()->get('pv')) {
             $params['pv'] = (int) $pv;
         }
         site_project_footer($params);

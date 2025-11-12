@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../www/file/file_utils.php';
 use FRSPackage;
 use FRSPackageFactory;
 use FRSReleaseFactory;
-use HTTPRequest;
 use PermissionsManager;
 use PFUser;
 use Project;
@@ -67,7 +66,7 @@ class FRSPackageController
         $this->license_agreement_factory = $license_agreement_factory;
     }
 
-    public function delete(HTTPRequest $request, FRSPackage $package, Project $project)
+    public function delete(\Tuleap\HTTPRequest $request, FRSPackage $package, Project $project)
     {
         $valid_package_id = new Valid_UInt('id');
         if ($request->valid($valid_package_id)) {
@@ -100,7 +99,7 @@ class FRSPackageController
         );
     }
 
-    public function create(HTTPRequest $request, Project $project, array $existing_packages): void
+    public function create(\Tuleap\HTTPRequest $request, Project $project, array $existing_packages): void
     {
         $url_home_frs = '/file/?group_id=' . urlencode($project->getGroupId());
         if (! $request->exist('submit')) {
@@ -143,7 +142,7 @@ class FRSPackageController
         );
     }
 
-    public function update(HTTPRequest $request, FRSPackage $package, Project $project, PFUser $user)
+    public function update(\Tuleap\HTTPRequest $request, FRSPackage $package, Project $project, PFUser $user)
     {
         if (! $request->exist('submit')) {
             $GLOBALS['Response']->addFeedback(\Feedback::INFO, $GLOBALS['Language']->getText('file_admin_editpackages', 'update_canceled'));

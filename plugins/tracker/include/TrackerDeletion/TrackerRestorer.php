@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\TrackerDeletion;
 
-use HTTPRequest;
 use RuntimeException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\RetrieveTracker;
@@ -33,7 +32,7 @@ final readonly class TrackerRestorer
     {
     }
 
-    public function restoreTracker(HTTPRequest $request, BaseLayout $response): void
+    public function restoreTracker(\Tuleap\HTTPRequest $request, BaseLayout $response): void
     {
         $tracker_id = $request->get('tracker_id');
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);

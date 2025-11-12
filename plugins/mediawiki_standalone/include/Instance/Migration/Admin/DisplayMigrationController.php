@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance\Migration\Admin;
 
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
@@ -47,7 +46,7 @@ final class DisplayMigrationController implements DispatchableWithRequest, Dispa
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         if (! $current_user->isSuperUser()) {

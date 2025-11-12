@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Core\RSS\Project;
 
 use ForgeConfig;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -60,7 +59,7 @@ class LatestProjectController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @return void
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $feed = new Feed();
         $feed->setTitle(sprintf(_('%s new projects'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));

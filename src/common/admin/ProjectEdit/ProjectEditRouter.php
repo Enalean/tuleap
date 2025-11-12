@@ -32,7 +32,7 @@ class ProjectEditRouter
         $this->project_edit_controller = $project_edit_controller;
     }
 
-    public function route(\HTTPRequest $request, \CSRFSynchronizerToken $csrf_token)
+    public function route(\Tuleap\HTTPRequest $request, \CSRFSynchronizerToken $csrf_token)
     {
         switch ($request->get('action')) {
             case 'update-project':

@@ -21,7 +21,6 @@
 namespace Tuleap\Project\Label;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Label\CollectionOfLabelableDao;
@@ -60,7 +59,7 @@ class IndexController
         $this->color_factory  = $color_factory;
     }
 
-    public function display(HTTPRequest $request)
+    public function display(\Tuleap\HTTPRequest $request)
     {
         $project = $request->getProject();
 

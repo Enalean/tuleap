@@ -21,7 +21,6 @@
 namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Layout\BaseLayout;
@@ -39,7 +38,7 @@ class ProjectVisibilityConfigDisplayController implements DispatchableWithReques
      * @throws \Exception
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

@@ -28,7 +28,7 @@ use Tuleap\Date\RelativeDatesAssetsRetriever;
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $em = EventManager::instance();
@@ -96,7 +96,7 @@ switch ($func) {
 }
 
 $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
-$detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+$detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(\Tuleap\HTTPRequest::instance());
 $GLOBALS['Response']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
 
 $focus = $request->get('focus');

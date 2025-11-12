@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 use Codendi_Mail;
 use ErrorChart;
 use EventManager;
-use HTTPRequest;
 use Override;
 use PFUser;
 use SystemEventManager;
@@ -273,7 +272,7 @@ class BurndownField extends TrackerField implements Tracker_FormElement_Field_Re
 
     /**
      *
-     * @param HTTPRequest $request
+     * @param \Tuleap\HTTPRequest $request
      * @param PFUser $current_user
      */
     #[Override]

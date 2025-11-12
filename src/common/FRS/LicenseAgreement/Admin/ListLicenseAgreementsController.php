@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\FRS\FRSPermissionManager;
@@ -100,7 +99,7 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->helper->assertCanAccess($project, $request->getCurrentUser());

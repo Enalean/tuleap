@@ -31,7 +31,7 @@ require_once __DIR__ . '/../include/pre.php';
 session_write_close();
 require_once __DIR__ . '/../my/my_utils.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $widget_factory = new WidgetFactory(
     UserManager::instance(),

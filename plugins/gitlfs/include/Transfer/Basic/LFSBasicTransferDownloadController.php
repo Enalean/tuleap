@@ -20,7 +20,6 @@
 
 namespace Tuleap\GitLFS\Transfer\Basic;
 
-use HTTPRequest;
 use League\Flysystem\FilesystemReader;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeDownload;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
@@ -63,7 +62,7 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
         $authorized_action = $this->user_access_request_checker->userCanAccess(

@@ -34,7 +34,7 @@ final class ArtifactViewBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\HTTPRequest
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -73,7 +73,7 @@ final class ArtifactViewBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(101);
 
-        $this->request = $this->createMock(\HTTPRequest::class);
+        $this->request = $this->createMock(\Tuleap\HTTPRequest::class);
 
         $project = $this->createMock(Project::class);
         $project->method('getID')->willReturn(201);

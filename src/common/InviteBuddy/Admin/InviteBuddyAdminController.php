@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy\Admin;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
@@ -58,7 +57,7 @@ class InviteBuddyAdminController implements DispatchableWithRequest, Dispatchabl
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser() || ! $this->configuration->canSiteAdminConfigureTheFeature()) {
             throw new ForbiddenException();

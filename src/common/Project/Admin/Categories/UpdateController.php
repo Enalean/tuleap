@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Categories;
 
 use Feedback;
-use HTTPRequest;
 use ProjectHistoryDao;
 use TroveCatDao;
 use Tuleap\Layout\BaseLayout;
@@ -73,7 +72,7 @@ class UpdateController implements DispatchableWithRequest
      * @throws ForbiddenException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);

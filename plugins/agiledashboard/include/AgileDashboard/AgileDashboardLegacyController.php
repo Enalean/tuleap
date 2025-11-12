@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard;
 
 use AgileDashboardRouterBuilder;
 use Feedback;
-use HTTPRequest;
 use Override;
 use Tuleap\AgileDashboard\Milestone\Pane\AgileDashboardPaneInfoIdentifier;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
@@ -50,7 +49,7 @@ final readonly class AgileDashboardLegacyController implements DispatchableWithR
      * @throws ForbiddenException
      */
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $request->getProject();
 
@@ -71,7 +70,7 @@ final readonly class AgileDashboardLegacyController implements DispatchableWithR
     }
 
     #[Override]
-    public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
+    public function isInABurningParrotPage(\Tuleap\HTTPRequest $request, array $variables): bool
     {
         return $this->isInOverviewTab($request)
                || $this->isPlanningV2URL($request)
@@ -79,29 +78,29 @@ final readonly class AgileDashboardLegacyController implements DispatchableWithR
                || $this->isPlanningAdministration($request);
     }
 
-    public static function isInOverviewTab(HTTPRequest $request): bool
+    public static function isInOverviewTab(\Tuleap\HTTPRequest $request): bool
     {
         return $request->get('action') === DetailsPaneInfo::ACTION
             && $request->get('pane') === DetailsPaneInfo::IDENTIFIER;
     }
 
-    public static function isPlanningV2URL(HTTPRequest $request): bool
+    public static function isPlanningV2URL(\Tuleap\HTTPRequest $request): bool
     {
         $pane_info_identifier = new AgileDashboardPaneInfoIdentifier();
         return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
     }
 
-    public static function isScrumAdminURL(HTTPRequest $request): bool
+    public static function isScrumAdminURL(\Tuleap\HTTPRequest $request): bool
     {
         return $request->get('action') === 'import-form' || $request->get('action') === 'admin';
     }
 
-    public function isPlanningAdministration(HTTPRequest $request): bool
+    public function isPlanningAdministration(\Tuleap\HTTPRequest $request): bool
     {
         return $request->get('action') === 'edit' || $request->get('action') === 'new';
     }
 
-    private function includeAssets(HTTPRequest $request, BaseLayout $layout): void
+    private function includeAssets(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         if (self::isInOverviewTab($request)) {
             $layout->addJavascriptAsset(

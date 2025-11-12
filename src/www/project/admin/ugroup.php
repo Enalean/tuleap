@@ -30,7 +30,7 @@ require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/permissions.php';
 
 $em      = EventManager::instance();
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 

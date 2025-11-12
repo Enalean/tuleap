@@ -26,7 +26,6 @@ use CSRFSynchronizerToken;
 use Feedback;
 use GitPermissionsManager;
 use GitPlugin;
-use HTTPRequest;
 use Project;
 use ProjectManager;
 use RuntimeException;
@@ -71,7 +70,7 @@ class AddController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProjectFromRequest($request);
         $this->csrf_token->check(
@@ -135,7 +134,7 @@ class AddController implements DispatchableWithRequest
     /**
      * @throws NotFoundException
      */
-    private function getProjectFromRequest(HTTPRequest $request): Project
+    private function getProjectFromRequest(\Tuleap\HTTPRequest $request): Project
     {
         $project_id = $request->get('project_id');
         if ($project_id === false) {

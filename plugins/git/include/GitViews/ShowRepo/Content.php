@@ -23,7 +23,7 @@ use Tuleap\Git\History\GitPhpAccessLogger;
 class GitViews_ShowRepo_Content
 {
     /**
-     * @var HTTPRequest
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
     /**
@@ -42,7 +42,7 @@ class GitViews_ShowRepo_Content
     public function __construct(
         GitRepository $repository,
         GitViews_GitPhpViewer $gitphp_viewer,
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         GitPhpAccessLogger $access_logger,
     ) {
         $this->repository    = $repository;

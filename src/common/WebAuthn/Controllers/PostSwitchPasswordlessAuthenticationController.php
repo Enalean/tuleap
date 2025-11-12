@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
@@ -43,7 +42,7 @@ final class PostSwitchPasswordlessAuthenticationController implements Dispatchab
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $this->provide_current_user->getCurrentUser();
         if ($current_user->isAnonymous()) {

@@ -21,7 +21,6 @@
 namespace Tuleap\SVN;
 
 use Feedback;
-use HTTPRequest;
 use ProjectManager;
 use SvnPlugin;
 use Tuleap\Layout\BaseLayout;
@@ -111,7 +110,7 @@ class SvnRouter implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         try {
             $this->checkAccessToProject($request, $layout);
@@ -228,14 +227,14 @@ class SvnRouter implements DispatchableWithRequest
         }
     }
 
-    private function checkUserCanAdministrateARepository(HTTPRequest $request)
+    private function checkUserCanAdministrateARepository(\Tuleap\HTTPRequest $request)
     {
         if (! $this->permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser())) {
             throw new UserCannotAdministrateRepositoryException();
         }
     }
 
-    private function useAViewVcRoadIfRootValid(HTTPRequest $request, array $url_variables)
+    private function useAViewVcRoadIfRootValid(\Tuleap\HTTPRequest $request, array $url_variables)
     {
         if ($request->get('root')) {
             $repository = $this->repository_manager->getRepositoryFromPublicPath($request);
@@ -248,7 +247,7 @@ class SvnRouter implements DispatchableWithRequest
         }
     }
 
-    private function useDefaultRoute(HTTPRequest $request)
+    private function useDefaultRoute(\Tuleap\HTTPRequest $request)
     {
         $this->explorer_controller->index($this->getService($request), $request);
     }
@@ -259,7 +258,7 @@ class SvnRouter implements DispatchableWithRequest
      *
      * @return ServiceSvn
      */
-    private function getService(HTTPRequest $request)
+    private function getService(\Tuleap\HTTPRequest $request)
     {
         $service = $request->getProject()->getService('plugin_svn');
 
@@ -276,7 +275,7 @@ class SvnRouter implements DispatchableWithRequest
         return $service;
     }
 
-    private function getProjectFromViewVcURL(HTTPRequest $request)
+    private function getProjectFromViewVcURL(\Tuleap\HTTPRequest $request)
     {
         $svn_root = $request->get('root');
         if (strpos($svn_root, '/') !== false) {
@@ -290,7 +289,7 @@ class SvnRouter implements DispatchableWithRequest
     /**
      * @throws CannotFindRepositoryException
      */
-    private function checkAccessToProject(HTTPRequest $request, BaseLayout $layout): void
+    private function checkAccessToProject(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         $project = $request->getProject();
         if (! $project->getID()) {

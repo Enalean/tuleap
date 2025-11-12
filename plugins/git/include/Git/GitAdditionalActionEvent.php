@@ -21,23 +21,21 @@
 
 namespace Tuleap\Git;
 
-use HTTPRequest;
-
 class GitAdditionalActionEvent implements \Tuleap\Event\Dispatchable
 {
     public const string NAME = 'gitAdditionalAction';
     /**
-     * @var HTTPRequest
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
-    public function __construct(HTTPRequest $request)
+    public function __construct(\Tuleap\HTTPRequest $request)
     {
         $this->request = $request;
     }
 
     /**
-     * @return HTTPRequest
+     * @return \Tuleap\HTTPRequest
      */
     public function getRequest()
     {

@@ -42,7 +42,7 @@ class Docman_Widget_MyDocmanSearch extends Widget //phpcs:ignore PSR1.Classes.Cl
     public function getContent(): string
     {
         $html    = '';
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
 

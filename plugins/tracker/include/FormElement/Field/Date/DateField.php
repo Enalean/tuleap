@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\FormElement\Field\Date;
 
 use Codendi_HTMLPurifier;
-use HTTPRequest;
 use Override;
 use PFUser;
 use SimpleXMLElement;
@@ -857,7 +856,7 @@ class DateField extends TrackerField
     {
         $html = '';
         if ($value && $value instanceof Tracker_Artifact_ChangesetValue_Date && $value->getTimestamp() !== null) {
-            $user  = HTTPRequest::instance()->getCurrentUser();
+            $user  = \Tuleap\HTTPRequest::instance()->getCurrentUser();
             $html .= $this->isTimeDisplayed()
                 ? DateHelper::relativeDateInlineContext($value->getTimestamp() ?? 0, $user)
                 : DateHelper::relativeDateInlineContextWithoutTime($value->getTimestamp() ?? 0, $user);

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Password\Administration;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Request\DispatchableWithRequest;
@@ -38,7 +37,7 @@ class PasswordPolicyUpdateController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $request->checkUserIsSuperUser();
 

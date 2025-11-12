@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tuleap\Userlog;
 
 use DateTimeImmutable;
-use HTTPRequest;
 use PFUser;
 use Project;
 
@@ -91,7 +90,7 @@ final class UserlogAccess
         $this->http_referer   = $http_referer;
     }
 
-    public static function buildFromRequest(HTTPRequest $request): self
+    public static function buildFromRequest(\Tuleap\HTTPRequest $request): self
     {
         return new self(
             new DateTimeImmutable(),

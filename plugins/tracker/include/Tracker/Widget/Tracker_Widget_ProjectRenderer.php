@@ -38,7 +38,7 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer //phpcs:ign
     {
         parent::__construct(
             self::ID,
-            HTTPRequest::instance()->get('group_id'),
+            \Tuleap\HTTPRequest::instance()->get('group_id'),
             \Tuleap\Dashboard\Project\ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
         if ($renderer_factory === null) {

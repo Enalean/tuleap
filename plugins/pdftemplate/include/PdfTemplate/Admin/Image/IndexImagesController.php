@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin\Image;
 
-use HTTPRequest;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
@@ -52,7 +51,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         $this->can_manage_templates_checker->checkUserCanManageTemplates($current_user);

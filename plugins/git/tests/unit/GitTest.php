@@ -24,7 +24,6 @@ namespace Tuleap\Git;
 
 use Git;
 use GitRepositoryFactory;
-use HTTPRequest;
 use PFUser;
 use SystemEventDao;
 use SystemEventManager;
@@ -65,7 +64,7 @@ final class GitTest extends TestCase
         $usermanager = $this->createMock(UserManager::class);
         $usermanager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $request                   = new HTTPRequest();
+        $request                   = new \Tuleap\HTTPRequest();
         $request->params           = ['repo_id' => 1];
 
         $git = $this->createPartialMock(Git::class, ['addAction', 'definePermittedActions', 'addView']);
@@ -90,7 +89,7 @@ final class GitTest extends TestCase
     public function testDispatchToForkRepositoriesIfRequestsPersonal(): void
     {
         $git             = $this->createPartialMock(Git::class, ['_doDispatchForkRepositories']);
-        $request         = new HTTPRequest();
+        $request         = new \Tuleap\HTTPRequest();
         $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
         $git->expects($this->once())->method('_doDispatchForkRepositories');
@@ -108,7 +107,7 @@ final class GitTest extends TestCase
     public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember(): void
     {
         $git             = $this->createPartialMock(Git::class, ['_doDispatchForkRepositories', 'redirect']);
-        $request         = new HTTPRequest();
+        $request         = new \Tuleap\HTTPRequest();
         $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
         $git->setProject(ProjectTestBuilder::aProject()->withUnixName('project-unix-name')->build());
@@ -128,7 +127,7 @@ final class GitTest extends TestCase
     public function testDispatchToForkCrossProjectIfRequestsProject(): void
     {
         $git             = $this->createPartialMock(Git::class, ['_doDispatchForkCrossProject']);
-        $request         = new HTTPRequest();
+        $request         = new \Tuleap\HTTPRequest();
         $request->params = ['choose_destination' => 'project'];
         $git->setRequest($request);
 

@@ -46,7 +46,7 @@ final class OnlyOfficeAdminSettingsControllerTest extends TestCase
 
         $admin_page_renderer->expects($this->once())->method('renderAPresenter');
 
-        $controller->process($this->createStub(\HTTPRequest::class), LayoutBuilder::build(), []);
+        $controller->process($this->createStub(\Tuleap\HTTPRequest::class), LayoutBuilder::build(), []);
     }
 
     public function testOnlySiteAdministratorsCanAccessThePage(): void
@@ -54,7 +54,7 @@ final class OnlyOfficeAdminSettingsControllerTest extends TestCase
         $controller = self::buildController($this->createStub(AdminPageRenderer::class), UserTestBuilder::anActiveUser()->build());
 
         $this->expectException(ForbiddenException::class);
-        $controller->process($this->createStub(\HTTPRequest::class), LayoutBuilder::build(), []);
+        $controller->process($this->createStub(\Tuleap\HTTPRequest::class), LayoutBuilder::build(), []);
     }
 
     private static function buildController(AdminPageRenderer $admin_page_renderer, \PFUser $current_user): OnlyOfficeAdminSettingsController

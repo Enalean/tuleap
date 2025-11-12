@@ -22,7 +22,6 @@ namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Project;
 use RuntimeException;
 use Service;
@@ -81,7 +80,7 @@ class DeleteController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
@@ -113,7 +112,7 @@ class DeleteController implements DispatchableWithRequest
         $layout->redirect(IndexController::getUrl($project));
     }
 
-    private function deleteFromAllProjects(HTTPRequest $request, BaseLayout $response, Project $project, Service $service): void
+    private function deleteFromAllProjects(\Tuleap\HTTPRequest $request, BaseLayout $response, Project $project, Service $service): void
     {
         if ((int) $project->getID() !== Project::DEFAULT_TEMPLATE_PROJECT_ID) {
             return;

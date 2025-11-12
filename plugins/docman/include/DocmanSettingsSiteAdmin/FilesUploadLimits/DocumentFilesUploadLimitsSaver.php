@@ -37,7 +37,7 @@ class DocumentFilesUploadLimitsSaver
         $this->config_dao = $dao;
     }
 
-    public function saveNbMaxFiles(\HTTPRequest $request, BaseLayout $layout): void
+    public function saveNbMaxFiles(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         $nb_files = (int) $request->getValidated('number-of-files-in-parallel', 'uint');
         if (! $nb_files) {
@@ -51,7 +51,7 @@ class DocumentFilesUploadLimitsSaver
         $this->config_dao->saveInt(DocmanPlugin::PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING, $nb_files);
     }
 
-    public function saveMaxFileSize(\HTTPRequest $request, BaseLayout $layout): void
+    public function saveMaxFileSize(\Tuleap\HTTPRequest $request, BaseLayout $layout): void
     {
         $max_file_size = (int) $request->getValidated('max-file-size', 'uint');
         if (! $max_file_size) {

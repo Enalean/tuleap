@@ -105,6 +105,6 @@ class Docman_Token
 
     public function _getHTTPRequest()
     {
-        return HTTPRequest::instance();
+        return \Tuleap\HTTPRequest::instance();
     }
 }

@@ -24,7 +24,6 @@ namespace TuleapCodingStandard\Tuleap\FRS;
 
 use FRSRelease;
 use FRSReleaseFactory;
-use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
@@ -128,7 +127,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['release_id' => 124];
         $layout    = $this->createMock(BaseLayout::class);
-        $request   = $this->createMock(HTTPRequest::class);
+        $request   = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
         $this->release_factory->expects($this->once())
             ->method('getFRSReleaseFromDb')
@@ -143,7 +142,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['release_id' => 124];
         $layout    = $this->createMock(BaseLayout::class);
-        $request   = $this->createMock(HTTPRequest::class);
+        $request   = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
         $release = $this->createStub(FRSRelease::class);
         $release->method('getPackage')->willReturn($this->createStub(\FRSPackage::class));
@@ -164,7 +163,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $variables    = ['release_id' => 124];
         $layout       = $this->createMock(BaseLayout::class);
         $current_user = UserTestBuilder::aUser()->build();
-        $request      = $this->createMock(HTTPRequest::class);
+        $request      = $this->createMock(\Tuleap\HTTPRequest::class);
         $request->method('getCurrentUser')->willReturn($current_user);
 
         $service_file = $this->createMock(\ServiceFile::class);

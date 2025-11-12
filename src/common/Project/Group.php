@@ -328,7 +328,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (isset($this->is_admin)) {
             //have already been through here and set the var
         } else {
-            if (HTTPRequest::instance()->getCurrentUser()->isSuperUser()) {
+            if (\Tuleap\HTTPRequest::instance()->getCurrentUser()->isSuperUser()) {
                 $this->is_admin = true;
             } else {
                 if (user_isloggedin()) {

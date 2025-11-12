@@ -19,13 +19,13 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
 $csrf = new CSRFSynchronizerToken('/admin/massmail.php');
 $csrf->check();
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 if ($request->isPost() && $request->existAndNonEmpty('destination')) {
     $validDestination = new Valid_WhiteList(
         'destination',

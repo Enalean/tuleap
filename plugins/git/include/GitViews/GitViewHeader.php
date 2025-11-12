@@ -22,7 +22,6 @@
 namespace Tuleap\Git\GitViews;
 
 use EventManager;
-use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -42,7 +41,7 @@ class GitViewHeader
     }
 
     public function header(
-        HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         Project $project,
         BreadCrumbCollection $breadcrumbs,
@@ -57,7 +56,7 @@ class GitViewHeader
         );
     }
 
-    private function getAdditionalBodyClasses(HTTPRequest $request)
+    private function getAdditionalBodyClasses(\Tuleap\HTTPRequest $request)
     {
         $classes = [];
         $params  = [

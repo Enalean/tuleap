@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -49,7 +48,7 @@ class RedirectOldViewVCUrls implements DispatchableWithRequest
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $redirect_url = $this->base_url . '/' . $variables['path'];
         if ($_SERVER['QUERY_STRING'] !== '') {

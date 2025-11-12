@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\Config\Project;
 
-use HTTPRequest;
 use Tuleap\Docman\View\Admin\AdminView;
 use Tuleap\Document\Tree\IExtractProjectFromVariables;
 use Tuleap\Layout\BaseLayout;
@@ -77,7 +76,7 @@ final class SearchView extends AdminView implements DispatchableWithBurningParro
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('document');
 

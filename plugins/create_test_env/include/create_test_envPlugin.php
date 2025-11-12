@@ -109,7 +109,7 @@ class create_test_envPlugin extends Plugin
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
-        $request      = HTTPRequest::instance();
+        $request      = \Tuleap\HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
         if ($current_user->isSuperUser()) {
             return;
@@ -122,7 +122,7 @@ class create_test_envPlugin extends Plugin
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
-        $request      = HTTPRequest::instance();
+        $request      = \Tuleap\HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
         if ($current_user->isSuperUser()) {
             return;
@@ -155,7 +155,7 @@ class create_test_envPlugin extends Plugin
     #[\Tuleap\Plugin\ListeningToEventName(Event::SERVICE_IS_USED)]
     public function serviceIsUsed(array $params): void
     {
-        $request      = HTTPRequest::instance();
+        $request      = \Tuleap\HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
         if ($current_user->isSuperUser()) {
             return;
@@ -168,7 +168,7 @@ class create_test_envPlugin extends Plugin
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceAccessEvent(ServiceAccessEvent $event): void
     {
-        $request      = HTTPRequest::instance();
+        $request      = \Tuleap\HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
         if ($current_user->isSuperUser()) {
             return;

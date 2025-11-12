@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient;
 
 use ForgeConfig;
-use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
@@ -54,7 +53,7 @@ class LoginController implements DispatchableWithRequestNoAuthz
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $return_to = $request->get('return_to');
         $presenter = $this->connector_presenter_builder->getLoginSpecificPageConnectorPresenter($return_to);

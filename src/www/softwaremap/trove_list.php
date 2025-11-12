@@ -26,12 +26,12 @@ if (ForgeConfig::get('sys_use_trove') == 0) {
     exit_permission_denied();
 }
 
-$request      = HTTPRequest::instance();
+$request      = \Tuleap\HTTPRequest::instance();
 $current_user = $request->getCurrentUser();
 
 $trove_cat_dao = new TroveCatDao();
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 if ($request->exist('form_cat')) {
     $form_cat = intval($request->get('form_cat'));
 } else {

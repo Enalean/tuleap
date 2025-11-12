@@ -7,7 +7,7 @@ require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/bookmarks.php';
 require_once __DIR__ . '/my_utils.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $vId = new Valid_UInt('bookmark_id');
 $vId->setErrorMessage('bookmark_id is required');

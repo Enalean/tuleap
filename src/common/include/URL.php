@@ -76,7 +76,7 @@ class URL //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public function getGroupIdFromUrl($url)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         $req_uri = '/' . trim($url, '/');
         // /projects/ and /viewvc/
         if ((strpos($req_uri, '/projects/') === 0) || (strpos($req_uri, '/viewvc.php/') !== false)) {

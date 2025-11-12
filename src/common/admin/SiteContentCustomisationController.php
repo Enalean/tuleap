@@ -25,7 +25,6 @@ namespace Tuleap\admin;
 use BaseLanguage;
 use BaseLanguageFactory;
 use DirectoryIterator;
-use HTTPRequest;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -61,7 +60,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

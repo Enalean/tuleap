@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Date\Admin;
 
 use Feedback;
-use HTTPRequest;
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Date\SelectedDateDisplayPreferenceValidator;
@@ -69,7 +68,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
      * @throws ForbiddenException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->csrf_token->check();
 

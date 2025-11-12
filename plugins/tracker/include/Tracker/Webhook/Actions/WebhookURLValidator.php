@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Webhook\Actions;
 
 use Feedback;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Valid_HTTPURI;
 
@@ -30,7 +29,7 @@ class WebhookURLValidator
     /**
      * @return string
      */
-    public function getValidURL(HTTPRequest $request, BaseLayout $layout, $redirect_url)
+    public function getValidURL(\Tuleap\HTTPRequest $request, BaseLayout $layout, $redirect_url)
     {
         $valid_url = new Valid_HTTPURI('webhook_url');
         $valid_url->required();

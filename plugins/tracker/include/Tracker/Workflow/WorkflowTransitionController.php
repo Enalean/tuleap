@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Workflow;
 
 use EventManager;
-use HTTPRequest;
 use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
@@ -56,7 +55,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $tracker = $this->tracker_factory->getTrackerById($variables['tracker_id']);
         if (! $tracker) {

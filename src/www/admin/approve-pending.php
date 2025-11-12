@@ -41,7 +41,7 @@ $special_access                   = $forge_ugroup_permissions_manager->doesUserH
     new User_ForgeUserGroupPermission_ProjectApproval()
 );
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 if (! $special_access) {
     $request->checkUserIsSuperUser();
 }

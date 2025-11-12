@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
-use HTTPRequest;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -54,7 +53,7 @@ class TextDiffRetriever implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $changeset_id = (int) $variables['changeset_id'];
         $artifact_id  = (int) $variables['artifact_id'];

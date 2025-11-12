@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use HTTPRequest;
 use Project;
 use Tracker_Exception;
 use TrackerFromXmlException;
@@ -84,7 +83,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
      * @inheritDoc
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
         $user    = $this->user_manager->getCurrentUser();

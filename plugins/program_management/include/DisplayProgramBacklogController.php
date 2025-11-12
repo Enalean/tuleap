@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement;
 
-use HTTPRequest;
 use PFUser;
 use Project;
 use Tuleap\Layout\BaseLayout;
@@ -85,7 +84,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
         if (! $project->usesService(ProgramService::SERVICE_SHORTNAME)) {

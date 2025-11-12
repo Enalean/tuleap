@@ -20,7 +20,6 @@
 
 namespace Tuleap\Dashboard\User;
 
-use HTTPRequest;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 class UserDashboardRouter
@@ -46,7 +45,7 @@ class UserDashboardRouter
      * Routes the request to the correct controller
      * @return void
      */
-    public function route(HTTPRequest $request)
+    public function route(\Tuleap\HTTPRequest $request)
     {
         if ($request->getCurrentUser()->isAnonymous()) {
             return;

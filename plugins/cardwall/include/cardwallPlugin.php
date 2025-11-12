@@ -352,7 +352,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $layout->addJavascriptAsset(new JavascriptAsset($cardwall_assets, 'cardwall.js'));
         }
 
-        if (HTTPRequest::instance()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
+        if (\Tuleap\HTTPRequest::instance()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
             $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         }
     }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
-use HTTPRequest;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\User\IGenerateMailConfirmationCode;
@@ -38,7 +37,7 @@ final class RegisterFormProcessor implements IProcessRegisterForm
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $mail_confirm_code = $this->mail_confirmation_code_generator->getConfirmationCode();
 

@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
-use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Dashboard\AssetsIncluder;
@@ -111,7 +110,7 @@ class UserDashboardController
         $this->assets_includer          = $assets_includer;
     }
 
-    public function display(HTTPRequest $request)
+    public function display(\Tuleap\HTTPRequest $request)
     {
         $current_user    = $request->getCurrentUser();
         $dashboard_id    = $request->get('dashboard_id');
@@ -168,7 +167,7 @@ class UserDashboardController
     /**
      * @return int|null
      */
-    public function createDashboard(HTTPRequest $request)
+    public function createDashboard(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -269,7 +268,7 @@ class UserDashboardController
         return false;
     }
 
-    public function deleteDashboard(HTTPRequest $request)
+    public function deleteDashboard(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -308,7 +307,7 @@ class UserDashboardController
         $GLOBALS['Response']->redirect('/my/?dashboard_id=' . urlencode($dashboard_id));
     }
 
-    public function editDashboard(HTTPRequest $request)
+    public function editDashboard(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -357,7 +356,7 @@ class UserDashboardController
         $this->redirectToDashboard($dashboard_id);
     }
 
-    public function deleteWidget(HTTPRequest $request)
+    public function deleteWidget(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -387,7 +386,7 @@ class UserDashboardController
         $this->redirectToDashboard($dashboard_id);
     }
 
-    public function minimizeWidget(HTTPRequest $request)
+    public function minimizeWidget(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -400,7 +399,7 @@ class UserDashboardController
         $this->redirectToDashboard($dashboard_id);
     }
 
-    public function maximizeWidget(HTTPRequest $request)
+    public function maximizeWidget(\Tuleap\HTTPRequest $request)
     {
         $this->csrf->check();
 

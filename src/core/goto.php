@@ -31,7 +31,7 @@ use Tuleap\Reference\ReferenceGetTooltipChainLegacy;
 use Tuleap\Reference\ReferenceGetTooltipChainOpenGraph;
 
 $reference_manager = ReferenceManager::instance();
-$request           = HTTPRequest::instance();
+$request           = \Tuleap\HTTPRequest::instance();
 $project_manager   = ProjectManager::instance();
 
 $project = null;

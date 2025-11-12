@@ -23,7 +23,6 @@ namespace Tuleap\Git\Repository\Settings;
 use Feedback;
 use GitRepoNotFoundException;
 use GitRepository;
-use HTTPRequest;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 
 abstract class SettingsController
@@ -41,7 +40,7 @@ abstract class SettingsController
     /**
      * @return GitRepository
      */
-    protected function getRepositoryUserCanAdministrate(HTTPRequest $request)
+    protected function getRepositoryUserCanAdministrate(\Tuleap\HTTPRequest $request)
     {
         try {
             return $this->repository_retriever->getRepositoryUserCanAdministrate($request);

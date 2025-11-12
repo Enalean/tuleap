@@ -596,7 +596,7 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             }
 
             // artifact permissions
-            $request                         = HTTPRequest::instance();
+            $request                         = \Tuleap\HTTPRequest::instance();
             $this->data_array['artifact_id'] = $artifact_id; // cheat
             $this->setPermissions($request->get('use_artifact_permissions_name'), $request->get('ugroups'));
 
@@ -1012,7 +1012,7 @@ class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $reference_manager->extractCrossRef($html, $this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());
         }
 
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         //for masschange look at the special case of changing the submitted_by param
         if ($masschange) {
             foreach ($_POST as $key => $val) {

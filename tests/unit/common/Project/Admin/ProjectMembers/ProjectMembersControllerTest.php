@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectMembers;
 
-use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
@@ -61,7 +60,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withId(110)
             ->withoutSiteAdministrator()
             ->build();
-        $request      = $this->createMock(HTTPRequest::class);
+        $request      = $this->createMock(\Tuleap\HTTPRequest::class);
         $request
             ->expects($this->once())
             ->method('getCurrentUser')
@@ -92,7 +91,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withId(110)
             ->withoutSiteAdministrator()
             ->build();
-        $request      = $this->createMock(HTTPRequest::class);
+        $request      = $this->createMock(\Tuleap\HTTPRequest::class);
         $request
             ->expects($this->once())
             ->method('getCurrentUser')

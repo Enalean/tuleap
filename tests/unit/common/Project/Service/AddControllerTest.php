@@ -64,7 +64,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('102')
             ->willReturn($project);
 
-        $request      = $this->createMock(\HTTPRequest::class);
+        $request      = $this->createMock(\Tuleap\HTTPRequest::class);
         $current_user = UserTestBuilder::buildWithDefaults();
         $request->method('getCurrentUser')->willReturn($current_user);
         $this->administrator_checker

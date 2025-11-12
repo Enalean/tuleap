@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap;
+
+use Codendi_Request;
+
 class HTTPRequest extends Codendi_Request
 {
     /**
@@ -66,7 +70,7 @@ class HTTPRequest extends Codendi_Request
     /**
      * The singleton method
      *
-     * @return HTTPRequest
+     * @return \Tuleap\HTTPRequest
      */
     public static function instance()
     {

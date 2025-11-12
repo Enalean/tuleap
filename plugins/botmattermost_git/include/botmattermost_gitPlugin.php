@@ -184,19 +184,19 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 
     public function botmattermost_bot_deleted(BotMattermostDeleted $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
+        $this->getController(\Tuleap\HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }
 
     #[Override]
     public function process(): void
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         if ($this->isAllowed($request->getProject()->getID())) {
             $this->getController($request)->process();
         }
     }
 
-    private function getController(HTTPRequest $request)
+    private function getController(\Tuleap\HTTPRequest $request)
     {
         $bot_factory = new BotFactory(new BotDao());
 

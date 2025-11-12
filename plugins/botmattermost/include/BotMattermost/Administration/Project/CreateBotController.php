@@ -24,7 +24,6 @@ namespace Tuleap\BotMattermost\Administration\Project;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Override;
 use Tuleap\BotMattermost\Bot\BotCreator;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
@@ -41,7 +40,7 @@ class CreateBotController implements DispatchableWithRequest
     }
 
     #[Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->existAndNonEmpty('project_id')) {
             $layout->addFeedback(Feedback::ERROR, 'System bots cannot be created this way.');

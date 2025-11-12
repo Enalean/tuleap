@@ -39,7 +39,7 @@ class Widget_ProjectDescription extends Widget // phpcs:ignore PSR1.Classes.Clas
     #[\Override]
     public function getContent(): string
     {
-        $request  = HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $pm       = ProjectManager::instance();
         $project  = $pm->getProject($group_id);

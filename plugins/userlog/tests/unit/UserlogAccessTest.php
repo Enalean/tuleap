@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Userlog;
 
-use HTTPRequest;
 use PFUser;
 use Project;
 
@@ -36,7 +35,7 @@ final class UserlogAccessTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = $this->createMock(Project::class);
         $user    = $this->createMock(PFUser::class);
 
-        $request = $this->createMock(HTTPRequest::class);
+        $request = $this->createMock(\Tuleap\HTTPRequest::class);
 
         $request->method('getProject')->willReturn($project);
         $request->method('getCurrentUser')->willReturn($user);

@@ -29,7 +29,6 @@ use Cardwall_OnTop_ConfigFactory;
 use Cardwall_SingleCardBuilder;
 use Cardwall_UserPreferences_UserPreferencesController;
 use Feedback;
-use HTTPRequest;
 use PlanningFactory;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -61,7 +60,7 @@ class CardwallLegacyController implements DispatchableWithRequest
      * @return void
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         switch ($request->get('action')) {
             case 'toggle_user_autostack_column':

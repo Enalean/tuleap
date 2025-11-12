@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Banner;
 
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
@@ -42,7 +41,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->addJavascriptAsset($this->ckeditor_assets);
         $layout->addJavascriptAsset($this->banner_assets);

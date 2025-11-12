@@ -71,7 +71,7 @@ class PluginsAdministrationViews extends Views
     public function display($view = '')
     {
         $renderer       = new AdminPageRenderer();
-        $request        = HTTPRequest::instance();
+        $request        = \Tuleap\HTTPRequest::instance();
         $plugin_factory = PluginFactory::instance();
 
         switch ($view) {

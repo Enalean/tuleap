@@ -854,7 +854,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * Process the artifact functions
      *
      * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
-     * @param \HTTPRequest $request The data from the user
+     * @param \Tuleap\HTTPRequest $request The data from the user
      * @param PFUser $current_user The current user
      *
      * @return void
@@ -1060,7 +1060,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         }
     }
 
-    private function checkIsAnAcceptableRequestForTrackerViewArtifactManipulation(\HTTPRequest $request): void
+    private function checkIsAnAcceptableRequestForTrackerViewArtifactManipulation(\Tuleap\HTTPRequest $request): void
     {
         if (! $request->isPost()) {
             $GLOBALS['Response']->redirect($this->getUri());

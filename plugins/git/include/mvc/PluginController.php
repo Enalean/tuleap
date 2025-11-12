@@ -54,10 +54,10 @@ abstract class PluginController
      * @var bool
      */
     protected $default_page_rendering = true;
-    protected HTTPRequest $request;
+    protected \Tuleap\HTTPRequest $request;
     public PFUser $user;
 
-    public function __construct(UserManager $user_manager, HTTPRequest $request)
+    public function __construct(UserManager $user_manager, \Tuleap\HTTPRequest $request)
     {
         $this->user    = $user_manager->getCurrentUser();
         $this->request = $request;

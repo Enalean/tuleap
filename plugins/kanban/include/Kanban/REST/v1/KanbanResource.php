@@ -423,7 +423,7 @@ final class KanbanResource extends AuthenticatedResource
                 $this->node_js_client,
                 $this->permissions_serializer
             );
-            $kanban_sender->sendMessageStructure($kanban, 'kanban:edit', $user, \HTTPRequest::instance(), $label);
+            $kanban_sender->sendMessageStructure($kanban, 'kanban:edit', $user, \Tuleap\HTTPRequest::instance(), $label);
         }
 
         if ($is_promoted !== null) {
@@ -1194,7 +1194,7 @@ final class KanbanResource extends AuthenticatedResource
             $this->node_js_client,
             $this->permissions_serializer
         );
-        $kanban_sender->sendMessageStructure($kanban, 'kanban:delete', $user, \HTTPRequest::instance(), '');
+        $kanban_sender->sendMessageStructure($kanban, 'kanban:delete', $user, \Tuleap\HTTPRequest::instance(), '');
     }
 
     /**
@@ -1294,7 +1294,7 @@ final class KanbanResource extends AuthenticatedResource
             $kanban,
             'kanban_column:create',
             $current_user,
-            \HTTPRequest::instance(),
+            \Tuleap\HTTPRequest::instance(),
             $column_representation
         );
 
@@ -1352,7 +1352,7 @@ final class KanbanResource extends AuthenticatedResource
             $kanban,
             'kanban_column:move',
             $user,
-            \HTTPRequest::instance(),
+            \Tuleap\HTTPRequest::instance(),
             $column_ids
         );
     }

@@ -33,7 +33,7 @@ class Widget_ProjectImageViewer extends Widget_ImageViewer
 {
     public function __construct()
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
         parent::__construct(
             'projectimageviewer',
             $request->get('group_id'),

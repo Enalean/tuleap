@@ -45,7 +45,7 @@ class KanbanRealtimeStructureMessageSender
         Kanban $kanban,
         string $kanban_cmd,
         \PFUser $user,
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         mixed $data,
     ): void {
         if (! $request->getFromServer(self::HTTP_CLIENT_UUID)) {

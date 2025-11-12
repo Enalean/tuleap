@@ -21,7 +21,6 @@
 
 namespace Tuleap\GraphOnTrackersV5;
 
-use HTTPRequest;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
@@ -99,7 +98,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      * Fetch content of the renderer
      */
     #[\Override]
-    public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
+    public function fetch(array $matching_ids, \Tuleap\HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
     {
         $html = '';
         $this->initiateSession();
@@ -264,7 +263,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
     /**
      * Process the request
-     * @param HTTPRequest $request
+     * @param \Tuleap\HTTPRequest $request
      */
     #[\Override]
     public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)

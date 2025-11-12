@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Docman;
 
 use Docman_Error_PermissionDenied;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Valid_Text;
@@ -43,7 +42,7 @@ final class LegacySendMessageController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
         $func = $request->getValidated('func', new Valid_WhiteList('func', ['docman_access_request']));

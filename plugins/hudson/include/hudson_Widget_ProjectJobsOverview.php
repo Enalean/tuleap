@@ -44,7 +44,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget //phpcs:ign
         $this->setOwner($group_id, ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         $this->plugin = $plugin;
 
-        $request           = HTTPRequest::instance();
+        $request           = \Tuleap\HTTPRequest::instance();
         $this->group_id    = $request->get('group_id');
         $this->job_builder = $job_builder;
     }

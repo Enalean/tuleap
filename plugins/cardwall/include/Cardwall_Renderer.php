@@ -106,7 +106,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      */
     #[\Override]
-    public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
+    public function fetch(array $matching_ids, \Tuleap\HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
     {
         $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), ['sb']);
         $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->field, $used_sb);

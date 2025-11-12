@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
-use HTTPRequest;
 use PFUser;
 use Project;
 use Tuleap\Layout\BaseLayout;
@@ -51,7 +50,7 @@ final readonly class IndexController implements DispatchableWithRequest, Dispatc
      * @throws \Tuleap\Request\NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $title = $GLOBALS['Language']->getText('project_admin_servicebar', 'edit_s_bar');
 

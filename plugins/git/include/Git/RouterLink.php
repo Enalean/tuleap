@@ -20,8 +20,6 @@
 
 namespace Tuleap\Git;
 
-use HTTPRequest;
-
 /**
  * I am part of a Chain of Responsibility to route Git requests
  */
@@ -47,7 +45,7 @@ abstract class RouterLink
         return $next;
     }
 
-    public function process(HTTPRequest $request)
+    public function process(\Tuleap\HTTPRequest $request)
     {
         if ($this->next) {
             $this->next->process($request);

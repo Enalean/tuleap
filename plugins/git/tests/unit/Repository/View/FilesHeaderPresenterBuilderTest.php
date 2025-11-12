@@ -24,7 +24,6 @@ namespace Tuleap\Git\Repository\View;
 
 use Git_GitRepositoryUrlManager;
 use GitRepository;
-use HTTPRequest;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ForgeConfigSandbox;
@@ -42,7 +41,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
     use ForgeConfigSandbox;
 
     private FilesHeaderPresenterBuilder $builder;
-    private HTTPRequest $request;
+    private \Tuleap\HTTPRequest $request;
     private GitRepository&MockObject $repository;
     private CommitForCurrentTreeRetriever&MockObject $commit_retriever;
     private GitPHPProjectRetriever&MockObject $gitphp_project_retriever;
@@ -51,7 +50,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->request                  = new HTTPRequest();
+        $this->request                  = new \Tuleap\HTTPRequest();
         $this->repository               = $this->createMock(GitRepository::class);
         $this->gitphp_project           = $this->createMock(Project::class);
         $this->commit_retriever         = $this->createMock(CommitForCurrentTreeRetriever::class);
@@ -63,7 +62,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withId(42)->build();
         $this->request->setProject($project);
 
-        HTTPRequest::setInstance($this->request);
+        \Tuleap\HTTPRequest::setInstance($this->request);
 
         $url_manager = $this->createMock(Git_GitRepositoryUrlManager::class);
         $url_manager->method('getRepositoryBaseUrl');
@@ -78,7 +77,7 @@ final class FilesHeaderPresenterBuilderTest extends TestCase
     #[\Override]
     protected function tearDown(): void
     {
-        HTTPRequest::clearInstance();
+        \Tuleap\HTTPRequest::clearInstance();
     }
 
     public function testHeadNameIsFirstBranchName(): void

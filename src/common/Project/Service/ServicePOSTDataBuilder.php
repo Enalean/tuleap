@@ -36,7 +36,7 @@ class ServicePOSTDataBuilder
     /**
      * @throws InvalidServicePOSTDataException
      */
-    public function buildFromRequest(\HTTPRequest $request, Project $project, ?Service $service, BaseLayout $response): ServicePOSTData
+    public function buildFromRequest(\Tuleap\HTTPRequest $request, Project $project, ?Service $service, BaseLayout $response): ServicePOSTData
     {
         $service_id        = $request->getValidated('service_id', 'int', 0);
         $short_name        = $request->getValidated('short_name', 'string', '');
@@ -265,7 +265,7 @@ class ServicePOSTDataBuilder
         }
     }
 
-    private function getIsUsed(\HTTPRequest $request, string $short_name): bool
+    private function getIsUsed(\Tuleap\HTTPRequest $request, string $short_name): bool
     {
         if ($short_name === 'admin') {
             return true;

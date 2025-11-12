@@ -5,7 +5,7 @@
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/bookmarks.php';
 
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 
 $HTML->header(\Tuleap\Layout\HeaderConfiguration::fromTitle($Language->getText('bookmark_delete', 'title')));

@@ -254,11 +254,11 @@ class Tracker_DateReminderRenderer
     /**
      * Validate date field Id param used for tracker reminder.
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return int
      */
-    public function validateFieldId(HTTPRequest $request)
+    public function validateFieldId(\Tuleap\HTTPRequest $request)
     {
         $validFieldId = new Valid_UInt('reminder_field_date');
         $validFieldId->required();
@@ -273,11 +273,11 @@ class Tracker_DateReminderRenderer
     /**
      * Validate distance param used for tracker reminder.
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return int
      */
-    public function validateDistance(HTTPRequest $request)
+    public function validateDistance(\Tuleap\HTTPRequest $request)
     {
         $validDistance = new Valid_UInt('distance');
         $validDistance->required();
@@ -292,11 +292,11 @@ class Tracker_DateReminderRenderer
     /**
      * Validate notification type param used for tracker reminder.
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return int
      */
-    public function validateNotificationType(HTTPRequest $request)
+    public function validateNotificationType(\Tuleap\HTTPRequest $request)
     {
         $validNotificationType = new Valid_UInt('notif_type');
         $validNotificationType->required();
@@ -311,11 +311,11 @@ class Tracker_DateReminderRenderer
     /**
      * Validate date reminder status.
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return int
      */
-    public function validateStatus(HTTPRequest $request)
+    public function validateStatus(\Tuleap\HTTPRequest $request)
     {
         $validStatus = new Valid_UInt('notif_status');
         $validStatus->required();
@@ -330,11 +330,11 @@ class Tracker_DateReminderRenderer
     /**
      * Validate date reminder status.
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return int
      */
-    public function validateNotifyClosedArtifacts(HTTPRequest $request)
+    public function validateNotifyClosedArtifacts(\Tuleap\HTTPRequest $request)
     {
         $validStatus = new Valid_UInt('notif_closed_artifacts');
         $validStatus->required();
@@ -413,11 +413,11 @@ class Tracker_DateReminderRenderer
      * Scind the notified people for tracker reminder into dedicated arrays.
      * At least one list should be not empty
      *
-     * @param HTTPRequest $request HTTP request
+     * @param \Tuleap\HTTPRequest $request HTTP request
      *
      * @return Array
      */
-    public function scindReminderNotifiedPeople(HTTPRequest $request)
+    public function scindReminderNotifiedPeople(\Tuleap\HTTPRequest $request)
     {
         $vArray   = new Valid_Array('reminder_notified');
         $notified = $roles = $ugroups = [];
@@ -528,7 +528,7 @@ class Tracker_DateReminderRenderer
         return $output;
     }
 
-    public function displayDateReminders(HTTPRequest $request, CSRFSynchronizerToken $csrf_token): void
+    public function displayDateReminders(\Tuleap\HTTPRequest $request, CSRFSynchronizerToken $csrf_token): void
     {
         $output  = '<h2 class="almost-tlp-title">' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_title') . '</h2>';
         $output .= '<p>' . dgettext('tuleap-tracker', 'Please note that date reminders does not take tracker notifications settings into account and will always be sent even if notifications are disabled.') . '</p>';

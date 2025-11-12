@@ -41,7 +41,7 @@ $em = EventManager::instance();
 $_cVar = [];
 // Raw variables
 $_rVar   = [];
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $_rVar['form_loginname'] = null;
 if ($request->valid(new Valid_String('form_loginname'))) {

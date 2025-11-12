@@ -110,7 +110,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 

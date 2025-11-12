@@ -90,7 +90,7 @@ class Controller
         $this->session_storage             =& $session_storage;
     }
 
-    public function login(\HTTPRequest $request, $return_to, $login_time)
+    public function login(\Tuleap\HTTPRequest $request, $return_to, $login_time)
     {
         require_once __DIR__ . '/../../../../../src/www/include/account.php';
         $this->checkIfUserAlreadyLogged($return_to);

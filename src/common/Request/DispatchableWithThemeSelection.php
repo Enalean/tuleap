@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use HTTPRequest;
-
 /**
  * This is only needed when migrating only some parts of a controller dealing with legacy code
  * Favor DispatchableWithBurningParrot for all the other use cases
  */
 interface DispatchableWithThemeSelection
 {
-    public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool;
+    public function isInABurningParrotPage(\Tuleap\HTTPRequest $request, array $variables): bool;
 }

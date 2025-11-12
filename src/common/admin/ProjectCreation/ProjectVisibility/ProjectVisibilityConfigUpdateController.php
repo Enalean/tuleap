@@ -23,7 +23,6 @@ namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 use CSRFSynchronizerToken;
 use Feedback;
 use ForgeAccess_ForgePropertiesManager;
-use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -41,7 +40,7 @@ class ProjectVisibilityConfigUpdateController implements DispatchableWithRequest
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();

@@ -21,7 +21,6 @@
 namespace Tuleap\Project\Service;
 
 use Feedback;
-use HTTPRequest;
 use Project;
 use ProjectManager;
 use Tuleap\Layout\BaseLayout;
@@ -84,7 +83,7 @@ class AddController implements DispatchableWithRequest
      * @throws \Tuleap\Request\NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);

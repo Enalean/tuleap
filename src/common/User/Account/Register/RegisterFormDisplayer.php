@@ -42,7 +42,7 @@ final class RegisterFormDisplayer implements IDisplayRegisterForm
 
     #[\Override]
     public function display(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         RegisterFormContext $context,
     ): void {
@@ -55,7 +55,7 @@ final class RegisterFormDisplayer implements IDisplayRegisterForm
 
     #[\Override]
     public function displayWithPossibleIssue(
-        \HTTPRequest $request,
+        \Tuleap\HTTPRequest $request,
         BaseLayout $layout,
         RegisterFormContext $context,
         ?RegisterFormValidationIssue $issue,

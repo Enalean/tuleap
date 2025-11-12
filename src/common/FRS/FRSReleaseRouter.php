@@ -22,7 +22,6 @@ namespace Tuleap\FRS;
 
 use FRSPackageFactory;
 use FRSReleaseFactory;
-use HTTPRequest;
 use PFUser;
 use Project;
 
@@ -47,7 +46,7 @@ class FRSReleaseRouter
         $this->package_factory    = $package_factory;
     }
 
-    public function route(HTTPRequest $request, Project $project, PFUser $user)
+    public function route(\Tuleap\HTTPRequest $request, Project $project, PFUser $user)
     {
         if (! $this->package_factory->userCanAdmin($user, $project->getGroupId())) {
             exit_permission_denied();

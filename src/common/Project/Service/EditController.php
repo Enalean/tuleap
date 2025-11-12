@@ -22,7 +22,6 @@ namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use HTTPRequest;
 use Project;
 use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -67,7 +66,7 @@ class EditController implements DispatchableWithRequest
      * @throws \Tuleap\Request\NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         try {
             $project = $this->project_retriever->getValidProjectById((int) $variables['project_id']);

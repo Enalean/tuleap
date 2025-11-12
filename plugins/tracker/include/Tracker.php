@@ -30,7 +30,6 @@ use EventManager;
 use Exception;
 use Feedback;
 use ForgeConfig;
-use HTTPRequest;
 use InvalidArgumentException;
 use PFUser;
 use Project;
@@ -1161,7 +1160,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return;
     }
 
-    private function checkIsAnAcceptableRequestForTrackerViewArtifactManipulation(HTTPRequest $request): void
+    private function checkIsAnAcceptableRequestForTrackerViewArtifactManipulation(\Tuleap\HTTPRequest $request): void
     {
         if (! $request->isPost()) {
             $GLOBALS['Response']->redirect($this->getUri());
@@ -1826,7 +1825,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayFooter($layout);
     }
 
-    protected function editOptions(HTTPRequest $request): void
+    protected function editOptions(\Tuleap\HTTPRequest $request): void
     {
         $previous_shortname   = $this->getItemName();
         $previous_public_name = $this->getName();

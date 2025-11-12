@@ -39,7 +39,7 @@ final class ExternalLinkRedirector
     private $project;
 
     /**
-     * @var \HTTPRequest
+     * @var \Tuleap\HTTPRequest
      */
     private $request;
 
@@ -56,7 +56,7 @@ final class ExternalLinkRedirector
      */
     private $root_folder_id;
 
-    public function __construct(\PFUser $user, \HTTPRequest $request, int $folder_id, int $root_folder_id)
+    public function __construct(\PFUser $user, \Tuleap\HTTPRequest $request, int $folder_id, int $root_folder_id)
     {
         $this->user           = $user;
         $this->project        = $request->getProject();

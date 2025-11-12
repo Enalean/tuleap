@@ -50,7 +50,7 @@ class GetAdditionalScrumAdminSection
         return $this->controllers;
     }
 
-    public function notifyAdditionalSectionsControllers(\HTTPRequest $request): void
+    public function notifyAdditionalSectionsControllers(\Tuleap\HTTPRequest $request): void
     {
         foreach ($this->controllers as $controller) {
             $controller->onSubmitCallback($request);

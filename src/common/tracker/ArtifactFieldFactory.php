@@ -187,7 +187,7 @@ class ArtifactFieldFactory
      */
     public function extractFieldList($post_method = true, $prefix = null)
     {
-        $request = HTTPRequest::instance();
+        $request = \Tuleap\HTTPRequest::instance();
 
         $vfl = [];
         if ($post_method) {

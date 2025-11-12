@@ -207,7 +207,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             $frs_breadcrumb->setSubItems($sub_items);
         }
 
-        $pv     = (int) HTTPRequest::instance()->get('pv');
+        $pv     = (int) \Tuleap\HTTPRequest::instance()->get('pv');
         $params = \Tuleap\Layout\HeaderConfigurationBuilder::get($title)
             ->inProject($project, 'file')
             ->withPrinterVersion($pv)

@@ -31,7 +31,7 @@ class Git_HTTP_CommandGitolite3 extends Git_HTTP_Command
         $this->env['REMOTE_USER']      = $user->getUserName();
         $this->env['GIT_HTTP_BACKEND'] = $command->getCommand();
         $this->env['HOME']             = $gitolite_home;
-        $this->env['REMOTE_ADDR']      = HTTPRequest::instance()->getIPAddress();
+        $this->env['REMOTE_ADDR']      = \Tuleap\HTTPRequest::instance()->getIPAddress();
         $this->env['TERM']             = 'linux';
         $this->appendToEnv('REQUEST_URI');
         $this->env['REMOTE_PORT'] = empty($_SERVER['REMOTE_PORT']) ? 'UNKNOWN' : $_SERVER['REMOTE_PORT'];

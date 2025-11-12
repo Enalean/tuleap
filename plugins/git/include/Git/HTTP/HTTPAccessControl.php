@@ -168,7 +168,7 @@ class HTTPAccessControl
             $user = $this->access_key_authenticator->getUser(
                 $_SERVER['PHP_AUTH_USER'],
                 new ConcealedString($_SERVER['PHP_AUTH_PW']),
-                \HTTPRequest::instance()->getIPAddress()
+                \Tuleap\HTTPRequest::instance()->getIPAddress()
             );
         } catch (HTTPBasicAuthUserAccessKeyMisusageException $ex) {
             $this->logger->debug('LOGIN ERROR ' . $exception->getMessage());

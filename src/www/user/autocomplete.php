@@ -28,7 +28,7 @@ use Tuleap\User\UserAutocompletePostSearchEvent;
 require_once __DIR__ . '/../include/pre.php';
 
 // Input treatment
-$request = HTTPRequest::instance();
+$request = \Tuleap\HTTPRequest::instance();
 
 $vUserName = new Valid_String('name');
 $vUserName->required();

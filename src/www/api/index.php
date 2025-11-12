@@ -39,7 +39,7 @@ $response        = $cors_middleware->process($minimal_request, $request_handler)
 
 $request_instrumentation = new RequestInstrumentation(Prometheus::instance(), BackendLogger::getDefaultLogger());
 
-$http_request = HTTPRequest::instance();
+$http_request = \Tuleap\HTTPRequest::instance();
 try {
     $gate_keeper = new GateKeeper();
     $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser());

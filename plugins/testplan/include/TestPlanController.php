@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use AgileDashboardPlugin;
-use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BaseLayout;
@@ -91,7 +90,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('testplan');
 

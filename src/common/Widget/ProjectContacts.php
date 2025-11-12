@@ -42,7 +42,7 @@ class ProjectContacts extends \Widget
     #[\Override]
     public function getContent(): string
     {
-        $request  = \HTTPRequest::instance();
+        $request  = \Tuleap\HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $pm       = \ProjectManager::instance();
         $project  = $pm->getProject($group_id);

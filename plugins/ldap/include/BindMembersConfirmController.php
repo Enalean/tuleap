@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-use HTTPRequest;
 use LDAP_GroupManager;
 use LDAP_ProjectGroupManager;
 use Tuleap\Layout\BaseLayout;
@@ -71,7 +70,7 @@ class BindMembersConfirmController implements DispatchableWithRequest
      * @throws NotFoundException
      */
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         // Import very long user group may takes very long time.
         ini_set('max_execution_time', '0');

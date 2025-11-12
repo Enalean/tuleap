@@ -20,7 +20,6 @@
 
 namespace Tuleap\GitLFS\Lock\Controller;
 
-use HTTPRequest;
 use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
 use Tuleap\GitLFS\HTTP\UserRetriever;
 use Tuleap\GitLFS\Lock\LockDestructionNotAuthorizedException;
@@ -96,7 +95,7 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
     }
 
     #[\Override]
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
 
