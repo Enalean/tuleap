@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
+use Override;
 use Tuleap\Git\Webhook\WebhookSettingsPresenter;
 use Tuleap\Git\Webhook\CreateWebhookButtonPresenter;
 use Tuleap\Git\Webhook\GenericWebhookPresenter;
@@ -35,6 +36,8 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use TemplateRendererFactory;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 
 class Hooks extends Pane
 {
@@ -77,7 +80,7 @@ class Hooks extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
-    #[\Override]
+    #[Override]
     public function getIdentifier()
     {
         return self::ID;
@@ -86,7 +89,7 @@ class Hooks extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
-    #[\Override]
+    #[Override]
     public function getTitle()
     {
         return dgettext('tuleap-git', 'Webhooks');
@@ -95,7 +98,7 @@ class Hooks extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
-    #[\Override]
+    #[Override]
     public function getContent()
     {
         $description            = dgettext('tuleap-git', 'You can define several generic webhooks.');
@@ -123,7 +126,7 @@ class Hooks extends Pane
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/settings');
 
-        return $renderer->renderToString(
+        $html = $renderer->renderToString(
             'hooks',
             new WebhookSettingsPresenter(
                 $csrf,
@@ -136,6 +139,17 @@ class Hooks extends Pane
                 new EditWebhookModalPresenter($this->repository)
             )
         ) . implode('', $additional_html_bits);
+
+
+        $assets = new IncludeViteAssets(
+            __DIR__ . '/../../../../scripts/repository-admin-webhooks/frontend-assets',
+            '/assets/git/repository-admin-webhooks'
+        );
+        assert($GLOBALS['HTML'] instanceof \Tuleap\Layout\BaseLayout);
+        $GLOBALS['HTML']->includeFooterJavascriptFile(
+            new JavascriptViteAsset($assets, 'src/index.ts')->getFileURL()
+        );
+        return $html;
     }
 
     private function addCustomWebhooks(array &$sections, array &$create_buttons, CSRFSynchronizerToken $csrf)
@@ -180,15 +194,15 @@ class Hooks extends Pane
 
     private function formatStatus($status)
     {
-        $classname = 'text-success';
-        $icon      = 'fa fa-check-circle';
+        $classname = 'tlp-text-success';
+        $icon      = 'fa-solid fa-check-circle';
         if ($status[0] !== '2') {
-            $classname = 'text-warning';
+            $classname = 'tlp-text-warning';
             $icon      = 'fa-solid fa-triangle-exclamation';
         }
 
         return '<span class="' . $classname . '" title="' . $this->hp->purify($status) . '">
-            <i class="' . $icon . '"></i> ' . $this->hp->purify($status) . '
+            <i class="' . $icon . '" aria-hidden="true"></i> ' . $this->hp->purify($status) . '
             </span>';
     }
 }

@@ -47,6 +47,7 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         'pullrequest', // should belong to pullrequest plugin, but it is a temporary situation, no need to fire a hook for that
         'delete',
         'perms',
+        'hooks',
     ];
 
     /**

@@ -1,26 +1,27 @@
-<div class="modal-header">
-    <a role="button" class="close" data-dismiss="modal">
-        <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-    </a>
-    <h3 id="modal-create-webhook-title">{{ title }}</h3>
+<div class="tlp-modal-header">
+    <h1 class="tlp-modal-title" id="modal-create-webhook-title">{{ title }}</h1>
+    <button role="button" class="tlp-modal-close" data-dismiss="modal" aria-label="{{# dgettext }} tuleap-git | Close {{/ dgettext }}">
+        <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+    </button>
 </div>
+
 <form method="post" action="/plugins/git/?group_id={{ project_id }}">
-    <input type="hidden" name="id" value="{{ id }}" />
-    <input type="hidden" name="repo_id" value="{{ repository_id }}" />
-    <input type="hidden" name="action" value="{{ action }}" />
-    <input type="hidden" name="challenge" value="{{ csrf_token }}" />
-
-    <div class="modal-body">
-
+    <input type="hidden" name="id" value="{{ id }}"/>
+    <input type="hidden" name="repo_id" value="{{ repository_id }}"/>
+    <input type="hidden" name="action" value="{{ action }}"/>
+    <input type="hidden" name="challenge" value="{{ csrf_token }}"/>
+    <div class="tlp-modal-body">
         <p>{{ desc }}</p>
-        <p>
-            <label for="webhook-url">{{ label }} <i class="fa-solid fa-asterisk"></i></label>
-            <input type="url" id="webhook-url" name="url" value="{{ webhook_url }}" placeholder="https://example.com/webhook" required pattern="https?://.+" />
-        </p>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="webhook-url">{{ label }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+            <input type="url" id="webhook-url" name="url" class="tlp-input" value="{{ webhook_url }}"
+                   placeholder="https://example.com/webhook" required pattern="https?://.+"/>
+        </div>
     </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_cancel }}</button>
-        <input type="submit" class="btn btn-primary" value="{{ save }}">
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal"
+                aria-hidden="true">{{ btn_cancel }}</button>
+        <input type="submit" class="tlp-button-primary tlp-modal-action" value="{{ save }}">
     </div>
 </form>

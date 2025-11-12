@@ -1,117 +1,119 @@
-<div class="git_webhook">
-    <h2>{{ title }}</h2>
+{{# create_buttons }}
+    {{# has_reached_the_limit }}
+        <div class="tlp-alert-warning">
+            {{ only_one }}
+        </div>
+    {{/ has_reached_the_limit }}
+{{/ create_buttons }}
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                {{ title }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+                <p>{{ description }}</p>
+            <div class="tlp-form-element">
+                {{# create_buttons }}
+                    <button
+                        id="add-generic-webhook-button"
+                        type="button"
+                        class="tlp-button-primary"
+                        {{# has_reached_the_limit }}
+                        disabled
+                        {{/ has_reached_the_limit }}
+                        data-target-modal-id="{{ target_modal }}"
+                    >
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ label }}
+                    </button>
+                {{/ create_buttons }}
+            </div>
+                {{# additional_description }}
+                    <p class="tlp-text-info">{{ . }}</p>
+                {{/ additional_description }}
 
-    <p class="hooks-desc">{{ description }}</p>
-
-    {{# create_buttons }}
-        {{# has_reached_the_limit }}
-        <span class="only-one-webhook"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title="{{ only_one }}"
-        >
-        {{/ has_reached_the_limit }}
-
-        <button
-            type="button"
-            class="btn btn-primary create-webhook-btn"
-            {{# has_reached_the_limit }}
-                disabled
-            {{/ has_reached_the_limit }}
-            {{^ has_reached_the_limit }}
-                data-toggle="modal"
-                data-target="#{{ target_modal }}"
-            {{/ has_reached_the_limit }}
-        >
-            <i class="fa-solid fa-plus"></i> {{ label }}
-        </button>
-
-        {{# has_reached_the_limit }}
-        </span>
-        {{/ has_reached_the_limit }}
-    {{/ create_buttons }}
-
-    {{# additional_description }}
-        <p class="hooks-desc alert alert-info">{{ . }}</p>
-    {{/ additional_description }}
-
-    <table class="table hooks-list">
-        <thead>
-            <tr>
-                <th>{{ url }}</th>
-                <th>{{ last_push }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        {{# sections }}
-            <tbody>
-                <tr>
-                    <td class="table-cell-section" colspan="3">
-                        {{ label }}
-                    </td>
-                </tr>
-            </tbody>
-            <tbody>
-                {{# webhooks }}
-                    {{# isSimple }}
+                <table class="tlp-table">
+                    <thead>
                     <tr>
-                        <td colspan="3">{{ webhook_url }}</td>
+                        <th>{{ url }}</th>
+                        <th>{{ last_push }}</th>
+                        <th></th>
                     </tr>
-                    {{/ isSimple }}
-                    {{^ isSimple }}
-                    <tr>
-                        <td>{{ webhook_url }}</td>
-                        <td class="last-push">{{{ purified_last_push_info }}}</td>
-                        <td class="action-buttons">
-                            <a role="button" data-toggle="modal" href="#modal-logs-{{ id }}">
-                                <i class="fa fa-list"></i> {{ logs }}
-                            </a>
-                            <a role="button" data-toggle="modal" href="#modal-edit-{{ id }}">
-                                <i class="far fa-edit"></i> {{ edit_hook }}
-                            </a>
-                            <a href="#"
-                                class="remove-hook"
-                                data-toggle="popover"
-                                data-trigger="click"
-                                data-placement="left"
-                                data-html="true"
-                                data-popover-id="remove-{{ id }}-popover"
-                            >
-                                <i class="far fa-trash-alt"></i> {{ remove }}
-                            </a>
+                    </thead>
+                    {{# sections }}
+                        <tbody>
+                        <tr>
+                            <td class="tlp-table-cell-section" colspan="7">
+                                {{ label }}
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        {{# webhooks }}
+                            {{# isSimple }}
+                                <tr>
+                                    <td colspan="3">{{ webhook_url }}</td>
+                                </tr>
+                            {{/ isSimple }}
+                            {{^ isSimple }}
+                                <tr>
+                                    <td>{{ webhook_url }}</td>
+                                    <td>{{{ purified_last_push_info }}}</td>
+                                    <td class="tlp-table-cell-actions">
+                                        <a id="modal-logs" role="button" data-target-modal-id="modal-logs-{{ id }}"
+                                           class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                                            <i class="tlp-button-icon fa-solid fa-list"
+                                               aria-hidden="true"></i> {{ logs }}
+                                        </a>
+                                        <a id="modal-edit" role="button" data-toggle="modal"
+                                           data-target-modal-id="modal-edit-{{ id }}"
+                                           class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                                            <i class="tlp-button-icon fa-solid fa-fw fa-edit"
+                                               aria-hidden="true"></i> {{ edit_hook }}
+                                        </a>
+                                        <a href="#"
+                                           class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline modal-delete"
+                                           data-target-modal-id="remove-{{ id }}-modal"
+                                        >
+                                            <i class="tlp-button-icon fa-regular fa-trash-can"
+                                               aria-hidden="true"></i> {{ remove }}
+                                        </a>
 
-                            {{> modal-logs }}
-                            {{> popover-remove-hook }}
-                        </td>
-                    </tr>
-                    {{/ isSimple }}
-                {{/ webhooks }}
-                {{# external_information }}
-                    <tr>
-                        <td colspan="3">{{ title }}</td>
-                    </tr>
-                {{/ external_information }}
-            </tbody>
-        {{/ sections }}
-        {{^ has_sections }}
-            <tbody>
-                <tr>
-                    <td class="table-cell-empty" colspan="3">
-                        {{ empty_hooks }}
-                    </td>
-                </tr>
-            </tbody>
-        {{/ has_sections }}
-    </table>
-</div>
+                                        {{> modal-logs }}
+                                        {{> modal-remove-hook }}
+                                    </td>
+                                </tr>
+                            {{/ isSimple }}
+                        {{/ webhooks }}
+                        {{# external_information }}
+                            <tr>
+                                <td colspan="3">{{ title }}</td>
+                            </tr>
+                        {{/ external_information }}
+                        </tbody>
+                    {{/ sections }}
+                    {{^ has_sections }}
+                        <tbody>
+                        <tr>
+                            <td class="tlp-table-cell-empty" colspan="3">
+                                {{ empty_hooks }}
+                            </td>
+                        </tr>
+                        </tbody>
+                    {{/ has_sections }}
+                </table>
+        </section>
+    </div>
+</section>
+
 
 {{# sections }}
     {{# webhooks }}
         {{# use_default_edit_modal }}
             {{# edit_modal }}
                 <div id="modal-edit-{{ id }}"
-                    class="modal hide fade modal-webhook"
-                    tabindex="-1"
+                    class="tlp-modal"
                     role="dialog"
                     aria-labelledby="modal-webhook-title"
                     aria-hidden="true"
@@ -125,8 +127,7 @@
 
 {{# create_modal }}
     <div id="modal-create-webhook"
-        class="modal hide fade modal-webhook"
-        tabindex="-1"
+        class="tlp-modal"
         role="dialog"
         aria-labelledby="modal-webhook-title"
         aria-hidden="true"
