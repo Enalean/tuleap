@@ -2250,9 +2250,6 @@ msgstr "Delegação de permissões"
 msgid "Permissions delegations have been successfully updated."
 msgstr "As delegações de permissões foram atualizadas com sucesso."
 
-msgid "Permissions for deprecated services"
-msgstr "Permissões para serviços descontinuados"
-
 msgid "Permissions per group"
 msgstr "Permissões por grupo"
 

@@ -2201,9 +2201,6 @@ msgstr "권한 위임"
 msgid "Permissions delegations have been successfully updated."
 msgstr "권한 위임이 성공적으로 업데이트되었습니다."
 
-msgid "Permissions for deprecated services"
-msgstr "사용되지 않는 서비스에 대한 권한"
-
 msgid "Permissions per group"
 msgstr "그룹별 권한"
 

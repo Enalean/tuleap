@@ -44,17 +44,6 @@ class NavigationPermissionsDropdownPresenterBuilder
             )
         );
 
-        if ($project->usesTracker() || $project->usesSVN()) {
-            $permission_links[] = new NavigationDropdownItemPresenter(
-                _('Permissions for deprecated services'),
-                '/project/admin/userperms.php?' . http_build_query(
-                    [
-                        'group_id' => $project->getID(),
-                    ]
-                )
-            );
-        }
-
         $permission_links[] = new NavigationDropdownItemPresenter(
             _('Permission Request'),
             '/project/admin/permission_request.php?' . http_build_query(
