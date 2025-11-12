@@ -127,9 +127,9 @@ final class DocmanItemsResource extends AuthenticatedResource
             return $item->accept(
                 $representation_visitor,
                 [
-                    'current_user' => $items_request->getUser(),
+                    'current_user'       => $items_request->getUser(),
                     'is_a_direct_access' => true,
-                    'with_size' => $with_size,
+                    'with_size'          => $with_size,
                 ]
             );
         } catch (UnknownMetadataException $exception) {
@@ -146,8 +146,8 @@ final class DocmanItemsResource extends AuthenticatedResource
      * @url    GET {id}/docman_items
      * @access hybrid
      *
-     * @param int $id     Id of the folder
-     * @param int $limit  Number of elements displayed {@from path}{@min 0}{@max 50}
+     * @param int $id Id of the folder
+     * @param int $limit Number of elements displayed {@from path}{@min 0}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return ItemRepresentation[]
@@ -210,8 +210,8 @@ final class DocmanItemsResource extends AuthenticatedResource
      * @url    GET {id}/parents
      * @access hybrid
      *
-     * @param int $id     Id of the item
-     * @param int $limit  Number of elements displayed {@from path}{@min 0}{@max 50}
+     * @param int $id Id of the item
+     * @param int $limit Number of elements displayed {@from path}{@min 0}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return ItemRepresentation[]
@@ -259,8 +259,8 @@ final class DocmanItemsResource extends AuthenticatedResource
      * @url    GET {id}/logs
      * @access hybrid
      *
-     * @param int $id     Id of the item
-     * @param int $limit  Number of elements displayed {@from path}{@min 1}{@max 50}
+     * @param int $id Id of the item
+     * @param int $limit Number of elements displayed {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return LogEntryRepresentation[]
@@ -295,7 +295,7 @@ final class DocmanItemsResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $page->total, self::MAX_LIMIT);
 
         return array_map(
-            static fn (LogEntry $entry): LogEntryRepresentation => LogEntryRepresentation::fromEntry($entry, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())),
+            static fn(LogEntry $entry): LogEntryRepresentation => LogEntryRepresentation::fromEntry($entry, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())),
             $page->entries,
         );
     }
@@ -337,12 +337,13 @@ final class DocmanItemsResource extends AuthenticatedResource
         $factories_factory        = new Docman_ApprovalTableFactoriesFactory();
         $approval_table_retriever = new ApprovalTableRetriever($factories_factory, new Docman_VersionFactory());
         $user_manager             = UserManager::instance();
+        $provide_user_avatar_url  = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
 
         $approval_tables = $approval_table_retriever->retrieveAllApprovalTables($item, $limit, $offset);
 
         Header::sendPaginationHeaders($limit, $offset, $approval_table_retriever->getCountOfApprovalTable($item), self::MAX_LIMIT);
         return array_map(
-            function (Docman_ApprovalTable $table) use ($item, $user_manager, $factories_factory): ItemApprovalTableRepresentation {
+            function (Docman_ApprovalTable $table) use ($item, $user_manager, $factories_factory, $provide_user_avatar_url): ItemApprovalTableRepresentation {
                 $owner = $user_manager->getUserById((int) $table->getOwner());
                 if ($owner === null) {
                     $this->logger->error('An approval table has a non-existing user as owner', [
@@ -351,18 +352,82 @@ final class DocmanItemsResource extends AuthenticatedResource
                     ]);
                     throw new RestException(404);
                 }
+
                 return ItemApprovalTableRepresentation::build(
                     $item,
                     $table,
                     MinimalUserRepresentation::build(
                         $owner,
-                        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                        $provide_user_avatar_url,
                     ),
                     new ApprovalTableStateMapper(),
                     $factories_factory,
+                    $user_manager,
+                    $provide_user_avatar_url,
                 );
             },
             $approval_tables,
+        );
+    }
+
+    /**
+     * @url OPTIONS {id}/approval_table/{version}
+     */
+    public function optionsApprovalTableVersion(int $id, int $version): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get specific item approval table
+     *
+     * @url    GET {id}/approval_table/{version}
+     * @access hybrid
+     *
+     * @param int $id ID of the item
+     * @param int $version Version number of the table
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 404
+     */
+    public function getApprovalTableVersion(int $id, int $version): ItemApprovalTableRepresentation
+    {
+        $this->checkAccess();
+        Header::allowOptionsGet();
+
+        $item = $this->retrieveItem($id);
+
+        $factories_factory        = new Docman_ApprovalTableFactoriesFactory();
+        $approval_table_retriever = new ApprovalTableRetriever($factories_factory, new Docman_VersionFactory());
+        $user_manager             = UserManager::instance();
+        $provide_user_avatar_url  = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+
+        $table = $approval_table_retriever->retrieveSpecificTable($item, $version);
+        if ($table === null) {
+            throw new I18NRestException(404, dgettext('tuleap-docman', 'Table does not exist'));
+        }
+        $owner = $user_manager->getUserById((int) $table->getOwner());
+        if ($owner === null) {
+            $this->logger->error('An approval table has a non-existing user as owner', [
+                'table' => $table->getId(),
+                'user'  => (int) $table->getOwner(),
+            ]);
+            throw new RestException(404);
+        }
+
+        return ItemApprovalTableRepresentation::build(
+            $item,
+            $table,
+            MinimalUserRepresentation::build(
+                $owner,
+                $provide_user_avatar_url,
+            ),
+            new ApprovalTableStateMapper(),
+            $factories_factory,
+            $user_manager,
+            $provide_user_avatar_url,
         );
     }
 

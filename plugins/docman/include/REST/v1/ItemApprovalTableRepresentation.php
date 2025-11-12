@@ -22,13 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_ApprovalReviewer;
 use Docman_ApprovalTable;
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableVersionned;
 use Docman_Item;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
+use Tuleap\User\RetrieveUserById;
 
 /**
  * @psalm-immutable
@@ -45,6 +48,7 @@ final readonly class ItemApprovalTableRepresentation
         public string $notification_type,
         public bool $is_closed,
         public string $description,
+        public array $reviewers,
     ) {
     }
 
@@ -54,6 +58,8 @@ final readonly class ItemApprovalTableRepresentation
         MinimalUserRepresentation $table_owner,
         ApprovalTableStateMapper $status_mapper,
         Docman_ApprovalTableFactoriesFactory $factory,
+        RetrieveUserById $user_manager,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         return new self(
             JsonCast::toInt($approval_table->getId()),
@@ -65,6 +71,15 @@ final readonly class ItemApprovalTableRepresentation
             $factory->getFromItem($item)?->getNotificationTypeName($approval_table->getNotification()) ?? '',
             $approval_table->isClosed(),
             $approval_table->getDescription() ?? '',
+            array_map(
+                static fn(Docman_ApprovalReviewer $reviewer) => ItemApprovalTableReviewerRepresentation::build(
+                    $reviewer,
+                    $status_mapper,
+                    $user_manager,
+                    $provide_user_avatar_url,
+                ),
+                $approval_table->getReviewerArray(),
+            ),
         );
     }
 }

@@ -24,7 +24,10 @@ namespace Tuleap\Docman\ApprovalTable;
 
 use Docman_ApprovalTable;
 use Docman_ApprovalTableFactoriesFactory;
+use Docman_ApprovalTableFileFactory;
+use Docman_ApprovalTableLinkFactory;
 use Docman_ApprovalTableVersionnedFactory;
+use Docman_ApprovalTableWikiFactory;
 use Docman_Item;
 
 class ApprovalTableRetriever
@@ -114,5 +117,16 @@ class ApprovalTableRetriever
         }
 
         return $item_factory->getTable(false) !== null ? 1 : 0;
+    }
+
+    public function retrieveSpecificTable(Docman_Item $item, int $version): ?Docman_ApprovalTable
+    {
+        $item_factory = $this->approval_table_factory->getFromItem($item, $version);
+        return match (true) {
+            $item_factory instanceof Docman_ApprovalTableLinkFactory,
+            $item_factory instanceof Docman_ApprovalTableFileFactory => $item_factory->getTableFromVersion($item_factory->itemVersion),
+            $item_factory instanceof Docman_ApprovalTableWikiFactory => $item_factory->getTableFromVersion($item->getId(), $item_factory->wikiVersionId),
+            default                                                  => $item_factory?->getTable(),
+        };
     }
 }

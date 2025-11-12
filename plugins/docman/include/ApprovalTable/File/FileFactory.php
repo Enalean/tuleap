@@ -29,9 +29,9 @@
  * proposed with an approval table. However, an approval owner can decide to
  * delete one table (attached to a version).
  */
-class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFactory
+class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    public $itemVersion;
+    public ?Docman_Version $itemVersion;
 
     public function __construct($item, $versionNumber = null)
     {
@@ -75,7 +75,7 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
      * @return int new table id
      */
     #[\Override]
-    public function _createTable($table)
+    public function _createTable($table) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->_getDao()->createTable(
             'version_id',
@@ -89,14 +89,14 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
     }
 
     #[\Override]
-    protected function _updateTableWithLastId($dstTable)
+    protected function _updateTableWithLastId($dstTable) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $currentVersion = $this->item->getCurrentVersion();
         $dstTable->setVersionId($currentVersion->getId());
     }
 
     #[\Override]
-    public function _getTable()
+    public function _getTable() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->getTableFromVersion($this->itemVersion);
     }
@@ -111,6 +111,7 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
                 $row   = $dar->current();
                 $table = $this->createTableFromRow($row);
                 $table->setVersionNumber($version->getNumber());
+                $this->_getReviewerFactory($table, $this->item)->appendReviewerList();
             }
         }
         return $table;
@@ -127,12 +128,12 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
     public function userAccessedSinceLastUpdate($user)
     {
         $log = new Docman_Log();
-        return $log->userAccessedSince($user->getId(), $this->item->getId(), $this->itemVersion->getDate());
+        return $log->userAccessedSince($user->getId(), $this->item->getId(), $this->itemVersion?->getDate());
     }
 
     // Class accessor
     #[\Override]
-    public function _getDao()
+    public function _getDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_ApprovalTableFileDao(CodendiDataAccess::instance());
     }

@@ -26,10 +26,9 @@
  *
  * The code follow the exact same patterns (and data structure than File)
  */
-class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFactory
+class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
-    /** @var Docman_LinkVersion */
-    private $itemVersion;
+    public ?Docman_LinkVersion $itemVersion;
 
     /** @var Docman_ApprovalTableLinkDao */
     private $dao;
@@ -76,7 +75,7 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
      * @return int new table id
      */
     #[\Override]
-    public function _createTable($table)
+    public function _createTable($table) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->dao->createTable(
             'link_version_id',
@@ -90,14 +89,14 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
     }
 
     #[\Override]
-    public function _updateTableWithLastId($dstTable)
+    public function _updateTableWithLastId($dstTable) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $currentVersion = $this->item->getCurrentVersion();
         $dstTable->setVersionId($currentVersion->getId());
     }
 
     #[\Override]
-    public function _getTable()
+    public function _getTable() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->getTableFromVersion($this->itemVersion);
     }
@@ -111,6 +110,7 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
                 $row   = $dar->current();
                 $table = $this->createTableFromRow($row);
                 $table->setVersionNumber($version->getNumber());
+                $this->_getReviewerFactory($table, $this->item)->appendReviewerList();
             }
         }
         return $table;
@@ -127,11 +127,11 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
     public function userAccessedSinceLastUpdate($user)
     {
         $log = new Docman_Log();
-        return $log->userAccessedSince($user->getId(), $this->item->getId(), $this->itemVersion->getDate());
+        return $log->userAccessedSince($user->getId(), $this->item->getId(), $this->itemVersion?->getDate());
     }
 
     #[\Override]
-    public function _getDao()
+    public function _getDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->dao;
     }

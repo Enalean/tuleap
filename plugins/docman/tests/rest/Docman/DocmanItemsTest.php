@@ -324,6 +324,40 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         self::assertSame(200, $delete_response->getStatusCode());
     }
 
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    public function testGetApprovalTableVersion(int $root_id): void
+    {
+        // Create embedded file
+        $post_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_folders/$root_id/embedded_files")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'title'               => 'My embedded file',
+                    'embedded_properties' => [
+                        'content' => 'Hello World!',
+                    ],
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(201, $post_response->getStatusCode());
+        $post_body = json_decode($post_response->getBody()->getContents());
+        $item_id   = $post_body['id'];
+
+        // Get approval table
+        $get_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', "docman_items/$item_id/approval_table/2"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        // Expected, we cannot yet create a table through API
+        self::assertSame(404, $get_response->getStatusCode());
+
+        // Cleanup (delete file)
+        $delete_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', "docman_embedded_files/$item_id"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $delete_response->getStatusCode());
+    }
+
     /**
      * @param array|null $folder
      * @param array|null $empty
