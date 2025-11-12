@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_ApprovalTable;
+use Docman_ApprovalTableFactoriesFactory;
+use Docman_ApprovalTableVersionned;
+use Docman_Item;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -29,42 +33,38 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 /**
  * @psalm-immutable
  */
-class ItemApprovalTableRepresentation
+final readonly class ItemApprovalTableRepresentation
 {
-    /**
-     * @var int
-     */
-    public $id;
+    private function __construct(
+        public ?int $id,
+        public MinimalUserRepresentation $table_owner,
+        public string $approval_state,
+        public ?string $approval_request_date,
+        public ?bool $has_been_approved,
+        public ?int $version_number,
+        public string $notification_type,
+        public bool $is_closed,
+        public string $description,
+    ) {
+    }
 
-    /**
-     * @var MinimalUserRepresentation
-     */
-    public $table_owner;
-    /**
-     * @var string
-     */
-    public $approval_state;
-    /**
-     * @var string
-     */
-    public $approval_request_date;
-
-    /**
-     * @var bool
-     */
-    public $has_been_approved;
-
-    public function __construct(
-        \Docman_ApprovalTable $approval_table,
+    public static function build(
+        Docman_Item $item,
+        Docman_ApprovalTable $approval_table,
         MinimalUserRepresentation $table_owner,
         ApprovalTableStateMapper $status_mapper,
-    ) {
-        $this->id                    = JsonCast::toInt($approval_table->getId());
-        $this->table_owner           = $table_owner;
-        $this->approval_state        = $status_mapper->getStatusStringFromStatusId((int) $approval_table->getApprovalState());
-        $this->approval_request_date = JsonCast::toDate($approval_table->getDate());
-        $this->has_been_approved     = JsonCast::toBoolean(
-            $approval_table->getApprovalState() === PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED
+        Docman_ApprovalTableFactoriesFactory $factory,
+    ): self {
+        return new self(
+            JsonCast::toInt($approval_table->getId()),
+            $table_owner,
+            $status_mapper->getStatusStringFromStatusId((int) $approval_table->getApprovalState()),
+            JsonCast::toDate($approval_table->getDate()),
+            JsonCast::toBoolean($approval_table->getApprovalState() === PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED),
+            $approval_table instanceof Docman_ApprovalTableVersionned ? (int) $approval_table->getVersionNumber() : null,
+            $factory->getFromItem($item)?->getNotificationTypeName($approval_table->getNotification()) ?? '',
+            $approval_table->isClosed(),
+            $approval_table->getDescription() ?? '',
         );
     }
 }

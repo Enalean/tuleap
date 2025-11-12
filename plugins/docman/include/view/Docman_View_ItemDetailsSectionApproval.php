@@ -24,7 +24,7 @@
 use Tuleap\Date\DateHelper;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSection
+class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSection // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $table;
     public $atf;
@@ -58,7 +58,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $this->table = $this->atf->getTable();
     }
 
-    public function _getItemVersionLink($version, $noLink = false)
+    public function _getItemVersionLink($version, $noLink = false) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html = '';
         if ($version !== null) {
@@ -225,7 +225,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
-    public function _getReviewCurrentVersion()
+    public function _getReviewCurrentVersion() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $version     = null;
         $itemFactory = Docman_ItemFactory::instance($this->item->getGroupId());
@@ -443,7 +443,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                 dgettext('tuleap-docman', 'Status'),
                 dgettext('tuleap-docman', 'Start date'),
             ]);
-            $allTables   = $this->atf->getAllApprovalTable();
+            $allTables   = $this->atf->getAllApprovalTable(null, null);
             $rowColorIdx = 1;
             foreach ($allTables as $table) {
                 $html .= '<tr class="' . html_get_alt_row_color($rowColorIdx++) . '">';
@@ -573,26 +573,26 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
-    public function &_getDocmanIcons()
+    public function &_getDocmanIcons() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $icons = new Docman_Icons($this->themePath . '/images/ic/', EventManager::instance());
         return $icons;
     }
 
-    public function &_getUserManager()
+    public function &_getUserManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $um = UserManager::instance();
         return $um;
     }
 
-    public function &_getCurrentUser()
+    public function &_getCurrentUser() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $um   = $this->_getUserManager();
         $user = $um->getCurrentUser();
         return $user;
     }
 
-    public function &_getPermissionsManager()
+    public function &_getPermissionsManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
         return $dpm;

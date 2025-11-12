@@ -381,7 +381,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
-        $this->checkItemHasADisabledApprovalTable($items, $title);
+        $this->checkItemHasNoApprovalTable($items, $title);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]

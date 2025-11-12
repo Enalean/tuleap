@@ -39,7 +39,7 @@
  *   v3 -'                          | v3 -'
  *   v4 -> approval v4 (copy of v2) | v4 -'
  */
-abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTableFactory
+abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTableFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Create $dstTable based on $srcTable.
@@ -148,17 +148,31 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     /**
      * Return all the approval table of for the item
      */
-    public function getAllApprovalTable()
+    public function getAllApprovalTable(?int $limit, ?int $offset)
     {
         $tableArray = [];
         $dao        = $this->_getDao();
-        $dar        = $dao->getApprovalTableItemId($this->item->getId(), 'app.*', '', true);
+        $limit_sql  = $limit !== null && $offset !== null
+            ? 'LIMIT ' . $dao->da->escapeInt($offset) . ',' . $dao->da->escapeInt($limit)
+            : '';
+        $dar        = $dao->getApprovalTableItemId($this->item->getId(), 'app.*', $limit_sql, true);
         if ($dar && ! $dar->isError()) {
             while ($row = $dar->getRow()) {
                 $tableArray[] = $this->createTableFromRow($row);
             }
         }
         return $tableArray;
+    }
+
+    public function getCountOfApprovalTable(): int
+    {
+        $dao = $this->_getDao();
+        $dar = $dao->getCountOfApprovalTableItemId($this->item->getId());
+        if ($dar && ! $dar->isError()) {
+            return (int) $dar->getRow()['nb_table'];
+        }
+
+        return 0;
     }
 
     abstract public function getLastDocumentVersionNumber();
