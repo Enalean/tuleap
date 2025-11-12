@@ -413,10 +413,10 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=admin-permissions]").click();
             cy.get("[data-test=field-permissions]").click();
             cy.get("[data-test=select-field-permissions]").select("Close date");
+            cy.get("[data-test=field-permissions]").eq(0).select("-");
             cy.get("[data-test=field-permissions]").eq(1).select("-");
             cy.get("[data-test=field-permissions]").eq(2).select("-");
-            cy.get("[data-test=field-permissions]").eq(3).select("-");
-            cy.get("[data-test=field-permissions]").eq(4).select("Read only");
+            cy.get("[data-test=field-permissions]").eq(3).select("Read only");
             cy.get("[data-test=submit-permissions]").click();
 
             cy.projectMemberSession();
