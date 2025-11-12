@@ -24,13 +24,9 @@ module.exports = [
     {
         entry: {
             style: "./themes/default/style.scss",
-            admin: "./scripts/admin.js",
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
-        externals: {
-            jquery: "jQuery",
-        },
         module: {
             rules: [webpack_configurator.rule_scss_loader],
         },

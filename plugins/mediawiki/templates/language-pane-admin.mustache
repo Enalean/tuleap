@@ -1,26 +1,38 @@
-<form name="admin_group_mediawiki" class="admin_group_mediawiki" method="post" action="{{ route }}">
-    <h1>{{ admin_title }}</h1>
+<h1 class="project-administration-title">{{ admin_title }}</h1>
 
-    <ul class="nav nav-tabs">
-        <li>
-            <a href="?group_id={{ group_id }}&pane=permissions">{{ permissions_label }}</a>
-        </li>
-        <li class="active">
-            <a href="?group_id={{ group_id }}&pane=language">{{ language_label }}</a>
-        </li>
-    </ul>
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        <a class="tlp-tab" href="?group_id={{ group_id }}&pane=permissions">{{ permissions_label }}</a>
+        <a class="tlp-tab tlp-tab-active" href="?group_id={{ group_id }}&pane=language">{{ language_label }}</a>
+    </nav>
+</div>
 
-    <h2>{{ available_languages_title }}</h2>
-    <p>
-        {{ available_languages_intro }}
-    </p>
-    {{# available_languages }}
-        <label class="radio">
-            <input type="radio" name="language" value="{{ language }}" {{# used }} checked {{/ used }}>
-            {{ language }}
-        </label>
-    {{/ available_languages }}
-    <div class="admin_group_mediawiki_submit">
-        <input type="submit" name="submit" value="{{ save_changes }}" class="btn btn-primary">
-    </div>
-</form>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <form method="post" action="{{ route }}" class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{ available_languages_title }}
+                </h1>
+            </div>
+            <div class="tlp-pane-section">
+                <p>
+                    {{ available_languages_intro }}
+                </p>
+
+                <div class="tlp-form-element">
+                    {{# available_languages }}
+                        <label class="tlp-label tlp-radio">
+                            <input type="radio" name="language" value="{{ language }}" {{# used }} checked {{/ used }}>
+                            {{ language }}
+                        </label>
+                    {{/ available_languages }}
+                </div>
+
+                <div class="tlp-pane-section-submit">
+                    <input type="submit" name="submit" value="{{ save_changes }}" class="tlp-button-primary">
+                </div>
+            </div>
+        </form>
+    </section>
+</div>

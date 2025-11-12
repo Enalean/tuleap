@@ -20,22 +20,15 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-use Event;
-use EventManager;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
-use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithDensityVariants;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\HeaderConfiguration\WithoutProjectContext;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariantColor;
-use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
@@ -57,11 +50,6 @@ class HeaderPresenterBuilder
     /** @var array */
     private $main_classes;
 
-    /**
-     * @var CssAssetCollection
-     */
-    private $css_assets;
-
     /** @var SidebarPresenter */
     private $sidebar;
 
@@ -69,10 +57,6 @@ class HeaderPresenterBuilder
     private $is_in_siteadmin;
     /** @var ProjectContextPresenter|null */
     private $project_context;
-    /**
-     * @var JavascriptAssetGeneric[]
-     */
-    private array $javascript_assets;
 
     /**
      * @param JavascriptAssetGeneric[] $javascript_assets
@@ -88,7 +72,7 @@ class HeaderPresenterBuilder
         URLRedirect $url_redirect,
         array $toolbar,
         array $breadcrumbs,
-        CssAssetCollection $css_assets,
+        BurningParrotStylesheetsBuilder $stylesheets_builder,
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
         NewDropdownPresenter $new_dropdown_presenter,
@@ -99,8 +83,6 @@ class HeaderPresenterBuilder
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
         DetectedBrowser $detected_browser,
         ThemeVariantColor $theme_color,
-        ThemeVariation $theme_variation,
-        array $javascript_assets,
         ?WithoutProjectContext $in_project_without_sidebar,
         InviteBuddiesPresenter $invite_buddies_presenter,
     ) {
@@ -109,10 +91,8 @@ class HeaderPresenterBuilder
         $this->body_classes             = $body_classes;
         $this->main_classes             = $main_classes;
         $this->sidebar                  = $sidebar;
-        $this->css_assets               = $css_assets;
         $this->is_in_siteadmin          = $is_in_siteadmin;
         $this->project_context          = $project_context;
-        $this->javascript_assets        = $javascript_assets;
 
         $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomized();
         $is_svg_logo_customized    = $customized_logo_detector->isSvgOrganizationLogoCustomized();
@@ -131,7 +111,7 @@ class HeaderPresenterBuilder
                 $platform_banner,
             ),
             $theme_color,
-            $this->getStylesheets($theme_variation),
+            $stylesheets_builder->getStylesheets(),
             $feedback_logs,
             $this->getBodyClassesAsString(),
             $this->getMainClassesAsString(),
@@ -164,39 +144,6 @@ class HeaderPresenterBuilder
         }
 
         return $page_title;
-    }
-
-    private function getStylesheets(ThemeVariation $theme_variation): array
-    {
-        $tlp_assets       = new IncludeAssets(__DIR__ . '/../../../scripts/tlp/frontend-assets', '/assets/core/tlp');
-        $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
-        $css_assets       = new CssAssetCollection(
-            [
-                new CssAssetWithoutVariantDeclinaisons($tlp_assets, 'tlp'),
-                new CssAssetWithDensityVariants($tlp_assets, 'tlp-vars'),
-                new CssAssetWithoutVariantDeclinaisons($core_assets, 'BurningParrot/burning-parrot'),
-                new CssAssetWithoutVariantDeclinaisons($core_assets, 'common-theme/project-sidebar'),
-            ]
-        );
-        $this->css_assets = $css_assets->merge($this->css_assets);
-        foreach ($this->javascript_assets as $javascript_asset) {
-            $this->css_assets = $this->css_assets->merge($javascript_asset->getAssociatedCSSAssets());
-        }
-
-        $stylesheets = [];
-        foreach ($this->css_assets->getDeduplicatedAssets() as $css_asset) {
-            $stylesheets[] = $css_asset->getFileURL($theme_variation);
-        }
-
-        EventManager::instance()->processEvent(
-            Event::BURNING_PARROT_GET_STYLESHEETS,
-            [
-                'stylesheets'     => &$stylesheets,
-                'theme_variation' => $theme_variation,
-            ]
-        );
-
-        return $stylesheets;
     }
 
     private function getMainClassesAsString()

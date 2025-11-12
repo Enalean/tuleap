@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ff-mw-wrapper {
-    position: relative;
-    margin-top: var(--tlp-large-spacing);
+.mediawiki-admin-permissions {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
 }
 
-/* stylelint-disable-next-line selector-no-qualifying-type */
-#mw-content-text a.new {
-    color: #ba0000;
+.mediawiki-admin-permissions-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--tlp-small-spacing);
 }
 
-.portlet a,
-#mw-content-text a {
-    color: #002bb8;
+.forge-mw-available-groups,
+.forge-mw-selected-groups {
+    width: 300px;
 }

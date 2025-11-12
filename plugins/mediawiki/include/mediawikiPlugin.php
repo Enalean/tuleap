@@ -253,8 +253,8 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         return null;
     }
 
-    #[ListeningToEventName('cssfile')]
-    public function cssFile($params): void
+    #[ListeningToEventName(Event::BURNING_PARROT_GET_STYLESHEETS)]
+    public function burningParrotGetStylesheets(array $params): void
     {
         // Only show the stylesheet if we're actually in the Mediawiki pages.
         if (
@@ -702,7 +702,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/forge_admin.php?action=site_index') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
