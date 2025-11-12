@@ -25,53 +25,6 @@ document.observe("dom:loaded", function () {
         var r = new codendi.RTE(elem); //eslint-disable-line @typescript-eslint/no-unused-vars
     });
 
-    $$("input[type=checkbox][name^=remove_rule]").each(function (elem) {
-        elem.observe("click", function () {
-            if (elem.checked) {
-                elem.up("tr").down("div").addClassName("deleted");
-                elem.up("tr")
-                    .select("select")
-                    .each(function (e) {
-                        e.disabled = true;
-                        e.readOnly = true;
-                    });
-                elem.up("tr")
-                    .select("input")
-                    .each(function (e) {
-                        e.required = false;
-                    });
-            } else {
-                elem.up("tr").down("div").removeClassName("deleted");
-                elem.up("tr")
-                    .select("select")
-                    .each(function (e) {
-                        e.disabled = false;
-                        e.readOnly = false;
-                    });
-                elem.up("tr")
-                    .select("input")
-                    .each(function (e) {
-                        if (e.hasClassName("required")) {
-                            e.required = true;
-                        }
-                    });
-            }
-        });
-    });
-
-    $$(".add_new_rule_title").each(function (add) {
-        var link = new Element("a", { href: "#add_new_rule" })
-            .update(add.innerHTML)
-            .observe("click", function (evt) {
-                add.next().toggle();
-                Event.stop(evt);
-                return false;
-            });
-        link.dataset.test = "add-new-rule";
-        add.update(link);
-        add.next().hide();
-    });
-
     /*
      * Trigger event handling
      */

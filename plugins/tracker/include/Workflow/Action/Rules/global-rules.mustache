@@ -1,0 +1,59 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                {{ title }}
+            </h1>
+        </div>
+        <div class="tlp-pane-section">
+            <p>{{# dgettext }}tuleap-tracker | Those rules will be applied on each creation/update of artifacts.{{/ dgettext }}</p>
+
+            <div class="tlp-table-actions">
+                <button type="button"
+                        class="tlp-button-primary tlp-table-actions-element tracker-admin-global-rules-modal-trigger"
+                        data-target-modal-id="tracker-global-rules-add-modal"
+                        data-test="add-new-rule"
+                >
+                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-tracker | Add a new rule{{/ dgettext }}
+                </button>
+                {{> global-rules-add-modal }}
+            </div>
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>{{# dgettext }}tuleap-tracker | Rule{{/ dgettext }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{^ rules }}
+                        <tr>
+                            <td colspan="2" class="tlp-table-cell-empty">
+                                {{# dgettext }}tuleap-tracker | There isn't any rules yet{{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/ rules }}
+                    {{# rules }}
+                        <tr>
+                            <td data-test="global-rule">
+                                {{> global-rule }}
+                            </td>
+                            <td class="tlp-table-cell-actions">
+                                <button type="button"
+                                        class="tlp-button-danger tlp-button-small tlp-button-outline tlp-table-cell-actions-button tracker-admin-global-rules-modal-trigger"
+                                        data-target-modal-id="tracker-global-rules-delete-modal-{{ id }}"
+                                        data-test="delete-rule"
+                                >
+                                    <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                                    {{# gettext }}Delete{{/ gettext }}
+                                </button>
+                                {{> global-rules-delete-modal }}
+                            </td>
+                        </tr>
+                    {{/ rules }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

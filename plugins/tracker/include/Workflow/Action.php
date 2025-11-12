@@ -34,7 +34,7 @@ abstract class Tracker_Workflow_Action
         $this->tracker = $tracker;
     }
 
-    protected function displayHeader(Tracker_IDisplayTrackerLayout $engine, string $title)
+    protected function displayHeaderFlamingParrot(Tracker_IDisplayTrackerLayout $engine, string $title): void
     {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow', $title);
 
@@ -42,9 +42,22 @@ abstract class Tracker_Workflow_Action
         echo '<div class="tab-content">';
     }
 
-    protected function displayFooter(Tracker_IDisplayTrackerLayout $engine)
+    protected function displayFooterFlamingParrot(Tracker_IDisplayTrackerLayout $engine): void
     {
         echo '</div>';
+        echo '</div>';
+        $this->tracker->displayFooter($engine);
+    }
+
+    protected function displayHeaderBurningParrot(Tracker_IDisplayTrackerLayout $engine, string $title): void
+    {
+        $this->tracker->displayAdminItemHeaderBurningParrot($engine, 'editworkflow', $title);
+
+        echo '<div class="tlp-framed">';
+    }
+
+    protected function displayFooterBurningParrot(Tracker_IDisplayTrackerLayout $engine): void
+    {
         echo '</div>';
         $this->tracker->displayFooter($engine);
     }

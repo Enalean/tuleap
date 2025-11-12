@@ -553,6 +553,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 'admin-editoptions',
                 'admin-csvimport',
                 'admin-perms-tracker',
+                Workflow::FUNC_ADMIN_RULES,
             ],
             true,
         );

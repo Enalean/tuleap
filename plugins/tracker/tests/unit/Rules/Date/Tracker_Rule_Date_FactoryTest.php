@@ -27,7 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     private int $source_field_id = 46345;
     private int $target_field_id = 465;
@@ -300,19 +300,5 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
 
         $trm->exportToXML($root, $array_xml_mapping, 666);
         $this->assertNull($root->dependencies->rule);
-    }
-
-    public function testItDelegatesSaveToDao(): void
-    {
-        $id   = 20;
-        $rule = new Tracker_Rule_Date();
-        $rule->setId($id);
-        $rule->setSourceField($this->source_field);
-        $rule->setComparator('>');
-        $rule->setTargetField($this->target_field);
-
-        $this->date_rule_dao->expects($this->once())->method('save')->with($id, $this->source_field_id, $this->target_field_id, '>')->willReturn(true);
-        $success = $this->date_rule_factory->save($rule);
-        $this->assertTrue($success);
     }
 }

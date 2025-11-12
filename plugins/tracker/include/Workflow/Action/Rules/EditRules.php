@@ -18,7 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Tracker\Artifact\Workflow\GlobalRules\GlobalRulesHistoryEntry;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Tracker;
 
 require_once __DIR__ . '/../../../../../../src/www/include/html.php';
@@ -26,26 +31,24 @@ require_once __DIR__ . '/../../../../../../src/www/include/html.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 {
-    public const string PARAMETER_ADD_RULE     = 'add_rule';
-    public const string PARAMETER_UPDATE_RULES = 'update_rules';
-    public const string PARAMETER_REMOVE_RULES = 'remove_rules';
+    public const string PARAMETER_ADD_RULE    = 'add_rule';
+    public const string PARAMETER_REMOVE_RULE = 'remove_rule';
 
     public const string PARAMETER_SOURCE_FIELD = 'source_date_field';
     public const string PARAMETER_TARGET_FIELD = 'target_date_field';
     public const string PARAMETER_COMPARATOR   = 'comparator';
 
-    private $default_value = 'default_value';
+    private string $url_query;
 
-    /** @var Tracker_Rule_Date_Factory */
-    private $rule_date_factory;
-
-    private $url_query;
-
-    public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, private CSRFSynchronizerToken $token, private ProjectHistoryDao $project_history_dao)
-    {
+    public function __construct(
+        Tracker $tracker,
+        private readonly Tracker_Rule_Date_Factory $rule_date_factory,
+        private readonly CSRFSynchronizerTokenInterface $token,
+        private readonly ProjectHistoryDao $project_history_dao,
+        private readonly TemplateRendererFactory $template_renderer_factory,
+    ) {
         parent::__construct($tracker);
-        $this->rule_date_factory = $rule_date_factory;
-        $this->url_query         = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->url_query = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => (int) $this->tracker->id,
                 'func'    => Workflow::FUNC_ADMIN_RULES,
@@ -53,20 +56,19 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         );
     }
 
-    private function shouldAddUpdateOrDeleteRules(Codendi_Request $request)
+    private function shouldAddOrDeleteRules(Codendi_Request $request): bool
     {
-        $should_delete_rules = is_array($request->get(self::PARAMETER_REMOVE_RULES));
-        $should_update_rules = is_array($request->get(self::PARAMETER_UPDATE_RULES));
+        $should_delete_rule = is_numeric($request->get(self::PARAMETER_REMOVE_RULE));
 
-        return $should_delete_rules || $should_update_rules || $this->shouldAddRule($request);
+        return $should_delete_rule || $this->shouldAddRule($request);
     }
 
-    private function shouldAddRule(Codendi_Request $request)
+    private function shouldAddRule(Codendi_Request $request): bool
     {
         $source_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_SOURCE_FIELD);
         $target_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD);
 
-        $fields_exist         = $source_field_id && $target_field_id;
+        $fields_exist         = $source_field_id !== null && $target_field_id !== null;
         $fields_are_different = false;
 
         if ($fields_exist) {
@@ -82,7 +84,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         return $fields_exist && $fields_are_different && $exist_comparator && $fields_have_good_type;
     }
 
-    private function checkFieldsAreDifferent($source_field, $target_field)
+    private function checkFieldsAreDifferent($source_field, $target_field): bool
     {
         $fields_are_different = $source_field !== $target_field;
         if (! $fields_are_different) {
@@ -92,12 +94,14 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         return $fields_are_different;
     }
 
-    private function getFieldIdFromAddRequest(Codendi_Request $request, $source_or_target)
+    private function getFieldIdFromAddRequest(Codendi_Request $request, $source_or_target): ?int
     {
         $add = $request->get(self::PARAMETER_ADD_RULE);
         if (is_array($add) && isset($add[$source_or_target])) {
             return (int) $add[$source_or_target];
         }
+
+        return null;
     }
 
     private function getComparatorFromAddRequest(Codendi_Request $request)
@@ -116,7 +120,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         }
     }
 
-    private function fieldsAreDateOnes($source_field_id, $target_field_id)
+    private function fieldsAreDateOnes($source_field_id, $target_field_id): bool
     {
         $source_field_is_date = (bool) $this->rule_date_factory->getUsedDateFieldById($this->tracker, $source_field_id);
         $target_field_is_date = (bool) $this->rule_date_factory->getUsedDateFieldById($this->tracker, $target_field_id);
@@ -127,87 +131,24 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user): void
     {
-        if ($this->shouldAddUpdateOrDeleteRules($request)) {
+        if ($this->shouldAddOrDeleteRules($request)) {
             // Verify CSRF Protection
             $this->token->check();
-            $this->addUpdateOrDeleteRules($request, $current_user);
+            $this->addOrDeleteRules($request, $current_user);
             $GLOBALS['Response']->redirect($this->url_query);
         } else {
             $this->displayPane($layout);
         }
     }
 
-    private function addUpdateOrDeleteRules(Codendi_Request $request, PFUser $user): void
+    private function addOrDeleteRules(Codendi_Request $request, PFUser $user): void
     {
-        $this->updateRules($request, $user);
         $this->removeRules($request, $user);
         $this->addRule($request, $user);
     }
 
-    private function updateRules(Codendi_Request $request, PFUser $user)
-    {
-        $rules_to_update = $request->get(self::PARAMETER_UPDATE_RULES);
-        if (! is_array($rules_to_update)) {
-            return;
-        }
-        $nb_updated = 0;
-        foreach ($rules_to_update as $rule_id => $new_values) {
-            if ($this->updateARule($rule_id, $new_values, $user)) {
-                ++$nb_updated;
-            }
-        }
-        if ($nb_updated) {
-            $update_msg = dgettext('tuleap-tracker', 'Rule(s) successfully updated');
-            $GLOBALS['Response']->addFeedback('info', $update_msg);
-        }
-    }
-
-    private function updateARule($rule_id, array $new_values, PFUser $user)
-    {
-        $rule                                           = $this->rule_date_factory->getRule($this->tracker, (int) $rule_id);
-        list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($new_values);
-        if ($rule && $this->shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)) {
-            $this->project_history_dao->addHistory(
-                $this->tracker->getProject(),
-                $user,
-                new \DateTimeImmutable(),
-                GlobalRulesHistoryEntry::UpdateGlobalRules->value,
-                '',
-                [
-                    $this->tracker->getId(),
-                    $rule->getId(),
-                    $rule->getSourceFieldId(),
-                    $rule->getComparator(),
-                    $rule->getTargetFieldId(),
-                    $source_field->getId(),
-                    $comparator,
-                    $target_field->getId(),
-                ]
-            );
-
-            $rule->setSourceField($source_field);
-            $rule->setTargetField($target_field);
-            $rule->setComparator($comparator);
-            return $this->rule_date_factory->save($rule);
-        }
-    }
-
-    private function shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)
-    {
-        return $rule
-            && $source_field
-            && $target_field
-            && $this->checkFieldsAreDifferent($source_field, $target_field)
-            && $comparator
-            && (
-                $rule->getSourceField() != $source_field
-                || $rule->getTargetField() != $target_field
-                || $rule->getComparator() != $comparator
-            );
-    }
-
     /** @return array (source_field, target_field, comparator) */
-    private function getFieldsAndComparatorFromRequestParameter(array $param)
+    private function getFieldsAndComparatorFromRequestParameter(array $param): array
     {
         $source_field = null;
         $target_field = null;
@@ -223,31 +164,26 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
     private function removeRules(Codendi_Request $request, PFUser $user): void
     {
-        $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
-        $nb_deleted   = 0;
-        if (! is_array($remove_rules)) {
+        $remove_rule_id = $request->get(self::PARAMETER_REMOVE_RULE);
+        if (! is_numeric($remove_rule_id)) {
             return;
         }
 
-        foreach ($remove_rules as $rule_id) {
-            if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int) $rule_id)) {
-                $this->project_history_dao->addHistory(
-                    $this->tracker->getProject(),
-                    $user,
-                    new \DateTimeImmutable(),
-                    GlobalRulesHistoryEntry::DeleteGlobalRules->value,
-                    '',
-                    [
-                        $this->tracker->getId(),
-                        $rule_id,
-                    ]
-                );
-                ++$nb_deleted;
-            }
-        }
-        if ($nb_deleted) {
-            $delete_msg = dgettext('tuleap-tracker', 'Rule(s) successfully deleted');
-            $GLOBALS['Response']->addFeedback('info', $delete_msg);
+        if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int) $remove_rule_id)) {
+            $this->project_history_dao->addHistory(
+                $this->tracker->getProject(),
+                $user,
+                new \DateTimeImmutable(),
+                GlobalRulesHistoryEntry::DeleteGlobalRules->value,
+                '',
+                [
+                    $this->tracker->getId(),
+                    (int) $remove_rule_id,
+                ]
+            );
+            $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, dgettext('tuleap-tracker', 'Rule successfully deleted'));
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'An error occurred while deleting the rule'));
         }
     }
 
@@ -281,105 +217,47 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         );
 
         $create_msg = dgettext('tuleap-tracker', 'Rule successfully created');
-        $GLOBALS['Response']->addFeedback('info', $create_msg);
+        $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, $create_msg);
     }
 
-    private function displayPane(Tracker_IDisplayTrackerLayout $layout)
+    private function displayPane(Tracker_IDisplayTrackerLayout $layout): void
     {
         $title = dgettext('tuleap-tracker', 'Define global date rules');
 
-        $this->displayHeader($layout, $title);
-        echo '<div class="workflow_rules">';
-        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
-        echo '<p class="help">' . dgettext('tuleap-tracker', 'Those rules will be applied on each creation/update of artifacts.') . '</p>';
-        echo '<form method="post" data-test="global-rules-form" action="' . $this->url_query . '">';
-        // CSRF Protection
-        echo $this->token->fetchHTMLInput();
-        $this->displayRules();
-        $this->displayAdd();
-        echo '<p><input type="submit" data-test="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></p>';
-        echo '</form>';
-        echo '</div>';
-        $this->displayFooter($layout);
-    }
+        $assets = new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $GLOBALS['Response']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'global-rules-style'));
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($assets, 'global-rules.js'));
 
-    private function displayRules()
-    {
-        $fields = $this->getListOfDateFieldLabels();
-        $rules  = $this->getRules();
-        echo '<table class="workflow_existing_rules">';
-        echo '<tbody>';
-        foreach ($rules as $rule) {
-            $name_prefix = self::PARAMETER_UPDATE_RULES . '[' . $rule->getId() . ']';
-            echo '<tr>';
-            echo '<td>';
-            echo '<div class="workflow_rule" data-test="global-rule">';
-            $this->displayFieldSelector($fields, $name_prefix . '[' . self::PARAMETER_SOURCE_FIELD . ']', $rule->getSourceField()->getId());
-            $this->displayComparatorSelector($name_prefix . '[' . self::PARAMETER_COMPARATOR . ']', $rule->getComparator());
-            $this->displayFieldSelector($fields, $name_prefix . '[' . self::PARAMETER_TARGET_FIELD . ']', $rule->getTargetField()->getId());
-            echo '</div>';
-            echo '</td>';
-            echo '<td>';
-            echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
-            echo '<input type="checkbox" name="' . self::PARAMETER_REMOVE_RULES . '[]" value="' . $rule->getId() . '" ></input>';
-            echo '</label>';
-            echo '</td>';
-            echo '</tr>';
-        }
-        echo '</tbody>';
-        echo '</table>';
-    }
+        $this->displayHeaderBurningParrot($layout, $title);
 
-    private function getRules()
-    {
-        return $this->rule_date_factory->searchByTrackerId($this->tracker->getId());
-    }
+        $date_fields = $this->rule_date_factory->getUsedDateFields($this->tracker);
 
-    private function displayComparatorSelector($name, $selected = null)
-    {
-        $comparators = array_combine(Tracker_Rule_Date::$allowed_comparators, Tracker_Rule_Date::$allowed_comparators);
-        echo html_build_select_box_from_array($comparators, $name, $selected);
-    }
+        $this->template_renderer_factory
+            ->getRenderer(__DIR__)
+            ->renderToPage('global-rules', [
+                'title' => $title,
+                'url' => $this->url_query,
+                'csrf_token' => \Tuleap\CSRFSynchronizerTokenPresenter::fromToken($this->token),
+                'rules' => array_map(
+                    static fn (Tracker_Rule_Date $rule) => [
+                        'id'         => $rule->getId(),
+                        'source'     => $rule->getSourceField()->getLabel(),
+                        'comparator' => $rule->getComparator(),
+                        'target'     => $rule->getTargetField()->getLabel(),
+                    ],
+                    $this->rule_date_factory->searchByTrackerId($this->tracker->getId()),
+                ),
+                'comparators' => array_map(
+                    static fn (string $comparator) => ['value' => $comparator, 'label' => $comparator],
+                    Tracker_Rule_Date::$allowed_comparators,
+                ),
+                'fields' => array_map(
+                    static fn (DateField $field) => ['value' => $field->getId(), 'label' => $field->getLabel()],
+                    $date_fields,
+                ),
+                'delete_name' => self::PARAMETER_REMOVE_RULE,
+            ]);
 
-    private function displayFieldSelector(array $fields, $name, $selected)
-    {
-        echo html_build_select_box_from_array($fields, $name, $selected);
-    }
-
-    private function displayAdd()
-    {
-        $fields   = $this->getListOfDateFieldLabelsPlusPleaseChoose();
-        $selected = $this->default_value;
-        echo '<p class="add_new_rule">';
-        echo '<span class="add_new_rule_title">';
-        echo '<i class="fa-solid fa-plus"></i> ';
-        echo dgettext('tuleap-tracker', 'Add a new rule') . ' ';
-        echo '</span>';
-        echo '<span>';
-        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE . '[' . self::PARAMETER_SOURCE_FIELD . ']', $selected);
-        $this->displayComparatorSelector(self::PARAMETER_ADD_RULE . '[' . self::PARAMETER_COMPARATOR . ']');
-        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE . '[' . self::PARAMETER_TARGET_FIELD . ']', $selected);
-        echo '</span>';
-        echo '</p>';
-    }
-
-    private function getListOfDateFieldLabelsPlusPleaseChoose()
-    {
-        $labels = [
-            $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed'),
-        ];
-
-        return $labels + $this->getListOfDateFieldLabels();
-    }
-
-    private function getListOfDateFieldLabels()
-    {
-        $labels        = [];
-        $form_elements = $this->rule_date_factory->getUsedDateFields($this->tracker);
-        foreach ($form_elements as $form_element) {
-            $labels[$form_element->getId()] = $form_element->getLabel();
-        }
-
-        return $labels;
+        $this->displayFooterBurningParrot($layout);
     }
 }

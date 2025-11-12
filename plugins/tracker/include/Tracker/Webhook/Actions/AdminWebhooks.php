@@ -59,7 +59,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
     #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
     {
-        $this->displayHeader($layout, dgettext('tuleap-tracker', 'Webhooks'));
+        $this->displayHeaderFlamingParrot($layout, dgettext('tuleap-tracker', 'Webhooks'));
 
         $presenter = new AdminPresenter(
             $this->getWebhookPresenters(),
@@ -70,7 +70,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/webhook');
         $renderer->renderToPage('administration', $presenter);
 
-        $this->displayFooter($layout);
+        $this->displayFooterFlamingParrot($layout);
     }
 
     /**

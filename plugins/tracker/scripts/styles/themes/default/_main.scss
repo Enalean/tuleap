@@ -1625,25 +1625,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     display: inline;
 }
 
-.workflow_rules {
-    display: inline-block;
-}
-
-.workflow_existing_rules {
-    padding-left: 0;
-    list-style: none;
-}
-
-.workflow_existing_rules .pc_check_unchecked {
-    float: right;
-    background-image: url("../../../../../../src/www/themes/common/images/ic/bin_closed.png");
-}
-
-.workflow_existing_rules .pc_check_checked {
-    float: right;
-    background-image: url("../../../../../../src/www/themes/common/images/ic/bin.png");
-}
-
 .workflow_action {
     padding: 1em 2em 1em 3em;
     border: 1px solid #cccccc;

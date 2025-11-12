@@ -1,0 +1,65 @@
+<form id="tracker-global-rules-add-modal"
+      role="dialog"
+      aria-labelledby="tracker-global-rules-add-modal-title"
+      class="tlp-modal"
+      action="{{ url }}"
+      method="post"
+      data-test="add-rule-form"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-global-rules-add-modal-title">
+            {{# dgettext }}tuleap-tracker | Add a new rule {{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <p>
+            {{# dgettext }}tuleap-tracker | Define rule between two fields:{{/dgettext}}
+        </p>
+            <div class="tracker-admin-global-rules-rule tlp-form-element">
+                <select name="add_rule[source_date_field]" class="tlp-select tlp-select-adjusted" required id="tracker-admin-global-rules-add-source">
+                    <option value="" selected>
+                        {{# dgettext }}tuleap-tracker | -- Please choose{{/dgettext}}
+                    </option>
+                    {{# fields }}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {{/ fields }}
+                </select>
+                <select name="add_rule[comparator]" id="add_rule[comparator]" class="tlp-select tlp-select-adjusted" required>
+                    {{# comparators }}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {{/comparators}}
+                </select>
+                <select name="add_rule[target_date_field]" class="tlp-select tlp-select-adjusted" required id="tracker-admin-global-rules-add-target">
+                    <option value="" selected>
+                        {{# dgettext }}tuleap-tracker | -- Please choose{{/dgettext}}
+                    </option>
+                    {{# fields }}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {{/ fields }}
+                </select>
+                <p class="tlp-text-danger tracker-admin-global-rules-add-same-error" id="tracker-admin-global-rules-add-same-error" hidden>
+                    {{# dgettext }}tuleap-tracker | Source and target fields must be different {{/ dgettext }}
+                </p>
+            </div>
+    </div>
+    <div class="tlp-modal-footer">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/csrf_token}}
+
+        <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                id="tracker-admin-global-rules-add-submit"
+                data-test="submit"
+        >
+            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-tracker | Create rule {{/ dgettext }}
+        </button>
+    </div>
+</form>

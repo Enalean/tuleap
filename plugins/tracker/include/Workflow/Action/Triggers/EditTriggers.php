@@ -59,7 +59,7 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout): void
     {
-        $this->displayHeader($layout, dgettext('tuleap-tracker', 'Define cross-tracker triggers'));
+        $this->displayHeaderFlamingParrot($layout, dgettext('tuleap-tracker', 'Define cross-tracker triggers'));
 
         $presenter = new TriggersPresenter(
             $this->tracker->getId(),
@@ -74,6 +74,6 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
             $this->rule_manager->getForTargetTracker($this->tracker)->fetchFormattedForJson()
         );
 
-        $this->displayFooter($layout);
+        $this->displayFooterFlamingParrot($layout);
     }
 }

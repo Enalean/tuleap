@@ -1,0 +1,39 @@
+<form id="tracker-global-rules-delete-modal-{{ id }}"
+      role="dialog"
+      aria-labelledby="tracker-global-rules-delete-modal-{{ id }}-title"
+      class="tlp-modal tlp-modal-danger"
+      action="{{ url }}"
+      method="post"
+      data-test="delete-rule-form"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="tracker-global-rules-delete-modal-{{ id }}-title">
+            {{# dgettext }}tuleap-tracker | Rule deletion {{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <p>
+            {{# dgettext }}tuleap-tracker | You are about to delete the rule: %s | {{> global-rule }}{{/dgettext}}
+        </p>
+        <p>
+            {{# dgettext }}tuleap-tracker | Please confirm your action.{{/dgettext}}
+        </p>
+    </div>
+    <div class="tlp-modal-footer">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="{{ delete_name }}" value="{{ id }}" />
+
+        <button type="button" data-dismiss="modal" class="tlp-button-danger tlp-button-outline tlp-modal-action">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action" data-test="submit">
+            <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-tracker | Delete the rule {{/ dgettext }}
+        </button>
+    </div>
+</form>
