@@ -1698,6 +1698,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "tuleap-wasmtime-wrapper"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "cbindgen",
+ "serde",
+ "serde_json",
+ "wasmtime",
+ "wasmtime-wasi",
+]
+
+[[package]]
 name = "typenum"
 version = "1.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2139,18 +2151,6 @@ dependencies = [
  "bytes",
  "futures",
  "wasmtime",
-]
-
-[[package]]
-name = "wasmtimewrapper"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "cbindgen",
- "serde",
- "serde_json",
- "wasmtime",
- "wasmtime-wasi",
 ]
 
 [[package]]

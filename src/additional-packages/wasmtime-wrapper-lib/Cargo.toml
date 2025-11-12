@@ -1,7 +1,8 @@
 [package]
-name = "wasmtimewrapper"
+name = "tuleap-wasmtime-wrapper"
 version = "0.2.0"
 edition = "2021"
+license = "GPL-2.0-or-later"
 
 [lib]
 name = "wasmtimewrapper"

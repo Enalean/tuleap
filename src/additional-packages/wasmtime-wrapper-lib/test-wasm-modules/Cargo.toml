@@ -1,7 +1,8 @@
 [package]
-name = "test-wasm"
+name = "tuleap-test-wasm-fixtures"
 version = "0.1.0"
 edition = "2021"
+license = "GPL-2.0-or-later"
 
 [[bin]]
 name = "running-time"
