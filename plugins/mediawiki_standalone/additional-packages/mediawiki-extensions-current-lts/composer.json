@@ -6,14 +6,14 @@
         {
           "name": "mediawiki/labeled-section-transclusion",
           "type": "mediawiki-extension",
-          "version": "1.39.7",
+          "version": "1.43.5",
           "require": {
-            "composer/installers": "^1.0"
+            "composer/installers": "^2.0"
           },
           "source": {
             "url": "https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion.git",
             "type": "git",
-            "reference": "5159ffb5602bed6c096381a86210451435a478d1"
+            "reference": "223431a4058029ba44655d9b2ce779fa8440fd83"
           }
         }
       ]
@@ -24,14 +24,14 @@
         {
           "name": "mediawiki/mpdf",
           "type": "mediawiki-extension",
-          "version": "1.39.7",
+          "version": "1.43.5",
           "require": {
-            "mpdf/mpdf": "^8.1.4"
+            "mpdf/mpdf": "^8.2.6"
           },
           "source": {
             "url": "https://github.com/wikimedia/mediawiki-extensions-Mpdf.git",
             "type": "git",
-            "reference": "abada1d008fdfe9be840e38fd940de34eacefac6"
+            "reference": "ecd72962766493593a320d86bca0665c5a2f2947"
           }
         }
       ]
@@ -50,11 +50,11 @@
     }
   ],
   "require": {
-    "mediawiki/labeled-section-transclusion": "^1.39.7",
-    "mediawiki/mpdf": "^1.0",
-    "mediawiki/tuleap-integration": "dev-REL1_39",
-    "mediawiki/tuleap-skin": "dev-REL1_39",
-    "mediawiki/tuleap-wiki-farm": "dev-REL1_39"
+    "mediawiki/labeled-section-transclusion": "^1.43.5",
+    "mediawiki/mpdf": "^1.43.5",
+    "mediawiki/tuleap-integration": "dev-REL1_43",
+    "mediawiki/tuleap-skin": "dev-REL1_43",
+    "mediawiki/tuleap-wiki-farm": "dev-REL1_43"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",

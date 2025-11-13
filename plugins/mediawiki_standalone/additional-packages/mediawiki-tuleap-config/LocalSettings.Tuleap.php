@@ -95,16 +95,9 @@ wfLoadExtensions([
 if (version_compare($GLOBALS['wgVersion'], '1.39', '>')) {
     wfLoadExtension('Math');
 }
-$GLOBALS['wgMathValidModes']             = ['mathml'];
-$GLOBALS['wgDefaultUserOptions']['math'] = 'mathml';
-$GLOBALS['wgMaxShellMemory']             = 1228800;
+$GLOBALS['wgMathValidModes']             = ['native'];
+$GLOBALS['wgDefaultUserOptions']['math'] = 'native';
 $GLOBALS['wgHiddenPrefs'][]              = 'math';
-$GLOBALS['wgMathoidCli']                 = [
-    '/usr/bin/tuleap-node',
-    '/usr/share/tuleap-mathoid/src/cli.js',
-    '--config',
-    '/usr/share/tuleap-mathoid/config.yaml',
-];
 
 // MediaWiki Core default settings - START ###
 $GLOBALS['wgUrlProtocols'][] = 'file://';

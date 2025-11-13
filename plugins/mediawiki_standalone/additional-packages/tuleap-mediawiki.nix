@@ -29,9 +29,9 @@ let
       '';
     };
   mediawikiCurrent = buildMediawikiTarball {
-    version = "1.39.15";
+    version = "1.43.4";
     tuleapUsage = "current-lts";
-    srcHash = "sha256-iHcTQ2PnlCvTtC7os6uOloYQHk6pk/h5X7zrvSG++rM=";
+    srcHash = "sha256-Z79EWbC+Y31zV5DEP3Oio4OwothhXDPB7rnESz7UAlU=";
   };
   mediawiki135 = buildMediawikiTarball {
     version = "1.35.13";
@@ -125,7 +125,8 @@ let
         find . -name 'README.md' -type f -delete
         find . -name 'README' -type f -delete
         rm -r ./docs/
-        rm -r ./extensions/Scribunto/includes/engines/LuaStandalone/binaries/
+        rm -r ./extensions/Scribunto/includes/Engines/LuaStandalone/binaries/ ||
+          rm -r ./extensions/Scribunto/includes/engines/LuaStandalone/binaries/
         runHook postBuild
       '';
 

@@ -4,43 +4,41 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "78608336b42586ac88e587eb1bb74888",
+    "content-hash": "9add8c296df84fa5cb9b6aca415bd8cc",
     "packages": [
         {
             "name": "composer/installers",
-            "version": "v1.12.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "d20a64ed3c94748397ff5973488761b22f6d3f19"
+                "reference": "12fb2dfe5e16183de69e784a7b84046c43d97e8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/d20a64ed3c94748397ff5973488761b22f6d3f19",
-                "reference": "d20a64ed3c94748397ff5973488761b22f6d3f19",
+                "url": "https://api.github.com/repos/composer/installers/zipball/12fb2dfe5e16183de69e784a7b84046c43d97e8e",
+                "reference": "12fb2dfe5e16183de69e784a7b84046c43d97e8e",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0 || ^2.0"
-            },
-            "replace": {
-                "roundcube/plugin-installer": "*",
-                "shama/baton": "*"
+                "composer-plugin-api": "^1.0 || ^2.0",
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "composer/composer": "1.6.* || ^2.0",
-                "composer/semver": "^1 || ^3",
-                "phpstan/phpstan": "^0.12.55",
-                "phpstan/phpstan-phpunit": "^0.12.16",
-                "symfony/phpunit-bridge": "^4.2 || ^5",
-                "symfony/process": "^2.3"
+                "composer/composer": "^1.10.27 || ^2.7",
+                "composer/semver": "^1.7.2 || ^3.4.0",
+                "phpstan/phpstan": "^1.11",
+                "phpstan/phpstan-phpunit": "^1",
+                "symfony/phpunit-bridge": "^7.1.1",
+                "symfony/process": "^5 || ^6 || ^7"
             },
             "type": "composer-plugin",
             "extra": {
                 "class": "Composer\\Installers\\Plugin",
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
+                    "dev-main": "2.x-dev"
+                },
+                "plugin-modifies-install-path": true
             },
             "autoload": {
                 "psr-4": {
@@ -61,7 +59,6 @@
             "description": "A multi-framework Composer library installer",
             "homepage": "https://composer.github.io/installers/",
             "keywords": [
-                "Craft",
                 "Dolibarr",
                 "Eliasis",
                 "Hurad",
@@ -82,7 +79,6 @@
                 "Whmcs",
                 "WolfCMS",
                 "agl",
-                "aimeos",
                 "annotatecms",
                 "attogram",
                 "bitrix",
@@ -91,6 +87,7 @@
                 "cockpit",
                 "codeigniter",
                 "concrete5",
+                "concreteCMS",
                 "croogo",
                 "dokuwiki",
                 "drupal",
@@ -101,7 +98,6 @@
                 "grav",
                 "installer",
                 "itop",
-                "joomla",
                 "known",
                 "kohana",
                 "laravel",
@@ -110,6 +106,7 @@
                 "magento",
                 "majima",
                 "mako",
+                "matomo",
                 "mediawiki",
                 "miaoxing",
                 "modulework",
@@ -129,9 +126,7 @@
                 "silverstripe",
                 "sydes",
                 "sylius",
-                "symfony",
                 "tastyigniter",
-                "typo3",
                 "wordpress",
                 "yawik",
                 "zend",
@@ -139,7 +134,7 @@
             ],
             "support": {
                 "issues": "https://github.com/composer/installers/issues",
-                "source": "https://github.com/composer/installers/tree/v1.12.0"
+                "source": "https://github.com/composer/installers/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -155,7 +150,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-13T08:19:44+00:00"
+            "time": "2024-06-24T20:46:46+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -286,57 +281,57 @@
         },
         {
             "name": "mediawiki/labeled-section-transclusion",
-            "version": "1.39.7",
+            "version": "1.43.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-LabeledSectionTransclusion.git",
-                "reference": "5159ffb5602bed6c096381a86210451435a478d1"
+                "reference": "223431a4058029ba44655d9b2ce779fa8440fd83"
             },
             "require": {
-                "composer/installers": "^1.0"
+                "composer/installers": "^2.0"
             },
             "type": "mediawiki-extension"
         },
         {
             "name": "mediawiki/mpdf",
-            "version": "1.39.7",
+            "version": "1.43.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-Mpdf.git",
-                "reference": "abada1d008fdfe9be840e38fd940de34eacefac6"
+                "reference": "ecd72962766493593a320d86bca0665c5a2f2947"
             },
             "require": {
-                "mpdf/mpdf": "^8.1.4"
+                "mpdf/mpdf": "^8.2.6"
             },
             "type": "mediawiki-extension"
         },
         {
             "name": "mediawiki/tuleap-integration",
-            "version": "dev-REL1_39",
+            "version": "dev-REL1_43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "19aa74fc7286c254ef27507a0d10d9b8e7e169d6"
+                "reference": "fed2d4e453c64455b04a4ef32212986eb412879c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/19aa74fc7286c254ef27507a0d10d9b8e7e169d6",
-                "reference": "19aa74fc7286c254ef27507a0d10d9b8e7e169d6",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/fed2d4e453c64455b04a4ef32212986eb412879c",
+                "reference": "fed2d4e453c64455b04a4ef32212986eb412879c",
                 "shasum": ""
             },
             "require": {
-                "composer/installers": "~1.0",
+                "composer/installers": "^1.0||^2.0",
                 "ext-sodium": "*",
                 "firebase/php-jwt": "v6.0.*",
                 "league/oauth2-client": "2.6.*",
                 "symfony/process": "~5"
             },
             "require-dev": {
-                "mediawiki/mediawiki-codesniffer": "41.0.0",
-                "mediawiki/mediawiki-phan-config": "0.12.1",
-                "mediawiki/minus-x": "1.1.1",
+                "mediawiki/mediawiki-codesniffer": "45.0.0",
+                "mediawiki/mediawiki-phan-config": "0.14.0",
+                "mediawiki/minus-x": "1.1.3",
                 "php-parallel-lint/php-console-highlighter": "1.0.0",
-                "php-parallel-lint/php-parallel-lint": "1.3.2"
+                "php-parallel-lint/php-parallel-lint": "1.4.0"
             },
             "type": "mediawiki-extension",
             "extra": {
@@ -365,34 +360,33 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/REL1_39"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/REL1_43"
             },
-            "time": "2024-06-06T08:37:31+00:00"
+            "time": "2025-11-14T11:05:01+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
-            "version": "dev-REL1_39",
+            "version": "dev-REL1_43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "dc89484c8344748e5018ee8b4295b751e95a466c"
+                "reference": "20820de1cf80407918f48b1afce504f88dd67ca0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/dc89484c8344748e5018ee8b4295b751e95a466c",
-                "reference": "dc89484c8344748e5018ee8b4295b751e95a466c",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/20820de1cf80407918f48b1afce504f88dd67ca0",
+                "reference": "20820de1cf80407918f48b1afce504f88dd67ca0",
                 "shasum": ""
             },
             "require": {
-                "composer/installers": "~1.0",
-                "mwstake/mediawiki-component-thirdpartyresources": "~1.0"
+                "composer/installers": "^1.0||^2.0"
             },
             "require-dev": {
-                "mediawiki/mediawiki-codesniffer": "41.0.0",
-                "mediawiki/mediawiki-phan-config": "0.12.1",
-                "mediawiki/minus-x": "1.1.1",
+                "mediawiki/mediawiki-codesniffer": "45.0.0",
+                "mediawiki/mediawiki-phan-config": "0.14.0",
+                "mediawiki/minus-x": "1.1.3",
                 "php-parallel-lint/php-console-highlighter": "1.0.0",
-                "php-parallel-lint/php-parallel-lint": "1.3.2"
+                "php-parallel-lint/php-parallel-lint": "1.4.0"
             },
             "type": "mediawiki-skin",
             "extra": {
@@ -419,35 +413,35 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/REL1_39"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/REL1_43"
             },
-            "time": "2025-11-13T13:55:20+00:00"
+            "time": "2025-11-14T13:46:51+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
-            "version": "dev-REL1_39",
+            "version": "dev-REL1_43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "d3696565442261e076e6586f4bdae3991af94dc7"
+                "reference": "72b3e121d4e257e2d02a3c0fda047ab6b52e0a2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/d3696565442261e076e6586f4bdae3991af94dc7",
-                "reference": "d3696565442261e076e6586f4bdae3991af94dc7",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/72b3e121d4e257e2d02a3c0fda047ab6b52e0a2b",
+                "reference": "72b3e121d4e257e2d02a3c0fda047ab6b52e0a2b",
                 "shasum": ""
             },
             "require": {
-                "composer/installers": "~1.0",
+                "composer/installers": "^1.0||^2.0",
                 "symfony/filesystem": "~3",
                 "symfony/process": "~5"
             },
             "require-dev": {
-                "mediawiki/mediawiki-codesniffer": "40.0.1",
-                "mediawiki/mediawiki-phan-config": "0.12.1",
-                "mediawiki/minus-x": "1.1.1",
+                "mediawiki/mediawiki-codesniffer": "45.0.0",
+                "mediawiki/mediawiki-phan-config": "0.14.0",
+                "mediawiki/minus-x": "1.1.3",
                 "php-parallel-lint/php-console-highlighter": "1.0.0",
-                "php-parallel-lint/php-parallel-lint": "1.3.2"
+                "php-parallel-lint/php-parallel-lint": "1.4.0"
             },
             "type": "mediawiki-extension",
             "extra": {
@@ -476,22 +470,22 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/REL1_39"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/REL1_43"
             },
-            "time": "2023-08-29T05:34:23+00:00"
+            "time": "2025-11-14T10:55:43+00:00"
         },
         {
             "name": "mpdf/mpdf",
-            "version": "v8.2.5",
+            "version": "v8.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "e175b05e3e00977b85feb96a8cccb174ac63621f"
+                "reference": "dd30e3b01061cf8dfe65e7041ab4cc46d8ebdd44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/e175b05e3e00977b85feb96a8cccb174ac63621f",
-                "reference": "e175b05e3e00977b85feb96a8cccb174ac63621f",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/dd30e3b01061cf8dfe65e7041ab4cc46d8ebdd44",
+                "reference": "dd30e3b01061cf8dfe65e7041ab4cc46d8ebdd44",
                 "shasum": ""
             },
             "require": {
@@ -501,7 +495,7 @@
                 "mpdf/psr-log-aware-trait": "^2.0 || ^3.0",
                 "myclabs/deep-copy": "^1.7",
                 "paragonie/random_compat": "^1.4|^2.0|^9.99.99",
-                "php": "^5.6 || ^7.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "^5.6 || ^7.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
                 "setasign/fpdi": "^2.1"
@@ -559,7 +553,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-11-18T15:30:42+00:00"
+            "time": "2025-08-18T08:51:51+00:00"
         },
         {
             "name": "mpdf/psr-http-message-shim",
@@ -654,115 +648,17 @@
             "time": "2023-05-03T06:18:28+00:00"
         },
         {
-            "name": "mwstake/mediawiki-component-thirdpartyresources",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hallowelt/mwstake-mediawiki-component-thirdpartyresources.git",
-                "reference": "cbfc239d07dc5f4baf1d1277156a8c0373b2b907"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hallowelt/mwstake-mediawiki-component-thirdpartyresources/zipball/cbfc239d07dc5f4baf1d1277156a8c0373b2b907",
-                "reference": "cbfc239d07dc5f4baf1d1277156a8c0373b2b907",
-                "shasum": ""
-            },
-            "require": {
-                "mwstake/mediawiki-componentloader": "~1"
-            },
-            "require-dev": {
-                "jakub-onderka/php-console-highlighter": "0.4.0",
-                "jakub-onderka/php-parallel-lint": "1.0.0",
-                "mediawiki/mediawiki-codesniffer": "29.0.0",
-                "mediawiki/minus-x": "1.0.0",
-                "phpunit/phpunit": "^6.5"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "MWStake\\MediaWiki\\Component\\ThirdPartyResources\\": "src/",
-                    "MWStake\\MediaWiki\\Component\\ThirdPartyResources\\Tests\\": "tests/phpunit/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-only"
-            ],
-            "authors": [
-                {
-                    "name": "BlueSpice",
-                    "email": "support@bluespice.com"
-                }
-            ],
-            "description": "Provides ResourceLoader module definitions that allow for inclusion of third-party pre-compiled resources (JS/CSS)",
-            "support": {
-                "issues": "https://github.com/hallowelt/mwstake-mediawiki-component-thirdpartyresources/issues",
-                "source": "https://github.com/hallowelt/mwstake-mediawiki-component-thirdpartyresources/tree/1.0.1"
-            },
-            "time": "2022-02-25T09:02:04+00:00"
-        },
-        {
-            "name": "mwstake/mediawiki-componentloader",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hallowelt/mwstake-mediawiki-componentloader.git",
-                "reference": "d4a0b61ac6bc97d367402d619762d3745b0eb3e4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hallowelt/mwstake-mediawiki-componentloader/zipball/d4a0b61ac6bc97d367402d619762d3745b0eb3e4",
-                "reference": "d4a0b61ac6bc97d367402d619762d3745b0eb3e4",
-                "shasum": ""
-            },
-            "require-dev": {
-                "jakub-onderka/php-console-highlighter": "0.4.0",
-                "jakub-onderka/php-parallel-lint": "1.0.0",
-                "mediawiki/mediawiki-codesniffer": "29.0.0",
-                "mediawiki/minus-x": "1.0.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "MWStake\\MediaWiki\\ComponentLoader\\": "src/",
-                    "MWStake\\MediaWiki\\ComponentLoader\\Tests\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-only"
-            ],
-            "authors": [
-                {
-                    "name": "BlueSpice",
-                    "email": "support@bluespice.com"
-                }
-            ],
-            "description": "Required for proper initialization of MWStake components",
-            "support": {
-                "issues": "https://github.com/hallowelt/mwstake-mediawiki-componentloader/issues",
-                "source": "https://github.com/hallowelt/mwstake-mediawiki-componentloader/tree/1.0.0"
-            },
-            "time": "2022-01-10T15:05:36+00:00"
-        },
-        {
             "name": "myclabs/deep-copy",
-            "version": "1.13.3",
+            "version": "1.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "faed855a7b5f4d4637717c2b3863e277116beb36"
+                "reference": "07d290f0c47959fd5eed98c95ee5602db07e0b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/faed855a7b5f4d4637717c2b3863e277116beb36",
-                "reference": "faed855a7b5f4d4637717c2b3863e277116beb36",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/07d290f0c47959fd5eed98c95ee5602db07e0b6a",
+                "reference": "07d290f0c47959fd5eed98c95ee5602db07e0b6a",
                 "shasum": ""
             },
             "require": {
@@ -801,7 +697,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.3"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.4"
             },
             "funding": [
                 {
@@ -809,7 +705,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-05T12:25:42+00:00"
+            "time": "2025-08-01T08:46:24+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -997,20 +893,20 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.28.0",
+            "version": "v1.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "ea208ce43cbb04af6867b4fdddb1bdbf84cc28cb"
+                "reference": "a3cc8b044a6ea513310cbd48ef7333b384945638"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/ea208ce43cbb04af6867b4fdddb1bdbf84cc28cb",
-                "reference": "ea208ce43cbb04af6867b4fdddb1bdbf84cc28cb",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/a3cc8b044a6ea513310cbd48ef7333b384945638",
+                "reference": "a3cc8b044a6ea513310cbd48ef7333b384945638",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=7.2"
             },
             "provide": {
                 "ext-ctype": "*"
@@ -1020,12 +916,9 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-main": "1.28-dev"
-                },
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1059,7 +952,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.28.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.33.0"
             },
             "funding": [
                 {
@@ -1071,24 +964,28 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-26T09:26:14+00:00"
+            "time": "2024-09-09T11:45:10+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.46",
+            "version": "v5.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "01906871cb9b5e3cf872863b91aba4ec9767daf4"
+                "reference": "5d1662fb32ebc94f17ddb8d635454a776066733d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/01906871cb9b5e3cf872863b91aba4ec9767daf4",
-                "reference": "01906871cb9b5e3cf872863b91aba4ec9767daf4",
+                "url": "https://api.github.com/repos/symfony/process/zipball/5d1662fb32ebc94f17ddb8d635454a776066733d",
+                "reference": "5d1662fb32ebc94f17ddb8d635454a776066733d",
                 "shasum": ""
             },
             "require": {
@@ -1121,7 +1018,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.46"
+                "source": "https://github.com/symfony/process/tree/v5.4.47"
             },
             "funding": [
                 {
@@ -1137,7 +1034,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-06T09:18:28+00:00"
+            "time": "2024-11-06T11:36:42+00:00"
         }
     ],
     "packages-dev": [],
