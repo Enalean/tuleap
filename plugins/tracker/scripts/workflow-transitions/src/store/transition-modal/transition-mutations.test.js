@@ -218,7 +218,7 @@ describe("Transition mutations", () => {
         it("Adds new ci build post action", () => {
             let post_action_unique_ids = Object.keys(state.post_actions_by_unique_id);
             expect(post_action_unique_ids).toHaveLength(2);
-            expect(state.post_actions_by_unique_id["new_4"]).toEqual({
+            expect(state.post_actions_by_unique_id.new_4).toEqual({
                 unique_id: "new_4",
                 type: "run_job",
             });
@@ -241,10 +241,10 @@ describe("Transition mutations", () => {
         });
 
         it("Removes post action with given unique_id", () => {
-            expect(state.post_actions_by_unique_id["unique_id_to_remove"]).toBeUndefined();
+            expect(state.post_actions_by_unique_id.unique_id_to_remove).toBeUndefined();
         });
         it("Keeps other post actions", () => {
-            expect(state.post_actions_by_unique_id["unique_id_to_keep"]).toBeDefined();
+            expect(state.post_actions_by_unique_id.unique_id_to_keep).toBeDefined();
         });
     });
 

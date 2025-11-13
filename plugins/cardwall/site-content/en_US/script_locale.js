@@ -19,14 +19,14 @@
 
 /* global codendi:readonly */
 
-codendi.locales["cardwall_field_validation"] = {
+codendi.locales.cardwall_field_validation = {
     error_message: {
         float_type: "the value must be a decimal",
         int_type: "the value must be an integer",
     },
 };
 
-codendi.locales["cardwall"] = {
+codendi.locales.cardwall = {
     edit_card: "Edit Card",
     go_to_fullscreen: "Fullscreen",
     exit_fullscreen: "Exit fullscreen",

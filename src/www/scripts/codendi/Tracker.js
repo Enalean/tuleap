@@ -32,7 +32,7 @@ function tracker_quote_comment(who, commentId) {
 
             // Build Ajax request
             var url = "?func=getcomment";
-            url += "&aid=" + queryParams["aid"];
+            url += "&aid=" + queryParams.aid;
             url += "&artifact_history_id=" + commentId;
             new Ajax.Request(url, {
                 onSuccess: function (response) {

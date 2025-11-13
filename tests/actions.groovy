@@ -61,13 +61,6 @@ def runBuildAndRun(String os) {
     }
 }
 
-def runESLint() {
-    sh("mkdir -p ${WORKSPACE}/results/eslint/")
-    dir ('sources') {
-        runInsideNixShell("pnpm run eslint --quiet --format=checkstyle --output-file=${WORKSPACE}/results/eslint/checkstyle.xml .")
-    }
-}
-
 def runTabFilesCheck() {
     dir ('sources') {
         runInsideNixShell('src/utils/analyse_language_files.pl ./')

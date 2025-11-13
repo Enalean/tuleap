@@ -19,14 +19,14 @@
 
 /* global codendi:readonly */
 
-codendi.locales["cardwall_field_validation"] = {
+codendi.locales.cardwall_field_validation = {
     error_message: {
         float_type: "la valeur doit être de type décimal",
         int_type: "la valeur doit être un entier",
     },
 };
 
-codendi.locales["cardwall"] = {
+codendi.locales.cardwall = {
     edit_card: "Éditer la carte",
     go_to_fullscreen: "Plein écran",
     exit_fullscreen: "Quitter le plein écran",

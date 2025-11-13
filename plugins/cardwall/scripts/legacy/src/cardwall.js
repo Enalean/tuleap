@@ -109,8 +109,8 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function (transport) {
             return;
         }
 
-        nb_open = parseInt(milestone_info["status_count"]["open"], 10);
-        nb_closed = parseInt(milestone_info["status_count"]["closed"], 10);
+        nb_open = parseInt(milestone_info.status_count.open, 10);
+        nb_closed = parseInt(milestone_info.status_count.closed, 10);
         nb_total = nb_open + nb_closed;
         element = $("milestone_remaining_effort");
 
@@ -122,7 +122,7 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function (transport) {
         var milestone_remaining_effort;
         var element;
 
-        milestone_remaining_effort = parseFloat(milestone_info["remaining_effort"]);
+        milestone_remaining_effort = parseFloat(milestone_info.remaining_effort);
         element = $("milestone_remaining_effort");
 
         element.update(milestone_remaining_effort);
@@ -168,7 +168,7 @@ tuleap.agiledashboard.cardwall.card.AbstractElementEditor = Class.create({
             return;
         }
         /* eslint-disable no-console */
-        if (typeof console == "object" && typeof console.error === "function") {
+        if (typeof console === "object" && typeof console.error === "function") {
             console.error(transport.responseText.stripTags());
             /* eslint-enable no-console */
         }
@@ -199,14 +199,14 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
             var container = this.createAndInjectTemporaryContainer();
 
-            this.options["callback"] = this.ajaxCallback();
-            this.options["onComplete"] = this.success();
-            this.options["onFailure"] = this.fail;
-            this.options["onFormCustomization"] = this.addValidationOnTextEditor.bind(this);
+            this.options.callback = this.ajaxCallback();
+            this.options.onComplete = this.success();
+            this.options.onFailure = this.fail;
+            this.options.onFormCustomization = this.addValidationOnTextEditor.bind(this);
 
             if (this.is_computed_field) {
-                this.options["onEnterEditMode"] = this.appendAutocomputedOverrideDiv.bind(this);
-                this.options["onLeaveEditMode"] = this.removeAutocomputedOverrideDiv.bind(this);
+                this.options.onEnterEditMode = this.appendAutocomputedOverrideDiv.bind(this);
+                this.options.onLeaveEditMode = this.removeAutocomputedOverrideDiv.bind(this);
             }
 
             this.in_place_editor = new Ajax.InPlaceEditor(container, this.update_url, this.options);
@@ -247,7 +247,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
                 manual_value: "",
             };
             parameters[linked_field] = JSON.stringify(post_value);
-            parameters["challenge"] = csrf_token_challenge_update;
+            parameters.challenge = csrf_token_challenge_update;
 
             new Ajax.Request(self.update_url, {
                 parameters: parameters,
@@ -307,7 +307,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
                     parameters[linked_field] = value;
                 }
 
-                parameters["challenge"] = csrf_token_challenge_update;
+                parameters.challenge = csrf_token_challenge_update;
 
                 return parameters;
             };
@@ -315,7 +315,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
         success: function () {
             return function updateCardInfo(transport) {
-                if (typeof transport != "undefined") {
+                if (typeof transport !== "undefined") {
                     tuleap.agiledashboard.cardwall.card.updateAfterAjax(transport);
                 }
             };
@@ -401,12 +401,12 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         },
 
         addOptions: function () {
-            this.options["multiple"] = this.isMultipleSelect();
-            this.options["collection"] = this.getAvailableUsers();
-            this.options["element"] = this.element;
-            this.options["callback"] = this.preRequestCallback();
-            this.options["onComplete"] = this.success();
-            this.options["onFailure"] = this.fail;
+            this.options.multiple = this.isMultipleSelect();
+            this.options.collection = this.getAvailableUsers();
+            this.options.element = this.element;
+            this.options.callback = this.preRequestCallback();
+            this.options.onComplete = this.success();
+            this.options.onFailure = this.fail;
         },
 
         bindSelectedElementsToEditor: function (editor) {
@@ -466,7 +466,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 asynchronous: false,
                 onSuccess: function (data) {
                     data.responseJSON.forEach(function (user_details) {
-                        users.set(user_details["id"], user_details);
+                        users.set(user_details.id, user_details);
                     });
                 },
             });
@@ -509,7 +509,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
                 value = value.length === 0 ? "" : value;
                 parameters[linked_field] = value;
-                parameters["challenge"] = csrf_token_challenge_update;
+                parameters.challenge = csrf_token_challenge_update;
                 return parameters;
             };
         },
@@ -598,11 +598,6 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
                 avatar_img = new Element("img", {
                     src: user.avatar_url,
-                });
-                avatar_img.observe("load", function () {
-                    if (this.width == 0 || this.height == 0) {
-                        return;
-                    }
                 });
                 avatar_div.appendChild(avatar_img);
 

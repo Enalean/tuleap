@@ -66,9 +66,8 @@ function ExecutionLinkIssueCtrl(
                 artifact.tracker.color_name = issue_xref_color;
                 self.issue_artifact = artifact;
                 return true;
-            } else {
-                return $q.reject();
             }
+            return $q.reject();
         });
     }
 

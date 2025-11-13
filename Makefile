@@ -251,14 +251,6 @@ psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch,
 deptrac: ## Execute deptrac. Use SEARCH_PATH to look for deptrac config files under a specific path.
 	@PHP=$(PHP) ./tests/deptrac/run.sh
 
-eslint: ## Execute eslint. Use FILES parameter to execute on specific file or directory.
-	$(eval FILES ?= .)
-	@pnpm run eslint --quiet -- $(FILES)
-
-eslint-fix: ## Execute eslint with --fix to try to fix problems automatically. Use FILES parameter to execute on specific file or directory.
-	$(eval FILES ?= .)
-	@pnpm run eslint --fix --quiet -- $(FILES)
-
 .PHONY:treefmt
 treefmt: ## Run treefmt
 	@treefmt

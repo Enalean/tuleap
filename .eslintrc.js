@@ -213,6 +213,8 @@ module.exports = {
             files: [
                 ".eslintrc.js",
                 "webpack.*.js",
+                "webpack.*.mjs",
+                "lib/frontend/potentially-dangerous-bidirectional-characters/src/potentially-dangerous-bidirectional-characters-cli.mjs",
                 "plugins/tracker/grammar/",
                 "tools/**/*.js",
                 "jest.config.js",

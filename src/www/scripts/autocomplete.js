@@ -36,7 +36,7 @@ var AutoCompleter = Class.create({
             return;
         }
 
-        if (this.options["allowNull"]) {
+        if (this.options.allowNull) {
             this.element.observe("click", function () {
                 this.stopObserving("blur");
             });
