@@ -38,7 +38,7 @@ final readonly class Cardwall_OnTop_Config_View_ColumnDefinition
 
     private function fetchMappings(): string
     {
-        $html  = '<table class="tlp-table cardwall_admin_ontop_mappings">';
+        $html  = '<table class="tlp-table cardwall-admin-ontop-mappings">';
         $html .= '<thead><tr class="cardwall-admin-header">';
         $html .= '<th></th>';
         foreach ($this->config->getDashboardColumns() as $column) {
