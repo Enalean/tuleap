@@ -97,8 +97,8 @@ class WebhookEditController implements DispatchableWithRequest
         $this->dao->edit($webhook_id, $webhook_url);
 
         $layout->addFeedback(
-            Feedback::INFO,
-            dgettext('tuleap-tracker', 'Webhook sucessfully updated')
+            Feedback::SUCCESS,
+            dgettext('tuleap-tracker', 'Webhook successfully updated')
         );
 
         $layout->redirect($redirect_url);

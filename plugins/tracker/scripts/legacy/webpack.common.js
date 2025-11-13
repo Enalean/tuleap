@@ -59,7 +59,6 @@ const config_for_legacy_scripts = {
                 "./src/TrackerCollapseFieldset.js",
                 "./src/CopyArtifact.js",
                 "./src/tracker-report-type-column.js",
-                "./src/tracker-webhooks.js",
             ],
         }),
         webpack_configurator.getManifestPlugin(),

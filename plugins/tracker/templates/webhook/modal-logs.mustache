@@ -1,19 +1,19 @@
 <div id="modal-logs-{{ webhook_id }}"
-    class="modal hide fade modal-tracker-webhooks"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="modal-logs-title"
-    aria-hidden="true"
+     class="tlp-modal"
+     role="dialog"
+     aria-labelledby="modal-logs-{{ webhook_id }}-title"
 >
-    <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal">
-            <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-        </a>
-        <h3 id="modal-logs-title">{{# dgettext }} tuleap-tracker | Logs for %s | {{ webhook_url }} {{/ dgettext }}</h3>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-logs-{{ webhook_id }}-title">
+            {{# dgettext }} tuleap-tracker | Logs for %s | {{ webhook_url }} {{/ dgettext }}
+        </h1>
+        <button type="button" class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
     </div>
 
-    <div class="modal-body">
-        <table class="table tracker-webhooks-all-logs">
+    <div class="tlp-modal-body">
+        <table class="tlp-table">
             <thead>
                 <tr>
                     <th>{{# dgettext }} tuleap-tracker | Time {{/ dgettext }}</th>
@@ -23,17 +23,17 @@
             <tbody>
                 {{# all_log }}
                     <tr>
-                       <td>{{ time }}</td>
+                       <td class="tracker-admin-webhooks-modal-logs-time">{{ time }}</td>
                        <td>
                            {{# status_ok }}
-                            <span class="text-success" title="{{ status_message }}">
-                               <i class="fa fa-check-circle"></i> {{ status_message }}
+                            <span class="tlp-text-success" title="{{ status_message }}">
+                               <i class="fa-solid fa-check-circle" aria-hidden="true"></i> {{ status_message }}
                             </span>
                            {{/ status_ok }}
 
                            {{^ status_ok }}
-                            <span class="text-warning" title="{{ status_message }}">
-                                <i class="fa-solid fa-triangle-exclamation"></i> {{ status_message }}
+                            <span class="tlp-text-warning" title="{{ status_message }}">
+                                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{ status_message }}
                             </span>
                            {{/ status_ok }}
                        </td>
@@ -41,7 +41,7 @@
                 {{/ all_log }}
                 {{^ all_log }}
                     <tr>
-                        <td class="table-cell-empty" colspan="2">
+                        <td class="tlp-table-cell-empty" colspan="2">
                         {{# dgettext }} tuleap-tracker | No logs yet {{/ dgettext }}
                         </td>
                     </tr>
@@ -50,7 +50,9 @@
         </table>
     </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{# dgettext }} tuleap-tracker | Close {{/ dgettext }}</button>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }} tuleap-tracker | Close {{/ dgettext }}
+        </button>
     </div>
 </div>

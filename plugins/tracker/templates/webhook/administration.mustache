@@ -1,23 +1,29 @@
-<div id="tracker-webhooks">
-    <h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker | Webhooks {{/ dgettext }}</h2>
+<section class="tlp-pane">
+<div class="tlp-pane-container">
+    <div class="tlp-pane-header">
+        <h1 class="tlp-pane-title">
+            {{# dgettext }} tuleap-tracker | Webhooks {{/ dgettext }}
+        </h1>
+    </div>
+    <div class="tlp-pane-section">
+        <p>{{# dgettext }} tuleap-tracker | You can define several webhooks that will be processed after each artifact creation and updates. {{/ dgettext }}</p>
+        <p class="tlp-text-warning">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-tracker | Be careful, all the artifact content is sent in the payload without permission checks. {{/ dgettext }}
+        </p>
 
-    <p class="tracker-webhooks-desc">
-        {{# dgettext }} tuleap-tracker | You can define several webhooks that will be processed after each artifact creation and updates. {{/ dgettext }}
-        <span class="tracker-webhooks-desc-warn text-warning">
-        <i class="fa-solid fa-triangle-exclamation"></i> {{# dgettext }} tuleap-tracker | Be careful, all the artifact content is sent in the payload without permission checks. {{/ dgettext }}
-    </span>
-    </p>
+    <div class="tlp-table-actions">
+        <button
+            type="button"
+            class="tlp-button-primary tlp-table-actions-element tracker-admin-webhooks-modal-trigger"
+            data-target-modal-id="modal-create-webhook"
+        >
+            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i> {{# dgettext }} tuleap-tracker | Add webhook {{/ dgettext }}
+        </button>
+        {{> modal-create-webhook }}
+    </div>
 
-    <button
-        type="button"
-        class="btn btn-primary create-tracker-webhook-btn"
-        data-toggle="modal"
-        href="#modal-create-webhook"
-    >
-        <i class="fa-solid fa-plus"></i> {{# dgettext }} tuleap-tracker | Add webhook {{/ dgettext }}
-    </button>
-
-    <table class="table tracker-webhooks-list">
+    <table class="tlp-table">
         <thead>
         <tr>
             <th>{{# dgettext }} tuleap-tracker | URL {{/ dgettext }}</th>
@@ -32,45 +38,50 @@
                 <td class="last-push">
                     {{# last_log }}
                         {{# status_ok }}
-                            <span class="text-success" title="{{ status_message }}">
-                            <i class="fa fa-check-circle"></i> {{ status_message }}
+                            <span class="tlp-text-success" title="{{ status_message }}">
+                            <i class="fa-solid fa-check-circle" aria-hidden="true"></i> {{ status_message }}
                          </span>
                         {{/ status_ok }}
 
                         {{^ status_ok }}
-                            <span class="text-warning" title="{{ status_message }}">
-                            <i class="fa-solid fa-triangle-exclamation"></i> {{ status_message }}
+                            <span class="tlp-text-warning" title="{{ status_message }}">
+                            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{ status_message }}
                          </span>
                         {{/ status_ok }}
                     {{/ last_log }}
                 </td>
-                <td class="action-buttons">
-                    <a role="button" data-toggle="modal" href="#modal-logs-{{ webhook_id }}">
-                        <i class="fa fa-list"></i> {{# dgettext }} tuleap-tracker | Logs {{/ dgettext }}
-                    </a>
-                    <a role="button" data-toggle="modal" href="#modal-edit-webhook-{{ webhook_id }}">
-                        <i class="far fa-edit"></i> {{# dgettext }} tuleap-tracker | Edit {{/ dgettext }}
-                    </a>
-                    <a href="#"
-                       class="remove-tracker-webhook"
-                       data-toggle="popover"
-                       data-trigger="click"
-                       data-placement="left"
-                       data-html="true"
-                       data-popover-id="remove-{{ webhook_id }}-popover"
+                <td class="tlp-table-cell-actions">
+                    <button
+                        type="button"
+                        data-target-modal-id="modal-logs-{{ webhook_id }}"
+                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tracker-admin-webhooks-modal-trigger"
                     >
-                        <i class="far fa-trash-alt"></i> {{# dgettext }} tuleap-tracker | Remove {{/ dgettext }}
-                    </a>
+                        <i class="fa-solid fa-list tlp-button-icon" aria-hidden="true"></i> {{# dgettext }} tuleap-tracker | Logs {{/ dgettext }}
+                    </button>
+                    <button
+                        type="button"
+                        data-target-modal-id="modal-edit-webhook-{{ webhook_id }}"
+                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tracker-admin-webhooks-modal-trigger"
+                    >
+                        <i class="fa-solid fa-edit tlp-button-icon"></i> {{# dgettext }} tuleap-tracker | Edit {{/ dgettext }}
+                    </button>
+                    <button
+                        type="button"
+                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline tracker-admin-webhooks-modal-trigger"
+                        data-target-modal-id="remove-{{ webhook_id }}-modal"
+                    >
+                        <i class="fa-solid fa-trash-alt tlp-button-icon"></i> {{# dgettext }} tuleap-tracker | Remove {{/ dgettext }}
+                    </button>
 
                     {{> modal-logs }}
-                    {{> popover-remove-webhook }}
+                    {{> modal-remove-webhook }}
                 </td>
             </tr>
         {{/ webhook_presenters }}
 
         {{^ webhook_presenters }}
             <tr>
-                <td class="table-cell-empty" colspan="3">
+                <td class="tlp-table-cell-empty" colspan="3">
                     {{# dgettext }} tuleap-tracker | No webhooks defined {{/ dgettext }}
                 </td>
             </tr>
@@ -78,9 +89,8 @@
         </tbody>
     </table>
 </div>
-
-{{> modal-create-webhook }}
-
 {{# webhook_presenters }}
     {{> modal-edit-webhook }}
 {{/ webhook_presenters }}
+    </div>
+</section>
