@@ -68,21 +68,13 @@ main() {
     then
       PHP=$(command -v php)
     fi
-    $PHP ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset-minimal.xml --encoding=utf-8 --runtime-set php_version 80200 -s ${files_list}
-    local status_strict=$?
-    if [[ ${status_strict} -ne 0 ]]
-    then
-        files_list=$(echo -n "$files_list" | tr '\n' ' ')
-        echo -e "This command can be launched to fix some errors automatically:\n\n\033[32mmake phpcbf FILES='$files_list'\e[0m\n"
-        exit ${status_strict}
-    fi
 
     local files_psr2_mandatory
     files_psr2_mandatory=$(get_list_of_mandatory_psr2_files "${files_list}")
     if [[ -n ${files_psr2_mandatory} ]]
     then
         local phpcs_output
-        phpcs_output=$($PHP ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset.xml --encoding=utf-8 --runtime-set php_version 80200 -s -p ${files_psr2_mandatory})
+        phpcs_output=$($PHP ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset.xml --encoding=utf-8 --runtime-set php_version 80400 -s -p ${files_psr2_mandatory})
         local status=$?
         if [[ ${status} -ne 0 ]]
         then

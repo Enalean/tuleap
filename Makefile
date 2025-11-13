@@ -248,14 +248,6 @@ psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch,
 	$(PHP) -d display_errors=1 -d display_startup_errors=1 -d memory_limit=-1 \
 	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml
 
-phpcs: ## Execute PHPCS with the "strict" ruleset. Use FILES parameter to execute on specific file or directory.
-	$(eval FILES ?= .)
-	@$(PHP) -d memory_limit=2536M ./src/vendor/bin/phpcs --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml --runtime-set php_version 80200 -s -p $(FILES)
-
-phpcbf: ## Execute PHPCBF with the "strict" ruleset enforced on all the codebase. Use FILES parameter to execute on specific file or directory.
-	$(eval FILES ?= .)
-	@$(PHP) -d memory_limit=2536M ./src/vendor/bin/phpcbf --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml --runtime-set php_version 80200 -p $(FILES)
-
 deptrac: ## Execute deptrac. Use SEARCH_PATH to look for deptrac config files under a specific path.
 	@PHP=$(PHP) ./tests/deptrac/run.sh
 
