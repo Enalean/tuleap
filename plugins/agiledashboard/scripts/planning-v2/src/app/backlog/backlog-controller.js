@@ -20,6 +20,7 @@
 import angular from "angular";
 import { extend, keyBy, isEmpty } from "lodash-es";
 import BacklogFilterValue from "../backlog-filter-terms.js";
+import { drag_autoscroll_service } from "../drag-autoscroll/drag-autoscroll-service";
 
 export default BacklogController;
 
@@ -400,6 +401,8 @@ function BacklogController(
     function dragularDrag(event, element) {
         event.stopPropagation();
 
+        drag_autoscroll_service.start();
+
         if (
             BacklogItemSelectedService.areThereMultipleSelectedBaklogItems() &&
             BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
@@ -414,6 +417,8 @@ function BacklogController(
 
     function dragularCancel(event) {
         event.stopPropagation();
+
+        drag_autoscroll_service.stop();
 
         BacklogItemSelectedService.deselectAllBacklogItems();
         $scope.$apply();
@@ -430,6 +435,8 @@ function BacklogController(
         target_index,
     ) {
         event.stopPropagation();
+
+        drag_autoscroll_service.stop();
 
         var source_list_element = angular.element(source_element),
             target_list_element = angular.element(target_element),

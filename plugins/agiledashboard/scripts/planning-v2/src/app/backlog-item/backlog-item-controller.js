@@ -1,6 +1,7 @@
 import angular from "angular";
 import { extend, isBoolean } from "lodash-es";
 import { getAccessibilityMode } from "../user-accessibility-mode.js";
+import { drag_autoscroll_service } from "../drag-autoscroll/drag-autoscroll-service";
 export default BacklogItemController;
 
 BacklogItemController.$inject = [
@@ -238,6 +239,8 @@ function BacklogItemController(
     function dragularDrag(event, element) {
         event.stopPropagation();
 
+        drag_autoscroll_service.start();
+
         if (
             BacklogItemSelectedService.areThereMultipleSelectedBaklogItems() &&
             BacklogItemSelectedService.isDraggedBacklogItemSelected(getDroppedItemId(element))
@@ -252,6 +255,8 @@ function BacklogItemController(
 
     function dragularCancel(event, dropped_item_element, source_element) {
         event.stopPropagation();
+
+        drag_autoscroll_service.stop();
 
         if (self.escaping) {
             self.escaping = false;
@@ -323,6 +328,8 @@ function BacklogItemController(
         target_index,
     ) {
         event.stopPropagation();
+
+        drag_autoscroll_service.stop();
 
         var source_list_element = angular.element(source_element),
             target_list_element = angular.element(target_element),
