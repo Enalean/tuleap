@@ -32,7 +32,6 @@ module.exports = [
                     "./src/ajaxInPlaceEditorExtensions.js",
                     "./src/cardwall.js",
                     "./src/script.js",
-                    "./src/custom-mapping.js",
                     "./src/CardsEditInPlace.js",
                     "./src/fullscreen.js",
                 ],

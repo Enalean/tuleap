@@ -42,7 +42,6 @@ use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundEx
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
-use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -312,10 +311,15 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 'src/planning-admin-colorpicker.ts'
             )
         );
-        $this->layout->addCssAsset(CssViteAsset::fromFileName(new IncludeViteAssets(
-            __DIR__ . '/../../../cardwall/scripts/styles/frontend-assets',
-            '/assets/cardwall/styles'
-        ), 'themes/BurningParrot/card-preview.scss'));
+        $this->layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../cardwall/scripts/planning-administration/frontend-assets',
+                    '/assets/cardwall/planning-administration'
+                ),
+                'src/planning-administration.ts'
+            )
+        );
 
         $title = dgettext('tuleap-agiledashboard', 'Edit');
 
