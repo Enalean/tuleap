@@ -2161,9 +2161,6 @@ msgstr "대기 중인 초대"
 msgid "Pending projects"
 msgstr "대기 중인 프로젝트"
 
-msgid "Pending trackers removal"
-msgstr "대기 중인 트래커 제거"
-
 msgid "Pending users"
 msgstr "대기 중인 사용자"
 

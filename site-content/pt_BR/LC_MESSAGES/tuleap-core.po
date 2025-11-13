@@ -2210,9 +2210,6 @@ msgstr "Convites pendentes"
 msgid "Pending projects"
 msgstr "Projetos pendentes"
 
-msgid "Pending trackers removal"
-msgstr "Trackers pendentes de remoção"
-
 msgid "Pending users"
 msgstr "Usuários pendentes"
 

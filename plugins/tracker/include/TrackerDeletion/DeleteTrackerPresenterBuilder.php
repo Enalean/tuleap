@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\TrackerDeletion;
 
-use CSRFSynchronizerToken;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final readonly class DeleteTrackerPresenterBuilder
 {
-    public function __construct(private TrackerDeletionRetriever $tracker_retriever)
+    public function __construct(private TrackerDeletionRetriever $tracker_retriever, private CSRFSynchronizerTokenInterface $restore_token)
     {
     }
 
@@ -36,7 +36,6 @@ final readonly class DeleteTrackerPresenterBuilder
 
         $deleted_trackers_presenters = [];
         $tracker_ids_warning         = [];
-        $restore_token               = new CSRFSynchronizerToken('/tracker/admin/restore.php');
 
         foreach ($deleted_trackers as $tracker) {
             $project = $tracker->getProject();
@@ -58,7 +57,7 @@ final readonly class DeleteTrackerPresenterBuilder
                 $project_id,
                 $project_name,
                 $deletion_date,
-                $restore_token
+                $this->restore_token
             );
         }
 

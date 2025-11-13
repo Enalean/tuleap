@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\TrackerDeletion;
 
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\TrackerDeletion\RetrieveDeletedTrackerStub;
@@ -46,7 +47,7 @@ final class DeleteTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             RetrieveTrackerStub::withoutTracker()
         );
 
-        $builder = new DeleteTrackerPresenterBuilder($tracker_retriever);
+        $builder = new DeleteTrackerPresenterBuilder($tracker_retriever, CSRFSynchronizerTokenStub::buildSelf());
 
         $presenter = $builder->displayDeletedTrackers();
         self::assertEquals([], $presenter->deleted_trackers_list);
@@ -64,7 +65,7 @@ final class DeleteTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             RetrieveTrackerStub::withTracker($tracker)
         );
 
-        $builder = new DeleteTrackerPresenterBuilder($tracker_retriever);
+        $builder = new DeleteTrackerPresenterBuilder($tracker_retriever, CSRFSynchronizerTokenStub::buildSelf());
 
         $presenter = $builder->displayDeletedTrackers();
         self::assertCount(1, $presenter->deleted_trackers_list);
@@ -84,7 +85,7 @@ final class DeleteTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             RetrieveTrackerStub::withTracker($tracker)
         );
 
-        $builder = new DeleteTrackerPresenterBuilder($tracker_retriever);
+        $builder = new DeleteTrackerPresenterBuilder($tracker_retriever, CSRFSynchronizerTokenStub::buildSelf());
 
         $presenter = $builder->displayDeletedTrackers();
 

@@ -21,11 +21,13 @@
 
 namespace Tuleap\Tracker\TrackerDeletion;
 
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
 final class DeletedTrackerPresenter
 {
     public int $id;
     public string $tracker;
-    public \CSRFSynchronizerToken $csrf_token;
+    public CSRFSynchronizerTokenInterface $csrf_token;
 
     public function __construct(
         int $tracker_id,
@@ -33,7 +35,7 @@ final class DeletedTrackerPresenter
         public int $project_id,
         public string $project_name,
         public string $deletion_date,
-        public \CSRFSynchronizerToken $restore_token,
+        public CSRFSynchronizerTokenInterface $restore_token,
     ) {
         $this->id         = $tracker_id;
         $this->tracker    = $tracker_name;

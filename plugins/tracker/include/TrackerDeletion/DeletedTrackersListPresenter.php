@@ -22,6 +22,8 @@ namespace Tuleap\Tracker\TrackerDeletion;
 
 final class DeletedTrackersListPresenter
 {
+    public TrackerRestorationSectionsPresenter $sections;
+    public string $tracker_restoration_url = TrackerRestorationDisplayController::FULL_URL;
     public string $title;
     public array $deleted_trackers_list;
     public array $tracker_ids_warning;
@@ -53,10 +55,11 @@ final class DeletedTrackersListPresenter
         $this->has_trackers                = $has_trackers;
         $this->has_warnings                = count($this->tracker_ids_warning) > 0;
         $this->warning_message             = dgettext('tuleap-tracker', 'The following trackers cannot be displayed (data seems missing in database):') . implode(',', $this->tracker_ids_warning);
+        $this->sections                    = new TrackerRestorationSectionsPresenter();
     }
 
     public function getTemplateDir(): string
     {
-        return TRACKER_TEMPLATE_DIR;
+        return TRACKER_TEMPLATE_DIR . '/siteadmin-config/';
     }
 }

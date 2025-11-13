@@ -216,16 +216,6 @@ tracker_admin_index	modify_fieldset	 - Modifier le groupe de champs
 tracker_admin_index	modify_fieldset_for	 - Modifier le groupe de champs '$1'
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/admin/restore.php
-#
-tracker_admin_restore	restore_failed	L'opération de restauration a échoué
-tracker_admin_restore	tracker_restored	Tracker restauré
-tracker_admin_restore	delay_failed	Echec de l'opération de report
-tracker_admin_restore	delayed_deletion	Destruction reportée
-tracker_admin_restore	pending_deletions	Tracker en attente de destruction
-tracker_admin_restore	tracker_deleted	Tracker détruit
-#
-#-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactCannedHtml.class.php
 #
 tracker_include_canned	create_response	Créer une nouvelle réponse

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\TrackerDeletion;
 
 use ForgeConfig;
+use Tuleap\Config\ConfigurationVariablesLocalIncDist;
 use Tuleap\DB\DataAccessObject;
 
 final class DeletedTrackerDao extends DataAccessObject implements RetrieveDeletedTracker, RestoreDeletedTracker
@@ -30,10 +31,10 @@ final class DeletedTrackerDao extends DataAccessObject implements RetrieveDelete
     #[\Override]
     public function retrieveTrackersMarkAsDeleted(): array
     {
-        if (ForgeConfig::getInt('sys_file_deletion_delay') === 0) {
+        if (ForgeConfig::getInt(ConfigurationVariablesLocalIncDist::FILE_DELETION_DELAY) === 0) {
             return [];
         }
-        $displayed_purge_date = strtotime('-' . ForgeConfig::getInt('sys_file_deletion_delay') . ' day');
+        $displayed_purge_date = strtotime('-' . ForgeConfig::getInt(ConfigurationVariablesLocalIncDist::FILE_DELETION_DELAY) . ' day');
 
         $sql = "SELECT tracker.*
                 FROM tracker

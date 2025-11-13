@@ -28,9 +28,6 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactLinkConfigController;
 use CSRFSynchronizerToken;
-use Response;
-use PFUser;
-use Feedback;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 
 final class ConfigController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
@@ -48,7 +45,7 @@ final class ConfigController implements DispatchableWithRequestNoAuthz, Dispatch
     public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = $request->getCurrentUser();
-        $this->checkUserIsSiteadmin($user, $layout);
+        SiteAdminChecker::checkUserIsSiteadmin($user, $layout);
 
         switch ($request->get('action')) {
             case 'create-type':
@@ -92,14 +89,6 @@ final class ConfigController implements DispatchableWithRequestNoAuthz, Dispatch
             case 'emailgateway':
             default:
                 $this->mailgateway_controller->index($this->csrf, $layout);
-        }
-    }
-
-    private function checkUserIsSiteadmin(PFUser $user, Response $response)
-    {
-        if (! $user->isSuperUser()) {
-            $response->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'perm_denied'));
-            $response->redirect('/');
         }
     }
 }

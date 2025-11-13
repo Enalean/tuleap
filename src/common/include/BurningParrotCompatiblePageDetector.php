@@ -83,10 +83,7 @@ class BurningParrotCompatiblePageDetector
     {
         $uri = $_SERVER['REQUEST_URI'];
 
-        $is_in_site_admin = (
-                    strpos($uri, '/admin/') === 0 ||
-                    strpos($uri, '/tracker/admin/restore.php') === 0
-                );
+        $is_in_site_admin = strpos($uri, '/admin/') === 0;
 
         if ($is_in_site_admin && $current_user->isSuperUser()) {
             return true;

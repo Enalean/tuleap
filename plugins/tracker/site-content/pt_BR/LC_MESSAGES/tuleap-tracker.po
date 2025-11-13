@@ -3849,6 +3849,9 @@ msgstr ""
 msgid "Trackers new generation"
 msgstr ""
 
+msgid "Trackers restoration"
+msgstr ""
+
 msgid "Transition not found."
 msgstr ""
 

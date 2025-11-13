@@ -2252,9 +2252,6 @@ msgstr "Invitations en cours"
 msgid "Pending projects"
 msgstr "Projets en attente"
 
-msgid "Pending trackers removal"
-msgstr "Trackers en attente"
-
 msgid "Pending users"
 msgstr "Utilisateurs en attente"
 

@@ -322,14 +322,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const string IMPORT_COMPAT_REF_XML = 'import_compat_ref_xml';
 
     /**
-     * Event raised to display the list of deleted Trackers
-     *
-     * Expected results:
-     *     Void
-     */
-    public const string LIST_DELETED_TRACKERS = 'display_deleted_trackers';
-
-    /**
      * Event launched while importing a cardwall from a xml content
      *
      * Parameters:
