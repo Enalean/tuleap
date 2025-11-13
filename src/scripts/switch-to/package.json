@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@pinia/testing": "^0.0.14",
-    "@testing-library/vue": "^6.6.1",
+    "@testing-library/vue": "^8.1.0",
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
