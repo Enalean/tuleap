@@ -74,6 +74,4 @@ export const ensureStepsHaveBeenCompletedInTheRightOrder = (
     if (!allowed_origins || !allowed_origins.includes(from.name)) {
         return { name: NO_GROUP_LINKED_EMPTY_STATE };
     }
-
-    return;
 };

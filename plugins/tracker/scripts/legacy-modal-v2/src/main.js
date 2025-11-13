@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// eslint-disable-next-line import/no-extraneous-dependencies -- jquery is included in FlamingParrot
 import jQuery from "jquery";
 import CKEDITOR from "ckeditor4";
 import codendi from "codendi";

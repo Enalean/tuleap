@@ -31,7 +31,7 @@
  */
 document.observe("dom:loaded", function () {
     // Observe form elements to show the previous value if there is a change
-    var form = $(document["forms"]["update_user"]);
+    var form = $(document.forms.update_user);
     form.getElements().each(function (elt) {
         // Get inital value
         var span = new Element("span", { class: "highlight" });
@@ -43,7 +43,7 @@ document.observe("dom:loaded", function () {
         }
         span.update(tuleap.escaper.html(txt));
         var container = new Element("span", { style: "margin-left: 1em;" });
-        container.update(codendi.locales["admin_usergroup"].was + " ");
+        container.update(codendi.locales.admin_usergroup.was + " ");
         container.appendChild(span);
         container.hide();
         elt.parentNode.appendChild(container);
@@ -72,9 +72,9 @@ document.observe("dom:loaded", function () {
     });
 
     // Bind account status and unix status.
-    var form_status = $(document["forms"]["update_user"]["form_status"]);
+    var form_status = $(document.forms.update_user.form_status);
     form_status.observe("change", function () {
-        var form_unixstatus = $(document["forms"]["update_user"]["form_unixstatus"]);
+        var form_unixstatus = $(document.forms.update_user.form_unixstatus);
         var val = $F(form_status);
         switch (val) {
             case "S":

@@ -58,7 +58,6 @@ const injectContent = (
         return err(Fault.fromMessage(`#${container_id} not found.`));
     }
 
-    // eslint-disable-next-line no-unsanitized/property
     container.innerHTML = DOMPurify.sanitize(replaceVariables(content, variables));
     return ok(null);
 };

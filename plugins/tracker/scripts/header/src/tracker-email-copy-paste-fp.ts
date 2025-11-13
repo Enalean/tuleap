@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// eslint-disable-next-line import/no-extraneous-dependencies -- jquery is defined globally
 import jQuery from "jquery";
 import { setupEmailCopyModalInteractions } from "@tuleap/plugin-tracker-email-copy-paste";
 

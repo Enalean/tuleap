@@ -116,14 +116,6 @@ pipeline {
                     steps { script { execTestWithLimitedConcurrency({ actions.runDeptrac() }) } }
                     post { always { junit 'results/deptrac/*.xml' } }
                 }
-                stage('ESLint static analysis') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runESLint() }) } }
-                    post {
-                        always {
-                            recordIssues enabledForFailure: true, tools: [checkStyle(id: 'checkstyle_eslint', pattern: 'results/eslint/checkstyle.xml')]
-                        }
-                    }
-                }
                 stage ('JS Unit tests') {
                     steps { script { execTestWithLimitedConcurrency({ actions.runJSUnitTests() }) } }
                     post { always { junit 'results/js-test-results/junit-*.xml' } }

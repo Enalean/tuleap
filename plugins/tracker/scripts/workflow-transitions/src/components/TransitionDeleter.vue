@@ -33,7 +33,7 @@
         <transition-delete-popover
             v-else
             data-test="delete-transition"
-            v-on:deleteTransition="deleteTransitionIfNothingElseIsRunning"
+            v-on:delete-transition="deleteTransitionIfNothingElseIsRunning"
             v-bind:is_transition_updated="is_transition_updated"
             v-bind:is_confirmation_needed="is_confirmation_needed"
         />

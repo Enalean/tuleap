@@ -29,6 +29,20 @@ treefmt-nix.mkWrapper pkgs {
     package = pkgs.nixfmt;
   };
   programs.oxipng.enable = true;
+  settings.formatter.eslint = {
+    command = pkgs.writeShellScriptBin "tuleap-eslint" ''
+      set -eou pipefail
+
+      pnpm run eslint --fix -- "$@"
+    '';
+    includes = [
+      "*.js"
+      "*.mjs"
+      "*.ts"
+      "*.mts"
+      "*.vue"
+    ];
+  };
   settings.formatter.stylelint = {
     command = pkgs.writeShellScriptBin "tuleap-stylelint" ''
       set -eou pipefail

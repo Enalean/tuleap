@@ -55,7 +55,6 @@
 import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
 export default {
     name: "DateInput",
-    emits: ["new-input-value"],
     props: {
         input_value: {
             type: String,
@@ -64,6 +63,7 @@ export default {
             type: Boolean,
         },
     },
+    emits: ["new-input-value"],
     data() {
         return {
             DATE_FIELD_VALUE,
