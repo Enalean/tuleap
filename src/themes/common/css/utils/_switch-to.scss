@@ -32,7 +32,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     background: none;
 }
 
-.switch-to-modal-header {
+.tlp-modal-header.switch-to-modal-header {
     padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing)
         calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
     border-bottom: 1px solid rgb(104 122 124 / 20%);
@@ -115,7 +115,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     }
 }
 
-.switch-to-modal-body {
+.tlp-modal-body.switch-to-modal-body {
     display: flex;
     gap: var(--tlp-jumbo-spacing);
     padding: var(--tlp-large-spacing) var(--tlp-large-spacing) var(--tlp-large-spacing)
@@ -124,12 +124,12 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     color: var(--tlp-typo-default-text-color-on-dark-background);
 }
 
-.switch-to-modal-body-search-results {
+.tlp-modal-body.switch-to-modal-body-search-results {
     flex-direction: column;
     gap: var(--tlp-large-spacing);
 }
 
-.switch-to-modal-body-title {
+.tlp-modal-subtitle.switch-to-modal-body-title {
     color: var(--tlp-dimmed-color);
     font-size: 0.8125rem;
     font-weight: 600;
