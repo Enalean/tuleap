@@ -17,4 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "@fontsource/public-sans";
+import "@fontsource-variable/public-sans";

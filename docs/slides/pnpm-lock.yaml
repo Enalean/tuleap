@@ -10,7 +10,7 @@ overrides:
   safer-buffer: npm:@nolyfill/safer-buffer@^1
 
 dependencies:
-  '@fontsource/public-sans':
+  '@fontsource-variable/public-sans':
     specifier: ^5.2.7
     version: 5.2.7
   vue:
@@ -612,8 +612,8 @@ packages:
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
     dev: true
 
-  /@fontsource/public-sans@5.2.7:
-    resolution: {integrity: sha512-pVttDr3HvhVIt2x6sZJfZKksNEpq23C1JCHTQwT9KWJdmFRdNeRM8gQftq8uP72sPW+p3Ku9x8HPk2E392DFvg==}
+  /@fontsource-variable/public-sans@5.2.7:
+    resolution: {integrity: sha512-4mvade2J3slKkvwRkS+p8T3szet/0vhWoSnuUJTVU81Uo2pRpSZY/Y8bSLRqpSwzIPxjVmRJ53oq6JKP/l/PSg==}
     dev: false
 
   /@iconify-json/carbon@1.2.14:

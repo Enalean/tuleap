@@ -5,7 +5,7 @@ classification: 'TLP:CLEAR'
 mdc: true
 fonts:
   provider: none
-  sans: 'Public Sans'
+  sans: 'Public Sans Variable'
 
 layout: enalean-cover
 ---
