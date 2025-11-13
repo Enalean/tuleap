@@ -23,9 +23,12 @@ class MediawikiAdminLanguagePanePresenter extends MediawikiAdminPanePresenter
     /** @var array */
     private $supported_languages;
 
-    public function __construct(Project $project, array $supported_languages)
-    {
-        parent::__construct($project);
+    public function __construct(
+        Project $project,
+        array $supported_languages,
+        \Tuleap\Request\CSRFSynchronizerTokenInterface $csrf_token,
+    ) {
+        parent::__construct($project, $csrf_token);
         $this->supported_languages = $supported_languages;
     }
 

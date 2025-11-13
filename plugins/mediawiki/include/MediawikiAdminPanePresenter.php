@@ -23,7 +23,7 @@ class MediawikiAdminPanePresenter
     /** @var Project */
     protected $project;
 
-    public function __construct(Project $project)
+    public function __construct(Project $project, public readonly \Tuleap\Request\CSRFSynchronizerTokenInterface $csrf_token)
     {
         $this->project = $project;
     }

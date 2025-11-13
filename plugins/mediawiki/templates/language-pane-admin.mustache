@@ -29,6 +29,10 @@
                     {{/ available_languages }}
                 </div>
 
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/csrf_token}}
+
                 <div class="tlp-pane-section-submit">
                     <input type="submit" name="submit" value="{{ save_changes }}" class="tlp-button-primary">
                 </div>

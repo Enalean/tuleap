@@ -113,6 +113,10 @@
             </div>
         </section>
 
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/csrf_token}}
+
         <input type="submit"
                name="submit"
                value="{{ submit_label }}"

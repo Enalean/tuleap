@@ -32,8 +32,9 @@ class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
         $is_compatibility_view_enabled,
         array $read_ugroups,
         array $write_ugroups,
+        \Tuleap\Request\CSRFSynchronizerTokenInterface $csrf_token,
     ) {
-        parent::__construct($project);
+        parent::__construct($project, $csrf_token);
         $this->groups_permissions            = $groups_permissions;
         $this->is_compatibility_view_enabled = $is_compatibility_view_enabled;
         $this->read_ugroups                  = $read_ugroups;
