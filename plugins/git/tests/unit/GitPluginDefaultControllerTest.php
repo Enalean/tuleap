@@ -60,6 +60,8 @@ final class GitPluginDefaultControllerTest extends TestCase
 
     public static function generateBurningParrotURIs(): iterable
     {
+        yield [Git::ADMIN_ACTION];
+        yield [Git::ADMIN_GERRIT_TEMPLATES_ACTION];
         yield [Git::ADMIN_GIT_ADMINS_ACTION];
     }
 
@@ -80,8 +82,7 @@ final class GitPluginDefaultControllerTest extends TestCase
         yield ['fetch_git_template'];
         yield ['fork_repositories_permissions'];
         yield ['view_last_git_pushes'];
-        yield ['admin'];
-        yield ['admin-gerrit-templates'];
+        yield [''];
     }
 
     #[DataProvider('generateNotBurningParrotURIs')]

@@ -46,13 +46,7 @@ final class PullRequestPane extends Pane
     ) {
         parent::__construct(
             dgettext('tuleap-pullrequest', 'Pull requests'),
-            GIT_BASE_URL . '/?' . http_build_query(
-                [
-                    'action'   => 'admin-default-settings',
-                    'group_id' => $project->getID(),
-                    'pane'     => self::NAME,
-                ]
-            ),
+            DefaultSettingsUrlBuilder::build($project),
             $is_active,
             false
         );

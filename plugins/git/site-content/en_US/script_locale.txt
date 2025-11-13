@@ -1,9 +1,4 @@
 codendi.locales['git'] = {
-    preview: 'Preview',
-    path_placeholder_disabled: 'Disabled for cross projects',
-    path_placeholder_enabled: 'Enter a path or leave it blank',
-    cannot_get_gerrit_config: 'Unable to retrieve the configuration',
-    cannot_get_template: 'Unable to retrieve the template',
     remove_webhook_title: 'Wait a minute…',
     regexp_permission_enabled_info: 'Regular expressions are available, only \\n can\'t be used'
 };

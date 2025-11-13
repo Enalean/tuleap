@@ -22,20 +22,23 @@
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Git\GlobalAdmin\GerritTemplatesPresenter;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
+use Tuleap\Layout\IncludeViteAssets;
 
 include_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
 
 class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    private Project $project;
-    private UGroupManager $ugroup_manager;
-    private EventManager $event_manager;
+    private readonly Project $project;
+    private readonly UGroupManager $ugroup_manager;
+    private readonly EventManager $event_manager;
+    private int|string $groupId;
 
     public function __construct(
         $controller,
@@ -64,7 +67,7 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->header_renderer->renderDefaultHeader($this->request, $this->user, $this->project);
     }
 
-    public function footer()
+    public function footer(): void
     {
         $GLOBALS['HTML']->footer([]);
     }
@@ -178,31 +181,55 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->footer();
     }
 
-    protected function adminGerritTemplatesView()
+    protected function adminGerritTemplatesView(): void
     {
+        assert($GLOBALS['HTML'] instanceof \Tuleap\Layout\BaseLayout);
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../scripts/global-admin-gerrit/frontend-assets',
+                    '/assets/git/global-admin-gerrit'
+                ),
+                'src/main.ts'
+            )
+        );
+
         $params = $this->getData();
 
-        $repository_list       = (isset($params['repository_list'])) ? $params['repository_list'] : [];
-        $templates_list        = (isset($params['templates_list'])) ? $params['templates_list'] : [];
-        $parent_templates_list = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : [];
+        $repository_list       = $params['repository_list'] ?? [];
+        $templates_list        = $params['templates_list'] ?? [];
+        $parent_templates_list = $params['parent_templates_list'] ?? [];
 
         $event = new GitAdminGetExternalPanePresenters($this->project);
         $this->event_manager->processEvent($event);
 
-        $presenter = new GitPresenters_AdminGerritTemplatesPresenter(
+        $presenter = new GerritTemplatesPresenter(
             $repository_list,
             $templates_list,
             $parent_templates_list,
-            $this->groupId,
+            (int) $this->groupId,
+            $params['has_gerrit_servers_set_up'],
+            self::getGerritTemplatesCSRF((int) $this->groupId),
             $event->getExternalPanePresenters(),
-            $params['has_gerrit_servers_set_up']
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-        echo $renderer->renderToString('admin-gerrit-templates', $presenter);
+        $renderer->renderToPage('admin-gerrit-templates', $presenter);
         $this->footer();
+    }
+
+    public static function getGerritTemplatesCSRF(int $project_id): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(
+            '/plugins/git/?' . http_build_query(
+                [
+                    'action' => Git::ADMIN_GERRIT_TEMPLATES_ACTION,
+                    'group_id' => $project_id,
+                ]
+            )
+        );
     }
 
     private function generateMassUpdateCSRF()

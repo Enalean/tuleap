@@ -64,7 +64,7 @@ class GitPanePresenter
         return GIT_BASE_URL . '/?' . http_build_query(
             [
                 'group_id' => $project->getID(),
-                'action'   => 'admin-git-admins',
+                'action'   => \Git::GIT_ADMIN_USER_GROUPS_ACTION,
             ]
         );
     }

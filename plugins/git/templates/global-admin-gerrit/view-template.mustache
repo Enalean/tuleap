@@ -1,0 +1,39 @@
+<div
+    id="view-gerrit-template"
+    role="dialog"
+    aria-labelledby="view-gerrit-template-title"
+    class="tlp-modal"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="view-gerrit-template-title">
+            {{# dgettext }}tuleap-git | View Gerrit template{{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-git | Close{{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-property">
+            <label class="tlp-label">{{# dgettext }}tuleap-git | Template file name{{/ dgettext }}</label>
+            <span id="view-template-name"></span>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="view-template-text">
+                {{# dgettext }}tuleap-git | Gerrit template{{/ dgettext }}
+            </label>
+            <textarea
+                readonly
+                id="view-template-text"
+                class="tlp-textarea"
+                rows="15"
+            ></textarea>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button
+            type="button"
+            data-dismiss="modal"
+            class="tlp-button-primary tlp-button-outline tlp-modal-action"
+        >{{# dgettext }}tuleap-git | Close{{/ dgettext }}</button>
+    </div>
+</div>

@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2025-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+@use "pkg:@tuleap/tlp-dropdown";
+@use "pkg:@tuleap/tlp-modal";
+@use "pkg:@tuleap/plugin-git-global-admin-styles";
 
-namespace Tuleap\PullRequest\DefaultSettings;
+.git-admin-hidden {
+    display: none;
+}
 
-use Git;
-
-final class DefaultSettingsUrlBuilder
-{
-    public static function build(\Project $project): string
-    {
-        return '/plugins/git/?' . http_build_query(
-            [
-                'action'   => Git::ADMIN_DEFAULT_SETTINGS_ACTION,
-                'group_id' => $project->getID(),
-                'pane'     => PullRequestPane::NAME,
-            ]
-        );
-    }
+.git-admin-gerrit-feedback {
+    margin: var(--tlp-medium-spacing) 0;
 }
