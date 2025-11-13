@@ -478,9 +478,9 @@ abstract class ListFieldBind implements Tracker_FormElement_Field_Shareable, Tra
                 return true;
             }
             $GLOBALS['Response']->redirect('?' . http_build_query([
-                    'tracker' => $tracker->getId(),
-                    'func'    => 'admin-formElements',
-                ]));
+                'tracker' => $tracker->getId(),
+                'func'    => 'admin-formElements',
+            ]));
         }
         return true;
     }

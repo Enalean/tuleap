@@ -6,7 +6,7 @@ def getModifiedFilesSinceFirstParentOfCurrentCommit(String path) {
         return sh(
             returnStdout: true,
             script: """#!/usr/bin/env bash
-            changes=\$(git diff --name-only --diff-filter=ACMTUXB --no-renames \${GIT_COMMIT}^ | grep -v -E '^VERSION\$|Makefile\$')
+            changes=\$(git diff --name-only --diff-filter=ACMTUXB --no-renames \${GIT_COMMIT}^)
             if [ \$(echo "\$changes" | wc --chars) -ge 17266 ]; then
                 echo -n "."
             else

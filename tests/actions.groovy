@@ -80,9 +80,9 @@ def runSecretsScan() {
     }
 }
 
-def runTreefmt() {
+def runTreefmt(String filesToAnalyze = '.') {
     dir ('sources') {
-        runInsideNixShell('treefmt --ci')
+        runInsideNixShell("treefmt --ci ${filesToAnalyze}")
     }
 }
 
@@ -106,16 +106,6 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
             """
         }
     }
-}
-
-def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAnalyze) {
-    if (filesToAnalyze == '' || !filesToAnalyze.contains('.php')) {
-        return;
-    }
-    sh """
-    docker run --rm -v $WORKSPACE/sources:/usr/share/tuleap:ro -w /usr/share/tuleap --network none \${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-aio-dev:el9-php84 \
-        scl enable php84 "php -d memory_limit=2536M ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}"
-    """
 }
 
 def runDeptrac() {

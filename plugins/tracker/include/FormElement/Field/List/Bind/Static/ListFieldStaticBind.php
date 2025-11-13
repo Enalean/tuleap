@@ -574,9 +574,9 @@ class ListFieldStaticBind extends ListFieldBind
         $html .= '<strong>' . dgettext('tuleap-tracker', 'Add new values') . '</strong><br />';
         $html .= '<textarea name="bind[add]" rows="5" cols="30"></textarea><br />';
         $html .= '<span style="color:#999; font-size:0.8em;">' . dgettext(
-                'tuleap-tracker',
-                'Add one value per row'
-            ) . '</span><br />';
+            'tuleap-tracker',
+            'Add one value per row'
+        ) . '</span><br />';
         $html .= '</p>';
 
         //Select default values
@@ -594,7 +594,7 @@ class ListFieldStaticBind extends ListFieldBind
             return $html;
         }
 
-        $html        .= '<h3>' . dgettext('tuleap-tracker', 'Values added by users') . '</h3>';
+        $html       .= '<h3>' . dgettext('tuleap-tracker', 'Values added by users') . '</h3>';
         $user_values = [];
 
         foreach ($user_row_values as $row_value) {
@@ -654,7 +654,7 @@ class ListFieldStaticBind extends ListFieldBind
 
     private function fetchAdminEditRowNotModifiable(Tracker_FormElement_Field_List_Value $v)
     {
-        $html = '';
+        $html  = '';
         $html .= '<tr valign="top" class="' . ($v->isHidden() ? 'tracker_admin_static_value_hidden' : '') . '">';
         $html .= '<td>' . $this->formatChangesetValue(['id' => $v->getId()]) . '</td>';
         $html .= '</tr>';

@@ -85,24 +85,6 @@ pipeline {
                 stage('Translations: check .tab files') {
                     steps { script { execTestWithLimitedConcurrency({ actions.runTabFilesCheck() }) } }
                 }
-                stage('PHP coding standards') {
-                    steps {
-                        script {
-                            execTestWithLimitedConcurrency({
-                                def filesToAnalyze = '.'
-                                if (env.GIT_BRANCH != 'origin/master') {
-                                    def helpers = load 'sources/tests/helpers.groovy'
-                                    filesToAnalyze = helpers.getModifiedFilesSinceFirstParentOfCurrentCommit('sources/')
-                                }
-                                actions.runPHPCodingStandards(
-                                    './src/vendor/bin/phpcs',
-                                    './tests/phpcs/tuleap-ruleset-minimal.xml',
-                                    filesToAnalyze
-                                )
-                            })
-                        }
-                    }
-                }
                 stage('Psalm static analysis') {
                     agent {
                         docker {
@@ -150,7 +132,18 @@ pipeline {
                     steps { script { execTestWithLimitedConcurrency({ actions.runSecretsScan() }) } }
                 }
                 stage ('Treefmt linter/formatter') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runTreefmt() }) } }
+                    steps {
+                        script {
+                            execTestWithLimitedConcurrency({
+                                def filesToAnalyze = '.'
+                                if (env.GIT_BRANCH != 'origin/master') {
+                                    def helpers = load 'sources/tests/helpers.groovy'
+                                    filesToAnalyze = helpers.getModifiedFilesSinceFirstParentOfCurrentCommit('sources/')
+                                }
+                                actions.runTreefmt(filesToAnalyze)
+                            })
+                        }
+                    }
                 }
             }
             post {
