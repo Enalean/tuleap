@@ -179,17 +179,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject //phpcs:ignore PSR1.C
         return $this->retrieve($sql);
     }
 
-    public function getSVNActivities()
-    {
-        $sql = "SELECT group_id,COUNT(*) AS result
-                FROM  svn_commits
-                WHERE date <= $this->end_date
-                    AND date >= $this->start_date
-                GROUP BY group_id";
-
-        return $this->retrieve($sql);
-    }
-
     public function getGitRead()
     {
         $start_date = new DateTime('@' . $this->start_date);
@@ -296,36 +285,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject //phpcs:ignore PSR1.C
                 GROUP BY group_id";
 
         return $this->retrieve($sql);
-    }
-
-    public function getNumberOfOpenArtifactsBetweenStartDateAndEndDate()
-    {
-        if (TrackerV3::instance()->available()) {
-            $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
-                    FROM artifact_group_list, artifact
-                    WHERE ( open_date >= $this->start_date
-                        AND open_date < $this->end_date
-                        AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
-                    GROUP BY artifact_group_list.group_id";
-            return $this->retrieve($sql);
-        } else {
-            return [];
-        }
-    }
-
-    public function getNumberOfClosedArtifactsBetweenStartDateAndEndDate()
-    {
-        if (TrackerV3::instance()->available()) {
-            $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
-                    FROM artifact_group_list, artifact
-                    WHERE ( close_date >= $this->start_date
-                        AND close_date < $this->end_date
-                        AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
-                    GROUP BY artifact_group_list.group_id";
-            return $this->retrieve($sql);
-        } else {
-            return [];
-        }
     }
 
     public function getNumberOfUserAddedBetweenStartDateAndEndDate()

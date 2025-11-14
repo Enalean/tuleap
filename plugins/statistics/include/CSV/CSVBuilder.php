@@ -80,9 +80,6 @@ class CSVBuilder
             );
         }
 
-        //SVN
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getSVNActivities(), 'SVN activities');
-
         //GIT
         $git_plugin = $this->plugin_manager->getPluginByName('git');
         if ($git_plugin && $this->plugin_manager->isPluginEnabled($git_plugin)) {
@@ -100,10 +97,6 @@ class CSVBuilder
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfWikiDocuments(), 'Wiki documents');
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate(), 'Modified wiki pages');
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfDistinctWikiPages(), 'Distinct wiki pages');
-
-        //Trackers v3
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate(), 'Open artifacts');
-        $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate(), 'Closed artifacts');
 
         //Docman
         $this->services_usage_formatter->buildDatas($this->services_usage_dao->getAddedDocumentBetweenStartDateAndEndDate(), 'Added documents');
