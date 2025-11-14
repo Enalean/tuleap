@@ -27,8 +27,8 @@
         v-bind:aria-label="$gettext('Switch to…')"
         ref="modal"
     >
-        <switch-to-header class="modal-header" v-bind:modal="null" />
-        <switch-to-body class="modal-body" />
+        <switch-to-header class="modal-header tlp-modal-header" v-bind:modal="null" />
+        <switch-to-body class="modal-body tlp-modal-body" />
     </div>
 </template>
 <script setup lang="ts">
