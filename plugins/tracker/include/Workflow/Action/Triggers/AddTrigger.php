@@ -20,41 +20,31 @@
 
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Workflow_Action_Triggers_AddTrigger
+readonly class Tracker_Workflow_Action_Triggers_AddTrigger
 {
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-
-    /**
-     * @var Tracker_Workflow_Trigger_RulesManager
-     */
-    private $rule_manager;
-
-    public function __construct(Tracker $tracker, Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_RulesManager $rule_manager)
-    {
-        $this->tracker             = $tracker;
-        $this->formelement_factory = $formelement_factory;
-        $this->rule_manager        = $rule_manager;
+    public function __construct(
+        private Tracker $tracker,
+        private Tracker_FormElementFactory $formelement_factory,
+        private Tracker_Workflow_Trigger_RulesManager $rule_manager,
+        private \Tuleap\Request\CSRFSynchronizerTokenInterface $csrf_token,
+    ) {
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
+        $this->csrf_token->check();
         $validator = new Tracker_Workflow_Trigger_TriggerValidator($this->rule_manager);
 
         $GLOBALS['Response']->setContentType('text/plain');
         try {
             $rules_factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory, $validator);
-            $rule          = $rules_factory->getRuleFromJson($this->tracker, $request->getJsonDecodedBody());
+            $rule          = $rules_factory->getRuleFromJson(
+                $this->tracker,
+                json_decode((string) $request->get('trigger_data'), false, 16, JSON_THROW_ON_ERROR)
+            );
             $this->rule_manager->add($rule);
             echo $rule->getId();
-        } catch (Tracker_Exception $exception) {
+        } catch (JsonException | Tracker_Exception $exception) {
             echo $exception->getMessage();
             $GLOBALS['Response']->sendStatusCode(400);
         }

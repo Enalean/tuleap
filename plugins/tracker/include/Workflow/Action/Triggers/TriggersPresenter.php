@@ -22,27 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\Action\Triggers;
 
-use CSRFSynchronizerToken;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-class TriggersPresenter
+final readonly class TriggersPresenter
 {
-    /**
-     * @var int
-     */
-    public $tracker_id;
-
-    /**
-     * @var string
-     */
-    public $triggers_form_action;
-
-    /** @var CSRFSynchronizerToken */
-    public $csrf_token;
-
-    public function __construct(int $tracker_id, string $triggers_form_action, CSRFSynchronizerToken $csrf_token)
+    public function __construct(public int $tracker_id, public CSRFSynchronizerTokenInterface $csrf_token)
     {
-        $this->tracker_id           = $tracker_id;
-        $this->triggers_form_action = $triggers_form_action;
-        $this->csrf_token           = $csrf_token;
     }
 }

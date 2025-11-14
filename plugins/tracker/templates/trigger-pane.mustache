@@ -39,16 +39,27 @@
                         </p>
                     </td>
                     <td>
-                        <img border="0" alt="remove" src="/themes/common/images/ic/cross.png" class="trigger_remove">
+                        <form method="post" action="/plugins/tracker/">
+                            {{# csrf_token }}
+                                {{> csrf_token_input }}
+                            {{/ csrf_token }}
+                            <input type="hidden" name="func" value="admin-workflow-delete-trigger">
+                            <input type="hidden" name="tracker" value="{{ tracker_id }}">
+                            <button type="submit" class="btn-link">
+                                <img alt="remove" src="/themes/common/images/ic/cross.png">
+                            </button>
+                        </form>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <form method="post" action="{{ triggers_form_action }}" id="triggers_form" style="display:none;">
+    <form method="post" action="/plugins/tracker/" id="triggers_form" style="display:none;">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
+        <input type="hidden" name="func" value="admin-workflow-add-trigger">
+        <input type="hidden" name="tracker" value="{{ tracker_id }}">
         <p class="add_new_trigger">
             <a href="#add-new-trigger" id="add_new_trigger_title">
                 <i class="fa-solid fa-plus"></i>

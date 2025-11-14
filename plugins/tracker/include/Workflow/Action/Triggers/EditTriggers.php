@@ -25,29 +25,17 @@ use Tuleap\Tracker\Workflow\Action\Triggers\TriggersPresenter;
 class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Action
 {
     private $template_renderer;
-    private $token;
     private $rule_manager;
-    /**
-     * @var string
-     */
-    private $url_query;
 
     public function __construct(
         Tracker $tracker,
-        CSRFSynchronizerToken $token,
+        private readonly \Tuleap\Request\CSRFSynchronizerTokenInterface $token,
         TemplateRenderer $renderer,
         Tracker_Workflow_Trigger_RulesManager $rule_manager,
     ) {
         parent::__construct($tracker);
 
-        $this->url_query         = TRACKER_BASE_URL . '/?' . http_build_query(
-            [
-                'tracker' => (int) $this->tracker->id,
-                'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
-            ]
-        );
         $this->template_renderer = $renderer;
-        $this->token             = $token;
         $this->rule_manager      = $rule_manager;
     }
 
@@ -63,7 +51,6 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
 
         $presenter = new TriggersPresenter(
             $this->tracker->getId(),
-            $this->url_query,
             $this->token
         );
 

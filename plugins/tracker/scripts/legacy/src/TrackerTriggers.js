@@ -188,34 +188,34 @@ tuleap.trackers.trigger = Class.create({
         delete this.triggering_fields[triggering_field.getId()];
     },
 
-    save: function (callback) {
-        var trigger_data = this.toJSON(),
-            self = this,
-            tracker_id = this.getUrlParam("tracker");
+    save: async function (callback) {
+        const trigger_data = this.toJSON();
 
         if (!trigger_data) {
             return;
         }
 
-        new Ajax.Request(
-            codendi.tracker.base_url +
-                "?tracker=" +
-                tracker_id +
-                "&func=admin-workflow-add-trigger",
-            {
-                contentType: "application/json",
-                method: "POST",
-                postBody: Object.toJSON(trigger_data),
-                onSuccess: function (response) {
-                    self.setId(response.responseText);
-                    callback();
-                },
-                onFailure: function (response) {
-                    //eslint-disable-next-line no-alert
-                    alert(response.responseText);
-                },
-            },
-        );
+        const form = document.getElementById("triggers_form");
+        if (!(form instanceof HTMLFormElement)) {
+            return;
+        }
+        const form_data = new FormData(form);
+        form_data.set("trigger_data", JSON.stringify(trigger_data));
+
+        const response = await fetch(form.action, {
+            method: "post",
+            body: form_data,
+        });
+
+        const response_content = response.text();
+        if (response.status !== 200) {
+            //eslint-disable-next-line no-alert
+            alert(response_content);
+            return;
+        }
+
+        this.setId(response_content);
+        callback();
     },
 
     getTargetFieldId: function () {
