@@ -25,6 +25,8 @@ use Feedback;
 use Psr\Log\LoggerInterface;
 use Project;
 use Rule_Email;
+use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\SVN\Notifications\CannotAddUgroupsNotificationException;
@@ -85,6 +87,8 @@ class AdminController
         HookConfigUpdator $hook_config_updator,
         HookConfigRetriever $hook_config_retriever,
         RepositoryDeleter $repository_deleter,
+        private readonly \User_ForgeUserGroupFactory $ugroup_factory,
+        private readonly UserGroupsPresenterBuilder $user_groups_presenter_builder,
     ) {
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
@@ -111,9 +115,16 @@ class AdminController
 
         $mail_header           = $this->mail_header_manager->getByRepository($repository);
         $notifications_details = $this->mail_notification_manager->getByRepository($repository);
+        $project_ugroups       = $this->ugroup_factory->getAllForProject($request->getProject());
 
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
+        $GLOBALS['Response']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../../../scripts/main/frontend-assets', '/assets/svn/main'),
+                'svn-admin.js',
+            )
+        );
         $service->renderInPageRepositoryAdministration(
             $request,
             $repository->getName() . ' – ' . $title,
@@ -121,10 +132,11 @@ class AdminController
             new MailNotificationPresenter(
                 $repository,
                 $request->getProject(),
-                $token,
+                CSRFSynchronizerTokenPresenter::fromToken($token),
                 $title,
                 $mail_header,
-                $this->notification_list_builder->getNotificationsPresenter($notifications_details)
+                $this->user_groups_presenter_builder->getUgroups($project_ugroups, []),
+                $this->notification_list_builder->getNotificationsPresenter($project_ugroups, $notifications_details)
             ),
             '',
             $repository,
@@ -144,12 +156,12 @@ class AdminController
             $mail_header = new MailHeader($repository, $repo_name);
             try {
                 $this->mail_header_manager->create($mail_header);
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-svn', 'Header updated successfully'));
+                $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, dgettext('tuleap-svn', 'Header updated successfully'));
             } catch (CannotCreateMailHeaderException $e) {
-                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Header update failed.'));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-svn', 'Header update failed.'));
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Header update failed.'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-svn', 'Header update failed.'));
         }
 
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
@@ -186,7 +198,7 @@ class AdminController
         $form_path       = $notification_to_add['path'];
         $valid_path      = new Valid_String($form_path);
         $invalid_entries = new InvalidEntryInAutocompleterCollection();
-        $autocompleter   = $this->getAutocompleter($request->getProject(), $invalid_entries, $notification_to_add['emails']);
+        $autocompleter   = $this->getAutocompleter($request->getProject(), $invalid_entries, $notification_to_add);
 
         $is_path_valid = $request->valid($valid_path) && $form_path !== '';
         $invalid_entries->generateWarningMessageForInvalidEntries();
@@ -224,7 +236,7 @@ class AdminController
             try {
                 $this->mail_notification_manager->createWithHistory($mail_notification);
                 $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
+                    Feedback::SUCCESS,
                     dgettext('tuleap-svn', 'Email Notification updated successfully')
                 );
             } catch (CannotCreateMailHeaderException $e) {
@@ -252,11 +264,10 @@ class AdminController
         $notification_ids = array_keys($notification_to_update);
         $notification_id  = $notification_ids[0];
         $new_path         = $notification_to_update[$notification_id]['path'];
-        $emails           = $notification_to_update[$notification_id]['emails'];
         $valid_path       = new Valid_String($new_path);
 
         $invalid_entries = new InvalidEntryInAutocompleterCollection();
-        $autocompleter   = $this->getAutocompleter($request->getProject(), $invalid_entries, $emails);
+        $autocompleter   = $this->getAutocompleter($request->getProject(), $invalid_entries, $notification_to_update[$notification_id]);
 
         $is_path_valid = $request->valid($valid_path) && $new_path !== '';
         $invalid_entries->generateWarningMessageForInvalidEntries();
@@ -318,7 +329,7 @@ class AdminController
             }
 
             $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
+                Feedback::SUCCESS,
                 dgettext('tuleap-svn', 'Email Notification updated successfully')
             );
         } catch (CannotCreateMailHeaderException $e) {
@@ -349,7 +360,7 @@ class AdminController
 
                 $this->mail_notification_manager->removeByPathWithHistory($notification);
                 $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
+                    Feedback::SUCCESS,
                     dgettext(
                         'tuleap-svn',
                         'Notification deleted successfully.'
@@ -521,7 +532,7 @@ class AdminController
         ));
     }
 
-    private function getAutocompleter(Project $project, InvalidEntryInAutocompleterCollection $invalid_entries, $emails): RequestFromAutocompleter
+    private function getAutocompleter(Project $project, InvalidEntryInAutocompleterCollection $invalid_entries, array $recipients): RequestFromAutocompleter
     {
         $autocompleter = new RequestFromAutocompleter(
             $invalid_entries,
@@ -530,7 +541,7 @@ class AdminController
             $this->ugroup_manager,
             $this->user_manager->getCurrentUser(),
             $project,
-            $emails
+            $recipients
         );
         return $autocompleter;
     }

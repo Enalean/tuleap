@@ -22,60 +22,26 @@ namespace Tuleap\SVN\Notifications;
 
 use Tuleap\SVN\Admin\MailNotification;
 
-final class NotificationPresenter
+final readonly class NotificationPresenter
 {
-    /**
-     * @var int
-     */
-    public $notification_id;
-    /**
-     * @var string
-     */
-    public $path;
+    public int $notification_id;
+    public string $path;
+    public string $comma_separated_emails_to_be_notified;
 
     /**
-     * @var array
+     * @param list<array{id: int, name: string, selected: bool}> $ugroups
      */
-    public $emails_to_be_notified;
-    /**
-     * @var array
-     */
-    public $ugroups_to_be_notified;
-    /**
-     * @var array
-     */
-    public $users_to_be_notified;
-    /**
-     * @var string
-     */
-    public $users_to_be_notified_json;
-    /**
-     * @var string
-     */
-    public $ugroups_to_be_notified_json;
-    /**
-     * @var string
-     */
-    public $emails_to_be_notified_json;
-
     public function __construct(
         MailNotification $notification,
-        array $emails_to_be_notified,
-        array $users_to_be_notified,
-        array $ugroups_to_be_notified,
-        $emails_to_be_notified_json,
-        $users_to_be_notified_json,
-        $ugroups_to_be_notified_json,
+        public array $emails_to_be_notified,
+        public array $users_to_be_notified,
+        public array $ugroups_to_be_notified,
+        public string $users_to_be_notified_json,
+        public array $ugroups,
     ) {
         $this->notification_id = $notification->getId();
         $this->path            = $notification->getPath();
 
-        $this->users_to_be_notified   = $users_to_be_notified;
-        $this->ugroups_to_be_notified = $ugroups_to_be_notified;
-        $this->emails_to_be_notified  = $emails_to_be_notified;
-
-        $this->emails_to_be_notified_json  = $emails_to_be_notified_json;
-        $this->users_to_be_notified_json   = $users_to_be_notified_json;
-        $this->ugroups_to_be_notified_json = $ugroups_to_be_notified_json;
+        $this->comma_separated_emails_to_be_notified = implode(', ', $emails_to_be_notified);
     }
 }

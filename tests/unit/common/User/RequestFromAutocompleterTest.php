@@ -78,6 +78,11 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
             [$this->project, 'Developers', $this->developers],
             [$this->project, 'Secret', $this->secret],
         ]);
+        $this->ugroup_manager->method('getUgroup')->willReturnMap([
+            [$this->project, $this->project_members->getId(), $this->project_members],
+            [$this->project, $this->developers->getId(), $this->developers],
+            [$this->project, $this->secret->getId(), $this->secret],
+        ]);
 
         $this->user_manager = $this->createMock(\UserManager::class);
         $this->user_manager->method('findUser')->willReturnMap([
@@ -157,6 +162,19 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(['jdoe@example.com'], $request->getEmails());
         self::assertEquals([$this->developers], $request->getUgroups());
         self::assertEquals([$this->thomas], $request->getUsers());
+    }
+
+    public function testItExtractsEmailsAndUgroupsAndUsersFromArray(): void
+    {
+        $request = $this->getRequest([
+            'emails' => 'jdoe@example.com, neo@example.com',
+            'users' => 'Thomas A. Anderson (neo), Smith (asmith)',
+            'ugroup_ids' => ['3', '103'],
+        ]);
+
+        self::assertEquals(['jdoe@example.com', 'neo@example.com'], $request->getEmails());
+        self::assertEquals([$this->project_members, $this->developers], $request->getUgroups());
+        self::assertEquals([$this->thomas, $this->smith], $request->getUsers());
     }
 
     public function testItCollectsUnknownEntries(): void

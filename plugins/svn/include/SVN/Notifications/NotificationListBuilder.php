@@ -20,9 +20,13 @@
 
 namespace Tuleap\SVN\Notifications;
 
-use ProjectUGroup;
 use Tuleap\SVN\Admin\MailNotification;
-use UGroupDao;
+use Tuleap\SVN\Admin\UserGroupsPresenterBuilder;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\ProvideUserFromRow;
+use Tuleap\User\REST\MinimalUserRepresentation;
+use User_ForgeUGroup;
+use function Psl\Json\encode;
 
 class NotificationListBuilder
 {
@@ -31,97 +35,76 @@ class NotificationListBuilder
      */
     private $ugroup_to_be_notified_builder;
     /**
-     * @var UGroupDao
-     */
-    private $ugroup_dao;
-    /**
      * @var CollectionOfUserToBeNotifiedPresenterBuilder
      */
     private $user_to_be_notified_builder;
 
     public function __construct(
-        UGroupDao $ugroup_dao,
+        private readonly UgroupsToNotifyDao $ugroups_to_notify_dao,
+        private readonly UsersToNotifyDao $users_to_notify_dao,
+        private readonly ProvideUserFromRow $user_manager,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
+        private readonly UserGroupsPresenterBuilder $user_groups_presenter_builder,
         CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
         CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder,
     ) {
-        $this->ugroup_dao                    = $ugroup_dao;
         $this->user_to_be_notified_builder   = $user_to_be_notified_builder;
         $this->ugroup_to_be_notified_builder = $ugroup_to_be_notified_builder;
     }
 
     /**
+     * @param User_ForgeUGroup[] $project_ugroups
      * @param MailNotification[] $notifications
-     * @return array
+     * @return NotificationPresenter[]
      */
-    public function getNotificationsPresenter(array $notifications)
+    public function getNotificationsPresenter(array $project_ugroups, array $notifications): array
     {
         $notifications_presenters = [];
         foreach ($notifications as $notification) {
-            $emails_to_be_notified      = $notification->getNotifiedMails();
-            $user_presenters            = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
-            $ugroup_presenters          = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
+            $emails_to_be_notified = $notification->getNotifiedMails();
+            $user_presenters       = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
+            $ugroup_presenters     = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
+
+            $ugroups = $this->getUgroups($project_ugroups, $notification);
+
             $notifications_presenters[] = new NotificationPresenter(
                 $notification,
                 $emails_to_be_notified,
                 $user_presenters,
                 $ugroup_presenters,
-                json_encode($this->transformEmailsData($emails_to_be_notified)),
-                json_encode($this->transformUsersData($user_presenters)),
-                json_encode($this->transformUgroupsData($ugroup_presenters))
+                $this->getUsersToBeNotifiedJson($notification),
+                $ugroups,
             );
         }
         return $notifications_presenters;
     }
 
     /**
-     * @return array
+     * @param User_ForgeUGroup[] $project_ugroups
+     * @return list<array{id: int, name: string, selected: bool}>
      */
-    private function transformUgroupsData(array $ugroups_to_be_notified)
+    private function getUgroups(array $project_ugroups, MailNotification $notification): array
     {
-        $ugroups_to_be_notified_parsed = [];
-        foreach ($ugroups_to_be_notified as $ugroup_presenter) {
-            $ugroup_row                      = $this->ugroup_dao->searchByUGroupId($ugroup_presenter->ugroup_id);
-            $ugroup                          = new ProjectUGroup($ugroup_row);
-            $ugroup_parsed                   = [
-                'type' => 'group',
-                'id'   => '_ugroup:' . $ugroup->getNormalizedName(),
-                'text' => $ugroup->getTranslatedName(),
-            ];
-            $ugroups_to_be_notified_parsed[] = $ugroup_parsed;
+        $selected = [];
+        foreach ($this->ugroups_to_notify_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
+            $selected[$row['ugroup_id']] = true;
         }
-        return $ugroups_to_be_notified_parsed;
+
+        return $this->user_groups_presenter_builder->getUgroups($project_ugroups, $selected);
     }
 
-    /**
-     * @return array
-     */
-    private function transformUsersData(array $users_to_be_notified)
+    private function getUsersToBeNotifiedJson(MailNotification $notification): string
     {
-        $users_to_be_notified_parsed = [];
-        foreach ($users_to_be_notified as $user_presenter) {
-            $user_parsed                   = (array) $user_presenter;
-            $user_parsed['type']           = 'user';
-            $user_parsed['id']             = $user_presenter->label;
-            $user_parsed['text']           = $user_presenter->label;
-            $users_to_be_notified_parsed[] = $user_parsed;
+        $users = [];
+        foreach ($this->users_to_notify_dao->searchUsersByNotificationId($notification->getId()) as $row) {
+            $user    = $this->user_manager->getUserInstanceFromRow($row);
+            $users[] = MinimalUserRepresentation::build($user, $this->provide_user_avatar_url);
         }
-        return $users_to_be_notified_parsed;
-    }
 
-    /**
-     * @return array
-     */
-    private function transformEmailsData(array $emails_to_be_notified)
-    {
-        $emails_to_be_notified_parsed = [];
-        foreach ($emails_to_be_notified as $email) {
-            $email_parsed                   = [
-                'type' => 'email',
-                'id'   => $email,
-                'text' => $email,
-            ];
-            $emails_to_be_notified_parsed[] = $email_parsed;
-        }
-        return $emails_to_be_notified_parsed;
+        usort($users, function (MinimalUserRepresentation $a, MinimalUserRepresentation $b) {
+            return strnatcasecmp($a->display_name, $b->display_name);
+        });
+
+        return encode($users);
     }
 }

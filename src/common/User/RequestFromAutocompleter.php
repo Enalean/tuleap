@@ -99,15 +99,43 @@ class RequestFromAutocompleter
         $this->ugroups = [];
         $this->users   = [];
 
-        $list_of_listeners = array_filter(explode(',', $data));
+        if (is_array($data)) {
+            $this->populateFromArray($data);
+        } else {
+            $list_of_listeners = array_filter(explode(',', $data));
 
-        foreach ($list_of_listeners as $listener) {
-            $listener = trim($listener);
-            if ($this->isLookingLikeAnEmail($listener)) {
-                $this->addEmailFromListener($listener);
-            } elseif ($this->isLookingLikeAnUgroup($listener)) {
-                $this->addUgroupFromListener($listener);
-            } else {
+            foreach ($list_of_listeners as $listener) {
+                $listener = trim($listener);
+                if ($this->isLookingLikeAnEmail($listener)) {
+                    $this->addEmailFromListener($listener);
+                } elseif ($this->isLookingLikeAnUgroup($listener)) {
+                    $this->addUgroupFromListener($listener);
+                } else {
+                    $this->addUserFromListener($listener);
+                }
+            }
+        }
+    }
+
+    private function populateFromArray(array $data): void
+    {
+        if (isset($data['emails'])) {
+            $list_of_listeners = array_filter(array_map(trim(...), explode(',', $data['emails'])));
+            foreach ($list_of_listeners as $listener) {
+                if ($this->isLookingLikeAnEmail($listener)) {
+                    $this->addEmailFromListener($listener);
+                }
+            }
+        }
+        if (isset($data['ugroup_ids']) && is_array($data['ugroup_ids'])) {
+            $list_of_listeners = $data['ugroup_ids'];
+            foreach ($list_of_listeners as $listener) {
+                $this->addUgroupFromUgroupId((int) $listener);
+            }
+        }
+        if (isset($data['users'])) {
+            $list_of_listeners = array_filter(array_map(trim(...), explode(',', $data['users'])));
+            foreach ($list_of_listeners as $listener) {
                 $this->addUserFromListener($listener);
             }
         }
@@ -165,6 +193,16 @@ class RequestFromAutocompleter
             $this->ugroups[] = $ugroup;
         } else {
             $this->invalid_entries->add($name);
+        }
+    }
+
+    private function addUgroupFromUgroupId(int $ugroup_id): void
+    {
+        $ugroup = $this->ugroup_manager->getUGroup($this->project, $ugroup_id);
+        if ($ugroup && $this->userCanSeeUgroup($this->current_user, $ugroup, $this->project)) {
+            $this->ugroups[] = $ugroup;
+        } else {
+            $this->invalid_entries->add($ugroup_id);
         }
     }
 
