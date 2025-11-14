@@ -284,6 +284,7 @@ use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\User\UserPreferencesPostController;
 use Tuleap\Tracker\User\UserPreferencesPresenter;
+use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
 use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
@@ -554,6 +555,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 'admin-csvimport',
                 'admin-perms-tracker',
                 Workflow::FUNC_ADMIN_RULES,
+                AdminWebhooks::FUNC_ADMIN_WEBHOOKS,
             ],
             true,
         );

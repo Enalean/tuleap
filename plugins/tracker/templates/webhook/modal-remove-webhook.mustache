@@ -1,0 +1,38 @@
+<form
+    id="remove-{{ webhook_id }}-modal"
+    role="dialog"
+    action="/plugins/tracker/webhooks/delete"
+    method="POST"
+    class="tlp-modal tlp-modal-danger"
+    aria-labelledby="modal-remove-webhook-title-{{ webhook_id }}"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-remove-webhook-title-{{ webhook_id }}">
+            {{# dgettext }} tuleap-tracker | Webhook deletion {{/ dgettext }}
+        </h1>
+        <button type="button" class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <input type="hidden" name="webhook_id" value="{{ webhook_id }}" />
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+
+    <div class="tlp-modal-body">
+        <p>{{# dgettext }} tuleap-tracker | You are about to remove the webhook. {{/ dgettext }}</p>
+        <p>{{# dgettext }} tuleap-tracker | Please confirm your action. {{/ dgettext }}</p>
+    </div>
+
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }} tuleap-tracker | Cancel {{/ dgettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-tracker | Confirm deletion{{/ dgettext }}
+        </button>
+    </div>
+</form>
+

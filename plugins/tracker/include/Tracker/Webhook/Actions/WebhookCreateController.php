@@ -86,8 +86,8 @@ class WebhookCreateController implements DispatchableWithRequest
         $this->webhook_dao->save($tracker_id, $webhook_url);
 
         $layout->addFeedback(
-            \Feedback::INFO,
-            dgettext('tuleap-tracker', 'Webhook sucessfully created')
+            \Feedback::SUCCESS,
+            dgettext('tuleap-tracker', 'Webhook successfully created')
         );
 
         $layout->redirect($this->getAdminWebhooksURL($tracker));

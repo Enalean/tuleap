@@ -4119,13 +4119,16 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Webhook sucessfully created"
+msgid "Webhook deletion"
 msgstr ""
 
-msgid "Webhook sucessfully deleted"
+msgid "Webhook successfully created"
 msgstr ""
 
-msgid "Webhook sucessfully updated"
+msgid "Webhook successfully deleted"
+msgstr ""
+
+msgid "Webhook successfully updated"
 msgstr ""
 
 msgid "Webhooks"
@@ -4184,7 +4187,7 @@ msgid ""
 "your action."
 msgstr ""
 
-msgid "You are about to remove the webhook. Please confirm your action."
+msgid "You are about to remove the webhook."
 msgstr ""
 
 #, php-format

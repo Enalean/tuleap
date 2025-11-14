@@ -83,8 +83,8 @@ class WebhookDeleteController implements DispatchableWithRequest
         $this->dao->delete($webhook_id);
 
         $layout->addFeedback(
-            \Feedback::INFO,
-            dgettext('tuleap-tracker', 'Webhook sucessfully deleted')
+            \Feedback::SUCCESS,
+            dgettext('tuleap-tracker', 'Webhook successfully deleted')
         );
 
         $layout->redirect($this->getAdminWebhooksURL($tracker));

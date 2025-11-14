@@ -37,6 +37,8 @@ module.exports = [
             "general-settings-style": "./styles/general-settings.scss",
             "global-rules": "./src/global-rules.ts",
             "global-rules-style": "./styles/global-rules.scss",
+            webhooks: "./src/webhooks.ts",
+            "webhooks-style": "./styles/webhooks.scss",
         },
         context: __dirname,
         output: webpack_configurator.configureOutput(

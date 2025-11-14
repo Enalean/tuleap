@@ -4691,13 +4691,16 @@ msgstr[1] ""
 "fait référence. Veuillez consulter la documentation pour les sélections "
 "autorisées."
 
-msgid "Webhook sucessfully created"
+msgid "Webhook deletion"
+msgstr "Suppression de webhook"
+
+msgid "Webhook successfully created"
 msgstr "Le webhook a été créé"
 
-msgid "Webhook sucessfully deleted"
+msgid "Webhook successfully deleted"
 msgstr "Le webhook a été supprimé"
 
-msgid "Webhook sucessfully updated"
+msgid "Webhook successfully updated"
 msgstr "Le webhook a été mis à jour"
 
 msgid "Webhooks"
@@ -4771,10 +4774,8 @@ msgstr ""
 "Vous êtes sur le point de supprimer l'utilisateur de la liste des "
 "désabonnements.Merci de confirmer votre action."
 
-msgid "You are about to remove the webhook. Please confirm your action."
-msgstr ""
-"Vous êtes sur le point de supprimer le webhook. Veuillez confirmer la "
-"suppression."
+msgid "You are about to remove the webhook."
+msgstr "Vous êtes sur le point de supprimer le webhook."
 
 #, php-format
 msgid "You are currently copying the artifact %1$s."

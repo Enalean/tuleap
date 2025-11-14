@@ -27,6 +27,9 @@ use PFUser;
 use TemplateRendererFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tracker_Workflow_Action;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -59,7 +62,11 @@ class AdminWebhooks extends Tracker_Workflow_Action
     #[\Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
     {
-        $this->displayHeaderFlamingParrot($layout, dgettext('tuleap-tracker', 'Webhooks'));
+        $assets = new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $GLOBALS['Response']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'webhooks-style'));
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($assets, 'webhooks.js'));
+
+        $this->displayHeaderBurningParrot($layout, dgettext('tuleap-tracker', 'Webhooks'));
 
         $presenter = new AdminPresenter(
             $this->getWebhookPresenters(),
@@ -70,7 +77,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/webhook');
         $renderer->renderToPage('administration', $presenter);
 
-        $this->displayFooterFlamingParrot($layout);
+        $this->displayFooterBurningParrot($layout);
     }
 
     /**
