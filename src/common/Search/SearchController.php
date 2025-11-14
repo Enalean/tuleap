@@ -45,7 +45,6 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             ]
         );
         $this->search_types  = [
-            Search_SearchTrackerV3::NAME => new Search_SearchTrackerV3(new ArtifactDao()),
             Search_SearchProject::NAME   => new Search_SearchProject(new ProjectDao()),
             Search_SearchPeople::NAME    => new Search_SearchPeople(UserManager::instance()),
             Search_SearchWiki::NAME      => new Search_SearchWiki(new WikiDao()),
@@ -176,11 +175,6 @@ class Search_SearchController // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         if ($project->usesService('wiki')) {
             $search_wiki              = new Search_SearchWiki(new WikiDao());
             $additionnal_presenters[] = $search_wiki->getFacets($project->getID(), $words);
-        }
-
-        if ($project->usesService('tracker')) {
-            $search_tracker           = new Search_SearchTrackerV3(new ArtifactDao());
-            $additionnal_presenters[] = $search_tracker->getFacets($project);
         }
 
         return $additionnal_presenters;
