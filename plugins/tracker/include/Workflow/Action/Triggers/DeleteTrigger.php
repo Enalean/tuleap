@@ -20,37 +20,21 @@
 
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Workflow_Action_Triggers_DeleteTrigger
+readonly class Tracker_Workflow_Action_Triggers_DeleteTrigger
 {
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Tracker_Workflow_Trigger_RulesManager
-     */
-    private $rule_manager;
-
-    public function __construct(Tracker $tracker, Tracker_Workflow_Trigger_RulesManager $rule_manager)
+    public function __construct(private Tracker $tracker, private Tracker_Workflow_Trigger_RulesManager $rule_manager, private \Tuleap\Request\CSRFSynchronizerTokenInterface $csrf_token)
     {
-        $this->tracker      = $tracker;
-        $this->rule_manager = $rule_manager;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_IDisplayTrackerLayout $layout, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
+        $this->csrf_token->check();
         try {
-            if (! $request->isPost()) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Method must be post');
-                $GLOBALS['Response']->sendStatusCode(405);
-                return false;
-            }
-            $rule = $this->rule_manager->getRuleById($request->getValidated('id', 'uint', 0));
+            $rule = $this->rule_manager->getRuleById($request->getValidated('trigger_id', 'uint', 0));
             $this->rule_manager->delete($this->tracker, $rule);
         } catch (Tracker_Exception $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $GLOBALS['Response']->sendStatusCode(400);
         }
+        $GLOBALS['Response']->redirect('/plugins/tracker?' . http_build_query(['func' => 'admin-workflow-triggers', 'tracker' => $this->tracker->getId()]));
     }
 }

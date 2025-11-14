@@ -22,32 +22,24 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class WorkflowManager
 {
-    protected $tracker;
-
-    public function __construct($tracker)
+    public function __construct(private readonly Tuleap\Tracker\Tracker $tracker)
     {
-        $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $engine, \Tuleap\HTTPRequest $request, PFUser $current_user)
+    public function process(TrackerManager $engine, \Tuleap\HTTPRequest $request, PFUser $current_user): void
     {
         $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
             $token             = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
                 [
-                    'tracker' => (int) $this->tracker->id,
+                    'tracker' => $this->tracker->getId(),
                     'func'    => Workflow::FUNC_ADMIN_RULES,
                 ]
             ));
             $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance());
             $action            = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token, new ProjectHistoryDao(), TemplateRendererFactory::build());
         } elseif ($request->get('func') == Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS) {
-            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
-                [
-                    'tracker' => (int) $this->tracker->id,
-                    'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
-                ]
-            ));
+            $token = $this->getCrossTrackerTriggerCSRFToken();
 
             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR . '/../templates');
             $action   = new Tracker_Workflow_Action_Triggers_EditTriggers(
@@ -58,15 +50,25 @@ class WorkflowManager
             );
         } elseif ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
             $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
-        } elseif ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
-            $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $workflow_factory->getTriggerRulesManager());
-        } elseif ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
-            $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $workflow_factory->getTriggerRulesManager());
+        } elseif ($request->isPost() && $request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
+            $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $workflow_factory->getTriggerRulesManager(), $this->getCrossTrackerTriggerCSRFToken());
+        } elseif ($request->isPost() && $request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
+            $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $workflow_factory->getTriggerRulesManager(), $this->getCrossTrackerTriggerCSRFToken());
         } else {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/workflow/' . $this->tracker->id . '/transitions');
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/workflow/' . urlencode((string) $this->tracker->getId()) . '/transitions');
             return;
         }
 
         $action->process($engine, $request, $current_user);
+    }
+
+    private function getCrossTrackerTriggerCSRFToken(): \Tuleap\Request\CSRFSynchronizerTokenInterface
+    {
+        return new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
+            [
+                'tracker' => $this->tracker->getId(),
+                'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
+            ]
+        ));
     }
 }

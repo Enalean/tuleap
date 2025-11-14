@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global $$:readonly codendi:readonly $:readonly tuleap:readonly Ajax:readonly */
+/* global $$:readonly codendi:readonly $:readonly tuleap:readonly */
 
 document.observe("dom:loaded", function () {
     $$(".tracker-field-richtext").each(function define_rich_text(elem) {
@@ -70,7 +70,6 @@ document.observe("dom:loaded", function () {
                 addTriggeringField(triggering_field, trigger_element);
             });
             removeFirstOperator(trigger_element);
-            bindRemove(trigger_element, trigger_id);
 
             function addTriggerContainer(trigger_template, trigger_id) {
                 var trigger_element;
@@ -78,6 +77,13 @@ document.observe("dom:loaded", function () {
                 existing_triggers_table.insert(trigger_template.cloneNode(true));
                 trigger_element = existing_triggers_table.childElements().last();
                 trigger_element.writeAttribute("data-trigger-id", trigger_id);
+                for (const form of trigger_element.getElementsByTagName("form")) {
+                    const input_trigger_id = document.createElement("input");
+                    input_trigger_id.setAttribute("type", "hidden");
+                    input_trigger_id.setAttribute("name", "trigger_id");
+                    input_trigger_id.setAttribute("value", trigger_id);
+                    form.appendChild(input_trigger_id);
+                }
 
                 return trigger_element;
             }
@@ -123,29 +129,6 @@ document.observe("dom:loaded", function () {
 
             function removeFirstOperator(trigger_element) {
                 trigger_element.down(".trigger_description_triggering_field_operator").update("");
-            }
-
-            function bindRemove(trigger_element, trigger_id) {
-                Event.observe(trigger_element.down(".trigger_remove"), "click", function () {
-                    var query_params = window.location.href.toQueryParams();
-                    new Ajax.Request(
-                        codendi.tracker.base_url +
-                            "?tracker=" +
-                            query_params.tracker +
-                            "&id=" +
-                            trigger_id +
-                            "&func=admin-workflow-delete-trigger",
-                        {
-                            method: "POST",
-                            onSuccess: function () {
-                                trigger_element.remove();
-                            },
-                            onFailure: function (response) {
-                                alert(response.responseText); //eslint-disable-line no-alert
-                            },
-                        },
-                    );
-                });
             }
         }
 
