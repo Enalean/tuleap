@@ -111,7 +111,7 @@ export default {
     },
     methods: {
         deleteTransition() {
-            this.$emit("deleteTransition");
+            this.$emit("delete-transition");
         },
         isWorkflowAdvanced() {
             return this.is_workflow_advanced;
