@@ -51,7 +51,7 @@ class Git_GitRepositoryUrlManager
 
     public function getForkUrl(GitRepository $repository)
     {
-        return \Tuleap\Git\ForkRepositories\ForkRepositoriesPOSTUrlBuilder::buildForksAndDestinationSelectionURL($repository->getProject());
+        return \Tuleap\Git\ForkRepositories\ForkRepositoriesUrlsBuilder::buildGETForksAndDestinationSelectionURL($repository->getProject());
     }
 
     public function getCommitURL(GitRepository $repository, string $commit_reference): string

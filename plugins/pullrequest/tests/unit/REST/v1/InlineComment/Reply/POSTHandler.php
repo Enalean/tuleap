@@ -176,7 +176,7 @@ final class POSTHandler extends TestCase
                 PullRequestTestBuilder::aPullRequestInReview()->build()
             ),
             CheckUserCanAccessPullRequestStub::withAllowed(),
-            RetrieveGitRepositoryStub::withGitRepository(
+            RetrieveGitRepositoryStub::withGitRepositories(
                 GitRepositoryTestBuilder::aProjectRepository()->build()
             ),
         );

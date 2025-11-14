@@ -48,6 +48,8 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
 {
     private const int PULL_REQUEST_ID = 15;
     private const int REFERENCE_ID    = 150;
+    private const int REPOSITORY_ID   = 2;
+
     private GetReferenceByPullRequestIdStub $git_pull_request_reference_dao;
     private RetrieveGitRepository $git_repository_factory;
     private SearchPullRequestStub $pull_request_dao;
@@ -61,6 +63,8 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
         $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()
             ->withId(self::PULL_REQUEST_ID)
             ->withTitle('CTR "Yellowbird"')
+            ->withRepositoryId(self::REPOSITORY_ID)
+            ->withRepositoryDestinationId(self::REPOSITORY_ID)
             ->build();
         $reference          = GitPullRequestReferenceTestBuilder::aReference(self::REFERENCE_ID)->build();
 
@@ -69,7 +73,7 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
             new PullRequestWithGitReference($this->pull_request, $reference)
         );
 
-        $this->git_repository_factory             = RetrieveGitRepositoryStub::withGitRepository(new GitRepository());
+        $this->git_repository_factory             = RetrieveGitRepositoryStub::withGitRepositories(new GitRepository());
         $this->permission_checker                 = CheckUserCanAccessPullRequestStub::withAllowed();
         $this->git_pull_request_reference_updater = UpdateGitPullRequestReferenceStub::build();
     }
@@ -183,8 +187,9 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
         // Needed because of the usage of GitExec::buildFromRepository which call `GitRepository::getFullPath
         $git_repository = $this->createMock(GitRepository::class);
         $git_repository->method('getFullPath')->willReturn('/repo.git');
+        $git_repository->method('getId')->willReturn(self::REPOSITORY_ID);
 
-        $this->git_repository_factory = RetrieveGitRepositoryStub::withGitRepository($git_repository);
+        $this->git_repository_factory = RetrieveGitRepositoryStub::withGitRepositories($git_repository);
 
         $reference = GitPullRequestReferenceTestBuilder::aReference(self::REFERENCE_ID)
             ->thatIsNotYetCreated()

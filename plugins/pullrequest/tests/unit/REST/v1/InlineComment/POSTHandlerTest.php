@@ -62,6 +62,7 @@ final class POSTHandlerTest extends TestCase
     private ?int $parent_id;
     private ParentCommentSearcherStub $parent_comment_searcher;
     private RetrieveGitRepositoryStub $repository_retriever;
+    private \GitRepository $git_repository;
 
     #[\Override]
     protected function setUp(): void
@@ -69,10 +70,10 @@ final class POSTHandlerTest extends TestCase
         $this->format    = TimelineComment::FORMAT_TEXT;
         $this->parent_id = self::PARENT_ID;
 
-        $git_repository = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $this->git_repository = GitRepositoryTestBuilder::aProjectRepository()->build();
 
         $this->parent_comment_searcher = ParentCommentSearcherStub::withNotFound();
-        $this->repository_retriever    = RetrieveGitRepositoryStub::withGitRepository($git_repository);
+        $this->repository_retriever    = RetrieveGitRepositoryStub::withGitRepositories($this->git_repository);
     }
 
     /**
@@ -82,7 +83,7 @@ final class POSTHandlerTest extends TestCase
     {
         $user         = UserTestBuilder::buildWithId(self::AUTHOR_ID);
         $post_date    = new \DateTimeImmutable('@' . self::POST_TIMESTAMP);
-        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $pull_request = PullRequestTestBuilder::aPullRequestInReview()->withRepositoryId($this->git_repository->getId())->build();
 
         $comment_data = PullRequestInlineCommentPOSTRepresentation::build(
             self::CONTENT,

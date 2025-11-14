@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
@@ -18,27 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+.tlp-form-element.access-control-activate-regexps-form-element {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    margin: 0 0 0 20px;
+}
 
-namespace Tuleap\Git\ForkRepositories;
+.tlp-pane-section > .access-control-permission-table:last-child {
+    margin-bottom: var(--tlp-medium-spacing);
+}
 
-use Project;
-
-final readonly class ForkRepositoriesPOSTUrlBuilder
-{
-    public static function buildForksAndDestinationSelectionURL(Project $project): string
-    {
-        return '/plugins/git/?' . http_build_query([
-            'group_id' => $project->getID(),
-            'action' => 'fork_repositories',
-        ]);
-    }
-
-    public static function buildForksPermissionsURL(int $project_id): string
-    {
-        return '/plugins/git/?' . http_build_query([
-            'group_id' => $project_id,
-            'action' => 'fork_repositories_permissions',
-        ]);
-    }
+#add-fine-grained-permission-template {
+    display: none;
 }

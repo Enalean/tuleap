@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 class GitPresenters_AccessControlPresenter
 {
     /**
@@ -89,7 +93,7 @@ class GitPresenters_AccessControlPresenter
         array $tags_permissions_representation,
         array $new_fine_grained_ugroups,
         $delete_url,
-        CSRFSynchronizerToken $csrf,
+        CSRFSynchronizerTokenInterface $csrf,
         $is_fork,
         $are_regexp_permission_activated_at_site_level,
         $is_regexp_enabled,
@@ -166,12 +170,12 @@ class GitPresenters_AccessControlPresenter
         }
     }
 
-    public function has_branches_permissions()
+    public function has_branches_permissions()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return count($this->branches_permissions) > 0;
     }
 
-    public function has_tags_permissions()
+    public function has_tags_permissions()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return count($this->tags_permissions) > 0;
     }

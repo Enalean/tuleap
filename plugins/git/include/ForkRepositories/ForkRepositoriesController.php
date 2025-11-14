@@ -78,7 +78,7 @@ final readonly class ForkRepositoriesController implements DispatchableWithReque
             $this->presenter_builder->build(
                 $user,
                 $project,
-                new CSRFSynchronizerToken(ForkRepositoriesPOSTUrlBuilder::buildForksAndDestinationSelectionURL($project)),
+                new CSRFSynchronizerToken(ForkRepositoriesUrlsBuilder::buildGETForksAndDestinationSelectionURL($project)),
             ),
         );
         $layout->footer([]);

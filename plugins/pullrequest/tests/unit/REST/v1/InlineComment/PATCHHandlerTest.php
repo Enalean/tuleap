@@ -68,7 +68,8 @@ final class PATCHHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->comment_author       = UserTestBuilder::buildWithId(150);
-        $this->pull_request         = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $git_repository             = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $this->pull_request         = PullRequestTestBuilder::aPullRequestInReview()->withRepositoryId($git_repository->getId())->build();
         $inline_comment             = InlineCommentTestBuilder::aMarkdownComment('initial content')
             ->withId(self::INLINE_COMMENT_ID)
             ->onPullRequest($this->pull_request)
@@ -81,8 +82,7 @@ final class PATCHHandlerTest extends TestCase
         $this->comment_saver          = InlineCommentSaverStub::withCallCount();
         $this->cross_references_saver = ExtractAndSaveCrossReferencesStub::withCallCount();
 
-        $git_repository             = GitRepositoryTestBuilder::aProjectRepository()->build();
-        $this->repository_retriever = RetrieveGitRepositoryStub::withGitRepository($git_repository);
+        $this->repository_retriever = RetrieveGitRepositoryStub::withGitRepositories($git_repository);
     }
 
     /**

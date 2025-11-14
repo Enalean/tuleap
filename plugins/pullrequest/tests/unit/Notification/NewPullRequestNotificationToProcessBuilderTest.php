@@ -72,7 +72,7 @@ final class NewPullRequestNotificationToProcessBuilderTest extends TestCase
                     ->createdBy(101)
                     ->build()
             ),
-            RetrieveGitRepositoryStub::withGitRepository(GitRepositoryTestBuilder::aProjectRepository()->withId(34)->build()),
+            RetrieveGitRepositoryStub::withGitRepositories(GitRepositoryTestBuilder::aProjectRepository()->withId(34)->build()),
         );
         self::assertCount(1, $notifications);
         self::assertInstanceOf(NewPullRequestNotification::class, $notifications[0]);
@@ -83,7 +83,7 @@ final class NewPullRequestNotificationToProcessBuilderTest extends TestCase
         self::assertSame([], $this->getNotificationToProcess(
             NewPullRequestEvent::fromPullRequestId(2),
             SearchPullRequestStub::withNoRow(),
-            RetrieveGitRepositoryStub::withGitRepository(GitRepositoryTestBuilder::aProjectRepository()->withId(34)->build()),
+            RetrieveGitRepositoryStub::withGitRepositories(GitRepositoryTestBuilder::aProjectRepository()->withId(34)->build()),
         ));
     }
 
@@ -98,7 +98,7 @@ final class NewPullRequestNotificationToProcessBuilderTest extends TestCase
                     ->createdBy(324)
                     ->build()
             ),
-            RetrieveGitRepositoryStub::withGitRepository(GitRepositoryTestBuilder::aProjectRepository()->withId(34)->build()),
+            RetrieveGitRepositoryStub::withGitRepositories(GitRepositoryTestBuilder::aProjectRepository()->withId(34)->build()),
         ));
     }
 

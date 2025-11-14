@@ -68,7 +68,7 @@ final class GETHandlerTest extends TestCase
         $this->repository = GitRepositoryTestBuilder::aProjectRepository()->build();
 
         $pull_request_author_id    = 102;
-        $this->pull_request        = PullRequestTestBuilder::aPullRequestInReview()->createdBy($pull_request_author_id)->build();
+        $this->pull_request        = PullRequestTestBuilder::aPullRequestInReview()->createdBy($pull_request_author_id)->withRepositoryId($this->repository->getId())->withRepositoryDestinationId($this->repository->getId())->build();
         $this->retrieve_user_by_id = RetrieveUserByIdStub::withUser(UserTestBuilder::anActiveUser()->withId($pull_request_author_id)->build());
 
         $reference = new PullRequestWithGitReference(
@@ -130,8 +130,8 @@ final class GETHandlerTest extends TestCase
             new QueryToSearchCriteriaConverter(new MapperBuilder()),
             SearchPaginatedPullRequestsStub::withAtLeastOnePullRequest($this->pull_request),
             $this->retrieve_user_by_id,
-            RetrieveGitRepositoryStub::withGitRepository($this->repository),
-            RetrieveGitRepositoryStub::withGitRepository($this->repository),
+            RetrieveGitRepositoryStub::withGitRepositories($this->repository),
+            RetrieveGitRepositoryStub::withGitRepositories($this->repository),
             new GitPullRequestReferenceRetriever($this->get_reference_by_pull_request_id_stub),
             RetrieveReviewersStub::withReviewers(
                 UserTestBuilder::anActiveUser()->build(),

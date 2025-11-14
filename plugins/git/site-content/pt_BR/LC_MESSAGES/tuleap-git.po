@@ -164,9 +164,6 @@ msgid ""
 "mirror of the Gerrit reference.</li></ul>"
 msgstr ""
 
-msgid "As personal fork"
-msgstr ""
-
 msgid "Authorize"
 msgstr ""
 
@@ -538,10 +535,6 @@ msgstr ""
 msgid ""
 "In order to make sure I have the correct access on Gerrit, it can be "
 "necessary to update my group and project membership."
-msgstr ""
-
-#, php-format
-msgid "Into project <b>%1$s</b>"
 msgstr ""
 
 msgid "Invalid Project ID"
@@ -933,6 +926,9 @@ msgid "Select repositories to fork"
 msgstr ""
 
 msgid "Set build status"
+msgstr ""
+
+msgid "Set permissions for the repository to be created"
 msgstr ""
 
 msgid "Settings"
@@ -1344,9 +1340,10 @@ msgid ""
 "projects. Are you sure you want to do this?"
 msgstr ""
 
-#, php-format
-msgid "You are going to fork repository: %1$s"
-msgstr ""
+msgid "You are going to fork the repository:"
+msgid_plural "You are going to fork the repositories:"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "You are not allowed to access this page"
 msgstr ""
@@ -1402,6 +1399,9 @@ msgid ""
 "duplicated."
 msgstr ""
 
+msgid "as personal fork"
+msgstr ""
+
 msgid "close artifacts"
 msgstr ""
 
@@ -1418,6 +1418,9 @@ msgid "from scratch"
 msgstr ""
 
 msgid "from template"
+msgstr ""
+
+msgid "into project"
 msgstr ""
 
 msgid "repository"

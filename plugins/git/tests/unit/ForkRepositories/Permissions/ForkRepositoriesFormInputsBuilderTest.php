@@ -1,0 +1,136 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Git\ForkRepositories\Permissions;
+
+use CuyZ\Valinor\MapperBuilder;
+use Tuleap\HTTPRequest;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Test\PHPUnit\TestCase;
+
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class ForkRepositoriesFormInputsBuilderTest extends TestCase
+{
+    private HTTPRequest $request;
+
+    #[\Override]
+    protected function setUp(): void
+    {
+        $this->request = new HTTPRequest();
+    }
+
+    /**
+     * @return Ok<ForkRepositoriesFormInputs>|Err<MissingRequiredParametersFault>
+     */
+    private function build(): Ok|Err
+    {
+        $builder = new ForkRepositoriesFormInputsBuilder(
+            new MapperBuilder()->mapper(),
+        );
+
+        return $builder->fromRequest($this->request);
+    }
+
+    public function testItBuildsFromRequest(): void
+    {
+        $this->request->params = [
+            'repos'              => ['1', '2', '3'],
+            'to_project'         => '101',
+            'path'               => '/my-forks',
+            'choose_destination' => ForkType::PERSONAL->value,
+        ];
+
+        $result = $this->build();
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($this->request->params['repos'], $result->value->repositories_ids);
+        self::assertSame($this->request->params['to_project'], $result->value->destination_project_id);
+        self::assertSame($this->request->params['path'], $result->value->path);
+        self::assertSame($this->request->params['choose_destination'], $result->value->fork_type->value);
+    }
+
+    public function testItBuildsWithEmptyDestinationProject(): void
+    {
+        $this->request->params = [
+            'repos'              => ['1', '2', '3'],
+            'path'               => '/my-forks',
+            'choose_destination' => ForkType::PERSONAL->value,
+        ];
+
+        $result = $this->build();
+
+        self::assertTrue(Result::isOk($result));
+        self::assertNull($result->value->destination_project_id);
+    }
+
+    public function testItBuildsWithEmptyPath(): void
+    {
+        $this->request->params = [
+            'repos'              => ['1', '2', '3'],
+            'choose_destination' => ForkType::PERSONAL->value,
+        ];
+
+        $result = $this->build();
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame('', $result->value->path);
+    }
+
+    public function testItReturnsAMissingRequiredParametersFaultWhenRepositoriesIdsAreMissing(): void
+    {
+        $this->request->params = [
+            'repos'              => [],
+            'choose_destination' => ForkType::PERSONAL->value,
+        ];
+
+        $result = $this->build();
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MissingRequiredParametersFault::class, $result->error);
+    }
+
+    public function testItReturnsAMissingRequiredParametersFaultWhenRepositoriesIdsAreEmpty(): void
+    {
+        $this->request->params = [
+            'choose_destination' => ForkType::PERSONAL->value,
+        ];
+
+        $result = $this->build();
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MissingRequiredParametersFault::class, $result->error);
+    }
+
+    public function testItReturnsAMissingRequiredParametersFaultWhenForkTypeIsMissing(): void
+    {
+        $this->request->params = [
+            'repos' => ['1', '2', '3'],
+        ];
+
+        $result = $this->build();
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(MissingRequiredParametersFault::class, $result->error);
+    }
+}

@@ -76,7 +76,8 @@ final class PATCHCommentHandlerTest extends TestCase
     {
         $this->comment_data = new CommentPATCHRepresentation(self::NEW_CONTENT);
 
-        $pull_request         = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $git_repository       = GitRepositoryTestBuilder::aProjectRepository()->build();
+        $pull_request         = PullRequestTestBuilder::aPullRequestInReview()->withRepositoryId($git_repository->getId())->build();
         $this->comment_author = UserTestBuilder::buildWithId(self::CURRENT_USER_ID);
         $comment              = CommentTestBuilder::aMarkdownComment('smarting meliponine')
             ->byAuthor($this->comment_author)
@@ -89,8 +90,7 @@ final class PATCHCommentHandlerTest extends TestCase
         $this->pull_request_permission_checker = CheckUserCanAccessPullRequestStub::withAllowed();
         $this->cross_references_saver          = ExtractAndSaveCrossReferencesStub::withCallCount();
 
-        $git_repository    = GitRepositoryTestBuilder::aProjectRepository()->build();
-        $this->git_factory = RetrieveGitRepositoryStub::withGitRepository($git_repository);
+        $this->git_factory = RetrieveGitRepositoryStub::withGitRepositories($git_repository);
 
         $this->last_edition_date = new DateTimeImmutable();
     }

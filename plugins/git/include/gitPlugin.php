@@ -61,8 +61,12 @@ use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\ForkRepositories\ForkRepositoriesController;
 use Tuleap\Git\ForkRepositories\ForkRepositoriesPresenterBuilder;
+use Tuleap\Git\ForkRepositories\Permissions\ForkRepositoriesFormInputsBuilder;
+use Tuleap\Git\ForkRepositories\Permissions\ForkRepositoriesPermissionsController;
+use Tuleap\Git\ForkRepositories\Permissions\ForkRepositoriesPermissionsPresenterBuilder;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\Git\GerritServerResourceRestrictor;
+use Tuleap\Git\GitAccessControlPresenterBuilder;
 use Tuleap\Git\GitGodObjectWrapper;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
@@ -176,6 +180,7 @@ use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
@@ -2634,6 +2639,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
         $event->getRouteCollector()->addGroup('/projects', function (FastRoute\RouteCollector $r) {
             $r->get('/{project_name}/fork-repositories[/]', $this->getRouteHandler('routeForkRepositories'));
+            $r->post('/{project_name}/fork-repositories/permissions[/]', $this->getRouteHandler('routeForkRepositoriesPermissions'));
         });
     }
 
@@ -2654,7 +2660,43 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     $project_manager,
                 ),
             ),
-            TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates')
+            TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/fork-repositories')
+        );
+    }
+
+    public function routeForkRepositoriesPermissions(): ForkRepositoriesPermissionsController
+    {
+        $project_manager = ProjectManager::instance();
+        return new ForkRepositoriesPermissionsController(
+            $project_manager,
+            $project_manager,
+            $this->getHeaderRenderer(),
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(__DIR__ . '/../scripts/access-control/frontend-assets', '/assets/git/access-control'),
+                'styles/styles.scss'
+            ),
+            new ForkRepositoriesFormInputsBuilder(
+                \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->mapper(),
+            ),
+            TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/fork-repositories'),
+            new ForkRepositoriesPermissionsPresenterBuilder(
+                new GitRepositoryFactory(
+                    new GitDao(),
+                    $project_manager,
+                ),
+                new GitAccessControlPresenterBuilder(
+                    new AccessRightsPresenterOptionsBuilder(new User_ForgeUserGroupFactory(new UserGroupDao()), PermissionsManager::instance()),
+                    $this->getDefaultFineGrainedPermissionFactory(),
+                    $this->getFineGrainedRetriever(),
+                    $this->getFineGrainedRepresentationBuilder(),
+                    $this->getFineGrainedFactory(),
+                    new Git_Driver_Gerrit_ProjectCreatorStatus(
+                        new Git_Driver_Gerrit_ProjectCreatorStatusDao()
+                    ),
+                    $this->getGitPermissionsManager(),
+                    $this->getRegexpFineGrainedRetriever(),
+                ),
+            ),
         );
     }
 

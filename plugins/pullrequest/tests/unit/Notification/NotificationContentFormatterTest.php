@@ -45,8 +45,8 @@ final class NotificationContentFormatterTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->content_interpreter  = ContentInterpretorStub::withInterpretedText(self::INTERPRETED_COMMENT);
         $project                    = ProjectTestBuilder::aProject()->withId(105)->build();
         $repository                 = GitRepositoryTestBuilder::aProjectRepository()->inProject($project)->build();
-        $this->repository_retriever = RetrieveGitRepositoryStub::withGitRepository($repository);
-        $this->pull_request         = PullRequestTestBuilder::aPullRequestInReview()->build();
+        $this->repository_retriever = RetrieveGitRepositoryStub::withGitRepositories($repository);
+        $this->pull_request         = PullRequestTestBuilder::aPullRequestInReview()->withRepositoryId($repository->getId())->build();
         $this->comment              = CommentTestBuilder::aMarkdownComment(self::COMMENT_SOURCE)->build();
     }
 
