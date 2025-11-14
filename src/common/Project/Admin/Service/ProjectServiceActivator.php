@@ -23,81 +23,45 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Service;
 
-use EventManager;
 use Project;
 use ReferenceManager;
-use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\ProjectCreationData;
 use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Project\Service\ServiceDao;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
 
-class ProjectServiceActivator
+readonly class ProjectServiceActivator
 {
-    /**
-     * @var ServiceCreator
-     */
-    private $service_creator;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ServiceDao
-     */
-    private $service_dao;
-    /**
-     * @var \ServiceManager
-     */
-    private $service_manager;
-    /**
-     * @var ServiceLinkDataBuilder
-     */
-    private $link_data_builder;
-
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
+    // This corresponds to legacy services that might be present in legacy data (either old templates or old XML archives
+    // they should no longer be created).
+    private const array LEGACY_SERVICES = ['tracker', 'svn'];
 
     public function __construct(
-        ServiceCreator $service_creator,
-        EventManager $event_manager,
-        ServiceDao $service_dao,
-        \ServiceManager $service_manager,
-        ServiceLinkDataBuilder $link_data_builder,
-        ReferenceManager $reference_manager,
+        private ServiceCreator $service_creator,
+        private ServiceDao $service_dao,
+        private \ServiceManager $service_manager,
+        private ServiceLinkDataBuilder $link_data_builder,
+        private ReferenceManager $reference_manager,
     ) {
-        $this->service_creator   = $service_creator;
-        $this->event_manager     = $event_manager;
-        $this->service_dao       = $service_dao;
-        $this->service_manager   = $service_manager;
-        $this->link_data_builder = $link_data_builder;
-        $this->reference_manager = $reference_manager;
     }
 
     /**
      * Activate the same services on $group_id than those activated on $template_group
-     * protected for testing purpose
      */
     public function activateServicesFromTemplate(
         Project $group,
         Project $template_group,
         ProjectCreationData $data,
-        array $legacy,
     ): void {
         $template_id = (int) $template_group->getID();
 
         if ($data->isIsBuiltFromXml()) {
             $this->inheritServicesFromXml($data, $group);
         } else {
-            $template_service_list = $this->service_dao->getServiceInfoQueryForNewProject($legacy, $template_id);
+            $template_service_list = $this->service_dao->getServiceInfoQueryForNewProject($template_id);
             $this->inheritServicesFromDefaultProject($data, $template_group, $group, $template_service_list);
         }
-
-        $event = new ProjectRegistrationActivateService($group, $template_group, $legacy);
-        $this->event_manager->processEvent($event);
     }
 
     private function inheritServicesFromDefaultProject(
@@ -110,6 +74,9 @@ class ProjectServiceActivator
         $template_id = (int) $template_group->getID();
 
         foreach ($template_service_list as $template_service) {
+            if (in_array($template_service['short_name'], self::LEGACY_SERVICES, true)) {
+                continue;
+            }
             $is_used = $this->retrieveLegacyServiceUsage($data, $template_service, $template_service['short_name']);
 
             $this->service_creator->createService(
@@ -137,9 +104,6 @@ class ProjectServiceActivator
 
         if ($short_name === 'admin' || $short_name === 'summary') {
             return '1';
-        }
-        if ($short_name === 'tracker' || $short_name === 'svn') {
-            return '0';
         }
 
         return $template_service['is_used'];
@@ -169,6 +133,9 @@ class ProjectServiceActivator
             }
 
             $short_name = $service->getShortName();
+            if (in_array($short_name, self::LEGACY_SERVICES, true)) {
+                continue;
+            }
 
             $icon = '';
             if ($short_name !== 'summary') {

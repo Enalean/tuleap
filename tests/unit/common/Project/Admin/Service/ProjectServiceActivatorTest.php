@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\common\Project\Admin\Service;
 
-use EventManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReferenceManager;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
@@ -41,7 +40,6 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \ServiceManager&MockObject $service_manager;
     private ProjectServiceActivator $service_activator;
     private ServiceDao&MockObject $service_dao;
-    private EventManager&MockObject $event_manager;
     private ServiceCreator&MockObject $service_creator;
     private ReferenceManager&MockObject $reference_manager;
 
@@ -49,7 +47,6 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->service_creator   = $this->createMock(ServiceCreator::class);
-        $this->event_manager     = $this->createMock(EventManager::class);
         $this->service_dao       = $this->createMock(ServiceDao::class);
         $this->service_manager   = $this->createMock(\ServiceManager::class);
         $this->link_builder      = $this->createMock(ServiceLinkDataBuilder::class);
@@ -57,7 +54,6 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service_activator = new ProjectServiceActivator(
             $this->service_creator,
-            $this->event_manager,
             $this->service_dao,
             $this->service_manager,
             $this->link_builder,
@@ -92,9 +88,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template, $data);
     }
 
     public function testServiceUsageIsInheritedFromTemplate(): void
@@ -141,9 +135,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         });
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template, $data);
     }
 
     public function testAdminServiceIsAlwaysActive(): void
@@ -173,9 +165,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template, $data);
     }
 
     public function testTV3ServiceUsageIsInheritedFromXml(): void
@@ -206,29 +196,12 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->link_builder->method('substituteVariablesInLink')->willReturn('/tracker/group_id=101');
 
-        $template_service = ['service_id' => 10, 'short_name' => 'tracker', 'is_used' => 0];
-        $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
+        $this->service_dao->expects($this->never())->method('create');
 
-        $this->service_dao->expects($this->once())->method('create')->with(
-            $project->getID(),
-            $service->getLabel(),
-            '',
-            $service->getDescription(),
-            $service->getShortName(),
-            '/tracker/group_id=101',
-            1,
-            1,
-            $service->getScope(),
-            $service->getRank(),
-            $service->isOpenedInNewTab()
-        );
+        $this->reference_manager->expects($this->never())->method('addSystemReferencesForService');
+        $this->reference_manager->expects($this->never())->method('updateReferenceForService');
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
-        $this->reference_manager->expects($this->once())->method('updateReferenceForService');
-
-        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data);
     }
 
     public function testTV3ServiceUsageIsNotInheritedFromTemplate(): void
@@ -247,23 +220,12 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'tracker', 'is_used' => 1];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_creator->expects($this->once())->method('createService')->with(
-            $template_service,
-            101,
-            [
-                'system'  => false,
-                'name'    => 'test-name',
-                'id'      => 201,
-                'is_used' => false,
-            ]
-        );
+        $this->service_creator->expects($this->never())->method('createService');
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template, $data);
     }
 
-    public function testSvnCoreServiceUsageIsInheritedFromXml(): void
+    public function testSvnCoreServiceUsageIsNoInheritedFromXml(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
@@ -291,29 +253,12 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->link_builder->method('substituteVariablesInLink')->willReturn('/svn/group_id=101');
 
-        $template_service = ['service_id' => 10, 'short_name' => 'svn', 'is_used' => 0];
-        $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
+        $this->service_dao->expects($this->never())->method('create');
 
-        $this->service_dao->expects($this->once())->method('create')->with(
-            $project->getID(),
-            $service->getLabel(),
-            '',
-            $service->getDescription(),
-            $service->getShortName(),
-            '/svn/group_id=101',
-            1,
-            1,
-            $service->getScope(),
-            $service->getRank(),
-            $service->isOpenedInNewTab()
-        );
+        $this->reference_manager->expects($this->never())->method('addSystemReferencesForService');
+        $this->reference_manager->expects($this->never())->method('updateReferenceForService');
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
-        $this->reference_manager->expects($this->once())->method('updateReferenceForService');
-
-        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data);
     }
 
     public function testSvnCoreServiceUsageIsNotInheritedFromTemplate(): void
@@ -332,20 +277,9 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_service = ['service_id' => 10, 'short_name' => 'svn', 'is_used' => 1];
         $this->service_dao->method('getServiceInfoQueryForNewProject')->willReturn([$template_service]);
 
-        $this->service_creator->expects($this->once())->method('createService')->with(
-            $template_service,
-            101,
-            [
-                'system'  => false,
-                'name'    => 'test-name',
-                'id'      => 201,
-                'is_used' => false,
-            ]
-        );
+        $this->service_creator->expects($this->never())->method('createService');
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template, $data);
     }
 
     public function testServiceUsageInheritsPropertySetInXml(): void
@@ -393,12 +327,10 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $service->isOpenedInNewTab()
         );
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
         $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
         $this->reference_manager->expects($this->once())->method('updateReferenceForService');
 
-        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data);
     }
 
     public function testAdminServiceShouldAlwaysBeEnabledForProjectFromXmlImport(): void
@@ -443,12 +375,10 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $service->isOpenedInNewTab()
         );
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
         $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
         $this->reference_manager->expects($this->once())->method('updateReferenceForService');
 
-        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data);
     }
 
     public function testGitServiceUsageIsInheritedFromXml(): void
@@ -496,12 +426,10 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $service->isOpenedInNewTab()
         );
 
-        $this->event_manager->expects($this->once())->method('processEvent');
-
         $this->reference_manager->expects($this->once())->method('addSystemReferencesForService');
         $this->reference_manager->expects($this->once())->method('updateReferenceForService');
 
-        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data);
     }
 
     public function testProjectDefinedServiceIsInheritedFromXml(): void
@@ -545,8 +473,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
             0,
             true
         );
-        $this->event_manager->method('processEvent');
 
-        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data, []);
+        $this->service_activator->activateServicesFromTemplate($project, $template_project, $data);
     }
 }

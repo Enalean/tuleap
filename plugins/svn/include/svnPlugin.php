@@ -49,14 +49,12 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
-use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
-use Tuleap\Project\Service\ServiceDao;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Reference\GetReferenceEvent;
@@ -64,7 +62,6 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
-use Tuleap\Service\ServiceCreator;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 use Tuleap\StatisticsCore\StatisticsServiceUsage;
@@ -131,7 +128,6 @@ use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
 use Tuleap\SVN\Repository\RuleName;
-use Tuleap\SVN\Service\ServiceActivator;
 use Tuleap\SVN\Setup\SetupSVNCommand;
 use Tuleap\SVN\SiteAdmin\DisplayMaxFileSizeController;
 use Tuleap\SVN\SiteAdmin\DisplayTuleapPMParamsController;
@@ -846,14 +842,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $statistic_collector->collect($event->csv_exporter, $event->start_date, $event->end_date);
     }
 
-    #[ListeningToEventName(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES)]
-    public function projectCreationRemoveLegacyServices(array $params): void
-    {
-        if (! $this->isRestricted()) {
-            $this->getServiceActivator()->unuseLegacyService($params);
-        }
-    }
-
     #[ListeningToEventName('SystemEvent_PROJECT_RENAME')]
     public function systemEventProjectRename(array $params): void
     {
@@ -1054,17 +1042,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             SystemEventManager::instance(),
             $this->getRepositoryManager()
         );
-    }
-
-    #[ListeningToEventClass]
-    public function projectRegistrationActivateService(ProjectRegistrationActivateService $event): void
-    {
-        $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate(), $event->getLegacy());
-    }
-
-    private function getServiceActivator(): ServiceActivator
-    {
-        return new ServiceActivator(ServiceManager::instance(), new ServiceCreator(new ServiceDao()));
     }
 
     private function getImmutableTagCreator(): ImmutableTagCreator

@@ -206,7 +206,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->expects($this->once())->method('setProjectAdmin');
         $this->creator->expects($this->once())->method('fakeGroupIdIntoHTTPParams');
         $this->creator->expects($this->once())->method('setMessageToRequesterFromTemplate');
-        $this->creator->expects($this->once())->method('initSVNModuleFromTemplate');
         $this->creator->expects($this->once())->method('initFRSModuleFromTemplate');
         $this->creator->expects($this->once())->method('initWikiModuleFromTemplate');
 
@@ -218,7 +217,7 @@ final class ProjectCreatorTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getProject')->willReturn($project);
 
-        $this->event_manager->expects($this->exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->reference_manager->expects($this->once())->method('addSystemReferencesWithoutService');
         $this->synchronized_project_membership_duplicator->expects($this->once())->method('duplicate');
@@ -262,7 +261,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->expects($this->once())->method('setProjectAdmin');
         $this->creator->expects($this->once())->method('fakeGroupIdIntoHTTPParams');
         $this->creator->expects($this->once())->method('setMessageToRequesterFromTemplate');
-        $this->creator->expects($this->once())->method('initSVNModuleFromTemplate');
         $this->creator->expects($this->once())->method('initFRSModuleFromTemplate');
         $this->creator->expects($this->once())->method('initWikiModuleFromTemplate');
 
@@ -274,7 +272,7 @@ final class ProjectCreatorTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->method('getProject')->willReturn($project);
 
-        $this->event_manager->expects($this->exactly(2))->method('processEvent');
+        $this->event_manager->expects($this->once())->method('processEvent');
 
         $this->reference_manager->expects($this->once())->method('addSystemReferencesWithoutService');
         $this->synchronized_project_membership_duplicator->expects($this->once())->method('duplicate');
@@ -323,7 +321,6 @@ final class ProjectCreatorTest extends TestCase
                 'setProjectAdmin',
                 'fakeGroupIdIntoHTTPParams',
                 'setMessageToRequesterFromTemplate',
-                'initSVNModuleFromTemplate',
                 'initFRSModuleFromTemplate',
                 'initWikiModuleFromTemplate',
                 'autoActivateProject',

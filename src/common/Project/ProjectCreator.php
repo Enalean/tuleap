@@ -85,16 +85,6 @@ use Tuleap\Widget\WidgetFactory;
  */
 class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    /**
-     * When a project is created, ask plugins if they replace the usage of legacy core services
-     *
-     * Parameters:
-     *  - template              => (input) Project
-     *  - project_creation_data => (output) array
-     *  - use_legacy_services   => (output) array
-     */
-    public const string PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
-
     public function __construct(
         private readonly ProjectManager $project_manager,
         private readonly ReferenceManager $reference_manager,
@@ -228,7 +218,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             ),
             new ProjectServiceActivator(
                 new ServiceCreator($service_dao),
-                $event_manager,
                 $service_dao,
                 ServiceManager::instance(),
                 new ServiceLinkDataBuilder(),
@@ -331,23 +320,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $template_group = ($data->getBuiltFromTemplateProject()) ? $data->getBuiltFromTemplateProject()->getProject() : null;
 
-        $legacy = [
-            Service::SVN => true,
-        ];
-
-        $this->event_manager->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, [
-            'template'              => $template_group,
-            'project_creation_data' => &$data,
-            'use_legacy_services'   => &$legacy,
-        ]);
-
         if ($template_group !== null) {
-            $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);
+            $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data);
             $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
-
-            if ($legacy[Service::SVN] === true) {
-                $this->initSVNModuleFromTemplate($group_id, $template_group->getID());
-            }
 
             $template_banner = $this->banner_retriever->getBannerForProject($template_group);
             if ($template_banner !== null) {
@@ -454,39 +429,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
         if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_msg_to_requester'));
-        }
-    }
-
-    /**
-     * protected for testing purpose
-     */
-    protected function initSVNModuleFromTemplate($group_id, $template_id)
-    {
-        $current_timestamp = db_escape_int($_SERVER['REQUEST_TIME']);
-
-        $sql = 'INSERT INTO svn_accessfile_history (version_number, group_id, version_date)
-                VALUES (1, ' . db_ei($group_id) . ", $current_timestamp)";
-
-        $result = db_query($sql);
-        if (! $result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
-        }
-
-        $sql    = 'SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM `groups` WHERE group_id=' . db_ei($template_id) . ' ';
-        $result = db_query($sql);
-        $arr    = db_fetch_array($result);
-        $query  = "UPDATE `groups`, svn_accessfile_history
-                  SET svn_tracker='" . db_ei($arr['svn_tracker']) . "',
-                      svn_mandatory_ref='" . db_ei($arr['svn_mandatory_ref']) . "',
-                      svn_preamble='" . db_escape_string($arr['svn_preamble']) . "',
-                      svn_commit_to_tag_denied='" . db_ei($arr['svn_commit_to_tag_denied']) . "',
-                      svn_accessfile_version_id = svn_accessfile_history.id
-                  WHERE `groups`.group_id = " . db_ei($group_id) . '
-                      AND `groups`.group_id = svn_accessfile_history.group_id';
-
-        $result = db_query($query);
-        if (! $result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
     }
 
