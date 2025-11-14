@@ -1,43 +1,23 @@
-<h1 class="almost-tlp-title administration-title" data-test="git-administration-page">{{ git_admin }}</h1>
-
+<h1 class="project-administration-title" data-test="git-administration-page">{{ git_admin }}</h1>
 <div class="main-project-tabs">
-    <ul class="nav nav-tabs git-admin-tabs">
-        <li>
-            <a href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{ tab_gerrit_templates }}</a>
-        </li>
-        <li>
-            <a href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{ tab_git_admins }}</a>
-        </li>
-        <li class="active">
-            <a href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_template_settings }}</a>
-        </li>
+    <nav class="tlp-tabs">
+        <a class="tlp-tab" href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{ tab_gerrit_templates }}</a>
+        <a class="tlp-tab" href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{ tab_git_admins }}</a>
+        <a class="tlp-tab tlp-tab-active" href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_template_settings }}</a>
         {{# external_pane_presenters }}
-            <li>
-                <a href="{{ uri }}">{{ pane_name }}</a>
-            </li>
+            <a class="tlp-tab" href="{{ uri }}">{{ pane_name }}</a>
         {{/ external_pane_presenters }}
-    </ul>
+    </nav>
 </div>
-
-<div class="git-administration-content">
-    <div class="tab-pane active">
-        <div class="tabbable" id="admin-general-settings">
-            <ul class="nav nav-tabs">
-                {{# panes }}
-                    <li {{# is_active }} class="active" {{/ is_active }}>
-                        <a {{# is_disabled }}class="disabled-link"{{/is_disabled}} href="{{ href }}">{{ title }}</a>
-                    </li>
-                {{/ panes }}
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active">
-                    {{# panes }}
-                        {{# is_active }}
-                            {{{ content }}}
-                        {{/is_active}}
-                    {{/ panes }}
-                </div>
-            </div>
-        </div>
-    </div>
+<nav class="tlp-tabs">
+    {{# panes }}
+        <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}{{# is_disabled }}tlp-tab-disabled{{/is_disabled}}" href="{{ href }}">{{ title }}</a>
+    {{/ panes }}
+</nav>
+<div class="tlp-framed-horizontally">
+    {{# panes }}
+        {{# is_active }}
+            {{{ content }}}
+        {{/is_active}}
+    {{/ panes }}
 </div>
