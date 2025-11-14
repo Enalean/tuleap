@@ -1,6 +1,6 @@
 [Unit]
 Description=Umbrella service for 'tuleap-worker@' to start as many workers are configured in Tuleap conf
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 After=tuleap.service
 PartOf=tuleap.service
 

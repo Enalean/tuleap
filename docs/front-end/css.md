@@ -111,7 +111,7 @@ match the following best practices. Please try to follow them.
     what you want.
 
 -   Always make sure the rules you are using work on our list of
-    [supported browsers](https://docs.tuleap.org/user-guide/misc.html#user-supported-browsers). To do that you can check with the [Can I
+    [supported browsers](https://docs.tuleap.com/user-guide/misc.html#user-supported-browsers). To do that you can check with the [Can I
     use](https://caniuse.com/) website.
 
 #### Resources

@@ -1,6 +1,6 @@
 [Unit]
 Description=Restart Tuleap Mercure Server service (realtime) on configuration change
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 
 [Service]
 Type=oneshot

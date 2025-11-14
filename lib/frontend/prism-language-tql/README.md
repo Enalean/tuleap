@@ -2,7 +2,7 @@
 
 TQL definition for syntax highlighting with [Prism](https://prismjs.com/).
 
-Based on documentation of the language: https://docs.tuleap.org/user-guide/tql.html.
+Based on documentation of the language: https://docs.tuleap.com/user-guide/tql.html.
 
 ## Usage
 

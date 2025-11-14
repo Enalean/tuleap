@@ -1,6 +1,6 @@
 [Unit]
 Description=Tuleap Smokescreen (proxy filtering outbound HTTP requests)
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 After=tuleap.service
 PartOf=tuleap.service
 

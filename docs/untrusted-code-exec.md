@@ -35,7 +35,7 @@ code.
 
 As for [pre-receive git hook](#pre-receive-git-hook), this action need a WASM module.
 
-- The module receives as input a payload same as [Tracker webhooks](https://docs.tuleap.org/user-guide/integration/webhook.html#tracker)
+- The module receives as input a payload same as [Tracker webhooks](https://docs.tuleap.com/user-guide/integration/webhook.html#tracker)
 - The module must output a payload identical to the one for REST API `PUT /api/artifacts/:id`
 
 Example modules are available in https://github.com/Enalean/tuleap-function-examples.

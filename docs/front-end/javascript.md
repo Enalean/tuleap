@@ -20,7 +20,7 @@ $ pnpm run build
 
 This command will install the tools needed, transpile the javascript to
 make it compatible with our
-[supported browsers](https://docs.tuleap.org/user-guide/misc.html#which-browser-should-i-use-to-browse-tuleap) and minify (compress) it.
+[supported browsers](https://docs.tuleap.com/user-guide/misc.html#which-browser-should-i-use-to-browse-tuleap) and minify (compress) it.
 
 -   you have to run `pnpm run build` every time you edit a Javascript
     file.
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", (): void => {
     keep it compatible with our supported browsers.
 -   Always make sure the Browser APIs you are using (for example DOM,
     `Location`, `CustomEvent`, etc.) work on our list of
-    [supported browsers](https://docs.tuleap.org/user-guide/misc.html#user-supported-browsers).
+    [supported browsers](https://docs.tuleap.com/user-guide/misc.html#user-supported-browsers).
     To do that you can check with the [Can I use](https://caniuse.com/) website.
 
 ### Resources

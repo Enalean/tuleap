@@ -5,7 +5,7 @@ some parts of Tuleap.
 
 ## User authentication
 
-See dedicated flowchart in Security [user-authentication-flowchart](https://docs.tuleap.org/administration-guide/users-management/security/user-authentication/authentication-flowchart.html#user-authentication-flowchart)
+See dedicated flowchart in Security [user-authentication-flowchart](https://docs.tuleap.com/administration-guide/users-management/security/user-authentication/authentication-flowchart.html#user-authentication-flowchart)
 
 ## User registration
 

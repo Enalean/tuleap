@@ -35,7 +35,7 @@ In addition to Chrome 70, we also know that usage of Firefox 68 is also widespre
 ## Decision Outcome
 
 Chosen option: "[option 1] Update `browserslist` to add Chrome 70 and Firefox 68", because it's the best tradeoff on the table:
-* The [official supported version of browsers](https://docs.tuleap.org/user-guide/misc.html#which-browser-should-i-use-to-browse-tuleap) doesn't change: last version of Firefox, Chrome and Edge. That means
+* The [official supported version of browsers](https://docs.tuleap.com/user-guide/misc.html#which-browser-should-i-use-to-browse-tuleap) doesn't change: last version of Firefox, Chrome and Edge. That means
   * Chrome and Firefox are actively tested
   * Bugs are fixed.
 * Firefox 68 and Chrome 70 are supported in "best effort". That means:

@@ -1,6 +1,6 @@
 [Unit]
 Description=Restart Meilisearch server for Tuleap on configuration change
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 
 [Service]
 Type=oneshot
