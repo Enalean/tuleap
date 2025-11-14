@@ -26,7 +26,6 @@ module.exports = [
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         plugins: [
-            webpack_configurator.getCleanWebpackPlugin(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
                 "cardwall.js": [
                     "./src/ajaxInPlaceEditorExtensions.js",

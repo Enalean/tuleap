@@ -50,7 +50,6 @@ module.exports = [
             ],
         },
         plugins: [
-            webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
