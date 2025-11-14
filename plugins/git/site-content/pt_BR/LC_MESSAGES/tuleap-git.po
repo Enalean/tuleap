@@ -1285,6 +1285,9 @@ msgstr ""
 msgid "View Gerrit template"
 msgstr ""
 
+msgid "Wait a minute…"
+msgstr ""
+
 msgid "Warning"
 msgstr ""
 

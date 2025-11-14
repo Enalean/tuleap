@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,25 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.tlp-form-element.access-control-activate-regexps-form-element {
-    display: flex;
-    gap: var(--tlp-small-spacing);
-    margin: 0 0 0 20px;
+import "../styles/styles.scss";
+import { initConfirmPermissionDeletionModals } from "./confirm-permission-deletion-modal";
+import { initAddFineGrainedPermissions } from "./add-fine-grained-permission";
+import { initToggleWarningModal } from "./remove-regexps-modal";
+import { initFineGrainedPermissionsToggle } from "./toggle-fine-grained-permissions";
 
-    &.hidden {
-        display: none;
-    }
-}
-
-.tlp-pane-section > .access-control-permission-table:last-child {
-    margin-bottom: var(--tlp-medium-spacing);
-}
-
-#add-fine-grained-permission-template {
-    display: none;
-}
-
-.remove-fine-grained-permission-popover {
-    text-align: initial;
-    white-space: initial;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    initFineGrainedPermissionsToggle();
+    initConfirmPermissionDeletionModals();
+    initAddFineGrainedPermissions();
+    initToggleWarningModal();
+});

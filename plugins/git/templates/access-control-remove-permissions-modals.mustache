@@ -1,0 +1,10 @@
+{{# can_use_fine_grained_permissions }}
+    {{# are_fine_grained_permissions_defined }}
+        {{# branches_permissions }}
+            {{> settings/modal-remove-fine-grained-permission }}
+        {{/ branches_permissions }}
+        {{# tags_permissions }}
+            {{> settings/modal-remove-fine-grained-permission }}
+        {{/ tags_permissions }}
+    {{/ are_fine_grained_permissions_defined }}
+{{/ can_use_fine_grained_permissions }}

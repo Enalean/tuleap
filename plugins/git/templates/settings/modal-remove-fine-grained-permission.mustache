@@ -1,0 +1,31 @@
+<div
+    id="remove-permission-{{ id }}-modal"
+    role="dialog"
+    aria-labelledby="remove-permission-{{ id }}-modal-title"
+    class="tlp-modal tlp-modal-danger"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="remove-permission-{{ id }}-modal-title">{{# dgettext }} tuleap-git | Wait a minute… {{/ dgettext }}</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }} tuleap-git | Close {{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <form
+        method="POST"
+        action="{{ remove_form_action }}"
+    >
+        <div class="tlp-modal-body">
+            <input type="hidden" name="permission_id" value="{{ id }}" />
+            <input type="hidden" name="challenge" value="{{ delete_challenge }}" />
+            <p>
+                {{ remove_fine_grained_permission_desc }}
+            </p>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" data-dismiss="modal" class="tlp-button-danger tlp-button-outline tlp-modal-action">{{ btn_cancel }}</button>
+            <button type="submit" class="tlp-button-danger tlp-modal-action">
+                {{ remove_fine_grained_permission_confirm }}
+            </button>
+        </div>
+    </form>
+</div>

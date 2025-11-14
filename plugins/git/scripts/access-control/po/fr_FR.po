@@ -1,0 +1,23 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Thomas GORKA <thomas.gorka@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.8\n"
+
+msgid "Branch name (master, my_feature…)"
+msgstr "Nom de la branche (master, ma_fonctionnalite…)"
+
+msgid "Regular expressions are available, only \\n can\\'t be used"
+msgstr ""
+"Les expressions régulières sont activées, seul \\n ne peut pas être utilisé"
+
+msgid "Tag name (v1, alpha)…"
+msgstr "Nom du tag (v1, alpha…)"

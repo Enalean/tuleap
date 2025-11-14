@@ -1432,6 +1432,9 @@ msgstr "Aperçu"
 msgid "View Gerrit template"
 msgstr "Voir le modèle Gerrit"
 
+msgid "Wait a minute…"
+msgstr "Attendez une minute…"
+
 msgid "Warning"
 msgstr "Attention"
 
