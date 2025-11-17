@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, provide, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import { Option } from "@tuleap/option";
 import DocumentView from "@/views/DocumentView.vue";
 import DocumentHeader from "@/components/DocumentHeader.vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
@@ -56,6 +57,15 @@ import {
     REGISTER_VERSIONS_SHORTCUT_HANDLER,
 } from "@/register-shortcut-handler-injection-keys";
 import { CAN_USER_DISPLAY_VERSIONS } from "@/can-user-display-versions-injection-key";
+import {
+    CAN_USER_EDIT_DOCUMENT,
+    ORIGINAL_CAN_USER_EDIT_DOCUMENT,
+} from "@/can-user-edit-document-injection-key";
+import type { Version } from "@/components/sidebar/versions/fake-list-of-versions";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
+import { getVersionedSectionsLoader } from "@/sections/VersionedSectionsLoader";
+import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
+import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 
 const { scrollToAnchor } = useScrollToAnchor();
 
@@ -110,27 +120,60 @@ addShortcutsGroup(document, {
     shortcuts,
 });
 
-getSectionsLoader(document_id)
-    .loadSections()
-    .match(
-        (collection) => {
-            sections_collection.replaceAll(collection.map((section) => ref(section)));
-            sections_numberer.updateSectionsLevels();
-            bad_sections.value = bad_sections_detector.detect(sections_collection.sections.value);
-            is_loading_sections.value = false;
+const displayLoadedSections = (collection: StoredArtidocSection[]): void => {
+    sections_collection.replaceAll(collection.map((section) => ref(section)));
+    sections_numberer.updateSectionsLevels();
+    bad_sections.value = bad_sections_detector.detect(sections_collection.sections.value);
+    is_loading_sections.value = false;
 
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                scrollToAnchor(hash);
-            }
-        },
-        () => {
-            sections_collection.replaceAll([]);
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+        scrollToAnchor(hash);
+    }
+};
 
-            is_loading_sections.value = false;
-            is_loading_failed.value = true;
-        },
-    );
+const handleLoadSectionsError = (): void => {
+    sections_collection.replaceAll([]);
+
+    is_loading_sections.value = false;
+    is_loading_failed.value = true;
+};
+
+const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+const original_can_user_edit_document = strictInject(ORIGINAL_CAN_USER_EDIT_DOCUMENT);
+const use_fake_versions = strictInject(USE_FAKE_VERSIONS);
+let old_version = ref<Option<Version>>(Option.nothing());
+
+const sections_loader = getSectionsLoader(document_id);
+const versioned_sections_loader = getVersionedSectionsLoader(document_id);
+
+provide(CURRENT_VERSION_DISPLAYED, {
+    old_version,
+    switchToOldVersion(version: Version) {
+        old_version.value = Option.fromValue(version);
+        can_user_edit_document.value = false;
+
+        if (use_fake_versions.value) {
+            return;
+        }
+
+        versioned_sections_loader
+            .loadVersionedSections(version)
+            .match(displayLoadedSections, handleLoadSectionsError);
+    },
+    switchToLatestVersion() {
+        old_version.value = Option.nothing();
+        can_user_edit_document.value = original_can_user_edit_document;
+
+        if (use_fake_versions.value) {
+            return;
+        }
+
+        sections_loader.loadSections().match(displayLoadedSections, handleLoadSectionsError);
+    },
+});
+
+sections_loader.loadSections().match(displayLoadedSections, handleLoadSectionsError);
 
 onMounted(() => {
     container.value?.addEventListener("scroll", onScroll);

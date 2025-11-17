@@ -477,6 +477,10 @@ msgstr "Versions"
 msgid "Versions based on fake data"
 msgstr "Versions basées sur des données simulées"
 
+msgid "You are currently viewing \"%{ title }\" in read-only mode."
+msgstr ""
+"Vous être actuellement en train de visionner \"%{ title }\" en lecture seule."
+
 msgid ""
 "You can now select your fields or go back to the document and create new "
 "sections, they will be stored as artifacts in the selected tracker."

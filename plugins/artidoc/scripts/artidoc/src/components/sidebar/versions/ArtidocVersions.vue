@@ -53,7 +53,11 @@
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" v-model="use_fake_versions" />
+                    <input
+                        type="checkbox"
+                        v-model="use_fake_versions"
+                        v-on:change="onFakeVersionToggle"
+                    />
                     {{ $gettext("Versions based on fake data") }}
                 </label>
             </div>
@@ -66,6 +70,7 @@
 <script setup lang="ts">
 import { ref, provide } from "vue";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import ListOfVersionsSkeleton from "@/components/sidebar/versions/ListOfVersionsSkeleton.vue";
 import type { VersionsDisplayChoices } from "@/components/sidebar/versions/versions-display";
 import {
@@ -79,6 +84,8 @@ import {
     IS_LOADING_VERSION,
     VERSIONS_LOADING_ERROR,
 } from "@/components/sidebar/versions/load-versions-injection-keys";
+import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
 
 const { $gettext } = useGettext();
 
@@ -87,13 +94,18 @@ const should_display_under_construction_message = ref(true);
 const is_loading_versions = ref(true);
 const show_title = $gettext("Change display of versions");
 const display = ref<VersionsDisplayChoices>(ALL_VERSIONS);
-const use_fake_versions = ref(true);
+const use_fake_versions = strictInject(USE_FAKE_VERSIONS);
+const versions_display = strictInject(CURRENT_VERSION_DISPLAYED);
 
 provide(IS_LOADING_VERSION, is_loading_versions);
 provide(VERSIONS_LOADING_ERROR, error);
 
 function gotit(): void {
     should_display_under_construction_message.value = false;
+}
+
+function onFakeVersionToggle(): void {
+    versions_display.switchToLatestVersion();
 }
 </script>
 
