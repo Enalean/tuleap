@@ -255,6 +255,9 @@ deptrac: ## Execute deptrac. Use SEARCH_PATH to look for deptrac config files un
 treefmt: ## Run treefmt
 	@treefmt
 
+tests-consistency-frontend-assets-manifests: ## Check that entry points referenced in JS manifests are present on disk
+	@pnpm -r --no-bail exec -- $(CURDIR)/tests/js_manifest_output_integrity/check.php
+
 bash-web: ## Give a bash on web container
 	@$(DOCKER) exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `$(DOCKER_COMPOSE) ps -q web` bash
 

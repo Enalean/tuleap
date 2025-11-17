@@ -120,6 +120,9 @@ pipeline {
                     steps { script { execTestWithLimitedConcurrency({ actions.runJSUnitTests() }) } }
                     post { always { junit 'results/js-test-results/junit-*.xml' } }
                 }
+                stage ('Check consistency JS manifest files') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runJSManifestConsistencyCheck() }) } }
+                }
                 stage ('Scan for secrets') {
                     steps { script { execTestWithLimitedConcurrency({ actions.runSecretsScan() }) } }
                 }

@@ -35,6 +35,12 @@ def runJSUnitTests(Boolean with_coverage = false) {
     }
 }
 
+def runJSManifestConsistencyCheck() {
+    dir ('sources') {
+        runInsideNixShell('make tests-consistency-frontend-assets-manifests')
+    }
+}
+
 def runRESTTests(String db, String php) {
     sh """
     mkdir -p \$WORKSPACE/results/api-rest/php${php}-${db}
