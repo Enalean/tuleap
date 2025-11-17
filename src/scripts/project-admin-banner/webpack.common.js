@@ -51,6 +51,7 @@ const config = {
         rules: [...webpack_configurator.configureTypescriptRules(), rule_vue_loader],
     },
     plugins: [
+        webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
         POGettextPlugin.webpack(),
         new VueLoaderPlugin(),

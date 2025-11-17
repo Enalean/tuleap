@@ -31,6 +31,9 @@ module.exports = [
         externals: {
             tlp: "tlp",
         },
-        plugins: [webpack_configurator.getManifestPlugin()],
+        plugins: [
+            webpack_configurator.getCleanWebpackPlugin(),
+            webpack_configurator.getManifestPlugin(),
+        ],
     },
 ];

@@ -35,6 +35,7 @@ module.exports = [
             rules: [webpack_configurator.rule_scss_loader],
         },
         plugins: [
+            webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
