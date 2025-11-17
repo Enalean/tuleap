@@ -25,7 +25,7 @@ import { merge } from "webpack-merge";
 import WebpackAssetsManifest from "webpack-assets-manifest";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import CopyWebpackPlugin from "copy-webpack-plugin";
-// eslint-disable-next-line import/no-extraneous-dependencies
+
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import RemoveEmptyScriptsPlugin from "webpack-remove-empty-scripts";
