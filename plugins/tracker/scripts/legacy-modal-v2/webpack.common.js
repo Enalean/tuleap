@@ -34,7 +34,10 @@ const config = {
         codendi: "codendi",
         jquery: "jQuery",
     },
-    plugins: [webpack_configurator.getManifestPlugin()],
+    plugins: [
+        webpack_configurator.getCleanWebpackPlugin(),
+        webpack_configurator.getManifestPlugin(),
+    ],
 };
 
 module.exports = [config];

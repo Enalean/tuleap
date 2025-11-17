@@ -34,6 +34,7 @@ const config_for_legacy_scripts = {
         tuleap: "tuleap",
     },
     plugins: [
+        webpack_configurator.getCleanWebpackPlugin(),
         ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
             "tracker.js": [
                 "./src/TrackerReports.js",

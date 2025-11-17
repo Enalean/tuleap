@@ -68,6 +68,7 @@ const webpack_config = {
         ],
     },
     plugins: [
+        webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getMomentLocalePlugin(),
         new RemoveEmptyScriptsPlugin({ extensions: ["scss", "css"] }),
         new MiniCssExtractPlugin({ filename: "[name].css" }),

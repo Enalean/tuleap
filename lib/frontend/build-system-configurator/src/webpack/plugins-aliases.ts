@@ -26,6 +26,8 @@ import WebpackAssetsManifest from "webpack-assets-manifest";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import CopyWebpackPlugin from "copy-webpack-plugin";
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import RemoveEmptyScriptsPlugin from "webpack-remove-empty-scripts";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
@@ -51,7 +53,6 @@ export function getMomentLocalePlugin(): webpack.ContextReplacementPlugin {
 interface OutputResult {
     path: string;
     filename: string;
-    clean: { keep: (filename: string) => boolean };
     publicPath: string | undefined;
 }
 
@@ -59,11 +60,6 @@ export function configureOutput(assets_dir_path: string, public_path = ""): Outp
     const output: OutputResult = {
         path: assets_dir_path,
         filename: "[name]-[chunkhash].js",
-        clean: {
-            keep: function (filename: string): boolean {
-                return filename.startsWith("css-assets/") || filename.startsWith("ckeditor-4.");
-            },
-        },
         publicPath: undefined,
     };
 
@@ -72,6 +68,12 @@ export function configureOutput(assets_dir_path: string, public_path = ""): Outp
     }
 
     return output;
+}
+
+export function getCleanWebpackPlugin(): CleanWebpackPlugin {
+    return new CleanWebpackPlugin({
+        cleanAfterEveryBuildPatterns: ["!css-assets/", "!css-assets/**"],
+    });
 }
 
 export function getCopyPlugin(patterns = [], options = {}): CopyWebpackPlugin {

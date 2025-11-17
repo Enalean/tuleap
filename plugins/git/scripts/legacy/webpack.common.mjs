@@ -39,6 +39,7 @@ export default [
             rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
         },
         plugins: [
+            webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
                 "git.js": ["./src/git.js", "./src/webhooks.js", "./src/permissions.js"],
