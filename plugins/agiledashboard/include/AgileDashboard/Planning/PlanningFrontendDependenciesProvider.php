@@ -23,12 +23,13 @@ namespace Tuleap\AgileDashboard\Planning;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Layout\JavascriptAsset;
 
 final readonly class PlanningFrontendDependenciesProvider
 {
     public function __construct(
-        private IncludeAssets $include_core_assets,
+        private IncludeAssetsGeneric $include_ckeditor_assets,
         private IncludeAssets $agiledashboard_include_assets,
         private BaseLayout $layout,
     ) {
@@ -36,7 +37,7 @@ final readonly class PlanningFrontendDependenciesProvider
 
     public function loadPlanningJavascriptAssets(): void
     {
-        $this->layout->addJavascriptAsset(new JavascriptAsset($this->include_core_assets, 'ckeditor.js'));
+        $this->layout->addJavascriptAsset(new JavascriptAsset($this->include_ckeditor_assets, 'ckeditor.js'));
         $this->layout->addJavascriptAsset(new JavascriptAsset($this->agiledashboard_include_assets, 'planning-v2.js'));
     }
 

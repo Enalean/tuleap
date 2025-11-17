@@ -109,6 +109,7 @@ final class EditLicenseAgreementControllerTest extends TestCase
             $this->factory,
             $this->createMock(CSRFSynchronizerToken::class),
             $assets,
+            $assets,
         );
     }
 

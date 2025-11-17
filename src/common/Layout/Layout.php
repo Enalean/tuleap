@@ -283,7 +283,10 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             $this->includeSubsetOfCombined();
         }
 
-        $this->includeJavascriptFile($this->include_asset->getFileURL('ckeditor.js'));
+        $this->includeJavascriptFile(
+            (new \Tuleap\Layout\IncludeViteAssets(__DIR__ . '/../../scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'))
+                ->getFileURL('ckeditor.js')
+        );
         $this->includeJavascriptFile($this->include_asset->getFileURL('rich-text-editor-including-prototypejs.js'));
 
         //Javascript i18n

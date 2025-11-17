@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeViteAssets;
+
 require_once __DIR__ . '/../include/pre.php';
 
 $request = \Tuleap\HTTPRequest::instance();
@@ -80,9 +82,8 @@ $recipients = [
     ],
 ];
 
-$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
-$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
+$ckeditor_assets = new IncludeViteAssets(__DIR__ . '/../../scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/');
+$GLOBALS['HTML']->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
 $site_admin_assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../scripts/site-admin/frontend-assets', '/assets/core/site-admin');
 $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($site_admin_assets, 'site-admin-mass-emailing.js'));

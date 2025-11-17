@@ -30,6 +30,8 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeAssetsGeneric;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -70,6 +72,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
         LicenseAgreementFactory $factory,
         \CSRFSynchronizerToken $csrf_token,
         IncludeAssets $assets,
+        private readonly IncludeAssetsGeneric $ckeditor_assets,
     ) {
         $this->project_retriever = $project_retriever;
         $this->helper            = $helper;
@@ -93,6 +96,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
             ),
             SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
             new \Tuleap\Layout\IncludeCoreAssets(),
+            new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/')
         );
     }
 
@@ -126,7 +130,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
 
         $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
 
-        $layout->includeFooterJavascriptFile($this->assets->getFileURL('ckeditor.js'));
+        $layout->includeFooterJavascriptFile($this->ckeditor_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('frs-admin-license-agreement.js'));
 
         $this->helper->renderHeader($project);

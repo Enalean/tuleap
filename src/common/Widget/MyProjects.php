@@ -27,6 +27,7 @@ use ForgeConfig;
 use Project;
 use RSS;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\User\Account\RemoveFromProjectController;
 use UserManager;
@@ -292,9 +293,10 @@ class MyProjects extends \Widget
     #[\Override]
     public function getJavascriptDependencies(): array
     {
-        $assets = new \Tuleap\Layout\IncludeCoreAssets();
+        $assets          = new \Tuleap\Layout\IncludeCoreAssets();
+        $ckeditor_assets = new IncludeViteAssets(__DIR__ . '/../../scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/');
         return [
-            ['file' => $assets->getFileURL('ckeditor.js')],
+            ['file' => $ckeditor_assets->getFileURL('ckeditor.js')],
             ['file' => '/scripts/tuleap/tuleap-ckeditor-toolbar.js'],
             ['file' => $assets->getFileURL('dashboards/widget-contact-modal.js')],
             ['file' => $assets->getFileURL('dashboards/widget-my-projects-leave-project.js')],

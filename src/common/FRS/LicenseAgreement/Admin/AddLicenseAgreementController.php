@@ -28,6 +28,8 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeAssetsGeneric;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
@@ -66,6 +68,7 @@ class AddLicenseAgreementController implements DispatchableWithRequest, Dispatch
         \TemplateRenderer $content_renderer,
         \CSRFSynchronizerToken $csrf_token,
         IncludeAssets $assets,
+        private readonly IncludeAssetsGeneric $ckeditor_assets,
     ) {
         $this->project_retriever = $project_retriever;
         $this->helper            = $helper;
@@ -85,6 +88,7 @@ class AddLicenseAgreementController implements DispatchableWithRequest, Dispatch
             \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/templates'),
             SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
             new \Tuleap\Layout\IncludeCoreAssets(),
+            new IncludeViteAssets(__DIR__ . '/../../../../scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
         );
     }
 
@@ -93,7 +97,7 @@ class AddLicenseAgreementController implements DispatchableWithRequest, Dispatch
     {
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->helper->assertCanAccess($project, $request->getCurrentUser());
-        $layout->includeFooterJavascriptFile($this->assets->getFileURL('ckeditor.js'));
+        $layout->includeFooterJavascriptFile($this->ckeditor_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('frs-admin-license-agreement.js'));
 
         $this->helper->renderHeader($project);

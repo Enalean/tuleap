@@ -38,6 +38,7 @@ use Tuleap\Kanban\KanbanJavascriptDependenciesProvider;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\MappingRegistry;
 use Widget;
 
@@ -225,7 +226,10 @@ abstract class KanbanWidget extends Widget
     #[\Override]
     public function getJavascriptDependencies(): array
     {
-        $provider = new KanbanJavascriptDependenciesProvider($this->getIncludeAssets());
+        $provider = new KanbanJavascriptDependenciesProvider(
+            $this->getIncludeAssets(),
+            new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/')
+        );
         return $provider->getDependencies();
     }
 

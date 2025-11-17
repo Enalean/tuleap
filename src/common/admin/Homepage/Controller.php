@@ -21,6 +21,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
+use Tuleap\Layout\IncludeViteAssets;
 
 class Admin_Homepage_Controller
 {
@@ -72,8 +73,8 @@ class Admin_Homepage_Controller
 
     public function index()
     {
-        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-        $this->response->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
+        $ckeditor_assets = new IncludeViteAssets(__DIR__ . '/../../../scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/');
+        $this->response->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/admin-homepage.js');
 
