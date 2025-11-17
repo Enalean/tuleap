@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// stylelint-disable selector-class-pattern,selector-id-pattern
+.trigger_condition_selector {
+    padding: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
+    text-align: right;
+    white-space: nowrap;
+}
+
+#triggers_existing > table > tbody > tr:nth-child(even) {
+    background: var(--tlp-table-row-background-even);
+}
+
+.trigger_description_triggering_field_intro {
+    padding-right: 0.25em;
+    text-align: right;
+}
+
+.trigger_description,
+.trigger_description + td {
+    padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+    vertical-align: middle;
+}
+
+#triggers_form select {
+    display: inline;
+}
+
+.add-new-trigger-hidden {
+    display: none;
+}
+
+.trigger_triggering_field_child_tracker_field_value {
+    margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
+}

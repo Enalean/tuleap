@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.4.2\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -381,6 +381,9 @@ msgid ""
 msgstr ""
 "Ajoutez une URL cible qui sera appelée à chaque création et mise à jour "
 "d'artifact. Cette URL sera appelée avec HTTP POST."
+
+msgid "Add condition"
+msgstr "Ajouter une condition"
 
 msgid "Add field to tooltip"
 msgstr "Ajouter un champ à l'infobulle"
@@ -889,6 +892,9 @@ msgid ""
 msgstr ""
 "Ne peut pas être formaté car au moins un des champs requis pour le format "
 "est manquant."
+
+msgid "Cannot save: missing data in form"
+msgstr "Impossible de sauvegarder : formulaire incomplet"
 
 #, php-format
 msgid "Cannot update conditions of transition with id '%d'"
@@ -5127,6 +5133,9 @@ msgstr "une nature avec le nom court %1$s existe déjà."
 msgid "added"
 msgstr "ajouté"
 
+msgid "all children"
+msgstr "tous les enfants"
+
 #, php-format
 msgid "all of <strong>%1$s %2$s</strong> are set to <strong>%3$s</strong>"
 msgstr ""
@@ -5138,6 +5147,9 @@ msgstr "par ordre alphabétique"
 
 msgid "and"
 msgstr "et"
+
+msgid "and all children"
+msgstr "et tous les enfants"
 
 msgid "and it's now placed after"
 msgstr "et il est maintenant placé après"
@@ -5160,11 +5172,11 @@ msgstr ""
 "au moins un(e) <strong>%1$s</strong> dont <strong>%2$s</strong> est à "
 "<strong>%3$s</strong>"
 
+msgid "at least one child"
+msgstr "au moins un enfant"
+
 msgid "autocomputed"
 msgstr "valeur calculée"
-
-msgid "cancel"
-msgstr "annuler"
 
 msgid "changed from"
 msgstr "modifié de"
@@ -5223,6 +5235,9 @@ msgstr "l'attribut fieldset_ids ne doit pas être vide."
 msgid "fixed_in"
 msgstr "fixed_in"
 
+msgid "has its field"
+msgstr "a le champ"
+
 msgid "have access to all artifacts"
 msgstr "accès à tous les artifacts"
 
@@ -5237,6 +5252,9 @@ msgstr "accès aux artifacts soumis par le groupe"
 
 msgid "have access to artifacts they submitted"
 msgstr "accès seulement aux artifacts qu'ils ont soumis"
+
+msgid "have their field"
+msgstr "ont le champ"
 
 msgid "in"
 msgstr "dans"
@@ -5280,17 +5298,14 @@ msgstr "de type"
 msgid "or"
 msgstr "ou"
 
+msgid "or at least one child"
+msgstr "ou au moins un enfant"
+
 msgid "raised"
 msgstr "augmentée"
 
 msgid "removed"
 msgstr "retiré"
-
-msgid "select child tracker field"
-msgstr "sélectionner le champ du tracker enfant"
-
-msgid "select child tracker name"
-msgstr "sélectionner le nom du tracker enfant"
 
 msgid "select current tracker field"
 msgstr "sélectionner le champ du tracker"

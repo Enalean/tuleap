@@ -1,6 +1,6 @@
-<?php
 /**
- * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+ * Copyright (c) Tuleap, 2017 - 2018. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+/* global codendi:readonly */
 
-namespace Tuleap\Tracker\Workflow\Action\Triggers;
-
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
-
-final readonly class TriggersPresenter
-{
-    public function __construct(public int $tracker_id, public CSRFSynchronizerTokenInterface $csrf_token, public string $json_encoded_existing)
-    {
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".tracker-field-richtext").forEach((elem) => new codendi.RTE(elem));
+});

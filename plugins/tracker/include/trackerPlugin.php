@@ -555,6 +555,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 'admin-csvimport',
                 'admin-perms-tracker',
                 Workflow::FUNC_ADMIN_RULES,
+                Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
                 AdminWebhooks::FUNC_ADMIN_WEBHOOKS,
             ],
             true,

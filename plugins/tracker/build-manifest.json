@@ -24,6 +24,10 @@
         "tracker-administration": {
             "src": "scripts/tracker-admin/src",
             "po": "scripts/tracker-admin/po"
+        },
+        "tracker-admin-triggers": {
+            "src": "scripts/tracker-admin-triggers/src",
+            "po": "scripts/tracker-admin-triggers/po"
         }
     },
     "gettext-vue3": {
