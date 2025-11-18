@@ -19,9 +19,10 @@
 
 import { createApp } from "vue";
 import App from "./components/App.vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { createInitializedStore } from "./store/index.js";
+import "../themes/style.scss";
 
 document.addEventListener("DOMContentLoaded", () => {
     const is_anonymous = document.body.dataset.userId === "0";
@@ -53,7 +54,7 @@ const initButton = async (container) => {
 
     const gettext = await initVueGettext(
         createGettext,
-        (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
     const app = createApp(App, {

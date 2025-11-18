@@ -29,15 +29,13 @@
 </template>
 
 <script>
-import { createModal } from "tlp";
-import store from "../store/index.js";
+import { createModal } from "@tuleap/tlp-modal";
 import CreatePullrequestButton from "./CreatePullrequestButton.vue";
 import CreatePullrequestModal from "./CreatePullrequestModal.vue";
 import CreatePullrequestErrorModal from "./CreatePullrequestErrorModal.vue";
 
 export default {
     name: "App",
-    store,
     components: {
         CreatePullrequestButton,
         CreatePullrequestModal,

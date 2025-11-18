@@ -21,42 +21,25 @@
 namespace Tuleap\Git\Repository;
 
 use Tuleap\Event\Dispatchable;
-use Tuleap\Layout\CssAsset;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 class CollectAssets implements Dispatchable
 {
     public const string NAME = 'collectAssets';
 
-    /** @var JavascriptAsset[] */
+    /** @var JavascriptAssetGeneric[] */
     private $scripts = [];
 
-    /** @var CssAsset[] */
-    private $stylesheets = [];
-
-    public function addScript(JavascriptAsset $script_asset)
+    public function addScript(JavascriptAssetGeneric $script_asset)
     {
         $this->scripts[] = $script_asset;
     }
 
-    public function addStylesheet(CssAsset $css_asset)
-    {
-        $this->stylesheets[] = $css_asset;
-    }
-
     /**
-     * @return JavascriptAsset[]
+     * @return JavascriptAssetGeneric[]
      */
     public function getScripts()
     {
         return $this->scripts;
-    }
-
-    /**
-     * @return CssAsset[]
-     */
-    public function getStylesheets()
-    {
-        return $this->stylesheets;
     }
 }
