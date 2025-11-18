@@ -34,6 +34,16 @@
         </div>
         <list-of-versions-skeleton v-if="is_loading_versions" />
         <template v-if="!error && !is_loading_versions">
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                        type="checkbox"
+                        v-model="use_fake_versions"
+                        v-on:change="onFakeVersionToggle"
+                    />
+                    {{ $gettext("Versions based on fake data") }}
+                </label>
+            </div>
             <div v-if="use_fake_versions" class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend">
                     <i
@@ -50,16 +60,6 @@
                         {{ $gettext("Group by named versions") }}
                     </option>
                 </select>
-            </div>
-            <div class="tlp-form-element">
-                <label class="tlp-label tlp-checkbox">
-                    <input
-                        type="checkbox"
-                        v-model="use_fake_versions"
-                        v-on:change="onFakeVersionToggle"
-                    />
-                    {{ $gettext("Versions based on fake data") }}
-                </label>
             </div>
         </template>
         <fake-list-of-versions-display v-if="use_fake_versions" v-bind:display="display" />
