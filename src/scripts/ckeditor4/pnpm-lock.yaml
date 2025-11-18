@@ -1,0 +1,16 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  ckeditor4:
+    specifier: 4.18.0
+    version: 4.18.0
+
+packages:
+
+  /ckeditor4@4.18.0:
+    resolution: {integrity: sha512-O4tnQCH0APKrBsz78L+m48s9Cs90aq0Nsatmh9CUj2YBTh8UZYdYcelBLVA84SlwA1nsx07aC76Zn08vgHqmLQ==}
+    dev: false

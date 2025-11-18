@@ -21,18 +21,18 @@
 namespace Tuleap\Kanban;
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeAssetsGeneric;
 
-final class KanbanJavascriptDependenciesProvider
+final readonly class KanbanJavascriptDependenciesProvider
 {
-    public function __construct(private readonly IncludeAssets $kanban_include_assets)
+    public function __construct(private IncludeAssets $kanban_include_assets, private IncludeAssetsGeneric $assets_ckeditor4)
     {
     }
 
     public function getDependencies(): array
     {
-        $core_include_assets = new \Tuleap\Layout\IncludeCoreAssets();
         return [
-            ['file' => $core_include_assets->getFileURL('ckeditor.js')],
+            ['file' => $this->assets_ckeditor4->getFileURL('ckeditor.js')],
             ['file' => $this->kanban_include_assets->getFileURL('kanban.js')],
         ];
     }

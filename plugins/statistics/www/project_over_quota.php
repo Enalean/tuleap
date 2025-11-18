@@ -17,12 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeViteAssets;
+
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
-$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
-$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
 
 $pluginManager    = PluginManager::instance();
 $statisticsPlugin = $pluginManager->getPluginByName('statistics');
@@ -33,6 +31,10 @@ if (! $statisticsPlugin || ! $pluginManager->isPluginEnabled($statisticsPlugin))
 if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
     $GLOBALS['Response']->redirect('/');
 }
+
+$ckeditor_assets = new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/');
+$GLOBALS['HTML']->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
 
 $project_quota_html = new ProjectQuotaHtml(Codendi_HTMLPurifier::instance());
 $project_quota_html->displayProjectsOverQuota();

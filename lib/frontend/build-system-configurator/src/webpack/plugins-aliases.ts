@@ -24,8 +24,6 @@ import { merge } from "webpack-merge";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import WebpackAssetsManifest from "webpack-assets-manifest";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import CopyWebpackPlugin from "copy-webpack-plugin";
-
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import RemoveEmptyScriptsPlugin from "webpack-remove-empty-scripts";
@@ -74,10 +72,6 @@ export function getCleanWebpackPlugin(): CleanWebpackPlugin {
     return new CleanWebpackPlugin({
         cleanAfterEveryBuildPatterns: ["!css-assets/", "!css-assets/**"],
     });
-}
-
-export function getCopyPlugin(patterns = [], options = {}): CopyWebpackPlugin {
-    return new CopyWebpackPlugin({ patterns, options });
 }
 
 export function getCSSExtractionPlugins(): object[] {

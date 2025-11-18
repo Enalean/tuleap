@@ -52,7 +52,6 @@ use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -153,7 +152,10 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new \Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider(),
             new RecentlyVisitedTopBacklogDao(),
             new PlanningFrontendDependenciesProvider(
-                new IncludeCoreAssets(),
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets',
+                    '/assets/core/ckeditor4/'
+                ),
                 new IncludeAssets(
                     __DIR__ . '/../scripts/planning-v2/frontend-assets',
                     '/assets/agiledashboard/planning-v2'

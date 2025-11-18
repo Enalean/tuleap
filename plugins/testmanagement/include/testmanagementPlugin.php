@@ -31,6 +31,7 @@ use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
@@ -544,7 +545,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
                 __DIR__ . '/../scripts/testmanagement/frontend-assets',
                 '/assets/testmanagement/testmanagement'
             ),
-            new \Tuleap\Layout\IncludeCoreAssets()
+            new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
         );
     }
 

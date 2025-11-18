@@ -33,6 +33,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -107,11 +108,12 @@ final class ShowKanbanController implements DispatchableWithRequest, Dispatchabl
                 ->withNewDropdownLinkSection($current_section)
                 ->build();
 
-            $kanban_assets = new IncludeAssets(
+            $kanban_assets   = new IncludeAssets(
                 __DIR__ . '/../../scripts/kanban/frontend-assets',
                 '/assets/kanban/kanban'
             );
-            $provider      = new KanbanJavascriptDependenciesProvider($kanban_assets);
+            $ckeditor_assets = new IncludeViteAssets(__DIR__ . '/../../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/');
+            $provider        = new KanbanJavascriptDependenciesProvider($kanban_assets, $ckeditor_assets);
             foreach ($provider->getDependencies() as $dependency) {
                 $layout->includeFooterJavascriptFile($dependency['file']);
             }

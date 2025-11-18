@@ -949,7 +949,10 @@ class RouteCollector
         return new BannerAdministrationController(
             AdministrationLayoutHelper::buildSelf(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/project/admin/banner/'),
-            new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'ckeditor.js'),
+            new JavascriptAsset(
+                new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
+                'ckeditor.js'
+            ),
             new JavascriptAsset(
                 new IncludeAssets(__DIR__ . '/../../scripts/project-admin-banner/frontend-assets', '/assets/core/project-admin-banner'),
                 'project-admin-banner.js'
@@ -966,7 +969,10 @@ class RouteCollector
         );
         return new PlatformBannerAdministrationController(
             new AdminPageRenderer(),
-            new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'ckeditor.js'),
+            new JavascriptAsset(
+                new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/'),
+                'ckeditor.js'
+            ),
             new JavascriptAsset($assets, 'platform-admin-banner.js'),
             new CssAssetWithoutVariantDeclinaisons($assets, 'platform-admin-banner-styles'),
             new \Tuleap\Platform\Banner\BannerRetriever(new \Tuleap\Platform\Banner\BannerDao())

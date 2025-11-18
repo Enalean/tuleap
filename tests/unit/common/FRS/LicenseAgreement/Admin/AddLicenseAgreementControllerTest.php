@@ -70,7 +70,8 @@ final class AddLicenseAgreementControllerTest extends TestCase
             $this->helper,
             $this->renderer,
             $this->csrf_token,
-            $this->assets
+            $this->assets,
+            $this->assets,
         );
     }
 

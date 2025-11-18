@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const fs = require("fs");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const path = require("path");
@@ -28,11 +27,6 @@ const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const context = __dirname;
 const assets_dir_path = path.resolve(__dirname, "./frontend-assets");
 const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/main/");
-
-const pkg = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "./node_modules/ckeditor4/package.json")),
-);
-const ckeditor_version = pkg.version;
 
 // Prototype doesn't like to have its "$super" argument mangled due to the fact
 // that it checks for its presence during class initialization
@@ -52,38 +46,7 @@ const manifest_plugin = new WebpackAssetsManifest({
     output: "manifest.json",
     merge: true,
     writeToDisk: true,
-    apply(manifest) {
-        manifest.set("ckeditor.js", `ckeditor-${ckeditor_version}/ckeditor.js`);
-    },
 });
-
-const webpack_config_for_ckeditor = {
-    entry: {},
-    context,
-    output,
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getCopyPlugin([
-            {
-                from: path.resolve(__dirname, "./node_modules/ckeditor4"),
-                to: path.resolve(__dirname, `./frontend-assets/ckeditor-${ckeditor_version}/`),
-                toType: "dir",
-                globOptions: {
-                    ignore: [
-                        "**/samples/**",
-                        "**/.github/**",
-                        "**/*.!(js|css|png)",
-                        "**/assets/ckeditor4.png",
-                        "**/adapters/**",
-                    ],
-                },
-            },
-        ]),
-    ],
-    stats: {
-        excludeAssets: [/\/plugins\//, /\/lang\//, /\/skins\//],
-    },
-};
 
 const webpack_config_for_flaming_parrot_code = {
     entry: {
@@ -312,7 +275,6 @@ const webpack_config_for_flaming_parrot_css = {
 };
 
 module.exports = [
-    webpack_config_for_ckeditor,
     webpack_config_legacy_combined,
     webpack_config_for_rich_text_editor,
     webpack_config_for_flaming_parrot_code,

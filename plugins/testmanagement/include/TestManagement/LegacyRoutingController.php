@@ -26,6 +26,7 @@ use Feedback;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -39,25 +40,20 @@ final class LegacyRoutingController implements DispatchableWithRequest, Dispatch
      * @var IncludeAssets
      */
     private $testmanagement_assets;
-    /**
-     * @var IncludeAssets
-     */
-    private $include_core_js_assets;
 
     public function __construct(
         Router $legacy_router,
         IncludeAssets $testmanagement_assets,
-        IncludeAssets $include_core_js_assets,
+        private readonly IncludeAssetsGeneric $ckeditor_assets,
     ) {
-        $this->legacy_router          = $legacy_router;
-        $this->include_core_js_assets = $include_core_js_assets;
-        $this->testmanagement_assets  = $testmanagement_assets;
+        $this->legacy_router         = $legacy_router;
+        $this->testmanagement_assets = $testmanagement_assets;
     }
 
     #[\Override]
     public function process(\Tuleap\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $layout->includeFooterJavascriptFile($this->include_core_js_assets->getFileURL('ckeditor.js'));
+        $layout->includeFooterJavascriptFile($this->ckeditor_assets->getFileURL('ckeditor.js'));
         $mermaid_asset = new \Tuleap\Layout\JavascriptViteAsset(
             new \Tuleap\Layout\IncludeViteAssets(
                 __DIR__ . '/../../../../src/scripts/mermaid-diagram-element/frontend-assets',

@@ -1,0 +1,14 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/core-ckeditor4",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "ckeditor4": "4.18.0"
+  },
+  "scripts": {
+    "build": "./copy_ckeditor.js"
+  }
+}
