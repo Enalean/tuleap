@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElement;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
@@ -272,6 +275,10 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
 
     public function process($engine, $request, $current_user)
     {
+        $assets = new IncludeAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin');
+        $GLOBALS['Response']->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'field-dependencies-style'));
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($assets, 'field-dependencies.js'));
+
         if ($request->get('source_field') && ! $request->get('target_field')) {
             $source_field = $request->get('source_field');
             $this->displayChooseSourceAndTarget($engine, $request, $current_user, $source_field);
@@ -286,7 +293,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                     $this->fieldIsAForbiddenSource($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
                 ) {
-                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Non authorized dependency.Please, select other fields.'));
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Non authorized dependency.Please, select other fields.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $tracker_id, 'func'    => 'admin-dependencies']));
                 } else {
                     $this->displayDefineDependencies($engine, $request, $current_user, $source_field, $target_field);
@@ -316,7 +323,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                         }
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Transitions updated'));
+                $GLOBALS['Response']->addFeedback(Feedback::SUCCESS, dgettext('tuleap-tracker', 'Transitions updated'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies']));
             }
         } else {
@@ -328,19 +335,24 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Manage field dependencies');
-        $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title);
+        $this->tracker->displayAdminItemHeaderBurningParrot($engine, 'editworkflow', $title);
 
-        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
+        echo '<div class="tlp-framed">';
+        echo '<section class="tlp-pane">';
+        echo '<div class="tlp-pane-container">';
+        echo '<div class="tlp-pane-header">';
+        echo '<h1 class="tlp-pane-title">' . $hp->purify($title) . '</h1>';
+        echo '</div>';
+        echo '<div class="tlp-pane-section">';
         echo '<p>' . dgettext('tuleap-tracker', 'Select a source field and a target field to edit dependencies between them.') . '</p>';
-
-        echo '<form action="' . TRACKER_BASE_URL . '/?" method="GET">';
+        echo '<form action="' . TRACKER_BASE_URL . '/?" method="GET" class="tracker-filed-dependencies-source-and-target">';
         echo '<input type="hidden" name="tracker" value="' . (int) $this->tracker->id . '" />';
         echo '<input type="hidden" name="func" value="admin-dependencies" />';
 
         //source
         $source_field = $this->form_element_factory->getFormElementById($source_field_id);
         if (! $source_field) {
-            echo '<select name="source_field" data-test="source_field" onchange="this.form.submit()">';
+            echo '<select name="source_field" data-test="source_field" class="tlp-select tlp-select-adjusted" onchange="this.form.submit()">';
             echo '<option value="0">' . dgettext('tuleap-tracker', '-- Choose source field') . '</option>';
             $sources = $this->getAllSourceFields();
             foreach ($sources as $id => $field) {
@@ -348,20 +360,21 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
                 echo $hp->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
                 echo '</option>';
             }
-            echo '</select>';
         } else {
             echo '<input type="hidden" name="source_field" value="' . $hp->purify($source_field_id) . '" />';
-            echo $hp->purify($source_field->getLabel());
+            echo '<select name="source_field" data-test="source_field" class="tlp-select tlp-select-adjusted"  disabled="">';
+            echo '<option value="' . $hp->purify($source_field->getId()) . '">' . $hp->purify($source_field->getLabel()) . '</option>';
         }
+        echo '</select>';
 
-        echo ' &rarr; ';
+        echo '<i class="fa-solid fa-arrow-right tracker-filed-dependencies-source-and-target-arrow" aria-hidden="true"></i>';
 
         //target
         $disabled = '';
         if (! $source_field) {
             $disabled = 'disabled="disabled" readonly="readonly"';
         }
-        echo '<select name="target_field" data-test="target_field" ' . $disabled . '>';
+        echo '<select name="target_field" data-test="target_field" ' . $disabled . 'class="tlp-select tlp-select-adjusted">';
         echo '<option value="0">' . dgettext('tuleap-tracker', '-- Choose target field') . '</option>';
         if ($source_field) {
             $sources = $this->getAllTargetFields($source_field_id);
@@ -373,7 +386,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         }
         echo '</select>';
 
-        echo ' <input type="submit" name="choose_source" data-test="choose_source_button" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        echo '<button type="submit" class="tlp-button-primary" name="choose_source" data-test="choose_source_button">' . dgettext('tuleap-tracker', 'Submit') . '</button>';
         echo '</form>';
 
         //Shortcut
@@ -405,6 +418,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
             echo '</ul>';
         }
 
+        echo '</div></div></section></div>';
         $this->tracker->displayFooter($engine);
     }
 
@@ -412,27 +426,25 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Define dependencies');
+        $this->tracker->displayAdminItemHeaderBurningParrot($engine, 'editworkflow', $title);
 
-        $GLOBALS['HTML']->addCssAsset(
-            \Tuleap\Layout\CssViteAsset::fromFileName(
-                new \Tuleap\Layout\IncludeViteAssets(
-                    __DIR__ . '/../../../scripts/styles/frontend-assets',
-                    '/assets/trackers/styles'
-                ),
-                'themes/FlamingParrot/dependencies-matrix.scss'
-            )
-        );
-        $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title, ['body_class' => ['has-sidebar-with-pinned-header']]);
         $source_field = $this->form_element_factory->getFieldById($source_field_id);
         $target_field = $this->form_element_factory->getFieldById($target_field_id);
         //Display creation form
-        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
+        echo '<div class="tlp-framed">';
+        echo '<section class="tlp-pane">';
+        echo '<div class="tlp-pane-container">';
+        echo '<div class="tlp-pane-header">';
+        echo '<h1 class="tlp-pane-title">' . $hp->purify($title) . '</h1>';
+        echo '</div>';
+        echo '<div class="tlp-pane-section">';
         $source_field_label = $source_field === null ? '' : $source_field->getLabel();
         $target_field_label = $target_field === null ? '' : $target_field->getLabel();
         echo '<p>' . sprintf(dgettext('tuleap-tracker', 'Define dependencies between <b>%1$s</b> as source and <b>%2$s</b> as target:'), $hp->purify($source_field_label), $hp->purify($target_field_label)) . '</p>';
 
         $this->displayDependenciesMatrix($source_field, $target_field);
 
+        echo '</div></section></div></div>';
         $this->tracker->displayFooter($engine);
     }
 
@@ -461,38 +473,68 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
             echo "<th class='matrix-label-cell'>" . $purifier->purify($source_field_value->getLabel()) . '</th>';
             foreach ($target_field_values as $target_field_value_id => $target_field_value) {
                 $box_value = $source_field_value_id . '_' . $target_field_value_id;
-                $this->displayCheckbox($source_field_value_id, $target_field_value_id, $dependencies, $box_value);
+                $this->displayCheckbox(
+                    $source_field_value_id,
+                    $source_field_value->getLabel(),
+                    $target_field_value_id,
+                    $target_field_value->getLabel(),
+                    $dependencies,
+                    $box_value
+                );
             }
             echo "</tr>\n";
             $j++;
         }
 
         echo '</tbody></table>';
-        echo '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
-            [
-                'tracker' => (int) $this->tracker->id,
-                'func'    => 'admin-dependencies',
-            ]
-        ) . '">';
-        echo '&laquo; ' . $GLOBALS['Language']->getText('global', 'btn_cancel');
+        echo '<section class="tlp-pane-section tlp-pane-section-submit">';
+        echo '<a class="tlp-button-primary tlp-button-outline" href="' . TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies']) . '">';
+        echo $GLOBALS['Language']->getText('global', 'btn_cancel');
         echo '</a> ';
-        echo '<input type="submit" name="create_field_dependencies" data-test="create-field-dependencies-button" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
-        echo '</FORM>';
+        echo '<input type="submit" name="create_field_dependencies" class="tlp-button-primary" data-test="create-field-dependencies-button" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        echo '</form>';
     }
 
-    protected function displayCheckbox($source_field_value_id, $target_field_value_id, $dependencies, $box_value)
+    protected function displayCheckbox($source_field_value_id, string $source_field_value_name, $target_field_value_id, string $target_field_value_name, $dependencies, $box_value)
     {
-        $checked = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $checked  = '';
         if (count($dependencies) > 0) {
             foreach ($dependencies as $dependency) {
-                if ($source_field_value_id == $dependency->source_value && $target_field_value_id == $dependency->target_value) {
+                if ($source_field_value_id === (int) $dependency->source_value && $target_field_value_id === (int) $dependency->target_value) {
                     $checked = 'checked="checked"';
                     break;
                 }
             }
         }
 
-        echo '<td class="matrix-cell" ><label class="pc_checkbox"><input type="checkbox" data-test="create-dependency" class=" tracker-field-dependencies-checkbox" name="' . $box_value . '" ' . $checked . '>&nbsp;</label></td>';
+        echo '<td class="matrix-cell" >';
+        $remove_label_title = sprintf(
+            dgettext(
+                'tuleap-tracker',
+                'Remove dependency between %1$s as source and %2$s as target'
+            ),
+            $purifier->purify($source_field_value_name),
+            $purifier->purify($target_field_value_name)
+        );
+        $add_label_title    = sprintf(
+            dgettext(
+                'tuleap-tracker',
+                'Add a dependency between %1$s as source and %2$s as target'
+            ),
+            $purifier->purify($source_field_value_name),
+            $purifier->purify($target_field_value_name)
+        );
+        $label_title        = $checked ? $remove_label_title : $add_label_title;
+        echo '<label class="tracker-field-dependencies-label-checkbox" title="' . $label_title . '">';
+        echo '<input type="checkbox" data-test="create-dependency" class="tracker-field-dependencies-checkbox" name="' . $box_value . '" ' . $checked . '/>';
+
+        $checked_icon_hidden_class   = $checked ? '' : 'field-dependencies-icon-hidden';
+        $unchecked_icon_hidden_class = $checked ? 'field-dependencies-icon-hidden' : '';
+
+        echo '<i class="fa-solid fa-turn-up field-dependencies-turn-up ' . $checked_icon_hidden_class . '" aria-hidden="true"></i>';
+        echo '<i class="fa-solid fa-circle field-dependencies-bullet-point ' . $unchecked_icon_hidden_class . '" aria-hidden="true"></i>';
+        echo '</label></td>';
     }
 
     public function displayRulesAsJavascript(): string

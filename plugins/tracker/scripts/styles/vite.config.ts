@@ -30,10 +30,6 @@ export default vite.defineAppConfig(
             rollupOptions: {
                 input: {
                     "style-fp": path.resolve(__dirname, "themes/FlamingParrot/style.scss"),
-                    "dependencies-matrix": path.resolve(
-                        __dirname,
-                        "themes/FlamingParrot/dependencies-matrix.scss",
-                    ),
                     print: path.resolve(__dirname, "themes/default/print.scss"),
                     "tracker-bp": path.resolve(__dirname, "themes/BurningParrot/tracker.scss"),
                 },

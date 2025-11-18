@@ -556,6 +556,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 'admin-perms-tracker',
                 Workflow::FUNC_ADMIN_RULES,
                 AdminWebhooks::FUNC_ADMIN_WEBHOOKS,
+                Workflow::FUNC_ADMIN_DEPENDENCIES,
             ],
             true,
         );

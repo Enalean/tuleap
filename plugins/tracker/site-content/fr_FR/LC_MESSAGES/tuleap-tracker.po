@@ -353,6 +353,12 @@ msgstr "Activer la nouvelle interface pour tous les trackers"
 msgid "Activate unified and simplified artifact links edition"
 msgstr "Activer l'édition des liens unifiée et simplifiée"
 
+#, php-format
+msgid "Add a dependency between %1$s as source and %2$s as target"
+msgstr ""
+"Ajouter une dépendance entre la valeur du champ source %1$s et la valeur du "
+"champ cible %2$s"
+
 msgid "Add a follow-up comment"
 msgstr "Ajouter un commentaire"
 
@@ -2724,6 +2730,12 @@ msgstr "Enlever %s du menu déroulant +Nouveau"
 
 msgid "Remove %s from sidebar and +New dropdown"
 msgstr "Enlever %s de la barre latérale et du menu déroulant +Nouveau"
+
+#, php-format
+msgid "Remove dependency between %1$s as source and %2$s as target"
+msgstr ""
+"Supprimer la dépendance entre la valeur du champ source %1$s et la valeur du "
+"champ cible %2$s"
 
 msgid "Remove from tooltip"
 msgstr "Enlever de l'infobulle"

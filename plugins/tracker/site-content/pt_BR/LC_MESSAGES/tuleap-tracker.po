@@ -290,6 +290,10 @@ msgstr ""
 msgid "Activate unified and simplified artifact links edition"
 msgstr ""
 
+#, php-format
+msgid "Add a dependency between %1$s as source and %2$s as target"
+msgstr ""
+
 msgid "Add a follow-up comment"
 msgstr ""
 
@@ -2415,6 +2419,10 @@ msgid "Remove %s from +New dropdown"
 msgstr ""
 
 msgid "Remove %s from sidebar and +New dropdown"
+msgstr ""
+
+#, php-format
+msgid "Remove dependency between %1$s as source and %2$s as target"
 msgstr ""
 
 msgid "Remove from tooltip"
