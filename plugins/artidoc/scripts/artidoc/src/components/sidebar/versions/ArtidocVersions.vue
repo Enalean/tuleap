@@ -22,7 +22,9 @@
     <section v-bind:class="{ 'use-fake-versions': use_fake_versions }">
         <div class="tlp-alert-info" v-if="should_display_under_construction_message">
             <p>{{ $gettext("This feature of artidoc is under construction.") }}</p>
-            <p>{{ $gettext("Data is fake in order to gather feedback about the feature.") }}</p>
+            <p v-if="use_fake_versions">
+                {{ $gettext("Data is fake in order to gather feedback about the feature.") }}
+            </p>
             <button type="button" class="tlp-button-small tlp-button-primary" v-on:click="gotit()">
                 {{ $gettext("Ok, got it") }}
             </button>
@@ -32,7 +34,7 @@
         </div>
         <list-of-versions-skeleton v-if="is_loading_versions" />
         <template v-if="!error && !is_loading_versions">
-            <div class="tlp-form-element tlp-form-element-prepend">
+            <div v-if="use_fake_versions" class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend">
                     <i
                         class="fa-solid fa-filter"
@@ -55,97 +57,40 @@
                     {{ $gettext("Versions based on fake data") }}
                 </label>
             </div>
-            <flat-list-of-versions v-if="display === ALL_VERSIONS" v-bind:versions="versions" />
-            <flat-list-of-versions
-                v-if="display === NAMED_VERSIONS"
-                v-bind:versions="named_versions"
-            />
-            <grouped-by-named-list-of-versions
-                v-if="display === GROUP_BY_NAMED_VERSIONS"
-                v-bind:grouped_versions="grouped_versions"
-            />
-            <button
-                class="tlp-button-mini tlp-button-primary load-more-versions"
-                v-on:click="more"
-                v-if="has_more_versions && !error"
-                v-bind:disabled="is_loading_more_versions"
-            >
-                <i
-                    class="tlp-button-icon"
-                    v-bind:class="
-                        is_loading_more_versions
-                            ? 'fa-solid fa-circle-notch fa-spin'
-                            : 'fa-solid fa-arrow-down'
-                    "
-                    aria-hidden="true"
-                ></i>
-                {{ $gettext("Load more versions") }}
-            </button>
         </template>
+        <fake-list-of-versions-display v-if="use_fake_versions" v-bind:display="display" />
+        <list-of-versions-display v-else />
     </section>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+import { ref, provide } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { Version } from "./fake-list-of-versions";
-import { getVersions } from "./fake-list-of-versions";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "@/project-id-injection-key";
-import FlatListOfVersions from "@/components/sidebar/versions/FlatListOfVersions.vue";
 import ListOfVersionsSkeleton from "@/components/sidebar/versions/ListOfVersionsSkeleton.vue";
-import { groupVersionsByNamedVersion } from "@/components/sidebar/versions/group-versions-by-named-version";
-import GroupedByNamedListOfVersions from "@/components/sidebar/versions/GroupedByNamedListOfVersions.vue";
+import type { VersionsDisplayChoices } from "@/components/sidebar/versions/versions-display";
+import {
+    ALL_VERSIONS,
+    GROUP_BY_NAMED_VERSIONS,
+    NAMED_VERSIONS,
+} from "@/components/sidebar/versions/versions-display";
+import FakeListOfVersionsDisplay from "@/components/sidebar/versions/FakeListOfVersionsDisplay.vue";
+import ListOfVersionsDisplay from "@/components/sidebar/versions/ListOfVersionsDisplay.vue";
+import {
+    IS_LOADING_VERSION,
+    VERSIONS_LOADING_ERROR,
+} from "@/components/sidebar/versions/load-versions-injection-keys";
 
 const { $gettext } = useGettext();
-const versions = ref<ReadonlyArray<Version>>([]);
-const project_id = strictInject(PROJECT_ID);
+
 const error = ref("");
 const should_display_under_construction_message = ref(true);
-let next: ReadonlyArray<Version> = [];
-const has_more_versions = ref(true);
-const is_loading_more_versions = ref(false);
 const is_loading_versions = ref(true);
 const show_title = $gettext("Change display of versions");
-
-const ALL_VERSIONS = "all";
-const NAMED_VERSIONS = "named";
-const GROUP_BY_NAMED_VERSIONS = "group";
-
-type Choices = typeof ALL_VERSIONS | typeof NAMED_VERSIONS | typeof GROUP_BY_NAMED_VERSIONS;
-
-const display = ref<Choices>(ALL_VERSIONS);
+const display = ref<VersionsDisplayChoices>(ALL_VERSIONS);
 const use_fake_versions = ref(true);
 
-const named_versions = computed(() => versions.value.filter((version) => version.title.isValue()));
-const grouped_versions = computed(() => groupVersionsByNamedVersion(versions.value));
-
-onMounted(() => {
-    setTimeout(() => {
-        getVersions(project_id).match(
-            (fetched_versions: ReadonlyArray<Version>) => {
-                is_loading_versions.value = false;
-                versions.value = fetched_versions.slice(0, 100);
-                next = fetched_versions.slice(100);
-            },
-            (fault) => {
-                is_loading_versions.value = false;
-                error.value = $gettext("An error occurred while getting versions: %{ error }", {
-                    error: String(fault),
-                });
-            },
-        );
-    }, 1000);
-});
-
-function more(): void {
-    is_loading_more_versions.value = true;
-    setTimeout(() => {
-        versions.value = [...versions.value, ...next];
-        has_more_versions.value = false;
-        is_loading_more_versions.value = false;
-    }, 1000);
-}
+provide(IS_LOADING_VERSION, is_loading_versions);
+provide(VERSIONS_LOADING_ERROR, error);
 
 function gotit(): void {
     should_display_under_construction_message.value = false;
@@ -178,9 +123,5 @@ select {
     order: 2;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-}
-
-.load-more-versions {
-    margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 </style>

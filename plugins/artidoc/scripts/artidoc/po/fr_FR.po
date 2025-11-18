@@ -408,6 +408,9 @@ msgstr "Il n'y a pas de tracker utilisable dans ce projet"
 msgid "This activation is personal and not persistent."
 msgstr "Cette activation est personnelle et n'est pas sauvegardée."
 
+msgid "This artidoc has no versions yet"
+msgstr "Cet artidoc n'a pas encore de versions"
+
 msgid "This document is empty"
 msgstr "Ce document est vide"
 
