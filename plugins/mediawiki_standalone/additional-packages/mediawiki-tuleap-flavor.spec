@@ -19,9 +19,10 @@ AutoReqProv: no
 
 Obsoletes: mediawiki-tuleap-flavor <= 999
 Provides: mediawiki-tuleap-flavor
+Obsoletes: tuleap-mathoid <= 17.1
+Provides: tuleap-mathoid
 
-Requires: tuleap-mathoid = %{tuleap_version}
-Requires: php84-php-cli php84-php-xml php84-php-intl php84-php-json php84-php-ldap php84-php-mbstring php84-php-mysqlnd php84-php-process php84-php-pdo php84-php-opcache php84-php-fpm php84-php-cli php84-php-sodium
+Requires: php84-php-cli php84-php-xml php84-php-intl php84-php-json php84-php-ldap php84-php-mbstring php84-php-mysqlnd php84-php-process php84-php-pdo php84-php-opcache php84-php-fpm php84-php-cli php84-php-sodium php84-php-openssl
 # Used by the mdpf extension
 Requires: php84-php-gd
 
