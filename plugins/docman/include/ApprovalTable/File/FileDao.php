@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableFileDao extends Docman_ApprovalTableItemDao
+class Docman_ApprovalTableFileDao extends Docman_ApprovalTableItemDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function getTableById($versionId, $fields = '*')
     {
@@ -51,5 +51,15 @@ class Docman_ApprovalTableFileDao extends Docman_ApprovalTableItemDao
         $orderBy = ' ORDER BY ver.number DESC ';
 
         return $this->getTableWithStatus($tableStatus, $fields, $where, $join, $orderBy, $limit);
+    }
+
+    public function getCountOfApprovalTableItemId(int $item_id): \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
+    {
+        $where   = ' ver.item_id = ' . $this->da->escapeInt($item_id) .
+                   ' AND app.wiki_version_id IS NULL';
+        $join    = ' JOIN plugin_docman_version ver ON (ver.id = app.version_id)';
+        $orderBy = ' ORDER BY ver.number DESC ';
+
+        return $this->getTableWithStatus(true, 'count(*) as nb_table', $where, $join, $orderBy, '');
     }
 }

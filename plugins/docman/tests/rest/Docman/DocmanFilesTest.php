@@ -483,7 +483,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             $new_version_file['last_update_date']
         );
         $date_after_update_timestamp = $date_after_update->getTimestamp();
-        $this->checkItemHasADisabledApprovalTable($items, 'POST F V');
+        $this->checkItemHasNoApprovalTable($items, 'POST F V');
         $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
     }
 

@@ -30,6 +30,8 @@ use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\RESTTestDataBuilder;
+use function Psl\Json\decode as json_decode;
+use function Psl\Json\encode as json_encode;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanItemsTest extends DocmanTestExecutionHelper
@@ -63,7 +65,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $folder['id'] . '/docman_items')
         );
-        $items_folder_2 = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $items_folder_2 = json_decode($response->getBody()->getContents());
 
         $items = array_merge($items_folder_1, $items_folder_2);
 
@@ -100,7 +102,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $folder['id'] . '/docman_items')
         );
-        $items_folder_2 = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $items_folder_2 = json_decode($response->getBody()->getContents());
 
         $items = array_merge($items_folder_1, $items_folder_2);
 
@@ -116,7 +118,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $root_id . '/docman_items')
         );
-        $folder   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $folder   = json_decode($response->getBody()->getContents());
 
         $allowed_folder = $this->findItemByTitle($folder, 'Folder');
         $this->assertNotNull($allowed_folder);
@@ -171,7 +173,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('GET', 'docman_items/' . $root_id),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $item     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $item     = json_decode($response->getBody()->getContents());
 
         $this->assertEquals('Project Documentation', $item['title']);
         $this->assertEquals($root_id, $item['id']);
@@ -186,7 +188,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('GET', 'docman_items/' . $root_id),
             RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
-        $item     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $item     = json_decode($response->getBody()->getContents());
 
         $this->assertEquals('Project Documentation', $item['title']);
         $this->assertEquals($root_id, $item['id']);
@@ -206,13 +208,13 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $folder = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $folder = json_decode($response->getBody()->getContents());
 
         $this->assertEquals(
             $folder['folder_properties'],
             [
                 'total_size' => 6,
-                'nb_files' => 3,
+                'nb_files'   => 3,
             ]
         );
     }
@@ -223,7 +225,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $embedded_2 = $this->findItemByTitle($items, 'GET EM');
 
         $project_response = $this->getResponse($this->request_factory->createRequest('GET', 'docman_items/' . $embedded_2['id'] . '/parents'));
-        $json_parents     = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $json_parents     = json_decode($project_response->getBody()->getContents());
         $this->assertEquals(count($json_parents), 3);
         $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
         $this->assertEquals($json_parents[1]['title'], 'Folder');
@@ -240,7 +242,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $json_parents = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $json_parents = json_decode($project_response->getBody()->getContents());
         $this->assertEquals(count($json_parents), 3);
         $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
         $this->assertEquals($json_parents[1]['title'], 'Folder');
@@ -269,8 +271,57 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         );
 
         $this->assertIsArray(
-            json_decode($get_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)
+            json_decode($get_response->getBody()->getContents())
         );
+    }
+
+    #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
+    public function testGetAllApprovalTables(int $root_id): void
+    {
+        // Create embedded file
+        $post_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_folders/$root_id/embedded_files")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'title'               => 'My embedded file',
+                    'embedded_properties' => [
+                        'content' => 'Hello World!',
+                    ],
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(201, $post_response->getStatusCode());
+        $post_body = json_decode($post_response->getBody()->getContents());
+        $item_id   = $post_body['id'];
+
+        // Create new version of file
+        $new_version_response = $this->getResponse(
+            $this->request_factory->createRequest('POST', "docman_embedded_files/$item_id/versions")
+                ->withBody($this->stream_factory->createStream(json_encode([
+                    'embedded_properties' => [
+                        'content' => 'No longer "Hello World!"',
+                    ],
+                    'should_lock_file'    => false,
+                ]))),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $new_version_response->getStatusCode());
+
+        // Get all approval tables
+        $get_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', "docman_items/$item_id/approval_tables"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $get_response->getStatusCode());
+        $get_body = json_decode($get_response->getBody()->getContents());
+        self::assertIsArray($get_body);
+        self::assertCount(0, $get_body);
+
+        // Cleanup (delete file)
+        $delete_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', "docman_embedded_files/$item_id"),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        );
+        self::assertSame(200, $delete_response->getStatusCode());
     }
 
     /**

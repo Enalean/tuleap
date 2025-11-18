@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
+class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public function getTableById($itemId, $wikiVersionId, $fields = '*')
     {
@@ -46,6 +46,16 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
         $join    = '';
         $orderBy = ' ORDER BY app.wiki_version_id DESC ';
         return $this->getTableWithStatus($tableStatus, $fields, $where, $join, $orderBy, $limit);
+    }
+
+    public function getCountOfApprovalTableItemId(int $item_id): \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
+    {
+        $where   = 'app.item_id = ' . $this->da->escapeInt($item_id) .
+                   ' AND app.wiki_version_id IS NOT NULL';
+        $join    = '';
+        $orderBy = ' ORDER BY app.wiki_version_id DESC ';
+
+        return $this->getTableWithStatus(true, 'count(*) as nb_table', $where, $join, $orderBy, '');
     }
 
     /**

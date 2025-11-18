@@ -155,8 +155,17 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function checkItemHasADisabledApprovalTable(array $items, string $title): void
     {
         $item = $this->checkApprovalExistence($items, $title);
-        $this->assertNull($item['approval_table']);
-        $this->assertFalse($item['is_approval_table_enabled']);
+        self::assertNotNull($item['approval_table']);
+        self::assertTrue($item['has_approval_table']);
+        self::assertFalse($item['is_approval_table_enabled']);
+    }
+
+    public function checkItemHasNoApprovalTable(array $items, string $title): void
+    {
+        $item = $this->checkApprovalExistence($items, $title);
+        self::assertNull($item['approval_table']);
+        self::assertFalse($item['has_approval_table']);
+        self::assertFalse($item['is_approval_table_enabled']);
     }
 
     private function checkApprovalExistence(array $items, string $title): array

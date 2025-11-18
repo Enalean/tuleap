@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1;
 
 use Codendi_HTMLPurifier;
+use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableFile;
+use Docman_ApprovalTableFileFactory;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
@@ -55,6 +57,7 @@ final class ItemRepresentationBuilderTest extends TestCase
     private ItemRepresentationBuilder $item_representation_builder;
     private DocmanItemPermissionsForGroupsBuilder&MockObject $item_permissions_for_groups_builder;
     private Codendi_HTMLPurifier&MockObject $html_purifier;
+    private Docman_ApprovalTableFactoriesFactory&MockObject $factories_factory;
 
     #[\Override]
     protected function setUp(): void
@@ -68,6 +71,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         $this->approval_table_retriever            = $this->createMock(ApprovalTableRetriever::class);
         $this->item_permissions_for_groups_builder = $this->createMock(DocmanItemPermissionsForGroupsBuilder::class);
         $this->html_purifier                       = $this->createMock(Codendi_HTMLPurifier::class);
+        $this->factories_factory                   = $this->createMock(Docman_ApprovalTableFactoriesFactory::class);
 
         $this->item_representation_builder = new ItemRepresentationBuilder(
             $this->createMock(Docman_ItemDao::class),
@@ -81,6 +85,7 @@ final class ItemRepresentationBuilderTest extends TestCase
             $this->item_permissions_for_groups_builder,
             $this->html_purifier,
             ProvideUserAvatarUrlStub::build(),
+            $this->factories_factory,
         );
 
         UserManager::setInstance($this->user_manager);
@@ -129,6 +134,17 @@ final class ItemRepresentationBuilderTest extends TestCase
         $item_approval_table->method('isEnabled')->willReturn(true);
         $item_approval_table->method('getApprovalState')->willReturn(0);
         $item_approval_table->method('getId')->willReturn(10);
+        $item_approval_table->method('isDisabled')->willReturn(false);
+        $item_approval_table->method('isClosed')->willReturn(false);
+        $item_approval_table->method('getVersionNumber')->willReturn('2');
+        $item_approval_table->method('getNotification')->willReturn(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
+        $item_approval_table->method('getDescription')->willReturn('');
+        $item_approval_table->method('getReviewerArray')->willReturn([]);
+
+        $approval_table_factory = $this->createMock(Docman_ApprovalTableFileFactory::class);
+        $approval_table_factory->method('getNotificationTypeName')->with(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED)->willReturn('Disabled');
+
+        $this->factories_factory->method('getFromItem')->with($docman_item)->willReturn($approval_table_factory);
 
         $this->approval_table_retriever->method('hasApprovalTable')->with($docman_item)->willReturn(true);
 
@@ -153,27 +169,31 @@ final class ItemRepresentationBuilderTest extends TestCase
             ItemRepresentation::TYPE_FILE
         );
 
-        self::assertEquals('My file.txt', $representation->title);
+        self::assertSame('My file.txt', $representation->title);
         self::assertFalse($representation->is_expanded);
         self::assertTrue($representation->user_can_write);
         self::assertTrue($representation->user_can_delete);
         self::assertTrue($representation->can_user_manage);
-        self::assertEquals($owner_id, $representation->lock_info->locked_by->id);
-        self::assertEquals('2019-02-06T15:00:00+01:00', $representation->lock_info->lock_date);
+        self::assertSame($owner_id, $representation->lock_info->locked_by->id);
+        self::assertSame('2019-02-06T15:00:00+01:00', $representation->lock_info->lock_date);
         self::assertNull($representation->file_properties);
         self::assertNull($representation->embedded_file_properties);
         self::assertNull($representation->link_properties);
         self::assertNull($representation->wiki_properties);
-        self::assertEquals($permissions_for_groups_representation, $representation->permissions_for_groups);
+        self::assertSame($permissions_for_groups_representation, $representation->permissions_for_groups);
 
-        self::assertEquals(10, $representation->approval_table->id);
-        self::assertEquals('Not yet', $representation->approval_table->approval_state);
-        self::assertEquals($owner_id, $representation->approval_table->table_owner->id);
-        self::assertEquals('2019-02-06T15:16:40+01:00', $representation->approval_table->approval_request_date);
+        self::assertSame(10, $representation->approval_table->id);
+        self::assertSame('Not yet', $representation->approval_table->approval_state);
+        self::assertSame($owner_id, $representation->approval_table->table_owner->id);
+        self::assertSame('2019-02-06T15:16:40+01:00', $representation->approval_table->approval_request_date);
         self::assertFalse($representation->approval_table->has_been_approved);
-        self::assertEquals('2019-02-06T15:00:00+01:00', $representation->metadata[0]->value);
-        self::assertEquals('2019-02-06T15:00:00+01:00', $representation->metadata[0]->post_processed_value);
-        self::assertEquals('metadata name', $representation->metadata[0]->name);
-        self::assertEquals('date', $representation->metadata[0]->type);
+        self::assertSame('', $representation->approval_table?->description);
+        self::assertFalse($representation->approval_table?->is_closed);
+        self::assertSame('Disabled', $representation->approval_table?->notification_type);
+        self::assertSame(2, $representation->approval_table?->version_number);
+        self::assertSame('2019-02-06T15:00:00+01:00', $representation->metadata[0]->value);
+        self::assertSame('2019-02-06T15:00:00+01:00', $representation->metadata[0]->post_processed_value);
+        self::assertSame('metadata name', $representation->metadata[0]->name);
+        self::assertSame('date', $representation->metadata[0]->type);
     }
 }

@@ -268,8 +268,9 @@ final class SearchResource extends AuthenticatedResource
         $html_purifier = Codendi_HTMLPurifier::instance();
 
         $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $factories_factory       = new \Docman_ApprovalTableFactoriesFactory();
 
-        $representation_builder =  new ItemRepresentationBuilder(
+        $representation_builder = new ItemRepresentationBuilder(
             $item_dao,
             $user_manager,
             $item_factory,
@@ -281,10 +282,7 @@ final class SearchResource extends AuthenticatedResource
                 $html_purifier,
                 UserHelper::instance()
             ),
-            new ApprovalTableRetriever(
-                new \Docman_ApprovalTableFactoriesFactory(),
-                $version_factory
-            ),
+            new ApprovalTableRetriever($factories_factory, $version_factory),
             new DocmanItemPermissionsForGroupsBuilder(
                 $permissions_manager,
                 $project_manager,
@@ -293,6 +291,7 @@ final class SearchResource extends AuthenticatedResource
             ),
             $html_purifier,
             $provide_user_avatar_url,
+            $factories_factory,
         );
 
 

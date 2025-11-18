@@ -25,6 +25,8 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Codendi_HTMLPurifier;
+use Docman_ApprovalTable;
+use Docman_ApprovalTableFactoriesFactory;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
@@ -35,6 +37,7 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use Project;
 use ProjectManager;
+use Psr\Log\LoggerInterface;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Log\LogEntry;
@@ -47,9 +50,11 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\REST\RESTLogger;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
+use Tuleap\User\REST\MinimalUserRepresentation;
 use UGroupManager;
 use UserHelper;
 use UserManager;
@@ -61,12 +66,14 @@ final class DocmanItemsResource extends AuthenticatedResource
     private Docman_ItemDao $item_dao;
     private DocmanItemsRequestBuilder $request_builder;
     private EventManager $event_manager;
+    private LoggerInterface $logger;
 
     public function __construct()
     {
         $this->item_dao        = new Docman_ItemDao();
         $this->request_builder = new DocmanItemsRequestBuilder(UserManager::instance(), ProjectManager::instance());
         $this->event_manager   = EventManager::instance();
+        $this->logger          = RESTLogger::getLogger();
     }
 
     /**
@@ -294,6 +301,72 @@ final class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/approval_tables
+     */
+    public function optionsApprovalTables(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get all item approval tables
+     *
+     * Table reviewers are not retrieved
+     *
+     * @url    GET {id}/approval_tables
+     * @access hybrid
+     *
+     * @param int $id ID of the item
+     * @param int $limit Number of elements to fetch {@from query}{@min 1}{@max 50}
+     * @param int $offset Position of the first element to fetch {@from query}{@min 0}
+     *
+     * @return list<ItemApprovalTableRepresentation>
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 404
+     */
+    public function getAllApprovalTables(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $this->checkAccess();
+        Header::allowOptionsGet();
+
+        $item = $this->retrieveItem($id);
+
+        $factories_factory        = new Docman_ApprovalTableFactoriesFactory();
+        $approval_table_retriever = new ApprovalTableRetriever($factories_factory, new Docman_VersionFactory());
+        $user_manager             = UserManager::instance();
+
+        $approval_tables = $approval_table_retriever->retrieveAllApprovalTables($item, $limit, $offset);
+
+        Header::sendPaginationHeaders($limit, $offset, $approval_table_retriever->getCountOfApprovalTable($item), self::MAX_LIMIT);
+        return array_map(
+            function (Docman_ApprovalTable $table) use ($item, $user_manager, $factories_factory): ItemApprovalTableRepresentation {
+                $owner = $user_manager->getUserById((int) $table->getOwner());
+                if ($owner === null) {
+                    $this->logger->error('An approval table has a non-existing user as owner', [
+                        'table' => $table->getId(),
+                        'user'  => (int) $table->getOwner(),
+                    ]);
+                    throw new RestException(404);
+                }
+                return ItemApprovalTableRepresentation::build(
+                    $item,
+                    $table,
+                    MinimalUserRepresentation::build(
+                        $owner,
+                        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                    ),
+                    new ApprovalTableStateMapper(),
+                    $factories_factory,
+                );
+            },
+            $approval_tables,
+        );
+    }
+
+    /**
      * @throws I18NRestException
      */
     private function checkItemCanHaveSubitems(\Docman_Item $item)
@@ -353,6 +426,7 @@ final class DocmanItemsResource extends AuthenticatedResource
         $html_purifier = Codendi_HTMLPurifier::instance();
 
         $permissions_manager = $this->getDocmanPermissionManager($project);
+        $factories_factory   = new \Docman_ApprovalTableFactoriesFactory();
 
         return new ItemRepresentationBuilder(
             $this->item_dao,
@@ -366,10 +440,7 @@ final class DocmanItemsResource extends AuthenticatedResource
                 $html_purifier,
                 UserHelper::instance()
             ),
-            new ApprovalTableRetriever(
-                new \Docman_ApprovalTableFactoriesFactory(),
-                new Docman_VersionFactory()
-            ),
+            new ApprovalTableRetriever($factories_factory, new Docman_VersionFactory()),
             new DocmanItemPermissionsForGroupsBuilder(
                 $permissions_manager,
                 ProjectManager::instance(),
@@ -378,6 +449,19 @@ final class DocmanItemsResource extends AuthenticatedResource
             ),
             $html_purifier,
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            $factories_factory,
         );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function retrieveItem(int $id): Docman_Item
+    {
+        $request_builder = new DocmanItemsRequestBuilder(UserManager::instance(), ProjectManager::instance());
+
+        $request = $request_builder->buildFromItemId($id);
+
+        return $request->getItem();
     }
 }

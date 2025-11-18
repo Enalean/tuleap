@@ -360,7 +360,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
-        $this->checkItemHasADisabledApprovalTable($items, $title);
+        $this->checkItemHasNoApprovalTable($items, $title);
 
         $versions_response = $this->getResponseByName(
             BaseTestDataBuilder::ADMIN_USER_NAME,

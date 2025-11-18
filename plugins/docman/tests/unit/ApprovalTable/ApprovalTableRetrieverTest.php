@@ -47,7 +47,7 @@ final class ApprovalTableRetrieverTest extends TestCase
         $this->approval_table_retriever = new ApprovalTableRetriever($this->approval_table_factory, $this->version_factory);
     }
 
-    public function testItReturnsNullWhenTableIsVersionedAndWhenNoVersionOfTableExists()
+    public function testItReturnsNullWhenTableIsVersionedAndWhenNoVersionOfTableExists(): void
     {
         $version_id = 1;
         $version    = new Docman_Version(['number' => $version_id]);
@@ -62,7 +62,7 @@ final class ApprovalTableRetrieverTest extends TestCase
         self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
 
-    public function testItReturnsTheLastTableWhenTableIsVersioned()
+    public function testItReturnsTheLastTableWhenTableIsVersioned(): void
     {
         $version_id = 1;
         $version    = new Docman_Version(['number' => $version_id]);
@@ -79,7 +79,7 @@ final class ApprovalTableRetrieverTest extends TestCase
         self::assertEquals($table, $this->approval_table_retriever->retrieveByItem($item));
     }
 
-    public function testItReturnsNullWhenFactoryDoesNotExistForItem()
+    public function testItReturnsNullWhenFactoryDoesNotExistForItem(): void
     {
         $version_id = 1;
         $version    = new Docman_Version(['number' => $version_id]);
@@ -93,7 +93,7 @@ final class ApprovalTableRetrieverTest extends TestCase
         self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
 
-    public function testItReturnsNullWhenItemDoesNotHaveAnApprovalTable()
+    public function testItReturnsNullWhenItemDoesNotHaveAnApprovalTable(): void
     {
         $version_id = 1;
         $version    = new Docman_Version(['number' => $version_id]);
@@ -110,7 +110,7 @@ final class ApprovalTableRetrieverTest extends TestCase
         self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
 
-    public function testItReturnsNullWhenItemApprovalTableIsDisabled()
+    public function testItReturnsApprovalTableEvenIfDisabled(): void
     {
         $version_id = 1;
         $version    = new Docman_Version(['number' => $version_id]);
@@ -126,10 +126,10 @@ final class ApprovalTableRetrieverTest extends TestCase
         $factory->method('getTable')->willReturn($table);
         $this->approval_table_factory->method('getSpecificFactoryFromItem')->with($item)->willReturn($factory);
 
-        self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
+        self::assertSame($table, $this->approval_table_retriever->retrieveByItem($item));
     }
 
-    public function testItReturnsApprovalTable()
+    public function testItReturnsApprovalTable(): void
     {
         $version_id = 1;
         $version    = new Docman_Version(['number' => $version_id]);
