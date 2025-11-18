@@ -1,6 +1,6 @@
 [Unit]
 Description=Tuleap git system events
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 
 [Timer]
 OnCalendar=*:*:00

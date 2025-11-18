@@ -1,6 +1,6 @@
 [Unit]
 Description=Meilisearch server for Tuleap
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 After=tuleap.service
 PartOf=tuleap.service
 

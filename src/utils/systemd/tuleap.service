@@ -1,6 +1,6 @@
 [Unit]
 Description=Tuleap service
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 After=nginx.target httpd.target
 
 [Service]

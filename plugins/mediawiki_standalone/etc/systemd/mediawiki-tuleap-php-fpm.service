@@ -1,6 +1,6 @@
 [Unit]
 Description=The PHP FastCGI Process Manager for MediaWiki Tuleap
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 After=tuleap.service
 PartOf=tuleap.service
 Conflicts=php84-php-fpm.service

@@ -108,7 +108,7 @@ Everytime a new feature or endpoint is implemented.
 ### What is this?
 
 See [OWASP document about access-control](https://owasp.org/www-community/Access_Control) and the [Tuleap Permissions
-model](https://docs.tuleap.org/administration-guide/users-management/security/site-access.html).
+model](https://docs.tuleap.com/administration-guide/users-management/security/site-access.html).
 
 ### Mitigations
 
@@ -200,7 +200,7 @@ To help administrators address these challenges, AI/LLM features in Tuleap must:
 * Not be essential to core Tuleap functionality. Tuleap should operate without depending on an AI/LLM service.
 * Allow restriction to specific areas (e.g. particular projects) or services within Tuleap.
 * Information shared with AI/LLM services must respect
-  [Tuleap Permissions model](https://docs.tuleap.org/administration-guide/users-management/security/site-access.html)
+  [Tuleap Permissions model](https://docs.tuleap.com/administration-guide/users-management/security/site-access.html)
   and the principle of least privilege.
 
 #### Prompt Injection and Moderation

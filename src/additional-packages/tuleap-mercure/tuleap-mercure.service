@@ -1,6 +1,6 @@
 [Unit]
 Description=Tuleap Mercure Server service (realtime)
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 After=tuleap.service
 PartOf=tuleap.service
 

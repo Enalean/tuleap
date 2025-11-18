@@ -1,6 +1,6 @@
 [Unit]
 Description=Tuleap launch system check
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 
 [Timer]
 OnCalendar=*:00/30:00

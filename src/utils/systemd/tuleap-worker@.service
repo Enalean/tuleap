@@ -1,6 +1,6 @@
 [Unit]
 Description=Tuleap worker instance %i
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 StartLimitIntervalSec=0
 StartLimitBurst=0
 

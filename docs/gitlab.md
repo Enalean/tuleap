@@ -34,7 +34,7 @@ you@workstation $> docker cp /tmp/gitlab.local.crt tuleap-web-1:/etc/pki/ca-trus
 ```
 
 When your certs are copied in Tuleap container, you need to trust them
-([Add a new certification authority to the CA bundle](https://docs.tuleap.org/administration-guide/system-administration/certification-authority.html)).
+([Add a new certification authority to the CA bundle](https://docs.tuleap.com/administration-guide/system-administration/certification-authority.html)).
 
 ### Create a GitLab admin account
 
@@ -57,7 +57,7 @@ As root account, you need to go to
 ## After Gitlab Webhook created
 
 Once a GitLab repository is integrated in Tuleap (see
-[Register GitLab repository](https://docs.tuleap.org/user-guide/code-versioning/gitlab.html#gitlab-repository-registration)), you must edit the new webhook's settings and disable
+[Register GitLab repository](https://docs.tuleap.com/user-guide/code-versioning/gitlab.html#gitlab-repository-registration)), you must edit the new webhook's settings and disable
 `SSL verification`. You can access to your webhooks with
 `https://gitlab.local/${namespace}/${project_name}/hooks`.
 

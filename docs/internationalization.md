@@ -30,7 +30,7 @@ Contributed files should not contain:
 ## Supported languages
 
 The list of currently available languages can be seen here:
-[available-languages](https://docs.tuleap.org/user-guide/user/preferences.html#languages)
+[available-languages](https://docs.tuleap.com/user-guide/user/preferences.html#languages)
 
 Contribution should respect `.po` files structure. Each component in
 Tuleap has its very own `.po` files and should be contributed as is.

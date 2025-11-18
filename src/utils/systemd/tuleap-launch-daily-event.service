@@ -1,6 +1,6 @@
 [Unit]
 Description=Tuleap launch daily event
-Documentation=https://docs.tuleap.org
+Documentation=https://docs.tuleap.com
 
 [Service]
 Type=simple
