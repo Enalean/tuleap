@@ -164,11 +164,7 @@ class IndexController
             $request->getProject()
         );
 
-        if (in_array($this->getCurrentPaneName($request), self::BURNING_PARROT_COMPATIBLE_PANES, true)) {
-            $renderer->renderToPage('admin-default-settings', $presenter);
-        } else {
-            $renderer->renderToPage('flaming-parrot-admin-default-settings', $presenter);
-        }
+        $renderer->renderToPage('admin-default-settings', $presenter);
         $GLOBALS['HTML']->footer([]);
     }
 
