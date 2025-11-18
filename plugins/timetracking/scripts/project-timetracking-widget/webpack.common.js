@@ -58,7 +58,6 @@ export default [
             },
         },
         plugins: [
-            webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             POGettextPlugin.webpack(),
             new VueLoaderPlugin(),

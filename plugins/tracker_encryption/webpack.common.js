@@ -31,7 +31,6 @@ module.exports = [
             rules: [webpack_configurator.rule_scss_loader],
         },
         plugins: [
-            webpack_configurator.getCleanWebpackPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
                 "tracker_encryption.js": ["./scripts/encrypted_field.js"],
