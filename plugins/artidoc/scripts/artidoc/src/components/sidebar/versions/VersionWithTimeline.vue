@@ -43,6 +43,7 @@ li {
         calc(var(--tlp-small-spacing) / 2) #{$timeline-whitespace};
     border-left: #{$border-width} solid transparent;
     gap: var(--tlp-small-spacing);
+    cursor: pointer;
 
     &:has(> .version-displayed) {
         border-left-color: var(--tlp-main-color);
