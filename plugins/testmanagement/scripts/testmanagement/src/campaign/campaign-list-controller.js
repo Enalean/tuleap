@@ -114,7 +114,11 @@ function CampaignListCtrl($q, gettextCatalog, TlpModalService, SharedPropertiesS
     }
 
     function shouldShowHideClosedButton() {
-        return !self.closed_campaigns_hidden && !self.shouldShowNoCampaigns();
+        return (
+            !self.closed_campaigns_hidden &&
+            self.closed_campaigns_loaded &&
+            !self.shouldShowNoCampaigns()
+        );
     }
 
     function showClosedCampaigns() {

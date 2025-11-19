@@ -270,9 +270,10 @@ describe("CampaignListController -", () => {
             jest.spyOn($ctrl, "shouldShowNoCampaigns").mockImplementation(() => {});
         });
 
-        it("Given the closed campaigns were shown and there are campaigns, then it will return true", () => {
+        it("Given the closed campaigns were shown, loaded and there are campaigns, then it will return true", () => {
             $ctrl.shouldShowNoCampaigns.mockReturnValue(false);
             $ctrl.closed_campaigns_hidden = false;
+            $ctrl.closed_campaigns_loaded = true;
 
             expect($ctrl.shouldShowHideClosedButton()).toBe(true);
         });
@@ -287,6 +288,14 @@ describe("CampaignListController -", () => {
         it("Given the closed campaigns were hidden, then it will return false", () => {
             $ctrl.shouldShowNoCampaigns.mockReturnValue(false);
             $ctrl.closed_campaigns_hidden = true;
+
+            expect($ctrl.shouldShowHideClosedButton()).toBe(false);
+        });
+
+        it("Given the closed campaigns were shown but not loaded, then it will return false", () => {
+            $ctrl.shouldShowNoCampaigns.mockReturnValue(false);
+            $ctrl.closed_campaigns_loaded = false;
+            $ctrl.closed_campaigns_hidden = false;
 
             expect($ctrl.shouldShowHideClosedButton()).toBe(false);
         });
