@@ -84,13 +84,15 @@ export const loadDocumentWithAscendentHierarchy = async (
 ): Promise<Item | void> => {
     try {
         const item = await getItem(item_id);
-        const loading_current_folder_promise = getItem(Number(item.parent_id));
-        await loadAscendantHierarchy(
-            context,
-            Number(item.parent_id),
-            loading_current_folder_promise,
-        );
 
+        if (item.parent_id !== 0) {
+            const loading_current_folder_promise = getItem(Number(item.parent_id));
+            await loadAscendantHierarchy(
+                context,
+                Number(item.parent_id),
+                loading_current_folder_promise,
+            );
+        }
         return item;
     } catch (exception) {
         return handleErrorsForDocument(context, exception);
