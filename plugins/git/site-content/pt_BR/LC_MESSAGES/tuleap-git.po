@@ -30,6 +30,9 @@ msgstr[1] ""
 msgid "A Gerrit project with that name already exists on that server"
 msgstr ""
 
+msgid "A comma-separated list of email addresses."
+msgstr ""
+
 msgid "A file already exists with this name under gitroot"
 msgstr ""
 
@@ -67,6 +70,9 @@ msgstr ""
 msgid "Add gerrit server"
 msgstr ""
 
+msgid "Add notification"
+msgstr ""
+
 msgid "Add permission on a new branch"
 msgstr ""
 
@@ -74,6 +80,9 @@ msgid "Add permission on a new tag"
 msgstr ""
 
 msgid "Add server"
+msgstr ""
+
+msgid "Add the notification"
 msgstr ""
 
 msgid "All projects can now use this Gerrit server."
@@ -353,6 +362,9 @@ msgid "Edit Gerrit template"
 msgstr ""
 
 msgid "Edit generic webhook"
+msgstr ""
+
+msgid "Emails who will receive the notification"
 msgstr ""
 
 msgid "Empty"
@@ -688,6 +700,9 @@ msgid "Not specified host"
 msgstr ""
 
 msgid "Notification Prefix"
+msgstr ""
+
+msgid "Notification deletion"
 msgstr ""
 
 msgid "Notifications"
@@ -1123,6 +1138,9 @@ msgstr ""
 msgid "There is no logged pushes in the last %1$s week(s)"
 msgstr ""
 
+msgid "These can be mailing list addresses or external recipients."
+msgstr ""
+
 msgid ""
 "This file contains bidirectional Unicode text. It may be interpreted "
 "differently than what is shown. This might be used to inject malicious code "
@@ -1266,12 +1284,15 @@ msgstr ""
 msgid "User group \"%s\" successfully added to notifications"
 msgstr ""
 
-msgid "User, group, email"
+msgid "User groups that will receive the notification"
 msgstr ""
 
 msgid ""
 "Users from selected user groups will be able to authenticate using their "
 "access keys when calling the build status update APIs."
+msgstr ""
+
+msgid "Users who will receive the notification"
 msgstr ""
 
 msgid "View"
@@ -1328,6 +1349,9 @@ msgid ""
 "You are about to permanently delete the repository <strong>%1$s</strong>. "
 "This operation <strong>cannot</strong> be undone. Do you confirm the "
 "deletion?"
+msgstr ""
+
+msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 
 msgid "You are about to remove the webhook. Please confirm your action."

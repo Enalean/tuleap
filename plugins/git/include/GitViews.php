@@ -51,6 +51,7 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
         private readonly HeaderRenderer $header_renderer,
         private readonly ProjectManager $project_manager,
         private readonly VerifyArtifactClosureIsAllowed $closure_verifier,
+        private readonly User_ForgeUserGroupFactory $user_group_factory,
     ) {
         parent::__construct($controller);
         $this->groupId        = (int) $this->request->get('group_id');
@@ -93,6 +94,7 @@ class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->event_manager,
             $this->project_manager,
             $this->closure_verifier,
+            $this->user_group_factory,
         );
 
         $repo_management_view->addPaneAssets();

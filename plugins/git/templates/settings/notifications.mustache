@@ -1,86 +1,128 @@
-<h2>{{ title }}</h2>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h2 class="tlp-pane-title">{{ mail_prefix_label }}</h2>
+        </div>
+        <form class="tlp-pane-section" action="/plugins/git/" method="POST">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <input type="hidden" name="action" value="mail" />
+            <input type="hidden" name="pane" value="{{ identifier }}" />
+            <input type="hidden" name="group_id" value="{{ repository_project_id }}" />
+            <input type="hidden" name="repo_id" value="{{ repository_id }}" />
 
-<form id="mail_prefix_form" action="/plugins/git/" method="POST">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <input type="hidden" id="action" name="action" value="mail" />
-    <input type="hidden" name="pane" value="{{ identifier }}" />
-    <input type="hidden" id="group_id" name="group_id" value="{{ repository_project_id }}" />
-    <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
-
-    <label for="mail_prefix">{{ mail_prefix_label }}</label>
-    <input name="mail_prefix" id="mail_prefix" class="plugin_git_mail_prefix" type="text" value="{{ mail_prefix }}" data-test="git-mail-prefix" />
-
-    <h3>{{ notified_mails_title }}</h3>
-
-    <table id="git-notification-mail-list" class="table">
-        <thead>
-            <tr>
-                <th><i class="far fa-trash-alt"></i></th>
-                <th class="git-notification-mail-list-people">{{ notified_people }}</th>
-            </tr>
-        </thead>
-        <tbody>
-        {{# has_notifications }}
-            {{# groups_to_be_notified }}
+            <input name="mail_prefix" class="tlp-input" size="40" type="text"
+                   value="{{ mail_prefix }}"
+                   data-test="git-mail-prefix" />
+            <div class="tlp-pane-section-submit">
+                <input type="submit" data-test="submit-git-notifications"
+                       class="tlp-button-primary" value="{{ btn_submit }}" />
+            </div>
+        </form>
+    </div>
+</section>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h2 class="tlp-pane-title">{{ notified_mails_title }}</h2>
+        </div>
+        <div class="tlp-pane-section">
+            <div class="tlp-table-actions">
+                <button type="button"
+                        class="tlp-button-primary tlp-table-actions-element"
+                        data-modal-trigger
+                        data-target-modal-id="git-notification-add-modal"
+                        data-test="git-notifications-add"
+                >
+                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-git | Add notification {{/ dgettext }}
+                </button>
+                {{> notifications/modal-add-notification }}
+            </div>
+            <table class="tlp-table">
+                <thead>
                 <tr>
-                    <td>
-                        <input type="checkbox" name="remove_ugroup[]" value="{{ ugroup_id }}" />
-                    </td>
-                    <td>
-                        <i data-test="group-icon" class="fa-solid fa-users git-notification-mail-list-group-icon"></i>
-                        {{ label }}
-                    </td>
+                    <th>{{ notified_people }}</th>
+                    <th></th>
                 </tr>
-            {{/ groups_to_be_notified }}
-            {{# users_to_be_notified }}
-                <tr>
-                    <td>
-                        <input type="checkbox" name="remove_user[]" value="{{ user_id }}" />
-                    </td>
-                    <td class="git-notification-mail-list-user">
-                        <div
-                            class="avatar git-notification-mail-list-user-avatar"
-                        ><img src="{{ avatar_url }}" loading="lazy" /></div>
-                        {{ label }}
-                    </td>
-                </tr>
-            {{/ users_to_be_notified }}
-            {{# list_of_mails }}
-                <tr>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="remove_mail[]" value="{{ mail }}" title="delete" />
-                        </label>
-                    </td>
-                    <td>{{ mail }}</td>
-                </tr>
-            {{/ list_of_mails }}
-        {{/ has_notifications }}
+                </thead>
+                <tbody>
+                {{# has_notifications }}
+                    {{# groups_to_be_notified }}
+                        <tr>
+                            <td>
+                                <i data-test="group-icon"
+                                   class="fa-solid fa-users git-notification-mail-list-group-icon"></i>
+                                {{ label }}
+                            </td>
+                            <td class="tlp-table-cell-actions">
+                                <button type="button"
+                                        class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button "
+                                        data-modal-trigger
+                                        data-target-modal-id="git-notification-delete-modal"
+                                        data-deletion-parameter-name="remove_ugroup[]"
+                                        data-deletion-parameter-value="{{ ugroup_id }}"
+                                >
+                                    <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                                    {{# gettext }}Delete{{/ gettext }}
+                                </button>
+                            </td>
+                        </tr>
+                    {{/ groups_to_be_notified }}
+                    {{# users_to_be_notified }}
+                        <tr>
+                            <td>
+                                <div
+                                    class="tlp-avatar"
+                                ><img src="{{ avatar_url }}" loading="lazy" /></div>
+                                {{ label }}
+                            </td>
+                            <td class="tlp-table-cell-actions">
+                                <button type="button"
+                                        class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                                        data-modal-trigger
+                                        data-target-modal-id="git-notification-delete-modal"
+                                        data-deletion-parameter-name="remove_user[]"
+                                        data-deletion-parameter-value="{{ user_id }}"
+                                >
+                                    <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                                    {{# gettext }}Delete{{/ gettext }}
+                                </button>
+                            </td>
+                        </tr>
+                    {{/ users_to_be_notified }}
+                    {{# list_of_mails }}
+                        <tr>
+                            <td>{{ mail }}</td>
+                            <td class="tlp-table-cell-actions">
+                                <button type="button"
+                                        class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                                        data-modal-trigger
+                                        data-target-modal-id="git-notification-delete-modal"
+                                        data-deletion-parameter-name="remove_mail[]"
+                                        data-deletion-parameter-value="{{ mail }}"
+                                >
+                                    <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                                    {{# gettext }}Delete{{/ gettext }}
+                                </button>
+                            </td>
+                        </tr>
+                    {{/ list_of_mails }}
+                {{/ has_notifications }}
 
-        {{^ has_notifications }}
-            <tr data-test="git-no-notifications">
-                <td class="table-cell-empty" colspan="2">
-                     {{ empty_notification }}
-                </td>
-            </tr>
-        {{/ has_notifications }}
-            <tr>
-                {{# has_notifications }}<td></td>{{/ has_notifications }}
-                <td {{^ has_notifications }}colspan="2"{{/ has_notifications }}>
-                    <input type="hidden"
-                           id="add_mail"
-                           name="add_mail"
-                           class="autocompleter-users-and-ugroups-input"
-                           placeholder="{{ placeholder }}"
-                           data-project-id="{{ repository_project_id }}"
-                           multiple
-                    />
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <input type="submit" data-test="submit-git-notifications" class="btn btn-primary git-notification-mail-list-submit" value="{{ btn_submit }}" />
-</form>
+                {{^ has_notifications }}
+                    <tr data-test="git-no-notifications">
+                        <td class="tlp-table-cell-empty" colspan="2">
+                            {{ empty_notification }}
+                        </td>
+                    </tr>
+                {{/ has_notifications }}
+                </tbody>
+            </table>
+            {{# has_notifications }}
+                {{> notifications/modal-delete-notification }}
+            {{/has_notifications}}
+        </div>
+    </div>
+</section>

@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/html-escaper':
+  '@tuleap/tlp-modal':
     specifier: workspace:*
-    version: link:../../lib/frontend/html-escaper
+    version: link:../../lib/frontend/tlp-modal
 
 devDependencies:
   '@tuleap/build-system-configurator':

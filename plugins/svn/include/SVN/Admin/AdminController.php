@@ -29,6 +29,7 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Project\UGroups\UserGroupsPresenterBuilder;
 use Tuleap\SVN\Notifications\CannotAddUgroupsNotificationException;
 use Tuleap\SVN\Notifications\CannotAddUsersNotificationException;
 use Tuleap\SVN\Notifications\NotificationListBuilder;

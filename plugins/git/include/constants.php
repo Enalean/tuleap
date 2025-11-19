@@ -42,13 +42,3 @@ define('GIT_ADDITIONAL_BODY_CLASSES', 'git_additional_body_classes');
  *   'permitted_actions' => (Output) String[]      Permitted actions
  */
 define('GIT_ADDITIONAL_PERMITTED_ACTIONS', 'git_additional_permitted_actions');
-
-/**
- * Allow plugins to add additional notifications setup for git
- *
- * Parameters:
- *   'repository' => (Input) GitRepository Git repository currently modified
- *   'request'    => (Input) \Tuleap\HTTPRequest   Current request
- *   'output'     => (Output) String       The HTML to present
- */
-define('GIT_ADDITIONAL_NOTIFICATIONS', 'git_additional_notifications');

@@ -1,0 +1,76 @@
+<form id="git-notification-add-modal"
+      role="dialog"
+      aria-labelledby="git-notification-add-modal-title"
+      class="tlp-modal"
+      action="/plugins/git/"
+      method="POST"
+>
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <input type="hidden" name="action" value="mail" />
+    <input type="hidden" name="pane" value="{{ identifier }}" />
+    <input type="hidden" name="group_id" value="{{ repository_project_id }}" />
+    <input type="hidden" name="repo_id" value="{{ repository_id }}" />
+
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="git-notification-add-modal-title">
+            {{# dgettext }}tuleap-git | Add notification {{/dgettext}}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="ugroups-add">
+                {{# dgettext }}tuleap-git | User groups that will receive the notification {{/dgettext}}
+            </label>
+            <select id="ugroups-add"
+                    data-test="git-add-ugroups"
+                    name="add_mail[ugroup_ids][]"
+                    class="tlp-select"
+                    multiple
+            >
+                {{# ugroups }}
+                    <option value="{{ id }}" {{# selected }}selected{{/ selected }}>{{ name }}</option>
+                {{/ ugroups }}
+            </select>
+        </div>
+        <div class="tlp-form-element git-monitor-autocompleter-user"
+             data-id="user-add"
+             data-name="add_mail[users]"
+        >
+            <label class="tlp-label" for="user-add">
+                {{# dgettext }}tuleap-git | Users who will receive the notification {{/dgettext}}
+            </label>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="email-add">
+                {{# dgettext }}tuleap-git | Emails who will receive the notification {{/dgettext}}
+            </label>
+            <input type="text"
+                   id="email-add"
+                   name="add_mail[emails]"
+                   class="tlp-input"
+                   placeholder="developers@example.com"
+            />
+            <p class="tlp-text-info">
+                {{# dgettext }}tuleap-git | A comma-separated list of email addresses. {{/dgettext}}
+                {{# dgettext }}tuleap-git | These can be mailing list addresses or external recipients. {{/dgettext}}
+            </p>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                data-test="git-save-notifications"
+        >
+            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-git | Add the notification {{/ dgettext }}
+        </button>
+    </div>
+</form>

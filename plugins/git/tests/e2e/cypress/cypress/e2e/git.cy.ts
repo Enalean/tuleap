@@ -340,25 +340,14 @@ describe("Git", function () {
                 cy.get("[data-test=git-repository-card-admin-link]").click();
                 cy.get("[data-test=mail]").click();
 
-                disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype();
-
-                addToNotifiedPeople("private");
-                cy.get("[data-test=submit-git-notifications]").click();
-
-                cy.get("[data-test=feedback]").contains("The entered value 'private' is invalid");
-
-                addToNotifiedPeople("devel");
-                cy.get("[data-test=submit-git-notifications]").click();
-
+                addToNotifiedGroup("developer");
                 cy.get("[data-test=feedback]").contains("developer");
                 cy.get("[data-test=group-icon]").should(
                     "have.class",
                     "git-notification-mail-list-group-icon",
                 );
 
-                addToNotifiedPeople("members");
-                cy.get("[data-test=submit-git-notifications]").click();
-
+                addToNotifiedGroup("Project members");
                 cy.get("[data-test=feedback]").contains("successfully added to notifications");
             });
         });
@@ -489,11 +478,9 @@ describe("Git", function () {
 
                 cy.get("[data-test=mail]").click();
                 cy.get("[data-test=git-mail-prefix]").type("[My new fork prefix]");
-
-                disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype();
-
-                addToNotifiedPeople("private");
                 cy.get("[data-test=submit-git-notifications]").click();
+
+                addToNotifiedGroup("Project members");
 
                 cy.log(
                     "Description, permissions, mail prefix and notifications on parent repository are not changed",
@@ -627,21 +614,10 @@ describe("Git", function () {
         });
     });
 
-    function addToNotifiedPeople(user: string): void {
-        // eslint-disable-next-line cypress/require-data-selectors
-        cy.get(".select2-container").click();
-        // eslint-disable-next-line cypress/require-data-selectors
-        cy.get(".select2-input").type(`${user}{enter}`);
-        // eslint-disable-next-line cypress/require-data-selectors
-        cy.get(".select2-result-label").last().click();
-    }
-
-    function disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype(): void {
-        cy.on("uncaught:exception", (err) => {
-            // the message below is only thrown by Prototypejs, if any other js exception is thrown
-            // the test will fail
-            return !err.message.includes("Assignment to constant variable");
-        });
+    function addToNotifiedGroup(group: string): void {
+        cy.get("[data-test=git-notifications-add]").click();
+        cy.get("[data-test=git-add-ugroups]").select(group);
+        cy.get("[data-test=git-save-notifications]").click();
     }
 
     context("Project members", function () {

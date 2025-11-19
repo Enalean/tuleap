@@ -202,6 +202,7 @@ final class GitGerritRouteTest extends TestCase
                 $this->createMock(HeaderRenderer::class),
                 $this->createMock(VerifyArtifactClosureIsAllowed::class),
                 $this->createMock(ConfigureAllowArtifactClosure::class),
+                $this->createMock(\User_ForgeUserGroupFactory::class),
             ])
             ->onlyMethods(['addAction', 'addError', 'redirect'])
             ->getMock();

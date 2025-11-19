@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\SVN\Admin;
+namespace Tuleap\Project\UGroups;
 
 use ProjectUGroup;
 use User_ForgeUGroup;

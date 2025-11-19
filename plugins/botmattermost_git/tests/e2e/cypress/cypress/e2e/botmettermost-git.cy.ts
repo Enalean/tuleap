@@ -51,10 +51,7 @@ describe(`Bot Mattermost`, function () {
 
         cy.get("[data-test=add-git-bot]").click();
 
-        cy.get("[data-test=channels]").within(() => {
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".select2-input").type(`test{enter}`, { force: true });
-        });
+        cy.get("[data-test=channels]").type("test");
         cy.get('[data-test="add-notification-button"]').click();
         cy.get("[data-test=git-bot-mattermost-list]").contains("test");
 

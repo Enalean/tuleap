@@ -20,8 +20,8 @@
 
 namespace Tuleap\SVN\Notifications;
 
+use Tuleap\Project\UGroups\UserGroupsPresenterBuilder;
 use Tuleap\SVN\Admin\MailNotification;
-use Tuleap\SVN\Admin\UserGroupsPresenterBuilder;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\ProvideUserFromRow;
 use Tuleap\User\REST\MinimalUserRepresentation;

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../default/css/style";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-#git-notification-mattermost-section .panel-header {
-    border-bottom-color: var(--tlp-main-color);
-}
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    "botmattermost-git": path.resolve(__dirname, "./scripts/botmattermost-git.ts"),
+                },
+            },
+        },
+    },
+);

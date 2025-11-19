@@ -46,10 +46,6 @@ textarea.text {
     height: 50px;
 }
 
-.plugin_git_mail_prefix {
-    width: 15em;
-}
-
 .plugin_git_permissions_select {
     width: 256px;
     margin-right: 20px;
@@ -169,36 +165,8 @@ h3 {
     }
 }
 
-#git-notification-mail-list {
-    max-width: 960px;
-    margin-bottom: 15px;
-}
-
-.git-notification-mail-list-people {
-    width: 100%;
-}
-
 #admin-git-default-access-rights {
     > table {
         margin-bottom: 10px;
     }
-}
-
-.avatar.git-notification-mail-list-user-avatar {
-    display: inline-block;
-    position: relative;
-    top: -2px;
-    width: 22px;
-    height: 22px;
-    margin: 0 2px 0 0;
-    vertical-align: middle;
-}
-
-.git-notification-mail-list-group-icon {
-    margin: 0 5px 0 4px;
-    color: #666666;
-}
-
-.git-notification-mail-list-submit {
-    margin: 15px 0 0;
 }

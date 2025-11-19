@@ -39,6 +39,7 @@ class RepositoryPaneNotificationPresenter
         $identifier,
         array $users_to_be_notified,
         array $groups_to_be_notified,
+        public array $ugroups,
     ) {
         $this->identifier            = $identifier;
         $this->users_to_be_notified  = $users_to_be_notified;
@@ -52,13 +53,11 @@ class RepositoryPaneNotificationPresenter
         $this->repository_id         = $repository->getId();
         $this->mail_prefix           = $repository->getMailPrefix();
 
-        $this->title                = dgettext('tuleap-git', 'Notifications');
         $this->mail_prefix_label    = dgettext('tuleap-git', 'Notification Prefix');
         $this->notified_mails_title = dgettext('tuleap-git', 'List of notified mails');
         $this->btn_submit           = $GLOBALS['Language']->getText('global', 'btn_submit');
         $this->notified_people      = dgettext('tuleap-git', 'Notified people');
         $this->empty_notification   = dgettext('tuleap-git', 'No notifications set');
-        $this->placeholder          = dgettext('tuleap-git', 'User, group, email');
         $this->csrf_token           = $csrf_token;
     }
 
