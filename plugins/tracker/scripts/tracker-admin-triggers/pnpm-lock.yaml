@@ -1,0 +1,27 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/gettext':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/gettext
+  '@tuleap/html-escaper':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/html-escaper
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/po-gettext-plugin

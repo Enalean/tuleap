@@ -1,26 +1,34 @@
-{{> trigger-condition-template}}
-<div id="trigger_create_new">
-    <h4>{{# dgettext }} tuleap-tracker | Create new trigger{{/ dgettext }}</h4>
+<div id="trigger_create_new" hidden>
+    <h3>{{# dgettext }} tuleap-tracker | Create new trigger{{/ dgettext }}</h3>
     <table >
         <tbody id="trigger_triggering_field_list">
         </tbody>
     </table>
-    <div>
-        <a href="#add-triggering-field" id="trigger_add_condition">
-            <i class="fa-solid fa-plus"></i>
-        </a>
-    </div>
-    <br />
-    {{# dgettext }} tuleap-tracker | Then the tracker field{{/ dgettext }}
-    <select id="trigger_target_field_name">
-        <option selected="selected" value="{{# dgettext }} tuleap-tracker | select current tracker field{{/ dgettext }}"></option>
-    </select>
-    {{# dgettext }} tuleap-tracker | will be set to{{/ dgettext }}
-    <select id="trigger_target_field_value">
-        <option selected="selected" value="">{{# dgettext }} tuleap-tracker | select value{{/ dgettext }}</option>
-    </select>
     <p>
-        <input type="button" value="{{# dgettext }}tuleap-tracker | Submit{{/ dgettext }}" id="trigger_submit_new" />
-        <a href="#cancel" id="trigger_add_cancel">{{# dgettext }} tuleap-tracker | cancel{{/ dgettext }}</a>
+        <button type="button"
+                id="trigger_add_condition"
+                class="tlp-button-secondary tlp-button-mini tlp-button-outline"
+        >
+            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-tracker | Add condition{{/ dgettext }}
+        </button>
+    </p>
+    <p>
+        {{# dgettext }} tuleap-tracker | Then the tracker field{{/ dgettext }}
+        <select id="trigger_target_field_name" class="tlp-select tlp-select-adjusted">
+            <option selected="selected" value="{{# dgettext }} tuleap-tracker | select current tracker field{{/ dgettext }}"></option>
+        </select>
+        {{# dgettext }} tuleap-tracker | will be set to{{/ dgettext }}
+        <select id="trigger_target_field_value" class="tlp-select tlp-select-adjusted">
+            <option selected="selected" value="">{{# dgettext }} tuleap-tracker | select value{{/ dgettext }}</option>
+        </select>
+    </p>
+    <p>
+        <button type="button" id="trigger_submit_new" class="tlp-button-primary">
+            {{# gettext }} Submit{{/ gettext }}
+        </button>
+        <button type="button" id="trigger_add_cancel" class="tlp-button-primary tlp-button-outline">
+            {{# gettext }} Cancel{{/ gettext }}
+        </button>
     </p>
 </div>

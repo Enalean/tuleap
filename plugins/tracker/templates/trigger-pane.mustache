@@ -1,74 +1,102 @@
-<div class="workflow_triggers">
-    <h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker | Define cross-tracker triggers{{/ dgettext }}</h2>
-    <p class="help">
-        {{# dgettext }} tuleap-tracker | The triggers will be applied on each creation/update of artifacts.{{/ dgettext }}
-        <a href="/plugins/tracker/?tracker={{ tracker_id }}&amp;func=admin-hierarchy">
-            {{# dgettext }} tuleap-tracker | The triggers definitions are based on the tracker hierarchy. {{/ dgettext }}
-        </a>
-    </p>
-    <p class="help">
-        {{# dgettext }} tuleap-tracker | Only children that are part of the defined hierarchy will be taken into account by triggers.{{/ dgettext }}
-    </p>
-    <div id="triggers_existing">
-        <h3>{{# dgettext }} tuleap-tracker | Existing triggers{{/ dgettext }}</h3>
-        <table cellspacing="0" cellpadding="10" border="0">
-            <tbody>
-                <tr>
-                    <td class="trigger_description">
-                        <table cellpadding="0" cellspacing="0" border="0">
-                            <tbody class="trigger_description_triggering_fields">
+<section class="tlp-pane" id="tracker-admin-triggers-container" data-tracker-id="{{ tracker_id }}">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                {{# dgettext }} tuleap-tracker | Define cross-tracker triggers{{/ dgettext }}
+            </h1>
+        </div>
+        <div class="tlp-pane-section">
+            <p>
+                {{# dgettext }} tuleap-tracker | The triggers will be applied on each creation/update of artifacts.{{/ dgettext }}
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&amp;func=admin-hierarchy">
+                {{# dgettext }} tuleap-tracker | The triggers definitions are based on the tracker hierarchy. {{/ dgettext }}
+                </a>
+            </p>
+            <p>
+                {{# dgettext }} tuleap-tracker | Only children that are part of the defined hierarchy will be taken into account by triggers.{{/ dgettext }}
+            </p>
+            <div id="triggers_existing"
+                 data-existing="{{ json_encoded_existing }}"
+                 data-tracker-id="{{ tracker_id }}"
+                 data-have-field-at_least_one="{{# dgettext }} tuleap-tracker | has its field{{/ dgettext }}"
+                 data-have-field-all_of="{{# dgettext }} tuleap-tracker | have their field{{/ dgettext }}"
+                 data-children-at_least_one="{{# dgettext }} tuleap-tracker | or at least one child{{/ dgettext }}"
+                 data-children-all_of="{{# dgettext }} tuleap-tracker | and all children{{/ dgettext }}"
+                 data-children-at_least_one-short="{{# dgettext }} tuleap-tracker | at least one child{{/ dgettext }}"
+                 data-children-all_of-short="{{# dgettext }} tuleap-tracker | all children{{/ dgettext }}"
+                 data-operator-at_least_one="{{# dgettext }} tuleap-tracker | or{{/ dgettext }}"
+                 data-operator-all_of="{{# dgettext }} tuleap-tracker | and{{/ dgettext }}"
+                 data-save-missing-data="{{# dgettext }} tuleap-tracker | Cannot save: missing data in form{{/ dgettext }}"
+            >
+                <h2>{{# dgettext }} tuleap-tracker | Existing triggers{{/ dgettext }}</h2>
+                <table cellspacing="0" cellpadding="10" border="0">
+                    <tbody>
+                    <tr class="trigger_row" hidden>
+                        <td class="trigger_description">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody class="trigger_description_triggering_fields">
                                 <tr class="trigger_description_triggering_field">
                                     <td class="trigger_description_triggering_field_intro">
-                                        <span class="trigger_description_triggering_field_when">{{# dgettext }} tuleap-tracker | When{{/ dgettext }}</span>
+                                        <span class="trigger_description_triggering_field_when">{{# dgettext }}
+                                            tuleap-tracker | When{{/ dgettext }}</span>
                                         <span class="trigger_description_triggering_field_operator"></span>
                                     </td>
                                     <td class="trigger_description_triggering_field_detail">
-                                        <span class="trigger_description_triggering_field_quantity"></span> {{# dgettext }} tuleap-tracker | of type{{/ dgettext }}
-                                        <strong><span class="trigger_description_triggering_field_tracker"></span></strong>
+                                        <span
+                                            class="trigger_description_triggering_field_quantity"></span> {{# dgettext }}
+                                        tuleap-tracker | of type{{/ dgettext }}
+                                        <strong><span
+                                            class="trigger_description_triggering_field_tracker"></span></strong>
                                         <span class="trigger_description_triggering_have_field"></span>
-                                        <strong><span class="trigger_description_triggering_field_field_name"></span></strong> {{# dgettext }} tuleap-tracker | set to{{/ dgettext }}
-                                        <strong><span class="trigger_description_triggering_field_field_value"></span></strong>
+                                        <strong><span
+                                            class="trigger_description_triggering_field_field_name"></span></strong> {{# dgettext }}
+                                        tuleap-tracker | set to{{/ dgettext }}
+                                        <strong><span
+                                            class="trigger_description_triggering_field_field_value"></span></strong>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
-                        <p class="trigger_description_target">
-                            {{# dgettext }} tuleap-tracker | Then the tracker field{{/ dgettext }}
-                            <strong><span class="trigger_description_target_field_name"></span></strong> {{# dgettext }} tuleap-tracker | will be set to{{/ dgettext }}
-                            <strong><span class="trigger_description_target_field_value"></span></strong>
-                        </p>
-                    </td>
-                    <td>
-                        <form method="post" action="/plugins/tracker/">
-                            {{# csrf_token }}
-                                {{> csrf_token_input }}
-                            {{/ csrf_token }}
-                            <input type="hidden" name="func" value="admin-workflow-delete-trigger">
-                            <input type="hidden" name="tracker" value="{{ tracker_id }}">
-                            <button type="submit" class="btn-link">
-                                <img alt="remove" src="/themes/common/images/ic/cross.png">
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                                </tbody>
+                            </table>
+                            <p>
+                                {{# dgettext }} tuleap-tracker | Then the tracker field{{/ dgettext }}
+                                <strong><span
+                                    class="trigger_description_target_field_name"></span></strong> {{# dgettext }}
+                                tuleap-tracker | will be set to{{/ dgettext }}
+                                <strong><span class="trigger_description_target_field_value"></span></strong>
+                            </p>
+                        </td>
+                        <td>
+                            <form method="post" action="/plugins/tracker/">
+                                {{# csrf_token }}
+                                    {{> csrf_token_input }}
+                                {{/ csrf_token }}
+                                <input type="hidden" name="func" value="admin-workflow-delete-trigger">
+                                <input type="hidden" name="tracker" value="{{ tracker_id }}">
+                                <button type="submit" class="tlp-button-danger tlp-button-small tlp-button-outline">
+                                    <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                                    {{# gettext }}Delete{{/ gettext }}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <form method="post" action="/plugins/tracker/" id="triggers_form" hidden>
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+                <input type="hidden" name="func" value="admin-workflow-add-trigger">
+                <input type="hidden" name="tracker" value="{{ tracker_id }}">
+                <button type="button" id="add_new_trigger" class="tlp-button-primary">
+                    <i class="fa-solid fa-plus tlp-button" aria-hidden="true"></i>
+                    <span>
+                        {{# dgettext }} tuleap-tracker | Add a new trigger{{/ dgettext }}
+                    </span>
+                </button>
+                {{> triggers-create-new }}
+            </form>
+            <p id="triggers_no_children" hidden class="tlp-alert-info">{{# dgettext }} tuleap-tracker | There are no child trackers defined for this tracker{{/ dgettext }}</p>
+        </div>
     </div>
-    <form method="post" action="/plugins/tracker/" id="triggers_form" style="display:none;">
-        {{# csrf_token }}
-            {{> csrf_token_input }}
-        {{/ csrf_token }}
-        <input type="hidden" name="func" value="admin-workflow-add-trigger">
-        <input type="hidden" name="tracker" value="{{ tracker_id }}">
-        <p class="add_new_trigger">
-            <a href="#add-new-trigger" id="add_new_trigger_title">
-                <i class="fa-solid fa-plus"></i>
-                <span>
-                    {{# dgettext }} tuleap-tracker | Add a new trigger{{/ dgettext }}
-                </span>
-            </a>
-            {{> triggers-create-new}}
-        </p>
-    </form>
-    <p id="triggers_no_children" style="display:none" class="alert alert-info">{{# dgettext }} tuleap-tracker | There are no child trackers defined for this tracker{{/ dgettext }}</p>
-</div>
+</section>

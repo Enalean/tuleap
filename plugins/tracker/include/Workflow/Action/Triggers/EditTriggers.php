@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\Action\Triggers\TriggersPresenter;
 
@@ -47,20 +48,26 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout): void
     {
-        $this->displayHeaderFlamingParrot($layout, dgettext('tuleap-tracker', 'Define cross-tracker triggers'));
+        $GLOBALS['Response']->addJavascriptAsset(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../../scripts/tracker-admin-triggers/frontend-assets',
+                    '/assets/trackers/tracker-admin-triggers',
+                ),
+                'src/tracker-admin-trigger.ts',
+            ),
+        );
+
+        $this->displayHeaderBurningParrot($layout, dgettext('tuleap-tracker', 'Define cross-tracker triggers'));
 
         $presenter = new TriggersPresenter(
             $this->tracker->getId(),
-            $this->token
+            $this->token,
+            \Psl\Json\encode($this->rule_manager->getForTargetTracker($this->tracker)->fetchFormattedForJson()),
         );
 
         $this->template_renderer->renderToPage('trigger-pane', $presenter);
 
-        $GLOBALS['HTML']->appendJsonEncodedVariable(
-            'tuleap.trackers.trigger.existing',
-            $this->rule_manager->getForTargetTracker($this->tracker)->fetchFormattedForJson()
-        );
-
-        $this->displayFooterFlamingParrot($layout);
+        $this->displayFooterBurningParrot($layout);
     }
 }

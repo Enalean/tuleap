@@ -317,6 +317,9 @@ msgid ""
 "updated. The URL will be called using HTTP POST method."
 msgstr ""
 
+msgid "Add condition"
+msgstr ""
+
 msgid "Add field to tooltip"
 msgstr ""
 
@@ -762,6 +765,9 @@ msgstr ""
 msgid ""
 "Cannot be formatted because at least one field needed for the format is "
 "missing."
+msgstr ""
+
+msgid "Cannot save: missing data in form"
 msgstr ""
 
 #, php-format
@@ -4459,6 +4465,9 @@ msgstr ""
 msgid "added"
 msgstr ""
 
+msgid "all children"
+msgstr ""
+
 #, php-format
 msgid "all of <strong>%1$s %2$s</strong> are set to <strong>%3$s</strong>"
 msgstr ""
@@ -4467,6 +4476,9 @@ msgid "alphabetically sort values"
 msgstr ""
 
 msgid "and"
+msgstr ""
+
+msgid "and all children"
 msgstr ""
 
 msgid "and it's now placed after"
@@ -4488,10 +4500,10 @@ msgstr ""
 msgid "at least one <strong>%1$s %2$s</strong> equals <strong>%3$s</strong>"
 msgstr ""
 
-msgid "autocomputed"
+msgid "at least one child"
 msgstr ""
 
-msgid "cancel"
+msgid "autocomputed"
 msgstr ""
 
 msgid "changed from"
@@ -4547,6 +4559,9 @@ msgstr ""
 msgid "fixed_in"
 msgstr ""
 
+msgid "has its field"
+msgstr ""
+
 msgid "have access to all artifacts"
 msgstr ""
 
@@ -4560,6 +4575,9 @@ msgid "have access to artifacts submitted by group"
 msgstr ""
 
 msgid "have access to artifacts they submitted"
+msgstr ""
+
+msgid "have their field"
 msgstr ""
 
 msgid "in"
@@ -4604,16 +4622,13 @@ msgstr ""
 msgid "or"
 msgstr "ou"
 
+msgid "or at least one child"
+msgstr ""
+
 msgid "raised"
 msgstr ""
 
 msgid "removed"
-msgstr ""
-
-msgid "select child tracker field"
-msgstr ""
-
-msgid "select child tracker name"
 msgstr ""
 
 msgid "select current tracker field"

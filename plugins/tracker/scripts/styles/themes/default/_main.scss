@@ -1997,40 +1997,6 @@ td.first-column {
     white-space: nowrap;
 }
 
-.trigger_triggering_field_remove {
-    cursor: pointer;
-}
-
-.trigger_condition_selector {
-    text-align: right;
-    white-space: nowrap;
-}
-
-.trigger_triggering_field {
-    vertical-align: top;
-}
-
-#triggers_existing > table > tbody > tr:nth-child(odd) {
-    background: #fcfcfc;
-}
-
-#triggers_existing > table > tbody > tr {
-    vertical-align: top;
-}
-
-.trigger_description_triggering_field {
-    vertical-align: top;
-}
-
-.trigger_description_triggering_field_intro {
-    padding-right: 0.25em;
-    text-align: right;
-}
-
-.trigger_triggering_field select {
-    vertical-align: top;
-}
-
 /** {{{ Notification popup */
 
 .artifact-event-popup {
