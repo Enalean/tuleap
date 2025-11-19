@@ -2799,17 +2799,14 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         $request = \Tuleap\HTTPRequest::instance();
 
-        if ($request->get('action') === 'repo_management') {
+        $action = $request->get('action');
+        if ($action === 'repo_management') {
             if (in_array($request->get('pane'), GitViews_RepoManagement::BURNING_PARROT_COMPATIBLE_PANES, true)) {
                 $event->setIsInBurningParrotCompatiblePage();
             }
         }
-        if ($request->get('action') === Git::ADMIN_DEFAULT_SETTINGS_ACTION) {
-            if (in_array($request->get('pane'), IndexController::BURNING_PARROT_COMPATIBLE_PANES, true)) {
-                $event->setIsInBurningParrotCompatiblePage();
-            }
-        }
-        if ($request->get('action') === 'admin-git-admins') {
+
+        if (in_array($action, [Git::ADMIN_GIT_ADMINS_ACTION, Git::ADMIN_DEFAULT_SETTINGS_ACTION], true)) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
