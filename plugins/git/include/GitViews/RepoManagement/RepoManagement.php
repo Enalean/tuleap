@@ -46,6 +46,7 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         'cibuilds',
         'pullrequest', // should belong to pullrequest plugin, but it is a temporary situation, no need to fire a hook for that
         'delete',
+        'perms',
     ];
 
     /**
@@ -204,5 +205,13 @@ class GitViews_RepoManagement // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         echo '<a href="' . $url . '" title="' . $purifier->purify($pane->getTitle()) . '" data-test="' . $purifier->purify($pane->getIdentifier()) . '"
             class="tlp-tab ' . ($this->current_pane == $pane->getIdentifier() ? 'tlp-tab-active' : '') . '"
         >' . $purifier->purify($pane->getLabel()) . '</a>';
+    }
+
+    public function addPaneAssets(): void
+    {
+        assert($GLOBALS['HTML'] instanceof \Tuleap\Layout\BaseLayout);
+        foreach ($this->panes[$this->current_pane]->getJavascriptViteAssets() as $asset) {
+            $GLOBALS['HTML']->addJavascriptAsset($asset);
+        }
     }
 }

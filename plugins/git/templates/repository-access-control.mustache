@@ -1,0 +1,34 @@
+<section class="tlp-pane">
+    <form class="tlp-pane-container" id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id={{ project_id }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/csrf_token}}
+        <input type="hidden" id="action" name="action" value="edit"/>
+        <input type="hidden" name="pane" value="perms"/>
+        <input type="hidden" name="save" value="save"/>
+        <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
+        <div class="tlp-pane-header">
+            <h2 class="tlp-pane-title">{{# dgettext }} tuleap-git | Access control {{/ dgettext }}</h2>
+        </div>
+
+        {{# access_control_presenter }}
+            {{> access-control }}
+        {{/ access_control_presenter }}
+
+        <div class="tlp-pane-section">
+            <div class="tlp-pane-section-submit">
+                <button
+                    id="save-permissions-with-regexp"
+                    type="submit"
+                    class="tlp-button-primary"
+                    data-are-regexp-enabled="{{ are_regexp_enabled }}"
+                    data-are-regexp-conflicting="{{ are_regexp_conflicting }}"
+                    data-test="git-permissions-submit"
+                >{{# dgettext }} tuleap-git | Save permissions {{/ dgettext }}</button>
+            </div>
+        </div>
+    </form>
+</section>
+{{# access_control_presenter }}
+    {{> access-control-remove-permissions-modals }}
+{{/ access_control_presenter }}

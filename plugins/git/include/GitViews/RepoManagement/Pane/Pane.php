@@ -23,6 +23,7 @@ namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 use GitRepository;
 use Codendi_Request;
 use Codendi_HTMLPurifier;
+use Tuleap\Layout\JavascriptViteAsset;
 
 /**
  * A pane to be displayed in git repo management
@@ -78,17 +79,26 @@ abstract class Pane
      */
     abstract public function getContent();
 
-    public function csrf_token(): \CSRFSynchronizerToken
+    public function csrf_token(): \CSRFSynchronizerToken //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return new \CSRFSynchronizerToken(
-            '/plugins/git/?' . http_build_query(
-                [
-                    'action'   => 'repo_management',
-                    'group_id' => $this->repository->getProjectId(),
-                    'repo_id'  => $this->repository->getId(),
-                    'pane'     => $this->getIdentifier(),
-                ]
-            )
+        $str = '/plugins/git/?' . http_build_query(
+            [
+                'action' => 'repo_management',
+                'group_id' => $this->repository->getProjectId(),
+                'repo_id' => $this->repository->getId(),
+                'pane' => $this->getIdentifier(),
+            ]
         );
+        return new \CSRFSynchronizerToken(
+            $str
+        );
+    }
+
+    /**
+     * @return list<JavascriptViteAsset>
+     */
+    public function getJavascriptViteAssets(): array
+    {
+        return [];
     }
 }

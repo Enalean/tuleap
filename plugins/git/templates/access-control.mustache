@@ -36,7 +36,7 @@
                         data-test="git-repository-write-permissions"
                         size="6"
                         {{# cannot_define_per_repo_permissions }}disabled{{/ cannot_define_per_repo_permissions }}
-                        class="tlp-select"
+                        class="tlp-select write-permission-select"
                     >
                         {{# write_options }}
                             <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
@@ -51,7 +51,7 @@
                         data-test="git-repository-rewind-permissions"
                         size="6"
                         {{# cannot_define_per_repo_permissions }}disabled{{/ cannot_define_per_repo_permissions }}
-                        class="tlp-select"
+                        class="tlp-select rewind-permission-select"
                     >
                         {{# rewrite_options }}
                             <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
@@ -63,5 +63,5 @@
     </table>
 </div>
 {{# can_use_fine_grained_permissions }}
-    {{> ../fine-grained-permissions }}
+    {{> fine-grained-permissions }}
 {{/ can_use_fine_grained_permissions }}

@@ -14,7 +14,14 @@
         </div>
 
         {{# are_regexp_permission_activated_at_site_level }}
-            <div class="tlp-form-element access-control-activate-regexps-form-element">
+            <div
+                id="access-control-use-regexps"
+                class="
+                    tlp-form-element
+                    access-control-activate-regexps-form-element
+                    {{^ are_fine_grained_permissions_defined }}hidden{{/ are_fine_grained_permissions_defined }}
+                "
+            >
                 <span>&#8627;</span>
                 <div>
                     <label class="tlp-label tlp-checkbox">
@@ -39,7 +46,7 @@
         {{/ is_fork }}
 
         <h4>{{ branches_title }}</h4>
-        <table class="tlp-table access-control-permission-table">
+        <table id="git-fine-grained-permissions-branch" class="tlp-table access-control-permission-table">
             <thead>
             <tr>
                 <th>{{ pattern_column }}</th>
@@ -80,18 +87,13 @@
                         </td>
                         {{^ is_fork }}
                             <td class="tlp-table-cell-actions">
-                                <a href="#"
-                                   class="tlp-table-cell-actions-button tlp-button-outline tlp-button-danger tlp-button-small"
-                                   data-toggle="popover"
-                                   data-trigger="click"
-                                   data-placement="left"
-                                   data-html="true"
-                                   data-popover-id="remove-{{ id }}-popover"
-                                   data-form-action="{{ remove_form_action }}"
+                                <button
+                                    type="button"
+                                    class="tlp-table-cell-actions-button tlp-button-outline tlp-button-danger tlp-button-small remove-fine-grained-permission"
+                                    data-target-modal-id="remove-permission-{{ id }}-modal"
                                 >
                                     <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i> {{ remove_fine_grained_permission_delete }}
-                                </a>
-                                {{> settings/popover-remove-fine-grained-permission }}
+                                </button>
                             </td>
                         {{/ is_fork }}
                     </tr>
@@ -100,17 +102,19 @@
             </tbody>
         </table>
         {{^ is_fork }}
-            <button class="tlp-button-primary tlp-button-outline"
+            <button class="tlp-button-primary tlp-button-outline add-fine-grained-permission-button"
                 type="button"
                 data-type="branch"
-                data-regexp-enabled="{{ is_regexp_enabled }}">
+                data-regexp-enabled="{{ is_regexp_enabled }}"
+                data-target-table="git-fine-grained-permissions-branch"
+            >
                 {{ add_branch_permission }}
             </button>
         {{/ is_fork }}
     </div>
     <div class="tlp-pane-section">
         <h4>{{ tags_title }}</h4>
-        <table class="tlp-table access-control-permission-table">
+        <table id="git-fine-grained-permissions-tag" class="tlp-table access-control-permission-table">
             <thead>
             <tr>
                 <th>{{ pattern_column }}</th>
@@ -151,18 +155,13 @@
                         </td>
                         {{^ is_fork }}
                             <td class="tlp-table-cell-actions">
-                                <a href="#"
-                                   class="tlp-table-cell-actions-button tlp-button-outline tlp-button-danger tlp-button-small"
-                                   data-toggle="popover"
-                                   data-trigger="click"
-                                   data-placement="left"
-                                   data-html="true"
-                                   data-popover-id="remove-{{ id }}-popover"
-                                   data-form-action="{{ remove_form_action }}"
+                                <button
+                                    class="tlp-table-cell-actions-button tlp-button-outline tlp-button-danger tlp-button-small remove-fine-grained-permission"
+                                    type="button"
+                                    data-target-modal-id="remove-permission-{{ id }}-modal"
                                 >
                                     <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i> {{ remove_fine_grained_permission_delete }}
-                                </a>
-                                {{> settings/popover-remove-fine-grained-permission }}
+                                </button>
                             </td>
                         {{/ is_fork }}
                     </tr>
@@ -172,10 +171,12 @@
         </table>
         {{^ is_fork }}
             <button
-                class="tlp-button-primary tlp-button-outline"
+                class="tlp-button-primary tlp-button-outline add-fine-grained-permission-button"
                 type="button"
                 data-type="tag"
-                data-regexp-enabled="{{ is_regexp_enabled }}">
+                data-regexp-enabled="{{ is_regexp_enabled }}"
+                data-target-table="git-fine-grained-permissions-tag"
+            >
                 {{ add_tag_permission }}
             </button>
         {{/ is_fork }}
@@ -188,3 +189,5 @@
         <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
     {{/ new_fine_grained_ugroups }}
 </select>
+
+{{> settings/modal-remove-non-valid-regexp-permission }}

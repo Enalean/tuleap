@@ -25,5 +25,11 @@
             "scripts-php": "include/GitPHP",
             "po": "site-content-gitphp"
         }
+    },
+    "gettext-ts": {
+        "access-control": {
+            "src": "scripts/access-control/src",
+            "po": "scripts/access-control/po"
+        }
     }
 }

@@ -28,10 +28,11 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use PermissionsManager;
 use Tuleap\Git\GitAccessControlPresenterBuilder;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use UserGroupDao;
 use Codendi_Request;
 use User_ForgeUserGroupFactory;
-use Git_Backend_Gitolite;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
@@ -114,38 +115,6 @@ class AccessControl extends Pane
     #[\Override]
     public function getContent()
     {
-        $html  = '';
-        $html .= '<h2>' . $this->getTitle() . '</h2>';
-        $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=' .
-            $this->repository->getProjectId() . '">';
-        $html .= $this->csrf_token()->fetchHTMLInput();
-        $html .= '<input type="hidden" id="action" name="action" value="edit" />';
-        $html .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
-        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';
-        if ($this->repository->getBackend() instanceof Git_Backend_Gitolite) {
-            $html .= $this->accessControlGitolite();
-        }
-
-        $are_regexp_enabled     = (bool) $this->regexp_retriever->areRegexpActivatedForRepository($this->repository);
-        $are_regexp_conflicting = (bool) $this->regexp_retriever->areRegexpRepositoryConflitingWithPlateform(
-            $this->repository
-        );
-
-        $html .= '<p><input type="submit" name="save" data-are-regexp-enabled="' . $are_regexp_enabled . '"
-                data-are-regexp-confliting="' . $are_regexp_conflicting . '"
-                data-test="git-permissions-submit"
-                class="btn btn-primary save-permissions-with-regexp" value="' .
-            dgettext('tuleap-git', 'Save permissions') . '" /></p>';
-        $html .= '</form>';
-
-        return $html;
-    }
-
-    /**
-     * Display access control management for gitolite backend
-     */
-    private function accessControlGitolite(): string
-    {
         $access_control_presenter_builder = new GitAccessControlPresenterBuilder(
             $this->getAccessRightsPresenterOptionsBuilder(),
             $this->default_fine_grained_factory,
@@ -156,17 +125,28 @@ class AccessControl extends Pane
                 new Git_Driver_Gerrit_ProjectCreatorStatusDao()
             ),
             $this->git_permission_manager,
-            $this->regexp_retriever
+            $this->regexp_retriever,
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
+        $are_regexp_enabled     = $this->regexp_retriever->areRegexpActivatedForRepository($this->repository);
+        $are_regexp_conflicting = $this->regexp_retriever->areRegexpRepositoryConflitingWithPlateform(
+            $this->repository
+        );
+        $renderer               = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/');
         return $renderer->renderToString(
-            'access-control-legacy',
-            $access_control_presenter_builder->buildForPermissionsManagement(
-                $this->repository,
-                $this->repository->getProject(),
-                UserManager::instance()->getCurrentUser()
-            ),
+            'repository-access-control',
+            [
+                'access_control_presenter' => $access_control_presenter_builder->buildForPermissionsManagement(
+                    $this->repository,
+                    $this->repository->getProject(),
+                    UserManager::instance()->getCurrentUser()
+                ),
+                'csrf_token' => $this->csrf_token(),
+                'repository_id' => $this->repository->getId(),
+                'project_id' => $this->repository->getProjectId(),
+                'are_regexp_enabled' => $are_regexp_enabled,
+                'are_regexp_conflicting' => $are_regexp_conflicting,
+            ],
         );
     }
 
@@ -176,5 +156,19 @@ class AccessControl extends Pane
         $user_group_factory = new User_ForgeUserGroupFactory($dao);
 
         return new AccessRightsPresenterOptionsBuilder($user_group_factory, PermissionsManager::instance());
+    }
+
+    #[\Override]
+    public function getJavascriptViteAssets(): array
+    {
+        return [
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../../scripts/access-control/frontend-assets',
+                    '/assets/git/access-control'
+                ),
+                'src/main.ts',
+            ),
+        ];
     }
 }

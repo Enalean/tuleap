@@ -1,0 +1,21 @@
+<div id="modal-regexp-delete" role="dialog" aria-labelledby="delete-regexps-confirmation-modal-title" class="tlp-modal tlp-modal-danger">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="delete-regexps-confirmation-modal-title">{{ title_warning_regexp_uncheck }}</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }} tuleap-git | Close {{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <p>
+            {{# warnings }}
+                {{ message }}
+            {{/ warnings }}
+        </p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" data-dismiss="modal" class="tlp-button-danger tlp-button-outline tlp-modal-action">{{ btn_cancel }}</button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            {{ save_permissions }}
+        </button>
+    </div>
+</div>
