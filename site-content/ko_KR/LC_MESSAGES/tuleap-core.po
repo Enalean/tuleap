@@ -4032,7 +4032,7 @@ msgstr "경고"
 
 msgid ""
 "We are sorry you caught an error, something meaningful was logged for site "
-"administrators. You may want got get in touch with them."
+"administrators. You may want to get in touch with them."
 msgstr ""
 "죄송합니다. 오류가 발생했습니다. 사이트 관리자에게 오류 내용이 기록되었습니"
 "다. 관리자에게 문의하세요."

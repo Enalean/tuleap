@@ -4118,7 +4118,7 @@ msgstr "Avisos"
 
 msgid ""
 "We are sorry you caught an error, something meaningful was logged for site "
-"administrators. You may want got get in touch with them."
+"administrators. You may want to get in touch with them."
 msgstr ""
 "Lamentamos que tenha encontrado um erro, algo significativo foi registrado "
 "para os administradores do site. Se desejar, entre em contato com eles."
