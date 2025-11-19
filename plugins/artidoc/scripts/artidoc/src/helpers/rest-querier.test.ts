@@ -21,13 +21,21 @@ import { describe, expect, it, vi } from "vitest";
 import * as fetch from "@tuleap/fetch-result";
 import { errAsync, okAsync } from "neverthrow";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { getAllSections, getSection, getTracker, putSection } from "@/helpers/rest-querier";
+import {
+    getAllSections,
+    getSection,
+    getTracker,
+    getVersionedSections,
+    putSection,
+} from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { Fault } from "@tuleap/fault";
 import { uri } from "@tuleap/fetch-result";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+
+const DOCUMENT_ID = 123;
 
 describe("rest-querier", () => {
     describe("getAllSections", () => {
@@ -48,7 +56,7 @@ describe("rest-querier", () => {
             );
 
             let all_sections: readonly ArtidocSection[] = [];
-            getAllSections(123).match(
+            getAllSections(DOCUMENT_ID).match(
                 (sections) => {
                     all_sections = sections;
                 },
@@ -81,7 +89,7 @@ describe("rest-querier", () => {
             );
 
             let all_sections: readonly ArtidocSection[] = [];
-            getAllSections(123).match(
+            getAllSections(DOCUMENT_ID).match(
                 (sections) => {
                     all_sections = sections;
                 },
@@ -202,6 +210,53 @@ describe("rest-querier", () => {
             }
 
             expect(result.value.fields).toStrictEqual([field_1, field_2]);
+        });
+    });
+
+    describe("getVersionedSections", () => {
+        const VERSION_ID = 45210;
+
+        it("should returns retrieved versioned sections", async () => {
+            const section_a = FreetextSectionFactory.create();
+            const section_b = ArtifactSectionFactory.create();
+
+            vi.spyOn(fetch, "getAllJSON").mockReturnValue(
+                okAsync([
+                    FreetextSectionFactory.override({
+                        ...section_a,
+                        title: "Le title A",
+                    }),
+                    ArtifactSectionFactory.override({
+                        ...section_b,
+                        title: "Le title B",
+                    }),
+                ]),
+            );
+
+            let all_sections: readonly ArtidocSection[] = [];
+            getVersionedSections(DOCUMENT_ID, VERSION_ID).match(
+                (sections) => {
+                    all_sections = sections;
+                },
+                () => {
+                    throw new Error();
+                },
+            );
+
+            await flushPromises();
+
+            expect(fetch.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/artidoc_versions/${VERSION_ID}`,
+                {
+                    params: {
+                        limit: 50,
+                        artidoc_id: DOCUMENT_ID,
+                    },
+                },
+            );
+            expect(all_sections).toHaveLength(2);
+            expect(all_sections[0].title).toBe("Le title A");
+            expect(all_sections[1].title).toBe("Le title B");
         });
     });
 });

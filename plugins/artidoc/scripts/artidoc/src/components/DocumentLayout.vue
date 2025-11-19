@@ -28,33 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from "vue";
 import DocumentContent from "./DocumentContent.vue";
 import DocumentSidebar from "./sidebar/DocumentSidebar.vue";
-import { CURRENT_VERSION_DISPLAYED } from "./current-version-displayed";
-import { Option } from "@tuleap/option";
-import type { Version } from "./sidebar/versions/fake-list-of-versions";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    CAN_USER_EDIT_DOCUMENT,
-    ORIGINAL_CAN_USER_EDIT_DOCUMENT,
-} from "@/can-user-edit-document-injection-key";
-
-let old_version = ref<Option<Version>>(Option.nothing());
-const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
-const original_can_user_edit_document = strictInject(ORIGINAL_CAN_USER_EDIT_DOCUMENT);
-
-provide(CURRENT_VERSION_DISPLAYED, {
-    old_version,
-    switchToOldVersion(version: Version) {
-        old_version.value = Option.fromValue(version);
-        can_user_edit_document.value = false;
-    },
-    switchToLatestVersion() {
-        old_version.value = Option.nothing();
-        can_user_edit_document.value = original_can_user_edit_document;
-    },
-});
 </script>
 
 <style lang="scss" scoped>

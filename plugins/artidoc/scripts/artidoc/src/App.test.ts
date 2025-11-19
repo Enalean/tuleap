@@ -22,7 +22,10 @@ import { shallowMount } from "@vue/test-utils";
 import { ref } from "vue";
 import App from "@/App.vue";
 import DocumentView from "@/views/DocumentView.vue";
-import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import {
+    CAN_USER_EDIT_DOCUMENT,
+    ORIGINAL_CAN_USER_EDIT_DOCUMENT,
+} from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
@@ -35,6 +38,7 @@ import {
 import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
 import { createGettext } from "vue3-gettext";
 import { CAN_USER_DISPLAY_VERSIONS } from "@/can-user-display-versions-injection-key";
+import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
 
 describe("App", () => {
     it("should load and display the document view", () => {
@@ -45,11 +49,13 @@ describe("App", () => {
                 provide: {
                     [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(true),
+                    [ORIGINAL_CAN_USER_EDIT_DOCUMENT.valueOf()]: ref(true),
                     [DOCUMENT_ID.valueOf()]: 1,
                     [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: ref(false),
                     [SELECTED_FIELDS.valueOf()]: ref([]),
                     [CAN_USER_DISPLAY_VERSIONS.valueOf()]: true,
+                    [USE_FAKE_VERSIONS.valueOf()]: false,
                 },
             },
         });

@@ -118,6 +118,18 @@ export function getAllSections(document_id: number): ResultAsync<readonly Artido
     });
 }
 
+export function getVersionedSections(
+    document_id: number,
+    version_id: number,
+): ResultAsync<readonly ArtidocSection[], Fault> {
+    return getAllJSON<ArtidocSection>(uri`/api/artidoc_versions/${version_id}`, {
+        params: {
+            limit: 50,
+            artidoc_id: document_id,
+        },
+    });
+}
+
 export function getSection(section_id: string): ResultAsync<ArtidocSection, Fault> {
     return getJSON<ArtidocSection>(uri`/api/artidoc_sections/${section_id}`);
 }

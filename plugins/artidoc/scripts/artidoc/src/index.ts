@@ -89,6 +89,7 @@ import {
     ARE_VERSIONS_DISPLAYED,
     CAN_USER_DISPLAY_VERSIONS,
 } from "@/can-user-display-versions-injection-key";
+import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -185,6 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         )
         .provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed)
         .provide(USER_PREFERENCES, buildUserPreferences(document, vue_mount_point))
+        .provide(USE_FAKE_VERSIONS, ref(true))
         .use(gettext)
         .use(VueDOMPurifyHTML)
         .mount(vue_mount_point);

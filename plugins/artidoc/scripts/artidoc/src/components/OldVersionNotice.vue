@@ -21,14 +21,7 @@
 <template>
     <div v-if="is_old_version_displayed">
         <i class="fa-solid fa-lock" aria-hidden="true"></i>
-        {{
-            $gettext(
-                'You will be able to display "%{ title }" a read-only version (not yet implemented).',
-                {
-                    title,
-                },
-            )
-        }}
+        {{ message }}
     </div>
 </template>
 
@@ -41,10 +34,12 @@ import type { Version } from "./sidebar/versions/fake-list-of-versions";
 import type { UserPreferences } from "@/user-preferences-injection-key";
 import { USER_PREFERENCES } from "@/user-preferences-injection-key";
 import { IntlFormatter } from "@tuleap/date-helper";
+import { USE_FAKE_VERSIONS } from "@/use-fake-versions-injection-key";
 
 const { $gettext } = useGettext();
 
 const current_version_displayed = strictInject(CURRENT_VERSION_DISPLAYED);
+const use_fake_versions = strictInject(USE_FAKE_VERSIONS);
 
 const is_old_version_displayed = computed(() =>
     current_version_displayed.old_version.value.isValue(),
@@ -65,6 +60,19 @@ const title = computed(() =>
         () => "",
     ),
 );
+
+const message = computed(() => {
+    if (use_fake_versions.value) {
+        return $gettext(
+            'You will be able to display "%{ title }" a read-only version (not yet implemented).',
+            { title: title.value },
+        );
+    }
+
+    return $gettext('You are currently viewing "%{ title }" in read-only mode.', {
+        title: title.value,
+    });
+});
 </script>
 
 <style scoped lang="scss">
