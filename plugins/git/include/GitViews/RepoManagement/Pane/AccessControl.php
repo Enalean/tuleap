@@ -132,7 +132,11 @@ class AccessControl extends Pane
         $are_regexp_conflicting = $this->regexp_retriever->areRegexpRepositoryConflitingWithPlateform(
             $this->repository
         );
-        $renderer               = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/');
+        $dirname                = dirname(GIT_BASE_DIR);
+        $renderer               = TemplateRendererFactory::build()->getRenderer([
+            $dirname . '/templates/',
+            $dirname . '/templates/access-control/',
+        ]);
         return $renderer->renderToString(
             'repository-access-control',
             [

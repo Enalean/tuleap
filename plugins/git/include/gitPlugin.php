@@ -2667,6 +2667,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     public function routeForkRepositoriesPermissions(): ForkRepositoriesPermissionsController
     {
         $project_manager = ProjectManager::instance();
+        $dirname         = dirname(GIT_BASE_DIR);
         return new ForkRepositoriesPermissionsController(
             $project_manager,
             $project_manager,
@@ -2678,7 +2679,10 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             new ForkRepositoriesFormInputsBuilder(
                 \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->mapper(),
             ),
-            TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/fork-repositories'),
+            TemplateRendererFactory::build()->getRenderer([
+                $dirname . '/templates/fork-repositories',
+                $dirname . '/templates/access-control',
+            ]),
             new ForkRepositoriesPermissionsPresenterBuilder(
                 new GitRepositoryFactory(
                     new GitDao(),
