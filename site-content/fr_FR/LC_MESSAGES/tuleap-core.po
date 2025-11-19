@@ -4205,7 +4205,7 @@ msgstr "Alertes"
 
 msgid ""
 "We are sorry you caught an error, something meaningful was logged for site "
-"administrators. You may want got get in touch with them."
+"administrators. You may want to get in touch with them."
 msgstr ""
 "Nous sommes désolé que vous ayez rencontré un problème. Une information a "
 "été enregistrée à destination des administrateurs sites. Vous pouvez "

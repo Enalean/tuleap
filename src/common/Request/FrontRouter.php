@@ -156,7 +156,7 @@ class FrontRouter
                 $request,
                 $code,
                 _('Internal server error'),
-                _('We are sorry you caught an error, something meaningful was logged for site administrators. You may want got get in touch with them.'),
+                _('We are sorry you caught an error, something meaningful was logged for site administrators. You may want to get in touch with them.'),
                 $exception
             );
         }
