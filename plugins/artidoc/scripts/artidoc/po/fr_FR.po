@@ -193,6 +193,13 @@ msgstr "Sélection des champs"
 msgid "Force save"
 msgstr "Forcer la sauvegarde"
 
+msgid ""
+"Freetext sections do not have a version history yet. Only their latest "
+"versions are displayed."
+msgstr ""
+"Les sections de texte libre n'ont pas encore d'historiques de versions. "
+"Seulement leurs dernières versions sont affichées."
+
 msgid "Full row"
 msgstr "Ligne entière"
 

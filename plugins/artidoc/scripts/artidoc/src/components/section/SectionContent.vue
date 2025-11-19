@@ -46,6 +46,7 @@
                 'document-section-is-in-error': is_in_error,
                 'document-section-is-outdated': is_outdated,
                 'document-section-has-empty-description': has_empty_description,
+                'freetext-section-in-versioned-artidoc': is_a_freetext_section_in_versioned_artidoc,
             }"
         >
             <section-header
@@ -53,6 +54,9 @@
                 v-bind:class="{ 'section-header-with-border': section.value.level === LEVEL_1 }"
                 v-if="!is_loading_sections"
                 v-bind:section="section"
+                v-bind:is_a_freetext_section_in_versioned_artidoc="
+                    is_a_freetext_section_in_versioned_artidoc
+                "
             />
             <section-header-skeleton v-if="is_loading_sections" class="section-header" />
             <section-description
@@ -97,8 +101,9 @@ import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-co
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/components/temporary-flag-duration";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
 
-import { isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import { isFreetextSection, isSectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import { getPendingSectionsReplacer } from "@/sections/insert/PendingSectionsReplacer";
 import { getSectionsUpdater } from "@/sections/update/SectionsUpdater";
 import { getSectionsRemover } from "@/sections/remove/SectionsRemover";
@@ -119,6 +124,7 @@ const sections_collection = strictInject(SECTIONS_COLLECTION);
 const document_id = strictInject(DOCUMENT_ID);
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const file_uploads_collection = strictInject(FILE_UPLOADS_COLLECTION);
+const current_version_displayed = strictInject(CURRENT_VERSION_DISPLAYED);
 const section_state = states_collection.getSectionState(props.section.value);
 
 function addTemporaryFlag(flag: Ref<boolean>): void {
@@ -201,6 +207,12 @@ const delete_section = getSectionDeletor(
 );
 
 const { is_in_error, is_outdated } = section_state;
+
+const is_a_freetext_section_in_versioned_artidoc = computed(
+    (): boolean =>
+        current_version_displayed.old_version.value.isValue() &&
+        isFreetextSection(props.section.value),
+);
 </script>
 
 <style lang="scss">
@@ -217,6 +229,13 @@ artidoc-section-description,
 
     h3 {
         font-size: 17px;
+    }
+}
+
+.freetext-section-in-versioned-artidoc {
+    > .section-description,
+    > .section-header > .section-title {
+        opacity: 0.5;
     }
 }
 </style>

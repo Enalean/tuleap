@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, beforeEach, expect, it } from "vitest";
 import { ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -29,9 +29,12 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { Level } from "@/sections/levels/SectionsNumberer";
 import { LEVEL_1, LEVEL_2, LEVEL_3 } from "@/sections/levels/SectionsNumberer";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
+import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 
 describe("SectionHeader", () => {
-    let can_user_edit_document: boolean, is_print_mode: boolean;
+    let can_user_edit_document: boolean,
+        is_print_mode: boolean,
+        is_a_freetext_section_in_versioned_artidoc: boolean;
 
     const buildSectionWithLevel = (level: Level): ReactiveStoredArtidocSection =>
         ReactiveStoredArtidocSectionStub.fromSection(
@@ -59,9 +62,14 @@ describe("SectionHeader", () => {
             },
             props: {
                 is_print_mode,
+                is_a_freetext_section_in_versioned_artidoc,
                 section,
             },
         });
+
+    beforeEach(() => {
+        is_a_freetext_section_in_versioned_artidoc = false;
+    });
 
     it("When the current user cannot edit the document and it is not in print mode, then it should display a readonly title", () => {
         can_user_edit_document = false;
@@ -109,4 +117,17 @@ describe("SectionHeader", () => {
             );
         },
     );
+
+    it("When the section is a freetext section and an older version of the artidoc is displayed, then a warning should be displayed", () => {
+        is_print_mode = false;
+        is_a_freetext_section_in_versioned_artidoc = true;
+
+        expect(
+            getWrapper(
+                ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.create()),
+            )
+                .find("[data-test=freetext-version-history-warning]")
+                .exists(),
+        ).toBe(true);
+    });
 });

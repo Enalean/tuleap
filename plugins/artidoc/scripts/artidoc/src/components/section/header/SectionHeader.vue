@@ -22,22 +22,38 @@
         <h1 v-if="section.value.level === LEVEL_1" v-bind:class="classes">{{ display_title }}</h1>
         <h2 v-if="section.value.level === LEVEL_2" v-bind:class="classes">{{ display_title }}</h2>
         <h3 v-if="section.value.level === LEVEL_3" v-bind:class="classes">{{ display_title }}</h3>
+        <i
+            v-if="is_a_freetext_section_in_versioned_artidoc"
+            role="img"
+            class="fa-solid fa-circle-exclamation unversioned-freetext-section-warning"
+            v-bind:title="
+                $gettext(
+                    'Freetext sections do not have a version history yet. Only their latest versions are displayed.',
+                )
+            "
+            data-test="freetext-version-history-warning"
+        ></i>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import { useGettext } from "vue3-gettext";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { LEVEL_1, LEVEL_2, LEVEL_3 } from "@/sections/levels/SectionsNumberer";
 import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection";
 
+const { $gettext } = useGettext();
+
 const props = withDefaults(
     defineProps<{
         section: ReactiveStoredArtidocSection;
+        is_a_freetext_section_in_versioned_artidoc: boolean;
         is_print_mode?: boolean;
     }>(),
     {
+        is_a_freetext_section_in_versioned_artidoc: false,
         is_print_mode: false,
     },
 );
@@ -61,6 +77,17 @@ const can_header_be_edited = computed(
 </script>
 
 <style lang="scss" scoped>
+.section-header {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    align-items: center;
+}
+
+.unversioned-freetext-section-warning {
+    color: var(--tlp-warning-color);
+    cursor: help;
+}
+
 h1 {
     margin: 0;
     padding-bottom: var(--tlp-small-spacing);
@@ -70,5 +97,10 @@ h1 {
 h2,
 h3 {
     margin: 0;
+}
+
+h3 {
+    line-height: 24px;
+    text-transform: initial;
 }
 </style>
