@@ -228,7 +228,7 @@ abstract class KanbanWidget extends Widget
     {
         $provider = new KanbanJavascriptDependenciesProvider(
             $this->getIncludeAssets(),
-            new IncludeViteAssets(__DIR__ . '/../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/')
+            new IncludeViteAssets(__DIR__ . '/../../../../../src/scripts/ckeditor4/frontend-assets/', '/assets/core/ckeditor4/')
         );
         return $provider->getDependencies();
     }
