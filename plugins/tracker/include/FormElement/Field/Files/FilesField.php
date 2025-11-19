@@ -28,6 +28,7 @@ use DataAccessObject;
 use ForgeConfig;
 use Override;
 use PFUser;
+use Ramsey\Uuid\Rfc4122\UuidV7;
 use Rule_File;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao;
@@ -45,6 +46,7 @@ use Tracker_FormElementFactory;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tracker_Report_Criteria_File_ValueDao;
+use Tuleap\DB\UUIDFromRamseyUUIDLibrary;
 use Tuleap\Option\Option;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
@@ -141,7 +143,7 @@ class FilesField extends TrackerField
     ): string {
         $html             = '';
         $submitter_needed = true;
-        $html            .= $this->fetchAllAttachment($artifact_id, $this->getChangesetValues($changeset_id), $submitter_needed, []);
+        $html            .= $this->fetchAllAttachment($this->getChangesetValues($changeset_id), $submitter_needed, []);
         return $html;
     }
 
@@ -219,7 +221,7 @@ class FilesField extends TrackerField
         $html             = '';
         $submitter_needed = true;
         $read_only        = false;
-        $html            .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, $submitted_values, $read_only);
+        $html            .= $this->fetchAllAttachment($value, $submitter_needed, $submitted_values, $read_only);
         $html            .= $this->fetchSubmitValue($submitted_values);
         return $html;
     }
@@ -278,7 +280,7 @@ class FilesField extends TrackerField
     {
         $html             = '';
         $submitter_needed = true;
-        $html            .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, []);
+        $html            .= $this->fetchAllAttachment($value, $submitter_needed, []);
         return $html;
     }
 
@@ -326,17 +328,12 @@ class FilesField extends TrackerField
     }
 
     public function fetchAllAttachment(
-        $artifact_id,
         $values,
         $submitter_needed,
         array $submitted_values,
         $read_only = true,
-        $lytebox_id = null,
     ) {
         $html = '';
-        if ($lytebox_id === null) {
-            $lytebox_id = $this->getId();
-        }
         if ($values !== null && count($values) > 0) {
             $hp    = Codendi_HTMLPurifier::instance();
             $uh    = UserHelper::instance();
@@ -345,14 +342,16 @@ class FilesField extends TrackerField
                 $query_link            = $hp->purify($this->getFileHTMLUrl($fileinfo));
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
 
-                $link_show = '<a href="' . $query_link . '"' .
-                             $this->getVisioningAttributeForLink($fileinfo, $read_only, $lytebox_id) . '
+                $preview_id = 'preview-' . new UUIDFromRamseyUUIDLibrary(UuidV7::uuid7(new \DateTimeImmutable()))->toString();
+                $link_show  = '<a href="' . $query_link . '"' .
+                             $this->getVisioningAttributeForLink($fileinfo, $preview_id) . '
                                  title="' . $sanitized_description . '">';
 
                 $add = '<div class="tracker_artifact_attachment">';
                 if (! $read_only) {
                     $add .= $this->fetchDeleteCheckbox($fileinfo, $submitted_values);
                 }
+
 
                 $add .= '<div class="tracker_artifact_preview_attachment_hover">';
                 if ($submitter_needed) {
@@ -371,6 +370,16 @@ class FilesField extends TrackerField
                     $add .= '<div class="tracker_artifact_preview_attachment image">';
                     $add .= '<div style="background-image: url(\'' . $query_add . '\')"></div>';
                     $add .= '</div>';
+                    $add .= <<<EOS
+                        <div class="tracker-artifact-preview-attachment-magnifier hidden" data-preview-id="{$hp->purify($preview_id)}">
+                            <div class="tracker-artifact-preview-attachment-magnifier-image">
+                                <img loading="lazy" src="{$hp->purify($query_link)}" alt="$sanitized_description" title="$sanitized_description"/>
+                            </div>
+                            <button class="tracker-artifact-preview-attachment-magnifier-close-button" type="button" title="{$hp->purify(_('Close'))}">
+                                <i class="fa-solid fa-times" role="img"></i>
+                            </button>
+                        </div>
+                        EOS;
                 } else {
                     $add .= '<div class="tracker_artifact_preview_attachment"></div>';
                 }
@@ -429,17 +438,15 @@ class FilesField extends TrackerField
         return (int) $file_info->getId() . '-' . rawurlencode($file_info->getFilename());
     }
 
-    private function getVisioningAttributeForLink($fileinfo, $read_only, $lytebox_id)
+    private function getVisioningAttributeForLink(Tracker_FileInfo $fileinfo, string $uuid): string
     {
         if (! $fileinfo->isImage()) {
             return '';
         }
 
-        if ($read_only) {
-            return 'rel="lytebox[' . $lytebox_id . ']"';
-        }
+        $purifier = Codendi_HTMLPurifier::instance();
 
-        return 'data-rel="lytebox[' . $lytebox_id . ']"';
+        return 'data-target-preview-id="' . $purifier->purify($uuid) . '"';
     }
 
     private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo, array $submitted_values)

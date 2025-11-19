@@ -20,7 +20,6 @@
 import codendi from "codendi";
 
 import $ from "jquery";
-import LyteBox from "lytebox";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 import { submissionBarIsAlreadyActive } from "./artifact-edition-buttons-switcher/submission-bar-status-checker.js";
@@ -39,6 +38,7 @@ tuleap.tracker.artifact.editionSwitcher = function () {
         bindClickOnAutocomputeInMassChange();
         observeRequiredElements();
         initDoubleArtifactFormSubmitionGuard();
+        initImagePreview();
 
         if ($("#artifact_informations").length > 0) {
             bindSubmissionBarToFollowups(
@@ -316,7 +316,6 @@ tuleap.tracker.artifact.editionSwitcher = function () {
             document.getElementById("tracker_followup_comment_new"),
             document,
         );
-        toggleHiddenImageViewing();
     };
 
     var focusField = function (element) {
@@ -386,13 +385,35 @@ tuleap.tracker.artifact.editionSwitcher = function () {
         return $(".add-field", element).length > 0;
     };
 
-    var toggleHiddenImageViewing = function () {
-        $("a[data-rel^=lytebox]").each(function () {
-            $(this).attr("rel", $(this).attr("data-rel"));
+    function initImagePreview() {
+        document.querySelectorAll("[data-target-preview-id]").forEach((trigger) => {
+            trigger.addEventListener("click", function (event) {
+                event.preventDefault();
+                document
+                    .querySelector(
+                        "[data-preview-id=" + trigger.getAttribute("data-target-preview-id") + "]",
+                    )
+                    .classList.remove("hidden");
+            });
         });
+        document
+            .querySelectorAll(".tracker-artifact-preview-attachment-magnifier-close-button")
+            .forEach(function (button) {
+                button.addEventListener("click", function () {
+                    button
+                        .closest(".tracker-artifact-preview-attachment-magnifier")
+                        .classList.add("hidden");
+                });
+            });
 
-        new LyteBox();
-    };
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                document
+                    .querySelectorAll(".tracker-artifact-preview-attachment-magnifier:not(.hidden)")
+                    .forEach((preview) => preview.classList.add("hidden"));
+            }
+        });
+    }
 
     return {
         init: init,

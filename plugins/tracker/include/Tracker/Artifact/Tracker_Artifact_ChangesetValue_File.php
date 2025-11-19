@@ -287,12 +287,10 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
 
         if ($previews && ! $is_for_mail) {
             $result .= '<div>' . $this->field->fetchAllAttachment(
-                $artifact->getId(),
                 $previews,
                 true,
                 [],
                 true,
-                $this->changeset->getId()
             ) . '</div>';
         }
 
