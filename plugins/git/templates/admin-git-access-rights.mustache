@@ -1,22 +1,30 @@
-<h2>{{ template_git_access_rights }}</h2>
+<section class="tlp-pane">
+    <form class="tlp-pane-container"
+          method="POST"
+          action="{{ default_access_rights_form_action }}"
+    >
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="save" value="save"/>
 
-<form class="form-horizontal"
-      id="admin-git-default-access-rights"
-      method="POST"
-      action="{{ default_access_rights_form_action }}"
->
+        <div class="tlp-pane-header">
+            <h2 class="tlp-pane-title">{{ template_git_access_rights }}</h2>
+        </div>
 
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
+        {{> access-control }}
 
-    {{> access-control-legacy }}
-
-    <input type="submit"
-           name="save"
-           class="btn btn-primary save-permissions-with-regexp"
-           data-are-regexp-enabled="{{ is_regexp_enabled }}"
-           data-are-regexp-confliting="{{ are_regexp_permission_conflicting_at_site_level }}"
-           value="{{ submit_default_access_rights }}" />
-
-</form>
+        <div class="tlp-pane-section">
+            <div class="tlp-pane-section-submit">
+                <button
+                    id="save-permissions-with-regexp"
+                    type="submit"
+                    class="tlp-button-primary"
+                    data-are-regexp-enabled="{{ is_regexp_enabled }}"
+                    data-are-regexp-conflicting="{{ are_regexp_permission_conflicting_at_site_level }}"
+                >{{ submit_default_access_rights }}</button>
+            </div>
+        </div>
+    </form>
+</section>
+{{> access-control-remove-permissions-modals }}

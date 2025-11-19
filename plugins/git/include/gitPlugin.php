@@ -2804,6 +2804,11 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $event->setIsInBurningParrotCompatiblePage();
             }
         }
+        if ($request->get('action') === Git::ADMIN_DEFAULT_SETTINGS_ACTION) {
+            if (in_array($request->get('pane'), IndexController::BURNING_PARROT_COMPATIBLE_PANES, true)) {
+                $event->setIsInBurningParrotCompatiblePage();
+            }
+        }
         if ($request->get('action') === 'admin-git-admins') {
             $event->setIsInBurningParrotCompatiblePage();
         }

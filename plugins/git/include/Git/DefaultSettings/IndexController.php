@@ -35,10 +35,18 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\HTTPRequest;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use UserManager;
 
 class IndexController
 {
+    public const array BURNING_PARROT_COMPATIBLE_PANES = [
+        false, // when no pane is given, it maps to 'settings'
+        'access_control',
+    ];
+
     /**
      * @var AccessRightsPresenterOptionsBuilder
      */
@@ -115,11 +123,7 @@ class IndexController
      */
     private function getPanes(Project $project, \Tuleap\HTTPRequest $request)
     {
-        $current_pane   = AccessControl::NAME;
-        $requested_pane = $request->get('pane');
-        if ($requested_pane) {
-            $current_pane = $requested_pane;
-        }
+        $current_pane = $this->getCurrentPaneName($request);
 
         $panes = new DefaultSettingsPanesCollection($project, $current_pane);
 
@@ -153,12 +157,43 @@ class IndexController
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
 
+        $this->addJavascriptAssets($request);
         $this->header_renderer->renderServiceAdministrationHeader(
             $request,
             $request->getCurrentUser(),
             $request->getProject()
         );
-        $renderer->renderToPage('admin-default-settings', $presenter);
+
+        if (in_array($this->getCurrentPaneName($request), self::BURNING_PARROT_COMPATIBLE_PANES, true)) {
+            $renderer->renderToPage('admin-default-settings', $presenter);
+        } else {
+            $renderer->renderToPage('flaming-parrot-admin-default-settings', $presenter);
+        }
         $GLOBALS['HTML']->footer([]);
+    }
+
+    private function getCurrentPaneName(\Tuleap\HTTPRequest $request): string
+    {
+        $current_pane   = AccessControl::NAME;
+        $requested_pane = $request->get('pane');
+        if ($requested_pane) {
+            $current_pane = $requested_pane;
+        }
+        return $current_pane;
+    }
+
+    private function addJavascriptAssets(HTTPRequest $request): void
+    {
+        if ($this->getCurrentPaneName($request) === AccessControl::NAME) {
+            $GLOBALS['HTML']->addJavascriptAsset(
+                new JavascriptViteAsset(
+                    new IncludeViteAssets(
+                        __DIR__ . '/../../../scripts/access-control/frontend-assets',
+                        '/assets/git/access-control'
+                    ),
+                    'src/main.ts',
+                ),
+            );
+        }
     }
 }
