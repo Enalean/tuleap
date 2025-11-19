@@ -65,6 +65,10 @@ generate-sbom: ## Generate Software-Bill-of-Materials
 		$(MAKE) composer COMPOSER_INSTALL='composer --quiet CycloneDX:make-sbom --output-format=json --output-reproducible --output-file=bom.json --spec-version=1.6'
 	cdxgen -t pnpm --spec-version=1.6 --profile=license-compliance -o bom.json --no-recurse .
 	pnpm -r --no-bail exec -- cdxgen -t pnpm --spec-version=1.6 --profile=license-compliance -o bom.json --no-recurse .
+	git ls-files --cached --modified --other --exclude-standard -z -- '*/go.mod' | \
+		xargs -0 -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && cyclonedx-gomod mod -licenses -type application -json -output-version 1.6 -test -output bom.json'
+	git ls-files --cached --modified --other --exclude-standard -z -- '*/Cargo.toml' | \
+		xargs -0 -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && cdxgen -t cargo --spec-version=1.6 --profile=license-compliance -o bom.json --no-install-deps --no-recurse .'
 
 ## RNG generation
 
