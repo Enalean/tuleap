@@ -177,4 +177,25 @@ describe("DropDownMenu", () => {
             should_approval_be_displayed,
         );
     });
+
+    it.each([
+        [TYPE_FOLDER, true],
+        [TYPE_FILE, false],
+        [TYPE_LINK, false],
+        [TYPE_EMBEDDED, false],
+        [TYPE_WIKI, false],
+        [TYPE_EMPTY, false],
+        ["whatever", false],
+    ])("should display a %s with statistics link: %s", (type, should_approval_be_displayed) => {
+        const wrapper = createWrapper({
+            id: 4,
+            title: "my item title",
+            type,
+            can_user_manage: false,
+        } as Item);
+
+        expect(wrapper.find("[data-test=document-dropdown-statistics]").exists()).toBe(
+            should_approval_be_displayed,
+        );
+    });
 });

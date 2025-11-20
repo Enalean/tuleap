@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type DetailsTabs = "versions" | "logs" | "references" | "notifications" | "statistics";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { getJSON, uri } from "@tuleap/fetch-result";
 
-export const VersionsTab: DetailsTabs = "versions";
-export const LogsTab: DetailsTabs = "logs";
-export const ReferencesTab: DetailsTabs = "references";
-export const NotificationsTab: DetailsTabs = "notifications";
-export const StatisticsTab: DetailsTabs = "statistics";
+export type FolderStatistics = {
+    size: string;
+    count: number;
+    types: Array<NumberOfItemsByType>;
+};
+
+export type NumberOfItemsByType = {
+    type_name: string;
+    count: number;
+};
+
+export function getStatistics(item_id: number): ResultAsync<FolderStatistics, Fault> {
+    return getJSON<FolderStatistics>(uri`/plugins/document/${item_id}/statistics`);
+}

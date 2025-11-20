@@ -64,6 +64,7 @@ use Tuleap\Docman\Metadata\Owner\AllOwnerRetriever;
 use Tuleap\Docman\Metadata\Owner\OwnerDao;
 use Tuleap\Docman\Metadata\Owner\OwnerRequestHandler;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
+use Tuleap\Docman\Notifications\NotificationsStatisticsController;
 use Tuleap\Docman\Notifications\NotificationsSubscribersController;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -1622,6 +1623,17 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
         );
     }
 
+    public function routeGetStatistics(): NotificationsStatisticsController
+    {
+        $user_manager = UserManager::instance();
+        return new NotificationsStatisticsController(
+            new DocmanItemsRequestBuilder($user_manager, ProjectManager::instance()),
+            $user_manager,
+            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            new SapiEmitter(),
+        );
+    }
+
     public function routeGetOwners(): OwnerRequestHandler
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
@@ -1686,6 +1698,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignor
                 '/{project_name:[A-z0-9-]+}/admin-search',
                 $this->getRouteHandler('routeUpdateAdminSearch')
             );
+            $r->get('/{item_id:\d+}/statistics', $this->getRouteHandler('routeGetStatistics'));
             $r->get('/{item_id:\d+}/subscribers', $this->getRouteHandler('routeGetSubscribers'));
             $r->get('/{project_name:[A-z0-9-]+}/owners', $this->getRouteHandler('routeGetOwners'));
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));

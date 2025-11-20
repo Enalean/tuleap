@@ -233,6 +233,9 @@ msgstr ""
 msgid "Description"
 msgstr "Descrição"
 
+msgid "Details"
+msgstr ""
+
 msgid "Document locked by %{username}."
 msgstr ""
 
@@ -347,6 +350,9 @@ msgid "It seems the content of this element can't be loaded."
 msgstr ""
 
 msgid "It's time to add new documents!"
+msgstr ""
+
+msgid "Item type"
 msgstr ""
 
 msgid "Keep lock?"
@@ -469,6 +475,12 @@ msgid "Notifications"
 msgstr "Notificações"
 
 msgid "Notified people or groups"
+msgstr ""
+
+msgid "Number of item"
+msgstr ""
+
+msgid "Number of items in this folder"
 msgstr ""
 
 msgid "Obsolescence date"
@@ -661,6 +673,9 @@ msgstr ""
 msgid "Show error details"
 msgstr ""
 
+msgid "Size"
+msgstr ""
+
 msgid "Size of the archive to be downloaded: %{ size_in_MB } MB"
 msgstr ""
 
@@ -673,6 +688,9 @@ msgstr ""
 msgid "Start over with a completely new approval table."
 msgstr ""
 
+msgid "Statistics"
+msgstr ""
+
 msgid "Status"
 msgstr "Estado"
 
@@ -680,6 +698,9 @@ msgid "Submit"
 msgstr ""
 
 msgid "Subscribers"
+msgstr ""
+
+msgid "Summary"
 msgstr ""
 
 msgid "Switch to old user interface"
@@ -726,6 +747,9 @@ msgid ""
 "threshold defined by the site administrators."
 msgstr ""
 
+msgid "The whole folder sub-tree is taken in account for these statistics."
+msgstr ""
+
 msgid "There are no items here or you don't have permissions to see them."
 msgstr ""
 
@@ -736,6 +760,9 @@ msgid "There are no versions yet"
 msgstr ""
 
 msgid "There is no upload in progress"
+msgstr ""
+
+msgid "There isn't any item"
 msgstr ""
 
 msgid "This document is currently locked by"
@@ -755,11 +782,19 @@ msgid ""
 "entered may not be saved. Do you want to leave this page?"
 msgstr ""
 
+msgid "This table shows the number of elements of each type."
+msgstr ""
+
 msgid "This wiki has a approval table, you can't update it."
 msgstr ""
 
 msgid "Title"
 msgstr "Título"
+
+msgid ""
+"To compute the size, only the last versions of 'file' and 'embedded' file "
+"documents are taken in account."
+msgstr ""
 
 msgid "Today"
 msgstr "Hoje"

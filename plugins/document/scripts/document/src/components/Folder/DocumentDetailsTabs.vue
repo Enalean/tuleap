@@ -55,6 +55,14 @@
         >
             {{ $gettext("Notifications") }}
         </router-link>
+        <router-link
+            v-if="item.type === TYPE_FOLDER"
+            class="tlp-tab"
+            v-bind:class="{ 'tlp-tab-active': active_tab === StatisticsTab }"
+            v-bind:to="{ name: 'statistics', params: { item_id: item.id } }"
+        >
+            {{ $gettext("Statistics") }}
+        </router-link>
     </nav>
 </template>
 <script setup lang="ts">
@@ -63,7 +71,14 @@ import type { Item } from "../../type";
 import { computed } from "vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
 import type { DetailsTabs } from "../../helpers/details-tabs";
-import { NotificationsTab, LogsTab, ReferencesTab, VersionsTab } from "../../helpers/details-tabs";
+import {
+    LogsTab,
+    ReferencesTab,
+    VersionsTab,
+    StatisticsTab,
+    NotificationsTab,
+} from "../../helpers/details-tabs";
+import { TYPE_FOLDER } from "../../constants";
 
 const props = defineProps<{
     item: Item;
