@@ -1,28 +1,36 @@
-<div class="modal-header">
-    <a role="button" class="close" data-dismiss="modal">
-        <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-    </a>
-    <h3 id="modal-create-jenkins-title">{{ title }}</h3>
+<div class="tlp-modal-header">
+    <h1 id="modal-create-jenkins-title" class="tlp-modal-title">{{ title }}</h1>
+    <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }} tuleap-git | Close {{/ dgettext }}">
+        <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+    </button>
 </div>
+
 <form method="post" action="/plugins/hudson_git/?group_id={{ project_id }}">
     <input type="hidden" name="repo_id" value="{{ repository_id }}" />
     <input type="hidden" name="action" value="save-jenkins" />
     <input type="hidden" name="challenge" value="{{ csrf_token }}" />
 
-    <div class="modal-body">
+<div class="tlp-modal-body">
 
-        <p>{{ jenkins_notification_desc }} <a href="https://github.com/jenkinsci/git-plugin/blob/git-4.11.4/README.adoc#push-notification-from-repository">{{ jenkins_documentation_link_label }}</a>.</p>
-        <p>
-            <label for="repo_jenkins">{{ jenkins_notification_label }} <i class="fas fa-asterisk" aria-hidden="true"></i></label>
-            <input type="url" id="repo_jenkins" name="url" value="{{ jenkins_server_url }}" class="input-xxlarge" placeholder="https://example.com/jenkins" required pattern="https?://.+" />
-        </p>
+    <p class="tlp-text">{{ jenkins_notification_desc }} <a
+        href="https://github.com/jenkinsci/git-plugin/blob/git-4.11.4/README.adoc#push-notification-from-repository">{{ jenkins_documentation_link_label }}</a>.
+    </p>
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="repo-jenkins">{{ jenkins_notification_label }} <i class="fa-solid fa-asterisk"
+                                                                                        aria-hidden="true"></i></label>
+        <input class="tlp-input" type="url" id="repo-jenkins" name="url" value="{{ jenkins_server_url }}"
+               placeholder="https://example.com/jenkins" required pattern="https?://.+"/>
+    </div>
 
-        <p>
-            <label for="jenkins-token">{{# dgettext }}tuleap-hudson_git | Jenkins notifyCommit access token{{/ dgettext }} <i class="fas fa-asterisk" aria-hidden="true"></i></label>
-            <input type="password" id="jenkins-token" name="token" class="input-xxlarge" required />
-        </p>
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="jenkins-token">{{# dgettext }}
+            tuleap-hudson_git | Jenkins notifyCommit access token{{/ dgettext }} <i class="fa-solid fa-asterisk"
+                                                                                    aria-hidden="true"></i></label>
+        <input class="tlp-input" type="password" id="jenkins-token" name="token" required/>
+    </div>
 
-        <label class="checkbox">
+    <div class="tlp-form-element">
+        <label class="tlp-label tlp-checkbox">
             <input type="hidden" name="is_commit_reference_needed" value="1">
             <input
                 type="checkbox"
@@ -33,15 +41,16 @@
             >
             {{# dgettext }}tuleap-hudson_git | Do not send commit's SHA-1 to Jenkins{{/ dgettext }}
         </label>
-        <p class="text-info">
+    </div>
+    <p class="tlp-text-info">
             {{# dgettext }}tuleap-hudson_git |
                 To work around the fact Jenkins doesn't poll the repositories when sha1 parameter is given.
             {{/ dgettext }}
         </p>
     </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_cancel }}</button>
-        <input type="submit" class="btn btn-primary" value="{{ save }}">
+<div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline" data-dismiss="modal" aria-hidden="true">{{ btn_cancel }}</button>
+        <input type="submit" class="tlp-button-primary" value="{{ save }}">
     </div>
 </form>

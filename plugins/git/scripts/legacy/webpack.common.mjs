@@ -42,7 +42,7 @@ export default [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
-                "git.js": ["./src/git.js", "./src/webhooks.js"],
+                "git.js": ["./src/git.js"],
             }),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],

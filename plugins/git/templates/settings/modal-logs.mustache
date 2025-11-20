@@ -1,19 +1,17 @@
 <div id="modal-logs-{{ id }}"
-    class="modal hide fade hook-logs-modal"
-    tabindex="-1"
+    class="tlp-modal"
     role="dialog"
     aria-labelledby="hook-logs-modal-title-{{ id }}"
-    aria-hidden="true"
 >
-    <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal">
-            <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
-        </a>
-        <h3 id="hook-logs-modal-title-{{ id }}">{{ logs_for }}</h3>
+    <div class="tlp-modal-header">
+        <h1 id="hook-logs-modal-title-{{ id }}" class="tlp-modal-title" >{{ logs_for }}</h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }} tuleap-git | Close {{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
     </div>
 
-    <div class="modal-body">
-        <table class="table hook-logs">
+    <div class="tlp-modal-body">
+        <table class="tlp-table">
             <thead>
                 <tr>
                     <th>{{ modal_logs_time_label }}</th>
@@ -23,7 +21,7 @@
             <tbody>
                 {{# hooklogs }}
                     <tr>
-                       <td class="hook-log-date">{{ time }}</td>
+                       <td>{{ time }}</td>
                        <td>
                            {{{ purified_information }}}
                        </td>
@@ -40,7 +38,7 @@
         </table>
     </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close }}</button>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal" aria-hidden="true">{{ btn_close }}</button>
     </div>
 </div>
