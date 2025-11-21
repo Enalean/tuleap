@@ -21,7 +21,7 @@
  *
  */
 
-class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotPascalCase
+class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -72,13 +72,6 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classe
             if (! $this->cleanupProjectFRS($groupId)) {
                 $this->error('Could not remove FRS items');
                 $deleteState = false;
-            }
-
-            // Mark all project trackers as deleted
-            $atf = $this->getArtifactTypeFactory($project);
-            if (! $atf->preDeleteAllProjectArtifactTypes()) {
-                $this->error('Could not mark all trackers as deleted');
-                    $deleteState = false;
             }
 
             // Mark Wiki attachments as deleted
@@ -133,18 +126,6 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classe
     {
         $frsff = $this->getFRSFileFactory();
         return $frsff->deleteProjectFRS($groupId, BackendSystem::instance());
-    }
-
-    /**
-     * Returns a ArtifactTypeFactory
-     *
-     * @param Project $project Project to be deleted
-     *
-     * @return ArtifactTypeFactory
-     */
-    public function getArtifactTypeFactory($project)
-    {
-        return new ArtifactTypeFactory($project);
     }
 
     /**
