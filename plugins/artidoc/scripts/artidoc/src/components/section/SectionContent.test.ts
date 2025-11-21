@@ -21,6 +21,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import { ref } from "vue";
+import { Option } from "@tuleap/option";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
@@ -41,6 +42,8 @@ import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-up
 import { FileUploadsCollectionStub } from "@/helpers/stubs/FileUploadsCollectionStub";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import ReadonlyFields from "@/components/section/readonly-fields/ReadonlyFields.vue";
+import { CURRENT_VERSION_DISPLAYED } from "@/components/current-version-displayed";
+import { noop } from "@/helpers/noop";
 
 describe("SectionContent", () => {
     let is_loading_sections: boolean;
@@ -68,6 +71,11 @@ describe("SectionContent", () => {
                     [IS_LOADING_SECTIONS.valueOf()]: ref(is_loading_sections),
                     [DOCUMENT_ID.valueOf()]: 123,
                     [UPLOAD_MAX_SIZE.valueOf()]: 100,
+                    [CURRENT_VERSION_DISPLAYED.valueOf()]: {
+                        old_version: ref(Option.nothing()),
+                        switchToOldVersion: noop,
+                        switchToLatestVersion: noop,
+                    },
                 },
             },
             props: {
