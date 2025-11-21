@@ -83,11 +83,8 @@ class GitRepositoryHeaderDisplayer
 
         $external_assets = new CollectAssets();
         $this->event_manager->processEvent($external_assets);
-        foreach ($external_assets->getStylesheets() as $css_asset) {
-            $layout->addCssAsset($css_asset);
-        }
         foreach ($external_assets->getScripts() as $script) {
-            $layout->includeFooterJavascriptFile($script->getFileURL());
+            $layout->addJavascriptAsset($script);
         }
     }
 

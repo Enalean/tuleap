@@ -51,8 +51,8 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -142,18 +142,12 @@ class pullrequestPlugin extends Plugin
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectAssets(CollectAssets $retriever): void
     {
-        $assets = new IncludeAssets(
+        $assets = new IncludeViteAssets(
             __DIR__ . '/../scripts/create-pullrequest-button/frontend-assets',
             '/assets/pullrequest/create-pullrequest-button'
         );
 
-        $css_assets = new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons(
-            $assets,
-            'repository-style'
-        );
-        $retriever->addStylesheet($css_assets);
-
-        $create_pullrequest = new JavascriptAsset($assets, 'create-pullrequest-button.js');
+        $create_pullrequest = new JavascriptViteAsset($assets, 'src/index.js');
         $retriever->addScript($create_pullrequest);
     }
 
