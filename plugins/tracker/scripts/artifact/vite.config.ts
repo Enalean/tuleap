@@ -33,7 +33,6 @@ export default vite.defineAppConfig(
             viteExternalsPlugin({
                 ckeditor4: "CKEDITOR",
                 codendi: "codendi",
-                lytebox: "LyteBox",
                 tuleap: "tuleap",
                 jquery: "jQuery",
             }),

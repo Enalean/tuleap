@@ -167,7 +167,6 @@ const fat_combined_files = [
         "../../www/scripts/autocomplete.js",
         "../../www/scripts/textboxlist/multiselect.js",
         "../../www/scripts/tablekit/tablekit.js",
-        "../../www/scripts/lytebox/lytebox.js",
         "../../www/scripts/lightwindow/lightwindow.js",
         "./node_modules/@tuleap/html-escaper/dist/html-escaper.umd.cjs",
         "../../www/scripts/codendi/Tracker.js",
