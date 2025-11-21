@@ -21,7 +21,6 @@
 @use "pkg:codemirror/addon/merge/merge";
 @use "pkg:@tuleap/plugin-pullrequest-comments";
 @use "./includes/pull-request";
-@use "./includes/commits";
 @use "./includes/files";
 @use "./includes/file-diff";
 @use "./includes/codemirror-overrides";

@@ -1,4 +1,5 @@
 import { buildOverviewURL } from "../helpers/overview-url-builder";
+import { buildCommitsTabURL } from "../helpers/commits-tab-url-builder";
 import { redirectToUrl } from "../window-helper";
 
 export default PullRequestController;
@@ -18,6 +19,19 @@ function PullRequestController($state, PullRequestRestService, SharedPropertiesS
             }
 
             return buildOverviewURL(
+                window.location,
+                pull_request,
+                SharedPropertiesService.getProjectId(),
+                SharedPropertiesService.getRepositoryId(),
+            ).toString();
+        },
+        getCommitsTabUrl: () => {
+            const pull_request = SharedPropertiesService.getPullRequest();
+            if (!pull_request) {
+                return "";
+            }
+
+            return buildCommitsTabURL(
                 window.location,
                 pull_request,
                 SharedPropertiesService.getProjectId(),

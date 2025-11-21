@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,15 @@
  */
 
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { buildOverviewURL } from "./overview-url-builder";
+import { buildCommitsTabURL } from "./commits-tab-url-builder";
 
-describe("overview-url-builder", () => {
-    it("Given a pull-request, then it should build an url to the view overview app", () => {
+describe("commits-tab-url-builder", () => {
+    it("Given a pull-request, then it should build an url to the commits tab", () => {
         const location: Location = {
             origin: "https://www.example.com",
         } as unknown as Location;
 
-        const url = buildOverviewURL(
+        const url = buildCommitsTabURL(
             location,
             {
                 id: 15,
@@ -45,7 +45,7 @@ describe("overview-url-builder", () => {
         );
 
         expect(url.toString()).toBe(
-            "https://www.example.com/plugins/git/?action=pull-requests&repo_id=1&group_id=101&tab=overview#/pull-requests/15/overview",
+            "https://www.example.com/plugins/git/?action=pull-requests&repo_id=1&group_id=101&tab=commits#/pull-requests/15/commits",
         );
     });
 });

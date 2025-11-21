@@ -34,7 +34,6 @@ import UnidiffComponent from "./file-diff/diff-modes/unidiff-component.js";
 import SideBySideDiffComponent from "./file-diff/diff-modes/side-by-side-diff-component.js";
 
 import FilesDirective from "./files/files-directive.js";
-import CommitsDirective from "./commits/commits-directive.js";
 import PullRequestDirective from "./pull-request/pull-request-directive.js";
 import PullRequestHeaderDirective from "./pull-request/header/header-directive.js";
 
@@ -44,7 +43,6 @@ import ErrorModalService from "./error-modal/error-modal-service.js";
 import FileDiffRestService from "./file-diff/file-diff-rest-service.js";
 import FilepathsService from "./files/filepaths-service.js";
 import FilesRestService from "./files/files-rest-service.js";
-import CommitsRestService from "./commits/commits-rest-service.js";
 import PullRequestRestService from "./pull-request/pull-request-rest-service.js";
 
 import MainConfig from "./app-config.js";
@@ -52,7 +50,6 @@ import TuleapResize from "./resize/resize.js";
 import SharedProperties from "./shared-properties/shared-properties.js";
 import FileDiffConfig from "./file-diff/file-diff-config.js";
 import FilesConfig from "./files/files-config.js";
-import CommitsConfig from "./commits/commits-config.js";
 import PullRequestConfig from "./pull-request/pull-request-config.js";
 
 import angular_custom_elements_module from "angular-custom-elements";
@@ -76,7 +73,6 @@ export default angular
     .component("sideBySideDiff", SideBySideDiffComponent)
 
     .directive("files", FilesDirective)
-    .directive("commits", CommitsDirective)
     .directive("pullRequest", PullRequestDirective)
     .directive("pullRequestHeader", PullRequestHeaderDirective)
 
@@ -86,13 +82,11 @@ export default angular
     .service("FileDiffRestService", FileDiffRestService)
     .service("FilepathsService", FilepathsService)
     .service("FilesRestService", FilesRestService)
-    .service("CommitsRestService", CommitsRestService)
     .service("PullRequestRestService", PullRequestRestService)
 
     .config(MainConfig)
     .config(FileDiffConfig)
     .config(FilesConfig)
-    .config(CommitsConfig)
     .config(PullRequestConfig)
     .run([
         "gettextCatalog",

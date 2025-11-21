@@ -23,9 +23,6 @@ msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
 msgid "Binary file"
 msgstr "Fichier binaire"
 
-msgid "CI"
-msgstr "IC"
-
 msgid "Changes"
 msgstr "Changements"
 
@@ -35,20 +32,11 @@ msgstr "Fermer"
 msgid "Commits"
 msgstr "Commits"
 
-msgid "Continuous integration status: Failure on %s"
-msgstr "Status intégration continue : Échec le %s"
-
-msgid "Continuous integration status: Success on %s"
-msgstr "Status intégration continue : Succès le %s"
-
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
 msgid "Git LFS file"
 msgstr "Fichier Git LFS"
-
-msgid "It seems that the pull request does not have any commits."
-msgstr "Il semblerait que la pull request n'a aucun commit."
 
 msgid "OK"
 msgstr "OK"

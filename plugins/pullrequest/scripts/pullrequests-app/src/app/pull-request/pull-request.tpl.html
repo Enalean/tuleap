@@ -8,10 +8,7 @@
                     {{ ::'Overview' | translate }}
                 </a>
 
-                <a class="tlp-tab"
-                   ng-class="{'tlp-tab-active': pull_request.$state.includes('commits')}"
-                   ui-sref="commits"
-                >
+                <a class="tlp-tab" href="{{ pull_request.getCommitsTabUrl() }}">
                     {{ ::'Commits' | translate }}
                 </a>
                 <a class="tlp-tab"

@@ -18,17 +18,17 @@
   -->
 
 <template>
-    <nav class="tlp-tabs">
+    <nav class="tlp-tabs" data-test="pullrequest-navigation-tabs">
         <a
             class="tlp-tab"
             v-bind:href="buildOverviewTabUrl(base_url, pull_request_id)"
-            data-test="tab-commits"
+            data-test="tab-overview"
             >{{ $gettext("Overview") }}</a
         >
         <router-link
             v-bind:to="{ name: VIEW_COMMITS_NAME }"
             class="tlp-tab tlp-tab-active"
-            data-test="tab-overview"
+            data-test="tab-commits"
             >{{ $gettext("Commits") }}</router-link
         >
         <a
