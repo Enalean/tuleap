@@ -88,7 +88,6 @@ class EventManager implements EventDispatcherInterface // phpcs:ignore
      * should not rely on it anymore.
      *
      * $event should be an object and $params should be ignored.
-     * @see \Tuleap\Widget\Event\GetPublicAreas for usage example.
      *
      * @param Tuleap\Event\Dispatchable|string $event
      * @param array $params

@@ -172,11 +172,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return (isset($components[1]) && $components[1]);
     }
 
-    public function getPublicArea(): string
-    {
-        return '';
-    }
-
     public function displayHeader(string $title, $breadcrumbs, array $toolbar, \Tuleap\Layout\HeaderConfiguration|array $params = []): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment(strtolower($this->getShortName()));

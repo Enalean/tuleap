@@ -132,65 +132,53 @@ useful to add some context to the listeners and allow them to give back
 results if needed. For example, we can look at the following usage:
 
 ``` php
-$get_public_areas = EventManager::instance()->dispatch(new GetPublicAreas($project));
-foreach($get_public_areas->getAreas() as $area) {
+$event = EventManager::instance()->dispatch(new GetStuff($project));
+foreach($event->getStuff() as $stuff) {
     …
 }
 ```
 
-This event is used to display additional information in the widget
-"Public areas". For example the `tracker` plugin wants to list all
-trackers of the project whereas the `docman` plugin only displays a link
-to the service:
+This event is then used by a plugin to add stuff:
 
 ``` php
-$project = $event->getProject();
-if ($project->usesService('docman') {
-    $event->addArea('<a href=…');
+if ($event->project->usesService('docman') {
+    $event->addStuff('<a href=…');
 }
 ```
 
-The class `GetPublicAreas` looks like the following:
+The class `GetStuff` looks like the following:
 
 ``` php
 declare(strict_types=1);
 
-namespace Tuleap\Widget\Event;
+namespace Tuleap\Stuff;
 
 use Project;
 use Tuleap\Event\Dispatchable;
 
-class GetPublicAreas implements Dispatchable
+class GetStuff implements Dispatchable
 {
     /**
      * @var string[]
      */
-    private array $areas;
+    private array $stuff = [];
 
-    private Project $project;
-
-    public function __construct(Project $project)
-    {
-        $this->project = $project;
-        $this->areas   = array();
-    }
-
-    public function getProject() : Project
-    {
-        return $this->project;
+    public function __construct(
+        public readonly Project $project
+    ) {
     }
 
     /**
      * @return \string[]
      */
-    public function getAreas() : array
+    public function getStuff() : array
     {
-        return $this->areas;
+        return $this->stuff;
     }
 
-    public function addArea(string $html)
+    public function addStuff(string $html): void
     {
-        $this->areas[] = $html;
+        $this->stuff[] = $html;
     }
 }
 ```

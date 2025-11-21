@@ -69142,11 +69142,6 @@
       <code><![CDATA[addProjectsWithCriteria]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Widget/Event/GetPublicAreas.php">
-    <MissingReturnType>
-      <code><![CDATA[addArea]]></code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Widget/Event/GetWidget.php">
     <MissingParamType>
       <code><![CDATA[$widget_name]]></code>
@@ -69565,18 +69560,6 @@
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[isAvailable]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Widget/Widget_ProjectPublicAreas.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($request->get('group_id'))]]></code>
-    </DeprecatedFunction>
-    <InvalidArgument>
-      <code><![CDATA[$group_id]]></code>
-    </InvalidArgument>
-    <MissingReturnType>
-      <code><![CDATA[getDescription]]></code>
-      <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/Widget/Widget_ProjectRss.php">

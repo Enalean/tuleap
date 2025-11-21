@@ -21,8 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\PHPWiki\WikiPage;
-
 require_once __DIR__ . '/../../../www/project/admin/permissions.php';
 require_once __DIR__ . '/WikiPage.php';
 /**
@@ -33,7 +31,7 @@ require_once __DIR__ . '/WikiPage.php';
  * PhpWiki for Codendi) and Codendi application
  *
  */
-class Wiki
+class Wiki // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public $gid;
     public string $language_id = '';
@@ -151,33 +149,10 @@ class Wiki
     }
 
   /**
-   * Get number of project wiki pages.
-   * @return number of project pages (0 if wiki is empty)
-   */
-    public function getProjectPageCount()
-    {
-        $excluded_pages_db_escaped = [];
-        foreach (array_merge(WikiPage::getAdminPages(), WikiPage::getDefaultPages()) as $excluded_page) {
-            $excluded_pages_db_escaped[] = '"' . db_es($excluded_page) . '"';
-        }
-        $res = db_query(' SELECT count(*) as count'
-        . ' FROM wiki_page, wiki_nonempty'
-        . ' WHERE wiki_page.group_id="' . db_ei($this->gid) . '"'
-        . ' AND wiki_nonempty.id=wiki_page.id'
-            . ' AND wiki_page.pagename NOT IN (' . implode(',', $excluded_pages_db_escaped) . ')');
-
-        if (db_numrows($res) > 0) {
-            return db_result($res, 0, 'count');
-        } else {
-            return 0;
-        }
-    }
-
-  /**
    * Get wiki language (set at creation time)
    * return 0 if no wiki document exist
    */
-    public function getLanguage_id()
+    public function getLanguage_id() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // The language of the wiki is the language of all its wiki documents.
         if (! $this->language_id) {

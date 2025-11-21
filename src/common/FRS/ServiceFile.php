@@ -36,26 +36,6 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     }
 
     /**
-     * getPublicArea
-     *
-     * Return the link which will be displayed in public area in summary page
-     */
-    #[\Override]
-    public function getPublicArea(): string
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-
-        $html    = '';
-        $html   .= '<p><a href="/file/showfiles.php?group_id=' . urlencode((string) $this->getGroupId()) . '">';
-        $html   .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($this->getIcon()) . '"></i>';
-        $html   .= $GLOBALS['Language']->getText('include_project_home', 'file_releases') . '</a>';
-        $user_id = UserManager::instance()->getCurrentUser()->getId();
-        $html   .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'packages', count($this->getPackagesForUser($user_id))) . ' )';
-        $html   .= '</p>';
-        return $html;
-    }
-
-    /**
     * getSummaryPageContent
     *
     * Return the text to display on the summary page
