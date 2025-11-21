@@ -76,6 +76,9 @@ msgstr "Êtes vous sûr de vouloir supprimer cette section de texte libre ?"
 msgid "Artidoc allows composition of a document based on artifacts."
 msgstr "Artidoc permet la composition d'un document basé sur des artifacts."
 
+msgid "Artifact history"
+msgstr "Historique artifact"
+
 msgid ""
 "As soon as you reload the page, the feature will no longer be displayed."
 msgstr ""
@@ -180,6 +183,9 @@ msgstr "Erreur d'export"
 
 msgid "Failed"
 msgstr "Échoué"
+
+msgid "Fake data"
+msgstr "Données simulées"
 
 msgid "Fake display of versions"
 msgstr "Affichage simulé des versions"
@@ -480,9 +486,6 @@ msgstr "Avatar de l'utilisateur"
 
 msgid "Versions"
 msgstr "Versions"
-
-msgid "Versions based on fake data"
-msgstr "Versions basées sur des données simulées"
 
 msgid "You are currently viewing \"%{ title }\" in read-only mode."
 msgstr ""

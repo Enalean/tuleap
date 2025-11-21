@@ -18,10 +18,13 @@
   -->
 
 <template>
-    <flat-list-of-versions v-if="display === ALL_VERSIONS" v-bind:versions="versions" />
-    <flat-list-of-versions v-if="display === NAMED_VERSIONS" v-bind:versions="named_versions" />
+    <flat-list-of-versions v-if="display === FAKE_DATA_ALL_VERSIONS" v-bind:versions="versions" />
+    <flat-list-of-versions
+        v-if="display === FAKE_DATA_NAMED_VERSIONS"
+        v-bind:versions="named_versions"
+    />
     <grouped-by-named-list-of-versions
-        v-if="display === GROUP_BY_NAMED_VERSIONS"
+        v-if="display === FAKE_DATA_GROUP_BY_NAMED_VERSIONS"
         v-bind:grouped_versions="grouped_versions"
     />
     <load-more-versions-button
@@ -40,9 +43,9 @@ import { getVersions } from "@/components/sidebar/versions/fake-list-of-versions
 import { groupVersionsByNamedVersion } from "@/components/sidebar/versions/group-versions-by-named-version";
 import type { VersionsDisplayChoices } from "@/components/sidebar/versions/versions-display";
 import {
-    ALL_VERSIONS,
-    GROUP_BY_NAMED_VERSIONS,
-    NAMED_VERSIONS,
+    FAKE_DATA_ALL_VERSIONS,
+    FAKE_DATA_GROUP_BY_NAMED_VERSIONS,
+    FAKE_DATA_NAMED_VERSIONS,
 } from "@/components/sidebar/versions/versions-display";
 import { PROJECT_ID } from "@/project-id-injection-key";
 import FlatListOfVersions from "@/components/sidebar/versions/FlatListOfVersions.vue";

@@ -34,17 +34,7 @@
         </div>
         <list-of-versions-skeleton v-if="is_loading_versions" />
         <template v-if="!error && !is_loading_versions">
-            <div class="tlp-form-element">
-                <label class="tlp-label tlp-checkbox">
-                    <input
-                        type="checkbox"
-                        v-model="use_fake_versions"
-                        v-on:change="onFakeVersionToggle"
-                    />
-                    {{ $gettext("Versions based on fake data") }}
-                </label>
-            </div>
-            <div v-if="use_fake_versions" class="tlp-form-element tlp-form-element-prepend">
+            <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend">
                     <i
                         class="fa-solid fa-filter"
@@ -54,11 +44,22 @@
                     ></i>
                 </span>
                 <select class="tlp-select" v-model="display" aria-labelledby="show-label">
-                    <option v-bind:value="ALL_VERSIONS">{{ $gettext("All versions") }}</option>
-                    <option v-bind:value="NAMED_VERSIONS">{{ $gettext("Named versions") }}</option>
-                    <option v-bind:value="GROUP_BY_NAMED_VERSIONS">
-                        {{ $gettext("Group by named versions") }}
-                    </option>
+                    <optgroup v-bind:label="$gettext('Fake data')">
+                        <option v-bind:value="FAKE_DATA_ALL_VERSIONS">
+                            {{ $gettext("All versions") }}
+                        </option>
+                        <option v-bind:value="FAKE_DATA_NAMED_VERSIONS">
+                            {{ $gettext("Named versions") }}
+                        </option>
+                        <option v-bind:value="FAKE_DATA_GROUP_BY_NAMED_VERSIONS">
+                            {{ $gettext("Group by named versions") }}
+                        </option>
+                    </optgroup>
+                    <optgroup v-bind:label="$gettext('Artifact history')">
+                        <option v-bind:value="ALL_VERSIONS">
+                            {{ $gettext("All versions") }}
+                        </option>
+                    </optgroup>
                 </select>
             </div>
         </template>
@@ -68,15 +69,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from "vue";
+import { ref, provide, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import ListOfVersionsSkeleton from "@/components/sidebar/versions/ListOfVersionsSkeleton.vue";
 import type { VersionsDisplayChoices } from "@/components/sidebar/versions/versions-display";
 import {
+    FAKE_DATA_ALL_VERSIONS,
+    FAKE_DATA_GROUP_BY_NAMED_VERSIONS,
+    FAKE_DATA_NAMED_VERSIONS,
     ALL_VERSIONS,
-    GROUP_BY_NAMED_VERSIONS,
-    NAMED_VERSIONS,
 } from "@/components/sidebar/versions/versions-display";
 import FakeListOfVersionsDisplay from "@/components/sidebar/versions/FakeListOfVersionsDisplay.vue";
 import ListOfVersionsDisplay from "@/components/sidebar/versions/ListOfVersionsDisplay.vue";
@@ -93,19 +95,20 @@ const error = ref("");
 const should_display_under_construction_message = ref(true);
 const is_loading_versions = ref(true);
 const show_title = $gettext("Change display of versions");
-const display = ref<VersionsDisplayChoices>(ALL_VERSIONS);
+const display = ref<VersionsDisplayChoices>(FAKE_DATA_ALL_VERSIONS);
 const use_fake_versions = strictInject(USE_FAKE_VERSIONS);
 const versions_display = strictInject(CURRENT_VERSION_DISPLAYED);
 
 provide(IS_LOADING_VERSION, is_loading_versions);
 provide(VERSIONS_LOADING_ERROR, error);
 
+watch(display, () => {
+    use_fake_versions.value = display.value !== ALL_VERSIONS;
+    versions_display.switchToLatestVersion();
+});
+
 function gotit(): void {
     should_display_under_construction_message.value = false;
-}
-
-function onFakeVersionToggle(): void {
-    versions_display.switchToLatestVersion();
 }
 </script>
 
