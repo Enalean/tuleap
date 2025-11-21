@@ -18,10 +18,12 @@
  */
 
 export const ALL_VERSIONS = "all";
-export const NAMED_VERSIONS = "named";
-export const GROUP_BY_NAMED_VERSIONS = "group";
+export const FAKE_DATA_ALL_VERSIONS = "fake_data_all";
+export const FAKE_DATA_NAMED_VERSIONS = "fake_data_named";
+export const FAKE_DATA_GROUP_BY_NAMED_VERSIONS = "fake_data_group";
 
 export type VersionsDisplayChoices =
     | typeof ALL_VERSIONS
-    | typeof NAMED_VERSIONS
-    | typeof GROUP_BY_NAMED_VERSIONS;
+    | typeof FAKE_DATA_ALL_VERSIONS
+    | typeof FAKE_DATA_NAMED_VERSIONS
+    | typeof FAKE_DATA_GROUP_BY_NAMED_VERSIONS;
