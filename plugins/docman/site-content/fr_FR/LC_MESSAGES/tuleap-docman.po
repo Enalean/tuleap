@@ -533,6 +533,9 @@ msgstr ""
 msgid "Cannot add following user(s). Not registered users. %1$s."
 msgstr "Impossible d'ajouter les utilisateurs suivants. N'existent pas : %1$s."
 
+msgid "Cannot create approval table for document"
+msgstr "Impossible de créer une table d'approbation pour ce document"
+
 msgid "Cannot delete a version on something that is not a file."
 msgstr ""
 "Impossible de supprimer une version d'un element qui n'est pas un fichier."
@@ -991,6 +994,9 @@ msgstr ""
 
 msgid "Every"
 msgstr "Chaque"
+
+msgid "Failed to create approval table"
+msgstr "Erreur lors de la création de la table d'approbation"
 
 msgid "File"
 msgstr "Fichier"

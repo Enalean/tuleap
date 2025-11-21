@@ -27,10 +27,12 @@ namespace Tuleap\Docman\REST\v1;
 use Codendi_HTMLPurifier;
 use Docman_ApprovalTable;
 use Docman_ApprovalTableFactoriesFactory;
+use Docman_ApprovalTableReviewerFactory;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_MetadataListOfValuesElementFactory;
+use Docman_PermissionsManager;
 use Docman_VersionFactory;
 use EventManager;
 use Luracast\Restler\RestException;
@@ -42,6 +44,7 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Log\LogEntry;
 use Tuleap\Docman\Log\LogRetriever;
+use Tuleap\Docman\REST\v1\ApprovalTable\ApprovalTablePostRepresentation;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Log\LogEntryRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
@@ -433,6 +436,64 @@ final class DocmanItemsResource extends AuthenticatedResource
             $provide_user_avatar_url,
             $version_factory,
         );
+    }
+
+    /**
+     * @url OPTIONS {id}/approval_table
+     */
+    public function optionsPostApprovalTable(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Create an approval table for item if none exists
+     *
+     * @url    POST {id}/approval_table
+     * @access hybrid
+     *
+     * @param int $id ID of the item {@from path}
+     * @param ApprovalTablePostRepresentation $representation Reviewers to add to the approval table {@from body}
+     *
+     * @status 201
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function postApprovalTable(int $id, ApprovalTablePostRepresentation $representation): void
+    {
+        $this->checkAccess();
+        Header::allowOptionsPost();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
+
+        $docman_permissions_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        $user_can_write             = $docman_permissions_manager->userCanWrite($user, $item->getId());
+
+        if (! $user_can_write) {
+            throw new RestException(404);
+        }
+
+        $factories_factory = new Docman_ApprovalTableFactoriesFactory();
+        $factory           = $factories_factory->getFromItem($item);
+        if ($factory === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'Cannot create approval table for document'));
+        }
+
+        $factory->newTableEmpty($user->getId());
+        $table = $factory->getTable();
+        if ($table === null) {
+            throw new I18NRestException(400, dgettext('tuleap-docman', 'Failed to create approval table'));
+        }
+
+        $reviewer_factory = new Docman_ApprovalTableReviewerFactory($table, $item);
+        $reviewer_factory->addUsers($representation->users);
+        foreach ($representation->user_groups as $user_group) {
+            $reviewer_factory->addUgroup($user_group);
+        }
     }
 
     /**
