@@ -557,6 +557,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 Workflow::FUNC_ADMIN_RULES,
                 Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
                 AdminWebhooks::FUNC_ADMIN_WEBHOOKS,
+                Workflow::FUNC_ADMIN_DEPENDENCIES,
             ],
             true,
         );
