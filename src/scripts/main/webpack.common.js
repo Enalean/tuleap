@@ -26,7 +26,7 @@ const { webpack_configurator, esbuild_target } = require("@tuleap/build-system-c
 const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const context = __dirname;
 const assets_dir_path = path.resolve(__dirname, "./frontend-assets");
-const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/main/");
+const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/main/", false);
 
 // Prototype doesn't like to have its "$super" argument mangled due to the fact
 // that it checks for its presence during class initialization
