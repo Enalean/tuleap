@@ -1702,6 +1702,9 @@ msgstr ""
 msgid "Table"
 msgstr ""
 
+msgid "Table does not exist"
+msgstr ""
+
 msgid "Table settings updated."
 msgstr ""
 

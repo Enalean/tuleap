@@ -32,7 +32,7 @@
  * table is created (and bound to a version of the page), the table is the
  * default one until the admin decide to create a new one.
  */
-class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFactory
+class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotPascalCase
 {
     public $wikiVersionId;
 
@@ -87,7 +87,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
     }
 
     #[\Override]
-    public function _createTable($table)
+    public function _createTable($table) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->_getDao()->createTable(
             $table->getItemId(),
@@ -101,7 +101,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
     }
 
     #[\Override]
-    protected function _updateTableWithLastId($dstTable)
+    protected function _updateTableWithLastId($dstTable) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $wikiVersionId = $this->_getDao()->getLastWikiVersionIdByItemId($this->item->getId());
         $dstTable->setItemId($this->item->getId());
@@ -109,7 +109,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
     }
 
     #[\Override]
-    public function _getTable()
+    public function _getTable() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->getTableFromVersion($this->item->getId(), $this->wikiVersionId);
     }
@@ -123,6 +123,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row   = $dar->current();
                 $table = $this->createTableFromRow($row);
+                $this->_getReviewerFactory($table, $this->item)->appendReviewerList();
             }
         }
         return $table;
@@ -143,7 +144,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
 
     // Class accessor
     #[\Override]
-    public function _getDao()
+    public function _getDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new Docman_ApprovalTableWikiDao(CodendiDataAccess::instance());
     }

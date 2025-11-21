@@ -186,6 +186,8 @@ class ItemRepresentationBuilder
                 $this->getMinimalUserRepresentation((int) $approval_table->getOwner()),
                 $this->approval_table_state_mapper,
                 $this->factories_factory,
+                $this->user_manager,
+                $this->provide_user_avatar_url,
             ),
             $lock_info,
             $this->item_permissions_for_groups_builder->getRepresentation($current_user, $item),

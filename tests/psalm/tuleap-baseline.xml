@@ -5348,6 +5348,11 @@
       <code><![CDATA[setStatus]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/docman/include/ApprovalTable/ApprovalTableRetriever.php">
+    <MissingPropertyType>
+      <code><![CDATA[$item_factory->wikiVersionId]]></code>
+    </MissingPropertyType>
+  </file>
   <file src="plugins/docman/include/ApprovalTable/FactoriesFactory.php">
     <MissingParamType>
       <code><![CDATA[$item]]></code>
@@ -5460,9 +5465,6 @@
       <code><![CDATA[$version]]></code>
       <code><![CDATA[$versionNumber]]></code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$itemVersion]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[_getDao]]></code>
       <code><![CDATA[_getTable]]></code>
@@ -5641,10 +5643,6 @@
       <code><![CDATA[getTableFromVersion]]></code>
       <code><![CDATA[newTable]]></code>
     </MissingReturnType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$lastItemVersion]]></code>
-      <code><![CDATA[$vFactory->getSpecificVersion($item, $versionNumber)]]></code>
-    </PossiblyNullPropertyAssignmentValue>
     <PossiblyNullReference>
       <code><![CDATA[getNumber]]></code>
     </PossiblyNullReference>

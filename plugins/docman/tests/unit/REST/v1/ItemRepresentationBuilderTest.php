@@ -191,6 +191,7 @@ final class ItemRepresentationBuilderTest extends TestCase
         self::assertFalse($representation->approval_table?->is_closed);
         self::assertSame('Disabled', $representation->approval_table?->notification_type);
         self::assertSame(2, $representation->approval_table?->version_number);
+        self::assertSame([], $representation->approval_table?->reviewers);
         self::assertSame('2019-02-06T15:00:00+01:00', $representation->metadata[0]->value);
         self::assertSame('2019-02-06T15:00:00+01:00', $representation->metadata[0]->post_processed_value);
         self::assertSame('metadata name', $representation->metadata[0]->name);

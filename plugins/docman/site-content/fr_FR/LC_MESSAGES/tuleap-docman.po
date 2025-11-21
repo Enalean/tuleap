@@ -1930,6 +1930,9 @@ msgstr "Basculer sur la nouvelle interface utilisateur"
 msgid "Table"
 msgstr "Table"
 
+msgid "Table does not exist"
+msgstr "La table n'existe pas"
+
 msgid "Table settings updated."
 msgstr "Paramètres de la table modifiés."
 
