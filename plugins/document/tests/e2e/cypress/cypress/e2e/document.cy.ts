@@ -394,6 +394,10 @@ describe("Document new UI", () => {
                     if (el.is(":not(:checked)")) {
                         // eslint-disable-next-line cypress/no-force
                         cy.get("[data-test=toggle-changelog-modal]").click({ force: true });
+                        cy.get("[data-test=feedback]").should(
+                            "contain.text",
+                            "Settings have been saved successfully.",
+                        );
                     }
                 });
             });
