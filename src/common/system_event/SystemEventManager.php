@@ -395,7 +395,6 @@ class SystemEventManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                     new UserRemover(
                         ProjectManager::instance(),
                         EventManager::instance(),
-                        new ArtifactTypeFactory(false),
                         new UserRemoverDao(),
                         $user_manager,
                         new ProjectHistoryDao(),
@@ -430,7 +429,6 @@ class SystemEventManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                     new UserRemover(
                         ProjectManager::instance(),
                         EventManager::instance(),
-                        new ArtifactTypeFactory(false),
                         new UserRemoverDao(),
                         UserManager::instance(),
                         new ProjectHistoryDao(),

@@ -72,7 +72,6 @@ if ($ldapPlugin instanceof LdapPlugin) {
             $user_remover = new \Tuleap\Project\UserRemover(
                 ProjectManager::instance(),
                 EventManager::instance(),
-                new ArtifactTypeFactory(false),
                 new \Tuleap\Project\UserRemoverDao(),
                 UserManager::instance(),
                 new ProjectHistoryDao(),

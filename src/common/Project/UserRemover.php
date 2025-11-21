@@ -22,7 +22,6 @@ namespace Tuleap\Project;
 
 use ProjectManager;
 use EventManager;
-use ArtifactTypeFactory;
 use Feedback;
 use Tuleap\Project\Admin\ForceRemovalOfRestrictedAdministrator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectAdminHistoryEntry;
@@ -42,11 +41,6 @@ class UserRemover
      * @var EventManager
      */
     private $event_manager;
-
-    /**
-     * @var ArtifactTypeFactory
-     */
-    private $tv3_tracker_factory;
 
     /**
      * @var UserRemoverDao
@@ -71,7 +65,6 @@ class UserRemover
     public function __construct(
         ProjectManager $project_manager,
         EventManager $event_manager,
-        ArtifactTypeFactory $tv3_tracker_factory,
         UserRemoverDao $dao,
         UserManager $user_manager,
         ProjectHistoryDao $project_history_dao,
@@ -80,7 +73,6 @@ class UserRemover
     ) {
         $this->project_manager     = $project_manager;
         $this->event_manager       = $event_manager;
-        $this->tv3_tracker_factory = $tv3_tracker_factory;
         $this->dao                 = $dao;
         $this->user_manager        = $user_manager;
         $this->project_history_dao = $project_history_dao;
@@ -130,8 +122,6 @@ class UserRemover
             'user_id'  => $user_id,
         ]);
 
-        $this->removeUserFromTrackerV3($project_id, $user_id);
-
         if (! $this->removeUserFromProjectUgroups($project, $user_id)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index', 'del_user_from_ug_fail'));
         }
@@ -161,24 +151,6 @@ class UserRemover
                 Feedback::INFO,
                 $GLOBALS['Language']->getText('project_admin_index', 'self_user_remove') . ' (' . $project->getPublicName() . ')'
             );
-        }
-    }
-
-    private function removeUserFromTrackerV3($project_id, $user_id)
-    {
-        $tv3_trackers = $this->tv3_tracker_factory->getArtifactTypesFromId($project_id);
-
-        if (! $tv3_trackers) {
-            return true;
-        }
-
-        foreach ($tv3_trackers as $tv3_tracker) {
-            if (! $tv3_tracker->deleteUser($user_id)) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    $GLOBALS['Language']->getText('project_admin_index', 'del_tracker_perm_fail', $tv3_tracker->getName())
-                );
-            }
         }
     }
 

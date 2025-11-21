@@ -1187,7 +1187,6 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
         return new UserRemover(
             ProjectManager::instance(),
             EventManager::instance(),
-            new ArtifactTypeFactory(false),
             new UserRemoverDao(),
             UserManager::instance(),
             new ProjectHistoryDao(),

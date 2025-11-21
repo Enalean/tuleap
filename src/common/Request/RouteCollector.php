@@ -21,7 +21,6 @@
 
 namespace Tuleap\Request;
 
-use ArtifactTypeFactory;
 use Codendi_HTMLPurifier;
 use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature\ECDSA\ES256;
@@ -700,7 +699,6 @@ class RouteCollector
             new \Tuleap\Project\UserRemover(
                 $project_manager,
                 EventManager::instance(),
-                new ArtifactTypeFactory(false),
                 new \Tuleap\Project\UserRemoverDao(),
                 $user_manager,
                 new ProjectHistoryDao(),
